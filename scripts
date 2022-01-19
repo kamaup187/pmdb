@@ -1,0 +1,36 @@
+########### WEB ONLY ############
+web gunicorn wsgi:app
+#################################
+
+########### WEB&WOKER ############
+web: sh heroku.sh
+#################################
+
+########### WEB&CLOCK ############
+web: sh herokuclock.sh
+#################################
+
+########### WEB&WOKER&CLOCK ############
+web: sh herokuclockworker.sh
+#################################
+
+########### WEB WORKER ############
+web gunicorn wsgi:app
+worker: python worker.py
+#################################
+
+########### WEB WORKER CLOCK ############
+web gunicorn wsgi:app
+worker: python worker.py
+clock: python clock.py
+#################################
+
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+
+import pdb; pdb.set_trace()
+
+# python -m pip freeze > requirements.txt
+# heroku run python manage.py db upgrade --app kiotapay-prod
+# heroku logs --tail --app eapartment-dev

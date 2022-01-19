@@ -1,0 +1,85 @@
+<div class="center-btn mb-2">
+    <span class="text-gray-900 font-weight-bold">Status: <span class="{{sms_highlight}}">{{smsstatus}}</span>
+</div>
+
+<div class="center-btn mb-3 smallify">
+    <span class="linebreak">{{salutation|safe}}</span>
+    <span class="linebrea">{{intro|safe}}</span>
+    {%if rent%}
+    <span class="linebrea">{{rent|safe}}</span>
+    {% endif %}
+    {%if water%}
+    <span class="linebrea">{{water|safe}}</span>
+    {% endif %}
+    {%if electricity%}
+    <span class="linebrea">{{electricity|safe}}</span>
+    {% endif %}
+    {%if security%}
+    <span class="linebrea">{{security|safe}}</span>
+    {% endif %}
+    {%if garbage%}
+    <span class="linebrea">{{garbage|safe}}</span>
+    {% endif %}
+    {%if arrears%}
+    <span class="linebrea">{{arrears|safe}}</span>
+    {% endif %}
+    {%if deposit%}
+    <span class="linebrea">{{deposit|safe}}</span>
+    {% endif %}
+    {%if total%}
+    <span class="linebreak">{{total|safe}}</span>
+    {% endif %}
+    {%if bank%}
+    <span class="linebrea">{{bank|safe}}</span>
+    {% endif %}
+
+    <span>~ {{co|safe}}</span>
+
+</div>
+
+<div class="divbg center-btn">
+    <button id="invoicebill" type="button" class="btn btn-outline-success">{{action}}</button>
+    <button class="btn btn-outline-danger" id="closeModal2" type="button" data-dismiss="modal"></i>Dismiss</button>
+    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+  </div>
+
+  <script>
+    $("#invoicebill").click(function(){
+      $("#invoicebill").html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+      $.ajax({
+          url: "{{ url_for('api.sendinvoices') }}",
+          type: "POST",
+          data: {
+                billid:$("#bill_identifier").text(),
+                prop:$("#prop_identifier").text(),
+                target:"isolated"
+              },
+          success: function(response) {
+    
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $("#closeModal2").click();
+              $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"sometarget"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+            });
+            }, 3000);
+    
+          },
+          error: function(xhr) {
+            $("#invoicebill").html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+            }
+        });
+    
+    })
+    
+    </script>

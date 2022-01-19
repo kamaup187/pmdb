@@ -1,0 +1,75 @@
+
+{% extends "base2.html" %}
+{% block content %}
+
+
+<div id="propdisp" class="">
+
+</div>
+
+<div id="proplist" class="">
+  <p class="center-btn">Houses & Classification >> Select apartment</p>
+  <div class="row">
+    <div class="col-xl-12 col-md-12 mb-1">
+        <div class="card shadow h-0 py-0">
+            <div class="card-body bg-white titanic-iceberg-top">
+                <div class="row no-gutters align-items-cente divbg">
+  
+  
+  
+                    {% if props %}
+                      
+                      {% for prop in props%}                   
+  
+                        <div class="image-wrap">
+                          <button id="{{prop.id}}" class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-prop no-margin divcol">
+                            <img class="img-prop text-xs" src="{{ prop.image_url }}" alt="--no image--"/>
+                            <!-- <span class="small mobile-malaysia text-ss">{{prop.name}}</span> -->
+                            <span class="small desktop-malaysia"><h6 class="small titanic-iceberg sss">{{prop.name}}</h6></span>
+                            <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
+                          </button>
+                        </div>
+  
+                      {% endfor %}
+  
+                    {% endif %}
+  
+                </div>
+  
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+
+
+<script>
+  var propIds = {{ propids|tojson }};
+  
+  $.each(propIds, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      // console.log(item);
+      // localStorage.setItem('tenantvar',item);
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.propertymanagement') }}",
+              data: {
+                  propid:item
+              },
+              success: function(response) {
+                // $("#detailedreport").toggleClass('bg-gradient-light bg-gradient-dark');
+                // $("#detailedreport").toggleClass('tenantdata dispnone');
+                $("#proplist").addClass("dispnone");
+                $("#propdisp").removeClass("dispnone")
+                $("#propdisp").html(response);
+              }
+          });
+     
+    });
+  });
+  </script>
+
+{% endblock %}

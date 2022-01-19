@@ -1,0 +1,18 @@
+  
+  <script>
+    arr_results = "{{ suggestions|safe }}";
+
+    var outputstr= arr_results.replace(/'/g,'"');
+ 
+    if(arr_results) {
+      arr_resultsTwo = JSON.parse(outputstr)
+      autocomplete(document.getElementById("searchInput"), arr_resultsTwo);
+      autocomplete(document.getElementById("searchInputMobile"), arr_resultsTwo);
+    }
+    else{
+      autocomplete(document.getElementById("searchInput"), arr_results);
+      autocomplete(document.getElementById("searchInputMobile"), arr_results)
+    }
+  </script>
+
+

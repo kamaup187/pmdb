@@ -1,0 +1,87 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 common-bg">
+                    <div class="card-header py-3 bg-gradient-dark divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-success"><i class="fas fa-fw fa-user-plus mr-3"></i>Register property manager</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span class="small"><i class="fas fa-fw fa-info-circle"></i>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/add/admincreateagent">
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="text" name="fname" placeholder="First name" required autofocus>
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" name="lname" placeholder="Last name" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="text" name="natid" placeholder="national_id">
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="tel" name="tel" placeholder="Mobile no">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="email" name="email" placeholder="Email" required>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="text" name="company" placeholder="Company name(optional)">
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="address" name="address" placeholder="Address (optional)">
+                                </div>
+                            </div>
+            
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="password" name="p1" placeholder="Password" required>
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="password" name="p2" placeholder="Confirm password" required>
+                                </div>
+                            </div>
+            
+                            <div class="divbg center-btn">
+                                <button type="submit" class="bg-gradient-success borderless text-white font-weight-bold"><i class="fas fa-check"></i>&nbsp;Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(500,"swing");
+    }, 2000);
+</script>
+
+{% endblock %}

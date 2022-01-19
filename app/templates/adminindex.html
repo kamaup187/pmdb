@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="KiotaPay" content="Property management system">
+
+  <title>KiotaPay - Property management software</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}"> -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <!-- Custom styles-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datatables.min.css') }}">
+
+  <!-- <link rel="stylesheet" href="../static/style.css"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
+
+  <script src="{{ url_for('static', filename='js/timepicker.js') }}"></script>
+
+</head>
+
+<body onload="startTime()" id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand bg-white d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+        <div class="sidebar-brand-icon rotate-n-0">
+          <img class="mobile-malaysian" src={{logopath}} alt="">
+          <img class="desktop-malaysian" src={{mobilelogopath}} alt="">
+        </div>
+        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
+        
+      </a>
+
+      <!-- Divider -->
+      <hr style="visibility: hidden;" class="sidebar-divider my-2">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Configuration
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-users-cog"></i>
+          <span>User management</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Access:</h6>
+            <a class="collapse-item" href="{{ url_for('api.modifyaccessright') }}"><span><i class="fas fa-fw fa-wrench"></i></span>&nbsp;Access rights</a>
+            <h6 class="collapse-header">Users:</h6>
+            <a class="collapse-item" href="{{ url_for('api.updateuser') }}"><span><i class="fas fa-fw fa-user-edit"></i></span>&nbsp;Edit user</a>
+            <a class="collapse-item" href="{{ url_for('api.adminregisteruser') }}"><span><i class="fas fa-fw fa-user-plus"></i></span>&nbsp;New user</a>
+            <a class="collapse-item" href="{{ url_for('api.admincreateagent') }}"><span><i class="fas fa-fw fa-user-plus"></i></span>&nbsp;Property manager</a>
+            
+          </div>
+        </div>
+      </li>
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Main menu
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Properties</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Property management:</h6>
+            <a class="collapse-item mylinks" href="{{ url_for('api.registerowner') }}"><span><i class="fas fa-fw fa-user-tie"></i></span>&nbsp;Owners</a>
+            <a class="collapse-item mylinks" href="{{ url_for('api.createapartment') }}"><span><i class="fas fa-fw fa-building"></i></span>&nbsp;Add Property</a>
+            <a class="collapse-item mylinks" href="{{ url_for('api.propertyaccess') }}"><span><i class="fas fa-fw fa-key"></i></span>&nbsp;Property Access</a>
+            <a class="collapse-item mylinks" href="{{ url_for('api.propertyaccesstermination') }}"><span><i class="fas fa-fw fa-key"></i></span>&nbsp;Property Termination</a>
+           <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-hand-holding-usd"></i>
+          <span>Billing</span>
+        </a>
+        <div id="collapseBilling" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Billing</h6>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+      <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Reports</span>
+        </a>
+      </li>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+
+
+
+
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand topbar-bg topbar mb-4 static-top shadow mobile-malaysian">
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw text-gray-400"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter"></span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts Center
+                </h6>
+                <!-- <a class="dropdown-item d-flex align-items-center" href="{{ url_for('api.internaldetail') }}">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">June 30, 2020</div>
+                    <span class="font-weight-bold"></span>
+                  </div>
+                </a> -->
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw text-gray-500"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message Center
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="https://mail.google.com/mail/u/0/#inbox" target="_blank">
+                  <div class="dropdown-list-image mr-1">
+                    <!-- <img class="rounded-circle" src="" alt="">
+                    <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.email}} · 1 minute ago</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-500 small">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user text-gray-500"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updateuser') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="{{ url_for('api.resetallmpesadata') }}">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+
+
+
+
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand bg-white topbar mb-4 static-top shadow desktop-malaysian">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTopa" class="btn btn-link d-md-none rounded-circle mr-0 text-info">
+            <i id = "myi"class="fa fa-bars"></i>
+          </button>
+          <a class="d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+            <i id = "myii"class="desktop-malaysian mr-0">
+              <img class="desktop-malaysian" src={{mobilelogopath}} alt="">
+            </i>
+          </a>
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none mobile-malaysian">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-0">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw kiota-col"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter">1</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts Center
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="{{ url_for('api.internaldetail') }}">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">October 30, 2020</div>
+                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                  </div>
+                </a>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-0">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw kiota-col"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message Center
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="https://mail.google.com/mail/u/0/#inbox" target="_blank">
+                  <div class="dropdown-list-image mr-1">
+                    <!-- <img class="rounded-circle" src="" alt="">
+                    <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.email}} · 1 minute ago</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="kiota-col mr-0">
+                  <span class="text-n-ss">{{group}}</span>
+                </div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <!-- <span class="font-weight-bold mr-2 text-white">-</span> -->
+                <span class="mr-2 d-none d-lg-inline kiota-col font-weight-bold">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user kiota-col"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updateuser') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="{{ url_for('api.resetallmpesadata') }}">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+
+
+
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <div id="dynamic-content" class="dispnone"></div>
+            <div id="body-block" class="">
+        
+                <div class="d-sm-flex align-items-center justify-content-between mb-1 divjust">
+
+                    <span>
+                        <li class="nav-item dropdown no-arrow d-sm-none no-li-marker">
+                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-out searchbtn" aria-labelledby="searchDropdown">
+                            <form class="form-inline mr-auto w-100 navbar-search">
+                            <div class="input-group">
+                                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                        </li>
+                    </span>
+        
+                    <div class="small text-info mobile-malaysian">
+                        <span></span>
+                        <div></div>
+                    </div>
+                </div>
+        
+        
+                <div id="dynamic-stats" class="row">
+        
+                    <div class="col-xl-3 col-md-6 mb-1 desktop-malaysian no-padding">
+                        <div class="card shadow h-100 py-0 card-bg">
+                        <div class="card-body titanic-iceberg-top titanic-iceberg-bottom">
+                            <div class="row no-gutters align-items-cente">
+                                <div class="col mr-0">
+                                    <div class="text-xs text-gray-200 mb-1">{{month_string}} Bills (total)</div>
+                                    <div class="text-xs text-gray-200 mb-1">{{month_string}} Paid (total)</div>
+                                    <div class="text-xs text-gray-200 mb-1">Balance (Net)</div>
+                                    <div class="text-xs text-gray-200 mb-1">Current client</span></div>
+                                    
+                                </div>
+                                <div class="col-auto">
+                                    <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">
+                                        <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                        <div class="fountainG-small">
+                                        <div class="fountainG_1s fountainG-s"></div>
+                                        <div class="fountainG_2s fountainG-s"></div>
+                                        <div class="fountainG_3s fountainG-s"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">
+                                        <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                        <div class="fountainG-small">
+                                        <div class="fountainG_1s fountainG-s"></div>
+                                        <div class="fountainG_2s fountainG-s"></div>
+                                        <div class="fountainG_3s fountainG-s"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs mb-0 font-weight-bold text-white mb-2">
+                                        <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                        <div class="fountainG-small">
+                                        <div class="fountainG_1s fountainG-s"></div>
+                                        <div class="fountainG_2s fountainG-s"></div>
+                                        <div class="fountainG_3s fountainG-s"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs mb-0 font-weight-bold text-warning mb-1">
+                                        <div class="fountainG-small">
+                                        <div class="fountainG_1s fountainG-s"></div>
+                                        <div class="fountainG_2s fountainG-s"></div>
+                                        <div class="fountainG_3s fountainG-s"></div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                        <div class="card border-left-dark shadow h-100 py-2 card-bg">
+                            <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white small">{{month_string}}</span> | Amount due(total)</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
+                                    <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                    <div class="fountainG-big">
+                                    <div class="fountainG_1b fountainG-b"></div>
+                                    <div class="fountainG_2b fountainG-b"></div>
+                                    <div class="fountainG_3b fountainG-b"></div>
+                                    <!-- <div id="fountainG_4" class="fountainG"></div>
+                                    <div id="fountainG_5" class="fountainG"></div>
+                                    <div id="fountainG_6" class="fountainG"></div>
+                                    <div id="fountainG_7" class="fountainG"></div>
+                                    <div id="fountainG_8" class="fountainG"></div> -->
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-auto">
+                                <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                        <div class="card border-left-dark shadow h-100 py-2 card-bg">
+                            <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white small">{{month_string}}</span> | payments(total)</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
+                                    <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                    <div class="fountainG-big">
+                                    <div class="fountainG_1b fountainG-b"></div>
+                                    <div class="fountainG_2b fountainG-b"></div>
+                                    <div class="fountainG_3b fountainG-b"></div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-auto">
+                                <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Pending Requests Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                        <div class="card border-left-dark shadow h-100 py-2 card-bg">
+                            <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Outstanding balance</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
+                                    <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
+                                    <div class="fountainG-big">
+                                    <div class="fountainG_1b fountainG-b"></div>
+                                    <div class="fountainG_2b fountainG-b"></div>
+                                    <div class="fountainG_3b fountainG-b"></div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col-auto">
+                                <i class="fas fa-money-check-alt fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                        <div class="card border-left-dark shadow h-100 py-2 card-bg">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1"> Current House occupancy</div>
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col-auto">
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-500">
+                                                <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
+                                            </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="progress progress-sm mr-2">
+                                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+        
+                    <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                        <div class="card border-left-dark shadow h-100 py-2 card-bg">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2 dispnon">
+                                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Clients</div>
+                                        <div class="align-items-center">
+                                            
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-500 addloader">
+                                            <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
+        
+                                            <!-- <div class="fountainG-big">
+                                                <div class="fountainG_1b fountainG-b"></div>
+                                                <div class="fountainG_2b fountainG-b"></div>
+                                                <div class="fountainG_3b fountainG-b"></div>
+                                            </div> -->
+                                            
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-city fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="buttons" class="row">
+                    <div class="col-xl-6 col-md-6 mb-1 desktop-malaysian no-padding">
+                      <div class="card shadow h-0 py-0">
+                        <div class="card-body bg-white report-card-padding">
+        
+                            <div class="divjust-end center-btn">
+                              <div class="fixed-width-btn">
+                                  <a class="housebtn" href="#">
+                                      <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                        <div><i class="fas fa-city fa-2x text-info"></i></div>
+                                      <span><h6 class="small-text">Button1</h6></span>
+                                      </button>
+                                  </a>
+                              </div>
+                      
+        
+                              <div class="fixed-width-btn">
+                                <a class="tenantbtn" href="#">
+                                    <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                      <div><i class="fas fa-house-user fa-2x text-info"></i></div>
+                                    <span><h6 class="small-text">Button2</h6></span>
+                                    </button>
+                                </a>
+                              </div>
+        
+                              <div class="fixed-width-btn">
+                                <a class="meterbtn" href="#">
+                                    <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                      <div><i class="fas fa-city fa-2x text-info"></i></div>
+                                      <span><h6 class="small-text">Button3</h6></span>
+                                    </button>
+                                </a>
+                              </div>
+        
+        
+                            </div>
+                            <div class="divjust-end center-btn">
+        
+                                <div class="fixed-width-btn">
+                                    <a class="billbtn" href="#">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                          <div><i class="fas fa-coins fa-2x text-info"></i></div>
+                                        <span><h6 class="small-text">Client Billing</h6></span>
+                                        </button>
+                                    </a>
+                                </div>
+        
+                                <div class="fixed-width-btn">
+                                  <a class="paybtn" href="#">
+                                      <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                        <div><i class="fas fa-hand-holding-usd fa-2x text-info"></i></div>
+                                      <span><h6 class="small-text">Button5</h6></span>
+                                      </button>
+                                  </a>
+                                </div>
+        
+                                <div class="fixed-width-btn">
+                                  <a class="expensebtn" href="#">
+                                      <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                        <div><i class="fas fa-money-check-alt fa-2x text-info"></i></div>
+                                      <span><h6 class="small-text">Button6</h6></span>
+                                      </button>
+                                  </a>
+                                </div>
+        
+                            </div>
+        
+                            <div class="divjust-end center-btn">
+        
+                                <div class="fixed-width-btn">
+                                  <a class="" href="#">
+                                      <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                        <div><i class="fas fa-users-cog fa-2x text-info"></i></div>
+                                        <span><h6 class="small-text">Button7</h6></span>
+                                      </button>
+                                  </a>
+                                </div>
+                        
+                                <div class="fixed-width-btn">
+                                    <a id="btn8" href="#">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                          <div><i class="fas fa-comments fa-2x text-info"></i></div>
+                                        <span><h6 class="small-text">Button8</h6></span>
+                                        </button>
+                                    </a>
+                                </div>
+        
+                                <div class="fixed-width-btn">
+                                    <a id="btn9" href="#">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                          <div><i class="fas fa-poll fa-2x text-info"></i></div>
+                                        <span><h6 class="small-text">Button9</h6></span>
+                                        </button>
+                                    </a>
+                                </div>
+        
+                            </div>
+                            
+                        </div>
+                      </div>
+                    </div>
+        
+                    <div class="col-xl-12 mb-1 no-padding mobile-malaysian">
+                        <div class="card shadow h-0 py-0">
+                          <div class="card-body bg-white report-card-padding">
+                                <div class="divjust-end center-btn">
+        
+                                  <div class="fixed-width-btn">
+                                    <a href="#" class="propsbtn">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                            <div>
+                                              <i class="fas fa-city fa-2x text-info"></i>
+                                            </div>
+                                            <span class="small mobile-malaysian sss">Properties</span>
+                                        </button>
+                                    </a>
+                                  </div>
+        
+                                  <div class="fixed-width-btn">
+                                    <a class="ownersbtn" href="#">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                            <div>
+                                              <i class="fas fa-user-friends fa-2x text-info"></i>
+                                            </div>
+                                            <span class="small mobile-malaysian sss">Owners</span>
+                                        </button>
+                                    </a>
+                                  </div>
+        
+                                  <div class="fixed-width-btn">
+                                    <a href="#" class="meterbtn">
+                                      <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                          <div>
+                                            <i class="fas fa-users fa-2x text-info"></i>
+                                          </div>
+                                          <span class="small mobile-malaysian sss">Clients</span>
+                                      </button>
+                                    </a>
+                                  </div>
+        
+                                  <div class="fixed-width-btn">
+                                    <a class="billbtn" href="#">
+                                        <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                            <div>
+                                              <i class="fas fa-house-user fa-2x text-info"></i>
+                                            </div>
+                                            <span class="small mobile-malaysian sss">Client Billing</span>
+                                        </button>
+                                    </a>
+                                  </div>
+
+                                    <div class="fixed-width-btn">
+                                      <a class="paybtn" href="#">
+                                          <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                              <div>
+                                                <i class="fas fa-hand-holding-usd fa-2x text-info"></i>
+                                              </div>
+                                              <span class="small mobile-malaysian sss">Payments</span>
+                                          </button>
+                                      </a>
+                                    </div>
+                    
+                                    <div class="fixed-width-btn">
+                                        <a class="expensebtn" href="#">
+                                            <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                                <div>
+                                                  <i class="fas fa-money-check-alt fa-2x text-info"></i>
+                                                </div>
+                                                <span class="small mobile-malaysian sss">Expenses</span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                            
+                                    <div class="fixed-width-btn">
+                                        <a id="btn16" href="{{ url_for('api.handletenantrequest') }}">
+                                            <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                                <div>
+                                                  <i class="fas fa-comments fa-2x text-info"></i>
+                                                </div>
+                                                <span class="small mobile-malaysian sss">Client requests</span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                    
+                                    <div class="fixed-width-btn">
+                                        <a id="btn17" href="{{ url_for('api.reports') }}">
+                                            <button class="btn btn-outline-success text-gray-700 borderles my-width mb-1">
+                                                <div>
+                                                  <i class="fas fa-poll fa-2x text-info"></i>
+                                                </div>
+                                                <span class="small mobile-malaysian sss">View reports</span>
+                                            </button>
+                                        </a>
+                                    </div>
+                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+                <div id="graph-area" class="row">
+        
+                    <div class="col-xl-8 col-lg-7 no-padding">
+                        <div class="card shadow mb-1 bg-white">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <a href="{{ url_for('api.internaldetail') }}">
+                                  <h6 class="m-0 font-weight-bold text-info"><i class="fas fa-signal"></i>
+                                    Clients Collections Overview
+                                 </h6>
+                                </a>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Reports:</div>
+                                <a class="dropdown-item" href="#">View all Reports</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Monthly Payments</a>
+                                <a class="dropdown-item" href="#">Monthly Bills</a>
+                                </div>
+                            </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body center-btn pb-4">
+                              <div style="display: inline;" class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Pie Chart -->
+                    <div class="col-xl-4 col-lg-5 no-padding">
+                        <div class="card shadow mb-1 bg-white">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-info"><i class="fas fa-home"></i> Clients stats</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Actions:</div>
+                                <a class="dropdown-item" href="#">Add house</a>
+                                <a class="dropdown-item" href="#">State charges</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Allocate tenants</a>
+                                </div>
+                            </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body pb-4 center-btn">
+                              <div style="display: inline;" class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                              <!-- <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div> -->
+                            </div>
+                        </div>
+        
+                    </div>
+                    <div class="col-lg-12 mb-4 no-padding mobile-malaysian">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Special Notes</h6>
+                            </div>
+                            <div class="card-body">
+                                <p>Empty.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; kiotapay 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade center-btn" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign out</h5>
+        </div>
+        <div class="modal-body">Ready to Leave?</div>
+        <div class="has-margin-bottom divbg">
+          <a class="btn btn-danger" href="{{ url_for('api.userlogout') }}"> <i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-smile mr-2"></i>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal center-btn" id="preloaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title text-danger" id="exampleModalLabel">Warning!</h5>
+        </div> -->
+        <div class="text-info pt-3 pb-3">
+          <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+        </div>       
+
+        <div class="dispnone">
+            <button type="button" id="postloader-btn" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button id="preloader-btn" class="dispnone" data-toggle="modal" data-target="#preloaderModal"></button>
+
+  
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script> -->
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='datatables.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='printThis.js') }}"></script>
+
+
+
+  
+  <!-- <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> -->
+  <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $('#sidebarToggleTopa').on('click',function(){
+
+        $('#myi').toggleClass('fa-bars fa-arrow-left')
+        $('#myii').toggleClass('dispnone')
+        $('#accordionSidebar').toggleClass('mobile-toggle')
+        
+      })
+
+    });
+  </script>
+
+
+<script type="text/javascript">
+
+  function getComStats() {
+      $.ajax({
+          url: "{{ url_for('api.comstats') }}",
+          type: 'get',
+          data: {
+                  com: localStorage.getItem('comvar')
+                },
+          success: function(data) {
+
+              $('#dynamic-stats').html(data);
+
+          },
+          complete:function(data) {
+              setTimeout(getGraphStats, 10);
+          }
+      });
+  }
+  function getGraphStats() {
+      $.ajax({
+          url: "{{ url_for('api.comgraphstats') }}",
+          type: 'get',
+          data: {
+                  com: localStorage.getItem('comvar')
+                },
+          success: function(data) {
+
+              $('#graph-area').html(data);
+
+          },
+
+      });
+  }
+  
+  $(document).ready(function() {
+      setTimeout(getComStats,1);
+  });
+
+  </script>
+
+
+<script>
+  $(".propsbtn").on('click',function(){
+      // $("#body-block").addClass("dispnone")
+      $("#preloader-btn").click();
+      url = "{{ url_for('api.allproperties') }}"
+
+      $.ajax({
+          type: "get",
+          url: url,
+          success: function(response) {
+              $("#postloader-btn").click();
+              $("#body-block").addClass("dispnone")
+              $("#dynamic-content").removeClass("dispnone")
+              $("#dynamic-content").html(response);
+          }
+      });
+  });
+</script>
+
+<script>
+  $(".ownersbtn").on('click',function(){
+      // $("#body-block").addClass("dispnone")
+      $("#preloader-btn").click();
+      url = "{{ url_for('api.allowners') }}"
+
+      $.ajax({
+          type: "get",
+          url: url,
+          success: function(response) {
+              $("#postloader-btn").click();
+              $("#body-block").addClass("dispnone")
+              $("#dynamic-content").removeClass("dispnone")
+              $("#dynamic-content").html(response);
+          }
+      });
+  });
+</script>
+
+<script>
+  $(".billbtn").on('click',function(){
+      // $("#body-block").addClass("dispnone")
+      $("#preloader-btn").click();
+      url = "{{ url_for('api.clientbilling') }}"
+
+      $.ajax({
+          type: "get",
+          url: url,
+          success: function(response) {
+              $("#postloader-btn").click();
+              $("#body-block").addClass("dispnone")
+              $("#dynamic-content").removeClass("dispnone")
+              $("#dynamic-content").html(response);
+          }
+      });
+  });
+</script>
+
+
+</body>
+
+</html>
+
+
+

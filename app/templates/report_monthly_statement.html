@@ -1,0 +1,742 @@
+
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} Income statement.pdf</span>
+
+<div class="row">
+  <div class="col-lg-6 offset-lg-3 no-padding">
+    <div class="formwrapper">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div class="divjust-end topbar-bg">
+          <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <div class="font-weight-bold text-white small card-header-form">
+              <span class="mr-4">Monthly statement: ({{apartment_name}}) </span>
+              <span><i class="fas fa-angle-down"></i></span>
+            </div>
+          </a>
+          <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+        </div>
+        <!-- Card Content - Collapse -->
+        <div class="" id="collapseCardExample">
+          <div class="card-body">
+              <form method="POST" action="/monthly/statement">
+                  <div class="form-group">
+                      <select name="prop" class="select-css" id ="selected_apartment" required>
+                        <option disabled selected value> -- Select apartment -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                  <div class="divbg mb-3">
+                    <span class="form-input">
+                      <select name="year" class="select-css" id ="url-box">
+                        <option disabled selected value> -- Year({{yearnow}}) -- </option>
+                        {% for o in year_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="month" class="select-css" id ="url-bo">
+                        <option disabled selected value> -- Month({{monthnow}}) -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+
+                  </div>
+                  <button id="submit" class="btn btn-block btn-primary btn-user">View</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12 no-padding">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div  class="d-block card-header topbar-bg card-header-report">
+          <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-gray-200">
+            {%if prop%}
+            <div class="small">
+              <div class=""><i class="fas fa-fw fa-calendar-check mr-2"></i>{{month}} Monthly statement : {{prop}}</div>
+            </div> 
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white mr-1"></i>Download</button>
+            {%endif%}
+          </div>
+        </div>
+        <div class="collapse show" id="collapseCardExample2">
+          <div class="card-body no-padding">
+
+
+
+            {%if prop%}
+            <div class="invoice-box">
+              <!-- <div class="d-sm-flex divjust text-gray-600">
+                <div class="mobile-malaysian">
+                  <img class="" src="{{fulllogopath}}" alt="--no image--"/>
+                </div>
+                <div class="desktop-malaysian">
+                  <img class="" src="{{logopath}}" alt="--no image--"/>
+                </div>
+                <div class="mobile-malaysian">
+                  <div class="small">Street Address : {{company.street_address}}</div>
+                  <div class="small">PO BOX : {{company.mail_box}}</div>
+                  <div class="small">Tel : {{company.phone}}</div>
+                  <div class="small">Email: {{company.email}}</div>
+                </div>
+                <div class="desktop-malaysian text-sll mb-3">
+                  <div class="small">Street Address : {{company.street_address}}</div>
+                  <div class="small">PO BOX : {{company.mail_box}}</div>
+                  <div class="small">Tel : {{company.phone}}</div>
+                  <div class="small">Email: {{company.email}}</div>
+                </div>
+              </div> -->
+              <table cellpadding="0" cellspacing="0">
+                  
+                  <tr class="information">
+                   
+                      <td colspan="2">
+                        <div class="center-btn">
+                          <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary">{{timeline}} </span>Statement</h5>
+                        </div>
+                      </td>
+                  </tr>
+                  
+                  <tr class="headin font-weight-bold text-primary">
+                      <td>
+                          Revenue
+                      </td>
+                      
+                  </tr>
+                
+                  <tr class="heading small">
+                      <td>
+                          Service
+                      </td>
+                      
+                      <td>
+                          Amount
+                      </td>
+                  </tr>
+                  
+                  <tr class="item">
+                      <td>
+                          Rent Amount due
+                      </td>
+                      
+                      <td>
+                          Kshs. {{renttotal}}0
+                      </td>
+                  </tr>
+                  {%if watertotal%}
+                  <tr class="item">
+                      <td>
+                          Water Amount due
+                      </td>
+                      
+                      <td>
+                        Kshs. {{watertotal}}0
+                      </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if electricitytotal%}
+                  <tr class="item">
+                    <td>
+                        Electricity Amount due
+                    </td>
+                    
+                    <td>
+                      Kshs. {{electricitytotal}}0
+                    </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if depositcredit%}
+                  <tr class="item">
+                    <td>
+                        Deposit due
+                    </td>
+                    
+                    <td>
+                      Kshs. {{depositcredit}}0
+                    </td>
+                </tr>
+                {%endif%}
+      
+                  <tr class="total">
+                      <td style="font-weight: 900;">
+                        Total:
+                      </td>
+                      
+                      <td style="font-weight: 900;">
+                        Kshs. {{credittotal}}0
+                      </td>
+                  </tr>
+                  <tr class="headin hide">
+                    <td>
+                        Spacing
+                    </td>
+                    
+                  </tr>
+
+                  <tr class="headin font-weight-bold text-danger">
+                    <td>
+                        Expenses
+                    </td>
+                    
+                  </tr>
+                
+                  <tr class="heading small">
+                      <td>
+                          Service
+                      </td>
+                      
+                      <td>
+                          Amount
+                      </td>
+                  </tr>
+                
+                  {%if managementfee%}
+                  <tr class="item">
+                      <td>
+                          Management fee / Commission {{commission_percentage}}
+                      </td>
+                      
+                      <td>
+                         Kshs. {{managementfee}}0
+                      </td>
+                  </tr>
+                  {%endif%}
+
+
+                  {%if depositrefund%}
+                  <tr class="item">
+                      <td>
+                          Deposit refund {{depositrefund_str_store}}
+                      </td>
+                      
+                      <td>
+                        Kshs. {{depositrefund}}0
+                      </td>
+                  </tr>
+                  {%endif%}
+
+                
+                  {%if tokenbill%}
+                  <tr class="item">
+                      <td>
+                          Electricity bill(tokens)
+                      </td>
+                      
+                      <td>
+                        Kshs. {{tokenbill}}0
+                      </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if waterbill%}
+                  <tr class="item">
+                    <td>
+                        Water bill (Nrb Water)
+                    </td>
+                    
+                    <td>
+                      Kshs. {{waterbill}}0
+                    </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if salaries%}
+                  <tr class="item">
+                    <td>
+                        Caretaker / Security Salaries
+                    </td>
+                    
+                    <td>
+                      Kshs. {{salaries}}0
+                    </td>
+                  </tr>
+                  {%endif%}
+    
+                  {%if electricityservice%}
+                  <tr class="item">
+                      <td>
+                          Electrician service & maintenance {{electricity_str_store}}
+                      </td>
+                      
+                      <td>
+                        Kshs. {{electricityservice}}0
+                      </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if plumbingservice%}
+                  <tr class="item">
+                    <td>
+                        Plumbing service & maintenance {{plumbing_str_store}}
+                    </td>
+                    
+                    <td>
+                      Kshs. {{plumbingservice}}0
+                    </td>
+                  </tr>
+                  {%endif%}
+
+                  {%if paint%}
+                  <tr class="item">
+                    <td>
+                        Paint & labour {{paint_str_store}}
+                    </td>
+                    
+                    <td>
+                      Kshs. {{paint}}0
+                    </td>
+                  </tr>
+                  {%endif%}
+    
+                  {%for bill in bills%}
+                  <tr class="item">
+                    <td>
+                        {{bill['name']}} {{bill['targethouse']}}
+                    </td>
+                    
+                    <td>
+                      Kshs. {{bill['amount']}}0
+                    </td>
+                  </tr>
+                  {% endfor %}
+                
+                  <tr class="item total last">
+                      <td style="font-weight: 900;">
+                        Total: 
+                      </td>
+                      
+                      <td style="font-weight: 900;">
+                        Kshs. {{debittotal}}
+                      </td>
+                  </tr>
+
+                  <tr class="headin hide">
+                    <td>
+                        Spacing
+                    </td>
+                    
+                  </tr>
+
+                  <tr class="heading">
+                    <td>
+                      Net Amount due
+                    </td>
+                    
+                    <td>
+                      
+                    </td>
+                  </tr>
+
+                  <tr class="total">
+                    <td>
+                      Net total:
+                    </td>
+                    
+                    <td style="font-size: 20px;">
+                      Kshs. {{netamount}}
+                    </td>
+                  </tr>
+                </table>
+                <br>
+
+                <div class="grid-container text-signage">
+                  <div class="grid-item">
+                    <div class="divjust-end">
+                      <div>Cheque No.</div>
+                      <div>...............................................</div>
+                    </div>
+                  </div>
+                  <div class="grid-item hide">hide</div>
+  
+                </div>
+                <div class="grid-container text-signage">
+                  <div class="grid-item">
+                    <div class="divjust-end">
+                      <div>Date</div>
+                      <div>...............................................</div>
+                    </div>
+                  </div>
+                  <div class="grid-item hide">hide</div>
+ 
+                </div>
+                <div class="grid-container text-signage">
+                  <div class="grid-item">
+                    <div class="divjust-end">
+                      <div>Property Manager</div>
+                      <div>...............................................</div>
+                    </div>
+                  </div>
+                  <div class="grid-item hide">hide</div>
+  
+                </div>
+                <div class="grid-container text-signage">
+                  <div class="grid-item">
+                    <div class="divjust-end">
+                      <div>Prepared by</div>
+                      <div>...............................................</div>
+                    </div>
+                  </div>
+                  <div class="grid-item hide">hide</div>
+
+                </div>
+
+
+            </div>
+            {%endif%}
+
+
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="shadow">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body no-padding">
+
+
+          {%if prop%}
+          <div class="invoice-box">
+
+            <div class="underline center-btn">
+              <img class="" src="{{letterhead}}" alt="--no image--"/>
+            </div>
+            
+            <table cellpadding="0" cellspacing="0">
+                
+                <tr class="information">
+                 
+                    <td colspan="2">
+                      <div class="center-btn">
+                        <h6 class="font-weight-bold">{{prop}} <span style="font-style: oblique;" class="text-primary">{{timeline}} </span>Statement</h6>
+                      </div>
+                    </td>
+                </tr>
+                
+                <tr class="headin font-weight-bold text-primary">
+                    <td>
+                        Revenue
+                    </td>
+                    
+                </tr>
+              
+                <tr class="heading small">
+                    <td>
+                        Service
+                    </td>
+                    
+                    <td>
+                        Amount
+                    </td>
+                </tr>
+                
+                <tr class="item">
+                    <td>
+                        Rent Amount due
+                    </td>
+                    
+                    <td>
+                        Kshs. {{renttotal}}0
+                    </td>
+                </tr>
+
+                {%if watertotal%}
+                <tr class="item">
+                    <td>
+                        Water Amount due
+                    </td>
+                    
+                    <td>
+                      Kshs. {{watertotal}}0
+                    </td>
+                </tr>
+                {%endif%}
+
+                {%if electricitytotal%}
+                <tr class="item">
+                  <td>
+                      Electricity Amount due
+                  </td>
+                  
+                  <td>
+                    Kshs. {{electricitytotal}}0
+                  </td>
+                </tr>
+                {%endif%}
+
+
+                {%if depositcredit%}
+                <tr class="item">
+                  <td>
+                      Deposit Due
+                  </td>
+                  
+                  <td>
+                    Kshs. {{depositcredit}}0
+                  </td>
+              </tr>
+              {%endif%}
+    
+                <tr class="total">
+                    <td style="font-weight: 900;">
+                      Total:
+                    </td>
+                    
+                    <td style="font-weight: 900;">
+                      Kshs. {{credittotal}}0
+                    </td>
+                </tr>
+
+                <tr class="headin font-weight-bold text-danger">
+                  <td>
+                      Expenses
+                  </td>
+                  
+                </tr>
+              
+                <tr class="heading small">
+                    <td>
+                        Service
+                    </td>
+                    
+                    <td>
+                        Amount
+                    </td>
+                </tr>
+                {%if managementfee%}
+                <tr class="item">
+                    <td>
+                        Management fee / Commission {{commission_percentage}}
+                    </td>
+                    
+                    <td>
+                       Kshs. {{managementfee}}0
+                    </td>
+                </tr>
+                {%endif%}
+
+
+                {%if depositrefund%}
+                <tr class="item">
+                  <td>
+                      Deposit refund {{depositrefund_str_store}}
+                  </td>
+                  
+                  <td>
+                    Kshs. {{depositrefund}}0
+                  </td>
+              </tr>
+              {%endif%}
+
+
+
+              {%if tokenbill%}
+            
+              <tr class="item">
+                  <td>
+                      Electricity bill(tokens)
+                  </td>
+                  
+                  <td>
+                    Kshs. {{tokenbill}}0
+                  </td>
+              </tr>
+              {%endif%}
+
+              {%if waterbill%}
+              <tr class="item">
+                <td>
+                    Water bill (Nrb Water)
+                </td>
+                
+                <td>
+                  Kshs. {{waterbill}}0
+                </td>
+              </tr>
+              {%endif%}
+
+              {%if salaries%}
+
+              <tr class="item">
+                <td>
+                    Caretaker / Security Salaries
+                </td>
+                
+                <td>
+                  Kshs. {{salaries}}0
+                </td>
+              </tr>
+              {%endif%}
+
+              {%if electricityservice%}
+              <tr class="item">
+                  <td>
+                      Electrician service & maintenance {{electricity_str_store}}
+                  </td>
+                  
+                  <td>
+                    Kshs. {{electricityservice}}0
+                  </td>
+              </tr>
+              {%endif%}
+
+              {%if plumbingservice%}
+
+              <tr class="item">
+                <td>
+                    Plumbing service & maintenance {{plumbing_str_store}}
+                </td>
+                
+                <td>
+                  Kshs. {{plumbingservice}}0
+                </td>
+              </tr>
+              {%endif%}
+
+              {%if paint%}
+              <tr class="item">
+                <td>
+                    Paint & labour {{paint_str_store}}
+                </td>
+                
+                <td>
+                  Kshs. {{paint}}0
+                </td>
+              </tr>
+              {%endif%}
+  
+                {%for bill in bills%}
+                <tr class="item">
+                  <td>
+                      {{bill['name']}} {{bill['targethouse']}}
+                  </td>
+                  
+                  <td>
+                    Kshs. {{bill['amount']}}0
+                  </td>
+                </tr>
+                {% endfor %}
+              
+                <tr class="item total last">
+                    <td style="font-weight: 900;">
+                      Total: 
+                    </td>
+                    
+                    <td style="font-weight: 900;">
+                      Kshs. {{debittotal}}
+                    </td>
+                </tr>
+
+                <tr class="heading">
+                  <td>
+                    Net Amount due
+                  </td>
+                  
+                  <td>
+                    
+                  </td>
+                </tr>
+
+                <tr class="total">
+                  <td>
+                    Net total:
+                  </td>
+                  
+                  <td style="font-size: 18px;">
+                    Kshs. {{netamount}}
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Cheque No.</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Date</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Property Manager</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Prepared by</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+
+
+          </div>
+          {%endif%}
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

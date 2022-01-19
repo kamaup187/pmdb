@@ -1,0 +1,180 @@
+<div class="card shadow mb-4">
+  <!-- Card Header - Accordion -->
+  <div class="d-block card-header topbar-bg py-2">
+    <div class="m-0 font-weight-bold text-white divjust-end">
+      <div class="smallify">
+        <div><span>{{tenant}} report</span></div>
+        <div>
+          <span class="">Balance</span>
+          <span class="text-info"> Kes.{{balance}}</span>
+        </div>
+      </div>
+      <div> 
+        <!-- <div><span id="close-to" class="bg-gradient-dange borderles text-success">Download</span></div> -->
+        <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal2"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download</button>
+      </div>
+      <div>
+        <div><span id="close-top"  class="bg-gradient-dange borderles text-white">Close</span></div>
+        
+      </div>      
+    </div>
+  </div>
+  <!-- Card Content - Collapse -->
+  <div class="collapse show" id="collapseCardExample2">
+    <div class="card-body">
+      <div class="table-responsive">
+        {% if bills %}
+        <table class="table bg-white text-info" id="tenant-data" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Hse</th>
+                  <th>Rent</th>
+                  <th>Water</th>
+                  <th>Garb</th>
+                  <th>Elec</th>
+                  <th>Sec</th>
+                  <th>Misc</th>
+                  <th>Arrs</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Bal</th>
+                  <!-- <th>B.By</th> -->
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td>{{ bill['month'] }}</td>
+                  <td>{{ bill['house'] }}</td>
+                  <td>{{ bill['rent'] }}</td>
+                  <td>{{ bill['water'] }}</td>
+                  <td>{{ bill['garbage'] }}</td>
+                  <td>{{ bill['electricity'] }}</td>
+                  <td>{{ bill['security'] }}</td>
+                  <td>{{ bill['other'] }}</td>
+                  <td>{{ bill['arrears'] }}</td>
+                  <td>{{ bill['total'] }}</td>
+                  <td>{{ bill['paid'] }}</td>
+                  <td>{{ bill['balance'] }}</td>
+                  <!-- <td>{{ bill['billedby'] }}</td> -->
+                </tr>
+              {% endfor %}
+              </tbody>
+
+            </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="tenant-data-download" class="card shadow dispnone">
+  <!-- Card Header - Accordion -->
+  <div class="d-block card-header topbar-bg py-2">
+    <div class="m-0 font-weight-bold text-white divjust-end">
+      <div class="smallify">
+        <div><span>{{tenant}} report</span></div>
+        <div>
+          <span class="">Balance</span>
+          <span class="text-info"> Kes.{{balance}}</span>
+        </div>
+      </div>     
+    </div>
+  </div>
+  <!-- Card Content - Collapse -->
+  <div class="collapse show" id="collapseCardExample2">
+    <div class="card-body">
+      <div class="table-responsive">
+        {% if bills %}
+        <table class="table bg-white text-info" id="data-table2" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Hse</th>
+                  <th>Rent</th>
+                  <th>Water</th>
+                  <th>Garb</th>
+                  <th>Elec</th>
+                  <th>Sec</th>
+                  <th>Misc</th>
+                  <th>Arrs</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Bal</th>
+                  <!-- <th>B.By</th> -->
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td>{{ bill['month'] }}</td>
+                  <td>{{ bill['house'] }}</td>
+                  <td>{{ bill['rent'] }}</td>
+                  <td>{{ bill['water'] }}</td>
+                  <td>{{ bill['garbage'] }}</td>
+                  <td>{{ bill['electricity'] }}</td>
+                  <td>{{ bill['security'] }}</td>
+                  <td>{{ bill['other'] }}</td>
+                  <td>{{ bill['arrears'] }}</td>
+                  <td>{{ bill['total'] }}</td>
+                  <td>{{ bill['paid'] }}</td>
+                  <td>{{ bill['balance'] }}</td>
+                  <!-- <td>{{ bill['billedby'] }}</td> -->
+                </tr>
+              {% endfor %}
+              </tbody>
+
+            </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script> -->
+
+<!-- Core plugin JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script> -->
+
+<!-- Custom scripts for all pages-->
+<!-- <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script> -->
+
+  <!-- Page level plugins -->
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='datatables.min.js') }}"></script> -->
+  
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenant-data').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 3,
+      "searching":false,
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+  $("#close-top").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#report").removeClass("dispnone")
+
+  });
+</script>
+<script>
+  $("#close-bottom").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#report").removeClass("dispnone")
+
+  });
+</script>

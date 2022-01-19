@@ -1,0 +1,45 @@
+<div class="center-btn h5 font-weight-bold text-white mb-1">Mpesa payment successful</div>
+<div class="card-body text-white">
+  <div>
+    <span >Receipt No. <span class="text-gray-300">{{receiptno}}</span></span>
+  </div>
+  <hr>
+  <div>
+    <span >Tenant : {{tenant}}</span>
+  </div>
+  <div>
+    <span >House : {{house}}</span>
+  </div>
+  <hr>
+  <div>
+    <span>Mpesa Ref: <span class="text-gray-200">{{ref}}</span></span>
+  </div>
+  <div>
+    <span >Total bill : Kshs {{bill}}</span>
+  </div>
+  <div>
+    <span class="mr-3">Paid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Kshs {{amount}}</span>
+  </div>
+  <div>
+    <span>Balance: Kshs {{balance}}</span>
+  </div>
+  <div>
+    <span >Paid for: {{chargetype}}</span><br>
+  </div>
+  <hr>
+  <div class="divbg center-btn">
+    <button id="close" type="button" class="bg-gradient-success borderless text-primary"><a class="text-white" href="{{ url_for('api.index') }}">Close</a></button>
+  </div>
+  
+
+</div>
+<!-- <script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script> -->

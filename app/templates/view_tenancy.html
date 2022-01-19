@@ -1,0 +1,128 @@
+
+{% extends 'reportbase.html' %}
+{% block content %}
+
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding">
+        <div class="formwrapper">
+            <div class="card shadow">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end topbar-bg">
+                <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-white small card-header-form">
+                    <span class="mr-4">Resident tenants report: ({{apartment_name}}) </span>
+                    <span><i class="fas fa-angle-down"></i></span>
+                  </div>
+                </a>
+                <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="collapse" id="collapseCardExample">
+                <div class="card-body">
+                    <form method="POST" action="/view/tenancy">
+                        <div class="input is-small">
+                            <select name="selected_apartment" class="form-control" id ="selected_apartment" required>
+                            <option disabled selected value> -- Select apartment -- </option>
+                            {% for o in apartment_list %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                            </select>
+                        </div><br>
+                        <button class="btn btn-block btn-primary btn-user">View</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+                                   
+    <div class="col-lg-12 no-padding">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div  class="d-block card-header topbar-bg card-header-report">
+          <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-gray-200">
+            <div>
+              <div><i class="fas fa-fw fa-calendar-check"></i>Resident Tenants</div>
+            </div> 
+
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1 mt-1 mb-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download</button>
+
+          </div>
+        </div>
+        {%if bills%}
+        <div class="toggleswitch">
+          <span>
+            <span class="small">Payment data</span>
+            <label class="switch mr-5">
+              <input id="reporttoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+        
+          <span>
+            <span class="small">Tenant info</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+        </div>
+        {%endif%}
+        <!-- Card Content - Collapse -->
+        <div class="collapse show" id="collapseCardExample2">
+          <div class="card-body">
+            <div id="detailedreport" class="dispnone"></div>
+            <div class="table-responsive">
+              {% if bills %}
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Id</th>
+                        <th>Phone</th>
+                        <th>House</th>
+                        <th class="text-sl">Check In</th>
+                        <th class="font-weight-bold">Balance</th>
+                        <th class="text-sl">Checked by</th>
+                      </tr>
+                    </thead>
+                    {% for bill in bills%}
+                        <td class="text-s no-wrap">{{ bill['fullname'] }}</td>
+                        <td class="text-s"><a id ="{{bill['idno']}}" href="#">View bill/info/payments</a></td>
+                        <td class="text-s">{{ bill['tel'] }}</td>
+                        <td class="text-s">{{ bill['housenum'] }}</td>
+                        <td class="text-s">{{ bill['checkin'] }}</td>
+                        <td class="text-s font-weight-bold">{{ bill['balance'] }}</td>
+                        <td class="text-s">{{ bill['regby'] }}</td>
+                      </tr>
+                    {% endfor %}
+                  </table>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

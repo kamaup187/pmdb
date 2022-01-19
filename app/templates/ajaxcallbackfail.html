@@ -1,0 +1,39 @@
+<div class="center-btn h5 font-weight-bold text-gray-900 mb-2">Payment request status</div>
+<div class="card-body text-white">
+  <span class="small">
+    Fetching payment. Please wait...(6s)
+  </span>
+
+
+  <div class="divbg center-btn">
+    <button id="refresh" type="button" class="bg-gradient-success borderless text-white">Refresh</button>
+  </div>
+  
+
+</div>
+
+
+<script>
+
+  $(document).ready(function(){
+    $("#refresh").click();
+  });
+
+  $("#refresh").on('click',function(){
+    $('#refresh').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Querying...');
+    setTimeout(function(){
+      $('#refresh').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Waiting...');
+      $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.querympesatrans') }}",
+            data: {
+                nodata:"nodata"
+            },
+            success: function(response) {
+                $("#payment-form-response").html(response);
+            }
+      });
+    },6000);
+
+  });
+</script>

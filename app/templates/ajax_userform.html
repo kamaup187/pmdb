@@ -1,0 +1,196 @@
+    <!-- Main page content-->
+    <div class="container-xl px-4 mt-4">
+        <div class="row">
+            <div class="col-xl-4">
+                <!-- Profile picture card-->
+                <div class="card mb-4 mb-xl-0">
+                    <div class="card-header">Profile Picture</div>
+                    <div class="card-body text-center">
+                        <!-- Profile picture image-->
+                        <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
+                        <i class="img-account-profile rounded-circle mb-2 fa-2x fas fa-user-alt"></i>
+
+                        <!-- Profile picture help block-->
+                        <div class="small font-italic text-muted mb-4">JPG or PNG</div>
+                        <!-- Profile picture upload button-->
+                        <button class="btn btn-primary" type="button" disabled>Upload new image</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header">Account Details</div>
+                    <div class="card-body">
+                        <form autocomplete="off">
+                            <!-- Form Row-->
+                            <div class="gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <label class="small mb-1" for="inputName">Full name</label>
+                                <input class="form-control" id="inputName" type="text" placeholder="Enter your full name" value="{{user.name}}" />
+                                
+                            </div>
+                            <div class="row gx-3 mb-3">
+                              <!-- Form Group (first name)-->
+                              <div class="col-md-6">
+                                  <label class="small mb-1" for="inputID">ID</label>
+                                  <input class="form-control" id="inputID" type="text" placeholder="Enter your ID" value="{{user.national_id}}" />
+                              </div>
+                              <!-- Form Group (last name)-->
+                              <div class="col-md-6">
+                                  <label class="small mb-1" for="inputEmail">Email</label>
+                                  <input class="form-control" id="inputEmail" type="text" placeholder="Enter your Email" value="{{user.email}}" />
+                              </div>
+                          </div>
+                          <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="pass1">Reset password</label>
+                                <span toggle="#pass1" class="fa fa-fw fa-eye small ml-3 toggle-password"></span>
+                        
+                                <input class="form-control" id="pass1" type="password" placeholder="****" value=""/>
+                            </div>
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="pass2">Re-type</label>
+                                <span toggle="#pass2" class="fa fa-fw fa-eye small ml-2 mr-2 toggle-password"></span>
+                                <span class="text-success small passmatch"></span>
+
+
+                                <input class="form-control" id="pass2" type="password" placeholder="****" value=""/>
+                            </div>
+                        </div>
+                        
+                        
+                            <!-- Form Group (Roles)-->
+                            <div class="mb-3 form-group">
+                                <label class="small mb-1">Group</label>
+                                <select class="form-control" aria-label="Default select example">
+                                    <option selected disabled>Select a role:</option>
+                                    <!-- <option disabled selected value> -- none selected -- </option> -->
+                                    {% for o in groups %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- Submit button-->
+                            <div class="text-center">
+                                <button id="saveprofile" class="btn btn-primary" type="button">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<script>
+    $(".toggle-password").click(function() {
+  
+        $(this).toggleClass("fa-eye fa-eye-slash");
+        var input = $($(this).attr("toggle"));
+        if (input.attr("type") == "password") {
+        input.attr("type", "text");
+        } else {
+        input.attr("type", "password");
+        }
+    });
+  
+  
+    let resetpass1 = document.querySelector('#pass1');
+    let resetpass2 = document.querySelector('#pass2');
+  
+    function someFun () {
+        resetpass1.value = '';
+        resetpass2.value = '';
+    }
+    someFun()
+  </script>
+
+  <script>
+
+    $("#pass1").keyup(function(){
+        let pass2 = document.querySelector('#pass2');
+
+        if (pass2.value === ""){} else{
+            if($(this).val() === pass2.value){
+            $(".passmatch").text("passwords match")
+            $(".passmatch").addClass("text-success")
+            $(".passmatch").removeClass("text-danger")
+
+            }else{
+                $(".passmatch").text("passwords no match")
+                $(".passmatch").addClass("text-danger")
+                $(".passmatch").removeClass("text-success")
+
+            }
+        }
+
+
+    })
+
+    $("#pass2").keyup(function(){
+        let pass1 = document.querySelector('#pass1');
+
+        if($(this).val() === pass1.value){
+            $(".passmatch").text("passwords match")
+            $(".passmatch").addClass("text-success")
+            $(".passmatch").removeClass("text-danger")
+
+        }else{
+            $(".passmatch").text("passwords no match")
+            $(".passmatch").addClass("text-danger")
+            $(".passmatch").removeClass("text-success")
+
+        }
+    })
+  </script>
+
+<script>
+    $("#saveprofile").click(function(){  
+      $("#saveprofile").html("updating...")  
+        $.ajax({
+          url: "{{ url_for('api.updateuser') }}",
+          type: "POST",
+          data: {
+            userid:$("#edit_user_identifier").text(),
+            pass1: $("#pass1").val(),
+            pass2: $("#pass2").val(),
+
+
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            $("#saveprofile").html("Updated")
+
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              
+              $(".reset").click();
+              // $('#saveprofile').attr('disabled', 'disabled');
+            //   $('#closeeditTenantModal').click();
+            //   $('#saveprofile').removeClass('btn-success')
+            //   $('#saveprofile').addClass('btn-secondary')
+              $("#saveprofile").html("save changes")
+            }, 1500);
+            // $.ajax({
+            //       url: "{{ url_for('api.fetchtenants') }}",
+            //       type: "get",
+            //       data: {
+            //         propid:  $("#prop_identifier").text(),
+            //         target:$("#current-reloader").text()
+            //       },
+            //       success: function(response) {
+                    
+            //         $("#result-view").html(response);
+            //       }
+            //     });
+          }
+        });
+    });
+  </script>

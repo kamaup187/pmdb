@@ -1,0 +1,459 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+    <div class="row">
+
+        <div id="header-strip" class="col-lg-12 no-padding">
+            <div class="card-header py-2 card-bg divjust-end" >
+                <h6 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-clipboard-check mr-3"></i></span>Expenses</h6>
+                <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 offset-lg no-padding desktop-malaysian">
+          <div class="center-btn expense-buttons divjust-end-sm">
+              <button id="submi" type="button" class="bg-gradient-success has-margin expense-btn expense-text borderless text-white" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus"></i>Add expense request</button>
+              <button id="submi" type="button" class="bg-gradient-info has-margin expense-btn expense-text borderless text-white" data-toggle="modal" data-target="#expenseModal"><i class="fas fa-fw fa-plus"></i>Add actual expense</button>
+          </div>
+        </div>
+
+        <div class="col-lg-9 offset-lg no-padding">
+            <div id="proplist" class="">
+                <div class="formwrapper">
+                    <div class="card shadow common-bg-">
+                        <div class="card-body myforms no-padding-sm">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% for category, message in messages %}
+                                <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                    <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                            {% endwith %}
+                        
+                            <span class="hide">hide</span>
+                            <form method="POST" action="/property/access">
+
+                                <div class="form-group divjust-end-lg">
+
+                                    <div class="">
+                                      <select name="property" class="select-css" id ="select_prop" required>
+                                          <option disabled selected value> -- Select Property -- </option>
+                                          {% for o in props %}
+                                          <option value="{{ o }}">{{ o }}</option>
+                                          {% endfor %}
+                                      </select>
+                                    </div>
+
+                                    <div class="">
+                                      <input id="search_date" name="date" type="date" class="form-control select-css">
+                                    </div>
+
+                                    <div class="">
+                                      <select class="select-css" id ="search_status">
+                                        <option disabled selected value> Search by status </option>
+                                        
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                        <option value="completed">Completed</option>
+                                        
+                                      </select>
+                                    </div>
+                                    <div class="center-btn divjust-end-sm">
+                                      <button type="reset" class="bg-gradient-danger borderless expense-form-btn has-margin small text-white">Clear</button>
+                                      <button id="submit" type="button" class="bg-gradient-success borderless expense-form-btn has-margin text-white">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 offset-lg no-padding mobile-malaysian">
+            <div class="center-btn expense-buttons divjust-end-sm">
+                <button id="submi" type="button" class="bg-gradient-success has-margin expense-btn expense-text borderless text-white" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus"></i>Add expense request</button>
+                <button id="submi" type="button" class="bg-gradient-info has-margin expense-btn expense-text borderless text-white" data-toggle="modal" data-target="#expenseModal"><i class="fas fa-fw fa-plus"></i>Add actual expense</button>
+            </div>
+        </div>
+
+        <!-- <div class="col-lg-12 offset-lg- no-padding">
+            <div id="propdisp" class=""></div>
+        </div> -->
+    </div>
+    <div class="row">
+
+        <div class="col-lg-12 no-padding">
+            <div id="reqdata" class="table-responsive">
+                <table id="expenseData" class="table shadow no-margin-bottom " width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="text-info font-weight-bold">Item</th>
+                        <th class="text-info track-title-cell">Invoice No.</th>
+                        <th class="text-info track-title-cell">Request date</th>
+                        <th class="text-info track-title-cell">Apartment</th>
+                        <th class="text-info track-title-cell">Amount</th>
+                        <th class="text-info track-title-cell mobile-malaysia">Status</th>
+                        <th class="text-info track-title-cell mobile-malaysia">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill in bills%}
+                      <tr>
+                        <td class="track-data-cell">{{ bill['name'] }}</td>
+                        <td class="track-data-cell">{{ bill['invoice'] }}</td>
+                        <td class="track-data-cell">{{ bill['date'] }}</td>
+                        <td class="track-data-cell">{{ bill['apartment'] }}</td>
+                        <td class="track-data-cell">{{ bill['amount'] }}</td>
+                        <td class="track-data-cell mobile-malaysia">{{ bill['status'] }}</td>
+                        <td class="track-data-cell">
+                          <button id="{{bill['id']}}" type="button" class="borderless btn-secondary modalTrigger" data-toggle="modal" data-target="#approveModal">Respond</button>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                       
+                    </table>
+            </div>
+        </div>
+</div>
+
+<div class="text-center">
+
+  <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Expense request approval</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <div class="form-group">
+                    <select class="select-css" id ="selected_action">
+                      <option disabled selected value> Select action </option>
+                      
+                      <option value="approved">Approve</option>
+                      <option value="rejected">Reject</option>
+                      
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="desc" name="desc" class="form-control" placeholder="Description">
+                  </div>
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-foote divbg">
+          <button id="submitmodalThree" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button>
+          <button type="button" id="closemodalThree" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+
+    <div class="modal fade" id="expenseRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New expense request & Estimate</h5>
+          </div>
+          <div class="modal-body">
+            <div class="media mb-2">
+              <div class="media-body">
+  
+                <div class="position-relative">
+                  <form class="divb" action="" method="POST">
+  
+                    <div class="form-group">
+                      <select name="property" class="select-css" id ="select_property" required>
+                          <option disabled selected value> -- Select Property -- </option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+
+
+                    <div class="form-group">
+                      <select class="select-css" id ="expense_type" required>
+                        <option disabled selected value> Expense type </option>
+                        
+                        <option value="token">Electricity bill(tokens)</option>
+                        <option value="water_bill">Water bill</option>
+                        <option value="electricity_service">Electricity service & Maintenance</option>
+                        <option value="plumbing_service">Plumbing service & Maintenance</option>
+                        <option value="security">Security fee</option>
+                        <option value="other">Other</option>
+                        
+                      </select>
+                    </div>
+  
+                    <div class="form-group">
+                      <input id="name" class="form-control" placeholder="Item name?" required>
+                    </div>
+
+                    <div class="form-group">
+                      <input id="costestimate" class="form-control" placeholder="Cost estimate? (optional)">
+                    </div>
+  
+                    <div class="form-group">
+                      <textarea id="desc" name="desc" class="form-control" placeholder="Description (optional)"></textarea>
+                    </div>
+                    <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                    <!-- <div class="divbg center-btn">
+                      <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                  </div> -->
+                  </form>
+  
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-foote divbg">
+            <button id="submitmodalOne" type="button" class="btn btn-secondary borderless text-white btn-sm has-margin-bottom" disabled>Submit</button>
+            <button type="button" id="closemodalOne" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="text-center">
+  <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Actual Expense & Update</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <div class="form-group">
+                    <select class="select-css" id ="select_expense">
+                      <option disabled selected value> Select expense item </option>
+                      {% for o in approved_exps %}
+                      <option value="{{ o }}">{{ o }}</option>
+                      {% endfor %}
+                      
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="actualcost" class="form-control" placeholder="Actual cost(required)">
+                  </div>
+
+                  <div class="form-group">
+                    <input id="invoice" class="form-control" placeholder="Invoice/Ref(optional)">
+                  </div>
+
+                  <div class="form-group">
+                    <textarea id="desc" name="desc" class="form-control" placeholder="Expense description(optional)"></textarea>
+                  </div>
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-foote divbg">
+          <button id="submitmodalTwo" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button>
+          <button type="button" id="closemodalTwo" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(30000,"swing");
+    }, 10000);
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#expenseData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 3,
+      "searching":false,
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+  var requestIdData = {{ expenseids|tojson }};
+  
+  $.each(requestIdData, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log(item);
+      localStorage.setItem('expensevar',item);
+     
+    });
+  });
+</script>
+
+<script>
+
+  $('#name').keyup(function() {
+      var empty = false;
+      
+          if ($('#name').val() == "") {
+              empty = true;
+          }
+   
+      if (empty) {
+          $('#submitmodalOne').attr('disabled', 'disabled');
+      } else {
+        $('#submitmodalOne').removeAttr('disabled');
+        $('#submitmodalOne').removeClass('btn-secondary')
+        $('#submitmodalOne').addClass('btn-success')
+      }
+  });
+
+</script>
+
+<script>
+  $("#submitmodalOne").on('click',function(){
+    $("#closemodalOne").click();
+      setTimeout(function(){
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              prop:$("#select_property").val(),
+              exp_type:$("#expense_type").val(),
+              name:$("#name").val(),
+              cost:$("#costestimate").val(),
+              desc:$("#desc").val(),
+              run:"expenserequest"
+            },
+            success: function(response) {
+              // $("#detailed-payments").toggleClass('invoice dispnone');
+              // $("#payments-report").toggleClass('row dispnone');
+              
+              $("#reqdata").html(response);
+          }
+      });
+    },300);
+});
+</script>
+
+<script>
+  $("#submitmodalTwo").on('click',function(){
+    $("#closemodalTwo").click();
+    setTimeout(function(){
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              expid:$("#select_expense").val(),
+              cost:$("#actualcost").val(),
+              invoice:$("#invoice").val(),
+              desc:$("#desc").val(),
+              run:"actualexpense"
+            },
+            success: function(response) {
+              // $("#detailed-payments").toggleClass('invoice dispnone');
+              // $("#payments-report").toggleClass('row dispnone');
+              
+              $("#reqdata").html(response);
+          }
+      });
+    },300);
+});
+</script>
+
+<script>
+  $("#submitmodalThree").on('click',function(){
+    $("#closemodalThree").click();
+
+    setTimeout(function(){
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              action:$("#selected_action").val(),
+              desc:$("#desc").val(),
+              expenseid:localStorage.getItem('expensevar'),
+
+              run:"expenseapproval"
+            },
+            success: function(response) {
+              // $("#detailed-payments").toggleClass('invoice dispnone');
+              // $("#payments-report").toggleClass('row dispnone');
+              
+              $("#reqdata").html(response);
+          }
+      });
+    },1000);
+});
+</script>
+
+<script>
+    $("#submit").on('click',function(){
+      $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Searching..');
+  
+        setTimeout(function(){
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.expenses') }}",
+              data: {
+                prop: $("#select_prop").val(),
+                date: $("#search_date").val(),
+                status: $("#search_status").val(),
+                run : "expensedisplay"
+              },
+              success: function(response) {
+                $('#submit').html('Search');
+
+                $("#reqdata").html(response);
+
+              }
+          });
+  
+        },300);
+    
+      });
+
+  </script>
+
+{% endblock %}

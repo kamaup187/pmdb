@@ -1,0 +1,91 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3 no-padding">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 common-bg-2">
+                    <div class="card-header py-1 card-bg divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-fw fa-user-plus mr-3"></i>new property owner</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/add/owner">
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="text" name="fname" placeholder="First name" required autofocus>
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="text" name="lname" placeholder="Last name" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="tel" name="ftel" placeholder="Tel" required>
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="tel" name="ltel" placeholder="Confirm tel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="email" name="email" placeholder="Email (optional)">
+                            </div>
+
+                            <!-- <div class="form-group">
+                                <input class="form-control" type="text" name="national_id" placeholder="National id" required>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="text" name="companyname" placeholder="Company (optional)">
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="address" name="address" placeholder="Address (optional)">
+                                </div>
+                            </div>
+            
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input class="form-control" type="password" name="p1" placeholder="Enter Password" required>
+                                </div>
+                
+                                <div class="col-sm-6">
+                                    <input class="form-control" type="password" name="p2" placeholder="Re-enter password" required>
+                                </div>
+                            </div> -->
+            
+                            <div class="divbg center-btn">
+                                <button type="submit" class="bg-gradient-dark borderless text-success font-weight-bold"><i class="fas fa-check"></i>&nbsp;Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(500,"swing");
+    }, 2000);
+</script>
+
+{% endblock %}

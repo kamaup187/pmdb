@@ -1,0 +1,158 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+<div class="containe">
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding">
+      <div class="formwrapper">
+        <div class="card shadow mb-4 bg-white">
+          <div class="card-header topbar-bg py-2 divjust-end" >
+            <h5 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-clipboard-list mr-2"></i></span>Readings</h5>
+            <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+          </div>
+          <div class="card-body myforms">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                      <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                  </div>
+              {% endfor %}
+            {% endwith %}
+            
+            <span class="hide">hide</span>
+            <form autocomplete="off" method="POST" action="/readings">
+              {{ form.csrf_token }}
+        
+              <div class="form-group">{{ form.apartment(class="form-control")}}</div>
+
+              <div id="apartment"class="form-group bg-gradient-dark center-btn">
+                <span class="text-white"><i class="fas fa-fw fa-info-circle"></i>&nbsp;&nbsp;Apartment: </span><span class="text-success makebig">{{apartment_name}}</span>
+              </div>
+
+              <div class="form-group">{{ form.house(class="form-control")}}</div>
+
+              <div id="place_for_suggestions"></div>
+
+              <div class="form-group">
+                <input id="reading" class="form-control" type="text" name="reading" placeholder=" type reading here" required>
+              </div>
+
+              <div id="units_consumed"></div>
+              <input id="hiddenvar" style="display: none;" type="text" name="apartmentsessionvariable">
+
+              <div class="divbg center-btn">
+                  <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Submit</button>
+                  <!-- <button type="button" class="bg-gradient-dark borderless"><a class="text-info" href="{{ url_for('api.createmeter') }}"><i class="fas fa-clock"></i>&nbsp;Meters</a></button> -->
+                  <button type="button" class="bg-gradient-dark borderless text-warning"onclick="history.back()"><i class="fas fa-arrow-left"></i>&nbsp;Back</button>
+              </div>
+                
+            </form>
+          </div>
+        </div>
+      </div><br>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+<script>
+$("#select_apartment").on('change',function(){
+    var apartmentvar = $("#select_apartment").val();
+    localStorage.setItem('apartmentvar',apartmentvar);
+    var sessionvar = localStorage.getItem('apartmentvar');
+    console.log(sessionvar);
+    document.getElementById('hiddenvar').value = sessionvar;
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.capturereading') }}",
+            cache:false,
+            data: {
+              apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                runhseopt:"somestring"
+            },
+            success: function(response) {
+                $("#select_house").html(response);
+            }
+        });
+});
+</script>
+
+<script>
+  var sessionvar = localStorage.getItem('apartmentvar');
+  console.log(sessionvar);
+  document.getElementById('hiddenvar').value = sessionvar;
+</script>
+
+<script>
+
+  $("#select_apartment").on('change',function(){
+    setTimeout(function(){
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.capturereading') }}",
+              cache:false,
+              data: {
+                apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  runapartnm:"somestring"
+              },
+              success: function(response) {
+                  $("#apartment").html(response);
+              }
+          });
+    },0);
+  
+
+  });
+  </script>
+
+<script>
+  $("#select_house").on('change',function(){
+  
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.capturereading') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  house: $("#select_house").val(),
+                  runprev:"somestring"
+              },
+              success: function(response) {
+                $("#place_for_suggestions").html(response);
+            }
+
+          });
+  });
+  </script>
+
+  <script>
+    $("#reading").keyup(function(){
+    
+        $.ajax({
+          url: "{{ url_for('api.capturereading') }}",
+          type: "POST",
+          data: {
+                  reading: $("#reading").val(),
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  house: $("#select_house").val(),
+                  runreading : "somestring"
+              },
+          success: function(response) {
+            $("#units_consumed").html(response);
+          },
+          error: function(xhr) {
+            //alert(xhr);
+          }
+        });
+    });
+    </script>
+
+{% endblock %}

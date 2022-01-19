@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- <html lang="ar"> for arabic only -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Customer Invoice</title>
+    <style>
+        @media print {
+            @page {
+                margin: 0 auto; /* imprtant to logo margin */
+                sheet-size: 300px 250mm; /* imprtant to set paper size */
+            }
+            html {
+                direction: rtl;
+            }
+            html,body{margin:0;padding:0}
+            #printContainer {
+                width: 250px;
+                margin: auto;
+                /*padding: 10px;*/
+                /*border: 2px dotted #000;*/
+                text-align: justify;
+            }
+
+           .text-center{text-align: center;}
+        }
+    </style>
+</head>
+<body onload="window.print();">
+<h1 id="logo" class="text-center"><img src='<?= base_url() ?>global/site/logo.jpg' alt='Logo'></h1>
+
+<div id='printContainer'>
+    <!-- <h2 id="slogan" style="margin-top:0" class="text-center">Cleaning Company</h2>
+
+    <table>
+        <tr>
+            <td>Invoice Num</td>
+            <td><b>#59867</b></td>
+        </tr>
+        <tr>
+            <td>Created At</td>
+            <td><b><?= date("d-m-Y H:i:s", time()); ?><br></b></td>
+        </tr>
+
+        <tr>
+            <td>Client Name</td>
+            <td><b>John Cena</b></td>
+        </tr>
+    </table>
+    <p class="text-center"><img src="<?= base_url() ?>global/site/qr.png" alt="QR-code" class="left"/></p>
+    <hr>
+
+    <table>
+        <tr>
+            <td><b>Service Type</b></td>
+            <td><b>Price</b></td>
+        </tr>
+        <tr><td colspan="2"><hr></td></tr>
+        <tr>
+            <td><b>Clean Cars</b></td>
+            <td><b>15.7 USD</b></td>
+        </tr>
+        <tr>
+            <td> eco badge for waterless car washThe service at Detailing Knights is not only unmatched, it is also mobile, waterless and environmentally friendly. </td>
+            <td></td>
+        </tr>
+    </table>
+    <hr>
+
+    <table>
+        <tr>
+            <td><b>Service Fee</b></td>
+            <td><b>15.7 USD</b></td>
+        </tr>
+        <tr>
+            <td><b>Discount</b></td>
+            <td><b>1.7 USD</b></td>
+        </tr>
+        <tr>
+            <td><b>Net Value</b></td>
+            <td><b>14 USD</b></td>
+        </tr>
+    </table>
+    <hr> -->
+    <div id="invoice" class="row receipt-margin mt-2">
+        <div class="col-md-1"></div>
+        <div class="col-md-12 border-data">
+            <div class="row receipt-data">
+                <div class="col-md-7 receipt-dat divjust-end text-primary">
+                    <span><img src={{logopath}} alt="logo"></span>
+                    <span>{{company}}</span>
+                    <!-- <span>wewe</span> -->
+                </div>
+                <div class="col-md-5 text-right">
+                    <div class="mobile-malaysian">
+                        <div class="small">Street Address : {{company.street_address}}</div>
+                        <div class="small">PO BOX : {{company.mail_box}}</div>
+                        <div class="small">Tel : {{company.phone}}</div>
+                        <div class="small">Email: {{company.email}}</div>
+                      </div>
+                      <div class="desktop-malaysian text-sll mb-3">
+                        <div class="small">Street Address : {{company.street_address}}</div>
+                        <div class="small">PO BOX : {{company.mail_box}}</div>
+                        <div class="small">Tel : {{company.phone}}</div>
+                        <div class="small">Email: {{company.email}}</div>
+                      </div>
+                </div>
+            </div>
+            <div class="center-btn underline text-info mb-1">
+                RECEIPT FOR PAYMENT
+            </div>
+            <div class="divjust-end">
+                <span>Received from: <span class="ml-2">{{tenant}}</span></span>
+                <div class="text-right">
+                    <div class="text-receipt border-data">
+                        <span class="mr-2"><strong>Receipt No: </strong>{{receiptno}}</span>
+                        <span class="pr-3">Date: <strong>{{paydate}}</strong></span>
+                    </div>
+                    <!-- <div class="text-receipt">
+                        <span class="mr-2">Tenant: <strong>{{tenant}}</strong></span>
+                        <span>Hse:<strong>{{house}}</strong></span>
+                    </div> -->
+                    <!-- <div class="text-receipt">
+                        <span class="font-weight-bold">{{prop}}</span>
+                    </div> -->
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-left small smallify">
+                    <span>Reference:</span>
+                    <span class="text-dark">{{refnum}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 well invoice-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th class="dispnone">Ref</th>
+                        <th class="dispnone">Billed</th>
+                        <th class="dispnone">Paid</th>
+                    </tr>
+                    </thead>
+    
+                    <tbody class="smallify">
+                        <tr>
+                            <td class="text-left squeeze">Received amount</td>
+                            <td class="squeeze small text-gray-900"><strong>(In words) {{str_amount}} shillings only.</strong></td>
+                            <td class="squeeze small text-gray-900"><strong>(In figures) KES {{amount}}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="squeeze">Invoiced Amount</td>
+                            <td class="squeeze" colspan="2">KES {{bill}}</td>
+                        </tr>
+                        <tr>
+                            <td class="squeeze">Paid</td>
+                            <td class="squeeze text-gray-900">KES {{amount}}</td>
+                            <td class="squeeze small">Balance KES {{balance}}</td>
+                        </tr>
+                        <!-- <tr>
+                            <td class="small">Received amount</td>
+                            <td colspan="2"><strong>KES {{amount}}</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="small">Balance</td>
+                            <td colspan="2">KES {{balance}}</td>
+                        </tr> -->
+    
+                        <tr>
+                            <td class="squeeze">Apartment</td>
+                            <td class="squeeze">{{prop}}</td>
+                            <td class="squeeze">House unit: {{house}}</td>
+                        </tr>
+                        <tr class="center-btn">
+                            <!-- <td class="small"></td> -->
+                            <td class="squeeze" colspan="3">Payment for the month of: <strong>{{str_month}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <div class="center-btn small">
+                <span class="text-gray-600 mr-5">With Thanks</span>
+                <span class="text-gray-500">Received by: {{user}}</span>
+            </div>
+            <div class="row">
+                
+                <div class="col-md-11 text-left mt-2 mb-2 text-ss text-gray-900">
+                    <span>Generated on: <span id="pdfgenTime"></span> </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

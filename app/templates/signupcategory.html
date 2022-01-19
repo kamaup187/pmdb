@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-180359985-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-180359985-1');
+	</script>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>KiotaPay | SignUp</title>
+
+  <!-- Custom fonts for this template-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/kiotafavi.png"/> -->
+  	<!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+	<link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+  
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='mystyle.css') }}"> -->
+  
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/bootstrap.css') }}"> -->
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/style.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/signupcss.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+  <style type="text/css">
+    #account_information,
+    #company_information{
+        display:none;
+    }
+</style>
+
+</head>
+
+<body>
+  	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+  </div>
+  	<!--================Header Menu Area =================-->
+	<header class="header_area">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<div class="container navbar-mobile-bg">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h mobile-malaysian" href="{{ url_for('api.landingpage') }}"><img src="../static/img/nkiota.png" alt=""></a>
+					<a class="navbar-brand logo_h desktop-malaysian" href="{{ url_for('api.landingpage') }}"><img src="../static/img/nkiotamobil.png" alt=""></a>
+					<button class="navbar-toggler my-toggler-color " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav menu_nav justify-content-center desktop-malaysian">
+							<li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.landingpage') }}">Home</a></li>
+							<li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.aboutus') }}">About Us</a></li>
+              <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.features') }}">Features</a></li>
+              <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.pricing') }}">Pricing</a></li>
+							<!-- <li class="nav-item submenu dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+								 aria-expanded="false">Pages</a>
+								<ul class="dropdown-menu">
+									<li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>
+								</ul>
+							</li> -->
+							<!-- <li class="nav-item submenu dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+								 aria-expanded="false">Blog</a>
+								<ul class="dropdown-menu">
+									<li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+									<li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
+								</ul>
+							</li> -->
+                            <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.contactus') }}">Contact</a></li>
+
+						</ul>
+      
+              <div class="divbg">
+                <!-- <ul class="nav navbar-nav navbar-right mr-4 login-topmargin mobile-malaysian">
+                  <li class="nav-item"><a href="{{ url_for('api.userlogin') }}" class="genric-btn info-border radius arrow">Login<span class="lnr lnr-arrow-right"></span></a></li>
+							  </ul> -->
+							<!-- <ul class="nav navbar-nav navbar-right mobile-malaysian">
+                <li class="nav-item signup-rightmargi"><a href="{{ url_for('api.signupcategory') }}" class="primary_btn text-uppercase mobile-signup-btn">sign up</a></li>
+              </ul> -->
+              <ul class="nav navbar-nav navbar-right desktop-malaysian">
+                  <li class="nav-item"><a href="{{ url_for('api.userlogin') }}" class="genric-btn circle text-info text-uppercase">sign in</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right desktop-malaysian">
+                  <li class="nav-item signup-rightmargi"><a href="{{ url_for('api.signupcategory') }}" class="genric-btn text-white circle text-uppercase mobile-signup-btn">sign up</a></li>
+              </ul>
+              </div>
+					</div>
+
+				</div>
+			</nav>
+		</div>
+	</header>
+	<!--================Header Menu Area =================-->
+<!-- multistep form -->
+<div id="signupform">
+  <form id="msform" method="POST" action="/signup" >
+
+    <fieldset>
+      <h2 class="fs-title">Sign Up</h2>
+        <h4 class="">Choose Category</h4>
+        
+        <div class="form-group">
+
+            <div class="container">
+              
+              <ul>
+                <li>
+                  <input type="radio" id="f-option" name="category" value="owner">
+                  <label class="radiolabel" for="f-option">Property Owner</label>
+                  
+                  <div class="check"></div>
+                </li>
+                
+                <li>
+                  <input type="radio" id="s-option" name="category" value="agent">
+                  <label class="radiolabel" for="s-option">Property Manager</label>
+                  
+                  <div class="check"><div class="inside"></div></div>
+                </li>
+                
+                <li class="mb-5"> 
+                  <input type="radio" id="t-option" name="category" value="tenant">
+                  <label class="radiolabel" for="t-option">Tenant</label>
+                  
+                  <div class="check"><div class="inside"></div></div>
+                </li>
+            </ul>
+            </div>
+        </div>
+      <!-- <input type="button" id="submit" name="submit" class="submit action-button" value="Submit" /> -->
+      
+        <button type="button" id="submit" class="bg-gradient-success borderless text-white mb-2">Proceed&nbsp;<i class="fas fa-angle-double-right"></i></button>
+  
+    </fieldset>
+
+  </form>
+</div>
+
+<script src="{{ url_for('static', filename='landingtwo/js/jquery-3.2.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/popper.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/stellar.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/jquery.magnific-popup.min.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='signup.js') }}"></script> -->
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(4000,"swing");
+    }, 10);
+</script>
+
+<script>
+  jQuery("input:radio[name=category]").on("change", function() {
+  if (jQuery(this).is(":checked")) {
+    $('#submit').removeClass("bg-gradient-danger");
+    $('#submit').addClass("bg-gradient-success");
+    $('#submit').html('Proceed <i class="fa fa-angle-double-right"></i>');
+  }
+})
+</script>
+
+<script>
+    $("#submit").click(function(){
+      var radioValue = $("input[name='category']:checked").val();
+      // $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Select Option!');
+      $('#submit').html('<i class="fa fa-exclamation mr-2"></i>Select Option');
+      $('#submit').addClass("bg-gradient-danger");
+
+      if(radioValue){
+        $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting..');
+        $('#submit').removeClass("bg-gradient-danger");
+        $('#submit').addClass("bg-gradient-success");
+        $.ajax({
+          url: "{{ url_for('api.signupcategory') }}",
+          type: "POST",
+          data: {
+                  category: radioValue
+              },
+          success: function(response) {
+            $("#signupform").html(response);
+          },
+          error: function(xhr) {
+          }
+        });
+
+      }
+    
+
+    });
+</script>
+<script src="{{ url_for('static', filename='customjs.js') }}"></script>
+</body>
+
+</html>

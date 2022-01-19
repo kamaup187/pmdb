@@ -1,0 +1,173 @@
+<span id="edit_bill_identifier" class="dispnone">{{bill.id}}</span>
+
+    <div class="form-group mb-1 text-right">
+        <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal" data-target="#editBillModal"><i class="fas fa-edit mr-1"></i>edit invoice</button>
+
+        <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal" data-target="#editArrModal"><i class="fas fa-cog mr-1"></i>edit arrears</button>
+
+        <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal" data-target="#editPayModal"><i class="fas fa-cogs mr-1"></i>edit payments</button>
+
+    </div>
+
+{%if bill.deposit_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Deposit due</span>
+        <input id="depositdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.deposit_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Deposit paid </span>
+        <input id="depositpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+{%if bill.rent_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Rent due</span>
+        <input id="rentdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger" type="text"
+            value="{{bill.rent_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Rent paid </span>
+        <input id="rentpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+{%if bill.penalty_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Penalty due</span>
+        <input id="penaltydue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.penalty_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Penalty paid </span>
+        <input id="penaltypaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+{%if bill.maintenance_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Service due</span>
+        <input id="servicedue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.maintenance_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Service paid </span>
+        <input id="servicepaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+{%if bill.garbage_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Garbage due</span>
+        <input id="garbagedue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.garbage_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Garbage paid </span>
+        <input id="garbagepaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+
+{% endif %}
+{%if bill.security_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Security due</span>
+        <input id="securitydue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.security_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Security paid </span>
+        <input id="securitypaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+{%if (bill.water_due) %}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Water due</span>
+        <input id="waterdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger" type="text"
+            value="{{bill.water_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Water paid </span>
+        <input id="waterpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+{%if bill.electricity_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Electricity due</span>
+        <input id="electricitydue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.electricity_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Electricity paid </span>
+        <input id="electricitypaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+{%if bill.agreement_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Agreement due</span>
+        <input id="agreementdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.agreement_due}}" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Agreement paid </span>
+        <input id="agreementpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+</div>
+{% endif %}
+
+
+    <div id="advancepay" class="form-group dispnone no-paddin input-icons">
+        <span>Overpayment/Advance/Prepayment</span>
+        <input id="advance_pay" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
+            value="" disabled />
+        <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+    </div>
+
+
+
+

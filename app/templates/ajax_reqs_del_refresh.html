@@ -1,0 +1,49 @@
+<div class="has-margin-bottom" id="tabledata"></div>
+<table class="table bg-gradient-dark text-info" width="100%" cellspacing="0">
+  <thead>
+    <tr>
+      <th class="text-white track-title-cell">Date</th>
+      <th class="text-white track-title-cell">Request</th>
+      <th class="text-white track-title-cell">Title</th>
+      <th class="text-white track-title-cell">Cost</th>
+      <th class="text-white track-title-cell">View</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bill in bills%}
+    <tr>
+      <td class="track-data-cell">{{ bill['date'] }}</td>
+      <td class="track-data-cell">{{ bill['requesttype'] }}</td>
+      <td class="track-data-cell">{{ bill['title'] }}</td>
+      <td class="track-data-cell">{{ bill['cost'] }}</td>
+      <td class="track-data-cell"><a id ="{{bill['id']}}" href="#">Track</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+     
+  </table>
+
+  <script>
+    var requestIdData = {{ requestids|tojson }};
+    
+    $.each(requestIdData, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        // console.log(item);
+        // localStorage.setItem('tenantvar',item);
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.trackrequest') }}",
+                data: {
+                    requestid:item
+                },
+                success: function(response) {
+                  // $("#detailedreport").toggleClass('bg-gradient-light bg-gradient-dark');
+                  // $("#detailedreport").toggleClass('tenantdata dispnone');
+                  $("#tabledata").html(response);
+                }
+            });
+       
+      });
+    });
+    </script>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-R7DLP684H1');
+	</script>
+
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+	<link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+	<link rel="manifest" href="../static/img/favico/site.webmanifest">
+	
+	<title>KiotaPay - Property Management System</title>
+	<!-- Bootstrap CSS -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/bootstrap.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/vendors/linericon/style.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/font-awesome.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/vendors/owl-carousel/owl.carousel.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/magnific-popup.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/vendors/nice-select/css/nice-select.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/vendors/animate-css/animate.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/vendors/flaticon/flaticon.css') }}">
+
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/features/css/themify-icons.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/features/css/styler.css') }}">
+    
+	<!-- main css -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='landingtwo/css/style.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+</head>
+
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder-alt">
+		<h1 class="loading-alt">KiotaPay</h1>
+		<div class="loader-alt"></div>
+	</div>
+	
+	<!--================Header Menu Area =================-->
+	<header class="header_area">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<div class="container navbar-mobile-bg">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h mobile-malaysian" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/kiotapay/full-logo.png" alt=""></a>
+					<a class="navbar-brand logo_h desktop-malaysian" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/kiotapay/l-logo.png" alt=""></a>
+					<button class="navbar-toggler my-toggler-color" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav menu_nav justify-content-center">
+							<li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.landingpage') }}">Home</a></li>
+							<li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.aboutus') }}">About Us</a></li>
+                            <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.features') }}">Features</a></li>
+                            <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.pricing') }}">Pricing</a></li>
+							<!-- <li class="nav-item submenu dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+								 aria-expanded="false">Pages</a>
+								<ul class="dropdown-menu">
+									<li class="nav-item"><a class="nav-link" href="elements.html">Elements</a></li>
+								</ul>
+							</li> -->
+							<!-- <li class="nav-item submenu dropdown">
+								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+								 aria-expanded="false">Blog</a>
+								<ul class="dropdown-menu">
+									<li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+									<li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
+								</ul>
+							</li> -->
+                            <li class="nav-item"><a class="nav-link mobile-link-color" href="{{ url_for('api.contactus') }}">Contact</a></li>
+
+						</ul>
+						
+                        <div class="divbg">
+                            <ul class="nav navbar-nav navbar-right mr-4 login-topmargin mobile-malaysian">
+                                <li class="nav-item"><a href="{{ url_for('api.userlogin') }}" class="genric-btn info-border radius arrow">Login<span class="lnr lnr-arrow-right"></span></a></li>
+							</ul>
+							<ul class="nav navbar-nav navbar-right mobile-malaysian">
+                                <li class="nav-item signup-rightmargi"><a href="{{ url_for('api.signupcategory') }}" class="primary_btn text-uppercase mobile-signup-btn">sign up</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right desktop-malaysian">
+                                <li class="nav-item"><a href="{{ url_for('api.userlogin') }}" class="genric-btn circle text-info text-uppercase">sign in</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right desktop-malaysian">
+                                <li class="nav-item signup-rightmargi"><a href="{{ url_for('api.signupcategory') }}" class="genric-btn text-white circle text-uppercase mobile-signup-btn">sign up</a></li>
+                            </ul>
+                        </div>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</header>
+	<!--================Header Menu Area =================-->
+
+    {% block content %}
+                
+    {% endblock %}
+
+
+	<!--================Footer Area =================-->
+    <footer class="bg-dark footer-padding">
+        <div class="container">
+          <div class="row mb-2">
+            <!-- <div class="col-md">
+              <div class="ftco-footer-widget mb-4 text-center">
+                <h2 class="top_title text-white">Company</h2>
+                <ul class="list-unstyled text-center">
+                    <li><a href="#"><span class="icon-long-arrow-right mr-2 text-white">Our Story</span></a></li>
+                    <li><a href="#"><span class="icon-long-arrow-right mr-2 text-white">Careers</span></a></li>
+                  </ul>
+              </div>
+            </div> -->
+            <div class="col-md mobile-malaysian">
+              <div class="ftco-footer-widget mb-4 ml-md-4 text-center">
+                <h2 class="ftco-heading-2 text-white">Links</h2>
+                <ul class="list-unstyled">
+					<span class="divjust-end">
+						<li><a href="{{ url_for('api.landingpage') }}"><span class="icon-long-arrow-right mr-2 text-white">Home</span></a></li>
+						<li><a href="{{ url_for('api.aboutus') }}"><span class="icon-long-arrow-right mr-2 text-white">About</span></a></li>
+						<li><a href="{{ url_for('api.features') }}"><span class="icon-long-arrow-right mr-2 text-white">Features</span></a></li>
+					</span>
+					<span class="divjust-end">
+						<li><a href="{{ url_for('api.pricing') }}"><span class="icon-long-arrow-right mr-2 text-white">Pricing</span></a></li>
+						<li><a href="{{ url_for('api.contactus') }}"><span class="icon-long-arrow-right mr-2 text-white">Contact Us</span></a></li>
+						<li class="hide"><a href="{{ url_for('api.contactus') }}"><span class="icon-long-arrow-right mr-2 text-white">Contact Us</span></a></li>
+					</span>
+                </ul>
+              </div>
+			</div>
+			<div class="col-md desktop-malaysian">
+				<div class="ftco-footer-widget mb-4 ml-md-4 text-center">
+				  <h2 class="ftco-heading-2 text-white">Links</h2>
+				  <ul class="list-unstyled divbg">
+					<li><a href="{{ url_for('api.landingpage') }}"><span class="icon-long-arrow-right mr-2 text-white">Home</span></a></li>
+					<li><a href="{{ url_for('api.aboutus') }}"><span class="icon-long-arrow-right mr-2 text-white">About</span></a></li>
+					<li><a href="{{ url_for('api.features') }}"><span class="icon-long-arrow-right mr-2 text-white">Features</span></a></li>
+					<li><a href="{{ url_for('api.pricing') }}"><span class="icon-long-arrow-right mr-2 text-white">Pricing</span></a></li>
+					<li><a href="{{ url_for('api.contactus') }}"><span class="icon-long-arrow-right mr-2 text-white">Contact</span></a></li>
+				  </ul>
+				</div>
+			  </div>
+            <div class="col-md mobile-malaysian">
+               <div class="ftco-footer-widget mb-4 text-center">
+                <h2 class="ftco-heading-2 text-white">Find Us</h2>
+                <ul class="list-unstyled">
+                    <span class="divbg">
+                        <li class="mb-2"><a href="https://www.facebook.com/Kiotapay"><img src="../static/landingtwo/img/media/fb.png" alt=""></a></li>
+						<li class="mb-2"><a href="https://twitter.com/kiotapay"><img src="../static/landingtwo/img/media/twitter.png" alt=""></a></li>
+						<li class="mb-2"><a href="#"><img src="../static/landingtwo/img/media/instagram.png" alt=""></a></li>
+                    </span>
+                    <span class="divbg">
+                        <li class="mb-"><a href="https://www.linkedin.com/company/kiotapay/"><img src="../static/landingtwo/img/media/linkedin.png" alt=""></a></li>
+                        <li><a href="#"><img src="../static/landingtwo/img/media/whatsapp.png" alt=""></a></li>
+                        <li><a href="https://www.youtube.com/channel/UC4oUDSz_XOScdOkkF82MDxA?view_as=subscriber"><img src="../static/landingtwo/img/media/youtube.png" alt=""></a></li>
+                    </span>
+                </ul>
+              </div>
+			</div>
+			<div class="col-md desktop-malaysian">
+				<div class="ftco-footer-widget mb-4 text-center">
+				 <h2 class="ftco-heading-2 text-white">Find Us</h2>
+				 <ul class="list-unstyled divjust-en">
+					 <span class="divbg">
+						 <li class="mb-2"><a href="https://www.facebook.com/Kiotapay"><img src="../static/landingtwo/img/media/fb.png" alt=""></a></li>
+						 <li class="mb-2"><a href="https://twitter.com/kiotapay"><img src="../static/landingtwo/img/media/twitter.png" alt=""></a></li>
+
+						 <li class="mb-2"><a href="#"><img src="../static/landingtwo/img/media/instagram.png" alt=""></a></li>
+						 <li class="mb-2"><a href="https://www.linkedin.com/company/kiotapay/"><img src="../static/landingtwo/img/media/linkedin.png" alt=""></a></li>
+
+						 <li><a href="#"><img src="../static/landingtwo/img/media/whatsapp.png" alt=""></a></li>
+						 <li><a href="https://www.youtube.com/channel/UC4oUDSz_XOScdOkkF82MDxA?view_as=subscriber"><img src="../static/landingtwo/img/media/youtube.png" alt=""></a></li>
+					 </span>
+				 </ul>
+			   </div>
+			 </div>
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4 text-center">
+                  <h2 class="ftco-heading-2 text-white">Contacts</h2>
+                  <div class="block-23 mb-3 text-center">
+                    <ul class="text-center list-unstyled">
+					  <li><span class="icon icon-map-marker"></span><span class="text-white">Woodvale Grove, Westlands, Nairobi, Kenya</span></li>
+					  <li><a href="#"><span class="icon icon-envelope"></span><span class="text-white">info@kiotapay.com</span></a></li>
+					  <li><a href="#"><span class="icon icon-phone"></span><span class="text-white">+254 725538750</span></a></li>
+					  <li><a href="#"><span class="icon icon-phone"></span><span class="text-white">+254 716674695</span></a></li>
+					</ul>
+				  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+  
+        		Copyright &copy; kiotapay<script>document.write(new Date().getFullYear());</script> All Rights Reserved | Simplicity & Convenience
+    
+          </div>
+        </div>
+    </footer>
+      
+	<!--================End Footer Area =================-->
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/popper.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/stellar.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/vendors/nice-select/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/vendors/isotope/imagesloaded.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/vendors/isotope/isotope-min.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='landingtwo/vendors/owl-carousel/owl.carousel.min.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery.ajaxchimp.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/vendors/counter-up/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/vendors/counter-up/jquery.counterup.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='landingtwo/js/mail-script.js') }}"></script>
+	<!--gmaps Js-->
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script> -->
+	<!-- <script src="js/gmaps.min.js"></script> -->
+    <!-- <script src="{{ url_for('static', filename='landingtwo/js/theme.js') }}"></script> -->
+    <!-- contact js -->
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery.form.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/contact.js') }}"></script>
+    <script src="{{ url_for('static', filename='customjs.js') }}"></script>
+</body>
+
+</html>

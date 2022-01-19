@@ -1,0 +1,13 @@
+
+    {% if form %}
+    <div class="form-field">{{ form.apartment.label }} {{ form.apartment}}</div>
+    {% endif %}
+
+    {% if apartmentlist %}
+    <select name="apartment" class="form-control" id ="select_apartment" >
+        <option disabled selected value> -- Select Apartment -- </option>
+        {% for o in apartmentlist %}
+        <option value="{{ o }}">{{ o }}</option>
+        {% endfor %}
+    </select>
+    {% endif %}

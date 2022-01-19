@@ -1,0 +1,24 @@
+
+<div class="card-body">
+  <div class="has-margin-bottom">
+    <span class="text-success font-weight-bold">{{status}}</span>
+  </div>
+
+  <div class="divbg center-btn">
+    <button id="close" type="button" class="bg-gradient-danger borderless text-white"><a class="text-white" href="{{ url_for('api.index') }}">Close</a></button>
+  </div>
+  
+
+</div>
+
+
+<!-- <script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script> -->

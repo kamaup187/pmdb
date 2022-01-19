@@ -1,0 +1,1360 @@
+
+    <section class="contact_area section_gap">
+      <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+      <span id="tenant_identifier" class="dispnone"></span>
+      <span id="edit_tenant_identifier" class="dispnone"></span>
+      <span id="del_tenant_identifier" class="dispnone"></span>
+      <span id="current-reloader" class="dispnone">current</span>
+      <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
+
+      <span class="multisave dispnone"></span>
+
+        <div id="parent-section">
+          <div class="col-12 no-padding mb-1">
+            <div class="card-header py-1 card-bg-alt divjust-end" >
+                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>New tenants & Allocation</div>
+                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
+            </div>
+          </div>
+
+
+
+          <div class="col-lg-12 center-btn mb-3">
+            <span class="text-black text-xx smallify underline shadow-alt">{{prop.name}}</span>
+          </div>
+          
+          <div class="row mb-3">
+              <div class="col-lg-12 center-btn">
+                <div class="info_item">
+                  <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add new tenant</span></button>
+                  <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadPhoneExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Phone numbers</span></span>
+                  <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadArrearsExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Arrears bulk upload</span></span>
+
+                </div>
+
+              </div>
+
+          </div>
+        
+
+        <div class="toggleswitch text-info font-weight-bold divbg mb-3">
+          <span>
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
+            <span class="small desktop-malaysian">Pending</span>
+            <label class="switch">
+              <input id="reporttoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+        
+          <span class="">
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Residents</span>
+            <span class="small desktop-malaysian">Residents</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+          <span class="">
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Vacated</span>
+            <span class="small desktop-malaysian">Vacated</span>
+            <label class="switch">
+              <input id="reporttoggle3" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+        </div>
+
+        <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
+        
+        <div id="result-view" class="row">
+        
+          <div class="col-lg-12 no-padding">
+              <div id="reqdata" class="table-responsive">
+                  <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+                      <thead class="border-top-info">
+                        <tr>
+                          <th class="text-info font-weight-bold">Name</th>
+                          <th class="text-info track-title-cell" data-orderable="false">Phone</th>
+                          <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
+                          <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">sms</th>
+                          <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
+                          <th class="text-info track-title-cell text-success">Bal</th>
+                          <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add house</th>
+                          <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
+                          <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th>
+
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for bill in bills%}
+                        <tr>
+                          <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                          <td class="data-cell">{{ bill['tel'] }}</td>
+                          <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
+                          <td class="data-cell expand dispnone-alt">{{ bill['sms'] }}</td>
+                          <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
+                          <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
+
+
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
+                            </div>
+                          </td>
+
+                          <!-- <td class="text-s data-cell">
+                            <div class="toolti">
+                              <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap tooltip" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add <span class="tooltiptext">{{bill['tooltip']}}</span></button>
+                            </div>
+                          </td> -->
+
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Clear</button>
+                            </div>
+                          </td>
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                            </div>
+                          </td>
+
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+        </div>
+    </section>
+ 
+
+    <div class="text-center">
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload property photo</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+
+                  <div class="position-relative">
+                    <form class="divbg" action="/change/prop/image" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected" multiple required/>
+                        <label for="file-1"><span>Choose an image&hellip;</span></label>
+                        <input type="text" name="propid" class="d-none" value="{{prop.id}}">
+                        <input type="submit" class="borderless bg-danger" value="Upload">
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foote">
+              <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Add new tenant</span>
+              <div>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2">
+
+                        <div class="form-group input-icons">
+                          <span>Tenant name<span class="text-danger small">(mandatory)</span></span>
+                            <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="form-group no-paddin input-icons">
+                          <span>Select house to allocate <span class="text-primary small">(recommended)</span></span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
+                            <option disabled selected value> loading... </option>
+                          </select>
+                          <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <span>Tenant mobile number <span class="text-primary small">(recommended)</span></span>
+                            <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <span>Tenant Email<span class="text-primary small">(optional)</span></span>
+                            <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <span>National id number <span class="text-primary small">(optional)</span></span>
+                            <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="fancy-checkbox-group form-control mb-4 divjust">
+                          <div>
+                            <input type="checkbox" id="migrate2"/>
+                            <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                          </div>       
+                        </div>
+
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="uploadTenantExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload tenants</span>
+              <div>
+                <button id="downloadtenants" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Select File: <input class="ph" id="tenantfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadtenant" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="uploadPhoneExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-black mb-2">Upload phone numbers</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Tenants mobile numbers Excel File: <input class="ph" id="tenantmobilefile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadmobile" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="uploadArrearsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-black mb-2">Upload arrears in bulk</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Tenants balances Excel File: <input class="ph" id="tenantarrearsfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadarrears" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update tenant detail</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div id="edittenantbed" class="mt-2">
+
+ 
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="edittenant" type="button" class="btn-secondary borderless text-white">Update</button>
+                        <button class="btn btn-light" id="closeeditTenantModal" type="button" data-dismiss="modal">Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset">Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="deleteTenantModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to permanently remove this tenant?</span>
+          </div>
+          <div class="has-margin-bottom divbg">
+              <button id="del_tenant" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="allocateHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">House Allocation</h5>
+            <span class="text-gray-900">Tenant: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons mt-2">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_house" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div id="notifications"></div>
+
+                      <div class="fancy-checkbox-group form-control mb-4 divjust">
+                        <div>
+                          <input type="checkbox" id="migrate"/>
+                          <label for="migrate">Transfer(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                        </div>       
+                      </div>
+        
+                    
+                      <div class="divbg center-btn">
+                        <button id="allocatebtn" type="button" class="btn-secondary borderless text-white" disabled>Allocate</button>
+                        <button class="btn btn-light" id="closeAllocateHouseModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="tenantClearanceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title mb-3" id="paymentDetailModalLabel">Clearance</h5>
+            <span class="text-gray-900">Tenant: <span class="tenantname" class="text-info"></span></span>
+            <div class="alert-msgs mb-3"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div id="clearance_notifications"></div>
+                   
+                      <div class="divbg center-btn">
+                        <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>
+                        <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="paymentDetailModalLabel">Mpesa Payment Integration Details</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <form class="" action="/property/paymentinfo" method="POST">
+    
+                        <div class="form-group">
+                          <input type="text" name="shortcode" class="form-control" placeholder="Paybill" >
+                        </div>
+              
+                        <div class="form-group">
+                          <input type="text" name="consumer_key" class="form-control" placeholder="Consumer key">
+                        </div>
+
+                        <div class="form-group">
+                          <input type="text" name="consumer_secret" class="form-control" placeholder="Consumer secret" >
+                        </div>
+                        <input id="prop_id2" type="text" name="propid" class="d-none" value="{{prop.id}}">
+                        <hr>
+                        <div class="divbg center-btn">
+                          <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+<script>
+  $("#close-propdisp").on('click',function(){
+    $('#proplist').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+    $('#tenant-area').removeClass('isactive')
+    $('#content-area').removeClass("isopen text-danger");
+  });
+</script>
+
+<script>
+  var rawIds = "{{ tenantids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_tenant_identifier").html(item)
+        }
+        else if(item.startsWith("tnt")){
+          $("#barloader").removeClass("dispnone")
+          $.ajax({
+            url: "/results",
+            type: "get",
+            data: {id: item},
+            success: function(response) {
+              $("#barloader").addClass("dispnone")
+              $("#propdisp").addClass("dispnone")
+              $("#searchresults").removeClass("dispnone")
+              $("#searchresults").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid: item,
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+            }
+          });
+        }else{
+          $("#edit_tenant_identifier").html(item)
+        }
+        
+      }else{
+        $("#tenant_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+
+<script>
+  
+  $("#reporttoggle").on('change',function(){
+
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb3 = document.getElementById("reporttoggle3");
+      cb3.checked = false;
+
+      $("#current-reloader").html("new");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"new"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb3 = document.getElementById("reporttoggle3");
+      cb3.checked = false;
+
+      $("#current-reloader").html("current");
+
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"somestring"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+
+  
+  $("#reporttoggle3").on('change',function(){
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb3 = document.getElementById("reporttoggle3");
+    if (cb3.checked){
+      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+
+      $("#current-reloader").html("old");
+
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"old"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+
+  });
+
+</script>
+
+
+  <script>
+    $(document).ready(function(){
+      $("#addTenantModal").on('shown.bs.modal', function(){
+        $(this).find('#new_name').focus();
+      });
+    });
+  </script>
+
+
+
+    <script>
+      
+      $("#uploadTenantExcelModal").on('shown.bs.modal', function(){
+        $(".dismissparent").click();
+      });
+    
+    </script>
+
+<script>
+  $("#downloadtenants").click(function(){ 
+      $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_tenants")[0].click();
+
+        setTimeout(function(){
+            $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
+
+
+  <script>
+    $("#uploadtenant").on('click',function(){
+        $("#uploadtenant").html("Uploading...") 
+  
+        url = "{{ url_for('api.addtenant') }}"
+  
+        var fd = new FormData();
+        var files = $('#tenantfile')[0].files;
+        fd.append('file',files[0]);
+        fd.append('target',"excelupload");
+        fd.append('propid',$("#prop_identifier").text());
+  
+        $.ajax({
+            type: "POST",
+            url: url,
+            data:fd,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $(".alert-msgs").html(response);
+                $("#uploadtenant").html("Uploaded") 
+  
+                setTimeout(function(){
+                  $("#uploadtenant").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },3000)
+  
+                setTimeout(function(){
+                  $.ajax({
+                    url: "{{ url_for('api.fetchtenants') }}",
+                    type: "get",
+                    data: {
+                      propid:  $("#prop_identifier").text(),
+                      target: "somestring"
+                    },
+                    success: function(response) {
+                      
+                      $("#result-view").html(response);
+                    }
+                  });
+                },5000);
+  
+            },
+            error:function(){
+              $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+              $("#uploadtenant").html("Retry") 
+  
+              setTimeout(function(){
+                $("#uploadtenant").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },5000)
+            }
+        });
+    });
+  </script>
+
+<script>
+  $("#uploadmobile").on('click',function(){
+      $("#uploadmobile").html("Uploading...") 
+
+      url = "{{ url_for('api.addtenant') }}"
+
+      var fd = new FormData();
+      var files = $('#tenantmobilefile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelmobileupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadmobile").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadmobile").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              setTimeout(function(){
+                $.ajax({
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {
+                    propid:  $("#prop_identifier").text(),
+                    target: "somestring"
+                  },
+                  success: function(response) {
+                    
+                    $("#result-view").html(response);
+                  }
+                });
+              },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadmobile").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadmobile").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+<script>
+  $("#uploadarrears").on('click',function(){
+      $("#uploadarrears").html("Uploading...") 
+
+      url = "{{ url_for('api.editbill') }}"
+
+      var fd = new FormData();
+      var files = $('#tenantarrearsfile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelarrearsupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadarrears").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadarrears").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              setTimeout(function(){
+                $.ajax({
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {
+                    propid:  $("#prop_identifier").text(),
+                    target: "somestring"
+                  },
+                  success: function(response) {
+                    
+                    $("#result-view").html(response);
+                  }
+                });
+              },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadarrears").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadarrears").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+<script>
+  $("#newtenant").click(function(){   
+    var cb2 = document.getElementById("migrate2");
+    if (cb2.checked){
+      var migrate2 = "True";
+    }else{
+      var migrate2 = "False";
+    }
+    $("#newtenant").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.addtenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#select_house2").val(),
+                name: $("#new_name").val(),
+                national_id: $("#new_natid").val(),
+                tel: $("#new_tel").val(),
+                email: $("#new_email").val(),
+                migrate: migrate2,
+                arr: $("#new_arr").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            // $('#newtenant').attr('disabled', 'disabled');
+            $('#newtenant').removeClass('btn-success')
+            $('#newtenant').addClass('btn-secondary')
+            $("#newtenant").html("submit")
+          }, 2000);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "current"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+<script>
+  $("#editTenantModal").on('shown.bs.modal', function(){
+    $(".multisave").empty();
+    $("#edittenant").removeClass("dispnone");
+    $("#edittenantbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.updatetenant') }}",
+      type: "get",
+      data: {
+            tenantid: $("#edit_tenant_identifier").text(),
+            target: "nonselfupdate"
+          },
+      success: function(response) {
+        $("#edittenantbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">Error occured, it is being resolved</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#edittenant").click(function(){  
+    $("#edittenant").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatetenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                tenant_id: $("#edit_tenant_identifier").text(),
+                name: $("#edit_name").val(),
+                national_id: $("#edit_natid").val(),
+                tel: $("#edit_tel").val(),
+                email: $("#edit_email").val(),
+                fine:$("#edit_fine").val(),
+                arr: $("#edit_arr").val(),
+                multi:$(".multisave").text()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $(".multisave").empty();
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            
+            $(".reset").click();
+            // $('#edittenant').attr('disabled', 'disabled');
+            $('#closeeditTenantModal').click();
+            $('#edittenant').removeClass('btn-success')
+            $('#edittenant').addClass('btn-secondary')
+            $("#edittenant").html("submit")
+          }, 1500);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:$("#current-reloader").text()
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#addTenantModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            target:"house options"
+          },
+      success: function(response) {
+        $("#select_house2").html(response);
+      }
+    });
+  });
+
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#allocateHouseModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            target:"house options"
+          },
+      success: function(response) {
+        $("#select_house").html(response);
+        // $("#select_house option:eq('1')").attr("selected", "selected");
+        // $("#select_house").change();
+        $.ajax({
+                url: "{{ url_for('api.allocatetenants') }}",
+                type: "POST",
+                data: {
+                  tenant_id:$("#tenant_identifier").text(),
+                  target:"tenant name"
+                },
+                success: function(response) {
+                  
+                  $(".tenantname").html(response);
+                }
+              });   
+      }
+    });
+  });
+
+</script>
+
+
+
+<script>
+  // This script shows alerts before allocation is done
+  $("#select_house").on('change',function(){
+
+      $('#allocatebtn').removeAttr('disabled');
+      $('#allocatebtn').removeClass('btn-secondary');
+      $('#allocatebtn').addClass('btn-success');
+
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            house: $("#select_house").val(),
+            target:"alerts"
+          },
+      success: function(response) {
+        $("#notifications").html(response);
+      }
+    });
+  });
+</script>
+
+
+
+<script>
+  // This script shows alerts before allocation is done
+  $("#select_house").on('change',function(){
+
+      $('#allocatebtn').removeAttr('disabled');
+      $('#allocatebtn').removeClass('btn-secondary');
+      $('#allocatebtn').addClass('btn-success');
+
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            house: $("#select_house").val(),
+            target:"alerts"
+          },
+      success: function(response) {
+        $("#notifications").html(response);
+      }
+    });
+  });
+</script>
+
+
+
+<script>
+  // This script  performs actual allocation
+  $("#allocatebtn").click(function(){   
+    var cb = document.getElementById("migrate");
+    if (cb.checked){
+      var migrate = "True";
+    }else{
+      var migrate = "False";
+    }
+    $("#allocatebtn").html("allocating...")  
+      $.ajax({
+        url: "{{ url_for('api.allocatetenants') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                tenant_id: $("#tenant_identifier").text(),
+                house: $("#select_house").val(),
+                migrate: migrate,
+                target: "new"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#notifications").empty();
+            $('#allocatebtn').attr('disabled', 'disabled');
+            $('#allocatebtn').removeClass('btn-success')
+            $('#allocatebtn').addClass('btn-secondary')
+            $("#allocatebtn").html("allocate")
+            $("#closeAllocateHouseModal").click();
+          }, 2000);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:$("#current-reloader").text()                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#tenantClearanceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.tenantclearance') }}",
+      type: "POST",
+      data: {
+            tenant_id: $("#del_tenant_identifier").text(),
+            runalert:"somestring"
+          },
+      success: function(response) {
+        $("#clearance_notifications").html(response);
+        $.ajax({
+                url: "{{ url_for('api.tenantclearance') }}",
+                type: "POST",
+                data: {
+                  tenant_id:$("#del_tenant_identifier").text(),
+                  target:"tenant name"
+                },
+                success: function(response) {
+                  
+                  $(".tenantname").html(response);
+                }
+              });   
+      }
+    });
+  });
+</script>
+
+
+<script>
+  // this script perrforms actual clearance
+  $("#clear_tenant").click(function(){   
+    var cb = document.getElementById("discard_bill");
+        if (cb){
+          if (cb.checked){
+            var discard = "True";
+          }else{
+              var discard = "False";
+          }
+        } else{
+          var discard = "False"
+        }
+
+        var cb2 = document.getElementById("payoff_balance");
+        if (cb2){
+          if (cb2.checked){
+            var pay = "True";
+          }else{
+              var pay = "False";
+          }
+        } else{
+          var pay = "False"
+        }
+
+
+
+      $("#clear_tenant").html("Clearing...")  
+      $.ajax({
+        url: "{{ url_for('api.tenantclearance') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#del_tenant_identifier").text(),
+                discard_bill: discard,
+                pay_off_balance : pay
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".dismissmodal").click();
+            $("#clearance_notifications").empty();
+            $("#clear_tenant").html("Clear")
+          }, 2000);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:$("#current-reloader").text()                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+<script>
+      
+  $("#del_tenant").on('click',function(){   
+    $('#del_tenant').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>removing...'); 
+    $.ajax({
+      url: "{{ url_for('api.updatetenant') }}",
+      type: "POST",
+      data: {
+            tenant_id:$("#del_tenant_identifier").text(),
+            target:"delete"
+          },
+      success: function(response) {
+        // $(".payment-info").html(response);  
+        
+        setTimeout(function(){
+          $('#del_tenant').html('Delete');
+          $(".closemodal").click();
+            }, 1500);
+        setTimeout(function(){
+
+          $.ajax({
+              url: "{{ url_for('api.fetchtenants') }}",
+              type: "get",
+              data: {
+                propid:$("#prop_identifier").text(),
+                target:$("#current-reloader").text()
+            },
+              success: function(response) {
+                
+                $("#result-view").html(response);
+              }
+            });
+
+            }, 100);  
+        
+      }
+    });
+  });
+  
+  </script>
+
+
+<script>
+  function tabletoggler() {
+    var x = document.getElementById("expandtoggler");
+    if (x.innerHTML === "expand") {
+      x.innerHTML = "minimise";
+    } else {
+      x.innerHTML = "expand";
+    }
+  }
+</script>
+
+<script>
+$('#expand').click(function(){
+  $('.expand').toggleClass("dispnone-alt")
+  tabletoggler();
+})
+</script>
+
+

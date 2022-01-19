@@ -1,0 +1,43 @@
+
+<div class="card-body">
+  <div>
+    <span class="text-warning font-weight-bold">{{status}}</span>
+  </div>
+  <div>
+    <span class="text-gray-100 small">{{message}}</span>
+  </div>
+  <hr>
+
+  <div class="divbg center-btn">
+    <button id="proceed-request" type="reset" class="bg-gradient-success borderless text-white">Proceed</button>
+    <button id="close" type="button" class="bg-gradient-danger borderless text-white"><a class="text-white" href="{{ url_for('api.index') }}">Cancel</a></button>
+  </div>
+  
+
+</div>
+<!-- <script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script> -->
+<script>
+  $("#proceed-request").on('click',function(){
+    $('#proceed-request').html('<i class="fa fa-spinner fa-spin mr-2"></i>Requesting');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.housetransferrequest') }}",
+            data: {
+                trans_house:$("#selected_trans_house").val(),
+                description:$("#description").val()
+            },
+            success: function(response) {
+                $("#transmessage").html(response);
+            }
+        });
+  });
+</script>

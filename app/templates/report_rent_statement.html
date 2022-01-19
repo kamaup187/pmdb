@@ -1,0 +1,462 @@
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
+<span id="orientation" class="dispnone">{{paging}}</span>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div class="formwrapper">
+            <div class="card shadow">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-white underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black card-header-form">
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                    <span class="mr-4 font-weight-bold text-125">Select property below</span>
+                  </div>
+                </a>
+                
+                <a class="text-white close-report" href="{{ url_for('api.reports') }}">
+                  <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
+                </a>
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body">
+                    <form class="row" method="GET" action="/rent/statement">
+
+                        <div class="col-6 form-group mb-2">
+                          <label class="text-danger font-weight-bold">Select property:</label>
+
+                            <select name="prop" class="select-css" id ="prop" required>
+                              <option disabled selected value> -- none selected -- </option>
+                              {% for o in props %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-6 form-group">
+                          <label class="text-danger font-weight-bold">Select month:</label>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" readonly />
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          </div>
+                        </div>
+
+                          <!-- <div class="col-6 form-group">
+                            <label class="text-danger font-weight-bold">Select month:</label>
+                            <input class="form-control ph-dark
+                            " type="text" id="from" name="from" placeholder="none set">
+                          </div> -->
+
+                        <button class="btn btn-block btn-primary mt-2">View</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 no-padding"></div> -->
+  <div class="col-lg-12 no-padding">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+      <div  class="d-block card-header card-header-report card-bg dispnon">
+        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
+
+          <div class="smallify">
+            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>Normal rent statement</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body pt-0">
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn mt-2 overline">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></h5>
+          </div>
+
+          <div class="divjust-end underline text-black font-weight-bold no-padding text-110">
+            <div class="">
+              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Property : {{prop_obj.name}}</div>
+              <div>Estate : {{prop_obj.location}}</div>
+            </div>
+            <div class="pr-3">
+              <div>Date remitted : {{reportdate}}</div>
+              <div>Pin No : </div>
+            </div>
+
+          </div>
+
+          <div class="text-right mt-1">
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
+          </div>
+
+                    
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">PNO</th>
+                      <th class="">TENANT NAME</th>
+                      <th class="">BB/F</th>
+                      <th class="">RENT</th>
+                      <th class="">TOTAL DUE</th>
+                      <th class="">TOTAL PAID</th>
+                      <th class="">BC/F</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{bill['rent-total']}}</td>
+                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{billtotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+          <div class="divjust-end ln-16 mobile-malaysian">
+            {%if not expenselist%}
+            <div class="hide">space</div>
+            {%endif%}
+
+            <div class="divjust-end mr-5">
+              <div class="mr-4">
+                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
+                <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div>
+                <div class="text-gray-900 mb-1">TOTALS</div>
+                <div class="hide mb-2">space</div>
+
+
+
+
+                <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}}</div>
+                <div class="mb-1">MGT FEES VAT</div>
+                <div class="mb-1">LETTING FEE</div>
+                <div class="mb-1">LETTING FEE VAT</div>
+
+                <div class="mb-1">OTHER DEDUCTIONS</div>
+                <div class="mb-1">TOTAL DEDUCTIONS</div>
+                <div class="hide mb-2">space</div>
+                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+              </div>
+
+              <div class="text-black">
+                <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
+                <div class="mb-1 text-gray-900">0.0</div>
+                <div class="mb-1 text-gray-900">0.0</div>
+                <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
+                <div class="hide mb-2">space</div>
+
+                <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+
+                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+
+                <div class="hide mb-2">space</div>
+
+                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+          {% if bills %}
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn mt-2 overline">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></h5>
+          </div>
+
+          <div class="divjust-end underline mb-3 text-black font-weight-bold no-padding text-110">
+            <div class="">
+              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Property : {{prop_obj.name}}</div>
+              <div>Estate : {{prop_obj.location}}</div>
+            </div>
+            <div class="pr-3">
+              <div>Date remitted : {{reportdate}}</div>
+              <div>Pin No : </div>
+            </div>
+
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">PNO</th>
+                  <th class="">TENANT NAME</th>
+                  <th class="">BB/F</th>
+                  <th class="">RENT</th>
+                  <th class="">TOTAL DUE</th>
+                  <th class="">TOTAL PAID</th>
+                  <th class="">BC/F</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
+                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right">{{bill['rent-total']}}</td>
+                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                  <td class="font-weight-bold text-right">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right">{{billtotal}}</td>
+                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              <div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
+                  <div class="col-6">........................</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Approved By:</div>
+                  <div class="col-6">........................</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
+                  <div class="col-6">........................</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
+                  <div class="col-6">........................</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Date:</div>
+                  <div class="col-6">........................</div>
+                </div>
+              </div>
+  
+              <div class="divjust-end mr-5">
+                <div class="mr-4">
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                  <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
+                  <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div>
+                  <div class="text-gray-900 mb-1">TOTALS</div>
+                  <div class="hide mb-2">space</div>
+  
+  
+  
+  
+                  <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}}</div>
+                  <div class="mb-1">MGT FEES VAT</div>
+                  <div class="mb-1">LETTING FEE</div>
+                  <div class="mb-1">LETTING FEE VAT</div>
+  
+                  <div class="mb-1">OTHER DEDUCTIONS</div>
+                  <div class="mb-1">TOTAL DEDUCTIONS</div>
+                  <div class="hide mb-2">space</div>
+                  <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+                </div>
+  
+                <div class="text-black">
+                  <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
+                  <div class="mb-1 text-gray-900">0.0</div>
+                  <div class="mb-1 text-gray-900">0.0</div>
+                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
+                  <div class="hide mb-2">space</div>
+  
+                  <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+  
+                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+  
+                  <div class="hide mb-2">space</div>
+  
+                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title" id="paymentDetailModalLabel">Edit monthly bill summary record</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div class="mt-2" id="billeditbed"></div>
+                
+                  <div class="divbg center-btn">
+                    <button id="editbill" type="button" class="btn btn-outline-danger borderles">Update</button>
+                    <button class="btn btn-outline-secondary" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $("#month").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "MM-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

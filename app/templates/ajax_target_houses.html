@@ -1,0 +1,75 @@
+
+<i class="fas fa-user mr-1"></i> Tenant : <span class="text-black mr-2">{{tenant_obj.name}}</span> balance: Kes <span class="text-danger">{{'%0.2f'| format(tenant_obj.balance|float)}}</span>
+
+<div class="row">
+    <div class="col-lg-6 form-group input-icons mt-2">
+        <select class="select-css" id ="select_house_alt" >
+            <option disabled selected value> -- specify houses -- </option>
+            {% for o in house_list %}
+            <option value="{{ o }}">{{ o }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-lg-6 p-lg-0 pt-lg-3 text-danger text-weight-bold mb-2">
+        <span class="text-black">Houses:</span> [<span id="house-holder">none selected</span>]  <button id="clear-selection" type="button" class="btn btn-danger p-0 pr-2 pl-2 font-weight-bold semi-small ml-2">X</button>
+    </div>
+
+</div>
+
+<div id="tenantbed2" class="center-btn smallify mb-2 text-success"></div>
+
+
+<script>
+    // This script displays alerts and tenant name before clearance
+    $("#select_house_alt").on('change',function(){
+        var txt = $("#house-holder").text();
+        var newitem = $("#select_house_alt").val()
+        
+        if (txt.includes(newitem)){}else{
+            if(txt.includes("none selected")){
+                $("#house-holder").empty();
+                txt = "";
+            }
+            if ($("#house-holder").text()){
+                $("#house-holder").text(txt + "," + newitem)
+            }else{
+                $("#house-holder").text(txt + newitem)
+            }
+        }
+
+
+
+      $("#tenantbed2").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+
+      if($("#propid").text() == ""){
+          var propid = $("#prop_identifier").text();
+          console.log(propid,"heeeeey")
+      }else{
+          var propid = $("#propid").text();
+          console.log(propid,"haaaaaaay")
+      }
+
+      // $("#tenantbed").removeClass("dispnone")
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+              propid:propid,
+              house: $("#select_house_alt").val(),
+              target:"tenant name2"
+            },
+        success: function(response) {
+          $("#tenantbed2").html(response);
+          // $("#fieldset2").removeClass("dispnone")
+        }
+      });
+    });
+  </script>
+
+  <script type="text/javascript">
+    $("#clear-selection").on("click", function() {
+        $("#house-holder").text("none selected")
+    })
+</script>
+
+

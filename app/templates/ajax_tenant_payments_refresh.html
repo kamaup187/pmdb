@@ -1,0 +1,91 @@
+<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Recent payments:</div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-info font-weight-bold">Payment No.</th>
+                <th class="text-info track-title-cell">Particulars.</th>
+                <th class="text-info track-title-cell">Payment date</th>
+                <!-- <th class="text-info track-title-cell">Bill</th> -->
+                <th class="text-info track-title-cell">Paid</th>
+                <th class="text-info track-title-cell">Balance</th>
+                <th class="text-info track-title-cell">Action</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items%}
+              <tr>
+                <td class="first-data-cell text-dark font-weight-bold">{{ item['id'] }}</td>
+                <td class="data-cell">{{ item['charge'] }}</td>
+                <td class="data-cell">{{ item['date'] }}</td>
+                <!-- <td class="data-cell">Kes <span class="text-primary">{{ item['chargedamnt'] }}</span></td> -->
+                <td class="data-cell">Kes <span class="text-success font-weight-bold">{{ item['amount'] }}</span></td>
+                <td class="data-cell">Kes <span class="{{item['highlight']}}">{{ item['balance'] }}</span></td>
+                <!-- <td class="data-cell"><a id ="{{item['id']}}" class="text-danger" href="#">View</a></td> -->
+                <td class="data-cell">
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header underline">Payment No: <span class="text-info font-weight-bold">{{item['id']}}</span></div>
+          
+                      <div>
+                        <i class="fas fa-receipt ml-3 mr-2 text-success"></i><span id="{{item['id']}}" type="button" class="btn-outline-success ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#receiptModal"><span class="smallify">View</span></span>
+                      </div>
+                      <div>
+                        <i class="fas fa-pen-alt ml-3 mr-2 text-info"></i><span id="{{item['editid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editPaymentModal"><span class="smallify">Edit</span></span>
+                      </div>
+                      <div>
+                        <i class="fas fa-trash-alt ml-3 mr-2 text-danger"></i><span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePaymentModal"><span class="smallify">Void</span></span>
+                      </div>
+                       
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+  var rawIds = "{{ payids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_payment_identifier").html(item)
+          $("#target_payment_id").html("void payment")
+        }else{
+          $("#edit_payment_identifier").html(item)
+          $("#target_payment_id").html("edit payment")
+        }
+        
+      }else{
+        $("#payment_identifier").html(item)
+        $("#target_payment_id").html("payment")
+      }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantPaymentData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "desc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>

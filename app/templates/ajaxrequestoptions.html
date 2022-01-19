@@ -1,0 +1,111 @@
+<!-- multistep form -->
+<div id="signupform">
+    <form id="msform" method="POST" action="" >
+  
+      <fieldset>
+          <h6 class="">Request Category</h6>
+          
+          <div class="form-group">
+  
+              <div class="container">
+                
+                <ul class="row divbg">
+                  <li class="mr-3 no-li-marker">
+                    <input type="radio" id="f-option" name="category" value="pending">
+                    <label class="radiolabel" for="f-option">Pending</label>
+                    
+                    <div class="check"></div>
+                  </li>
+                  
+                  <li class="mr-3 no-li-marker">
+                    <input type="radio" id="s-option" name="category" value="approve">
+                    <label class="radiolabel" for="s-option">Queued</label>
+                    
+                    <div class="check"><div class="inside"></div></div>
+                  </li>
+                  
+                  <li class="mr-3 no-li-marker"> 
+                    <input type="radio" id="t-option" name="category" value="running">
+                    <label class="radiolabel" for="t-option">Running</label>
+                    
+                    <div class="check"><div class="inside"></div></div>
+                  </li>
+              </ul>
+              </div>
+          </div>
+    
+      </fieldset>
+  
+    </form>
+  </div>
+
+  
+  <script>
+      setTimeout(function(){
+      $("#alert-msgs").fadeOut(4000,"swing");
+      }, 10);
+  </script>
+  
+  <script>
+    jQuery("input:radio[name=category]").on("change", function() {
+    if (jQuery(this).is(":checked")) {
+      // $('#submit').removeClass("bg-gradient-danger");
+      // $('#submit').addClass("bg-gradient-success");
+      // $('#submit').html('Proceed <i class="fa fa-angle-double-right"></i>');
+      $('#loading-reqs').html('<i class="spinner-border spinner-border-sm role="status" aria-hidden="true""></i>');
+
+      var radioValue = $("input[name='category']:checked").val();
+      $.ajax({
+            url: "{{ url_for('api.handletenantrequest') }}",
+            type: "POST",
+            data: {
+                    category: radioValue,
+                    apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                    run: "run"
+                },
+            success: function(response) {
+                // $("#detailed-payments").removeClass("dispnone");
+                // $("#payments-report").toggleClass('row dispnone');
+                $("#detailed-payments").html(response);
+                $('#loading-reqs').html('');
+            },
+            error: function(xhr) {
+            }
+          });
+
+
+    }
+  })
+  </script>
+  
+  <!-- <script>
+      $("#submit").click(function(){
+        var radioValue = $("input[name='category']:checked").val();
+        $('#submit').html('<i class="fa fa-exclamation mr-2"></i>Select Option');
+        $('#submit').addClass("bg-gradient-danger");
+  
+        if(radioValue){
+          $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting..');
+          $('#submit').removeClass("bg-gradient-danger");
+          $('#submit').addClass("bg-gradient-success");
+          $.ajax({
+            url: "{{ url_for('api.handletenantrequest') }}",
+            type: "POST",
+            data: {
+                    category: radioValue,
+                    apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                    run: "run"
+                },
+            success: function(response) {
+                $("#detailed-payments").html(response);
+            },
+            error: function(xhr) {
+            }
+          });
+  
+        }
+      
+  
+      });
+  </script> -->
+  <script src="{{ url_for('static', filename='customjs.js') }}"></script>

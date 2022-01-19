@@ -1,0 +1,94 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 bg-gradient-light">
+                    <div class="card-header py-3 bg-gradient-dark divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-success"><span><i class="fas fa-fw fa-key mr-3"></i></span>Terminate property access</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/property/termination">
+
+                            <div class="form-group">
+                                <select name="owner" class="form-control" id ="select_owner" required>
+                                    <option disabled selected value> -- Select Owner -- </option>
+                                    {% for o in owners %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                           <div class="form-group">
+                                <select name="property" class="form-control" id ="select_apartment" required>
+                                    <option disabled selected value> -- Select property -- </option>
+                                    {% for o in properties %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select name="agent" class="form-control" id ="select_agent" required>
+                                    <option disabled selected value> -- Select Agent -- </option>
+                                    {% for o in agents %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="divbg center-btn">
+                                <button id="submit" type="submit" class="bg-gradient-danger borderless text-white">Terminate</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(30000,"swing");
+    }, 10000);
+</script>
+
+<script>
+    $("#select_owner").on('change',function(){
+    
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.propertyaccess') }}",
+                data: {
+                    owner: $("#select_owner").val(),
+                    propertyauto:"somestring"
+                },
+                success: function(response) {
+                    $("#select_apartment").html(response);
+                }
+            });
+    });
+</script>
+
+<script>
+    $("#submit").on('click',function(){
+      $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Terminating..');
+    });
+  </script>
+
+{% endblock %}

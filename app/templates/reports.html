@@ -1,0 +1,672 @@
+{% extends 'reportbase.html' %}
+{% block content %}
+<!-- Page Heading -->
+
+
+<!-- Content Row -->
+    <div class="row">
+
+        <div class="col-xl-6 col-md-6 desktop-malaysian no-padding">
+            <div class="card shadow h-0 py-0">
+                <!-- <div  class="d-block card-header card-header-report bg-gradient-info center-btn text-white font-weight-bold">Reports</div> -->
+                <div class="card-header py-2 topbar-bg divjust-end" >
+                    <h5 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-chart-line mr-2"></i></span>Reports</h5>
+                    <a href="{{ url_for('api.index') }}"><span class="text-white">Close</span></a>
+                </div>
+                <div class="card-body bg-white report-card-padding">
+
+                    <div class="divjust-end center-btn">
+                        <div class="fixed-width-btn">
+                            <a class="btn6" href="{{ url_for('api.monthlystatement') }}">
+                                <button class="btn btn-outline-success text-black borderles my-width mb-1">
+                                    <div class="loader6"><i class="fas fa-clipboard-list fa-2x "></i></div>
+                                    <span><h6 class="small-text">Landlord Statement</h6></span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <div class="fixed-width-btn">
+                            <a class="btnx" href="{{ url_for('api.rentreport') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loaderx"><i class="fas fa-calendar-day fa-2x "></i></div>
+                                    <span><h6 class="small-text">Rent statement</h6></span>
+                                </button>
+                            </a>
+                        </div>
+                        
+
+                        <!-- <div class="fixed-width-btn">
+                            <a class="btn1" href="{{ url_for('api.summarisedcombinedbill') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader1"><i class="fas fa-user-friends fa-2x "></i></div>
+                                    <span><h6 class="small-text">Income per Owner</h6></span>
+                                </button>
+                            </a>
+                        </div> -->
+        
+        
+                        <div class="fixed-width-btn">
+                            <a class="btn12" href="{{ url_for('api.viewmonthlyreading') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader12"><i class="fas fa-tint fa-2x "></i></div>
+                                    <span><h6 class="small-text">Readings report</h6></span>
+                                </button>
+                            </a>
+                        </div> 
+                    </div>
+
+                    <div class="divjust-end center-btn">
+
+                        <div class="fixed-width-btn">
+                            <a class="btn2" href="{{ url_for('api.externaldetail') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader2"><i class="fas fa-city fa-2x "></i></div>
+                                    <span><h6 class="small-text">Detailed landlord</h6></span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <div class="fixed-width-btn">
+                            <a class="btn3" href="{{ url_for('api.internaldetail') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader3"><i class="fas fa-calendar-week fa-2x "></i></div>
+                                    <span><h6 class="small-text">Detailed internal</h6></span>
+                                </button>
+                            </a>
+                        </div>  
+
+                        <div class="fixed-width-btn">
+                            <a class="btn4" href="{{ url_for('api.viewpayment') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader4"><i class="fas fa-layer-group fa-2x "></i></div>
+                                    <span><h6 class="small-text">Payments reports</h6></span>
+                                </button>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="divjust-end center-btn">
+                        <div class="fixed-width-btn">
+                            <a class="btn7" href="{{ url_for('api.viewhouses') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader7"><i class="fas fa-laptop-house fa-2x "></i></div>
+                                    <span><h6 class="small-text">Houses per property</h6></span>
+                                </button>
+                            </a>
+                        </div>
+        
+                        <div class="fixed-width-btn">
+                            <a class="btn8" href="{{ url_for('api.viewtenancy') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader8"><i class="fas fa-users fa-2x "></i></div>
+                                    <span><h6 class="small-text">Resident Tenants</h6></span>
+                                </button>
+                            </a>
+                        </div>
+        
+                        <div class="fixed-width-btn">
+                            <a class="btn9" href="{{ url_for('api.viewvacatedtenants') }}">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width">
+                                    <div class="loader9"><i class="fas fa-address-card fa-2x "></i></div>
+                                    <span><h6 class="small-text">Vacated Tenants</h6></span>
+                                </button>
+                            </a>
+                        </div>   
+
+                    </div>
+                    <div class="divjust-end center-btn">
+
+                        <div class="fixed-width-btn">
+                            <a class="btn10" href="{{ url_for('api.summarisedcombinedbill') }}">
+                                <button class="btn btn-outline-success text-black borderles my-width" disabled>
+                                    <div class="loader10"><i class="fas fa-weight fa-2x "></i></div>
+                                    <span><h6 class="small-text">Meters per property</h6></span>
+                                </button>
+                            </a>
+                        </div>
+        
+                        <div class="fixed-width-btn">
+                            <a class="btn11" href="{{ url_for('api.tenantstatement') }}">
+                                <button class="btn btn-outline-success borderles my-width">
+                                    <div class="loader11r"><i class="fas fa-file-contract fa-2x"></i></div>
+                                    <span><h6 class="small-text">Tenant Statement <span class="badge badge-danger badge-counter">New</span>
+                                    </h6></span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <div class="fixed-width-btn">
+                            <a class="btn5" href="#">
+                                <button class="btn btn-outline-success text-black borderles mb-1 my-width" disabled>
+                                    <div class="loader5"><i class="fas fa-clipboard-list fa-2x "></i></div>
+                                    <span><h6 class="small-text">Expenses per property</h6></span>
+                                </button>
+                            </a>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="landlord_statements" class="">
+        
+
+            <fieldset class="bg-white pl-4 pr-4 mb-3">
+                <legend class="legend"><span class="text-primary">Based on actual collections:</span></legend>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                        <div class="car h-0 py-0">
+                            <div class="report-card-padding">
+                                <div class="divjust-end center-btn">          
+                    
+                                    <div class="report-btn">
+                                        <a class="" href="{{ url_for('api.rentstatement') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class=""><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Rent statement </span>
+                                            </button>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="report-btn">
+                                        <a class="" href="{{ url_for('api.waterstatement') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class="loader6"><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Water statement </span>
+                                            </button>
+                                        </a>
+                                    </div>
+                
+                                    <div class="report-btn">
+                                        <a class="" href="{{ url_for('api.garbagestatement') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class="loader6"><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Garbage statement </span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                                    <div class="report-btn">
+                                        <a class="dev" href="#">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class="loader3"><i class="fas fa-receipt fa-2x "></i></div>
+                                                <span class="sss text-black">Landlord statement</span>
+                                                <span class="badge badge-primary badge-counter">summary statement</span>
+                
+                                            </button>
+                                        </a>
+                                    </div>
+                
+                                    <div class="report-btn">
+                                        <a class="btn4" href="{{ url_for('api.landlordprofitandloss') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class=""><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Landlord statement</span>
+                                                <span class="badge badge-primary badge-counter">full statement</span>
+                                            </button>
+                                        </a>
+                                    </div>
+                
+                
+                                    <div class="report-btn dispnone">
+                                        <a class="dev" href="#">
+                                            <button class="btn btn-outline-success borderles report-card mb-1">
+                                                <div class=""><i class="fas fa-layer-group fa-2x"></i></div>
+                                                <span class="sss text-black">Landlord statement IV <span class="badge badge-danger badge-counter">quarterly | annually</span></span>
+                                            </button>
+                                        </a>
+                                    </div>
+                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="bg-white pl-4 pr-4">
+                <legend class="legend"><span class="text-primary">Based on projected collections:</span></legend>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                        <div class="car h-0 py-0">
+                            <div class="report-card-padding">
+                                <div class="divjust-end center-btn">
+                
+                
+        
+                
+                                    <div class="report-btn">
+                                        <a class="btn3" href="{{ url_for('api.monthlystatement') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class="loader3"><i class="fas fa-receipt fa-2x "></i></div>
+                                                <span class="sss text-black">Landlord statement</span>
+                                                <span class="badge badge-primary badge-counter">summary statement</span>
+                
+                                            </button>
+                                        </a>
+                                    </div>
+                
+        
+                                    <div class="report-btn">
+                                        <a class="btn4" href="{{ url_for('api.externaldetail') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class=""><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Landlord statement</span>
+                                                <span class="badge badge-primary badge-counter">full statement</span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                                    <div class="report-btn hide">
+                                        <a class="btn2" href="{{ url_for('api.tenantstatement') }}">
+                                            <button class="btn btn-outline-success report-card mb-1">
+                                                <div class="loader2"><i class="fas fa-file-contract fa-2x"></i></div>
+                                                <span class="sss text-black">Tenant Statement I
+                                            </span>
+                
+                                            </button>
+                                        </a>
+                                    </div>
+                
+                                    <div class="report-btn hide">
+                                        <a class="dev" href="#">
+                                            <button class="btn btn-outline-success report-card mb-1">
+                                                <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                                <span class="sss text-black">Tenant Statement II
+                                            </span>
+                                            <span class="badge badge-danger badge-counter">new </span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                                    <div class="report-btn hide">
+                                        <a class="btn8" href="{{ url_for('api.expensedetail') }}">
+                                            <button class="btn btn-outline-success borderles report-card mb-1">
+                                                <div class="loader8"><i class="fas fa-file fa-2x"></i></div>
+                                                <span class="sss text-black">Cost of sales</span>
+                                                <span class="badge badge-primary badge-counter">disbursements</span>
+                                            </button>
+                                        </a>
+                                    </div>
+                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <fieldset class="bg-white pl-4 pr-4">
+                <legend class="legend"><span class="text-primary">Others:</span></legend>
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                        <div class="car h-0 py-0">
+                            <div class="report-card-padding">
+                                <div class="divjust-end center-btn">
+                
+                                    <div class="report-btn">
+                                        <a class="btn8" href="{{ url_for('api.expensedetail') }}">
+                                            <button class="btn btn-outline-success borderles report-card mb-1">
+                                                <div class="loader8"><i class="fas fa-file fa-2x"></i></div>
+                                                <span class="sss text-black">Expenses</span>
+                                                <span class="badge badge-primary badge-counter">disbursements</span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                
+                                    <div class="report-btn">
+                                        <a class="btn3" href="{{ url_for('api.internaldetail') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class="loader3"><i class="fas fa-receipt fa-2x "></i></div>
+                                                <span class="sss text-black">Invoices report</span>
+                                                <span class="badge badge-primary badge-counter">general statement</span>
+                
+                                            </button>
+                                        </a>
+                                    </div>
+                
+        
+                                    <div class="report-btn">
+                                        <a class="btn4" href="{{ url_for('api.viewpayment') }}">
+                                            <button class="btn btn-outline-success  report-card mb-1">
+                                                <div class=""><i class="fas fa-file-alt fa-2x "></i></div>
+                                                <span class="sss text-black">Payments report</span>
+                                                <span class="badge badge-primary badge-counter">collections statement</span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                                    <div class="report-btn hide">
+                                        <a class="btn2" href="{{ url_for('api.tenantstatement') }}">
+                                            <button class="btn btn-outline-success report-card mb-1">
+                                                <div class="loader2"><i class="fas fa-file-contract fa-2x"></i></div>
+                                                <span class="sss text-black">Tenant Statement I
+                                            </span>
+                
+                                            </button>
+                                        </a>
+                                    </div>
+                
+                                    <div class="report-btn hide">
+                                        <a class="dev" href="#">
+                                            <button class="btn btn-outline-success report-card mb-1">
+                                                <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                                <span class="sss text-black">Tenant Statement II
+                                            </span>
+                                            <span class="badge badge-danger badge-counter">new </span>
+                                            </button>
+                                        </a>
+                                    </div>
+        
+                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+
+
+
+
+
+
+    </div>
+
+    <div id="office_statements" class="dispnone">
+        <div class="row">
+
+            <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                <div class="car h-0 py-0">
+                    <div class="card-body bg-white report-card-padding">
+                        <div class="divjust-end center-btn">          
+            
+                            <div class="report-btn dispnone">
+                                <a class="btn5" href="{{ url_for('api.internaldetail') }}">
+                                    <button class="btn btn-outline-success  report-card mb-1">
+                                        <div class="loader5"><i class="fas fa-calendar-alt fa-2x "></i></div>
+                                        <span class="sss text-black">Internal report</span>
+                                        <!-- <span class="badge badge-primary badge-counter">per property</span> -->
+                                    </button>
+                                </a>
+                            </div>
+                            
+                            
+                            <div class="report-btn dispnone">
+                                <a class="btn6" href="{{ url_for('api.rentreport') }}">
+                                    <button class="btn btn-outline-success  report-card mb-1">
+                                        <div class="loader6"><i class="fas fa-file-alt fa-2x "></i></div>
+                                        <span class="sss text-black">Rent statement</span>
+                                    </button>
+                                </a>
+                            </div>
+        
+                            <div class="report-btn dispnone">
+                                <a class="btn7" href="{{ url_for('api.viewmonthlyreading') }}">
+                                    <button class="btn btn-outline-success  report-card mb-1">
+                                        <div class="loader7"><i class="fas fa-tint fa-2x "></i></div>
+                                        <span class="sss text-black">Readings report</span>
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div class="report-btn">
+                                <a class="btn1" href="{{ url_for('api.viewpayment') }}">
+                                    <button class="btn btn-outline-success  report-card mb-1">
+                                        <div class="loader1"><i class="fas fa-coins fa-2x "></i></div>
+                                        <span class="sss text-black">All collections</span>
+                                    </button>
+                                </a>
+                            </div>
+        
+                            <div class="report-btn">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-secondary  report-card mb-1">
+                                        <div class="loader7"><i class="fas fa-file fa-2x "></i></div>
+                                        <span class="sss text-black">Collection ratios <span class="badge badge-danger badge-counter"></span></span>
+                                    </button>
+                                </a>
+                            </div>
+        
+                            <div class="report-btn">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-secondary  report-card mb-1">
+                                        <div class="loader7"><i class="fas fa-file fa-2x "></i></div>
+                                        <span class="sss text-black">Commission income <span class="badge badge-danger badge-counter"></span></span>
+                                    </button>
+                                </a>
+                            </div>
+        
+        
+                            <div class="report-btn">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success  report-card mb-1">
+                                        <div class="loader7"><i class="fas fa-file fa-2x "></i></div>
+                                        <span class="sss text-black">Expenses <span class="badge badge-danger badge-counter">internal</span></span>
+                                    </button>
+                                </a>
+                            </div>
+        
+                            
+        
+                            <div class="report-btn">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success borderles report-card mb-1">
+                                        <div class=""><i class="fas fa-layer-group fa-2x"></i></div>
+                                        <span class="sss text-black">Profit and Loss <span class="badge badge-danger badge-counter">internal</span></span>
+                                    </button>
+                                </a>
+                            </div>
+
+        
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="tenant_statements" class="dispnone">
+        <div class="row">
+
+            <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                <div class="car h-0 py-0">
+                    <div class="card-body bg-white report-card-padding">
+                        <div class="divjust-end center-btn">
+        
+
+        
+                            <div class="report-btn">
+                                <a class="btn2" href="{{ url_for('api.tenantstatement') }}">
+                                    <button class="btn btn-outline-success report-card mb-1">
+                                        <div class="loader2"><i class="fas fa-file-contract fa-2x"></i></div>
+                                        <span class="sss text-black">Tenant Statement I
+                                    </span>
+        
+                                    </button>
+                                </a>
+                            </div>
+        
+                            <div class="report-btn">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success report-card mb-1">
+                                        <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                        <span class="sss text-black">Tenant Statement II
+                                    </span>
+                                    <span class="badge badge-danger badge-counter">new </span>
+        
+        
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div class="report-btn hide">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success report-card mb-1">
+                                        <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                        <span class="sss text-black">Tenant Statement II
+                                    </span>
+                                    <span class="badge badge-danger badge-counter">new </span>
+        
+        
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div class="report-btn hide">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success report-card mb-1">
+                                        <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                        <span class="sss text-black">Tenant Statement II
+                                    </span>
+                                    <span class="badge badge-danger badge-counter">new </span>
+        
+        
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div class="report-btn hide">
+                                <a class="dev" href="#">
+                                    <button class="btn btn-outline-success report-card mb-1">
+                                        <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                        <span class="sss text-black">Tenant Statement II
+                                    </span>
+                                    <span class="badge badge-danger badge-counter">new </span>
+        
+        
+                                    </button>
+                                </a>
+                            </div>
+                
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="col-xl-12 col-md-12 mb-1 mobile-malaysian no-padding dispnone">
+        <div class="car shado h-0 py-0">
+            <div class="card-body bg-white report-card-padding">
+                <div class="divjust-end center-btn">
+    
+                    <div class="report-btn hide">
+                        <a class="btn7" href="{{ url_for('api.viewhouses') }}">
+                            <button class="btn btn-outline-success  report-card-alt mb-1" disabled>
+                                <div class="loader7"><i class="fas fa-house-user fa-2x "></i></div>
+                                <span class="sss text-black">House Units</span>
+                            </button>
+                        </a>
+                    </div>
+    
+    
+                    <div class="report-btn hide">
+                        <a class="btn9" href="{{ url_for('api.viewvacatedtenants') }}">
+                            <button class="btn btn-outline-success  report-card-alt mb-1" disabled>
+                                <div class="loader9"><i class="fas fa-address-card fa-2x "></i></div>
+                                <span class="sss text-black">Vacated Tenants</span>
+                            </button>
+                        </a>
+                    </div>              
+
+                    <div class="report-btn hide">
+                        <a class="btn8" href="{{ url_for('api.viewtenancy') }}">
+                            <button class="btn btn-outline-success  report-card-alt mb-1" disabled>
+                                <div class="loader8"><i class="fas fa-users fa-2x "></i></div>
+                                <span class="sss text-black">Resident Tenants</span>
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="report-btn hide">
+                        <a class="btn10" href="{{ url_for('api.viewmeters') }}">
+                            <button class="btn btn-outline-secondary  report-card-alt mb-1" disabled>
+                                <div class="loader10"><i class="fas fa-faucet fa-2x text-secondary"></i></div>
+                                <span class="sss text-black">Meters</span>
+                            </button>
+                        </a>
+                    </div>
+              
+                    <div class="report-btn hide">
+                        <a class="btn2" href="{{ url_for('api.summarisedcombinedbill') }}">
+                            <button class="btn btn-outline-success  report-card-alt mb-1" disabled>
+                                <div class="loader2"><i class="fas fa-file fa-2x "></i></div>
+                                <span class="sss text-black">General report</span>
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="report-btn hide">
+                        <a class="btnxxx" href="#">
+                            <button class="btn btn-outline-secondary  report-card-alt mb-1" disabled>
+                                <div class="loaderxxx"><i class="fas fa-comments fa-2x text-secondary"></i></div>
+                                <span class="sss text-black">Tenant requests</span>
+                            </button>
+                        </a>
+                    </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+
+<!-- 
+<script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script> -->
+<!-- <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script> -->
+
+<script>
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML =
+      h + ":" + m + ":" + s;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
+    }
+</script>
+
+<script>
+    var myDate = new Date();
+    var hrs = myDate.getHours();
+  
+    var greet;
+  
+    if (hrs < 12)
+        greet = 'Good Morning';
+    else if (hrs >= 12 && hrs <= 17)
+        greet = 'Good Afternoon';
+    else if (hrs >= 17 && hrs <= 24)
+        greet = 'Good Evening';
+  
+    document.getElementById('greetings').innerHTML = greet ;
+  </script> 
+{% endblock %}
+

@@ -1,0 +1,59 @@
+<ol class="progtrckr" data-progtrckr-steps="4">
+    <li class="{{progress1}} text-xs">{{level}}</li>
+    <li class="{{progress2}} text-xs">{{status}}</li>
+    <li class="{{progress3}} text-xs">Running</li>
+    <li class="{{progress4}} text-xs">Complete</li>
+</ol>
+
+<div class="divjust-end has-margin-top">
+
+    <span class="text-white small">{{reqobj.title}}-No.{{reqobj.id}}</span>
+    <span class="text-warning font-weight-bold small">{{comment}}</span>
+    <button id ="del-request" type="button" class="bg-gradient-secondary text-gray-600 del-req-btn small">Delete</button>
+
+</div>
+
+<script>
+$(document).ready(function () {
+
+
+    var status = {{reqobj.status|tojson}};
+    console.log(status)
+    // $('#del-request').removeClass("bg-gradient-danger");
+    // $('#del-request').removeClass("text-white");
+    // $('#del-request').addClass("bg-gradient-secondary");
+    // $('#del-request').addClass("text-gray-600");
+    $("#del-request").attr("disabled", true);
+    if (status == "completed" || status == "rejected" ){
+        //Enable disBtn
+        $('#del-request').removeClass("bg-gradient-secondary");
+        $('#del-request').removeClass("text-gray-600");
+        $('#del-request').addClass("bg-gradient-warning");
+        $('#del-request').addClass("text-white");
+        $("#del-request").attr("disabled", false);
+        };
+
+});
+</script>
+
+<script>
+    var state = {{reqid|tojson}};
+    $("#del-request").on('click',function(){
+
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.deleterequest') }}",
+                data: {
+                    requestid:state
+                },
+                success: function(response) {
+                    $("#trackrequest").remove()
+                    $("#trackrefresh").html(response);
+                }
+            });
+
+    
+  
+    });
+    </script>
+

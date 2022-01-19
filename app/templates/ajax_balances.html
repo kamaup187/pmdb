@@ -1,0 +1,65 @@
+<h5 class="modal-title text-black divjust-end underline overline  mt-3">
+    <span class="mr-3 smallify font-weight-bold">Balances</span>
+    <div>
+      <button id="closemodule2" class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button">X</button>
+    </div>
+  </h5>
+
+<div class="table-responsive">
+    <table id="reportData" class="table shadow" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th class="text-info font-weight-bold">Property</th>
+            <th class="text-info font-weight-bold">House</th>
+            <th class="text-info track-title-cell text-right">BBF</th>
+            <th class="text-info track-title-cell text-right">Due</th>
+            <th class="text-info track-title-cell text-right">Paid</th>
+            <th class="text-info track-title-cell text-right">Date</th>
+            <th class="text-info track-title-cell text-right">Balance</th>
+            <!-- <th class="text-success track-title-cell">Pledge</th> -->
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in bills%}
+            <tr>
+                <td class="first-data-cell">{{ i['prop'] }}</td>
+            <td class="data-cell font-weight-bold">{{ i['hst']|safe }}</td>
+            <td class="data-cell text-danger text-right">{{ i['arrears'] }}</td>
+            <td class="data-cell text-right">{{ i['total'] }}</td>
+            <td class="data-cell text-black text-right">{{ i['paid-alt']|safe }}</td>
+            <td class="data-cell text-right">{{ i['payment_date'] }}</td>
+            <td class="data-cell text-right {{i['highlight']}}">{{ i['balance'] }}</td>
+            <!-- <td class="data-cell">{{ i['pledge'] }}</td> -->
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#reportData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,3,4,5,6 ],type: 'natural' }],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+
+<script type="text/javascript">
+    $("#closemodule2").on('click',function(){
+        $("#body-block").removeClass("dispnone")
+        $("#propdisp").addClass("dispnone")
+        $("#list-area").removeClass("isopen text-danger")
+        $("#content-area").removeClass("isopen text-danger")
+        $("#search-area").removeClass("isopen")
+        $("#sidebarToggle").click();
+    });
+</script>

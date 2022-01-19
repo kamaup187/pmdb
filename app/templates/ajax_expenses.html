@@ -1,0 +1,941 @@
+
+    <div class="row">
+        <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+        <span id="exp_identifier" class="dispnone"></span>
+        <span id="editexp_identifier" class="dispnone"></span>
+        <span id="delexp_identifier" class="dispnone"></span>
+        <span id="target_identifier" class="dispnone">pending</span>
+
+
+        <div id="header-strip" class="col-lg-12 no-padding">
+            <div class="card-header py-1 card-bg divjust-end" >
+                <span class="text-white font-weight-bold text-xx shadow-alt">{{propname}}</span>
+                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-clipboard-check mr-1"></i>Expenses</div>
+                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white shadow-alt"><i class="fas fa-times"></i></div></button>
+            </div>
+        </div>
+
+        <div class="col-lg-3 no-padding desktop-malaysian">
+          <div class="center-btn expense-buttons divjust-end-sm">
+              <button type="button" class="btn btn-outline-success expense-btn font-weight-bold small m-1" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus"></i>Add expense</button>
+              <button type="button" class="btn btn-outline-info expense-btn small m-1" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus"></i>Deposit refund</button>
+          </div>
+        </div>
+
+        <div class="col-lg-12  no-padding mobile-malaysian underline-thin mb-2 mt-2">
+          <div class="center-btn divjust-end-sm mb-2">
+              <span type="button" class="btn btn-outline-primary font-weight-bold" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus mr-2"></i>add expense</span>
+              <span type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus-circle mr-2"></i>deposit refund</span>
+          </div>
+        </div>
+
+        <div class="col-lg-12">
+ 
+                       
+                            <div class="toggleswitch divbg">
+                              <span>
+                                <span class="smallify text-info">Pending</span>
+                                <label class="switch">
+                                  <input id="reporttoggle" type="checkbox" checked>
+                                  <span class="slider round"></span>
+                                </label>
+                              </span>
+                            
+                              <span>
+                                <span class="smallify text-success">Approved</span>
+                                <label class="switch">
+                                  <input id="reporttoggle2" type="checkbox">
+                                  <span class="slider round"></span>
+                                </label>
+                              </span>
+                  
+                              <span>
+                                <span class="smallify text-danger">Rejected</span>
+                                <label class="switch">
+                                  <input id="reporttoggle4" type="checkbox">
+                                  <span class="slider round"></span>
+                                </label>
+                              </span>
+
+                              <span class="mt-3">
+                                <label for="period" class="no-wrap">
+                                  <input id="period" type="checkbox" checked> 
+                                  <span class="smallify text-success font-weight-bold">Current</span>
+                                </label>
+                              </span>
+                    
+                            </div>
+
+                            <!-- <form method="POST" action="/property/access">
+
+                                <div class="form-group divjust-end-lg">
+
+                                    <div class="">
+                                      <input id="search_date" name="date" type="text" placeholder="Select date" onfocus="(this.type='date')" class="form-control">
+                                    </div>
+
+                                    <div class="">
+                                      <select class="select-css" id ="search_status">
+                                        <option disabled selected value> Search by status </option>
+                                        
+                                        <option value="pending">Pending</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="rejected">Rejected</option>
+                                        <option value="completed">Completed</option>
+                                        
+                                      </select>
+                                    </div>
+                                    <div class="center-btn divjust-end-sm">
+                                      <button type="reset" class="bg-gradient-danger borderless expense-form-btn has-margin small text-white">Clear</button>
+                                      <button id="submit" type="button" class="bg-gradient-success borderless expense-form-btn has-margin text-white">Search</button>
+                                    </div>
+                                </div>
+                            </form> -->
+
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 no-padding">
+
+          <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+            <div class="bar-alt"></div>
+            <div class="bar-alt"></div>
+            <div class="bar-alt"></div>
+          </div>
+            <div id="reqdata" class="table-responsive">
+              <span class="font-weight-bold mr-2 smallify text-danger mt-1">Pending expenses:</span>
+              <!-- <span>
+                <label>
+                  <span class="smallify text-gray-500">Recent data only</span>
+                  <input id="date-check" type="checkbox" checked>
+                </label>
+              </span> -->
+              <table id="expenseData" class="table shadow no-margin-bottom" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="text-info font-weight-bold">No.</th>
+                      <th class="text-info font-weight-bold">Item/Service</th>
+                      <th class="text-info track-title-cell">Category</th>
+                      <th class="text-info track-title-cell">Qty</th>
+                      <th class="text-info track-title-cell">House</th>
+                      <th class="text-info track-title-cell">Cost</th>
+                      <th class="text-info track-title-cell">Labour</th>
+                      <th class="text-info track-title-cell">Total</th>
+                      <th class="text-info track-title-cell">Status</th>
+                      <th class="text-info track-title-cell">Date</th>
+                      <th class="text-info track-title-cell">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in items%}
+                    <tr>
+                      <td class="first-data-cell">{{ bill['id'] }}</td>
+                      <td class="data-cell">{{ bill['name'] }}</td>
+                      <td class="data-cell">{{ bill['type'] }}</td>
+                      <td class="data-cell">{{ bill['qty'] }}</td>
+                      <td class="data-cell">{{ bill['house'] }}</td>
+                      <td class="data-cell">{{ bill['cost'] }}</td>
+                      <td class="data-cell">{{ bill['labour'] }}</td>
+                      <td class="data-cell">{{ bill['amount'] }}</td>
+                      <td class="data-cell">{{ bill['status'] }}</td>
+                      <td class="data-cell">{{ bill['date'] }}</td>
+                      <td class="data-cell">
+                        <div class="dropdown no-arrow">
+                          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header underline">Item: <span class="text-info font-weight-bold">{{bill['name']}}</span></div>
+                
+                            <div>
+                              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{bill['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#approveModal">Approve/reject</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{bill['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editExpenseModal">Edit</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-trash-alt text-danger ml-3 mr-2"></i><span id="{{bill['delid']}}" type="button" class="borderless ellipsis btn-outline-info modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteExpenseModal">Delete</span>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                      
+                  </table>
+            </div>
+        </div>
+</div>
+
+
+<script>
+  $("#close-propdisp").on('click',function(){
+    $('#proplist').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+    $('#content-area').removeClass("isopen text-danger");
+  });
+</script>
+
+<div class="text-center">
+
+  <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Expense request approval</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <div class="form-group">
+                    <select class="select-css" id ="selected_action">
+                      <option disabled selected value> Select action </option>
+                      
+                      <option value="completed">Approve</option>
+                      <option value="rejected">Reject</option>
+                      
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="desc" name="desc" class="form-control" placeholder="Description">
+                  </div>
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-foote divbg">
+          <button id="submitmodalThree" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button>
+          <button type="button" id="closemodalThree" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+    <div class="modal fade" id="expenseRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header">
+            <h5 class="modal-title text-xx text-info" id="exampleModalLabel">New expense</h5>
+          </div>
+          <div class="modal-body">
+            <div class="media mb-2">
+              <div class="media-body">
+  
+                <div class="position-relative">
+                  <form class="" action="" method="POST">
+
+                    <div class="underline-thin">
+
+                    
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Expense</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemname" class="form-control ph" type="text" placeholder="Eg Tokens, paint">
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Period</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <select class="select-css" id ="month" required>
+                          <option disabled selected value> Select month </option>
+                          
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                          
+                        </select>
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>                    
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Category</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <select class="select-css" id ="expense_type" required>
+                          <option disabled selected value> Expense type </option>
+                          
+                          <option value="token">Electricity bill(tokens)</option>
+                          <option value="water_bill">Water bill(Council)</option>
+                          <option value="electricity_service">Electrician service</option>
+                          <option value="plumbing_service">Plumbing service</option>
+                          <option value="cleaning_tool">Cleaning tools</option>
+                          <option value="salaries">Salary payment</option>
+                          <option value="paint">Paint & Labour</option>
+                          <option value="other">Other</option>
+                          
+                        </select>
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Quantity</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemqty" class="form-control ph" type="text" placeholder="Eg. 5lts (if applicable)">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">House</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemhouse" class="form-control ph" type="text" placeholder="Eg. H2,D5,Parking">
+                        <!-- <span class="fa field-icon-two text-info small">Eg</span> -->
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Cost</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemcost" class="form-control pl-5 ph" type="text" placeholder="Eg. 2000">
+                        <span class="fa field-icon-two text-info small">Kshs</span>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Labour</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="labourcost" class="form-control pl-5 ph" type="text" placeholder="Eg. 500">
+                        <span class="fa field-icon-two text-info small">Kshs</span>
+                      </div>
+                    </div>
+
+                    <div class="row dispnone">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Desc.</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemdesc" class="form-control pl-5 ph-dark" type="text" placeholder="description">
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>
+
+                  </div>
+
+                    <div class="divbg">
+                      <button id="submitmodalOne" type="button" class="btn btn-outline-secondary btn-sm mt-2" disabled>Submit</button>
+                      <button type="button" id="closemodalOne" class="btn btn-outline-danger btn-sm mt-2" data-dismiss="modal">Close</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+
+
+                  </form>
+  
+                </div>
+              </div>
+            </div>
+          </div>
+  
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="dynamic_modal" class="text-center">
+  <div class="modal fade" id="depositRefundModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Deposit Refund</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <!-- <div class="form-group">
+                    <select class="form-control" id ="select_expense">
+                      <option disabled selected value> Select expense item </option>
+                      {% for o in approved_exps %}
+                      <option value="{{ o }}">{{ o }}</option>
+                      {% endfor %}
+                      
+                    </select>
+                  </div> -->
+                  <div class="row form-group">
+                    <div class="col-sm-6">
+                      <input id="deposittenant" class="form-control" placeholder="Tenant">
+                    </div>
+                    <div class="col-sm-6">
+                      <input id="deposithouse" class="form-control" placeholder="House">
+                    </div>
+                  </div>
+
+                  <div class="row form-group">
+                    <div class="col-sm-6">
+                      <input id="depositamount" class="form-control" placeholder="Available deposit" disabled>
+                    </div>
+                    <div class="col-sm-6">
+                      <input id="depositcost" class="form-control" placeholder="Refund amount">
+                    </div>
+                  </div>
+
+                  <div class="modal-foote divbg">
+                    <button id="submitmodalTwo" type="button" class="btn btn-outline-success btn-sm">Submit</button>
+                    <button type="button" id="closemodalTwo" class="btn btn-outline-danger btn-sm" data-dismiss="modal">Close</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center">
+
+  <div class="modal fade" id="editExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="editExpenseModalLabel">Expense editing</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form>
+                  <div class="underline-thin">
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Expense</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="editname" class="form-control ph" type="text" placeholder="Eg Tokens, paint">
+                      <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Period</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <select class="select-css" id ="editmonth" required>
+                        <option disabled selected value> Select month </option>
+                        
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                        
+                      </select>
+                      <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                    </div>
+                  </div>                    
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Category</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <select class="select-css" id ="editexpense_type" required>
+                        <option disabled selected value> Expense type </option>
+                        
+                        <option value="token">Electricity bill(tokens)</option>
+                        <option value="water_bill">Water bill(Council)</option>
+                        <option value="electricity_service">Electrician service</option>
+                        <option value="plumbing_service">Plumbing service</option>
+                        <option value="cleaning_tool">Cleaning tools</option>
+                        <option value="salaries">Salary payment</option>
+                        <option value="paint">Paint & Labour</option>
+                        <option value="other">Other</option>
+                        
+                      </select>
+                      <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Quantity</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="editqty" class="form-control pl-5 ph" type="text" placeholder="Eg. 5lts">
+                      <span class="fa field-icon-two text-info small">Qty</span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">House</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="edithouse" class="form-control ph" type="text" placeholder="Eg. H2,D5,Parking">
+                      <!-- <span class="fa field-icon-two text-info small">Eg</span> -->
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Cost</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="editcost" class="form-control pl-5 ph" type="text" placeholder="Eg. 2000">
+                      <span class="fa field-icon-two text-info small">Kshs</span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Labour</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="editlabour" class="form-control pl-5 ph" type="text" placeholder="Eg. 500">
+                      <span class="fa field-icon-two text-info small">Kshs</span>
+                    </div>
+                  </div>
+
+                  <div class="row dispnone">
+                    <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Desc.</span></div>
+                    <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                      <input id="editdesc" class="form-control pl-5 ph-dark" type="text" placeholder="description">
+                      <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                    </div>
+                  </div>
+
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+
+                </div>
+
+                  <div class="divbg">
+                    <button id="submitmodalFour" type="button" class="btn btn-outline-success btn-sm mt-2">Submit</button>
+                    <button type="button" id="closemodalFour" class="btn btn-outline-danger btn-sm mt-2" data-dismiss="modal">Close</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade center-btn" id="deleteExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm delete</h5>
+      </div>
+      <div class="modal-body">Delete the expense?</div>
+      <div class="has-margin-bottom divbg">
+          <button id="delete_expense" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+          <button type="button" id="closeDeleteExpenseModal" class="btn btn-info btn-sm has-margin-bottom" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(30000,"swing");
+    }, 10000);
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#expenseData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 10,
+      "searching":false,
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script> 
+
+  var url = "{{ url_for('api.expensemanagement') }}"
+
+  $("#reporttoggle").on('change',function(){
+    
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      $("#target_identifier").html("pending")
+      $("#barloader-alt").removeClass("dispnone")
+
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb4 = document.getElementById("reporttoggle4");
+      cb4.checked = false;
+
+      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
+
+      $.ajax({
+                url: url,
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "pending",
+                  period:period
+                },
+                success: function(response) {
+                  $("#barloader-alt").addClass("dispnone")
+
+                  $("#reqdata").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      $("#target_identifier").html("completed")
+      $("#barloader-alt").removeClass("dispnone")
+
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      // var cb3 = document.getElementById("reporttoggle3");
+      // cb3.checked = false;
+      var cb4 = document.getElementById("reporttoggle4");
+      cb4.checked = false;
+
+      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
+
+      $.ajax({
+                url: url,
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "completed",
+                  period:period
+                },
+                success: function(response) {
+                  $("#barloader-alt").addClass("dispnone")
+
+                  $("#reqdata").html(response);
+                }
+              });
+    }
+  
+  });
+
+  
+  $("#period").on('change',function(){
+    $("#barloader-alt").removeClass("dispnone")
+    if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
+    
+    $.ajax({
+                url: url,
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: $("#target_identifier").text(),
+                  period: period
+                },
+                success: function(response) {
+                  $("#barloader-alt").addClass("dispnone")
+                  $("#reqdata").html(response);
+                }
+              });
+
+
+  });
+
+  $("#reporttoggle4").on('change',function(){
+    
+    var cb4 = document.getElementById("reporttoggle4");
+    if (cb4.checked){
+      $("#target_identifier").html("rejected")
+      $("#barloader-alt").removeClass("dispnone")
+
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+
+      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
+
+      $.ajax({
+                url: url,
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "rejected",
+                  period:period
+                },
+                success: function(response) {
+                  $("#barloader-alt").addClass("dispnone")
+
+                  $("#reqdata").html(response);
+                }
+              });
+    }
+
+  });
+
+</script>
+
+<script>
+  var expids = "{{ expids|safe }}";
+  var exp_ids = expids.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(exp_ids)
+  $.each(exp_ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#delexp_identifier").html(item)
+        }else{
+          $("#editexp_identifier").html(item)
+        }
+        
+      }else{
+        $("#exp_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+<script>
+  $('#itemname').keyup(function() {
+      var empty = false;
+      
+          if ($('#itemname').val() == "") {
+              empty = true;
+          }
+   
+      if (empty) {
+          $('#submitmodalOne').attr('disabled', 'disabled');
+      } else {
+        $('#submitmodalOne').removeAttr('disabled');
+        $('#submitmodalOne').removeClass('btn-outline-secondary')
+        $('#submitmodalOne').addClass('btn-outline-success')
+      }
+  });
+
+</script>
+
+<script>
+  $("#submitmodalOne").on('click',function(){
+    $("#barloader-alt").removeClass("dispnone")
+
+    $("#closemodalOne").click();
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              propid:$("#prop_identifier").text(),
+              exp_type:$("#expense_type").val(),
+              name:$("#itemname").val(),
+              month:$("#month").val(),
+              qty:$("#itemqty").val(),
+              house:$("#itemhouse").val(),
+              cost:$("#itemcost").val(),
+              labour:$("#labourcost").val(),
+              desc:$("#itemdesc").val(),
+              run:"expenserequest"
+            },
+            success: function(response) {      
+              $("#barloader-alt").addClass("dispnone")
+
+              $('#submitmodalOne').attr('disabled', 'disabled');
+              $('#submitmodalOne').addClass('btn-outline-secondary')
+              $('#submitmodalOne').removeClass('btn-outline-success')
+       
+              $("#reqdata").html(response);
+              $(".reset").click();
+          }
+      });
+});
+</script>
+
+
+<script>
+  $("#submitmodalTwo").on('click',function(){
+    $("#closemodalTwo").click();
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              propid:$("#prop_identifier").text(),
+              exp_type:"deposit_refund",
+              name:$("#deposittenant").val(),
+              house:$("#deposithouse").val(),
+              deposit:$("#depositamount").val(),
+              cost:$("#depositcost").val(),
+              desc:"Deposit refund",
+              run:"expenserequest"
+            },
+            success: function(response) {
+              // $("#detailed-payments").toggleClass('invoice dispnone');
+              // $("#payments-report").toggleClass('row dispnone');   
+              $(".reset").click();         
+              $("#reqdata").html(response);
+          }
+      });
+});
+</script>
+
+<script>
+  $("#submitmodalThree").on('click',function(){
+    $("#barloader-alt").removeClass("dispnone")
+
+    $("#closemodalThree").click();
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              propid:$("#prop_identifier").text(),
+              action:$("#selected_action").val(),
+              desc:$("#desc").val(),
+              expenseid:$("#exp_identifier").text(),
+
+              run:"expenseapproval"
+            },
+            success: function(response) {  
+              $(".reset").click();
+              $("#barloader-alt").addClass("dispnone")          
+              $("#reqdata").html(response);
+          }
+      });
+});
+</script>
+
+<script>
+  $("#submitmodalFour").on('click',function(){
+    $("#barloader-alt").removeClass("dispnone")
+
+    $("#closemodalFour").click();
+
+
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              propid:$("#prop_identifier").text(),
+              exp_type:$("#editexpense_type").val(),
+              name:$("#editname").val(),
+              qty:$("#editqty").val(),
+              house:$("#edithouse").val(),
+              deposit:$("#editdeposit").val(),
+              cost:$("#editcost").val(),
+              labour:$("#editlabour").val(),
+              desc:$("#editdesc").val(),
+              editid:$("#editexp_identifier").text(),
+
+              run:"expenseedit"
+            },
+            success: function(response) {
+              $("#barloader-alt").addClass("dispnone")
+
+              // var cb = document.getElementById("reporttoggle");
+              // cb.checked = false;
+              // var cb2 = document.getElementById("reporttoggle2");
+              // cb2.checked = false;
+              // var cb3 = document.getElementById("reporttoggle3");
+              // cb3.checked = false;
+              // var cb4 = document.getElementById("reporttoggle4");
+              // cb4.checked = false;
+              $(".reset").click();
+              $("#reqdata").html(response);
+          }
+      });
+
+});
+</script>
+
+<!-- <script>
+    $("#submit").on('click',function(){
+      $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Searching..');
+  
+        setTimeout(function(){
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.expenses') }}",
+              data: {
+                prop: $("#prop_identifier").text(),
+                date: $("#search_date").val(),
+                status: $("#search_status").val(),
+                run : "expensedisplay"
+              },
+              success: function(response) {
+                $('#submit').html('Search');
+                $("#reqdata").html(response);
+
+              }
+          });
+  
+        },300);
+    
+      });
+
+  </script> -->
+
+  <script>
+    
+    $("#delete_expense").on('click',function(){  
+      $("#barloader-alt").removeClass("dispnone")
+  
+      $.ajax({
+        url: "{{ url_for('api.expenses') }}",
+        type: "POST",
+        data: {
+              propid: $("#prop_identifier").text(),
+              delid:$("#delexp_identifier").text(),
+              run:"expensedelete"
+            },
+        success: function(response) {
+          $("#closeDeleteExpenseModal").click();
+          $("#barloader-alt").addClass("dispnone")
+
+          $("#reqdata").html(response);
+          
+        }
+      });
+    });
+    
+    </script>

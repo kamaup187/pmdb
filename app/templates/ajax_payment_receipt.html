@@ -1,0 +1,226 @@
+
+<div id="invoice" class="row receipt-margin mt-2">
+    <div class="col-md-1"></div>
+    <div class="col-md-12 border-data">
+        <div class="row receipt-data">
+            <div class="col-md-7 receipt-dat divjust-end text-primary">
+                <span><img src={{logopath}} alt="logo"></span>
+                <span>{{company}}</span>
+                <!-- <span>wewe</span> -->
+            </div>
+            <div class="col-md-5 text-right">
+                <div class="mobile-malaysian">
+                    <div class="small">Street Address : {{company.street_address}}</div>
+                    <div class="small">PO BOX : {{company.mail_box}}</div>
+                    <div class="small">Tel : {{company.phone}}</div>
+                    <div class="small">Email: {{company.email}}</div>
+                  </div>
+                  <div class="desktop-malaysian text-sll mb-3">
+                    <div class="small">Street Address : {{company.street_address}}</div>
+                    <div class="small">PO BOX : {{company.mail_box}}</div>
+                    <div class="small">Tel : {{company.phone}}</div>
+                    <div class="small">Email: {{company.email}}</div>
+                  </div>
+            </div>
+        </div>
+        <div class="center-btn underline mb-1">
+            RECEIPT FOR PAYMENT
+        </div>
+        <div class="divjust-end">
+            <span>Received from: <span class="ml-2">{{tenant}}</span></span>
+            <div class="text-right">
+                <div class="text-receipt border-data">
+                    <span class="mr-2"><strong>Receipt No: </strong>{{receiptno}}</span>
+                    <span class="pr-3">Date: <strong>{{paydate}}</strong></span>
+                </div>
+                <!-- <div class="text-receipt">
+                    <span class="mr-2">Tenant: <strong>{{tenant}}</strong></span>
+                    <span>Hse:<strong>{{house}}</strong></span>
+                </div> -->
+                <!-- <div class="text-receipt">
+                    <span class="font-weight-bold">{{prop}}</span>
+                </div> -->
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 text-left small smallify">
+                <span>Reference:</span>
+                <span class="text-dark">{{refnum}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 well invoice-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="dispnone">Ref</th>
+                    <th class="dispnone">Billed</th>
+                    <th class="dispnone">Paid</th>
+                </tr>
+                </thead>
+
+                <tbody class="smallify">
+                    <tr>
+                        <td class="text-left squeeze">Received amount</td>
+                        <td class="squeeze small text-gray-900"><strong>{{str_amount}} shillings only.</strong></td>
+                        <td class="squeeze small text-gray-900"><strong>KES {{amount}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="squeeze">Invoiced Amount</td>
+                        <td class="squeeze" colspan="2">KES {{bill}}</td>
+                    </tr>
+                    <tr>
+                        <td class="squeeze">Paid</td>
+                        <td class="squeeze text-gray-900">KES {{amount}}</td>
+                        <td class="squeeze"><span class="text-gray-900">Bal</span> KES {{balance}}</td>
+                    </tr>
+                    <!-- <tr>
+                        <td class="small">Received amount</td>
+                        <td colspan="2"><strong>KES {{amount}}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="small">Balance</td>
+                        <td colspan="2">KES {{balance}}</td>
+                    </tr> -->
+
+                    <tr>
+                        <td class="squeeze">Apartment</td>
+                        <td class="squeeze">{{prop}}</td>
+                        <td class="squeeze">House unit: {{house}}</td>
+                    </tr>
+                    <tr class="center-btn">
+                        <!-- <td class="small"></td> -->
+                        <td class="squeeze" colspan="3">Payment for the month of: <strong>{{str_month}}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="center-btn small">
+            <span class="text-gray-600 mr-5">With Thanks</span>
+            <span class="text-gray-500">Received by: {{user}}</span>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-11 text-left mt-2 mb-2 text-ss text-gray-900">
+                <span>Generated on: <span id="pdfgenTime"></span> </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="invoice" class="row receipt-margin">
+    <div class="col-md-1"></div>
+    <div class="col-md-12 border-data">
+        <div class="row">
+            <div class="col-md-12 receipt-data text-center text-primary">
+            <h4>Payment Receipt</h4>
+            </div>
+        </div>
+        <div class="divjust-end">
+            <div class="text-left">
+                <img src={{logopath}} alt="logo">
+            </div>
+            <div class="text-right">
+                <div class="hide">space</div>
+                <div class="text-receipt">
+                    <span class="mr-2"><strong>Receipt No: </strong>{{receiptno}}</span>
+                    <span>Date: <strong id="payTime"></strong></span>
+                </div>
+                <div class="text-receipt">
+                    <span class="mr-2">Tenant: <strong>{{tenant}}</strong></span>
+                    <span>Hse:<strong>{{house}}</strong></span>
+                </div>
+                <div class="text-receipt">
+                    <span class="font-weight-bold">{{prop}}</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12 text-left">
+                <span>Payment mode:</span>
+                <span class="font-weight-bold">{{paymode}}</span>
+            </div>
+            <div class="col-md-12 text-left small smallify">
+                <span>Purpose:</span>
+                <span class="text-dark">{{chargetype}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 well invoice-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Billed</th>
+                    <th>Paid</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="small">{{refnum}}</td>
+                    <td>KES {{bill}}</td>
+                    <td><strong>KES {{amount}}</strong></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>Balance</td>
+                    <td><strong>KES {{balance}}</strong></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11 text-left mt-2 mb-2 text-ss text-gray-900">
+                <span>Generated on: <span id="pdfgenTime"></span> </span>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+<script>
+  document
+    .getElementById("downloadPaymentPdf")
+    .addEventListener("click", function download() {
+        $('#downloadPaymentPdf').html("Downloading...")
+      const element = document.getElementById("invoice");
+      html2pdf()
+        .from(element)
+        .set({
+            margin:       [0.2, 0, 0.2, 0], 
+            filename:"receipt",
+            pageBreak: { mode: 'css', before:'#nextpage1'},
+            jsPDF: {orientation: 'portrait', unit: 'in', format: 'a5'}
+
+            })
+        .save();
+        setTimeout(function(){
+            $('#downloadPdf').html("<i class='fas fa-file-download text-primary'></i>")
+        },4000);
+    });
+</script>
+
+<script>
+    $("#closeReceipt").on('click',function(){
+        $('#form').toggleClass('dispform dispnone');
+        $('#receipt').toggleClass('dispnone receipt-pos');
+        $("#payment-form-response").addClass("dispnone");
+        $("#payment-form-request").removeClass("dispnone");
+        $('#clearBtn').click();
+    });
+</script>
+
+
+<script>
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+
+    document.getElementById('payTime').innerHTML = date ;
+    document.getElementById('pdfgenTime').innerHTML = dateTime ;
+</script>

@@ -1,0 +1,72 @@
+
+<div class="center-btn h5 font-weight-bold text-success mb-2">Processing payment</div>
+<div class="card-body center-btn">
+  <span class="text-dark text-ss">
+    Please enter PIN on your phone
+  </span>
+
+
+  <div class="divbg center-btn">
+    <button id="query" type="button" class="bg-gradient-success borderless text-white">Complete request</button>
+  </div>
+
+</div>
+
+<script>
+
+  $(document).ready(function(){
+      $("#query").click();
+    });
+
+  $("#query").on('click',function(){
+    $('#query').html('<span class="fa fa-spinner fa-spin mr-2" role="status" aria-hidden="true"></span>Analysing...(12s)');
+    setTimeout(function(){
+      $('#query').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Processing...(30s)');
+
+    },12000);
+    setTimeout(function(){
+      $('#query').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Waiting...');
+      $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.consumempesadata') }}",
+            data: {
+                nodata:"nodata"
+            },
+            success: function(response) {
+                $("#payment-form-response").html(response);
+            }
+    });
+    },40000);
+
+});
+
+</script>
+<!-- <script>
+
+  $(document).ready(function(){
+      $("#query2").click();
+    });
+
+  $("#query2").on('click',function(){
+    $('#query2').html('<span class="fa fa-spinner fa-spin mr-2" role="status" aria-hidden="true"></span>Analysing...(20s)');
+    setTimeout(function(){
+      $('#query2').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Processing...');
+
+    },18000);
+    setTimeout(function(){
+      $('#query2').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Waiting...');
+      $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.consumempesadata') }}",
+            data: {
+                nodata:"nodata"
+            },
+            success: function(response) {
+                $("#payment-form2").html(response);
+            }
+    });
+    },30000);
+
+});
+
+</script> -->

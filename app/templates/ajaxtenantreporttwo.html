@@ -1,0 +1,121 @@
+<div class="card shadow mb-4 bg-gradient-light">
+  <!-- Card Header - Accordion -->
+  <div class="d-block card-header bg-gradient-light py-2">
+    <h6 class="m-0 font-weight-bold text-primary divjust-end">
+      <span><i class="fas fa-fw fa-user-alt"></i> Tenant Detailed Monthly Report <span class="text-info">({{tenant}})</span></span>
+      <span>Current balance:<span class="text-danger"> Kshs {{balance}}</span></span>
+      <span><button id="close-top" type="reset" class="bg-gradient-danger borderless text-white">Close</button></span>
+    </h6>
+  </div>
+  <!-- Card Content - Collapse -->
+  <div class="collapse show" id="collapseCardExample2">
+    <div class="card-body">
+      <div class="table-responsive">
+        {% if bills %}
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Hse</th>
+                  <th>Rent</th>
+                  <th>Water</th>
+                  <th>Garb</th>
+                  <th>Elec</th>
+                  <th>Sec</th>
+                  <th>Misc</th>
+                  <th>Arrs</th>
+                  <th>Total</th>
+                  <th>Paid</th>
+                  <th>Bal</th>
+                  <!-- <th>B.By</th> -->
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th class="small">Month</th>
+                  <th class="small">Hse</th>
+                  <th class="small">Rent</th>
+                  <th class="small">Water</th>
+                  <th class="small">Garb</th>
+                  <th class="small">Elec</th>
+                  <th class="small">Sec</th>
+                  <th class="small">Misc</th>
+                  <th class="small">Arrs</th>
+                  <th class="small">Total</th>
+                  <th class="small">Paid</th>
+                  <th class="small">Bal</th>
+                  <!-- <th class="small">B.By</th> -->
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td>{{ bill['month'] }}</td>
+                  <td>{{ bill['house'] }}</td>
+                  <td>{{ bill['rent'] }}</td>
+                  <td>{{ bill['water'] }}</td>
+                  <td>{{ bill['garbage'] }}</td>
+                  <td>{{ bill['electricity'] }}</td>
+                  <td>{{ bill['security'] }}</td>
+                  <td>{{ bill['other'] }}</td>
+                  <td>{{ bill['arrears'] }}</td>
+                  <td>{{ bill['total'] }}</td>
+                  <td>{{ bill['paid'] }}</td>
+                  <td>{{ bill['balance'] }}</td>
+                  <!-- <td>{{ bill['billedby'] }}</td> -->
+                </tr>
+              {% endfor %}
+              </tbody>
+
+            </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="divbg center-btn">
+    <button id="close-bottom" type="reset" class="bg-gradient-danger borderless text-white">Close</button>
+  </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script> -->
+
+<!-- Core plugin JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script> -->
+
+<!-- Custom scripts for all pages-->
+<!-- <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script> -->
+
+  <!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='src/jquery.table2excel.js') }}"></script>
+
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+  
+
+</div>
+<script>
+  $("#close-top").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#bill-report").toggleClass('dispnone row');
+    // $("#detailedreport").innerHTML = "";
+
+  });
+</script>
+<script>
+  $("#close-bottom").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#bill-report").toggleClass('dispnone row');
+    // $("#detailedreport").innerHTML = "";
+
+  });
+</script>

@@ -1,0 +1,244 @@
+<div id="inv" class="justify-content-cente text-black m-2">
+    <div class="row">
+        <div class="col-12 no-padding-sm">
+            <div class="car">
+
+                <div class="card-body no-padding-sm">
+                    <div class="row pl-2">
+
+
+                        <div class="col-lg-4">
+                            <div class="mb-4 ">
+                                <div class="text-left">
+                                    <h4 class="invoice-color mb-2 mt-md-2">Invoice</h4>
+                                    <!-- <ul class="list list-unstyled mb-0">
+                                        <li>Date: <span class="font-weight-semibold">June 20th, 2021</span></li>
+                                        <li>Due date: <span class="font-weight-semibold">July 1st, 2021</span></li>
+                                    </ul> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="mb-4 text-right">
+                                <img class="" src={{logo}} alt="KIOTAPAY">
+                                <!-- <ul class="list list-unstyled mb-0 text-left">
+                                    <li>New york city</li>
+                                    <li>+1 474 44737 47 </li>
+                                </ul> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divjust-end smallify pl-2">
+                        <div class="">
+                            <div class="mb-0 mb-md-2 text-left small"> <span class="text-muted">Invoice To:</span>
+                                <ul class="list list-unstyled mb-0">
+                                    <li>
+                                        <h5 class="my-2 font-weight-bold">{{client.name}}</h5>
+                                    </li>
+                                    <li>{{client.street_address}}</li>
+                                    <li>{{client.mail_box}}</li>
+                                    {%if client.region%}
+                                    <li>{{client.region}}</li>
+                                    {%endif%}
+                                    <li>{{client.phone}}</li>
+                                    <li type="email" class="text-primary">{{client.email}}</li>
+                                </ul>
+                            </div>
+    
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="mb-0 mb-md-2 text-right pt-1"> 
+                                    <ul class="list list-unstyled ln-14">    
+                                        <li class="font-weight-bold">Invoice date</li>
+                                        <li>{{invdate}}</li>
+    
+                                        <li class="mt-2 font-weight-bold">Due date</li>
+                                        <li>{{invdue}}</li>
+
+                                        <li class="mt-2 font-weight-bold">Invoice number</li>
+                                        <li class="text-danger">#{{invnum}}</li>
+                                    </ul>
+                                </div>
+        
+                            </div>
+                            <div class="col-7 border-left-semidark">
+                                <div class="mb-0 mb-md-2 text-left">
+                                    <ul class="list list-unstyled mb-0">
+                                        <li class="font-weight-bold text-info text-xx">KIOTAPAY</li>
+                                        <li>{{kiotapay.street_address}}</li>
+                                        <li>{{kiotapay.mail_box}}</li>
+                                        <li>Email: <span class="text-primary">{{kiotapay.email}}</span></li>
+                                        <li>Tel: {{kiotapay.phone}}</li>
+                                        <li>Website: <span class="text-primary">kiotapay.com</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Qty</th>
+                                <th class="no-wrap mobile-malaysian">Unit Price</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="mb-0">{{bill.description}}</span>
+                                </td>
+                                <td>1</td>
+                                <td class="mobile-malaysian">{{sub}}</td>
+                                <td><span class="font-weight-bold mr-5">{{sub}}</span></td>
+                            </tr>
+                            {%if bill.arrears%}
+                            <tr>
+                                <td>
+                                    <span class="mb-0">Arrears</span>
+                                </td>
+                                <td></td>
+                                <td class="mobile-malaysian"></td>
+                                <td><span class="font-weight-bold mr-5">{{bill.arrears}}</span></td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 hide">hide</div>
+
+                            <div class="col-6">
+                                <div class="">
+                                    <table class="table">
+                                        <tbody>   
+                                            <tr>
+                                                <th class="text-left">Total:</th>
+                                                <td class="text-right text-primary">
+                                                    <h5 class="font-weight-bold mr-5">Kes {{total}}</h5>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="card-footer">
+                    <span class="text-muted">
+                        Payment will be done on Cheque, funds transfer or Mobile money to:
+                    </span>
+                    <p class="small text-muted">
+                        BANK: ABSA BANK KENYA PLC<br>
+                        BRANCH: WESTGATE<br>
+                        ACCOUNT NAME: KIOTAPAY LIMITED<br>
+                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">2045019023</span><br>
+                        Safaricom Paybill: <span class="text-gray-900 font-weight-bold">4081687</span> Account: <span class="text-gray-900 font-weight-bold">Kiotapay</span><br>
+                    </p>
+                    <p class="small text-muted">
+                        Please do not hesitate to contact the undersigned for any enquiries<br>
+                        Peter Koech 0716674695 Email: peter@kiotapay.com
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+
+<script>
+    //   window.addEventListener("load", window.print());
+    
+    function PrintElem(elem)
+    {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+        var title = document.title.split(' ').slice(0, 1).join(' ');
+        mywindow.document.write('<html><head><title>' + title  + '</title>');
+        mywindow.document.write('<link rel="stylesheet" href="./static/mystyle.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write('<h1>' + title  + '</h1>');
+        mywindow.document.write(document.getElementById(elem).innerHTML);
+        mywindow.document.write('</body></html>');
+    
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+    
+        mywindow.print();
+        mywindow.close();
+    
+        return true;
+    }
+    
+    
+</script>
+
+<script>
+    $("#printinv").on("click", function() {
+        $('#printinv').html('<i class="fas fa-spinner fa-spin mr-1"></i>Printing...');
+
+        // PrintElem("inv")
+        $('#inv').printThis({});
+
+        $('#printinv').html('<i class="fas fa-print mr-2"></i>Print');
+
+    })
+</script>
+
+<script>
+    $("#saveinv").click(function(){ 
+        $('#saveinv').html('<i class="fas fa-spinner fa-spin mr-1"></i>Saving...');
+        const element = document.getElementById("inv");
+        html2pdf()
+          .from(element)
+          .set({
+              margin:       [0.2, 0, 0.2, 0], 
+              filename:"Invoice",
+              image: { type: 'jpeg', quality: 1 },
+              html2canvas: {
+                dpi: 192,
+                scale:4,
+                letterRendering: true,
+                // useCORS: true
+              },
+              pageBreak: { mode: 'css', before:'#nextpage1'},
+              jsPDF: {orientation: 'portrait', unit: 'in', format: 'a4'}
+  
+              })
+          .save();
+          setTimeout(function(){
+              $('#saveinv').html("<i class='fas fa-file-download mr-2'></i>Save")
+          },10000);
+      });
+  </script>
+
+<script>
+    
+    $("#mailbtn").on('click',function(){   
+      $('#mailbtn').html('<span class="spinner-border spinner-border-sm mr-1 text-info" role="status" aria-hidden="true"></span>sending'); 
+      $.ajax({
+        url: "{{ url_for('api.sendmail') }}",
+        type: "get",
+        data: {
+              invid:$("#bill_identifier").text(),
+              target: "clientinvoice"
+            },
+        success: function(response) {
+          $('#mailbtn').html('<i class="fas fa-envelope text-success mr-2"></i>Sent!');
+          $('#mailbtn').attr('disabled', 'disabled');
+        },
+        error: function(xhr) {
+          $('#mailbtn').html('<i class="fas fa-ban text-danger mr-2"></i>Failed');
+          $('#mailbtn').attr('disabled', 'disabled');
+            alert("Not ready yet");
+        }
+      });
+    });
+    
+    </script>

@@ -1,0 +1,98 @@
+
+{% extends "tenantbase.html" %}
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 bg-light">
+                    <div class="card-header py-2 topbar-bg divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-user-edit"></i></span>&nbsp;&nbsp;Update my info</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-warning"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+
+                        <form role="form" method="POST" action="/update/tenant" autocomplete="off">
+
+                          <!-- <div class="form-group">
+                            <select name="id" class="form-control" id ="url-bo" required >
+                              <option disabled selected value> -- select tenant -- </option>
+                              {% for o in tenantlist %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div> -->
+
+                          <input id="tenant_id" style="display: none;" type="text">
+
+                          <div class="form-group">
+                            <input type="text" name="name" class="form-control" id="edit_name" placeholder="Name ~ {{tenant.name}}" >
+                          </div>
+                
+                          <div class="form-group">
+                            <input type="tel" name="phone" class="form-control" id="edit_tel" placeholder="Tel ~ {{tenant.phone}}" >
+                          </div>
+                
+                          <div class="form-group">
+                            <input type="int" name="national_id" class="form-control" id="edit_natid" placeholder="National_id ~ {{tenant.national_id}}" >
+                          </div>
+
+                          <div class="form-group">
+                            <input type="email" name="email" class="form-control" id="edit_email" placeholder="Email ~ {{tenant.email}}" >
+                          </div>
+                
+                          <div class="divbg center-btn">
+                            <button id="editself" type="button" class="bg-gradient-dark borderless text-success"><i class="fas fa-edit mr-2"></i>Update</button>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+<script>
+  // var sessionapvar = localStorage.getItem('apartmentvar');
+  // console.log(sessionapvar);
+  document.getElementById('tenant_id').value = "{{tenant_id}}";
+</script>
+
+<script>
+  $("#editself").click(function(){   
+    $("#editself").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatetenant') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_id").val(),
+                name: $("#edit_name").val(),
+                national_id: $("#edit_natid").val(),
+                tel: $("#edit_tel").val(),
+                email: $("#edit_email").val()
+            },
+        success: function(response) {
+          location.reload(true);
+        }
+      });
+  });
+</script>
+
+{% endblock %}

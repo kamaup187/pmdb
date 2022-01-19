@@ -1,0 +1,85 @@
+{% extends "base2.html" %}
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 bg-gradient-light">
+                    <div class="card-header py-3 bg-gradient-dark divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-primary"><span><i class="fas fa-fw fa-clock"></i></span>&nbsp;&nbsp;Add a new meter</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                    
+                        <span class="hide">hide</span>
+                        <form role="form" method="POST" action="/add/meter" autocomplete="off">
+                          <div class="form-group">
+                            <select name="apartment" class="form-control" id ="url-bo" >
+                              <option disabled selected value> -- Select property -- </option>
+                              {% for o in apartmentlist %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <input type="text" name="serial_num" class="form-control" id="url-box" placeholder="Serial  number..." required>
+                          </div>
+                
+                          <div class="form-group">
+                            <input type="text" name="meter_num" class="form-control" id="url-box" placeholder="Meter number..." required>
+                          </div>
+                
+                          <div class="form-group">
+                            <input type="number" name="unit_cost" class="form-control" id="url-box" placeholder="Unit cost..." required>
+                          </div>
+
+                          <!-- <div class="form-group">
+                            <input type="int" name="decitype" class="form-control" id="url-box" placeholder="Decimal type..." required>
+                          </div> -->
+                          <div class="form-group">
+                            <select class="form-control" name="decitype" required>
+                              <option disabled selected value> -- Select decimal type -- </option>
+                              <option value="0">0</option>
+                              <option value="1">0.0</option>
+                              <option value="2">0.00</option>
+                              <option value="3">0.000</option>
+                              <option value="4">0.0000</option>
+                              <option value="5">0.00000</option>
+                            </select>
+                          </div>
+
+                
+                          <div class="form-group">
+                            <input type="number" name="initial_reading" class="form-control" id="url-box" placeholder="Initial reading..." required>
+                          </div>
+                          <hr>
+                          <div class="divbg center-btn">
+                            <button type="submit" class="bg-gradient-dark borderless text-success"><i class="fas fa-check"></i>&nbsp;Save</button>
+                            <button type="button" class="bg-gradient-dark borderless"><a class="text-info" href="{{ url_for('api.allocatemeters') }}"><i class="fas fa-pen"></i>&nbsp;Allocate</a></button>
+                            <button type="button" class="bg-gradient-dark borderless text-warning"onclick="history.back()"><i class="fas fa-arrow-left"></i>&nbsp;Back</button>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,55 @@
+<script>
+    var propIds = "{{ propids|safe }}";
+    var ids = propIds.split`,`.map(x=>x);
+    
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        var url,urlcheck
+        urlcheck = $("#module").text();
+  
+        if ( urlcheck === "Meters"){
+          url = "{{ url_for('api.metermanagement') }}"
+        }else if(urlcheck === "Houses"){
+          url = "{{ url_for('api.propertymanagement') }}"
+        }else if(urlcheck === "Expenses"){
+          url = "{{ url_for('api.expensemanagement') }}"
+        }else if(urlcheck ==="Tenants"){
+          url = "{{ url_for('api.tenantmanagement') }}"
+          $("#tenant-area").addClass("isactive")
+        }else if(urlcheck ==="Payments"){
+          url = "{{ url_for('api.paymentsmanagement') }}"
+        }else if(urlcheck ==="Submissionss"){
+          url = "{{ url_for('api.submissionsmanagement') }}"
+        }
+  
+        // $("#proplist").addClass("dispnone");
+        // $("#body-block").removeClass("dispnone")
+        // $("#preloader-btn").click();
+        $("#barloader").removeClass("dispnone")
+  
+        $.ajax({
+                type: "get",
+                url: url,
+                data: {
+                    propid:item
+                },
+                success: function(response) {
+                  if (!$('#content-area').hasClass("isopen") && !$('#list-area').hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                        $('#sidebarToggle').click();
+                        $('#smaccordionSidebar').removeClass("toggled");
+                      }
+                  $('#content-area').addClass("isopen text-danger")
+                  // $("#postloader-btn").click();
+                  $("#barloader").addClass("dispnone")
+                  $("#body-block").addClass("dispnone");
+                  $("#proplist").addClass("dispnone");
+                  $("#propdisp").removeClass("dispnone")
+
+                  $("#propdisp").html(response);
+                }
+            });
+       
+      });
+    });
+</script>

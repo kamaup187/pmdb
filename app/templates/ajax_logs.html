@@ -1,0 +1,94 @@
+<div class="col-12 font-weight-bold text-dark mb-1"> <span class="text-warning font-weight-bold">{{targetdate}},</span></div>
+<div class="col-12 font-weight-bold text-black mb-1">{{logins}}</div>
+<div class="col-12">
+  <div id="reqdata" class="table-responsive">
+    <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+      <thead class="border-top-info">
+        <tr>
+
+          <th class="text-info track-title-cell font-weight-bold">Company</th>
+          <th class="text-info track-title-cell font-weight-bold ">User</th>
+          <th class="text-info track-title-cell font-weight-bold ">Contact</th>
+
+          <th class="text-info track-title-cell font-weight-bold ">Frequency</th>                                                                 
+          <th class="text-info track-title-cell font-weight-bold" >Searches</th>
+          <!-- <th class="text-info track-title-cell font-weight-bold" >Tenants</th> -->
+
+          <th class="text-info track-title-cell font-weight-bold">Invoices</th>
+          <th class="text-info track-title-cell font-weight-bold">Payments</th>
+          <th class="text-info track-title-cell font-weight-bold" >Reports</th>
+
+          <th class="text-info track-title-cell font-weight-bold">Initial</th>
+          <th class="text-info track-title-cell font-weight-bold">Latest</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items%}
+        <tr>
+          <td class="data-cell">{{ item['company']}}</td>
+          <td class="data-cell ">{{ item['user'] }}</td>
+          <td class="data-cell ">{{ item['tel'] }}</td>
+
+
+          <td class="data-cell ">{{ item['frequency'] }}</td>
+          <td class="data-cell ">{{ item['search'] }}</td>
+          <!-- <td class="data-cell ">{{ item['tenant'] }}</td> -->
+
+          <td class="data-cell ">{{ item['invoice']}}</td>
+          <td class="data-cell ">{{ item['payment']}}</td>
+          <td class="data-cell ">{{ item['report'] }}</td>
+
+          <td class="data-cell ">{{ item['initial'] }}</td>
+          <td class="data-cell ">{{ item['latest'] }}</td>
+
+
+
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- <script>
+    var rawIds = "{{ payids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_payment_identifier").html(item)
+            $("#target_payment_id").html("void payment")
+          }else{
+            $("#edit_payment_identifier").html(item)
+            $("#target_payment_id").html("edit payment")
+          }
+          
+        }else{
+          $("#payment_identifier").html(item)
+          $("#target_payment_id").html("payment")
+        }
+      });
+    });
+  </script> -->
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+

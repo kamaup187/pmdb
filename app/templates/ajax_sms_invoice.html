@@ -1,0 +1,129 @@
+<div class="ml-5 mb-2">
+    <span class="text-gray-900 font-weight-bold">Status: <span class="{{sms_highlight}}">{{smsstatus}}</span>
+</div>
+
+<div class="ml-5 text-left text-black">
+  <span class="linebreak">{{salutation|safe}}</span>
+  <span class="linebrea">{{intro|safe}}</span>
+</div>
+<div class="center-btn mb-3 ml-5 smallify">
+
+    {%if bill.rent%}
+    <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{bill.rent}}</span></div>
+    {% endif %}
+
+    {%if bill.deposit%}
+    <div class="divjust-end mr-5 "><span>Deposit: </span><span class="text-gray-900">{{bill.deposit}}</span></div>
+    {% endif %}
+
+    {%if readings%}
+      <div class="divjust-end mr-5 overline-thin-fade"><span>Water Previous: </span><span class="text-gray-900">{{readings.last_reading}}</span></div>
+      <div class="divjust-end mr-5 "><span>Water Current: </span><span class="text-gray-900">{{readings.reading}}</span></div>
+      <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{readings.units}}<span class="text-danger font-weight-bold {{w_edited}}"> *</span></span></div>
+      <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.waterrate}}</span></div>
+      <div class="divjust-end mr-5 underline-thin-fade "><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.waterrate * readings.units|float)}}</span></div>
+
+    {% endif %}
+    
+    {%if house.housecode.watercharge%}
+    <div class="divjust-end mr-5 "><span>Standing water charge: </span><span class="text-gray-900">{{house.housecode.watercharge}}</span></div>
+    {% endif %}
+
+    {%if ereadings%}
+      <div class="divjust-end mr-5 overline-thin-fade"><span>Electricity Previous: </span><span class="text-gray-900">{{ereadings.last_reading}}</span></div>
+      <div class="divjust-end mr-5 "><span>Electricity Current: </span><span class="text-gray-900">{{ereadings.reading}}</span></div>
+      <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{ereadings.units}}<span class="text-danger font-weight-bold {{e_edited}}"> *</span></span></div>
+      <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.electricityrate}}</span></div>
+      <div class="divjust-end mr-5 underline-thin-fade"><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.electricityrate * ereadings.units|float)}}</span></div>
+
+    {% endif %}
+
+    {%if bill.security%}
+    <div class="divjust-end mr-5 "><span>Security: </span><span class="text-gray-900">{{bill.security}}</span></div>
+    {% endif %}
+
+    {%if bill.maintenance%}
+    <div class="divjust-end mr-5 "><span>Service: </span><span class="text-gray-900">{{bill.maintenance}}</span></div>
+    {% endif %}
+
+    {%if bill.garbage%}
+    <div class="divjust-end mr-5 "><span>Garbage: </span><span class="text-gray-900">{{bill.garbage}}</span></div>
+    {% endif %}
+
+    {%if bill.penalty%}
+    <div class="divjust-end mr-5 "><span>Fines: </span><span class="text-gray-900">{{bill.penalty}}</span></div>
+    {% endif %}
+
+    {%if arrears%}
+    <div class="divjust-end mr-5 "><span class="{{bbfhighlight}}">{{arrtitle}}</span><span class="text-gray-900">{{arrears}}</span></div>
+    {% endif %}
+
+
+    <div class="divjust-end mr-5 "><span>Total: </span><span class="text-gray-900">{{total}}</span></div>
+
+    {%if bill.paid_amount%}
+    <div class="divjust-end mr-5 "><span>Paid: </span><span class="text-gray-900">{{billpaid}}</span></div>
+    <div class="divjust-end mr-5 "><span>Balance: </span><span class="text-gray-900">{{billbal}}</span></div>
+    {% endif %}
+    
+    {%if bank%}
+    <span class="linebrea">{{bank|safe}}</span>
+    {% endif %}
+
+    <span>{{co|safe}}</span>
+
+    {% if not w_edited or not e_edited%}
+    <div class="text-left">
+      <span class="text-danger font-weight-bold"> * <span class="small text-black">Adjusted</span></span>
+    </div>
+    {% endif %}
+
+
+</div>
+
+<div class="divbg center-btn ml-0">
+    <button id="invoicebill" type="button" class="btn btn-outline-success">{{action}}</button>
+    <button class="btn btn-outline-danger" id="closeModal2" type="button" data-dismiss="modal"></i>Dismiss</button>
+    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+  </div>
+
+  <script>
+    $("#invoicebill").click(function(){
+      $("#invoicebill").html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+      $.ajax({
+          url: "{{ url_for('api.sendinvoices') }}",
+          type: "POST",
+          data: {
+                billid:$("#bill_identifier").text(),
+                prop:$("#prop_identifier").text(),
+                target:"isolated"
+              },
+          success: function(response) {
+    
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $("#closeModal2").click();
+              $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"sometarget"
+                },
+                success: function(response) {
+                  
+                  $("#result-view2").html(response);
+                }
+            });
+            }, 3000);
+    
+          },
+          error: function(xhr) {
+            $("#invoicebill").html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+            }
+        });
+    
+    })
+    
+    </script>

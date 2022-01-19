@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+  <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>CodePen - POS Receipt Template Html Css</title>
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='mystyle.css') }}"> -->
+
+  <style>
+@media print {
+    .page-break { display: block; page-break-before: always; }
+}
+      #invoice-POS {
+  box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+  padding: 2mm;
+  margin: 0 auto;
+  width: 140mm;
+  height: 120mm;
+  background: #FFF;
+}
+#invoice-POS ::selection {
+  background: #f31544;
+  color: #FFF;
+}
+#invoice-POS ::moz-selection {
+  background: #f31544;
+  color: #FFF;
+}
+#invoice-POS h1 {
+  font-size: 1.5em;
+  color: #222;
+}
+#invoice-POS h2 {
+  font-size: .9em;
+}
+#invoice-POS h3 {
+  font-size: 1.2em;
+  font-weight: 300;
+  line-height: 2em;
+}
+/* #invoice-POS span {
+  font-size: .7em;
+  color: #666;
+  line-height: 1.2em;
+} */
+#invoice-POS #top, #invoice-POS #mid, #invoice-POS #bot {
+  /* Targets all id with 'col-' */
+  border-bottom: 1px solid #EEE;
+}
+#invoice-POS #top {
+  min-height: 70px;
+}
+#invoice-POS #mid {
+  min-height: 80px;
+}
+#invoice-POS #bot {
+  min-height: 50px;
+}
+#invoice-POS #top .logo {
+  /* height: 60px; */
+  /* width: 60px; */
+  /* background: url(http://michaeltruong.ca/images/logo1.png) no-repeat; */
+  /* background-size: 60px 60px; */
+}
+/* #invoice-POS .clientlogo {
+  float: left;
+  height: 60px;
+  width: 60px;
+  background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+  background-size: 60px 60px;
+  border-radius: 50px;
+} */
+#invoice-POS .info {
+  display: block;
+  margin-left: 0;
+}
+#invoice-POS .title .date {
+  float: right;
+}
+.date{
+  float: right !important;
+}
+#invoice-POS .title span {
+  text-align: right;
+}
+#invoice-POS table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#invoice-POS .tabletitle {
+  font-size: 1.2em;
+  background: #EEE;
+}
+#invoice-POS .service {
+  border-bottom: 1px solid #EEE;
+}
+#invoice-POS .tableitem {
+  /* width: 24mm; */
+  padding: 0px !important;
+  margin: 0px !important;
+}
+#invoice-POS .itemtext {
+  /* font-size: 1em; */
+  font-size: 96% !important;
+}
+#invoice-POS #legalcopy {
+  margin-top: 5mm;
+}
+.receipt-cell{
+    /* font-size: 80% !important; */
+    /* font-size: 96% !important; */
+    line-height: 16px !important;
+}
+.ln{
+  line-height: 17px !important;
+  color: black;
+}
+
+    </style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div id="invoice">
+    <div id="invoice-POS">
+
+      <div id="top" class="divjust">
+        <div class="logo">
+          <div><img src={{logopath}} alt="logo"></div>
+          <div class="info"> 
+            <h2 class="ml-3">Property managers</h2>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="smallify"> 
+  
+                  <div class="ln">Address : {{company.street_address}}</div>
+                  <div class="ln">PO BOX : {{company.mail_box}}</div>
+                  <div class="ln">Tel : {{company.phone}}</div>
+                  <div class="ln">Email: {{company.email}}</div>
+  
+          </div>
+        </div>
+
+    </div><!--End InvoiceTop-->
+  
+      <div class="small date mb-1">Date: <strong>{{paydate}} {{paytime}}</strong></div><br>
+      <div class="text-primary center-btn underline">
+          PAYMENT RECEIPT
+      </div>
+  
+      <div class="mb-1">
+          Receipt No. <span class="text-danger">{{receiptno}}</span>
+          Ref: <span class="text-primary">{{refnum}}</span>       
+      </div>
+      <div class="text-gray-800 divjust-end">
+        <span>Received from: <span class="text-success font-weight-bold">{{tenant}}</span> </span>
+        <span class="mr-3 small">Particulars: <span class="text-info">{{chargetype}}</span> </span>
+      </div>
+  
+      <div id="bot">
+  
+                      <div id="table" class="table-bordered">
+                          <table>
+                              <!-- <tr class="tabletitle">
+                                  <td class="item"><h2>Item</h2></td>
+                                  <td class="Hours"><h2>Qty</h2></td>
+                                  <td class="Rate"><h2>Sub Total</h2></td>
+                              </tr> -->
+  
+                              <tr class="service">
+                                  <td class="tableitem receipt-cell text-dark"><span class="itemtext">Received amount</span></td>
+                                  <td class="tableitem receipt-cell"><span class="itemtext text-info">{{str_amount}} shillings only.</span></td>
+                                  <td class="tableitem receipt-cell"><span class="text-primary itemtext">Kes.{{amount}}</span></td>
+                              </tr>
+  
+  
+                              <tr class="service">
+                                  <td class="tableitem receipt-cell"><span class="itemtext">Apartment</span></td>
+                                  <td class="tableitem receipt-cell"><span class="itemtext">{{prop}}</span></td>
+                                  <td class="tableitem receipt-cell"><span class="itemtext">House:{{house}}</span></td>
+                              </tr>
+  
+
+  
+  
+                              <tr class="tabletitle">
+                                  <td></td>
+                                  <td class="Rate"><h2>Amount due</h2></td>
+                                  <td class="payment"><h2 class="text-gray-900">Kes.{{bill}}</h2></td>
+                              </tr>
+  
+                              <tr class="tabletitle">
+                                  <td></td>
+                                  <td class="Rate"><h2>Paid</h2></td>
+                                  <td class="payment"><h2 class="text-gray-900">Kes.{{amount}}</h2></td>
+                              </tr>
+  
+                              <tr class="tabletitle">
+                                  <td></td>
+                                  <td class="Rate"><h2>Balance</h2></td>
+                                  <td class="payment"><h2 class="text-gray-900">Kes.{{balance}}</h2></td>
+                              </tr>
+                              <tr class="service center-btn">
+                                <td colspan="3" class="tableitem"><span class="itemtext">Being payment for the month of <strong>{{str_month}}</strong></span></td>
+                              </tr>
+  
+                          </table>
+                      </div><!--End Table-->
+  
+                      <div class="center-btn">
+                          <div class="small"><strong>With Thanks</strong>.</div>
+                          <div class="small"><strong>Served by: {{user}}</strong>.</div>
+                      </div>
+                      <div class="small">
+                        <span class="text-danger small" style="font-style: oblique;">Rent once paid is not refundable</span>
+                      </div>
+  
+                  </div><!--End InvoiceBot-->
+    </div><!--End Invoice-->
+
+  </div>
+
+
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+<script>
+  document
+    .getElementById("downloadReceiptPdf")
+    .addEventListener("click", function download() {
+        $('#downloadReceiptPdf').html("Downloading...")
+      const element = document.getElementById("invoice");
+      html2pdf()
+        .from(element)
+        .set({
+            margin:       [0.2, 0, 0.2, 0], 
+            filename:"receipt",
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+              dpi: 192,
+              scale:4,
+              letterRendering: true,
+              useCORS: true
+            },
+            pageBreak: { mode: 'css', before:'#nextpage1'},
+            jsPDF: {orientation: 'portrait', unit: 'in', format: 'a4'}
+
+            })
+        .save();
+        setTimeout(function(){
+            $('#downloadReceiptPdf').html('<i class="fas fa-print text-primary">Print</i>')
+        },4000);
+    });
+</script>
+
+<script>
+    $("#closeReceipt").on('click',function(){
+        $('#form').toggleClass('dispform dispnone');
+        $('#receipt').toggleClass('dispnone receipt-pos');
+        $("#payment-form-response").addClass("dispnone");
+        $("#payment-form-request").removeClass("dispnone");
+        $('#clearBtn').click();
+    });
+</script>
+
+
+<script>
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+
+    document.getElementById('payTime').innerHTML = date ;
+    document.getElementById('pdfgenTime').innerHTML = dateTime ;
+</script>
+
+
+
+
+
+
+</body>

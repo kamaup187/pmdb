@@ -1,0 +1,178 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+<div class="containe">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-1 bg-white">
+                    <div class="card-header py-2 topbar-bg divjust-end" >
+                        <h5 class="m-0 font-weight-bold text-white"><i class="fas fa-house-user mr-1"></i><span class="mobile-heading mr-2">Add house</span><span id="prop" class="var-heading mr-2">>> {{prop}}</span><span id="code" class="var-heading text-info">>> {{code}}</span></h5>
+                        <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span class="small"><i class="fas fa-fw fa-info-circle mr-2"></i>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                    
+                        <span class="hide">hide</span>
+                        <form autocomplete="off" method="POST" action="/add/house">
+                          
+                    
+                          <div class="form-group input-icons">
+                            <i class="fa fa-caret-down icon text-info"></i>
+                            <select name="usergroup" class="form-control" id ="select_apartment" >
+                              <option disabled selected value> -- Select Apartment -- </option>
+                              {% for o in props %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+
+                          <div class="form-group input-icons">
+                            <i class="fa fa-caret-down icon text-info"></i>
+                            <select name="usergroup" class="form-control" id ="select_housecode" >
+                              <option disabled selected value> -- Select Housecode -- </option>
+                              {% for o in items %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+              
+                          <div class="form-group input-icons">
+                            <i class="fa fa-hashtag icon text-info"></i> 
+                            <input id="enter_house" class="form-control input-field text-info" style="text-align: center;" type="text" name="house" placeholder="House name/number" required>
+                          </div>
+              
+                            <div id="notifications"></div>
+              
+                            <div class="form-group input-icons">
+                              <i class="fa fa-caret-down icon text-info"></i>
+                              <select class="form-control" name="desc" required>
+                                <option disabled selected value> -- Select description -- </option>
+                                <option value="Single Room">Single Room</option>
+                                <option value="Bedsitter">Bedsitter</option>
+                                <option value="One Bedroom">One Bedroom</option>
+                                <option value="Two Bedroom">Two Bedroom</option>
+                                <option value="Three Bedroom">Three Bedroom</option>
+                                <option value="Four Bedroom">Four Bedroom</option>
+                                <option value="Duplex">Duplex</option>
+                                <option value="Condo">Condo</option>
+                              </select>
+                            </div>
+
+                            <input id="apvar" style="display: none;" type="text" name="apartmentsessionvariable">
+                            <input id="codevar" style="display: none;" type="text" name="codesessionvariable">
+              
+                            
+                            <div class="divbg center-btn">
+                              <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>                                                         
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(500,"swing");
+    }, 2000);
+</script>
+
+<script>
+  var contents =  $("#prop").text();
+  console.log(contents);
+  if (contents == ">> None"){
+    $("#prop").html(">> Apartment?");
+    $("#prop").addClass("text-warning")
+    $("#prop").removeClass("text-info")
+  }else{
+    $("#prop").html(contents);
+    $("#prop").addClass("text-info")
+    $("#prop").removeClass("text-warning")
+  }
+  
+</script>
+
+<script>
+  $("#select_apartment").on('change',function(){
+      var apartmentvar = $("#select_apartment").val();
+      localStorage.setItem('apartmentvar',apartmentvar);
+      var sessionapvar = localStorage.getItem('apartmentvar');
+      document.getElementById('apvar').value = sessionapvar;
+
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.createhouse') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  runapart:"somestring"
+              },
+              success: function(response) {
+                  $("#select_housecode").html(response);
+              }
+          });
+    });
+</script>
+
+<script>
+  $("#select_housecode").on('change',function(){
+      var housecodevar = $("#select_housecode").val();
+      localStorage.setItem('housecodevar',housecodevar);
+      var sessioncodevar = localStorage.getItem('housecodevar');
+      document.getElementById('codevar').value = sessioncodevar;
+
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.createhouse') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  codesessionvariable: localStorage.getItem('housecodevar'),
+                  runcodenm:"somestring"
+              },
+              success: function(response) {
+                  $("#code").html(response);
+              }
+          });
+    });
+</script>
+
+<script>
+  $("#enter_house").keyup(function(){
+  
+      $.ajax({
+        url: "{{ url_for('api.createhouse') }}",
+        type: "POST",
+        data: {
+                apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                codesessionvariable: localStorage.getItem('housecodevar'),
+                house: $("#enter_house").val(),
+                runalert: "run"
+            },
+        success: function(response) {
+          $("#notifications").html(response);
+        },
+        error: function(xhr) {
+          //alert(xhr);
+        }
+      });
+  });
+  </script>
+  
+  <script>
+    var sessionapvar = localStorage.getItem('apartmentvar');
+    $('#apvar').val(sessionapvar);
+    var sessioncodevar = localStorage.getItem('housecodevar');
+    $('#codevar').val(sessionapvar);
+  </script>
+{% endblock %}

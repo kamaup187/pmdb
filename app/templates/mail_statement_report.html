@@ -1,0 +1,294 @@
+
+
+<div class="row">
+  <div id="invoice" class="col-lg-12 no-padding">
+    <div class="card shadow">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body">
+          <div class="invoice-box">
+            <table cellpadding="0" cellspacing="0">
+                <tr class="top">
+                  <td colspan="2">
+                      <table>
+                          <tr>
+                              <td class="title">
+                                  <img src="../../static/img/logos/chasenrainbow/full-logo.png" alt="">
+                              </td>
+                              
+                              <td class="text-address text-primary">
+                                <br>
+                                <br>
+                                Kasarani Biashara Center<br>
+                                PO BOX 45150-00100, NRB<br>
+                                Email: chasenrainbow@gmail.com<br>
+                                Mobile: 0720496063/0787924880
+                              </td>
+                          </tr>
+                      </table>
+                  </td>
+                </tr>
+                
+                <tr class="information">
+                 
+                    <td colspan="2">
+                      <div class="center-btn">
+                        <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary">{{month}} </span>Statement</h5>
+                      </div>
+                    </td>
+                </tr>
+
+                <tr class="headin hide">
+                  <td>
+                      Spacing
+                  </td>
+                  
+                </tr>
+                
+                <tr class="headin font-weight-bold text-primary">
+                    <td>
+                        Credits
+                    </td>
+                    
+                </tr>
+                
+
+                
+                <tr class="heading small">
+                    <td>
+                        Service
+                    </td>
+                    
+                    <td>
+                        Amount
+                    </td>
+                </tr>
+                
+                <tr class="item">
+                    <td>
+                        Rent collection
+                    </td>
+                    
+                    <td>
+                        Kshs. {{renttotal}}0
+                    </td>
+                </tr>
+                
+                <tr class="item">
+                    <td>
+                        Water collection
+                    </td>
+                    
+                    <td>
+                      Kshs. {{watertotal}}0
+                    </td>
+                </tr>
+    
+                <tr class="total">
+                    <td style="font-weight: 900;">
+                      Total:
+                    </td>
+                    
+                    <td style="font-weight: 900;">
+                      Kshs. {{credittotal}}0
+                    </td>
+                </tr>
+
+                <tr class="headin hide">
+                  <td>
+                      Spacing
+                  </td>
+                  
+                </tr>
+
+
+                <tr class="headin font-weight-bold text-danger">
+                  <td>
+                      Debits
+                  </td>
+                  
+                </tr>
+              
+                <tr class="heading small">
+                    <td>
+                        Service
+                    </td>
+                    
+                    <td>
+                        Amount
+                    </td>
+                </tr>
+              
+                <tr class="item">
+                    <td>
+                        Management fee 
+                    </td>
+                    
+                    <td>
+                       Kshs. {{managementfee}}0
+                    </td>
+                </tr>
+              
+                <tr class="item">
+                    <td>
+                        Electricity bill(tokens)
+                    </td>
+                    
+                    <td>
+                      Kshs. {{tokenbill}}0
+                    </td>
+                </tr>
+  
+                <tr class="item">
+                    <td>
+                        Electrician service & maintenance
+                    </td>
+                    
+                    <td>
+                      Kshs. {{electricityservice}}0
+                    </td>
+                </tr>
+              
+                <tr class="item">
+                    <td>
+                        Caretaker / Security
+                    </td>
+                    
+                    <td>
+                      Kshs. {{securitybill}}0
+                    </td>
+                </tr>
+  
+                <tr class="item">
+                    <td>
+                        Water bill (Nrb Water)
+                    </td>
+                    
+                    <td>
+                      Kshs. {{waterbill}}0
+                    </td>
+                </tr>
+              
+                <tr class="item total last">
+                    <td style="font-weight: 900;">
+                      Total: 
+                    </td>
+                    
+                    <td style="font-weight: 900;">
+                      Kshs. {{debittotal}}0
+                    </td>
+                </tr>
+
+                <tr class="headin hide">
+                  <td>
+                      Spacing
+                  </td>
+                  
+                </tr>
+
+                <tr class="heading">
+                  <td>
+                    Net Amount due
+                  </td>
+                  
+                  <td>
+                    
+                  </td>
+                </tr>
+                <tr class="headin hide">
+                  <td>
+                      Spacing
+                  </td>
+                  
+                </tr>
+                <tr class="total">
+                  <td>
+                    Net total:
+                  </td>
+                  
+                  <td style="font-size: 20px;">
+                    Kshs. {{netamount}}0
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <br>
+
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Cheque No.</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Date</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Property Manager</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+              <div class="grid-container text-signage">
+                <div class="grid-item">
+                  <div class="divjust-end">
+                    <div>Prepared by</div>
+                    <div>...............................................</div>
+                  </div>
+                </div>
+                <div class="grid-item hide">hide</div>
+
+              </div>
+
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-11 text-left mt-2 mb-2 text-ss text-gray-900">
+    <span>Generated on: <span id="pdfgenTime">{{pdftime}}</span> </span>
+  </div>  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

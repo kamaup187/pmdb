@@ -1,0 +1,12 @@
+{% if form %}
+<div class="form-field">{{ form.tenant.label }} {{ form.tenant}}</div>
+{% endif %}
+
+{% if tenantlist %}
+<select name="id" class="form-control" id ="select_tenant" >
+    <option disabled selected value> -- Select Tenant -- </option>
+    {% for o in tenantlist %}
+    <option value="{{ o }}">{{ o }}</option>
+    {% endfor %}
+</select>
+{% endif %}

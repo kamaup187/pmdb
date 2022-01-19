@@ -1,0 +1,98 @@
+
+<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">All houses:</div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="text-info font-weight-bold">House</th>
+                    <th class="text-info track-title-cell">Type</th>
+                    <th class="text-info track-title-cell">Group</th>
+                    <th class="text-info track-title-cell">Tenant</th>
+                    <th class="text-info track-title-cell">Rent</th>
+                    <th class="text-info track-title-cell">W.Rate</th>
+                    <th class="text-info track-title-cell">W.fixed</th>
+                    <th class="text-info track-title-cell">Service</th>
+                    <th class="text-info track-title-cell">Garbage</th>
+                    <th class="text-info track-title-cell">Security</th>
+                    <th class="text-info track-title-cell">By</th>
+                    <th class="text-info track-title-cell">Action</th>
+                
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items%}
+                <tr>
+                    <td class="first-data-cell text-dark font-weight-bold">{{ i['house'] }}</td>
+                    <td class="data-cell">{{ i['description'] }}</td>
+                    <td class="data-cell">{{ i['group'] }}</td>
+                    <td class="data-cell {{i['highlight']}}">{{ i['tenant'] }}</td>
+                    <td class="data-cell">{{ i['rent'] }}</td>
+                    <td class="data-cell">{{ i['rate'] }}</td>
+                    <td class="data-cell">{{ i['fixed'] }}</td>
+                    <td class="data-cell">{{ i['maintenance'] }}</td>
+                    <td class="data-cell">{{ i['garbage'] }}</td>
+                    <td class="data-cell">{{ i['security'] }}</td>
+                    <td class="data-cell">{{ i['by'] }}</td>
+                    <td class="data-cell">
+                        <div class="dropdown no-arrow">
+                          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger font-weight-bold ellipsis-btn"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header underline">House: <span class="text-info font-weight-bold">{{i['house']}}</span></div>
+                
+                            <div>
+                              <i class="fas fa-random ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#updateHouseModal">ChangeGroup</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{i['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editHouseModal">Edit house</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-trash-alt ml-3 mr-2 text-info"></i><span id="{{i['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger" data-toggle="modal" data-target="#deleteHouseModal">Remove</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+                      </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+    var rawIds = "{{ houseids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_house_identifier").html(item)
+          }else{
+            $("#edit_house_identifier").html(item)
+          }
+          
+        }else{
+          $("#house_identifier").html(item)
+        }
+      });
+    });
+  </script>

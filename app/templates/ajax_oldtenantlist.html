@@ -1,0 +1,83 @@
+
+<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1 smallify">Vacated tenants <span class="text-danger">(cleared)</span></div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+            <thead class="border-top-info">
+                <tr>
+                <th class="text-info font-weight-bold">Name</th>
+                <th class="text-info track-title-cell">Phone</th>
+                <th class="text-info track-title-cell expand dispnone-alt">Email</th>
+                <th class="text-info track-title-cell">Vacated</th>
+                <th class="text-info track-title-cell">Bal</th>
+                <th class="text-info track-title-cell text-warning expand dispnone-alt">Reallot</th>
+                <th class="text-info track-title-cell text-danger expand dispnone-alt">Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items%}
+                <tr>
+                <td class="first-data-cell text-dark font-weight-bold">{{ i['name'] }}</td>
+                <td class="data-cell">{{ i['tel'] }}</td>
+                <td class="data-cell expand dispnone-alt">{{ i['email'] }}</td>
+                <td class="data-cell">{{ i['checkin'] }}</td>
+                <td class="data-cell {{i['highlight']}}">{{ i['balance'] }}</td>
+                <td class="text-s data-cell expand dispnone-alt">
+                  <div>
+                    <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-info font-weight-bold  no-wrap" data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Reallot</button>
+                  </div>
+                </td>
+                <!-- <td class="text-s data-cell expand dispnone-al">
+                  <div>
+                    <button id="{{i['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                  </div>
+                </td> -->
+                <td class="text-s data-cell expand dispnone-alt">
+                  <div>
+                    <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteTenantModal"><i class="fas fa-trash-alt mr-1"></i>Remove</button>
+                  </div>
+                </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "order": [[ 0, "asc" ]],
+        "aoColumnDefs": [{ "bSortable": false, "aTargets": [ 1,2,5,6 ],type: 'natural' }],
+        "searching":false,
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+
+<script>
+    var rawIds = "{{ tenantids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_tenant_identifier").html(item)
+          }else{
+            $("#edit_tenant_identifier").html(item)
+          }
+          
+        }else{
+          $("#tenant_identifier").html(item)
+        }
+      });
+    });
+  </script>

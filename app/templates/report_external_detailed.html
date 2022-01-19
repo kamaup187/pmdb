@@ -1,0 +1,538 @@
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} detailed landlord statement.pdf</span>
+<span id="orientation" class="dispnone">{{paging}}</span>
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding">
+        <div class="formwrapper">
+            <div class="card shadow">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end topbar-bg">
+                
+                <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-white small card-header-form">
+                    <span class="mr-4">Generate report</span>
+                    <span><i class="fas fa-angle-down"></i></span>
+                  </div>
+                </a>
+                <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                        <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
+                            <span>{{ message }}</span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <form method="GET" action="/external/detailed">
+                        <div class="form-group">
+                            <select name="selected_apartment" class="form-control" id ="selected_apartment" required>
+                            <option disabled selected value> -- Select apartment -- </option>
+                            {% for o in apartment_list %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="selected_year" class="form-control" id ="url-box" >
+                          <option disabled selected value> -- Year (Default Current year) -- </option>
+                          {% for o in year_list %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="selected_month" class="form-control" id ="url-box" >
+                          <option disabled selected value> -- Month (Default Current month) -- </option>
+                          {% for o in month_list %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                          </select>
+                        </div>
+                        <button class="btn btn-block btn-primary">View</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 no-padding"></div> -->
+  <div class="col-lg-12 no-padding">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+      <div  class="d-block card-header card-header-report card-bg">
+        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
+
+          <div class="smallify">
+            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>Detailed Landlord statement</div>
+          </div>
+          {%if bills%}
+          <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
+          {%endif%}
+
+        </div>
+      </div>
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body pt-0">
+          <div class="center-btn">
+            <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Landlord detailed statement</h5>
+          </div>
+                    
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="header-cell-parent">House</th>
+                      <th class="header-cell-parent">Tenant</th>
+                      <th class="header-cell-parent">Rent</th>
+                      <th class="header-cell-parent {{fieldshow_water}}">Water</th>
+                      <th class="header-cell-parent {{fieldshow_garb}}">Garbage</th>
+                      <th class="header-cell-parent {{fieldshow_sec}}">Security</th>
+                      <th class="header-cell-parent {{fieldshow_dep}}">Deposit</th>
+                      <th class="header-cell-parent">BBF</th>
+                      <th class="header-cell-parent">Due</th>
+                      <th class="header-cell-parent">Paid</th>
+                      <th class="header-cell-parent">BCF</th>
+                      <th class="header-cell-parent" data-orderable="false">Edit</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="text-s data-cell">{{ bill['house'] }}</td>
+                      <td class="text-s data-cell {{bill['vacancy']}}">{{ bill['tenant'] }}</td>
+                      <td class="text-s data-cell">{{ bill['rent'] }}</td>
+                      <td class="text-s data-cell {{fieldshow_water}}">{{ bill['water'] }}</td>
+                      <td class="text-s data-cell {{fieldshow_garb}}">{{ bill['garbage'] }}</td>
+                      <td class="text-s data-cell {{fieldshow_sec}}">{{ bill['security'] }}</td>
+                      <td class="text-s data-cell {{fieldshow_dep}}">{{ bill['dep'] }}</td>
+                      <td class="text-s data-cell">{{bill['arrears']}}</td>
+                      <td class="text-s data-cell">{{ bill['calc_total'] }}</td>
+                      <td class="{{bill['payhighlight']}} text-s data-cell">{{ bill['paid'] }}</td>
+                      <td class="text-s data-cell">{{ bill['balance'] }}</td>
+                      <td class="text-s data-cell">
+                        <div>
+                          <span id="{{bill['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700 no-wrap" data-toggle="modal" data-target="#editBillModal"><i class="fas fa-wrench mr-1 text-success x-small"></i>Edit</span>
+                        </div>
+                      </td>
+
+                    </tr>
+                  {% endfor %}
+                  <tfoot>
+                    <tr>
+                      <td colspan="2" class="footer-cell text-info center-btn">Total</td>
+                      <td class="font-weight-bold text-info footer-cell">{{renttotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell {{fieldshow_water}}">{{watertotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell {{fieldshow_garb}}">{{garbagetotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell {{fieldshow_sec}}">{{securitytotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell {{fieldshow_dep}}">{{deposittotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell">{{billtotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-info footer-cell">{{bcftotal}}</td>
+                    </tr>
+                  </tfoot>
+                  </tbody>
+                </table>
+                <div class="divjust-end ln-16 mobile-malaysian">
+                  {%if not expenselist%}
+                  <div class="hide">space</div>
+                  {%endif%}
+                  {%if expenselist%}
+                  <div class="divjust-end small">
+                    <span class="mr-4">Expenses</span>
+                    <table class="table black table-bordered" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th class="squeeze">House.</th>
+                              <th class="squeeze">Expense</th>
+                              <th class="squeeze">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for item in expenselist%}
+                            <tr>
+                              <td class="squeeze">{{ item['house'] }}</td>
+                              <td class="squeeze">{{ item['name'] }}</td>
+                              <td class="squeeze">{{ item['amount'] }}</td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th colspan="2" class="squeeze">Total</th>
+                              <th class="squeeze">Kshs {{expenses}}</th>
+                            </tr>
+                          </tfoot>
+                        </table>
+                  </div>
+                  {%endif%}
+                  <div class="divjust-end mr-5">
+                    <div class="mr-4">
+                      <div class="mb-1 text-gray-900">Total Collection</div>
+                      <div class="small mb-2">Debit(Water,Garbage,Security & Deposit)</div>
+                      <div class="text-gray-900 mb-1">Rent Collection</div>
+                      <div>Commission {{commission_percentage}}</div>
+                      <div class="mb-1">Expenses</div>
+                      <div class="mb-1 {{fieldshow_loan}}">Loan</div>
+                      <div class="">Deposit</div>
+                      <div class="mb-2">Water</div>
+                      <div class="text-gray-900 mb-3 fs-120pc">Net payable</div>
+                    </div>
+                    <div class="">
+                      <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
+                      <div class="hide mb-2">space</div>
+                      <div class="text-gray-900 mb-1">Kshs {{formatted_netrent}}</div>
+                      <div>Kshs {{commission}} (<span class="text-danger">debited</span>)</div>
+                      <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debited</span>)</div>
+                      <div class="mb-1 {{fieldshow_loan}}">Kshs {{loan}} (<span class="text-danger">debited</span>)</div>
+                      <div class="">Kshs {{deposittotal}} (<span class="text-primary">credited</span>)</div>
+                      <div class="mb-2">Kshs {{watertotal}} (<span class="text-primary">credited</span>)</div>
+                      <div class="text-gray-900 mb-3 fs-120pc">Kshs {{netpay}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    {%if prop_obj.landlord_bank%}
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account number:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankacc}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account name:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankaccname}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Bank:</div>
+                      <div class="col-6">{{prop_obj.landlord_bank}}</div>
+                    </div>
+                    {%endif%}
+
+                    <br>
+                    {%if prop_obj.landlord_bank_two%}
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">(Loan) Account number:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankacc_two}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account name:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankaccname_two}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Bank:</div>
+                      <div class="col-6">{{prop_obj.landlord_bank_two}}</div>
+                    </div>
+                    {%endif%}
+                  </div>
+                  <div class="col-6">
+                    <div class="hide">space</div>
+                    <div class="hide">space</div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Prepared By:</div>
+                      <div class="col-6">{{agent}}</div>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="car shadow">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+          {% if bills %}
+          <div class="underline center-btn">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn">
+            <h6 class="font-weight-bold text-titl">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Landlord detailed statement</h6>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="header-cell squeeze">House</th>
+                      <th class="header-cell squeeze">Tenant</th>
+                      <th class="header-cell squeeze">Rent</th>
+                      <th class="header-cell squeeze">Water</th>
+                      <th class="header-cell squeeze">Garbage</th>
+                      <th class="header-cell squeeze {{fieldshow_sec}}">Security</th>
+                      <th class="header-cell squeeze">Deposit</th>
+                      <th class="header-cell squeeze">BBF</th>  
+                      <th class="header-cell squeeze">Due</th>
+                      <th class="header-cell squeeze">Paid</th>
+                      <th class="header-cell squeeze">BCF</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="squeeze text-cell">{{ bill['house'] }}</td>
+                      <td class="squeeze text-cell {{bill['vacancy']}}">{{ bill['tenant'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['rent'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['water'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['garbage'] }}</td>
+                      <td class="squeeze text-cell {{fieldshow_sec}}">{{ bill['security'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['dep'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['arrears'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['calc_total'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['paid'] }}</td>
+                      <td class="squeeze text-cell">{{ bill['balance'] }}</td>
+                      
+                    </tr>
+                  {% endfor %}
+                  <tfoot>
+                    <tr>
+                      <td colspan="2" class="font-weight-bold squeeze text-info footer-cell center-btn">Total</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{renttotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{watertotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{garbagetotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell {{fieldshow_sec}}">{{securitytotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{deposittotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{bbftotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{billtotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{paidtotal}}</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{bcftotal}}</td>
+                    </tr>
+                  </tfoot>
+                  </tbody>
+                </table>
+                <div class="divjust-end ln-16 mobile-malaysian">
+                  {%if not expenselist%}
+                  <div class="hide">space</div>
+                  {%endif%}
+                  {%if expenselist%}
+                  <div class="fs-65pc">
+                    <div class="">Expenses</div>
+                    <table class="table black table-bordered" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th class="p-0">House</th>
+                              <th class="p-0">Expense</th>
+                              <th class="p-0">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for item in expenselist%}
+                            <tr>
+                              <td class="p-0">{{ item['house'] }}</td>
+                              <td class="p-0">{{ item['name'] }}</td>
+                              <td class="p-0">{{ item['amount'] }}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th colspan="2" class="squeeze">Total</th>
+                              <th class="squeeze">Kshs {{expenses}}</th>
+                            </tr>
+                          </tfoot>
+                        </table>
+                  </div>
+                  {%endif%}
+                  <div class="divjust-end mr-5">
+                    <div class="mr-4">
+                      <div class="mb-1 text-gray-900">Total Collection</div>
+                      <div class="small mb-2">Debit(Water,Garbage,Security & Deposit)</div>
+                      <div class="text-gray-900 mb-1">Rent Collection</div>
+                      <div>Commission {{commission_percentage}}</div>
+                      <div class="mb-1">Expenses</div>
+                      <div class="mb-1 {{fieldshow_loan}}">Loan</div>
+                      <div class="mb-">Deposit</div>
+                      <div class="mb-2">Water</div>
+                      <div class="text-gray-900 mb-3 fs-120pc">Net payable</div>
+                    </div>
+                    <div class="">
+                      <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
+                      <div class="hide mb-2">space</div>
+                      <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
+                      <div>Kshs {{commission}} (<span class="text-danger">debited</span>)</div>
+                      <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debited</span>)</div>
+                      <div class="mb-1 {{fieldshow_loan}}">Kshs {{loan}} (<span class="text-danger">debited</span>)</div>
+                      <div class="">Kshs {{deposittotal}} (<span class="text-primary">credited</span>)</div>
+                      <div class="mb-2">Kshs {{watertotal}} (<span class="text-primary">credited</span>)</div>
+                      <div class="text-gray-900 mb-3 fs-120pc">Kshs {{netpay}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row small">
+                  <div class="col-6">
+                    {%if prop_obj.landlord_bank%}
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account number:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankacc}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account name:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankaccname}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Bank:</div>
+                      <div class="col-6">{{prop_obj.landlord_bank}}</div>
+                    </div>
+                    {%endif%}
+
+                  </div>
+
+                  <div class="col-6">
+                    {%if prop_obj.landlord_bank_two%}
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">(Loan) Account number:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankacc_two}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Account name:</div>
+                      <div class="col-6">{{prop_obj.landlord_bankaccname_two}}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Bank:</div>
+                      <div class="col-6">{{prop_obj.landlord_bank_two}}</div>
+                    </div>
+                    {%endif%}
+
+                    {%if not prop_obj.landlord_bank_two%}
+                    <div class="hide">space</div>
+                    <div class="hide">space</div>
+                    <div class="row">
+                      <div class="col-6 text-right no-padding">Prepared By:</div>
+                      <div class="col-6">{{agent}}</div>
+                    </div>
+                    {%endif%}
+                  </div>
+                </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit monthly bill summary record</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div class="mt-2" id="billeditbed"></div>
+                
+                  <div class="divbg center-btn">
+                    <button id="editbill" type="button" class="btn btn-outline-danger borderles">Update</button>
+                    <button class="btn btn-outline-secondary" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

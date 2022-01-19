@@ -1,0 +1,84 @@
+
+
+
+    <div class="form-group input-icons mt-2">
+        <select class="select-css" id ="select_house_alt" >
+            <option disabled selected value> -- specify houses -- </option>
+            {% for o in house_list %}
+            <option value="{{ o }}">{{ o }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="dispnone p-lg-0 pt-lg-3 text-danger text-weight-bold mb-2">
+        <span class="text-black">Houses:</span> [<span id="house-holder">none selected</span>]  <button id="clear-selection" type="button" class="btn btn-danger p-0 pr-2 pl-2 font-weight-bold semi-small ml-2">X</button>
+    </div>
+
+
+
+<script>
+    // This script displays alerts and tenant name before clearance
+    $("#select_house_alt").on('change',function(){
+        var txt = $("#house-holder").text();
+        var newitem = $("#select_house_alt").val()
+        
+        if (txt.includes(newitem)){}else{
+            if(txt.includes("none selected")){
+                $("#house-holder").empty();
+                txt = "";
+            }
+            if ($("#house-holder").text()){
+                // $("#house-holder").text(txt + "," + newitem)
+                $("#house-holder").text(newitem)
+            }else{
+                $("#house-holder").text(newitem)
+            }
+        }
+
+
+
+
+      if($("#propid").text() == ""){
+          var propid = $("#prop_identifier_main").text();
+      }else{
+          var propid = $("#propid").text();
+      }
+
+      // $("#tenantbed").removeClass("dispnone")
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+              propid:propid,
+              house: $("#select_house_alt").val(),
+              target:"amount due alt"
+            },
+        success: function(response) {
+          $("#totaldue").html(response);
+          // $("#fieldset2").removeClass("dispnone")
+        }
+      });
+
+      $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house_alt").val(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
+                },
+            success: function(response) {
+              $("#billbreakdown").html(response);
+
+              }
+            });
+    });
+  </script>
+
+  <script type="text/javascript">
+    $("#clear-selection").on("click", function() {
+        $("#house-holder").text("none selected")
+    })
+</script>
+
+

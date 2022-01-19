@@ -1,0 +1,224 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="containe">
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3">
+      <div class="formwrapper">
+        <div class="card shadow mb-4 bg-gradient-light">
+          <div class="card-header py-3 bg-gradient-dark divjust-end" >
+            <h6 class="m-0 font-weight-bold text-primary"><span><i class="fas fa-fw fa-wrench"></i></span>&nbsp;&nbsp;Modify accessrights</h6>
+            <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+          </div>
+          <div class="card-body myforms">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                      <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                  </div>
+              {% endfor %}
+            {% endwith %}
+            
+            <span class="hide">hide</span>
+              
+              <form autocomplete="off" method="POST" action="/modify/access">
+                {{ form.csrf_token }}
+          
+                <div>
+                  {{ form.usergroup(class="form-control half")}}&nbsp;
+                  <button style="display: inline;" type="button" class="btn btn-default" onclick="openGForm()"><i class="fas fa-plus fa-sm fa-fw mr-2 text-black-400"></i></button>
+                </div>
+
+                <div id="place_for_suggestions"></div><br>
+
+                <!-- <div>
+                  {{ form.grouprole(class="form-control half")}}&nbsp;&nbsp;&nbsp;
+                  <button style="display: inline;" type="button" class="btn btn-default" onclick="openForm()"><span class="plus-sign">+</span></button>
+                </div><br> -->
+
+
+                <div id="display_access"></div>
+
+                <!-- <div class="center-btn">
+                  <button type="submit" class="btn btn-default">Update</button>
+                </div> -->
+                  
+              </form>
+              <!-- <div class="divbg center-btn">
+                <button class="btn btn-default" onclick="openForm()">Assign role</button>
+                <p style="display: inline;">...</p>
+                <form style="display: inline;">
+                    <input type="button" value="Back" onclick="history.back()">
+                </form>
+              </div> -->
+
+
+
+            <div class="form-popup bg-gradient-info" id="newgroup">
+              <form method="POST" action="/add/usergroup">
+                <div class="center-btn">Add new group</div><br>
+                <div class="form-group">
+                  <input class="form-control quarter" type="text" name="name" placeholder="name" autofocus>
+                </div>
+
+                <div class="form-group">
+                  <input class="form-control quarter"type="text" name="description" placeholder="description">
+                </div>
+
+                <div class=" divbg center-btn">
+                  <button type="submit" class="bg-gradient-dark borderless">Add</button>
+                  <button type="button" class="bg-gradient-dark borderless" onclick="closeGForm()">Close</button>
+                </div>
+              </form>
+            </div>
+
+
+            <div class="clone bg-gradient-info" id="assignrole">
+              <form method="POST" action="/assign/role">
+                <div class="center-btn">Assign new role</div>
+
+                <div class="form-group">
+                  <select name="usergroup" class="form-control" id ="optiongroup" >
+                    <option disabled selected value> -- Select Usergroup -- </option>
+                    {% for o in option_list %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div id="displaygroupname" class="form-group"><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;Usergroup: <span class="text-light">{{current_usergroup}}</span></div>
+          
+                <div class="form-group" id="optionrole">
+                  <select name="role" class="form-control" required >
+                    <option disabled selected value> -Select Role to assign- </option>
+                    {% for o in role_option_list %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <input id="groupvar2" style="display: none;" type="text" name="usergroupsessionvar">
+
+                <div class="divbg center-btn">
+                  <button type="submit" class="bg-gradient-dark borderless">Assign</button>
+                  <button type="button" class="bg-gradient-dark borderless" onclick="closeForm()">Close</button>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+<script>
+$("#select_usergroup").on('change',function(){
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.modifyaccessright') }}",
+            data: {
+                usergroup: $("#select_usergroup").val(),
+                run:"run"
+            },
+            success: function(response) {
+                $("#place_for_suggestions").html(response);
+            }
+        });
+});
+</script>
+
+<!-- <script>
+
+  $("#select_usergroup").on('change',function(){
+    setTimeout(function(){
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.modifyaccessright') }}",
+              data: {
+                  usergroup: $("#select_usergroup").val()
+              },
+              success: function(response) {
+                  $("#select_grouprole").html(response);
+              }
+          });
+    },0);
+  
+
+  });
+  </script> -->
+
+<script>
+
+  $("#optiongroup").on('change',function(){
+      var groupvar = $("#optiongroup").val();
+      localStorage.setItem('groupvar',groupvar);
+      var sessiongroupvar = localStorage.getItem('groupvar');
+      document.getElementById('groupvar2').value = sessiongroupvar;
+
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.assignrole') }}",
+              data: {
+                usergroupsessionvar:localStorage.getItem('groupvar'),
+                run:"run"
+              },
+              success: function(response) {
+                  $("#displaygroupname").html(response);
+              }
+          });
+  });
+  </script>
+
+<script>
+
+  $("#optiongroup").on('change',function(){
+    setTimeout(function(){
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.assignrole') }}",
+              data: {
+                usergroupsessionvar:localStorage.getItem('groupvar')
+              },
+              success: function(response) {
+                  $("#optionrole").html(response);
+              }
+          });
+    },0);
+  
+  });
+</script>
+
+
+
+  <script>
+    var sessiongroupvar = localStorage.getItem('groupvar');
+    $('#groupvar2').val(sessiongroupvar);
+  </script>
+
+  <script>
+    function openForm() {
+      document.getElementById("assignrole").style.display = "block";
+    }
+    function openGForm() {
+      document.getElementById("newgroup").style.display = "block";
+    }
+    
+    function closeGForm() {
+      document.getElementById("newgroup").style.display = "none";
+    }
+    function closeForm() {
+      document.getElementById("assignrole").style.display = "none";
+    }
+  </script>
+
+{% endblock %}

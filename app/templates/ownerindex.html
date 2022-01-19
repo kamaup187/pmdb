@@ -1,0 +1,414 @@
+{% extends 'base2.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-1 divjust">
+    <span>
+        <span><span id="greetings" class="h6 text-gray-600 mr-2"></span><span class="text-primary">{{username}}</span></span>
+    </span>
+    <span>
+        <li class="nav-item dropdown no-arrow d-sm-none">
+          <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-search fa-fw"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-out searchbtn" aria-labelledby="searchDropdown">
+            <form class="form-inline mr-auto w-100 navbar-search">
+              <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </li>
+      </span>
+
+    <div class="small text-info mobile-malaysian">
+        <span id="txt"></span>
+        <div>{{weekday}}, {{current_day}} {{month_string}} {{current_year}}</div>
+    </div>
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-1 desktop-malaysian">
+        <div class="card border-left-success shadow h-100 py-0 bg-indexcard">
+            <div class="card-body titanic-iceberg-top titanic-iceberg-bottom">
+                <div class="row no-gutters align-items-cente">
+                    <div class="col mr-0">
+                        <div class="text-xs text-gray-200 mb-1">{{month_string}} Bills (total)</div>
+                        <div class="text-xs text-gray-200 mb-1">{{month_string}} Paid (total)</div>
+                        <div class="text-xs text-gray-200 mb-1">Balance (total)</div>
+                        
+                    </div>
+                    <div class="col-auto">
+                        <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">Kshs {{monthly_bills}}</div>
+                        <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">Kshs {{monthly_rent_collection}}</div>
+                        <div class="text-xs mb-0 font-weight-bold text-warning mb-1">Kshs --</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-md-6 mb-1 desktop-malaysian">
+        <div class="card shadow h-0 py-0">
+            <div class="card-body bg-light titanic-iceberg-top titanic-iceberg-bottom card-btn-padding">
+
+                <div class="divbg no-gutters align-items-center">
+
+                    <div>
+                        <a href="{{ url_for('api.allocatetenants') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/tenant_1_40x40.png"></div>
+                              <span class="small mobile-malaysian sss">Tenant allocation</span>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Tenant allocation</h6></span>
+                            </button>
+                        </a>
+                    </div>
+
+                    <div>
+                        <a href="{{ url_for('api.capturereading') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/pipe-40.png"></div>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Read Meters</h6></span>
+                            </button>
+                        </a>
+                    </div>
+
+                    <div>
+                        <a href="{{ url_for('api.billing') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/mybills_40x40.png"></div>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Tenant Billing</h6></span>
+                            </button>
+                        </a>
+                    </div> 
+                </div>
+
+                <div class="divbg no-gutters align-items-center">
+                    <div>
+                        <a href="{{ url_for('api.receivepayment') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/money_40x40.png"></div>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Receive payments</h6></span>
+                            </button>
+                        </a>
+                    </div>
+              
+                    <div>
+                        <a href="{{ url_for('api.handletenantrequest') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/requests_40x40.png"></div>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Handle requests</h6></span>
+                            </button>
+                        </a>
+                      </div>
+
+                      <div>
+                        <a href="{{ url_for('api.summarisedcombinedbill') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                              <div><img src="../static/img/40/progress_40x40.png"></div>
+                              <span class="small desktop-malaysian"><h6 class="text-xs titanic-iceberg ss">View Reports</h6></span>
+                            </button>
+                        </a>
+                      </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-2 mobile-malaysian">
+        <div class="card border-left-success shadow h-100 py-2 bg-gradient-dark">
+            <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{month_string}} Bill (total)</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-500">Kshs {{monthly_bills}}</div>
+                </div>
+                <div class="col-auto">
+                <i class="fas fa-calendar-alt fa-2x text-gray-600"></i>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-2 mobile-malaysian">
+        <div class="card border-left-primary shadow h-100 py-2 bg-gradient-dark">
+            <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{month_string}} Rent colletion</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-500">Kshs {{monthly_rent_collection}}</div>
+                </div>
+                <div class="col-auto">
+                <i class="fas fa-calendar-day fa-2x text-gray-600"></i>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-2 mobile-malaysian">
+        <div class="card border-left-warning shadow h-100 py-2 bg-gradient-dark">
+            <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-500">{{pending_reqs}}</div>
+                </div>
+                <div class="col-auto">
+                <i class="fas fa-comments fa-2x text-gray-600"></i>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-2 mobile-malaysian">
+        <div class="card border-left-info shadow h-100 py-2 bg-gradient-dark">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1"> Current House occupancy</div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-500">{{occupancy_rate}}%</div>
+                            </div>
+                            <div class="col">
+                                <div class="progress progress-sm mr-2">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12 col-md-6 mb-1 mobile-malaysian">
+        <div class="card shadow h-0 py-0">
+            <div class="card-body bg-white titanic-iceberg-bottom titanic-iceberg-top">
+                <div class="row no-gutters align-items-center">
+    
+                    <div class="col mr-3">
+                        <a href="{{ url_for('api.allocatetenants') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/tenant_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">Tenant allocation</span>
+                            </button>
+                        </a>
+                    </div>
+    
+                    <div class="col mr-3">
+                        <a href="{{ url_for('api.capturereading') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/pipe_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">Read meters</span>
+                            </button>
+                        </a>
+                    </div>
+    
+                    <div class="col mr-3">
+                        <a href="{{ url_for('api.billing') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/mybills_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">Tenant billing</span>
+                            </button>
+                        </a>
+                    </div>              
+    
+                    <div class="col mr-3">
+                        <a href="{{ url_for('api.receivepayment') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/money_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">Receive payments</span>
+                            </button>
+                        </a>
+                    </div>
+              
+                    <div class="col mr-3">
+                        <a href="{{ url_for('api.handletenantrequest') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/requests_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">Handle requests</span>
+                            </button>
+                        </a>
+                    </div>
+    
+                    <div class="col">
+                        <a href="{{ url_for('api.summarisedcombinedbill') }}">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn">
+                                <div><img src="../static/img/50/progress_50x50.png"></div>
+                                <span class="small mobile-malaysian sss">View reports</span>
+                            </button>
+                        </a>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <a href="{{ url_for('api.viewmonthlybill') }}"><h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-signal"></i> Collections Overview</h6></a>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Reports:</div>
+                <a class="dropdown-item" href="#">View all Reports</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Monthly Payments</a>
+                <a class="dropdown-item" href="#">Monthly Bills</a>
+                </div>
+            </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-area">
+                <p id="theInput" style="display: none;">{{chartstring}}</p>
+                <canvas id="myAreaChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-home"></i> Houses Overview</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Actions:</div>
+                <a class="dropdown-item" href="#">Add house</a>
+                <a class="dropdown-item" href="#">State charges</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Allocate tenants</a>
+                </div>
+            </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <!-- <div class="chart-pie pt-4 pb-2">
+                    <canvas id="myPieChart"></canvas>
+                </div> -->
+                <div class="mt-4">
+                    <span class="mr-5">
+                    <i class="fas fa-circle text-primary"></i> Total Houses&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span class="mr-1">
+                        <i class="fas fa-info-circle text-secondary"></i> <span class="text-primary">{{numhouse}}</span>
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <span class="mr-4">
+                    <i class="fas fa-circle text-success"></i> Occupied Houses&nbsp;&nbsp;
+                    </span>
+                    <span class="mr-1">
+                        <i class="fas fa-info-circle text-dark"></i> <span class="text-success">{{numalloc}}</span>
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <span class="mr-5">
+                    <i class="fas fa-circle text-danger"></i> Vacant Houses
+                    </span>
+                    <span class="mr-1">
+                    <i class="fas fa-info-circle text-secondary"></i> <span class="text-danger">{{numvac}}</span>
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <span class="mr-4">
+                    <i class="fas fa-circle text-warning"></i> Bookings&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>
+                    <span class="mr-1">
+                    <i class="fas fa-info-circle text-dark"></i> <span class="text-primary">{{numpndtnt}}</span>
+                    </span>
+                </div>
+                <div class="mt-4">
+                    <span class="mr-5">
+                    <i class="fas fa-circle text-danger"></i> Unpaid Houses
+                    </span>
+                    <span class="mr-1">
+                    <i class="fas fa-info-circle text-secondary"></i> <span class="text-danger">{{numvac}}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-12 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Special Notes</h6>
+            </div>
+            <div class="card-body">
+                <p>Empty.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script> -->
+
+<script>
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML =
+      h + ":" + m + ":" + s;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
+    }
+</script>
+<script>
+    var myDate = new Date();
+    var hrs = myDate.getHours();
+  
+    var greet;
+  
+    if (hrs < 12)
+        greet = 'Good Morning';
+    else if (hrs >= 12 && hrs <= 17)
+        greet = 'Good Afternoon';
+    else if (hrs >= 17 && hrs <= 24)
+        greet = 'Good Evening';
+  
+    document.getElementById('greetings').innerHTML = greet ;
+  </script> 
+{% endblock %}

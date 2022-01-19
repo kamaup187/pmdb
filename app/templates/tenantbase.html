@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-R7DLP684H1');
+  </script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>KiotaPay | Tenant</title>
+
+  <!-- Custom fonts-->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+    <!-- Custom fonts-->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <!-- Custom styles-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='search.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+
+</head>
+
+<body onload="startTime()" id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand bg-gradient-light d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+        <div class="sidebar-brand-icon rotate-n-0">
+          <img class="mobile-malaysian" src="../static/img/nkiotamobil.png" alt="">
+          <img class="desktop-malaysian" src="../static/img/nkiotamobilelogo.png" alt="">
+        </div>
+        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
+      </a>
+
+      <!-- Divider -->
+      <hr style="visibility: hidden;" class="sidebar-divider my-2">
+
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Main menu
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Lease Agreement</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Lease:</h6>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMeters" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Transfer</span>
+        </a>
+        <div id="collapseMeters" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Transfer requests:</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-clock"></i></span>&nbsp;Apartment transfer</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;House transfer</a>
+            <a class="collapse-item active " href="#"><span><i class="fas fa-fw fa-clipboard-list"></i></span>&nbsp;Clearance</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTenants" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Repairs</span>
+        </a>
+        <div id="collapseTenants" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Maintenance Requests:</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-wrench"></i></span>&nbsp;Repair</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Paint</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;New Fittings</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-hand-holding-usd"></i>
+          <span>My Bills</span>
+        </a>
+        <div id="collapseBilling" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">monthly bills</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-dollar-sign"></i></span>&nbsp;View bills</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-cogs"></i></span>&nbsp;View payments</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-hand-holding-usd"></i></span>&nbsp;Bill complaint</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+    
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light topbar-bg topbar mb-4 static-top shadow mobile-malaysian">
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm kiota-col"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw text-white"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter">1</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-info">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">September 22, 2020</div>
+                    <span class="font-weight-bold">Remember to set a secure password!</span>
+                  </div>
+                </a>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw text-white"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-imag mr-1">
+                    <!-- <img class="rounded-circle" src="" alt=""> -->
+                    <!-- <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i></span>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="text-gray-400 mr-2">
+                  {{group}}
+                </div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <span class="mr-2 d-none d-lg-inline text-gray-100 font-weight-bold">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user text-secondary"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+
+
+
+
+
+
+
+
+        <nav class="navbar navbar-expand navbar-light topbar-b bg-white bg-gradient-ligh topbar mb-4 static-top shadow desktop-malaysian">
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTopa" class="btn btn-link d-md-none rounded-circle mr-0 text-info">
+            <i id = "myi"class="fa fa-bars"></i>
+          </button>
+          <a class="d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+            <i id = "myii"class="collapselogo desktop-malaysian mr-2"></i>
+          </a>
+
+          <!-- <a href="{{ url_for('api.index') }}">
+            <img class="desktop-malaysian" src="../static/img/smkiotapaylogo.png" alt="">
+          </a> -->
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control topbar-bg border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm kiota-col"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw kiota-col"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter">1</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-info">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">September 22, 2020</div>
+                    <span class="font-weight-bold">Remember to set a secure password!</span>
+                  </div>
+                </a>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw kiota-col"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-imag mr-1">
+                    <!-- <img class="rounded-circle" src="" alt=""> -->
+                    <!-- <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i></span>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="text-gray-500 mr-2">
+                  {{group}}
+                </div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <span class="mr-2 d-none d-lg-inline kiota-col small">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user kiota-col"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <div class="myblock">
+            <!-- <div class="apptitle">
+                <h3 class="eapartment"><span class="e">e</span><a href="{{ url_for('api.index') }}">Apartment Services</a></h3>
+                <p class="logged"> User :  <span class="admin"><a href="{{ url_for('api.userlogout') }}">{{name}}</a></span></p>
+            </div><br><br><br> -->
+
+            
+            {% block content %}
+            
+            {% endblock %}
+
+          </div>
+
+          <!-- Page Heading -->
+          <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer id="footer" class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; KiotaPay 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade center-btn" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign out</h5>
+        </div>
+        <div class="modal-body">Ready to Leave?</div>
+        <div class="has-margin-bottom divbg">
+          <a class="btn btn-danger" href="{{ url_for('api.userlogout') }}"> <i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-grin mr-2"></i>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script>
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $('#sidebarToggleTopa').on('click',function(){
+        $('#myi').toggleClass('fa-bars fa-arrow-left')
+        $('#myii').toggleClass('dispnone')
+        $('#accordionSidebar').toggleClass('mobile-toggle')
+
+      })
+
+    });
+  </script>
+  
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <p class="formtitle">Reported Bugs</p>
+    <div class="box">
+        {{table}}
+
+    </div>
+</div>
+<div class="col-sm-5 col-sm-offset-1">
+    <div>
+      <h3>Notifications</h3>
+    </div>
+    {% if msgs %}
+    <div class="notification is-success">
+      {{msgs}}
+    </div>
+    {% endif %}
+    
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="notification is-danger">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}

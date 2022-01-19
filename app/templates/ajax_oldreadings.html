@@ -1,0 +1,146 @@
+
+<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Current billing period (<span class="text-info">{{period}}</span>) readings:</div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive ml-2">
+        <table id="readingData" class="table shadow mb-1" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-info font-weight-bold">Meter.</th>
+                <th class="text-info font-weight-bold">House.</th>
+                <th class="text-info track-title-cell">Prev.</th>
+                <th class="text-info track-title-cell">Curr</th>
+                <th class="text-info track-title-cell">Rate</th>
+                <th class="text-info track-title-cell">Units</th>
+                <th class="text-info track-title-cell">Charge</th>
+                <th class="text-info track-title-cell">Period</th>
+                <th class="text-info track-title-cell">Date</th>
+                <th class="text-info track-title-cell">Edit</th>
+                <th class="text-info track-title-cell">Edit</th>
+                <th class="text-info track-title-cell">Delete</th>
+
+
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items%}
+              <tr>
+                <td class="first-data-cell text-dark font-weight-bold">{{ item['meter'] }}</td>
+                <td class="data-cell">{{ item['house'] }}</td>
+                <td class="data-cell">{{ item['last_reading'] }}</td>
+                <td class="data-cell">{{ item['reading'] }}</td>
+                <td class="data-cell">{{ item['rate'] }}</td>
+                <td class="data-cell">{{ item['units'] }}</td>
+                <td class="data-cell {{item['highlight']}}">{{ item['charged'] }}</td>
+                <td class="data-cell">{{ item['period'] }}</td>
+                <td class="data-cell">{{ item['date'] }}</td>
+
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{item['id']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editUnitsModal"><i class="fas fa-cog mr-1"></i>units</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{item['editid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editReadingModal"><i class="fas fa-cog mr-1"></i>readings</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{item['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#deleteReadingModal"><i class="fas fa-trash-alt mr-1"></i>readings</button>
+                  </div>
+                </td>
+
+                <!-- <td class="data-cell dispnone">
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-disabled="true">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header underline">Reading: <span class="text-info font-weight-bold">{{item['house']}}</span></div>
+          
+                      <div>
+                        <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{item['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editReadingModal" aria-disabled="true">Edit reading</span>
+                      </div>
+                      <div>
+                        <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{item['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editUnitsModal" aria-disabled="true">Edit units</span>
+                      </div>
+                       
+                    </div>
+                  </div>
+                </td> -->
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#readingData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "order": [[ 1, "asc" ]],
+        "searching":false,
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+  var rawIds = "{{ readingids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_reading_identifier").html(item)
+        }else{
+          $("#edit_reading_identifier").html(item)
+        }
+        
+      }else{
+        $("#reading_identifier").html(item)
+
+        // $("#"+item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+        // $.ajax({
+        //     url: "{{ url_for('api.sendinvoices') }}",
+        //     type: "POST",
+        //     data: {
+        //           billid:item,
+        //           prop:$("#prop_identifier").text(),
+        //           target:"isolated",
+        //           ctype:"water"
+        //         },
+        //     success: function(response) {
+
+        //       setTimeout(function(){
+        //         $.ajax({
+        //         url: "{{ url_for('api.fetchreadings') }}",
+        //         type: "get",
+        //         data: {
+        //               propid: $("#prop_identifier").text(),
+        //               target:$("#current-reloader").text()
+        //             },
+        //         success: function(response) {
+        //           $("#result-view").html(response);
+        //           // $("#select_house option:eq('1')").attr("selected", "selected");
+        //         }
+                
+        //       });
+        //       }, 3000);
+
+        //     },
+        //     error: function(xhr) {
+        //       $("#"+item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+        //       }
+        //   });
+      }
+    });
+  });
+</script>

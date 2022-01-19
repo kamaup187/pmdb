@@ -1,0 +1,870 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+        <div class="container no-padding">
+            <div class="divjust-end mb-2">
+              <i class="fa fa-home fa-2x text-info"></i>
+              <div class="center-btn font-weight-bold text-success mb-2 text-xx">House details</div>
+              <span id="prop_identifier" class="dispnone">{{prop.name}}</span>
+              <span id="house_identifier" class="dispnone">{{house.name}}</span>
+              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
+            </div>
+            <hr>
+            
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="">
+                        <div class="text-xx mb-2 center-btn text-primary font-weight-bold">House no: <span class="text-info">{{house.name}}</span></div>
+
+                        <div class="mb-3 center-btn">
+                          
+                          <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal" data-target=""><span class="fixed-width-prop"><img src="" alt="No image"/></span></button>
+                          
+                        </div>
+  
+                    </div>
+                </div>
+
+                <div class="col-lg-3 text-info dispnone">
+
+                  <div class="info_item">
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target=""><i class="fas fa-faucet ml-4"></i><span class="mr-4">Water reading</span></button>
+                  </div>
+                  <div class="info_item">
+    
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target=""><i class="fas fa-clipboard-list ml-4"></i><span class="mr-4">View readings</span></button>
+                  </div>
+                  <div class="info-item">
+
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target=""><i class="fas fa-plus ml-4"></i><span class="mr-4">Payments</span></button>
+                  </div>
+                  <div class="info-item">
+
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#editHouseModal"><i class="fas fa-edit ml-4"></i><span class="mr-4">Update Rates</span></button>
+                  </div>
+
+                </div>
+
+                <div class="col-lg-3">
+
+                    <div class="info_item">
+                      <i class="fas fa-building"></i>
+                      <span>Property.</span>
+                      <span class="text-info">
+                        {{prop.name}}
+                      </span><br>
+
+                      <i class="fas fa-hashtag"></i>
+                      <span>Group:</span>
+                      <span class="text-info">{{house.housecode}}</span><br>
+
+                      <i class="fas fa-house-user"></i>
+                      <span>Rent fee:</span>
+                      <span class="text-info">{{house.housecode.rentrate}}</span><br>
+                      <i class="fas fa-faucet"></i>
+                      <span>Water rates:</span>
+                      <span class="text-info">{{house.housecode.waterrate}}</span>
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+
+                  <div class="info_item small">
+                      <i class="fas fa-user"></i>
+                      <span>Current tenant:</span>
+                      <span class="text-danger">Vacant</span><br>
+                      <i class="fas fa-dollar-sign"></i>
+                      <span>Tenant balance:</span>
+                      <span class="text-info"> - </span><br>   
+                      <i class="fas fa-phone-alt"></i>
+                      <span>Contact:</span>
+                      <span class="text-info"> - </span><br>
+                      <i class="fas fa-bold"></i>
+                      <span>Billable?:</span>
+                      <span class="text-info">{{billing_status}}</span>
+                      <button type="button" class="borderless btn-light modalTrigger" data-toggle="modal" data-target="#billStatusModal"><i class="fas fa-edit text-danger"></i></button>
+                  </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <span class="font-weight-bold text-dark">Recent readings(water):</span>
+              <div class="col-lg-12 no-padding">
+                  <div id="reqdata" class="table-responsive">
+                      <table id="readingData" class="table shadow no-margin-bottom " width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th class="text-info font-weight-bold">Meter.</th>
+                              <th class="text-info track-title-cell">Prev.</th>
+                              <th class="text-info track-title-cell">Curr</th>
+                              <th class="text-info track-title-cell">Rate</th>
+                              <th class="text-info track-title-cell">Units</th>
+                              <th class="text-info track-title-cell">Charge</th>
+                              <th class="text-info track-title-cell">Date read</th>
+  
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for bill in bills%}
+                            <tr>
+                              <td class="first-data-cell text-dark font-weight-bold">{{ bill['meter'] }}</td>
+                              <td class="data-cell">{{ bill['last_reading'] }}</td>
+                              <td class="data-cell">{{ bill['reading'] }}</td>
+                              <td class="data-cell">{{ bill['rate'] }}</td>
+                              <td class="data-cell">{{ bill['units'] }}</td>
+                              <td class="data-cell">{{ bill['charged'] }}</td>
+                              <td class="data-cell">{{ bill['date'] }}</td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div>
+        </div>
+    </section>
+    <!--================Contact Area =================-->
+
+
+    <div class="text-center">
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload property photo</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+
+                  <div class="position-relative">
+                    <form class="divbg" action="/change/prop/image" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected" multiple required/>
+                        <label for="file-1"><span>Choose an image&hellip;</span></label>
+                        <input type="text" name="propid" class="d-none" value="{{prop.id}}">
+                        <input type="submit" class="borderless bg-danger" value="Upload">
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foote">
+              <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newHouseCodeModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Create new Housecode</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="/create/housecode">
+          
+                      <div class="form-group input-icons">
+                        <i class="fa fa-hashtag icon text-info"></i> 
+                        <input id="enter_house_code" class="form-control input-field text-info" style="text-align: center;" type="text" name="housecode" placeholder="New housecode" autofocus>
+                      </div>
+        
+                      <div id="notifications"></div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-home icon text-info"></i> 
+                        <input id="rentrate" class="form-control input-field" type="text" name="rentrate" placeholder="Rent charge" required>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-faucet icon text-info"></i> 
+                        <input id="waterrate" class="form-control input-field" type="text" name="waterrate" placeholder="Unit rate(water)" required>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-biohazard icon text-info"></i> 
+                        <input id="garbagerate" class="form-control input-field" type="text" name="garbagerate" placeholder="Garbage fee" required>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-dollar-sign icon text-info"></i> 
+                        <input id="securityrate" class="form-control input-field" type="text" name="securityrate" placeholder="Security fee" required>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-percent icon text-info"></i> 
+                        <input id="finerate" class="form-control input-field" type="text" name="finerate" placeholder="Fine percentage" required>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="addhousecode" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="editHouseCodeModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Update rates</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_housecode" >
+                          <option disabled selected value> -- Select Housecode -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+        
+                      <div id="dynamic_div">
+                        <div class="form-group input-icons">
+                          <i class="fa fa-home icon text-info"></i> 
+                          <input id="edit_rentrate" class="form-control input-field" type="text" name="rentrate" placeholder="Rent charge" required>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <i class="fa fa-faucet icon text-info"></i> 
+                          <input id="edit_waterrate" class="form-control input-field" type="text" name="waterrate" placeholder="Unit rate(water)" required>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <i class="fa fa-biohazard icon text-info"></i> 
+                          <input id="edit_garbagerate" class="form-control input-field" type="text" name="garbagerate" placeholder="Garbage fee" required>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <i class="fa fa-dollar-sign icon text-info"></i> 
+                          <input id="edit_securityrate" class="form-control input-field" type="text" name="securityrate" placeholder="Security fee" required>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <i class="fa fa-percent icon text-info"></i> 
+                          <input id="edit_finerate" class="form-control input-field" type="text" name="finerate" placeholder="Fine percentage" required>
+                        </div>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="edithousecode" type="button" class="btn-secondary borderless text-white" disabled>Update</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="newHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Add new house <span id="code" class="var-heading text-warning"></span></h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_housecode2" >
+                          <option disabled selected value> -- Select Housecode -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+          
+                      <div class="form-group input-icons">
+                        <i class="fa fa-hashtag icon text-info"></i> 
+                        <input id="enter_housename" class="form-control input-field text-info" style="text-align: center;" type="text" name="house" placeholder="House number/name" autofocus>
+                      </div>
+        
+                      <div id="notifications2"></div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select id="desc" class="form-control" name="desc" required>
+                          <option disabled selected value> -- Select description -- </option>
+                          <option value="Single Room">Single Room</option>
+                          <option value="Bedsitter">Bedsitter</option>
+                          <option value="One Bedroom">One Bedroom</option>
+                          <option value="Two Bedroom">Two Bedroom</option>
+                          <option value="Three Bedroom">Three Bedroom</option>
+                          <option value="Four Bedroom">Four Bedroom</option>
+                          <option value="Duplex">Duplex</option>
+                          <option value="Condo">Condo</option>
+                        </select>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Update House detail</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_house" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_housecode3" >
+                          <option disabled selected value> -- Select Housecode -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+        
+                      <div id="notifications3"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="edithouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="text-center">
+      <div class="modal fade" id="billStatusModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="paymentDetailModalLabel">Update billing </h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <form class="" action="/bill/status" method="POST">
+
+                      <div class="form-group input-icons">
+                        <select name="bill_status" class="form-control">
+                          <option disabled selected value> -- Bill status -- </option>
+                         
+                          <option value="True">Billable</option>
+                          <option value="False">Not billable</option>
+
+                        </select>
+                      </div>
+                      <input type="text" name="houseid" class="d-none" value="{{house.id}}">
+                      <hr>
+                      <div class="divbg center-btn">
+                        <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+
+
+<script>
+  $("#close-propdisp").on('click',function(){
+    $('#body-block').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+  });
+</script>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#readingData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 10,
+      "searching":false,
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+
+
+  <script>
+    $(document).ready(function(){
+      $("#newHouseCodeModal").on('shown.bs.modal', function(){
+        $(this).find('#enter_house_code').focus();
+      });
+    });
+  </script>
+
+  <script>
+    $("#enter_house_code").keyup(function(){  
+      var empty = false;
+    
+      if ($('#enter_house_code').val() == "") {
+          empty = true;
+      }
+
+      if (empty) {
+          $('#addhousecode').attr('disabled', 'disabled');
+          $('#addhousecode').removeClass('btn-success')
+          $('#addhousecode').addClass('btn-secondary')
+      } else {
+        $('#addhousecode').removeAttr('disabled');
+        $('#addhousecode').removeClass('btn-secondary')
+        $('#addhousecode').addClass('btn-success')
+      }    
+        $.ajax({
+          url: "{{ url_for('api.createhousecode') }}",
+          type: "POST",
+          data: {
+                  apartmentsessionvariable: $("#prop_identifier").text(),
+                  housecode: $("#enter_house_code").val(),
+                  runalert: "run"
+              },
+          success: function(response) {
+            $("#notifications").html(response);
+            // setTimeout(function(){
+            //   $("#notifications").empty();
+            // }, 2000);
+          }
+        });
+    });
+    </script>
+
+<script>
+  $("#addhousecode").click(function(){   
+    $("#addhousecode").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.createhousecode') }}",
+        type: "POST",
+        data: {
+                apartmentsessionvariable: $("#prop_identifier").text(),
+                housecode: $("#enter_house_code").val(),
+                rentrate: $("#rentrate").val(),
+                waterrate: $("#waterrate").val(),
+                garbagerate: $("#garbagerate").val(),
+                securityrate: $("#securityrate").val(),
+                finerate: $("#finerate").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#notifications").empty();
+            $('#addhousecode').attr('disabled', 'disabled');
+            $('#addhousecode').removeClass('btn-success')
+            $('#addhousecode').addClass('btn-secondary')
+            $("#addhousecode").html("submit")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+      
+  $("#editHouseCodeModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.edithousecode') }}",
+      type: "POST",
+      data: {
+            prop: $("#prop_identifier").text(),
+            runcode:"somestring"
+          },
+      success: function(response) {
+        $("#select_housecode").html(response);
+        
+      }
+    });
+  });
+
+</script>
+
+<script>
+    
+$("#select_housecode").on('change',function(){
+  var empty = false;
+    
+    if ($('#select_housecode').val() == "") {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#edithousecode').attr('disabled', 'disabled');
+        $('#edithousecode').removeClass('btn-success')
+        $('#edithousecode').addClass('btn-secondary')
+    } else {
+      $('#edithousecode').removeAttr('disabled');
+      $('#edithousecode').removeClass('btn-secondary')
+      $('#edithousecode').addClass('btn-success')
+    } 
+  $.ajax({
+    url: "{{ url_for('api.edithousecode') }}",
+    type: "POST",
+    data: {
+          prop: $("#prop_identifier").text(),
+          housecode: $("#select_housecode").val(),
+          rundata:"somestring"
+        },
+    success: function(response) {
+      $("#dynamic_div").html(response);
+      
+    }
+  });
+});
+
+</script>
+
+<script>
+  $("#edithousecode").click(function(){   
+    $("#edithousecode").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.edithousecode') }}",
+        type: "POST",
+        data: {
+                prop: $("#prop_identifier").text(),
+                housecode: $("#select_housecode").val(),
+                rentrate: $("#edit_rentrate").val(),
+                waterrate: $("#edit_waterrate").val(),
+                garbagerate: $("#edit_garbagerate").val(),
+                securityrate: $("#edit_securityrate").val(),
+                finerate: $("#edit_finerate").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#edithousecode').attr('disabled', 'disabled');
+            $('#edithousecode').removeClass('btn-success')
+            $('#edithousecode').addClass('btn-secondary')
+            $("#edithousecode").html("update")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<script> 
+  $("#newHouseModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.createhouse') }}",
+      type: "POST",
+      data: {
+            prop: $("#prop_identifier").text(),
+            runcode:"somestring"
+          },
+      success: function(response) {
+        $("#select_housecode2").html(response);
+        
+      }
+    });
+  });
+</script>
+
+
+<script>
+  $("#select_housecode2").on('change',function(){
+
+    $.ajax({
+      url: "{{ url_for('api.createhouse') }}",
+      type: "POST",
+      data: {
+            prop: $("#prop_identifier").text(),
+            housecode: $("#select_housecode2").val(),
+            runcodechange:"somestring"
+          },
+      success: function(response) {
+        $("#code").html(response);
+        
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#enter_housename").keyup(function(){  
+    var empty = false;
+    // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+    if ($('#enter_housename').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#addhouse').attr('disabled', 'disabled');
+        $('#addhouse').removeClass('btn-success')
+        $('#addhouse').addClass('btn-secondary')
+    } else {
+      $('#addhouse').removeAttr('disabled');
+      $('#addhouse').removeClass('btn-secondary')
+      $('#addhouse').addClass('btn-success')
+    }    
+    // console.log($("#code").text().length);
+    // console.log($("#code").text())
+      $.ajax({
+        url: "{{ url_for('api.createhouse') }}",
+        type: "POST",
+        data: {
+                prop: $("#prop_identifier").text(),
+                housecode: $("#code").text(),
+                house: $("#enter_housename").val(),
+                runalert: "run"
+            },
+        success: function(response) {
+          $("#notifications2").html(response);
+          // setTimeout(function(){
+          //   $("#notifications2").empty();
+          // }, 4000);
+        }
+      });
+  });
+  </script>
+
+<script>
+  $("#addhouse").click(function(){   
+    $("#addhouse").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.createhouse') }}",
+        type: "POST",
+        data: {
+                prop: $("#prop_identifier").text(),
+                housecode: $("#code").text(),
+                house: $("#enter_housename").val(),
+                desc: $("#desc").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#notifications2").empty();
+            $('#addhouse').attr('disabled', 'disabled');
+            $('#addhouse').removeClass('btn-success')
+            $('#addhouse').addClass('btn-secondary')
+            $("#addhouse").html("submit")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+<script> 
+  $("#editHouseModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.edithouse') }}",
+      type: "POST",
+      data: {
+            prop: $("#prop_identifier").text(),
+            runhouse:"somestring"
+          },
+      success: function(response) {
+        $("#select_house").html(response);
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#select_house").on('change',function(){
+    // var empty = false;
+      
+    //   if ($('#select_housecode2').val() == "") {
+    //       empty = true;
+    //   }
+  
+    //   if (empty) {
+    //       $('#addhouse').attr('disabled', 'disabled');
+    //       $('#addhouse').removeClass('btn-success')
+    //       $('#addhouse').addClass('btn-secondary')
+    //   } else {
+    //     $('#addhouse').removeAttr('disabled');
+    //     $('#addhouse').removeClass('btn-secondary')
+    //     $('#addhouse').addClass('btn-success')
+    //   } 
+    $.ajax({
+      url: "{{ url_for('api.edithouse') }}",
+      type: "POST",
+      data: {
+            prop: $("#prop_identifier").text(),
+            house: $("#select_house").val(),
+            runalert:"somestring"
+          },
+      success: function(response) {
+        $("#notifications3").html(response);
+          $.ajax({
+              url: "{{ url_for('api.edithouse') }}",
+              type: "POST",
+              data: {
+                    prop: $("#prop_identifier").text(),
+                    runcode:"somestring"
+                  },
+              success: function(response) {
+                $("#select_housecode3").html(response);
+              }
+            });
+      }
+    });
+  });
+</script>
+
+<script>
+  $("#select_housecode3").on('change',function(){
+
+      $('#edithouse').removeAttr('disabled');
+      $('#edithouse').removeClass('btn-secondary')
+      $('#edithouse').addClass('btn-success')
+  
+  });
+</script>
+
+<script>
+  $("#edithouse").click(function(){   
+    $("#edithouse").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.edithouse') }}",
+        type: "POST",
+        data: {
+                prop: $("#prop_identifier").text(),
+                housecode: $("#select_housecode3").val(),
+                house: $("#select_house").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#notifications3").empty();
+            $('#edithouse').attr('disabled', 'disabled');
+            $('#edithouse').removeClass('btn-success')
+            $('#edithouse').addClass('btn-secondary')
+            $("#edithouse").html("submit")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+

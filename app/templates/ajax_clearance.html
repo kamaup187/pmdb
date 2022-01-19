@@ -1,0 +1,31 @@
+<div class="mb-2">
+    
+    {%if checkbox%}
+
+    <span style="display: inline;" class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="discard_bill">
+        <label class="form-check-label text-gray-900" for="discard_bill">
+            Discard <span class="center-btn text-danger">{{alert_one}}</span>
+        </label>
+    </span>
+    
+    {%endif%}
+
+</div>
+
+<div class="mb-4">
+
+
+    {%if checkboxtwo%}
+
+    <span style="display: inline;" class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="payoff_balance">
+        <label class="form-check-label text-gray-900" for="payoff_balance">
+            Deduct <span class="center-btn text-danger">{{alert_two}}</span> from deposit?
+        </label>
+    </span>
+
+    
+    {%endif%}
+
+</div>

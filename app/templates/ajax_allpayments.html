@@ -1,0 +1,1801 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_ga">
+      <span id="prop_identifier_main" class="dispnone"></span>
+      <span id="targeturl" class="dispnone"></span>
+
+        <div class="no-padding row">
+          <div class="col-12 no-padding mb-2">
+            <div class="card-header py-0 card-bg-alt divjust-end" >
+                <div class="mt-2 font-weight-bold text-white text-xx"><i class="fas fa-fw fa-calendar-day mr-1"></i>All properties payments</div>
+                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
+            </div>
+          </div>
+
+          <!-- <div id="reportbtns" class="row mb-3">
+            <div class="col-lg-12 center-btn">
+              <div class="info_item">
+                <button id="balbtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Balances report</span></button>
+                <button id="paybtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Payments report</span></button>
+                <button id="arrbtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Arrears report</span></button>
+              </div>
+            </div>
+          </div> -->
+
+
+            
+          <!-- <div class="row mb-3">
+              <div class="col-lg-12 center-btn">
+                <div class="info_item">
+                  <button type="button" class="borderless btn-info" data-toggle="modal" data-target="#addPaymentModa"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">Bill</span></button>
+                </div>
+              </div>
+          </div> -->
+        </div>
+
+        <div class="toggleswitch divbg mb-2 d-none underline">
+          <span>
+            <span class="small">View previous month data</span>
+            <label class="switch">
+              <input id="reporttoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+        
+          <span class="">
+            <span class="small">View current month data</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+
+        </div>
+        
+        <div id="arr-view" class="col-lg-12 no-padding d-none"></div>
+
+        <div id="result-view" class="">
+          <div class="divbg font-weight-bold text-dark smallify">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" disabled>
+              <label class="form-check-label" for="flexRadioDefault2">
+                Previous payments ({{previous_month}})
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+              <label class="form-check-label" for="flexRadioDefault1">
+                Current payments ({{current_month}})
+              </label>
+            </div>
+            <div class="form-check dispnone">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" disabled>
+              <label class="form-check-label" for="flexRadioDefault1">
+                Not yet paid ({{current_month}})
+              </label>
+            </div>
+          </div>
+
+          <div class="col-lg-12 no-padding mt-3">
+            <div id="reqdata" class="table-responsive">
+                <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                  <thead class="custom-header">
+                    <tr>
+                    <th class="text-info font-weight-bold" data-orderable="true">Property</th>
+                    <th class="text-info font-weight-bold " data-orderable="false">Payments</th>
+                    <th class="text-info font-weight-bold " data-orderable="false">Add</th>
+                    <!-- <th class="text-info font-weight-bold " data-orderable="false">Send</th> -->
+                    <th class="text-danger {{fieldshow_dep}} ">Deposit</th>
+                    <th class="text-info  {{fieldshow_rent}} ">Rent</th>
+                    <th class="text-info  {{fieldshow_water}} ">Water</th>
+                    <th class="text-info  {{fieldshow_fine}} ">Fine</th>
+                    <th class="text-info ">Others</th>
+
+                    <!--
+                    <th class="text-info   {{fieldshow_elec}}">Electricity</th>
+                    <th class="text-info   {{fieldshow_garb}}">Garbage</th>
+                    <th class="text-info   {{fieldshow_sec}}">Security</th>
+                    <th class="text-info   {{fieldshow_sev}}">Service</th>
+                    <th class="text-info   {{fieldshow_dep}}">Deposit</th>
+                    <th class="text-info   {{fieldshow_arg}}">Agreement</th> -->
+                    <th class="text-info ">Due</th>
+                    <th class="text-info ">Paid</th>
+                    <th class="text-info  text-danger">b.c.f</th>
+                    </tr>
+                </thead>
+
+                    <tbody>
+                      {% for item in items%}
+                      <tr>
+                        <!-- <td class="first-data-cell text-dark font-weight-bold"><a href="#" id="{{item['identity']}}"> </a></td> -->
+                        <td class="font-weight-bold text-s  data-cell">
+                          <div>
+                            <button id="{{item['identity']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold namebutton modalTrigger no-wrap"><i class="fas fa-city mr-1"></i>{{ item['name'] }}</button>
+                          </div>
+                        </td>
+
+                        <td class="data-cell text-center text-black">{{item['payments'] }}</td>
+
+
+                        <td class="font-weight-bold text-s text-center data-cell">
+                          <div>
+                            <button id="{{item['propid']}}" type="button" class="btn btn-primary btn-small action-btn-alt font-weight-bold no-wrap" data-toggle="modal" data-target="#addPaymentModal2"><span>add payment</span></button>
+                          </div>
+                        </td>
+
+
+                        <!-- <td class="font-weight-bold text-s text-center data-cell">
+                          <div>
+                            <button id="{{item['smsid']}}" type="button" class="btn action-btn-alt {{item['sms_outline']}} font-weight-bold no-wrap" disabled>{{item['sms'] }}</button>
+                          </div>
+                        </td> -->
+                     
+                        <td class="data-cell text-right {{fieldshow_dep}}">{{item['deposit'] }}</td>
+                        <td class="data-cell text-right {{fieldshow_rent}}">{{item['rent'] }}</td>
+                        <td class="data-cell text-right {{fieldshow_water}}">{{item['water'] }}</td>
+                        <td class="data-cell text-right {{fieldshow_fine}}">{{item['fine'] }}</td>
+                        <td class="data-cell text-right">{{item['others'] }}</td>
+
+                        <td class="data-cell text-right text-black font-weight-bold">{{item['total'] }}</td>
+                        <td class="data-cell text-right {{item['payhighlight']}} font-weight-bold">{{item['paid'] }}</td>
+                        <td class="data-cell text-right {{item['highlight']}} font-weight-bold">{{item['bal'] }}</td>
+
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="3" class="center-btn font-weight-bold data-cell text-black">Total</td>
+                        <td class="font-weight-bold data-cell text-info text-right {{fieldshow_dep}}">{{deptotal}}</td>
+                        <td class="font-weight-bold data-cell text-info text-right {{fieldshow_rent}}">{{renttotal}}</td>
+                        <td class="font-weight-bold data-cell text-info text-right {{fieldshow_water}}">{{watertotal}}</td>
+                        <!-- 
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_elec}}">{{electotal}}</td>
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_garb}}">{{garbtotal}}</td>
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_sec}}">{{sectotal}}</td>
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_sev}}">{{sevtotal}}</td>
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_dep}}">{{deptotal}}</td>
+                        <td class="font-weight-bold data-cell text-info footer-cell {{fieldshow_arg}}">{{argtotal}}</td> -->
+                        <td class="font-weight-bold data-cell text-info text-right {{fieldshow_fine}}">{{penalties}}</td>
+                        <td class="font-weight-bold data-cell text-info text-right">{{others}}</td>
+
+                        <td class="font-weight-bold data-cell text-info text-right">{{totalbills}}</td>
+                        <td class="font-weight-bold data-cell text-info text-right">{{totalpaid}}</td>
+                        <td class="font-weight-bold data-cell text-info text-right">{{totalbalance}}</td>
+
+                      </tr>
+                    </tfoot>
+                </table>
+            </div>
+          </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="addPaymentModal2" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0">
+            <div class="smallify text-white bg-gradient-info form-control mb-2" id="paymentDetailModalLabel">Receive payment <div id="propname" class="d-inline text-warning font-weight-bold">
+              <div class="fountainG-small d-inline ml-3">
+                <div class="fountainG_1s fountainG-s"></div>
+                <div class="fountainG_2s fountainG-s"></div>
+                <div class="fountainG_3s fountainG-s"></div>
+              </div>
+            </div></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+                      <fieldset class="mb-2">
+                        <legend class="legend">Select tenant:</legend>
+
+                        <div class="form-group input-icons mt-0">
+                          <select class="select-css" id ="select_house" >
+                            <option disabled selected value> -- loading -- </option>
+                            {% for o in houselist %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+
+                        <div id="tenantbed" class="center-btn smallify mb-2 text-info"></div>
+
+                        <div class="divbg form-group x-smallify mb-0">
+                          <span class="text-danger">
+                            Prepayment?:
+                          </span>
+                          
+                          <span class="">
+                            <input type="radio" id="paytype1" class="check-bt" name="paytype" value="current" checked>
+                            <label for="paytype1">No</label>
+                          </span>
+          
+                          <span class="">
+                            <input type="radio" id="paytype2" class="check-bt" name="paytype" value="next" disabled>
+                            <label for="paytype2">Yes</label> 
+                          </span>
+                        </div>
+
+                        <div class="divbg form-group x-smallify">
+                          <span class="text-danger">
+                            Notify tenant by:
+                          </span>
+                          
+                          <span class="">
+                            <input type="checkbox" id="notifysms" class="check-bt" name="chargetype1" value="Rent" checked>
+                            <label for="notifysms">Sms</label>
+                          </span>
+          
+                          <span class="">
+                            <input type="checkbox" id="notifyemail" class="check-bt" name="chargetype2" value="water">
+                            <label for="notifyemail">Email</label> 
+                          </span>
+                        </div>
+
+
+                      </fieldset>
+
+                      <fieldset id="fieldset2" class="mb-2 dispnone">
+                        <legend class="legend smallify">Bill breakdown(inclusive of respective arrears)</legend>
+
+                        <div id="billbreakdown">
+                          <div class="fountainG-small d-inline ml-3">
+                            <div class="fountainG_1s fountainG-s"></div>
+                            <div class="fountainG_2s fountainG-s"></div>
+                            <div class="fountainG_3s fountainG-s"></div>
+                          </div>
+                        </div>
+
+                        <div id="totalbed" class="row">
+                          <div class="form-group col-6 no-paddin input-icons">
+                              <span class="text-danger">TOTAL DUE</span>
+                              <div id="totaldue">
+                                <div class="fountainG-small d-inline ml-3">
+                                  <div class="fountainG_1s fountainG-s"></div>
+                                  <div class="fountainG_2s fountainG-s"></div>
+                                  <div class="fountainG_3s fountainG-s"></div>
+                                </div>
+                              </div>
+                              <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+                          </div>
+                          <div class="form-group col-6 no-paddin input-icons">
+                            <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
+                              <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
+                              <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+                          </div>
+                        </div>
+    
+                      </fieldset>
+
+
+
+                      <fieldset id="fieldset3" class="mb-2 dispnone">
+                        <legend class="legend">Payment details</legend>
+
+                        <!-- <span class="text-danger">MONTH OF PAYMENT?</span>
+                        <div id="select_period" class="row x-smallify center-btn">     
+                          <div class="fountainG-small d-inline ml-3">
+                            <div class="fountainG_1s fountainG-s"></div>
+                            <div class="fountainG_2s fountainG-s"></div>
+                            <div class="fountainG_3s fountainG-s"></div>
+                          </div>
+                        </div>
+                        <div class="underline"></div> -->
+
+                       
+                      <div class="row">
+                        <div class="form-group col-md-6 no-paddin input-icons">
+                          <span class="text-danger">DATE?</span>
+                          <div id="datepicker" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="pay-date" class="form-control ph" type="text" placeholder="Date of payment" readonly />
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          </div>
+                        </div>
+
+                        <div class="form-group col-md-6 no-paddin input-icons">
+                          <span class="text-danger">TIME? (optional)</span>
+                          <input class="form-control ph" type="time" id="pay-time" min="00:00" max="24:00">
+                        </div>
+                      </div>
+
+                      <span class="text-danger">PAYMENT METHOD</span>
+                      <div id="select_paymode" class="row x-smallify center-btn text-black font-weight-bold">
+                        
+                        <span class="col-4 mb-2 form-group">
+                          <input type="radio" id="paymode1" class="" name="paymode" value="bank">
+                          <label for="paymode1">Bank deposit</label>
+                        </span>
+        
+                        <span class="col-4 mb-2 form-group">
+                          <input type="radio" id="paymode2" class="" name="paymode" value="cash">
+                          <label for="paymode2">Cash payment</label> 
+                        </span>
+                        
+                        <span class="col-4 mb-2 form-group">
+                          <input type="radio" id="paymode3" class="" name="paymode" value="mpesa">
+                          <label for="paymode3">Mpesa paybill</label> 
+                        </span>
+                      </div>
+
+                      <div id="banks" class="overline dispnone">
+                        <span class="text-danger">SELECT BANK</span>
+                        <div class="divbg form-group mb-0 x-smallify">
+                                  
+                          <span class="spanwidth ml-4">
+                            <input type="radio" id="bank1" class="check-btn ml-md-3" name="bank" value="Equity">
+                            <label for="bank1">Equity</label>
+                          </span>
+          
+                          <span class="spanwidth">
+                            <input type="radio" id="bank2" class="check-btn ml-md-3" name="bank" value="StanChart">
+                            <label for="bank2">StanC</label> 
+                          </span>
+                          
+                          <span class="spanwidth">
+                            <input type="radio" id="bank3" class="check-btn ml-md-2" name="bank" value="Coop">
+                            <label for="bank3">Coop</label> 
+                          </span>
+                          
+                          <span class="spanwidth">
+                            <input type="radio" id="bank4" class="check-btn ml-md-1" name="bank" value="KCB">
+                            <label for="bank4">KCB</label>
+                          </span>
+                          
+                          <span class="spanwidth">
+                            <input type="radio" id="bank5" class="check-btn ml-md-2" name="bank" value="ABSA">
+                            <label for="bank5">ABSA</label>
+                          </span>
+  
+                          <span class="spanwidth">
+                            <input type="radio" id="bank6" class="check-btn ml-md-3" name="bank" value="Unaitas">
+                            <label for="bank6">Unaitas</label>
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- <div class="underline"></div> -->
+
+                      <div id="billref" class="form-group input-icons overline dispnone">
+                        <span class="text-danger">REFERENCE NUMBER?</span>
+                          <input id="bill_ref" class="form-control border-top-0 border-right-0 border-left-0 ph text-left" type="text" placeholder="xxxxxxxxxxxxx"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-barcode text-info"></i></span>
+                      </div>
+
+
+
+                    </fieldset>
+                        
+
+                      
+                      <div class="divbg center-btn">
+                        <button id="paybtn_alt" type="button" class="btn btn-outline-success borderles dispnone">Submit</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="receiptPaymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center dispnon">
+            <div class="modal-title header-elements-inline underline pb-0 divbg">
+              <span class="card-title pt-2 text-gray-900 font-size-bold">Receipt</span>
+              <button type="button" class="btn btn-light btn-sm borderless" data-dismiss="modal"><i class="fa fa-times text-danger mr-2"></i>Close</button>
+            </div>
+
+            <div class="header-elements divbg mb-2 pt-2">
+              <button type="button" class="savebtn btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button> 
+              <button type="button" class="printbtn mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button>
+            </div>
+          </div>
+          <div class="modal-body no-padding">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div id="receipt-payment-bed" class="position-relative"></div>
+                <div class="hide">spacing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+
+          <div class="modal-header pb-0 text-center dispnon">
+            <div class="modal-title header-elements-inline underline pb-0 divbg">
+              <span class="card-title pt-2 text-gray-900 font-size-bold">Receipt</span>
+              <button type="button" class="btn btn-light btn-sm borderless" data-dismiss="modal"><i class="fa fa-times text-danger mr-2"></i>Close</button>
+            </div>
+
+            <div class="header-elements divbg mb-2 pt-2">
+              <button type="button" class="savebtn btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button> 
+              <button type="button" class="printbtn mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button>
+
+              <button id="smsbtn" type="button" class="btn btn-light btn-sm"><i class="fas fa-sms text-primary mr-2">Sms</i></button>
+              <button id="mailbtn" type="button" class="btn btn-light btn-sm"><i class="fa fa-envelope text-primary mr-2"></i>Email</button>
+            </div>
+          </div>
+
+          <div class="modal-body no-padding">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div id="receipt-bed" class="position-relative"></div>
+                <div class="hide">spacing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade center-btn" id="editPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Edit payment</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <!-- <div class="form-group mt-2">                        
+              <input id="edit_datepicker" class="form-control text-info pl-5 ph" type="text" placeholder="Edit date">
+              <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span>
+            </div> -->
+
+          <!-- <div class="row">
+            <div id="edit-datepicker" class="form-group mt-2 date" data-date-format="dd-mm-yyyy">
+              <input id="edit-pay-date" class="form-control ph" type="text" placeholder="Update date of payment" readonly />
+              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+            </div>
+  
+            <div class="form-group col-6">
+              <small>Update time</small>
+              <input class="form-contro ph" type="time" id="edit-pay-time" min="00:00" max="24:00">
+            </div>
+          </div> -->
+          <div class="underline"></div>
+
+          <div class="row underline">
+              <div id="edit-datepicker" class="form-group col-6 mt-2 date" data-date-format="dd-mm-yyyy">
+                <input id="edit-pay-date" class="form-control ph pl-5" type="text" placeholder="date of payment" readonly />
+                <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+              </div>
+              <div class="form-group col-6 mt-2 input-icons">
+                  <span>Rent paid </span>
+                  <input class="form-contro ph" type="time" id="edit-pay-time" min="00:00" max="24:00">
+
+              </div>
+          </div>
+
+
+            <div class="form-group dispnone">
+              <input id="edit_paidamount" class="form-control ph" type="text" name="paidamount" placeholder="Update amount" required>
+            </div>
+
+          </div>
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Do you really want to edit this payment?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="edit_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Update</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade center-btn" id="deletePaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-danger">Confirm delete</div>
+          
+          <span class="text-gray-700 small mb-2 mr-2 ml-2">Tenant will be <span class="text-danger">NOTIFIED</span> of the reversal. Continue?</span>
+          <div class="has-margin-bottom divbg">
+              <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit bill</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="billeditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editbill" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeBillModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit arrears per invoice item</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="arreditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editarr" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeArrModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editPayModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit payments</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="payeditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editpay" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closePayModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editTenantModal"></button> -->
+    <!--================Contact Area =================-->
+    <button type="button" id="receipt-btn" class="dispnone" data-toggle="modal" data-target="#receiptModal"></button>
+    <button type="button" id="receipt-payment-btn" class="dispnone" data-toggle="modal" data-target="#receiptPaymentModal"></button>
+
+
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <!-- <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+   -->
+
+
+  <script>
+    $("#close-propdisp").on('click',function(){
+      $('#body-block').removeClass('dispnone')
+      $('#propdisp').addClass('dispnone');
+      $('#content-area').removeClass("isopen text-danger");
+      $('#list-area').removeClass("isopen text-danger");
+      $('#sidebarToggle').click();
+      $('#smaccordionSidebar').removeClass("toggled");
+    });
+  </script>
+
+<script>
+  var rawIds = "{{ propids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_prop_identifier").html(item)
+        }
+        else if(item.startsWith("prp")){
+          console.log("Clicked properties")
+          $("#preloader-btn-alt").click();
+          // $("#spinner").removeClass("dispnone")
+          $.ajax({
+              url: "{{ url_for('api.fetchpayments') }}",
+              type: "get",
+              data: {
+                    propid:item,
+                    target:"new alt"
+                  },
+              success: function(response) {
+                $("#postloader-btn-alt").click();
+                $('#result-view').toggleClass("d-none");
+                $('#reportbtns').toggleClass("d-none");
+                $('#arr-view').toggleClass("d-none");
+                $("#arr-view").html(response);
+                
+              }
+            });
+        
+        }else if(item.startsWith("sms")){
+          console.log("Clicked sms")
+          $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>sending...');
+
+          $.ajax({
+            url: "/send/invoices",
+            type: "POST",
+            data: {propid: item},
+            success: function(response) {
+              $("#"+item).html('Sent');
+            }
+          });
+                
+        }
+        else{
+          $("#edit_prop_identifier").html(item)
+        }
+        
+      }else{
+        $("#prop_identifier_main").html(item)
+      }
+    });
+  });
+</script>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    var tt= $('#tenantPaymentData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    tt.columns().iterator( 'column', function (ctx, idx) {
+    $( tt.column(idx).header() ).append('<span class="sort-icon"/>');
+  } );
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+
+<script>
+  
+  $("#reporttoggle").on('change',function(){
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+
+      $.ajax({
+        url: $("#targeturl").text(),
+        type: "get",
+        data: {
+              propid:"",
+              target:"old"
+            },
+        success: function(response) {
+
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+
+      $.ajax({
+        url: $("#targeturl").text(),
+        type: "get",
+        data: {
+              propid:"",
+              target:"default"
+            },
+        success: function(response) {
+
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+  });
+</script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#addPaymentModal2").on('shown.bs.modal', function(){
+    $(function () {
+      $("#datepicker").datepicker({ 
+            autoclose: true, 
+            todayHighlight: true
+      });
+    });
+
+    $.ajax({
+      url: "{{ url_for('api.receivepayment') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier_main").text(),
+            target:"propname"
+          },
+      success: function(response) {
+        $("#propname").html(response);
+
+        $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+              propid: $("#prop_identifier_main").text(),
+              target:"houselist"
+            },
+        success: function(response) {
+          $("#select_house").html(response);
+
+            $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  target:"period-disable"
+                },
+            success: function(response) {
+              $("#select_period").html(response);
+
+              }
+            });
+
+          }
+        });
+
+      }
+    });
+  });
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#receiptModal").on('shown.bs.modal', function(){
+    // $('#tenantbed').addClass("dispnone");
+    $('#mailbtn').removeAttr('disabled');
+    $('#mailbtn').html('<i class="fas fa-envelope text-primary"></i>Email');
+    $('#smsbtn').removeAttr('disabled');
+    $('#smsbtn').html('<i class="fas fa-sms text-primary"></i>Sms');
+    $("#receipt-bed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+    $.ajax({
+      url: "{{ url_for('api.receipt') }}",
+      type: "get",
+      data: {
+            payid: $("#payment_identifier").text()
+          },
+      success: function(response) {
+        $("#receipt-bed").html(response); 
+      }
+    });
+  });
+
+</script>
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#select_house").on('change',function(){
+    $("#fieldset2").removeClass("dispnone")
+    $("#billbreakdown").html(
+          '<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>'
+          );
+    $.ajax({
+      url: "{{ url_for('api.receivepayment') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier_main").text(),
+            house: $("#select_house").val(),
+            target:"amount due"
+          },
+      success: function(response) {
+        if (response.split(" ")[0] == "<input"){
+          $("#totaldue").html(response);
+          $("#tenantbed").empty();
+
+          $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house").val(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
+                },
+            success: function(response) {
+              $("#billbreakdown").html(response);
+
+
+
+              //Disable this in futute, say May 2022
+              $.ajax({
+                url: "{{ url_for('api.editbill') }}",
+                type: "POST",
+                data: {
+                        billid: $("#edit_bill_identifier").text(),
+                        rent:"",
+                        water:"",
+                        garbage:"",
+                        security:"",
+                        electricity:"",
+                        agreement:"",
+                        fine:"",
+                        deposit:"",
+                        maintenance:"",
+                        arrears:""
+                    },
+                success: function(response) {
+                  $(".alert-msgs").html(response);
+                  // location.reload();
+                  $.ajax({
+                    url: "{{ url_for('api.receivepayment') }}",
+                    type: "get",
+                    data: {
+                          propid: $("#prop_identifier_main").text(),
+                          house: $("#select_house").val(),
+                          paidamount:$("#paidamount").val(),
+                          target:"breakdown"
+                        },
+                    success: function(response) {
+                      $("#billbreakdown").html(response);
+
+                      $.ajax({
+                        url: "{{ url_for('api.receivepayment') }}",
+                        type: "get",
+                        data: {
+                              propid: $("#prop_identifier_main").text(),
+                              house: $("#select_house").val(),
+                              house2: $("#house-holder").text(),
+                              target:"amount due"
+                            },
+                        success: function(response) {
+                          $("#totaldue").html(response);                  
+                        }
+                      });
+
+                      }
+                    });
+
+
+                }
+              });
+              //end of temporary function
+
+              }
+            });
+
+        }else{
+          $("#tenantbed").html(response);
+          // $("#totaldue").html('fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>');
+          $("#total_due").val('0.0');
+
+        }
+        // $("#fieldset2").removeClass("dispnone")
+
+      }
+    });
+  });
+</script>
+
+
+<script>
+  $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
+    $("#tenantbed").empty();
+    $("#billbreakdown").empty();
+    $("#fieldset2").addClass("dispnone")
+    $("#totaldue").empty();
+  });
+</script>
+
+
+
+
+
+
+
+<script>
+  $("#select_paymode").on('change',function(){
+
+    $('#billref').removeClass('dispnone');
+    $('#bill_ref').removeClass('dispnone');
+    $('#bill_ref').val("");
+
+    // var empty = false;
+
+    var paymode = document.querySelector('input[name="paymode"]:checked').value;
+
+    if(paymode == "cash"){
+      $('#bill_ref').val("N/A");
+      $('#billref').addClass('dispnone');
+      $('#banks').addClass('dispnone');
+    }else if(paymode=="bank"){
+      $('#bill_ref').attr("placeholder","Enter deposit slip reference");
+      $('#banks').removeClass('dispnone');
+    }else{
+      $('#bill_ref').attr("placeholder","Enter Mpesa reference");
+      $('#banks').addClass('dispnone');
+    }
+
+    // if ($('#bill_ref').val() == "") {
+    //   empty = true;
+    // }else if($('#paidamount').val() == ""){
+    //   empty = true;
+    // }
+
+    // var contents =  $("#access").text();
+
+    // if (contents != "" && paymode =="cash"){
+    //   empty = true;
+    // }
+
+    // if (empty) {
+    //     $('#paybtn_alt').addClass("dispnone");
+    // } else {
+    //     $('#paybtn_alt').removeClass("dispnone")
+    // }
+
+  })
+
+
+
+  // $("#bill_ref").on('keyup',function(){
+  //   var empty = false;
+  //   if ($('#bill_ref').val() == "") {
+  //     empty = true;
+  //   }else if($('#paidamount').val() =="") {
+  //     empty = true;
+  //   }
+
+  //   var contents =  $("#access").text();
+
+  //   if (contents != "" && paymode =="cash"){
+  //     empty = true;
+  //   }
+    
+  //   if (empty) {
+  //       $('#paybtn_alt').addClass("dispnone");
+  //   } else {
+  //       $('#paybtn_alt').removeClass("dispnone")
+  //   }
+  // })
+
+</script>
+
+<script>
+
+  $("#paidamount").on('keyup',function(){
+    var empty = false;
+    if ($('#paidamount').val() == "") {
+      empty = true;
+    }
+    
+    var contents =  $("#access").text();
+
+    if (contents != ""){
+      empty = true;
+    }
+
+    if (empty) {
+        $("#fieldset3").addClass("dispnone")
+        $('#paybtn_alt').addClass("dispnone");
+    } else {
+        $('#paybtn_alt').removeClass("dispnone")
+        $("#fieldset3").removeClass("dispnone")
+
+    }
+
+
+    let paid = parseInt($("#paidamount").val().replace(/,/g, ''));
+    let bal = paid
+
+    let rentdue = parseInt($("#rentdue").val())
+    let waterdue = parseInt($("#waterdue").val())
+    if (waterdue < 0){
+      waterdue = 0
+    }
+    let electricitydue = parseInt($("#electricitydue").val())
+    let garbagedue = parseInt($("#garbagedue").val())
+    let securitydue = parseInt($("#securitydue").val())
+    let servicedue = parseInt($("#servicedue").val())
+    let penaltydue = parseInt($("#penaltydue").val())
+    let depositdue = parseInt($("#depositdue").val())
+    let agreementdue = parseInt($("#agreementdue").val())
+
+
+    if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
+
+    if (bal >= rentdue) {$("#rentpaid").val(rentdue);bal -= rentdue}else if (bal < rentdue && bal > 0) {$("#rentpaid").val(bal);bal = 0}else {$("#rentpaid").val(0.0)}
+    if (bal >= penaltydue) {$("#penaltypaid").val(penaltydue);bal -= penaltydue}else if (bal < penaltydue && bal > 0) {$("#penaltypaid").val(bal);bal = 0}else {$("#penaltypaid").val(0.0)}
+
+    if (bal >= garbagedue) {$("#garbagepaid").val(garbagedue);bal -= garbagedue}else if (bal < garbagedue && bal > 0) {$("#garbagepaid").val(bal);bal = 0}else {$("#garbagepaid").val(0.0)}
+    if (bal >= securitydue) {$("#securitypaid").val(securitydue);bal -= securitydue}else if (bal < securitydue && bal > 0) {$("#securitypaid").val(bal);bal = 0}else {$("#securitypaid").val(0.0)}
+    if (bal >= servicedue) {$("#servicepaid").val(servicedue);bal -= servicedue}else if (bal < servicedue && bal > 0) {$("#servicepaid").val(bal);bal = 0}else {$("#servicepaid").val(0.0)}
+
+    if (bal >= waterdue) {$("#waterpaid").val(waterdue);bal -= waterdue}else if (bal < waterdue && bal > 0) {$("#waterpaid").val(bal);bal = 0}else {$("#waterpaid").val(0.0)}
+    if (bal >= electricitydue) {$("#electricitypaid").val(electricitydue);bal -= electricitydue}else if (bal < electricitydue && bal > 0) {$("#electricitypaid").val(bal);bal = 0}else {$("#electricitypaid").val(0.0)}
+
+    if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
+
+    if(bal){
+      $("#advancepay").removeClass("dispnone")
+      $("#advance_pay").val(bal)
+    }else{
+      $("#advancepay").addClass("dispnone")
+      $("#advance_pay").val(0.0)
+    }
+
+  })
+
+  </script>
+
+  <script>
+  $("#paybtn_alt").on('click',function(){
+    // $('#paybtn_alt').attr('disabled', 'disabled')
+    $('#paybtn-altt').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
+
+    var cb = document.getElementById("notifysms");
+    if (cb.checked){
+      var notifysms = "True";
+    }else{
+      var notifysms = "False";
+    }
+
+    var cb = document.getElementById("notifyemail");
+    if (cb.checked){
+      var notifyemail = "True";
+    }else{
+      var notifyemail = "False";
+    }
+  
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.receivepayment') }}",
+            data: {
+                propid: $("#prop_identifier_main").text(),
+                house: $("#select_house").val(),
+                house2: $("#house-holder").text(),
+                chargetype1:"rent",
+                bank:$("input[name=bank]:checked").val(),
+                sms:notifysms,
+                email:notifyemail,
+                month:$("input[name=paytype]:checked").val(),
+                date:$("#pay-date").val(),
+                time:$("#pay-time").val(),
+
+                paymode:document.querySelector('input[name="paymode"]:checked').value,
+                bill_ref:$("#bill_ref").val(),
+                rentpaid : ($("#rentpaid").val()),
+                waterpaid : ($("#waterpaid").val()),
+                electricitypaid : ($("#electricitypaid").val()),
+                garbagepaid : ($("#garbagepaid").val()),
+                securitypaid : ($("#securitypaid").val()),
+                servicepaid : ($("#servicepaid").val()),
+                penaltypaid : ($("#penaltypaid").val()),
+                depositpaid : ($("#depositpaid").val()),
+                agreementpaid :($("#agreementpaid").val()),
+                paidamount:$("#paidamount").val()
+            },
+            success: function(response) {
+                $('#paybtn_alt').off('click');
+                $('#paybtn_alt').html('Submit');
+                $('#paybtn_alt').addClass("dispnone")
+                // $('#pay-date').attr("type","text")
+                $(".reset").click();
+                $(".closemodal").click();
+                $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+                $("#tenantbed").empty();
+                $("#billbreakdown").empty();
+                $("#totaldue").empty();
+                $("#receipt-payment-btn").click();
+                $("#fieldset2").addClass("dispnone")
+                $("#fieldset3").addClass("dispnone")
+                $('#billref').addClass('dispnone');
+                $('#banks').addClass('dispnone');
+                $("#addPaymentModal2").empty();
+                $("#receipt-payment-bed").html(response);
+                // $('#paybtn-alt').click(rebindfunc());
+                $.ajax({
+                    url: "{{ url_for('api.fetchpayments') }}",
+                    type: "get",
+                    data: {
+                          propid: $("#prop_identifier_main").text(),
+                          target:"new alt"
+                        },
+                    success: function(response) {
+                      $('#result-view').toggleClass("d-none");
+                      $('#reportbtns').toggleClass("d-none");
+                      $('#arr-view').toggleClass("d-none");
+                      $("#arr-view").html(response);
+
+                          // $("#body-block").addClass("dispnone")
+                          // $("#preloader-btn").click();
+                      // $("#barloader").removeClass("dispnone")
+
+                      // url = "{{ url_for('api.payments') }}"
+
+                      // $(".paybtn2").click();
+
+
+
+                      // $.ajax({
+                      //       type: "get",
+                      //       url: url,
+                      //       success: function(response) {
+                      //         // $("#postloader-btn").click();
+                      //         if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                      //               $('#sidebarToggle').click();
+                      //               $('#smaccordionSidebar').removeClass("toggled");
+                      //             }
+                      //           $('#content-area').addClass("isopen text-danger");
+                      //         $("#barloader").addClass("dispnone")
+                      //         $("#body-block").addClass("dispnone")
+                      //         $("#proplist").addClass("dispnone")
+                      //         $("#propdisp").removeClass("dispnone")
+                      //         $("#searchresults").html("empty")
+                      //         $("#searchresults").addClass("dispnone")
+                      //         $("#propdisp").html(response);
+                      //       }
+                      //   });
+                      
+                    }
+                  });
+            },
+            error: function(xhr) {
+              $('#paybtn_alt').html('Submit');
+              alert("Please select tenant before proceeding");
+        }
+        });
+  });
+
+
+  function rebindfunc() {
+    // $('#paybtn_alt').attr('disabled', 'disabled')
+    $('#paybtn-altt').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
+
+    var cb = document.getElementById("notifysms");
+    if (cb.checked){
+      var notifysms = "True";
+    }else{
+      var notifysms = "False";
+    }
+
+    var cb = document.getElementById("notifyemail");
+    if (cb.checked){
+      var notifyemail = "True";
+    }else{
+      var notifyemail = "False";
+    }
+  
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.receivepayment') }}",
+            data: {
+                propid: $("#prop_identifier_main").text(),
+                house: $("#select_house").val(),
+                house2: $("#house-holder").text(),
+                chargetype1:"rent",
+                bank:$("input[name=bank]:checked").val(),
+                sms:notifysms,
+                email:notifyemail,
+                month:$("input[name=paytype]:checked").val(),
+                date:$("#pay-date").val(),
+                time:$("#pay-time").val(),
+
+                paymode:document.querySelector('input[name="paymode"]:checked').value,
+                bill_ref:$("#bill_ref").val(),
+                rentpaid : ($("#rentpaid").val()),
+                waterpaid : ($("#waterpaid").val()),
+                electricitypaid : ($("#electricitypaid").val()),
+                garbagepaid : ($("#garbagepaid").val()),
+                securitypaid : ($("#securitypaid").val()),
+                servicepaid : ($("#servicepaid").val()),
+                penaltypaid : ($("#penaltypaid").val()),
+                depositpaid : ($("#depositpaid").val()),
+                agreementpaid :($("#agreementpaid").val()),
+                paidamount:$("#paidamount").val()
+            },
+            success: function(response) {
+                $('#paybtn_alt').off('click');
+                $('#paybtn_alt').html('Submit');
+                $('#paybtn_alt').addClass("dispnone")
+                // $('#pay-date').attr("type","text")
+                $(".reset").click();
+                $(".closemodal").click();
+                $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
+                    $('body').addClass('modal-open');
+                });
+                $("#tenantbed").empty();
+                $("#billbreakdown").empty();
+                $("#totaldue").empty();
+                $("#receipt-payment-btn").click();
+                $("#fieldset2").addClass("dispnone")
+                $("#fieldset3").addClass("dispnone")
+                $('#billref').addClass('dispnone');
+                $('#banks').addClass('dispnone');
+                $("#receipt-payment-bed").html(response);
+                $.ajax({
+                    url: "{{ url_for('api.fetchpayments') }}",
+                    type: "get",
+                    data: {
+                          propid: $("#prop_identifier_main").text(),
+                          target:"new alt"
+                        },
+                    success: function(response) {
+                      $('#result-view').toggleClass("d-none");
+                      $('#reportbtns').toggleClass("d-none");
+                      $('#arr-view').toggleClass("d-none");
+                      $("#arr-view").html(response);
+                      
+                    }
+                  });
+            },
+            error: function(xhr) {
+              $('#paybtn_alt').html('Submit');
+              alert("Please select tenant before proceeding");
+        }
+        });
+  }
+</script>
+
+
+<script type="text/javascript">
+  $('#editBillModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<script type="text/javascript">
+  $('#editArrModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<script type="text/javascript">
+  $('#editPayModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<!-- <script type="text/javascript">
+  $('#editArrModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script> -->
+
+<script>
+  $("#editBillModal").on('shown.bs.modal', function(){
+    $("#editbill").removeClass("dispnone");
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text()
+          },
+      success: function(response) {
+        $("#billeditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#editArrModal").on('shown.bs.modal', function(){
+    $("#editarr").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"editarrears"
+          },
+      success: function(response) {
+        $("#arreditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#arreditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        $("#editarr").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+
+<script>
+  $("#editPayModal").on('shown.bs.modal', function(){
+    $("#editpay").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"editpayments"
+          },
+      success: function(response) {
+        $("#payeditbed").html(response);
+      },
+      error: function(xhr) {
+        // $("#payeditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        // $(".alert-msgs").html("You are not allowed to edit payments")
+        $("#payeditbed").html("You are not allowed to edit payments")
+
+        $("#editpay").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+
+<script>
+  $("#editbill").click(function(){   
+    $("#editbill").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent").val(),
+                water: $("#edit_water").val(),
+                garbage: $("#edit_garbage").val(),
+                security: $("#edit_security").val(),
+                electricity: $("#edit_electricity").val(),
+                agreement: $("#edit_agreement").val(),
+                fine: $("#edit_penalty").val(),
+                deposit: $("#edit_deposit").val(),
+                maintenance: $("#edit_maintenance").val(),
+                arrears: $("#edit_arrears").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+          $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house").val(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
+                },
+            success: function(response) {
+              $("#billbreakdown").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier_main").text(),
+                      house: $("#select_house").val(),
+                      house2: $("#house-holder").text(),
+                      target:"amount due"
+                    },
+                success: function(response) {
+                  $("#totaldue").html(response);                  
+                }
+              });
+
+              }
+            });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset").click();
+            $("#editbill").html("Update")
+            $("#closeBillModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+<script>
+  $("#editarr").click(function(){   
+    $("#editarr").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent_arr").val(),
+                water: $("#edit_water_arr").val(),
+                garbage: $("#edit_garbage_arr").val(),
+                security: $("#edit_security_arr").val(),
+                electricity: $("#edit_electricity_arr").val(),
+                agreement: $("#edit_agreement_arr").val(),
+                fine: $("#edit_penalty_arr").val(),
+                deposit: $("#edit_deposit_arr").val(),
+                maintenance: $("#edit_maintenance_arr").val(),
+                target: "editarrears"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+          $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house").val(),
+                  house2: $("#house-holder").text(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
+                },
+            success: function(response) {
+              $("#billbreakdown").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier_main").text(),
+                      house: $("#select_house").val(),
+                      target:"amount due"
+                    },
+                success: function(response) {
+                  $("#totaldue").html(response);                  
+                }
+              });
+
+              }
+            });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editarr").html("Update")
+            $("#closeArrModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#editpay").click(function(){   
+    $("#editpay").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent_paid").val(),
+                water: $("#edit_water_paid").val(),
+                garbage: $("#edit_garbage_paid").val(),
+                security: $("#edit_security_paid").val(),
+                electricity: $("#edit_electricity_paid").val(),
+                agreement: $("#edit_agreement_paid").val(),
+                fine: $("#edit_penalty_paid").val(),
+                deposit: $("#edit_deposit_paid").val(),
+                maintenance: $("#edit_maintenance_paid").val(),
+                target: "editpayments"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+          $.ajax({
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house").val(),
+                  house2: $("#house-holder").text(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
+                },
+            success: function(response) {
+              $("#billbreakdown").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier_main").text(),
+                      house: $("#select_house").val(),
+                      target:"amount due"
+                    },
+                success: function(response) {
+                  $("#totaldue").html(response);                  
+                }
+              });
+
+              }
+            });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editpay").html("Update")
+            $("#closePayModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#editPaymentModal").on('shown.bs.modal', function(){
+    $(function () {
+      $("#edit-datepicker").datepicker({ 
+            autoclose: true, 
+            todayHighlight: true
+      });
+    });
+
+    $(".payment-info").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>retrieving...');
+    $.ajax({
+      url: "{{ url_for('api.editpayment') }}",
+      type: "get",
+      data: {
+            payid: $("#payment_identifier").text(),
+            editid: $("#edit_payment_identifier").text(),
+            delid: $("#del_payment_identifier").text(),
+            target: $("#target_payment_id").text()
+          },
+      success: function(response) {
+        $(".payment-info").html(response); 
+      }
+    });
+  });
+</script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#deletePaymentModal").on('shown.bs.modal', function(){
+    $(".payment-info").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>retrieving...');
+    $.ajax({
+      url: "{{ url_for('api.editpayment') }}",
+      type: "get",
+      data: {
+            payid: $("#payment_identifier").text(),
+            editid: $("#edit_payment_identifier").text(),
+            delid: $("#del_payment_identifier").text(),
+            target: $("#target_payment_id").text()
+          },
+      success: function(response) {
+        $(".payment-info").html(response); 
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+
+  $("#balbtn").on('click',function(){
+    if ($("#balbtn").hasClass("closereport")){
+
+      $("#balbtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Balances report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('.toggleswitch').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#paybtn').toggleClass("d-none");
+      $('#arrbtn').toggleClass("d-none");
+      $('#balbtn').toggleClass("closereport");
+      $('#balbtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+      $("#targeturl").html("/balances");
+      $("#balbtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/balances",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#paybtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("d-none");
+          $('#balbtn').toggleClass("closereport");
+          $("#balbtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#balbtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('.toggleswitch').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+<script>
+  $("#paybtn").on('click',function(){
+    if ($("#paybtn").hasClass("closereport")){
+      $('#balbtn').toggleClass("d-none");
+      $('#arrbtn').toggleClass("d-none");
+      $("#paybtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Payments report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('.toggleswitch').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#paybtn').toggleClass("closereport");
+      $('#paybtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+      $("#targeturl").html("/compare/payments");
+      $("#paybtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/compare/payments",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#balbtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("d-none");
+          $('#paybtn').toggleClass("closereport");
+          $("#paybtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#paybtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('.toggleswitch').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+<script>
+  $("#arrbtn").on('click',function(){
+    if ($("#arrbtn").hasClass("closereport")){
+      $('#balbtn').toggleClass("d-none");
+      $('#paybtn').toggleClass("d-none");
+      $("#arrbtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Arrears report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#arrbtn').toggleClass("closereport");
+      $('#arrbtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+
+      $("#arrbtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/arrears",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#balbtn').toggleClass("d-none");
+          $('#paybtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("closereport");
+          $("#arrbtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#arrbtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+
+
+
+
+
+

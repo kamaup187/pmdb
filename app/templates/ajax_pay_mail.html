@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  <!-- <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /> -->
+  <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>KiotaPay - POS Receipt Template Html Css</title>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+    <div id="invoice">
+      <div id="invoice-POS">
+  
+        <div class="r-border">
+          <div class="center-btn svg underline">
+            <div class="svg-child">
+              <div class="logo">
+                <span><img src={{logopath}} alt="logo"></span>
+              </div>
+              <!-- <div class="info text-black"> 
+                <span>{{company}}</span>
+              </div> -->
+    
+              <div class="center-btn mb-3 ln-10 text-black"> 
+                <div class="small">Address : {{company.street_address}}</div>
+                <div class="small">PO BOX : {{company.mail_box}}</div>
+                <div class="small">Tel : {{company.phone}}</div>
+                <div class="small">Email: {{company.email}}</div>
+              </div>
+              
+            </div>
+          </div>
+        
+          <div class="svg">
+            <div class="svg-child">
+              <div class="divjust-end">
+                <span class="small ml-3">Date: <strong class="text-black font-weight-bold">{{paydate}}</strong></span>
+                <span class="small text-right mr-3">Time: <strong class="text-black font-weight-bold">{{paytime}}</strong></span>
+              </div>
+              <div class="center-btn underline font-weight-bold text-primary">
+                  OFFICIAL PAYMENT RECEIPT
+              </div>
+          
+              <span class="{{voided}} watermark">VOIDED</span>
+  
+              <div class="divbg">
+                  <div class="text-black">Receipt No. <span class="text-danger font-weight-bold ">{{receiptno}}</span></div>
+                  <div class="text-right text-black">Ref: <span class="text-info font-weight-bold">{{refnum}}</span></div>
+              </div>
+              <span class="text-gray-600 small mb-1">Received from:</span><br>
+              <div class="underline no-padding center-btn">
+                <div class="ln-10 text-black pb-1">{{tenant}}</div>
+              </div>
+            </div>
+          </div>
+    
+    
+      
+          <div class="svg underline">
+            <div class="svg-child text-left">
+              <div class="row service mb-1 pb-1">
+                <div class="col-8 itemtext text-black font-weight-bold mt-2"><div class="text-gray-500 center-btn mb-1">(words)</div> {{str_amount}} shillings only.</div>
+                <div class="col-4 itemtext text-black font-weight-bold mt-2 border-left-semidark"><div class="text-gray-500 mb-1">(figures)</div> {{amount}}</div>
+              </div> 
+              <div class="row service mb-1 pb-1">
+                <span class="col-8 itemtext mt-0"><div class="text-gray-500 center-btn">Flat/Apartment/Estate:</div><div class="text-black">{{prop}}</div></span>
+                <span class="col-4 itemtext mt-0 border-left-semidark"><div class="text-gray-500">House</div> <div class="text-black">{{house}}</div></span>
+              </div>
+              <div class="service mb-1 pb-1 itemtext center-btn">Being payment for the month of <strong class="text-black font-weight-bold">{{str_month}}</strong></div>       
+              <div class="mb-1 pb-1 itemtext center-btn">Paid for; <strong>{{chargetype}}</strong></div>
+            </div>
+          </div>
+    
+          <div class="svg">
+            <div class="svg-child">
+  
+              <div class="divjust-end service mb-1 pb-1">
+                <div class="itemtext text-black font-weight-bold mt-2 pl-5">Amount due</div>
+                <div class="itemtext text-black font-weight-bold mt-2 text-right pr-5">Kes {{bill}}</div>
+              </div> 
+  
+              <div class="divjust-end service mb-1 pb-1">
+                <div class="itemtext text-info font-weight-bold mt-2 pl-5">Paid</div>
+                <div class="itemtext text-info font-weight-bold mt-2 text-right pr-5">{{amount}}</div>
+              </div> 
+  
+              <div class="divjust-end service mb-1 pb-1">
+                <div class="itemtext {{outline}} font-weight-bold mt-2 pl-5">{{baltitle}}</div>
+                <div class="itemtext {{outline}} font-weight-bold mt-2 text-right pr-5">{{balance}}</div>
+              </div> 
+  
+            </div>
+          </div>
+    
+          <div class="svg">
+            <div class="small service mb-1 pb-1 svg-child">
+                <div class="center-btn"><strong class="small">With Thanks</strong>.</div>
+                <div class="center-btn"><strong class="small">Served by: {{user}}</strong>.</div>
+                <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
+            </div>
+          </div>
+    
+        </div>
+        </div>
+  
+    </div>
+
+</body>

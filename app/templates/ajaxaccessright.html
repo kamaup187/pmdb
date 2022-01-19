@@ -1,0 +1,55 @@
+{% if assign %}
+
+<div>
+    <input type="checkbox" id={{assign}} name="access"  value={{assign}} checked>
+    <label for={{assign}}>{{assign}}</label>
+    <script>
+        var myid = {{assign|tojson}};
+        // alert(myid);
+    </script>
+    <!-- <p id="theInput" style="display: none;">
+        {{assign}}
+     </p> -->
+</div>
+
+<script>
+    function myFunction() {
+        // var assign = document.getElementById("theInput").innerText;
+        // var trm = assign.trim();
+        document.getElementById(myid).removeAttribute("checked");
+    }
+    var state = {{assigned|tojson}};
+    if (state == "no"){
+        myFunction();
+    }
+</script>
+
+<script>
+    // var assign = document.getElementById("theInput").innerText;
+    // var trm = assign.trim();
+    // var assign = document.getElementById("grant_rights");
+    // alert(assign);
+    $("#grant_rights").on('change',function(){
+        var cb = document.getElementById(myid);
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        alert(accessr);
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: $("#select_grouprole").val(),
+                    access: accessr
+                },
+            //   success: function(response) {
+            //     $("#display_access").html(response);
+            // }
+
+            });
+      });
+      </script>
+{% endif %}

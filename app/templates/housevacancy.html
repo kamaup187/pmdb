@@ -1,0 +1,223 @@
+
+{% extends "tenantbase.html" %}
+{% block content %}
+
+<!-- <div class="containe">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 bg-gradient-light">
+                    <div class="card-header py-3 bg-gradient-dark divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-primary"><span><i class="fas fa-fw fa-person-booth"></i></span>&nbsp;&nbsp;Browse for available houses</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+
+                        <form role="form" method="GET" action="/search/house" autocomplete="off">
+
+                            <div class="form-group">
+                                <select name="selected_apartment" class="form-control" id ="selected_apartment" required>
+                                  <option disabled selected value> -- Select apartment -- </option>
+                                  {% for o in apartment_list %}
+                                  <option value="{{ o }}">{{ o }}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select name="paymode" class="form-control" id="select_paymode" required>
+                                  <option disabled selected value> Select unit type </option>
+                                  
+                                  <option value="mpesa">One Bedroom</option>
+                                  <option value="visa">Two Bedroom</option>
+                                  
+                                </select>
+                              </div>
+                
+                          <hr>
+                          <div class="divbg center-btn">
+                            <button type="submit" class="bg-gradient-dark borderless text-success"><i class="fas fa-search"></i>&nbsp;Search</button>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="center-btn">
+  <p></p> Browse for properties / apartments</p>
+</div>
+
+  <form>
+    <div class="inner-form">
+      <!-- <div class="basic-search">
+
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search by location..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-light" type="button">
+                <i class="fas fa-search text-gray-700 fa-2x"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div> -->
+      <div class="advance-search">
+        <span class="desc ml-40-percent">Filter search</span>
+        <div class="row">
+          
+          <!-- <div class="input-field">
+            <div class="input-selec">
+              <span class="search-ico"><i class="fa fa-search"></i></span>
+              <input type="text" class="form-contro inline-b border-p" placeholder="Search by location">
+            </div>
+          </div> -->
+
+          <div class="input-field">
+            <div class="input-select">
+              <select data-trigger="" name="type">
+                <option placeholder="" value="">Type</option>
+                <option>Two Bedroom</option>
+                <option>Three Bedroom</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="input-select">
+              <select data-trigger="" name="rent">
+                <option placeholder="" value="">Rent</option>
+                <option>Below Kshs 8000</option>
+                <option>Kshs 8000-15000</option>
+                <option>Above Kshs 16000</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <div class="input-select">
+              <select data-trigger="" name="furnish">
+                <option placeholder="" value="">Furnish</option>
+                <option>Unfurnished</option>
+                <option>Fully furnished</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            
+              <div class="input-group">
+                <input type="text" name="location" class="form-control bg-light border-0 small custom-width-input border-bottom-dark" placeholder="Location?" aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-success">
+                    <i class="fas fa-search fa-sm text-white"></i>
+                  </button>
+                </div>
+              </div>
+            
+          </div>
+
+
+        </div>
+
+        <!-- <div class="third center-btn">
+          <div class="">
+            <button class="btn-search">Search</button>
+            <button class="btn-delete" id="delete">Reset</button>
+          </div>
+        </div> -->
+
+      </div>
+    </div>
+  </form>
+
+<script src="{{ url_for('static', filename='js/choices.js') }}"></script>
+
+<script>
+  const customSelects = document.querySelectorAll("select");
+  const deleteBtn = document.getElementById('delete')
+  const choices = new Choices('select',
+  {
+    searchEnabled: false,
+    removeItemButton: true,
+    itemSelectText: '',
+  });
+  for (let i = 0; i < customSelects.length; i++)
+  {
+    customSelects[i].addEventListener('addItem', function(event)
+    {
+      if (event.detail.value)
+      {
+        let parent = this.parentNode.parentNode
+        parent.classList.add('valid')
+        parent.classList.remove('invalid')
+      }
+      else
+      {
+        let parent = this.parentNode.parentNode
+        parent.classList.add('invalid')
+        parent.classList.remove('valid')
+      }
+    }, false);
+  }
+  deleteBtn.addEventListener("click", function(e)
+  {
+    e.preventDefault()
+    const deleteAll = document.querySelectorAll('.choices__button')
+    for (let i = 0; i < deleteAll.length; i++)
+    {
+      deleteAll[i].click();
+    }
+  });
+
+</script>
+
+
+
+<!-- <div class="row mobile-malaysia">
+  <div class="col-xl-12 col-md-12 mb-1">
+      <div class="card shadow h-0 py-0">
+          <div class="card-body bg-white titanic-iceberg-top">
+              <div class="row no-gutters align-items-center">
+
+
+
+                  {% if props %}
+                    
+                    {% for prop in props%}                   
+
+                      <div class="col mr-3">
+                        <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openRequestForm()">
+                          <div><img src="{{ prop.image_url }}" alt="No image"/></div>
+                          <span class="small mobile-malaysian sss">{{prop.name}}</span>
+                          <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span>
+                        </button>
+                      </div>
+
+                    {% endfor %}
+
+                  {% endif %}
+
+
+              </div>
+
+          </div>
+      </div>
+  </div>
+
+</div> -->
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="container no-padding">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3 no-padding">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 common-bg-2">
+                    <div class="card-header py-1 card-bg divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-building mr-2"></i></span>Add a property</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span class="small"><i class="fas fa-fw fa-info-circle mr-2"></i>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/add/apartment" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <select name="owner" class="select-css" id ="url-box" required>
+                                    <option disabled selected value> -- Select Owner -- </option>
+                                    {% for o in owners %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="name" placeholder="Property name* " autofocus required>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-control">
+                                <!-- <input type="file" class="custom-file-input" name="image" id="image">
+                                <label class="custom-file-label" for="image">Select image...</label> -->
+                                <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected"/>
+                                <label for="file-1"><span>Choose image...(optional)</span></label>
+                                </div>
+                            </div>
+        
+                            <div class="form-group divjust-end">
+                                <select name="location" class="select-css" id ="url-box" required>
+                                <option disabled selected value> -- Select Region -- </option>
+                                {% for o in option_list %}
+                                <option value="{{ o }}">{{ o }}</option>
+                                {% endfor %}
+                                </select>
+        
+                               <button type="button" class="btn btn-default bg-white text-info small-text" onclick="openGForm()">+ Region</button>
+                            </div>
+
+                            <div class="fancy-checkbox-group form-control mb-4">
+                                <input type="checkbox" name="agency_management" id="cb1" />
+                                <label for="cb1">Is this property managed by Agency?</label>
+                            </div>
+                            
+                            <div class="divbg center-btn">
+                                <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
+                                <!-- <button type="button" class="bg-gradient-dark borderless"><a class="text-info" href="{{ url_for('api.createhouse') }}"><i class="fas fa-plus"></i>&nbsp;Houses</a></button> -->
+                                <button type="button" class="bg-gradient-dark borderless text-warning"onclick="history.back()"><i class="fas fa-arrow-left"></i>&nbsp;Back</button>
+                                <!-- <form style="display: inline;">
+                                    <input type="button" class="bg-gradient-dark borderless btn-sm " value="Back" onclick="history.back()">
+                                </form> -->
+                            </div>
+                            
+                        </form>
+                        <div class="form-popup bg-gradient-light" id="newregion">
+                            <form method="POST" action="/add/location">
+                            <div class="center-btn">Add new location</div><br>
+                            <div class="form-group">
+                                <input class="form-control quarter" type="text" name="region" placeholder="region..." autofocus required>
+                            </div>
+                    
+                            <div class="form-group">
+                                <input class="form-control quarter"type="text" name="description" placeholder="description...">
+                            </div>
+                    
+                            <div class="center-btn">
+                                <button type="submit" class="bg-gradient-dark borderless">Add</button>
+                                <button type="button" class="bg-gradient-dark borderless" onclick="closeGForm()">Close</button>
+                            </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+<script src="{{ url_for('static', filename='upload.js') }}"></script>
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(500,"swing");
+    }, 2000);
+</script>
+
+<script>
+    function openGForm() {
+      document.getElementById("newregion").style.display = "block";
+    }
+    
+    function closeGForm() {
+      document.getElementById("newregion").style.display = "none";
+    }
+</script>
+
+{% endblock %}

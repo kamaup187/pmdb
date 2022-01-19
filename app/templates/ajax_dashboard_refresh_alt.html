@@ -1,0 +1,220 @@
+
+      <div class="col-xl-3 col-md-6 mb-1 desktop-malaysian no-padding">
+          <div class="card shadow h-100 py-0 card-bg">
+              <div class="card-body titanic-iceberg-top titanic-iceberg-bottom">
+                  <div class="row no-gutters divjust-end">
+                      <div class="col-6 mr-0">
+                          <div class="card-text text-gray-400 mb-1">{{month_string}} Invoices</div>
+                          <div class="card-text text-gray-400 mb-1">{{month_string}} Paid</div>
+                          <div class="card-text text-gray-400 mb-2">Balance (Net)</div>
+                          <div class="prop-toggler card-text text-white font-weight-bold">Showing for:</div>
+                          
+                      </div>
+                      <div class="col-6 shadow-alt">
+                          <div class="card-text mb-0 font-weight-bold text-gray-200 mb-1 addloader-mobile">Kshs {{monthly_bills}}</div>
+                          <div class="card-text mb-0 font-weight-bold text-gray-200 mb-1 addloader-mobile">Kshs {{monthly_rent_collection}}</div>
+                          <div class="card-text mb-0 font-weight-bold text-white shadow-alt-red mb-2 addloader-mobile">Kshs {{monthly_bal}}</div>
+                          <div class="card-text mb-0 font-weight-bold text-warning mb-2 prop-display prop-toggler addloader-alt-mobile">{{comonfocus}}</div>
+                          <div class="form-group mb-0 dispnone prop-select">
+                            <select name="property" class="select-css-alt" id ="select_prop_mobile" required>
+                                <option disabled selected value> select client </option>
+                                {% for o in clients%}
+                                <option value="{{ o }}">{{ o }}</option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                          
+                          <!-- <div class="progress progress-sm mr-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div> -->
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+
+
+
+
+
+      <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+          <div class="card border-left-dark shadow-alt h-100 py-2 card-bg">
+              <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white">{{month_string}}</span> | Amount due(total)</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">Kshs {{monthly_bills}}</div>
+                  </div>
+                  <div class="col-auto">
+                  <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+          <div class="card border-left-dark shadow-alt h-100 py-2 card-bg">
+              <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white">{{month_string}}</span> | payments(total)</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">Kshs {{monthly_rent_collection}}</div>
+                  </div>
+                  <div class="col-auto">
+                  <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+              </div>
+          </div>
+      </div>
+
+
+      <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+          <div class="card border-left-dark shadow-alt h-100 py-2 card-bg">
+              <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Outstanding balance</div>
+                  <div class="h5 mb-0 font-weight-bold text-white shadow-alt-red addloader">Kshs {{monthly_bal}}</div>
+                  </div>
+                  <div class="col-auto">
+                  <i class="fas fa-money-check-alt fa-2x text-gray-300"></i>
+                  </div>
+              </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+          <div class="card border-left-dark shadow h-100 py-2 card-bg">
+              <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                          <div class="text-xs font-weight-bold text-white text-uppercase mb-1"> Current House occupancy</div>
+                          <div class="row no-gutters align-items-center">
+                              <div class="col-auto">
+                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-500">{{occupancy_rate}}%</div>
+                              </div>
+                              <div class="col">
+                                  <div class="progress progress-sm mr-2">
+                                      <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-auto">
+                          <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div> -->
+
+      <div id="prop-card" class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian prop-toggler">
+        <div class="card border-left-info shadow-alt h-100 py-2 card-bg">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="select-prop text-xs font-weight-bold text-white-50 text-uppercase mb-1"><i class="fas fa-caret-down mr-2"></i>Select client<i class="fas fa-caret-down ml-2"></i></div>
+
+                        <div class="addloader-alt">
+                            <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle">{{comonfocus}}</div>
+
+                            <div class="form-group mb-0 dispnone prop-select">
+                                <select name="property" class="select-css" id ="select_prop" required>
+                                    <option disabled selected value> -- Select client -- </option>
+                                    {% for o in clients%}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-city fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+
+      <script>
+        $("#select_prop_mobile").on('change',function(){
+            let comvar = $("#select_prop_mobile").val();
+            localStorage.setItem('comvar',comvar);
+
+            $(".addloader-mobile").html('<div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div>')
+            $(".addloader-alt-mobile").html('<div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div>')
+       
+            $.ajax({
+                url: "{{ url_for('api.comstats') }}",
+                type: 'get',
+                data: {
+                        com: localStorage.getItem('comvar')
+                        },
+                success: function(data) {
+                    $('#dynamic-stats').html(data);
+
+                },
+                complete:function(data) {
+                    setTimeout(getGraphStats, 1000);
+                }
+            });
+        });
+        </script>
+
+        <script>
+            $("#select_prop").on('change',function(){
+                let comvar = $("#select_prop").val();
+                localStorage.setItem('comvar',comvar);
+
+                $(".addloader").html('<div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div>')
+                $(".addloader-alt").html('<div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>')
+        
+                $.ajax({
+                    url: "{{ url_for('api.comstats') }}",
+                    type: 'get',
+                    data: {
+                            com: localStorage.getItem('comvar')
+                            },
+                    success: function(data) {
+                        $('#dynamic-stats').html(data);
+
+                    },
+                    complete:function(data) {
+                        setTimeout(getGraphStats, 1000);
+                    }
+                });
+            });
+        </script>
+
+        <!-- <script>
+            $("#prop-display").hover(function(){
+                $(this).css("display", "none");
+                $("#prop-select").removeClass("dispnone");
+                }, function(){
+                $(this).css("display", "block");
+                $("#prop-select").addClass("dispnone");
+                
+            });
+        </script> -->
+
+        <script>
+            $(".prop-toggler").hover(function(){
+                // $(".prop-display").toggle();
+                // $(".prop-select").toggleClass('dispnone');
+                $(".prop-display").addClass("dispnone");
+                $(".prop-select").removeClass('dispnone');
+                $(".select-prop").addClass('dispnone');
+                // setTimeout(function(){
+                //     $(".prop-display").removeClass("dispnone");
+                //     $(".prop-select").addClass('dispnone');
+                //     $(".select-prop").removeClass('dispnone');
+                // }, 10000);
+                });
+        </script>
+        

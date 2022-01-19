@@ -1,0 +1,325 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<!-- multistep form -->
+
+<div id="signupform">
+  <form id="msform" method="POST" action="" >
+
+    <fieldset class="mobile-malaysian">
+      <h6 class="center-btn mb-4">Request Category</h6>
+      
+      <div class="form-group">
+
+          <div class="container">
+            
+            <ul class="row divbg">
+              <li class="mr-3 no-li-marker">
+                <input type="radio" id="f-option" name="category" value="maintenance">
+                <label class="radiolabel text-info" id="f-option-label" for="f-option">House Maintenance</label>
+                
+                <div class="check"></div>
+              </li>
+              
+              <li class=" no-li-marker">
+                <input type="radio" id="s-option" name="category" value="clearance">
+                <label class="radiolabel text-info" for="s-option">Tenant Clearance</label>
+                
+                <div class="check"><div class="inside"></div></div>
+              </li>
+
+              <li class="mr-3 no-li-marker"> 
+                <input type="radio" id="t-option" name="category" value="transfer">
+                <label class="radiolabel text-info" for="t-option">House Transfer</label>
+                
+                <div class="check"><div class="inside"></div></div>
+              </li>
+              <li class="no-li-marker mr-2"> 
+                <input type="radio" id="v-option" name="category" value="vacancy">
+                <label class="radiolabel text-info" for="v-option">Vacancy Request</label>
+                
+                <div class="check"><div class="inside"></div></div>
+              </li>
+          </ul>
+          </div>
+      </div>
+
+    </fieldset>
+
+    <fieldset class="desktop-malaysian">
+        <h6 class="center-btn mb-4">Request Category</h6>
+        
+        <div class="form-group">
+
+            <div class="container">
+              
+              <ul class="row divjust-end">
+                <li class="mr-3 no-li-marker">
+                  <input type="radio" id="mf-option" name="category" value="maintenance">
+                  <label class="radiolabel text-info" for="mf-option">Maintenance</label>
+                  
+                  <div class="check"></div>
+                </li>
+                
+                <li class=" no-li-marker">
+                  <input type="radio" id="ms-option" name="category" value="clearance">
+                  <label class="radiolabel text-info" for="ms-option">Clearance</label>
+                  
+                  <div class="check"><div class="inside"></div></div>
+                </li>
+              </ul>
+              <ul class="row divjust-end">
+
+                <li class="mr-3 no-li-marker"> 
+                  <input type="radio" id="mt-option" name="category" value="transfer">
+                  <label class="radiolabel text-info" for="mt-option">Transfer</label>
+                  
+                  <div class="check"><div class="inside"></div></div>
+                </li>
+                <li class="no-li-marker mr-2"> 
+                  <input type="radio" id="mv-option" name="category" value="vacancy">
+                  <label class="radiolabel text-info" for="mv-option">Vacancy</label>
+                  
+                  <div class="check"><div class="inside"></div></div>
+                </li>
+            </ul>
+            </div>
+        </div>
+  
+    </fieldset>
+
+  </form>
+</div>
+
+<div id="proplist" class="dispnone animated--grow-in">
+  <p class="center-btn">Select apartment</p>
+  <div class="row">
+    <div class="col-xl-12 col-md-12 mb-1">
+        <div class="card shadow h-0 py-0">
+            <div class="card-body bg-white titanic-iceberg-top">
+                <div class="row no-gutters align-items-cente divjust-end">
+  
+  
+  
+                    {% if props %}
+                      
+                      {% for prop in props%}                   
+  
+                        <div class="image-wrap mb-2">
+                          <button id="{{prop.id}}" class="btn btn-outline-success text-gray-700 borderles fixed-width-prop divcol">
+                            <img class="constant-margin-to" src="{{ prop.image_url }}" alt="No image"/>
+                            <!-- <span class="text-ss">{{prop.name}}</span> -->
+                            <span class="small desktop-malaysia"><h6 class="small titanic-iceberg sss">{{prop.name}}</h6></span>
+                            <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
+                          </button>
+                        </div>
+  
+                      {% endfor %}
+  
+                    {% endif %}
+  
+                </div>
+  
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="row common-g divbg">
+  <div id="maintenance" class="">
+    <form id="msform" method="POST" action="" >
+  
+      <fieldset>
+        <h5 class="fs-title text-info center-btn">Maintenance requests</h5>
+                
+          <div class="form-group">
+  
+              <div class="container">
+              
+                  <select name="selected_apartment" class="form-control select-css" id ="selected_apartment_maintenance" required>
+                  <option disabled selected value> -- Select apartment -- </option>
+                  {% for o in apartment_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                  </select>
+             
+
+              </div>
+          </div>
+    
+      </fieldset>
+  
+    </form>
+  </div>
+
+
+  <div id="transfer" class="">
+    <form id="msform" method="POST" action="" >
+  
+      <fieldset>
+        <h5 class="fs-title text-info center-btn">House transfer</h5>
+                
+          <div class="form-group">
+  
+              <div class="container">
+              
+                  <select name="selected_apartment" class="select-css" id ="selected_apartment_transfer" required>
+                  <option disabled selected value> -- Select apartment -- </option>
+                  {% for o in apartment_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                  </select>
+             
+
+              </div>
+          </div>
+    
+      </fieldset>
+  
+    </form>
+  </div>
+
+  <div id="clearance" class="">
+    <form id="msform" method="POST" action="" >
+  
+      <fieldset>
+        <h5 class="fs-title text-info center-btn">House clearance</h5>
+                
+          <div class="form-group">
+  
+              <div class="container">
+              
+                  <select name="selected_apartment" class="select-css" id ="selected_apartment_clearnce" required>
+                  <option disabled selected value> -- Select apartment -- </option>
+                  {% for o in apartment_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                  </select>
+             
+
+              </div>
+          </div>
+    
+      </fieldset>
+  
+    </form>
+  </div>
+
+  <div id="vacancy" class="">
+    <form id="msform" method="POST" action="" >
+  
+      <fieldset>
+        <h5 class="fs-title text-info center-btn">Vacancy requests</h5>
+                
+          <div class="form-group">
+  
+              <div class="container">
+              
+                  <select name="selected_apartment" class="select-css" id ="selected_apartment_vacancy" required>
+                  <option disabled selected value> -- Select apartment -- </option>
+                  {% for o in apartment_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                  </select>
+             
+
+              </div>
+          </div>
+    
+      </fieldset>
+  
+    </form>
+  </div>
+
+
+</div>
+<div id="dispoptions" class="center-btn"></div>
+<div id ="payments-report" class="row">
+  <div class="col-lg-12 mb-1">
+      <div class="card shadow mb-0">
+          <div class="card-header bg-gradient-dark py-2 divjust-end">
+            <span class="text-info">Request Handling</span>
+            <span id="loading-reqs" class="text-info"></span>
+            <span>
+              <a class="text-white" href="{{ url_for('api.index') }}"><button type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i></button></a>
+            </span>
+          </div>
+          <div class="card-body bg-gradient-dark">            
+              <div id="detailed-payments" class="invoice"></div>
+          </div>
+      </div>
+  </div>
+</div> -->
+
+<script src="{{ url_for('static', filename='landingtwo/js/jquery-3.2.1.min.js') }}"></script>
+
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(4000,"swing");
+    }, 10);
+</script>
+
+<!-- <script>
+  $("#selected_apartment_maintenance").on('change',function(){
+      // var apartmentvar = $("#selected_apartment_maintenance").val();
+      // localStorage.setItem('apartmentvar',apartmentvar);
+      // $("#transfer").addClass("mobile-malaysian");
+      // $("#clearance").addClass("mobile-malaysian");
+      // $("#vacancy").addClass("mobile-malaysian");
+  });
+  </script> -->
+
+<script>
+  jQuery("input:radio[name=category]").on("change", function() {
+  if (jQuery(this).is(":checked")) {
+    $('#proplist').removeClass("dispnone");
+    $('.radiolabel').addClass("text-gray-300")
+    $("input[name='category']:checked+label").removeClass("text-gray-300")
+    $("input[name='category']:checked+label").addClass("text-warning")
+    jQuery("input:radio[name=category]").prop('disabled',true);
+    
+    // $('#submit').html('Proceed <i class="fa fa-angle-double-right"></i>');
+    // $('#loading-reqs').html('<i class="spinner-border spinner-border-sm role="status" aria-hidden="true""></i>');
+
+    var radioValue = $("input[name='category']:checked").val();
+
+  }
+})
+</script>
+
+
+<!-- <script>
+    $("#submit").click(function(){
+      var radioValue = $("#selected_apartment").val();
+      console.log(radioValue)
+
+      $('#submit').html('<i class="fa fa-exclamation mr-2"></i>Select Apartment');
+      $('#submit').addClass("bg-gradient-danger");
+
+      if(radioValue){
+        $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting..');
+        $('#submit').removeClass("bg-gradient-danger");
+        $('#submit').addClass("bg-gradient-success");
+        $.ajax({
+          url: "{{ url_for('api.handletenantrequest') }}",
+          type: "POST",
+          data: {
+                  run: "requestoptions"
+              },
+          success: function(response) {
+            $("#payments-report").toggleClass('row dispnone');
+            $("#detailed-payments").toggleClass('invoice dispnone');
+            $("#signupform").html(response);
+          },
+          error: function(xhr) {
+          }
+        });
+
+      }
+
+    });
+</script> -->
+<script src="{{ url_for('static', filename='customjs.js') }}"></script>
+{% endblock %}

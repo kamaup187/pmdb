@@ -1,0 +1,213 @@
+
+      <form class="form-horizontal" action="/signup/owner" method="POST" id="msform">
+        
+          <ul id="progressbar">
+            <li class="active">Personal Info</li>
+            <li>Company Info</li>
+            <li>Finish</li>
+          </ul>
+
+          <fieldset id="personal_information" class="">
+            <h2 class="fs-title">Personal info</h2>
+              <div>
+                <!-- <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                <input type="text" class="form-control" id="username" name="username" placeholder="username"> -->
+                <!-- <input type="text" name="fname" id="fname" placeholder="First Name" />
+                <input type="text" name="lname" id="lname" placeholder="Last Name" />
+                <input type="text" name="phone" id="phone" placeholder="Phone" />
+                
+                <input type="text" name="email" id="id" placeholder="Id" /> -->
+              </div>
+              <div class="row">
+                <div class="col-sm-6 ">
+                    <input class="form-control" type="text" name="fname" placeholder="First Name">
+                </div>
+
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="lname" placeholder="Last Name">
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                  <input class="form-control" type="text" name="natid" placeholder="National Id">
+              </div>
+
+              <div class="col-sm-6">
+                  <input class="form-control" type="tel" name="phone" placeholder="Phone">
+              </div>
+          </div>
+              <!-- <p><a class="btn btn-primary next signup-btn">next</a></p> -->
+              <div class="divbg center-btn">
+                <a href="{{ url_for('api.signupcategory') }}"><button type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-arrow-left"></i>&nbsp;Back</button></a>
+                <button type="button" id="submit-personal" class="bg-gradient-success borderless text-white next">Next&nbsp;<i class="fas fa-angle-double-right"></i></button>
+              </div>
+          </fieldset>
+
+          <fieldset id="company_information" class="">
+            <h2 class="fs-title">Company details</h2>
+              <div class="form-group">
+                <input type="text" class="form-control" id="company" name="company" placeholder="Company Name(Optional)">
+                <input type="text" class="form-control" id="address" name="address" placeholder="Address(Optional)">
+              </div>
+              <!-- <p><a class="btn btn-primary previous" id="previous" >Previous</a></p> -->
+              <!-- <p><a class="btn btn-primary next">next</a></p> -->
+              <div class="divbg center-btn">
+                <button type="button" class="bg-gradient-danger borderless text-white previous">&nbsp;<i class="fas fa-angle-double-left"></i>Previous</button>
+                <button type="button" id="submit-company" class="bg-gradient-success borderless text-white next">Next&nbsp;<i class="fas fa-angle-double-right"></i></button>
+              </div>
+          </fieldset>
+
+          <fieldset id="account_information" class="">
+            <h2 class="fs-title">Now set your password</h2>
+              <div class="form-group">
+                <input class="form-control" type="email" name="email" placeholder="Email">            
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <input type="password" class="form-control" id="conf_password" name="conf_password" placeholder="Password">
+              </div>
+              <!-- <p><a class="btn btn-primary previous" id="previous" >Previous</a></p>
+              <p><input class="btn btn-success" type="submit" value="submit"></p> -->
+              <div class="divbg center-btn">
+                <button type="button" class="bg-gradient-danger borderless text-white previous">&nbsp;<i class="fas fa-angle-double-left"></i>Previous</button>
+                <button type="submit" id="submit-form" class="bg-gradient-success borderless text-white next">Complete&nbsp;<i class="fas fa-check"></i></button>
+              </div>
+              
+          </fieldset>
+      </form>
+
+
+<!-- contact js -->
+<script src="{{ url_for('static', filename='landingtwo/js/jquery.form.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/jquery.validate.min.js') }}"></script>
+<script src="{{ url_for('static', filename='landingtwo/js/contact.js') }}"></script>
+<script src="{{ url_for('static', filename='customjs.js') }}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var current_fs, next_fs, previous_fs; //fieldsets
+    var left, opacity, scale; //fieldset properties which we will animate
+    var animating; //flag to prevent quick multi-click glitches
+
+      // Custom method to validate username
+      $.validator.addMethod("usernameRegex", function(value, element) {
+          return this.optional(element) || /^[a-zA-Z0-9]*$/i.test(value);
+      }, "Username must contain only letters, numbers");
+
+      $(".next").click(function(){
+    
+          // if(animating) return false;
+          // animating = true;
+          // $('#submit-personal').html('<i class="fa fa-exclamation mr-2"></i>Check your inputs');
+          // $('#submit-company').html('<i class="fa fa-exclamation mr-2"></i>Check your inputs');
+          // $('#submit-form').html('<i class="fa fa-exclamation mr-2"></i>Check your inputs');
+          
+          var form = $("#msform");
+          form.validate({
+              errorElement: 'span',
+              errorClass: 'error-color',
+              highlight: function(element, errorClass, validClass) {
+                  $(element).closest('.form-group').addClass("has-error");
+              },
+              unhighlight: function(element, errorClass, validClass) {
+                  $(element).closest('.form-group').removeClass("has-error");
+              },
+              rules: {
+                  password : {
+                      required: true,
+                  },
+                  conf_password : {
+                      required: true,
+                      equalTo: '#password',
+                  },
+                  natid:{
+                      required: true,
+                      minlength: 6,
+                      maxlength: 8,
+                  },
+                  phone:{
+                      required: true,
+                      minlength: 10,
+                      maxlength: 10,
+                  },
+                  fname: {
+                      required: true,
+                      minlength: 3,
+                  },
+                  lname: {
+                      required: true,
+                      minlength: 1,
+                  },
+                  email: {
+                      required: true,
+                      minlength: 3,
+                  },
+
+              },
+              messages: {
+                  natid: {
+                      required: "National Id is required",
+                  },
+                  password : {
+                      required: "Password is required",
+                  },
+                  conf_password : {
+                      required: "Password required",
+                      equalTo: "Passwords don't match",
+                  },
+                  fname: {
+                      required: "First Name is required",
+                  },
+                  lname: {
+                      required: "Last Name is required",
+                  },
+                  phone: {
+                      required: "Phone number is required",
+                  },
+                  email: {
+                      required: "Email is required",
+                  },
+                  
+              }
+          });
+          if (form.valid() === true){
+            // $('#submit-personal').html('Next<i class="fas fa-angle-double-right"></i>');
+            // $('#submit-company').html('Next<i class="fas fa-angle-double-right"></i>');
+            // $('#submit-form').html('<i class="fas fa-check"></i>Complete');
+              if ($('#personal_information').is(":visible")){
+                  current_fs = $('#personal_information');
+                  next_fs = $('#company_information');
+                  $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+              }else if($('#company_information').is(":visible")){
+                  current_fs = $('#company_information');
+                  next_fs = $('#account_information');
+                  $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+              }
+              
+
+              next_fs.show(); 
+              current_fs.hide();
+
+          }
+      });
+
+      $('.previous').click(function(){
+            // $('#submit-personal').html('Next<i class="fas fa-angle-double-right"></i>');
+            // $('#submit-company').html('Next<i class="fas fa-angle-double-right"></i>');
+            // $('#submit-form').html('<i class="fas fa-check"></i>Complete');
+          // if(animating) return false;
+          // animating = true;
+          if($('#company_information').is(":visible")){
+              current_fs = $('#company_information');
+              next_fs = $('#personal_information');
+              $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+          }else if ($('#account_information').is(":visible")){
+              current_fs = $('#account_information');
+              next_fs = $('#company_information');
+              $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+          }
+          next_fs.show(); 
+          current_fs.hide();
+
+      });
+
+  });
+</script>

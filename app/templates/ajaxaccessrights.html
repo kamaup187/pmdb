@@ -1,0 +1,417 @@
+
+<hr>
+<div class="divjust-end">
+    <span class="listofrole"><i class="fas fa-list fa-sm fa-fw mr-2 text-dark-400"></i>List of assigned roles</span>
+    <button type="button" class="borderless" onclick="openForm()"><i class="fas fa-plus fa-sm fa-fw  text-black-400"></i></button>
+</div>
+<hr>
+<div class="divbg">
+    <button id="checkall" type="button" class="borderless btn-light"><i class="fas fa-check-square fa-sm fa-fw mr-2 text-black-400"></i> <span style="color: rgb(6, 182, 6);">Check all</span></button> 
+    <button id="uncheckall" type="button" class="borderless btn-light"><i class="fas fa-square fa-sm fa-fw mr-2 text-dark-400"></i><span style="color: rgb(182, 21, 6);"> Uncheck all</span></button>
+</div>
+<hr>
+
+{% if assigngrouproleobjs_list %}
+
+{% for assign in assigngrouproleobjs_list %}
+    <span class="assign-width">
+        <script>
+            var myid = "{{assign}}"
+        </script>
+
+        <!-- <input type="checkbox" id="{{assign}}" name="access"  value="{{assign}}" checked>
+        <label for="{{assign}}">{{assign}}</label> -->
+        
+        <label class="switch">
+            <input id="{{assign}}" type="checkbox" name="access" value="{{assign}}" checked>
+            <span class="slider round"></span>
+        </label>
+        <label for="{{assign}}">{{assign}}</label>
+
+    </span>
+    
+    <script>
+        function myFunction() {
+
+            var mm = document.getElementById(myid)
+            mm.removeAttribute("checked");
+    
+        }
+        var state = {{assign.accessright|tojson}};
+        
+        if (state == false){
+            myFunction();
+        }
+    </script>
+{% endfor %}
+
+{% endif %}
+
+<script>
+
+    $("#checkall").on('click',function(){
+
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    access: "True",
+                    runcheckall:"somestring"
+                },
+                success: function(response) {
+                $("#place_for_suggestions").html(response);
+                },
+                error: function(xhr) {
+                alert(xhr);
+                }
+            });
+      });
+</script>
+
+<script>
+
+    $("#uncheckall").on('click',function(){
+
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    access: "False",
+                    runcheckall:"somestring"
+                },
+                success: function(response) {
+                $("#place_for_suggestions").html(response);
+                },
+                error: function(xhr) {
+                alert(xhr);
+                }
+            });
+      });
+</script>
+
+<script>
+
+    $("#grant_rights").on('change',function(){
+        var cb = document.getElementById("grant_rights");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "grant_rights",
+                    access: accessr
+                },
+            //   success: function(response) {
+            //     $("#display_access").html(response);
+            // }
+
+            });
+      });
+</script>
+<script>
+    $("#read_meter").on('change',function(){
+        var cb = document.getElementById("read_meter");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "read_meter",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#add_user").on('change',function(){
+        var cb = document.getElementById("add_user");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "add_user",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#update_user").on('change',function(){
+        var cb = document.getElementById("update_user");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "update_user",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#create_owner").on('change',function(){
+        var cb = document.getElementById("create_owner");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "create_owner",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#add_apartment").on('change',function(){
+        var cb = document.getElementById("add_apartment");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "add_apartment",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#add_house").on('change',function(){
+        var cb = document.getElementById("add_house");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "add_house",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#add_tenant").on('change',function(){
+        var cb = document.getElementById("add_tenant");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "add_tenant",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#register_meter").on('change',function(){
+        var cb = document.getElementById("register_meter");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "register_meter",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#allocate_tenant").on('change',function(){
+        var cb = document.getElementById("allocate_tenant");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "allocate_tenant",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#allocate_meter").on('change',function(){
+        var cb = document.getElementById("allocate_meter");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "allocate_meter",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#define_charge").on('change',function(){
+        var cb = document.getElementById("define_charge");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "define_charge",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#bill_tenant").on('change',function(){
+        var cb = document.getElementById("bill_tenant");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "bill_tenant",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#amend_charge").on('change',function(){
+        var cb = document.getElementById("amend_charge");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "amend_charge",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#receive_payment").on('change',function(){
+        var cb = document.getElementById("receive_payment");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "receive_payment",
+                    access: accessr
+                },
+            });
+      });
+</script>
+
+<script>
+    $("#view_reports").on('change',function(){
+        var cb = document.getElementById("view_reports");
+        if (cb.checked){
+            var accessr = "True";
+        }else{
+            var accessr = "False";
+        }
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.modifyaccessright') }}",
+                data: {
+                    usergroup: $("#select_usergroup").val(),
+                    grouprole: "view_reports",
+                    access: accessr
+                },
+            });
+      });
+</script>
+

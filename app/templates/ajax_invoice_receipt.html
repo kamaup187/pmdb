@@ -1,0 +1,86 @@
+
+<div class="row ">
+    <div class="col-md-12 no-padding text-center">
+    <button type="reset" class="btn btn-light text-danger" id="closeReceipt">
+        Close Receipt
+    </button>
+    </div>
+</div>
+
+</div>
+<div id="invoice" class="row receipt-margin">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 border-data">
+        <div class="row">
+            <div class="col-md-12 receipt-data text-center text-primary">
+            <h4>Payment Receipt</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+            <p><strong>Invoice No: </strong> SHP#345</p>
+            <p><strong>Date:</strong> 21/10/2020</p>
+            <p>Sahara Apartments</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 well invoice-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Charge</th>
+                    <th>Amount</th>
+                    <th>Note</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Rent</td>
+                    <td>Kes 24,000</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><strong>Total</strong></td>
+                    <td><strong>Kes 24,000.00</strong></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11 text-right mt-2 mb-2">Generated on 21/10/2020</div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row ">
+      <div class="col-md-12 text-center mb-4 mt-3">
+        <button type="button" class="btn btn-inf btn-light-blue" id="downloadPdf">
+          Download Receipt
+        </button>
+      </div>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+<script>
+  document
+    .getElementById("downloadPdf")
+    .addEventListener("click", function download() {
+      const element = document.getElementById("invoice");
+      html2pdf()
+        .from(element)
+        .save();
+    });
+</script>
+
+<script>
+    $("#closeReceipt").on('click',function(){
+        $('#form').toggleClass('dispform dispnone');
+        $('#receipt').toggleClass('dispnone receipt-pos');
+        $('#clearBtn').click();
+    });
+</script>

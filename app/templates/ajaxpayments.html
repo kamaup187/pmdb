@@ -1,0 +1,98 @@
+<!-- <div class="card-header py-2 bg-gradient-dark divjust-end" >
+    <h6 class="m-0 font-weight-bold text-success small"><span><i class="fas fa-fw fa-money-bill-wave"></i></span>&nbsp;&nbsp;Invoice</h6>
+</div> -->
+
+<div id="ppp" class="card-body bg-gradient-dark mobile-malaysian">
+
+  <div>
+    <span class="text-white">Payments made {{month}}</span>
+  </div>
+
+  <div class="table-responsiv">
+    <table class="table bg-gradient-dark text-info table-bordere" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th class="text-white">Receipt No.</th>
+          <th class="text-white">Ref No.</th>
+          <th class="text-white">House</th> 
+          <th class="text-white text-centr">Paid for</th>
+          <th class="text-white">Date</th>
+          <th class="text-white">Charge amount</th>
+          <th class="text-white">Amount paid</th>
+          <th class="text-white">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bill in bills%}
+        <tr>
+          <td>{{ bill['id'] }}</td>
+          <td>{{ bill['ref'] }}</td>
+          <td>{{ bill['house'] }}</td>
+          <td>{{ bill['charge'] }}</td>
+          <td>{{ bill['date'] }}</td>
+          <td>{{ bill['chargedamnt'] }}</td>
+          <td>{{ bill['amount'] }}</td>
+          <td>{{ bill['balance'] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+         
+        </table>
+  </div>
+  <div class="divbg center-btn">
+    <button id="close-payment-btn-bottom-lg" type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i>&nbsp;Close</button>
+  </div>
+</div>
+
+
+
+<div class="card-body bg-gradient-dark desktop-malaysian">
+  <span class="text-gray-300 font-weight-bold">Payments made {{month}}</span>
+  {% for bill in bills%}
+  <hr class="sidebar-divider d-md-block">
+  <div class="divjust-end">
+    <span class="text-white">Receipt</span>
+    <span class="text-white">{{bill.id}}</span>
+  </div>
+  <div class="divjust-end">
+    <span class="text-white">Date:</span>
+    <span class="text-white">{{bill.date}}</span>
+  </div>
+  <div class="divjust-end">
+    <span class="text-white">Amount:</span>
+    <span class="text-white">Kshs {{bill.amount}}</span>
+  </div>
+  {% endfor %}
+  <hr class="sidebar-divider d-md-block">
+  <div class="divbg center-btn">
+    <button id="close-payment-btn-bottom-sm" type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i>&nbsp;Close</button>
+  </div>
+  
+</div>
+
+<script>
+  $("#close-payment-btn-bottom-lg").on('click',function(){
+
+    $('#detailed-payments').toggleClass('dispnone invoice');
+    $('#payments-report').toggleClass('dispnone row');
+    $('#view-payment-btn-lg').html('My payments');
+
+    $('#selected_month option').prop('selected', function() {
+        return this.defaultSelected;
+    });
+
+  });
+</script>
+<script>
+  $("#close-payment-btn-bottom-sm").on('click',function(){
+
+    $('#detailed-payments').toggleClass('dispnone invoice');
+    $('#payments-report').toggleClass('dispnone row');
+    $('#view-payment-btn-sm').html('My bill');
+
+    $('#selected_month option').prop('selected', function() {
+        return this.defaultSelected;
+    });
+
+  });
+</script>

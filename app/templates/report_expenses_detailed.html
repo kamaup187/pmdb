@@ -1,0 +1,221 @@
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} detailed statement.pdf</span>
+<span id="orientation" class="dispnone">{{paging}}</span>
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding">
+        <div class="formwrapper">
+            <div class="card shadow">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end topbar-bg">
+                
+                <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-white small card-header-form">
+                    <span class="mr-4">Generate report</span>
+                    <span><i class="fas fa-angle-down"></i></span>
+                  </div>
+                </a>
+                <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                        <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
+                            <span>{{ message }}</span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <form method="POST" action="/expenses/detailed">
+                        <div class="form-group">
+                            <select name="selected_apartment" class="form-control" id ="selected_apartment" required>
+                            <option disabled selected value> -- Select apartment -- </option>
+                            {% for o in apartment_list %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="selected_year" class="form-control" id ="url-box" >
+                          <option disabled selected value> -- Year (Default Current year) -- </option>
+                          {% for o in year_list %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <select name="selected_month" class="form-control" id ="url-box" >
+                          <option disabled selected value> -- Month (Default Current month) -- </option>
+                          {% for o in month_list %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                          </select>
+                        </div>
+                        <button class="btn btn-block btn-primary">View</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 no-padding"></div> -->
+  <div class="col-lg-12 no-padding">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+      <div  class="d-block card-header card-header-report card-bg">
+        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
+
+          <div class="smallify">
+            <div class=""><i class="fas fa-fw fa-calendar-check mr-2"></i>{{string_month}} detailed expenses report : {{prop}}</div>
+          </div>
+          {%if bills%}
+          <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white mr-1"></i>Download</button>
+          {%endif%}
+
+        </div>
+      </div>
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body">
+          <div class="center-btn">
+            <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span> expenses statement</h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="text-sl text-dark">House</th>
+                      <th class="text-sl text-dark">Item/Service</th>
+                      <th class="text-sl text-dark">Qty</th>
+                      <th class="text-sl text-dark">Description</th>
+                      <!-- <th class="text-sl text-dark">Deposit</th> -->
+                      <th class="text-sl text-dark">Amount</th>
+                      <th class="text-sl text-dark">Labour</th>  
+                      <th class="text-sl text-dark">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="shosho">{{ bill['house'] }}</td>
+                      <td class="shosho">{{ bill['name'] }}</td>
+                      <td class="shosho">{{ bill['qty'] }}</td>
+                      <td class="shosho">{{ bill['desc'] }}</td>
+                      <!-- <td class="shosho">{{ bill['deposit'] }}</td> -->
+                      <td class="shosho">{{ bill['cost'] }}</td>
+                      <td class="shosho">{{ bill['labour'] }}</td>
+                      <td class="text-danger font-weight-bold shosho-alt">{{ bill['amount'] }}</td>
+
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="6" class="font-weight-bold text-info footer-cell">Total Amount</td>
+
+                      <td  class="font-weight-bold text-info footer-cell">{{amounttotal}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="card shadow">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+          {% if bills %}
+
+          <div class="underline center-btn">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn">
+            <h6 class="font-weight-bold text-titl">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>expenses report</h6>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <!-- <th class="hide cell-top-none"></th> -->
+                      <th class="header-cell squeez">House</th>
+                      <th class="header-cell squeez">Item/Service</th>
+                      <th class="header-cell squeez">Qty</th>
+                      <th class="header-cell squeez">Description</th>
+                      <!-- <th class="header-cell squeez">Deposit</th> -->
+                      <th class="header-cell squeez">Amount</th>
+                      <th class="header-cell squeez">Labour</th>  
+                      <th class="header-cell squeez">Total</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="squeez shosho">{{ bill['house'] }}</td>
+                      <td class="squeez shosho">{{ bill['name'] }}</td>
+                      <td class="squeez shosho">{{ bill['qty'] }}</td>
+                      <td class="squeez shosho">{{ bill['desc'] }}</td>
+                      <!-- <td class="squeez shosho">{{ bill['deposit'] }}</td> -->
+                      <td class="squeez shosho">{{ bill['cost'] }}</td>
+                      <td class="squeez shosho">{{ bill['labour'] }}</td>
+                      <td class="squeez text-danger font-weight-bold shosho-alt">{{ bill['amount'] }}</td>
+
+                    </tr>
+                  {% endfor %}
+                  <tfoot class="dispnon">
+                    <tr>
+                      <td colspan="6" class="font-weight-bold squeeze text-info footer-cell">Total amount</td>
+                      <td class="font-weight-bold squeeze text-info footer-cell">{{amounttotal}}</td>
+                    </tr>
+                  </tfoot>
+                  </tbody>
+                </table>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

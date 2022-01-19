@@ -1,0 +1,93 @@
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Deposit payment</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <div class="form-group">
+                    <span class="text-info">Deposit Amount to be paid: <span class="font-weight-bold text-danger">{{bill['totaldeposit']}}</span></span>
+                  </div>
+
+                  <div class="form-group bg-light">
+                    <div class="divjust-end">
+                      <span class="ml-3">Rent Deposit:</span>
+                      <span class="mr-3">{{bill['rent']}}</span>
+                    </div>
+                    <div class="divjust-end">
+                      <span class="ml-3">Water Deposit:</span>
+                      <span class="mr-3">{{bill['water']}}</span>
+                    </div>
+                    <div class="divjust-end">
+                      <span class="ml-3">Electricity Deposit:</span>
+                      <span class="mr-3">{{bill['electricity']}}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="amount" class="form-control" placeholder="Amount">
+                  </div>
+
+                  <div class="form-group">
+                    <input id="invoice" class="form-control" placeholder="Invoice/Ref(optional)">
+                  </div>
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-foote divbg">
+          <button id="submitmodalThree" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Pay now</button>
+          <button type="button" id="closemodalThree" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $("#submitmodalThree").on('click',function(){
+      $("#closemodalThree").click();
+      setTimeout(function(){
+        url2 = "{{ url_for('api.receivedepositpayment') }}";
+        var cb = document.getElementById("cb1");
+        if (cb.checked){
+            var billable = "True";
+        }else{
+            var billable = "";
+        }
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                    apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                    house: $("#select_house").val(),
+                    tenant: $("#select_tenant").val(),
+                    amount: $("#amount").val(),
+                    bill_ref: $("#invoice").val(),
+                    billable: billable,
+              },
+              success: function(response) {
+                // $("#detailed-payments").toggleClass('invoice dispnone');
+                // $("#payments-report").toggleClass('row dispnone');
+                
+                $("#receipt").html(response);
+                $('#receipt').toggleClass('receipt-pos dispnone');
+                $('#form').toggleClass('dispnone dispform');
+            }
+        });
+      },300);
+  });
+  </script>

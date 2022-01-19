@@ -1,0 +1,244 @@
+
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} Rent income statement.pdf</span>
+<span id="orientation" class="dispnone">{{paging}}</span>
+
+<div class="row">
+  <div class="col-lg-6 offset-lg-3 no-padding">
+    <div class="formwrapper">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div class="divjust-end topbar-bg">
+          <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <div class="font-weight-bold text-white small card-header-form">
+              <span class="mr-4">Rental statement: ({{prop}}) </span>
+              <span><i class="fas fa-angle-down"></i></span>
+            </div>
+          </a>
+          <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+        </div>
+        <!-- Card Content - Collapse -->
+        <div class="" id="collapseCardExample">
+          <div class="card-body">
+              <form method="POST" action="/rent/report">
+                  <div class="form-group">
+                      <select name="prop" class="select-css" id ="selected_apartment" required>
+                        <option disabled selected value> -- Select apartment -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                  <div class="divjust-end mb-3">
+                    <span class="form-input">
+                      <select name="year" class="select-css" id ="url-box">
+                        <option disabled selected value> -- Year({{yearnow}}) -- </option>
+                        {% for o in year_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="month" class="select-css" id ="url-bo">
+                        <option disabled selected value> -- Month -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+
+                  </div>
+                  <button class="btn btn-block btn-primary btn-user">View</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 no-padding dispnon">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div  class="d-block card-header topbar-bg card-header-report2">
+          <div class="d-sm-flex divjust-end mb-0 m-0 font-weight-bold text-gray-200">
+            <div class="mobile-malaysian">
+              <div><i class="fas fa-fw fa-calendar-check mr-2"></i>Rent data: {{apartment_name}}</div>
+            </div> 
+            {%if bills%}
+
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download</button>
+            {%endif%}
+          </div>
+        </div>
+        
+        <div class="collapse show" id="collapseCardExample2">
+          <div class="card-body">
+            {% if bills %}
+            <div class="d-sm-flex divjust text-gray-600">
+              <div class="mobile-malaysian">
+                <img class="img-prop tex" src="{{fulllogopath}}" alt="--no image--"/>
+              </div>
+              <div class="desktop-malaysian">
+                <img class="img-prop text-xs" src="{{logopath}}" alt="--no image--"/>
+              </div>
+              <div class="mobile-malaysian">
+                <div class="small">Street Address : {{company.street_address}}</div>
+                <div class="small">PO BOX : {{company.mail_box}}</div>
+                <div class="small">Tel : {{company.phone}}</div>
+                <div class="small">Email: {{company.email}}</div>
+              </div>
+              <div class="desktop-malaysian text-sll">
+                <div class="smal">Street Address : {{company.street_address}}</div>
+                <div class="smal">PO BOX : {{company.mail_box}}</div>
+                <div class="smal">Tel : {{company.phone}}</div>
+                <div class="smal">Email: {{company.email}}</div>
+              </div>
+            </div>
+            <div class="center-btn">
+              <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Rent income statement</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>House</th>
+                    <th>Space</th> 
+                    <th>Tenant</th>
+                    <th>Deposit</th>
+                    <th>Rent</th>
+                            
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for bill in bills%}
+                  <tr>
+                    <td class="text-s">{{ bill['house'] }}</td>
+                    <td class="text-s">{{ bill['space'] }}</td>
+                    <td class="text-s {{bill['vacancy']}}">{{ bill['tenant'] }}</td>
+                    <td class="text-s">{{ bill['dep'] }}</td>
+                    <td class="text-s">{{ bill['rent'] }}</td>
+                    
+                    
+                  </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>            
+                  <tr>
+                    <td colspan="3" class="font-weight-bold text-info footer-cell center-btn">Sub Total</td>
+                    <td class="font-weight-bold text-info footer-cell">{{deposittotal}}</td>
+                    <td class="font-weight-bold text-info footer-cell">{{renttotal}}</td>
+                    
+                  </tr>
+                  <tr>
+                    <td colspan="3" class="font-weight-bold squeeze text-info footer-cell center-btn">Grand Total</td>
+                    <td colspan="2" class="font-weight-bold squeeze text-info footer-cell center-btn">Kshs {{grandtotal}}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="card shadow">
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+          {% if bills %}
+          <div class="d-sm-flex divjust text-gray-600">
+            <div class="mobile-malaysian">
+              <img class="img-prop tex" src="{{fulllogopath}}" alt="--no image--"/>
+            </div>
+            <div class="desktop-malaysian">
+              <img class="img-prop text-xs" src="{{logopath}}" alt="--no image--"/>
+            </div>
+            <div class="mobile-malaysian text-report mt-5">
+              <div class="small">Street Address : {{company.street_address}}</div>
+              <div class="small">PO BOX : {{company.mail_box}}</div>
+              <div class="small">Tel : {{company.phone}}</div>
+              <div class="small">Email: {{company.email}}</div>
+            </div>
+            <div class="desktop-malaysian text-sll">
+              <div class="smal">Street Address : {{company.street_address}}</div>
+              <div class="smal">PO BOX : {{company.mail_box}}</div>
+              <div class="smal">Tel : {{company.phone}}</div>
+              <div class="smal">Email: {{company.email}}</div>
+            </div>
+          </div>
+          <div class="center-btn">
+            <h6 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Rent income statement</h6>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="header-cell squeeze">House</th>
+                  <th class="header-cell squeeze">Space</th>
+                  <th class="header-cell squeeze">Tenant</th>
+                  <th class="header-cell squeeze">Deposit</th> 
+                  <th class="header-cell squeeze">Rent</th>        
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="squeeze text-cell">{{ bill['house'] }}</td>
+                  <td class="squeeze text-cell">{{ bill['space'] }}</td>
+                  <td class="squeeze text-cell {{bill['vacancy']}}">{{ bill['tenant'] }}</td>
+                  <td class="squeeze text-cell">{{ bill['dep'] }}</td>
+                  <td class="squeeze text-cell">{{ bill['rent'] }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+              <tfoot>            
+                <tr>
+                  <td colspan="3" class="font-weight-bold squeeze text-info footer-cell center-btn">Sub Total</td>
+                  <td class="font-weight-bold squeeze text-info footer-cell">{{deposittotal}}</td>
+                  <td class="font-weight-bold squeeze text-info footer-cell">{{renttotal}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="font-weight-bold squeeze text-info footer-cell center-btn">Grand Total</td>
+                  <td colspan="2" class="font-weight-bold squeeze text-info footer-cell center-btn">Kshs {{grandtotal}}</td>
+                </tr>
+              </tfoot>
+
+            </table>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

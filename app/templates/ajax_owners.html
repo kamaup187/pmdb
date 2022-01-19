@@ -1,0 +1,1061 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+      <span id="prop_identifier" class="dispnone"></span>
+      <span id="link_identifier" class="dispnone"></span>
+      <span id="prop_id_identifier" class="dispnone"></span>
+      <span id="edit_prop_identifier" class="dispnone"></span>
+      <span id="del_prop_identifier" class="dispnone"></span>
+
+        <div class="container no-padding">
+            <div class="divjust-end mb-2 smallify">
+              
+              <span><i class="fa fa-building fa-2x text-info mr-2"></i><span class="text-xx">{{company.name}}</span></span>
+              <div class="center-btn font-weight-bold text-success mb-2 text-xx mr-5">Property Owners</div>
+              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
+             
+            </div>
+        </div>
+
+        <div class="toggleswitch divbg mb-3 dispnone">
+          <span>
+            <span class="small">View current payments</span>
+            <label class="switch">
+              <input id="reporttoggle" type="checkbox" checked disabled>
+              <span class="slider round"></span>
+            </label>
+          </span>
+        
+          <span class="">
+            <span class="small">View previous payments</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox" disabled>
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+
+        </div>
+        
+        <div id="result-view" class="row">
+          <div class="col-lg-12 no-padding">
+            <div id="props" class="table-responsive">
+                <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="text-info font-weight-bold">NAME</th>
+                        <th class="text-info font-weight-bold">ID</th>
+                        <th class="text-info font-weight-bold">TEL</th>
+                        <th class="text-info font-weight-bold">Props</th>
+                        <th class="text-info track-title-cell">Acc</th>                    
+                        <th class="text-info track-title-cell">Edit</th>
+                        <th class="text-info track-title-cell">Del</th>
+                        <th class="text-info track-title-cell">By</th>
+
+        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in items%}
+                      <tr>
+                        <td class="first-data-cell text-primary font-weight-bold"><span class="text-info">{{item['id']}}</span> -{{ item['name'] }}</td>
+                        <td class="data-cell">{{ item['natid'] }}</td>
+                        <td class="data-cell">{{ item['phone'] }}</td>
+                        <td class="data-cell text-gray-700">{{ item['properties'] }}</td>
+                        <td class="data-cell text-gray-900">{{ item['acc'] }}</td>
+
+                        <td class="data-cell">
+                          <div>
+                            <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#editPropModa"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
+                          </div>
+                        </td>
+                        <td class="data-cell">
+                          <div>
+                            <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModa"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+                          </div>
+                        </td>
+                        <td class="data-cell">{{ item['createdby'] }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+    </section>
+    <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editTenantModal"></button> -->
+    <!--================Contact Area =================-->
+
+    <button type="button" id="receipt-btn" class="dispnone" data-toggle="modal" data-target="#receiptModal"></button>
+    <button type="button" id="receipt-payment-btn" class="dispnone" data-toggle="modal" data-target="#receiptPaymentModal"></button>
+
+    <div class="text-center">
+      <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title text-info font-weight-bold mb-1" id="paymentDetailModalLabel">Property registration</h5>
+              <span class="modal-info"></span>
+            </div>
+            <div class="modal-body">
+              
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    
+                    <form class="" action="" method="POST">
+
+                        <span class="small text-danger">Note: Make sure to select owner before submitting, add owner if not available.</span>
+
+                        <div class="form-group divjust-end">
+                          <select name="owner" class="select-css" id ="select_owner" required>
+                              <option disabled selected value> loading... </option>
+                              {% for o in owners %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                          </select>
+                          <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-target="#addOwnerModal"><i class="fas fa-plus-circle text-danger"></i>Owner</button>
+                        </div>
+
+                        <div class="form-group divjust-end">
+                          <select name="location" class="select-css" id ="select_region" required>
+                          <option disabled selected value> loading... </option>
+                          {% for o in regions %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                          </select>
+  
+                         <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-target="#addRegionModal"><i class="fas fa-plus-circle text-danger"></i>Region</button>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                          <div class="col-sm-7 mb-3 mb-sm-0">
+                              <input class="form-control ph" id="prop" placeholder="Apartment name">
+                          </div>
+          
+                          <div class="col-sm-5">
+                            <div class="fancy-checkbox-group form-control mb-4 tsmallify">
+                              <input type="checkbox" name="agency_management" id="cb1" checked>
+                              <label for="cb1">Agency managed</label>
+                          </div>
+                          </div>
+                        </div>
+
+  
+                        <hr>
+                        <div class="divbg center-btn">
+                          <button id="add_prop" type="button" class="bg-gradient-success borderless text-white"><i class="fas fa-check mr-1"></i>submit</button>
+                          <button class="btn btn-secondary closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="">
+      <div class="modal fade" id="receiptPaymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="divbg">
+              <button type="button" class="btn borderless" id="downloadPaymentPdf"><i class="fas fa-print text-primary">Print</i></button>
+              <button class="btn borderless" type="button" data-dismiss="modal"><i class="fas fa-times fa-2x text-danger"></i></button>
+            </div>
+            <div class="modal-body no-padding">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div id="receipt-payment-bed" class="position-relative"></div>
+                  <div class="hide">spacing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="addPaymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-white bg-gradient-info form-control mb-2" id="paymentDetailModalLabel">Receive payment</h5>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+                      <fieldset>
+                        <legend class="legend">Select house:</legend>
+                        <div class="form-group input-icons mt-2">
+                          <i class="fa fa-caret-down icon text-info"></i>
+                          <select class="form-control" id ="select_house" >
+                            <option disabled selected value> -- Select house -- </option>
+                            {% for o in houselist %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+
+                        <div id="tenantbed" class="center-btn smallify"></div>
+
+                      </fieldset>
+                        
+                      <fieldset class="mb-2">
+                        <legend class="legend">Payment details</legend>
+                        <div class="mt-2 row">
+
+                          <div class="col-3 pr-0 mt-2">
+                            <!-- <label class="text-white text-small">Payment for:</label> -->
+                            <div class="divcol form-group x-small">
+                              
+                              <span>
+                                <input type="checkbox" id="chargetype1" class="check-btn" name="chargetype1" value="Rent">
+                                <label for="chargetype1">Rent</label>
+                              </span>
+              
+                              <span>
+                                <input type="checkbox" id="chargetype2" class="check-btn" name="chargetype2" value="water">
+                                <label for="chargetype2">Water</label> 
+                              </span>
+                              
+                              <span>
+                                <input type="checkbox" id="chargetype3" class="check-btn" name="chargetype3" value="Garbage">
+                                <label for="chargetype3">Garbage</label> 
+                              </span>
+                              
+                              <span>
+                                <input type="checkbox" id="chargetype4" class="check-btn" name="chargetype4" value="Seurity">
+                                <label for="chargetype4">Security</label>
+                              </span>
+                              
+                              <span>
+                                <input type="checkbox" id="chargetype5" class="check-btn" name="chargetype5" value="Arrears">
+                                <label for="chargetype5">Arrears</label>
+                              </span>
+
+                              <span>
+                                <input type="checkbox" id="chargetype6" class="check-btn" name="chargetype6" value="Deposit">
+                                <label for="chargetype6">Deposit</label>
+                              </span>
+            
+                            </div>
+                            
+                          </div>
+                          <div class="col-9">
+                          
+                              <!-- <input id="datepicker" class="form-control text-info pl-5 ph" type="text" placeholder="Date of payment..."> -->
+                              
+                              <!-- <input type="text" id="pay-date" class="form-control text-info pl-5 ph" placeholder="Date of payment" onfocus="(this.type='date')">
+                              <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span> -->
+
+                              <div id="datepicker" class="form-group mt-2 date" data-date-format="dd-mm-yyyy">
+                                  <input id="pay-date" class="form-control ph" type="text" placeholder="Date of payment" readonly />
+                                  <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                                  
+                              </div>
+
+                              <div class="form-group">
+                                <small>(Optional) Enter time</small>
+                                <input class="form-contro ph" type="time" id="pay-time" min="00:00" max="24:00">
+                              </div>
+                 
+
+    
+    
+                            <div class="form-group mt-2">
+                              <select class="form-control" name="paymode" class="form-control" id="select_paymode" required>
+                            
+                                <option disabled selected value> -- Select Payment method -- </option>
+                                <option value="Bank deposit">Bank deposit</option>
+                                <option value="Cash payment">Cash payment</option>
+                                <option value="Mpesa payment">Mpesa payment</option>
+                                
+                              </select>
+                            </div>
+    
+                            <div class="form-group">
+                              <input id="bill_ref" class="form-control ph" type="text" name="bill_ref" placeholder="Payment reference...?">
+                            </div>
+              
+                            <div class="form-group">
+                              <input id="paidamount" class="form-control ph" type="text" name="paidamount" placeholder="amount to pay..." required>
+                            </div>
+  
+                          </div>
+
+                        </div>
+                      </fieldset>
+     
+ 
+                    
+                      <div class="divbg center-btn">
+                        <button id="paybtn" type="button" class="dispnone btn btn-outline-success borderles">Submit</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="editPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Edit payment</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <!-- <div class="form-group mt-2">                        
+              <input id="edit_datepicker" class="form-control text-info pl-5 ph" type="text" placeholder="Edit date">
+              <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span>
+            </div> -->
+
+          <div id="edit-datepicker" class="form-group mt-2 date" data-date-format="dd-mm-yyyy">
+            <input id="edit-pay-date" class="form-control ph" type="text" placeholder="Update date of payment" readonly />
+            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+          </div>
+
+          <div class="form-group">
+            <small>Update time</small>
+            <input class="form-contro ph" type="time" id="edit-pay-time" min="00:00" max="24:00">
+          </div>
+
+            <div class="form-group dispnone">
+              <input id="edit_paidamount" class="form-control ph" type="text" name="paidamount" placeholder="Update amount" required>
+            </div>
+
+          </div>
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Do you really want to edit this payment?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="edit_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Update</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade center-btn" id="addOwnerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content bg-gradient-dark">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="exampleModalLabel">Add new owner</h5>
+          </div>
+          <div class="modal-body">
+            <div class="media">
+              <div class="media-body">
+                <div class="position-relative">
+                  <form class="" action="" method="POST">
+
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                            <input class="form-control ph" id="fname" placeholder="First name">
+                        </div>
+        
+                        <div class="col-sm-6">
+                          <input class="form-control ph" id="lname" placeholder="Second name">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <input class="form-control ph" id="tel" placeholder="Mobile number">
+                      </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="has-margin-bottom divbg">
+              <button id="add_owner" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Submit</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal-small" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="addRegionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog mt-5" role="document">
+        <div class="modal-content bg-gradient-dark">
+          <div class="modal-header">
+            <h5 class="modal-title text-info" id="exampleModalLabel">Add a new region</h5>
+          </div>
+          <div class="modal-body">
+            
+            <div class="media">
+              <div class="media-body">
+                <div class="position-relative">
+                  <form class="" action="" method="POST">
+
+                      <div class="form-group">
+
+                        <input class="form-control ph" id="region" placeholder="Region name">
+
+                      </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="has-margin-bottom divbg">
+              <button id="add_region" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Submit</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal-small" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="linkModal" tabindex="-1" role="dialog" aria-labelledby="linkModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title font-weight-bold text-info mb-1" id="linkModalLabel">Loading</h5>
+            <span class="modal-info"></span>
+          </div>
+          <div class="modal-body">
+            
+            <div class="media">
+              <div class="media-body">
+                <div class="position-relative">
+                  <form class="" action="" method="POST">
+
+                      <div class="form-group">
+
+                        <div class="form-group ">
+                          <select name="owner" class="select-css" id ="select_company" required>
+                              <option disabled selected value> loading... </option>
+                              {% for o in companies %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                          </select>
+                        </div>
+
+                      </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="has-margin-bottom divbg">
+              <button id="link-btn" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Link</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="editPropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Property detail update</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger">IN DEVELOPMENT</span>: Check back in a couple of days.</span>
+          </div>
+          <div class="has-margin-bottom divbg dispnone">
+              <button id="edit_prop" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Edit</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="deletePropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Confirm Removal</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to permanently remove this property from your listings?</span>
+          </div>
+          <div class="has-margin-bottom divbg">
+              <button id="del_prop" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+  
+
+<script>
+  $("#close-propdisp").on('click',function(){
+    $('#body-block').removeClass('dispnone')
+    $('#dynamic-content').addClass('dispnone');
+  });
+</script>
+
+<script>
+
+</script>
+
+<script>
+  var rawIds = "{{ propids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_prop_identifier").html(item)
+        }
+        else if(item.startsWith("prp")){
+          $("#prop_id_identifier").html(item)
+          // $("#spinner").removeClass("dispnone")
+          // $.ajax({
+          //   url: "/results",
+          //   type: "get",
+          //   data: {id: item},
+          //   success: function(response) {
+          //     $("#spinner").addClass("dispnone")
+          //     $("#propdisp").html(response);
+          //   }
+          // });
+        }else{
+          $("#edit_prop_identifier").html(item)
+        }
+        
+      }else{
+        $("#prop_identifier").html(item)
+        var linkTarget = $( "#"+item ).children( "i" ).children("span").text()
+        $("#link_identifier").html(linkTarget)
+
+      }
+    });
+  });
+</script>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantPaymentData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+
+<script>
+  
+  $("#reporttoggle").on('change',function(){
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      $("#update-reloader").html("new");
+      $("#allocate-reloader").html("new");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"new"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      $("#update-reloader").html("current");
+      $("#allocate-reloader").html("current");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"somestring"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  });
+</script>
+
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#addPropertyModal").on('shown.bs.modal', function(){
+
+    $.ajax({
+      url: "{{ url_for('api.addprop') }}",
+      type: "get",
+      data: {
+            target:"owners"
+          },
+      success: function(response) {
+        $("#select_owner").html(response);
+        $.ajax({
+      url: "{{ url_for('api.addprop') }}",
+      type: "get",
+      data: {
+            target:"regions"
+          },
+      success: function(response) {
+        $("#select_region").html(response); 
+      }
+    });
+      }
+    });
+  });
+</script>
+
+
+<script>
+  $("#add_prop").on('click',function(){
+    $('#add_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
+
+    var cb = document.getElementById("cb1");
+    if (cb.checked){
+      var agency = "True";
+    }else{
+      var agency = "False";
+    }
+  
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.addprop') }}",
+            data: {
+                owner:$("#select_owner").val(),
+                region:$("#select_region").val(),
+                prop:$("#prop").val(),
+                agency:agency,
+                target:""
+            },
+            success: function(response) {
+                $(".modal-info").html(response);  
+                $('#add_prop').html('Submit');
+                setTimeout(function(){
+                  $(".closemodal").click();
+                    }, 2000);
+                setTimeout(function(){
+
+                  $.ajax({
+                    url: "{{ url_for('api.allproperties') }}",
+                    type: "get",
+                    success: function(response) {
+                      $("#dynamic-content").html(response);
+                      
+                    }
+                  });
+
+                    }, 4000);           
+
+                  // setTimeout(function(){
+                    
+                  //   $(".reset").click();
+                  //   $(".closemodal").click();
+                  //   }, 1000);
+            }
+        });
+  });
+</script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#deletePropModal").on('shown.bs.modal', function(){
+    $(".payment-info").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>retrieving...');
+    $.ajax({
+      url: "{{ url_for('api.editprop') }}",
+      type: "get",
+      data: {
+            delid: $("#del_prop_identifier").text(),
+            target: "delete"
+          },
+      success: function(response) {
+        $(".payment-info").html(response); 
+      }
+    });
+  });
+</script>
+
+<script>
+    
+  $("#del_prop").on('click',function(){   
+    $('#del_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
+    $.ajax({
+      url: "{{ url_for('api.editprop') }}",
+      type: "POST",
+      data: {
+            delid:$("#del_prop_identifier").text(),
+            target:"delete"
+          },
+      success: function(response) {
+        $(".payment-info").html(response);  
+        $('#del_prop').html('Delete');
+        setTimeout(function(){
+          $(".closemodal").click();
+            }, 2000);
+        setTimeout(function(){
+
+          $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "get",
+            success: function(response) {
+              $("#dynamic-content").html(response);
+              
+            }
+          });
+
+            }, 3000);  
+        
+      }
+    });
+  });
+  
+  </script>
+
+
+
+<script>
+    
+  $("#add_owner").on('click',function(){   
+    
+    $('#add_owner').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...'); 
+    $.ajax({
+      url: "{{ url_for('api.addowner') }}",
+      type: "POST",
+      data: {
+            fname:$("#fname").val(),
+            lname:$("#lname").val(),
+            tel:$("#tel").val(),
+            target:""
+          },
+      success: function(response) {
+        $(".modal-info").show();
+        $(".closemodal-small").click();
+        $(".modal-info").html("<span class='text-success'>Owner added successfully</span>");  
+        $('#add_owner').html('Submit');
+        $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+                  target:"owners"
+                },
+            success: function(response) {
+              $("#select_owner").html(response);
+              
+            }
+          });
+        setTimeout(function(){
+          $(".modal-info").fadeOut(4000,"swing");
+          }, 1000);
+        
+      }
+    });
+  });
+  
+  </script>
+
+<script>
+    
+  $("#add_region").on('click',function(){   
+    
+    $('#add_region').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...'); 
+    $.ajax({
+      url: "{{ url_for('api.addregion') }}",
+      type: "POST",
+      data: {
+            name:$("#region").val(),
+            target:""
+          },
+      success: function(response) {
+        $(".modal-info").show();
+        $(".closemodal-small").click();
+        $(".modal-info").html("<span class='text-success'>Region added successfully</span>");  
+        $('#add_region').html('Submit');
+        $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+                  target:"regions"
+                },
+            success: function(response) {
+              $("#select_region").html(response);
+              
+            }
+          });
+        setTimeout(function(){
+          $(".modal-info").fadeOut(4000,"swing");
+          }, 1000);
+        
+      }
+    });
+  });
+  
+  </script>
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#linkModal").on('shown.bs.modal', function(){
+    var targetLink = $("#link_identifier").text();
+    if(targetLink == "link"){
+      $("#linkModalLabel").html("Link to Agent");
+      $("#link-btn").html("Link");
+    }else{
+      $("#linkModalLabel").html("Unlink property");
+      $("#link-btn").html("Unlink");
+    }
+    
+    $.ajax({
+      url: "{{ url_for('api.linkproperty') }}",
+      type: "get",
+      data:{
+        propid:$("#prop_identifier").text(),
+        target:targetLink
+      },
+      success: function(response) {
+        $("#select_company").html(response); 
+      }
+    });
+  });
+</script>
+
+<script>
+    
+  $("#link-btn").on('click',function(){   
+    var targetLink = $("#link_identifier").text();
+    if(targetLink == "link"){
+      $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>linking...'); 
+    }else{
+      $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Unlinking...'); 
+    }
+        
+    $.ajax({
+      url: "{{ url_for('api.linkproperty') }}",
+      type: "POST",
+      data: {
+            company:$("#select_company").val(),
+            propid:$("#prop_identifier").text(),
+            target:targetLink
+          },
+      success: function(response) {
+        $(".modal-info").show();
+        $(".modal-info").html("<span class='text-success'>Property link success</span>");  
+        $('#link-btn').html('Link');
+
+        setTimeout(function(){
+          $(".modal-info").fadeOut(4000,"swing");
+          $(".closemodal").click();
+          }, 1000);
+
+          setTimeout(function(){
+
+            $.ajax({
+              url: "{{ url_for('api.allproperties') }}",
+              type: "get",
+              success: function(response) {
+                $("#dynamic-content").html(response);
+                
+              }
+            });
+
+              }, 3000);
+        
+      }
+    });
+  });
+  
+  </script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#addPaymentModal").on('shown.bs.modal', function(){
+    $(function () {
+      $("#datepicker").datepicker({ 
+            autoclose: true, 
+            todayHighlight: true
+      });
+    });
+
+    $.ajax({
+      url: "{{ url_for('api.receivepayment') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier").text(),
+            target:"houselist"
+          },
+      success: function(response) {
+        $("#select_house").html(response); 
+      }
+    });
+  });
+</script>
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#select_house").on('change',function(){
+    $("#tenantbed").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+    // $("#tenantbed").removeClass("dispnone")
+    $.ajax({
+      url: "{{ url_for('api.receivepayment') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier").text(),
+            house: $("#select_house").val(),
+            target:"tenant name"
+          },
+      success: function(response) {
+        $("#tenantbed").html(response); 
+      }
+    });
+  });
+</script>
+
+<script>
+
+  $("#select_paymode").on('change',function(){
+    $('#bill_ref').removeClass('dispnone');
+    $('#bill_ref').val("");
+    var empty = false;
+    if($('#select_paymode').val() == "Cash payment"){
+      $('#bill_ref').val("N/A");
+      $('#bill_ref').addClass('dispnone');
+    }else if($('#select_paymode').val()=="Bank deposit"){
+      $('#bill_ref').attr("placeholder","Enter deposit slip reference");
+    }else{
+      $('#bill_ref').attr("placeholder","Enter Mpesa reference");
+    }
+    if ($('#bill_ref').val() == "") {
+      empty = true;
+    }else if($('#paidamount').val() == ""){
+      empty = true;
+    }
+
+    if (empty) {
+        $('#paybtn').addClass("dispnone");
+    } else {
+        $('#paybtn').removeClass("dispnone")
+    }
+  })
+
+</script>
+
+<script>
+
+  $("#bill_ref").on('keyup',function(){
+    var empty = false;
+    if ($('#bill_ref').val() == "") {
+      empty = true;
+    }else if($('#paidamount').val() =="") {
+      empty = true;
+    }
+    
+    if (empty) {
+        $('#paybtn').addClass("dispnone");
+    } else {
+        $('#paybtn').removeClass("dispnone")
+    }
+  })
+
+</script>
+
+<script>
+
+  $("#paidamount").on('keyup',function(){
+    var empty = false;
+    if ($('#paidamount').val() == "") {
+      empty = true;
+    }else if($('#bill_ref').val() =="") {
+      empty = true;
+    }
+    
+    if (empty) {
+        $('#paybtn').addClass("dispnone");
+    } else {
+        $('#paybtn').removeClass("dispnone")
+    }
+  })
+
+</script>
+
+
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#receiptModal").on('shown.bs.modal', function(){
+    // $('#tenantbed').addClass("dispnone");
+    $("#receipt-bed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+    $.ajax({
+      url: "{{ url_for('api.receipt') }}",
+      type: "get",
+      data: {
+            payid: $("#payment_identifier").text()
+          },
+      success: function(response) {
+        $("#receipt-bed").html(response); 
+      }
+    });
+  });
+
+</script>
+
+
+
+
+
+

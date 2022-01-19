@@ -1,0 +1,333 @@
+
+
+    <!-- <div class="col-12 no-padding">
+        <div class="card shadow mb-1 bg-white">
+            <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+
+                    <div class="font-weight-bold targetprop">
+                        <span>(<span class="text-black targetprop">{{targetprop}}</span>)</span>
+                        <i class="fas fa-chevron-right text-info ml-1"></i>
+                    </div>
+                   
+                    <div class="font-weight-bold">
+                        <span class="text-primary mr-1">{{numhouse}}</span>
+                        <span>Units</span>
+                        <i class="fas fa-circle text-primary ml-1"></i>
+                    </div>
+
+                    <div class="font-weight-bold">
+                        <span class="text-success mr-1">{{numalloc}}</span>
+                        <span>Occupied</span>
+                        <i class="fas fa-circle text-success ml-1"></i>
+                    </div>
+
+                    <div class="font-weight-bold">
+                        <span class="text-danger mr-1">{{numvac}}</span>
+                        <span>Vacant</span>
+                        <i class="fas fa-circle text-danger ml-1"></i>
+                    </div>
+
+            </div>
+        </div>
+
+    </div> -->
+
+
+
+    <!-- Area Chart -->
+    <div class="col-lg-6 no-padding">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-line mr-2"></i>Expected vs Actual Collections <span>(<span class="text-black targetprop">{{targetprop}}</span>)</span></div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are">
+                <p id="theInput" class="dispnone">{{billstring}}</p>
+                <p id="theInput2" class="dispnone">{{collectionstring}}</p>
+                <!-- <canvas id="myAreaChart"></canvas> -->
+                <canvas id="lineChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 no-padding">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-bar mr-2"></i>Water consumption <span>(<span class="text-black">{{targetprop}}</span>)</span></div>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are">
+                <p id="theInput3" class="dispnone">{{waterstring}}</p>
+                <canvas id="barChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-6 no-padding mt-3">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-line mr-2"></i>Money in <span>(<span class="text-black targetprop">{{targetprop}}</span>)</span> vs Money out <span>(<span class="text-black targetprop">total expenses</span>)</span></div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are">
+                <p id="theInput4" class="dispnone">{{incomestring}}</p>
+                <p id="income" class="dispnone">{{income}}</p>
+                <p id="theInput5" class="dispnone">{{outcomestring}}</p>
+                <p id="outcome" class="dispnone">{{outcome}}</p>
+                <!-- <canvas id="myAreaChart"></canvas> -->
+                <canvas id="lineChart1"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 no-padding mt-3">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-bar mr-2"></i>Net income <span>(<span class="text-black">{{targetprop}}</span>)</span></div>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are">
+                <p id="theInput6" class="dispnone">{{netcomestring}}</p>
+                <p id="netcome" class="dispnone">{{netcome}}</p>
+                <canvas id="barChart1"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script> -->
+
+    <script>
+        var ctxL = document.getElementById("lineChart").getContext('2d');
+
+        var stringData = document.getElementById("theInput").innerText;
+        var app_data = stringData.split`,`.map(x=>+x);
+
+        var stringData2 = document.getElementById("theInput2").innerText;
+        var app_data2 = stringData2.split`,`.map(x=>+x);
+
+        var myLineChart = new Chart(ctxL, {
+        type: 'line',
+        data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+        datasets: [{
+        label: "Expected collection",
+        data: app_data,
+        backgroundColor: [
+        'rgba(105, 0, 132, .2)',
+        ],
+        borderColor: [
+        'rgba(200, 99, 132, .7)',
+        ],
+        borderWidth: 2
+        },
+        {
+        label: "Actual collection",
+        data: app_data2,
+        backgroundColor: [
+        'rgba(0, 137, 132, .2)',
+        ],
+        borderColor: [
+        'rgba(0, 10, 130, .7)',
+        ],
+        borderWidth: 2
+        }
+        ]
+        },
+        options: {
+        responsive: true
+        }
+        });
+    </script>
+
+    <script>
+        var ctxB = document.getElementById("barChart").getContext('2d');
+
+
+        var stringData3 = document.getElementById("theInput3").innerText;
+        var app_data3 = stringData3.split`,`.map(x=>+x);
+
+        var myBarChart = new Chart(ctxB, {
+        type: 'bar',
+        data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+        datasets: [{
+        label: '# of units consumed(total)',
+        data: app_data3,
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+        }]
+        },
+        options: {
+        scales: {
+        yAxes: [{
+        ticks: {
+        beginAtZero: true
+        }
+        }]
+        }
+        }
+        });
+    </script>
+
+
+<script>
+    var ctxL = document.getElementById("lineChart1").getContext('2d');
+
+    var stringData = document.getElementById("theInput4").innerText;
+    var app_data = stringData.split`,`.map(x=>+x);
+    var income = document.getElementById("income").innerText;
+
+
+    var stringData2 = document.getElementById("theInput5").innerText;
+    var app_data2 = stringData2.split`,`.map(x=>+x);
+    var outcome = document.getElementById("outcome").innerText;
+
+
+    var myLineChart = new Chart(ctxL, {
+    type: 'line',
+    data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+    datasets: [{
+    label: "Kshs " + income + ' income)',
+    data: app_data,
+    backgroundColor: [
+    'rgba(18, 216, 124, .9)',
+    ],
+    borderColor: [
+    'rgba(200, 99, 132, .7)',
+    ],
+    borderWidth: 2
+    },
+    {
+    label: "Kshs " + outcome + ' expenses)',
+    data: app_data2,
+    backgroundColor: [
+    'rgba(249, 96, 30, .9)',
+    ],
+    borderColor: [
+    'rgba(0, 10, 130, .7)',
+    ],
+    borderWidth: 2
+    }
+    ]
+    },
+    options: {
+    responsive: true
+    }
+    });
+</script>
+
+<script>
+    var ctxB = document.getElementById("barChart1").getContext('2d');
+
+
+    var stringData3 = document.getElementById("theInput6").innerText;
+    var app_data3 = stringData3.split`,`.map(x=>+x);
+    var netcome = document.getElementById("netcome").innerText;
+
+    var myBarChart = new Chart(ctxB, {
+    type: 'bar',
+    data: {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+    datasets: [{
+    label: "Kshs " + netcome + ' net income)',
+    data: app_data3,
+    backgroundColor: [
+    'rgba(0, 13, 202, 0.3)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)'
+    ],
+    borderColor: [
+    'rgba(255,99,132,1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255,99,132,1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)'
+    ],
+    borderWidth: 1
+    }]
+    },
+    options: {
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
+    }
+    }]
+    }
+    }
+    });
+</script>

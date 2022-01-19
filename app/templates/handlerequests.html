@@ -1,0 +1,169 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+    <div class="row">
+
+        <div id="header-strip" class="col-lg-12 no-padding">
+            <div class="card-header py-2 card-bg divjust-end" >
+                <h6 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-clipboard-check mr-3"></i></span>Handle Requests</h6>
+                <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+            </div>
+        </div>
+
+        <div class="col-lg-12 offset-lg- no-padding">
+            <div id="propdisp" class=""></div>
+        </div>
+
+        <div class="col-lg-6 offset-lg- no-padding">
+            <div id="reqdata" class="common-bg-2 reqdata-h">
+                <table class="table common-bg-2 text-white shadow no-margin-bottom" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="text-info font-weight-bold">Type</th>
+                        <th class="text-white track-title-cell">Pending</th>
+                        <th class="text-white track-title-cell">Queued</th>
+                        <th class="text-white track-title-cell">Running</th>
+                        <th class="text-white track-title-cell mobile-malaysian">Completed</th>
+                        <th class="text-white track-title-cell mobile-malaysian">Rejected</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill in bills%}
+                      <script>
+                          var req_obj = {{bill['pending']|tojson}}
+                          console.log(req_obj);
+                      </script>
+                      <tr>
+                        <td class="track-data-cell text-info">{{ bill['type'] }}</td>
+                        <td class="track-data-cell">{{ bill['pending'] }}</td>
+                        <td class="track-data-cell">{{ bill['queued'] }}</td>
+                        <td class="track-data-cell">{{ bill['running'] }}</td>
+                        <td class="track-data-cell mobile-malaysian">{{ bill['completed'] }}</td>
+                        <td class="track-data-cell mobile-malaysian">{{ bill['rejected'] }}</td>
+                        <!-- <td class="track-data-cell"><a class="text-warning" id ="{{bill['id']}}" href="#">Track</a></td> -->
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                       
+                    </table>
+            </div>
+        </div>
+        <div class="col-lg-6 offset-lg no-padding">
+            <div id="proplist" class="">
+            <div class="formwrapper">
+                <div class="card shadow mb-4 common-bg-2">
+                    <!-- <div class="card-header py-2 card-bg divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-clipboard-check mr-3"></i></span>Handle Requests</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-white"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div> -->
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/property/access">
+
+                            <div class="form-group">
+                                <select name="property" class="select-css" id ="select_property" required>
+                                    <option disabled selected value> -- Select Property -- </option>
+                                    {% for o in props %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select name="reqtype" class="select-css" id ="select_request" required>
+                                    <option disabled selected value> -- Select Request type -- </option>
+                                    {% for o in reqtypes %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <select name="category" class="select-css" id ="select_category" required>
+                                    <option disabled selected value> -- Select Status Category -- </option>
+                                    {% for o in categories %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+            
+                            <div class="divbg center-btn">
+                                <button id="submit" type="button" class="bg-gradient-success borderless text-white">View</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(30000,"swing");
+    }, 10000);
+</script>
+
+<!-- <script>
+    $("#select_owner").on('change',function(){
+    
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.propertyaccess') }}",
+                data: {
+                    owner: $("#select_owner").val(),
+                    propertyauto:"somestring"
+                },
+                success: function(response) {
+                    $("#select_apartment").html(response);
+                }
+            });
+    });
+</script> -->
+
+<!-- <script>
+    $("#submit").on('click',function(){
+      $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Retrieving..');
+    });
+</script> -->
+
+<script>
+    $("#submit").on('click',function(){
+      $('#submit').html('<i class="fa fa-spinner fa-spin mr-2"></i>Retrieving..');
+  
+        setTimeout(function(){
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.handletenantrequest') }}",
+              data: {
+                property: $("#select_property").val(),
+                reqtype: $("#select_request").val(),
+                category: $("#select_category").val(),
+                run : "display"
+              },
+              success: function(response) {
+                $("#proplist").addClass("dispnone");
+                $("#header-strip").addClass("dispnone");
+                $("#reqdata").addClass("dispnone");
+                $("#propdisp").removeClass("dispnone")
+                $("#propdisp").html(response);
+              }
+          });
+  
+        },300);
+    
+      });
+
+  </script>
+
+{% endblock %}

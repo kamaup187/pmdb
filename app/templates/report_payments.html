@@ -1,0 +1,294 @@
+
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} detailed payments report.pdf</span>
+
+<div class="row">
+  <div class="col-lg-6 offset-lg-3 no-padding">
+    <div class="formwrapper">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div class="divjust-end topbar-bg">
+          <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <div class="font-weight-bold text-white small card-header-form">
+              <span class="mr-4">Payments report: ({{apartment_name}}) </span>
+              <span><i class="fas fa-angle-down"></i></span>
+            </div>
+          </a>
+          <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+        </div>
+        <!-- Card Content - Collapse -->
+        <div class="" id="collapseCardExample">
+          <div class="card-body pl-2 pr-2 pb-1 pt-1">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
+                      <span>{{ message }}</span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+              <form method="POST" action="/view/payments">
+                  <div class="divbg">Group by:
+                    <!-- <span>Group by:</span> -->
+                    <span class="spanwidt">
+                      <input type="checkbox" id="mode" class="check-bt" name="mode" value="mode">
+                      <label class="m-0" for="mode">Mode</label>
+                    </span>
+                    <span class="spanwidt">
+                      <input type="checkbox" id="tenant" class="check-bt" name="tenant" value="tenant">
+                      <label class="m-0" for="tenant">Tenant</label>
+                    </span>
+                  </div>
+                  <div class="form-group">
+                      <select name="selected_apartment" class="select-css" id ="selected_apartment" required>
+                        <option disabled selected value> -- Select apartment -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group dispnone" id="mode-display">
+                    <select name="selected_mode" class="select-css">
+                      <option disabled selected value> -- Select mode -- </option>
+                      
+                      <option value="Bank deposit">Bank</option>
+                      <option value="Mpesa payment">Mpesa</option>
+                      <option value="Cash payment">Cash</option>
+                      <option value="Deposit deduction">Other</option>
+                      
+                    </select>
+                  </div>
+                  <div class="form-group dispnone" id="tenant-display">
+                    <select name="selected_tenant" class="select-css" id ="selected_tenant">
+                      <option disabled selected value> -- Select tenant (loading) -- </option>
+                      {% for o in houses %}
+                      <option value="{{ o }}">{{ o }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="divjust-end mb-3">
+                    <span class="form-input">
+                      <select name="year" class="select-css" id ="url-box">
+                        <option disabled selected value> -- Year({{yearnow}}) -- </option>
+                        {% for o in year_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="start_month" class="select-css" id ="url-bo">
+                        <option disabled selected value> -- Start -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="end_month" class="select-css" id ="url-box">
+                        <option disabled selected value> -- End -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+
+                  </div>
+                  <button class="btn btn-block btn-primary btn-user">View</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 no-padding">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div  class="d-block card-header topbar-bg card-header-report">
+          <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-gray-200">
+            <div class="mobile-malaysian small">
+              <div><i class="fas fa-fw fa-calendar-check mr-2"></i>Detailed Payments: {{apartment_name}}</div>
+            </div> 
+            {%if bills%}
+
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download</button>
+            {%endif%}
+          </div>
+        </div>
+        
+        <div class="collapse show" id="collapseCardExample2">
+          <div class="card-body">
+            {% if bills %}
+            <div class="center-btn">
+              <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Detailed payments</h5>
+              <br>
+              <!-- <div>
+                <span class="mr-3">{{endmonth}} :</span>
+                <span class="text-info">Total Bills:</span>
+                <span class="font-weight-bold mr-3"> Kshs {{billtotals}}</span>
+                <span class="text-success"> Paid:</span>
+                <span class="font-weight-bold mr-3"> Kshs {{paidbills}}</span>
+                <span class="text-danger">Balance:</span>
+                <span class="font-weight-bold"> Kshs {{balances}}</span>
+              </div> -->
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th class="header-cell">House</th>
+                    <th class="header-cell">#No.</th> 
+                    <th class="header-cell font-weight-bold">Ref</th>
+                    <th class="header-cell" data-orderable="false">Item</th>
+                    <th class="header-cell" data-orderable="false">Mode</th>
+                    <th class="header-cell" data-orderable="false">Due</th>                                            
+                    <th class="header-cell font-weight-bold text-info" data-orderable="false">Paid</th>
+                    <th class="header-cell text-danger">Bal</th>
+                    <th class="header-cell">Date</th>
+                    <th class="header-cell" data-orderable="false">Time</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for bill in bills%}
+                  <tr>
+                    <td class="data-cell no-wrap">{{ bill['hst']|safe }}</td>
+                    <td class="data-cell">{{ bill['id'] }}</td>  
+                    <td class="data-cell">{{ bill['ref'] }}</td>
+                    <td class="data-cell">{{ bill['charge'] }}</td>
+                    <td class="data-cell">{{ bill['mode'] }}</td>
+                    <td class="data-cell">{{bill['chargedamnt'] }}</td>                                              
+                    <td class="data-cell font-weight-bold">{{ bill['amount'] }}</td>
+                    <td class="data-cell"><span class="{{bill['highlight']}}">{{ bill['balance'] }}</span></td>
+                    <td class="data-cell">{{ bill['date'] }}</td>
+                    <td class="data-cell">{{ bill['time'] }}</td>
+
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="invoice" class="col-lg-12 no-padding dispnon">
+    <div class="car shadow">
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body">
+          {% if bills %}
+          <div class="underline center-btn">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>     
+
+          <div class="center-btn">
+            <h5 class="report-title font-weight-bold">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Detailed payments</h5>
+          </div>
+
+        <div class="table-responsive">
+          
+          <table class="table" id="data-table" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="header-cell squeeze">House</th>
+                <th class="header-cell squeeze">#No</th>
+                <th class="header-cell squeeze font-weight-bold">Ref</th> 
+                <!-- <th class="header-cell squeeze">Item</th> -->
+                <th class="header-cell squeeze">Mode</th>
+                <th class="header-cell squeeze">Due</th>
+                <th class="header-cell squeeze font-weight-bold text-info">Paid</th>
+                <th class="header-cell squeeze text-danger">Bal</th>
+                <th class="header-cell squeeze">Date</th>
+                <th class="header-cell squeeze">Time</th>
+                 
+              </tr>
+            </thead>
+            <tbody>
+              {% for bill in bills%}
+              <tr>
+                <td class="squeeze text-cell no-wrap">{{ bill['hst']|safe }}</td>
+                <td class="squeeze text-cell">{{ bill['id'] }}</td>
+                <td class="squeeze text-cell font-weight-bold">{{ bill['ref'] }}</td>
+                <!-- <td class="squeeze text-cell">{{ bill['charge'] }}</td> -->
+                <td class="squeeze text-cell">{{ bill['mode'] }}</td>
+                <td class="squeeze text-cell">{{ bill['chargedamnt'] }}</td>
+                <td class="squeeze text-cell font-weight-bold">{{ bill['amount'] }}</td>
+                <td class="squeeze text-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
+                <td class="squeeze text-cell">{{ bill['date'] }}</td>
+                <td class="squeeze text-cell">{{ bill['time'] }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="footer-cell squeeze font-weight-bold text-black text-right">Total</td>    
+                <td class="footer-cell squeeze font-weight-bold"></td>
+                <td class="footer-cell squeeze font-weight-bold font-weight-bold text-black">{{paidbills}}</td>
+                <td class="footer-cell squeeze font-weight-bold"></td>
+
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

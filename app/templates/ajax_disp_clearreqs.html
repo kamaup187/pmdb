@@ -1,0 +1,229 @@
+
+<div class="card-header py-2 card-bg divjust-end">
+  <h6 class="m-0 font-weight-bold text-white mobile-malaysian">Handle Requests</h6>
+  <span class="text-white small-title title-ff">{{title}}</span>
+  <i id="close-prop-details" class="fas fa-times text-white fa-fw"></i>
+</div>
+
+<!-- <div id="my-requests">
+    <div id="trackrequest" class="table-responsiv">
+      <table class="table bg-gradient-dark text-info table-bordere" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="text-white track-title-cell">Date</th>
+            <th class="text-white track-title-cell">Type</th>
+            <th class="text-white track-title-cell">Title</th>
+            <th class="text-white track-title-cell">status</th>
+            <th class="text-white track-title-cell">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bill in bills%}
+          <tr>
+            <td class="track-data-cell">{{ bill['date'] }}</td>
+            <td class="track-data-cell">{{ bill['requesttype'] }}</td>
+            <td class="track-data-cell">{{ bill['title'] }}</td>
+            <td class="track-data-cell">{{ bill['status'] }}</td>
+            <td class="track-data-cel"  >
+              <div class="form-grou">
+                <input id="{{bill['costid']}}" name="identifier" class="form-contro form-control-use request-cost-width" placeholder="charges/reject reason">
+                <select name="reaction" class="form-contro request-cost-width" id ="{{bill['id']}}" required>
+                  <option disabled selected value> Select action </option>
+                  
+                  <option value="approve">Queue</option>
+                  <option value="running">Dispatch</option>
+                  <option value="reject">Reject</option>
+                  <option value="complete">Complete</option>
+                  
+                </select>
+                
+              </div>
+              
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>  
+      </table>
+    </div>
+</div> -->
+
+<div id="my-requests">
+  <div id="trackrequest" class="table-responsiv">
+    <table class="table bg-gradient-dark text-info table-bordere" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th class="text-white track-title-cell">Date</th>
+          <th class="text-white track-title-cell">Hse</th>
+          <th class="text-white track-title-cell">C.Month</th>
+          <th class="text-white track-title-cell">Arrs</th>
+          <th class="text-white track-title-cell">status</th>
+          <th class="text-white track-title-cell">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bill in bills%}
+        <tr>
+          <td class="track-data-cell">{{ bill['date'] }}</td>
+          <td class="track-data-cell">{{ bill['house'] }}</td>
+          <td class="track-data-cell">{{ bill['clear_month'] }}</td>
+          <td class="track-data-cell">{{ bill['arrears'] }}</td>
+          <td class="track-data-cell">{{ bill['status'] }}</td>
+          <td class="track-data-cell">
+            <button id="{{bill['id']}}" type="button" class="borderless btn-secondary modalTrigger" data-toggle="modal" data-target="#exampleModal">Respond</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>  
+    </table>
+  </div>
+</div>
+
+
+<div class="text-center">
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Request action & Billing</h5>
+        </div>
+        <div class="modal-body">
+          <div class="media mb-2">
+            <div class="media-body">
+
+              <div class="position-relative">
+                <form class="divb" action="" method="POST">
+
+                  <div class="form-group">
+                    <select class="select-css" id ="selected_action" required>
+                      <option disabled selected value> Select action </option>
+                      <option value="running">Initiate</option>
+                      <option value="completed">Complete</option>
+                      <option value="rejected">Reject</option>
+                      
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="cost" class="form-control" placeholder="Paint Costs">
+                  </div>
+
+                  <div class="form-group">
+                    <select class="select-css" id ="billing" required>
+                      <option disabled selected value> Billed to? </option>
+                      
+                      <option value="approve">Tenant</option>
+                      <option value="running">Internal Expense</option>
+                      
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <input id="desc" name="desc" class="form-control" placeholder="Description">
+                  </div>
+                  <!-- <input type="submit" class="borderless bg-success" value="submit"> -->
+                  <!-- <div class="divbg center-btn">
+                    <button id="submitmodal" type="button" class="bg-gradient-success borderless text-white">Submit</button>
+                </div> -->
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-foote divbg">
+          <button id="submitmodal" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button>
+          <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $("#close-prop-details").on('click',function(){
+
+    $('#proplist').removeClass('dispnone');
+    $('#header-strip').removeClass('dispnone');
+    $('#reqdata').removeClass('dispnone');
+    $('#propdisp').addClass('dispnone');
+    $('#submit').html('View');
+    $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.handletenantrequest') }}",
+              data:{
+                run:"reqdata"
+              },
+              success: function(response) {                
+                $("#reqdata").html(response);
+            }
+        });
+
+  });
+</script>
+
+<script>
+    $("#submitmodal").on('click',function(){
+      $("#closemodal").click();
+      setTimeout(function(){
+        url2 = "{{ url_for('api.reacttorequest') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                action:$("#selected_action").val(),
+                requestid:localStorage.getItem('requestvar'),
+                cost:$("#cost").val(),
+                desc:$("#desc").val(),
+                target_debit:$("#billing").val(),
+                run:"clearance",
+
+                property: $("#select_property").val(),
+                reqtype: $("#select_request").val(),
+                category: $("#select_category").val()
+              },
+              success: function(response) {
+                // $("#detailed-payments").toggleClass('invoice dispnone');
+                // $("#payments-report").toggleClass('row dispnone');
+                
+                $("#propdisp").html(response);
+            }
+        });
+      },300);
+  });
+</script>
+
+
+<script>
+    var requestIdData = {{ requestids|tojson }};
+    
+    $.each(requestIdData, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        // console.log(item);
+        localStorage.setItem('requestvar',item);
+        // $("#requestresponse").removeClass("dispnone");
+        // $("#requestresponse").addClass("request-popup");
+      //   $.ajax({
+      //           type: "POST",
+      //           url: "{{ url_for('api.reacttorequest') }}",
+      //           data: {
+      //             action:$("#"+item).val(),
+      //             requestid:item,
+      //             cost:$("#cost"+item).val()
+      //           },
+      //           success: function(response) {
+      //             // $("#detailedreport").toggleClass('bg-gradient-light bg-gradient-dark');
+      //             // $("#detailedreport").toggleClass('tenantdata dispnone');
+      //             // $("#"+item).html(response);
+                  
+      //           }
+      //       });
+       
+      });
+    });
+</script>
+

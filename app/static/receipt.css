@@ -1,0 +1,157 @@
+@media print {
+    .page-break { display: block; page-break-before: always; }
+}
+#invoice-POS {
+  box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+  padding: 2mm;
+  margin: 0 auto;
+  width: 80mm;
+  background: #FFF;
+  border: 2px dotted #423e3f;
+}
+
+.watermark {
+  opacity: 0.9;
+  font-size: 40px;
+  font-weight: 900;
+  color: red;
+  transform: rotate(-30deg);
+  background: '#ccc';
+  position: absolute;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  right: 26%;
+  bottom: 20%;
+}
+
+#invalid .watermark{
+  opacity: 1;
+  font-size: 20px;
+  font-weight: 900;
+  color: red;
+  transform: rotate(0deg);
+  background: '#ccc';
+  position: static;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.svg{
+  position: relative;
+}
+.svg::before {
+  content: "";
+  background-image: url("../static/img/log.jpeg");
+  background-size: cover;
+  -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+  color-adjust: exact !important;  
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+#invalid .svg::before {
+  content: "";
+  background-image: url("");
+  background-size: cover;
+  -webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+  color-adjust: exact !important;  
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+.svg-child{
+  position: relative;
+}
+
+#invoice-POS ::selection {
+  background: #f31544;
+  color: #FFF;
+}
+#invoice-POS ::moz-selection {
+  background: #f31544;
+  color: #FFF;
+}
+#invoice-POS h1 {
+  font-size: 1.5em;
+  color: #222;
+}
+#invoice-POS datacell {
+  font-size: .9em;
+}
+#invoice-POS h3 {
+  font-size: 1.2em;
+  font-weight: 300;
+  line-height: 2em;
+}
+#invoice-POS p {
+  font-size: .7em;
+  color: #666;
+  line-height: 1.2em;
+}
+#invoice-POS #top, #invoice-POS #mid, #invoice-POS #bot {
+  /* Targets all id with 'col-' */
+  border-bottom: 1px solid #EEE;
+}
+#invoice-POS #top {
+  min-height: 100px;
+}
+#invoice-POS #mid {
+  min-height: 80px;
+}
+#invoice-POS #bot {
+  min-height: 50px;
+}
+
+#invoice-POS .info {
+  display: block;
+  margin-left: 0;
+}
+#invoice-POS .title {
+  float: right;
+}
+#invoice-POS .title p {
+  text-align: right;
+}
+#invoice-POS table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#invoice-POS .tabletitle {
+  font-size: .8em;
+  /* background: #EEE; */
+}
+#invoice-POS .service {
+  border-bottom: 1px solid #EEE;
+}
+#invoice-POS .item {
+  width: 24mm;
+}
+#invoice-POS .itemtext {
+  font-size: .9em;
+  line-height:12px;
+}
+#invoice-POS #legalcopy {
+  margin-top: 5mm;
+}
+.receipt-cell{
+    font-size: 80% !important;
+    line-height: 6px !important;
+}
+/* .r-border{
+    border: 4px dotted #555051;
+    margin: 2px !important;
+} */

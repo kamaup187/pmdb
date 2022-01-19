@@ -1,0 +1,69 @@
+
+<div id="invoice" class="row receipt-margin">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 border-data">
+        <div class="row">
+            <div class="col-md-12 receipt-data text-center text-primary">
+            <h4>Payment Receipt</h4>
+            </div>
+        </div>
+        <div class="divjust-end">
+            <div class="text-left">
+                <img src={{logopath}} alt="{{prop}}">
+            </div>
+            <div class="text-right mt-2">
+                <div class="text-receipt">
+                    <span class="mr-2"><strong>Receipt No: </strong>{{receiptno}}</span>
+                    <span>Date: <strong id="payTime"></strong>{{paytime}}</span>
+                </div>
+                <div class="text-receipt">
+                    <span class="mr-2">Tenant: <strong>{{tenant}}</strong></span>
+                    <span>Hse:<strong>{{house}}</strong></span>
+                </div>
+                <div class="text-receipt">
+                    <span class="font-weight-bold">{{prop}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-left">
+                <span>Payment mode:</span>
+                <span class="font-weight-bold">{{paymode}}</span>
+            </div>
+            <div class="col-md-12 text-left small">
+                <span>Purpose:</span>
+                <span class="text-dark">{{chargetype}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 well invoice-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Billed</th>
+                    <th>Paid</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{refnum}}</td>
+                    <td>KES {{bill}}</td>
+                    <td><strong>KES {{amount}}</strong></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>Balance</td>
+                    <td><strong>KES {{balance}}</strong></td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11 text-left mt-2 mb-2 text-ss text-gray-900">
+                <span>Generated on: <span id="pdfgenTime">{{pdftime}}</span> </span>
+            </div>
+        </div>
+    </div>
+</div>

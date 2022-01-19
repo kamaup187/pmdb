@@ -1,0 +1,6 @@
+<select name="role" class="form-control" >
+    <option disabled selected value> -Select Role to assign- </option>
+    {% for o in role_options %}
+    <option value="{{ o }}">{{ o }}</option>
+    {% endfor %}
+</select>

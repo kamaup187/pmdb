@@ -1,0 +1,104 @@
+<div class="card shadow mb-4 bg-gradient-light">
+  <!-- Card Header - Accordion -->
+  <div class="d-block card-header bg-gradient-light py-2">
+    <h6 class="m-0 font-weight-bold text-primary divjust-end">
+      <span><i class="fas fa-fw fa-user-alt"></i> Tenant Payment details <span class="text-info">({{tenant}})</span></span>
+      <span>Current tenant balance:<span class="text-danger"> Kshs {{balance}}</span></span>
+      <span><button id="close-top" type="reset" class="bg-gradient-danger borderless text-white">Close</button></span>
+    </h6>
+  </div>
+  <!-- Card Content - Collapse -->
+  <div class="collapse show" id="collapseCardExample2">
+    <div class="card-body">
+      <div class="table-responsive">
+        {% if bills %}
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Receipt No.</th>
+                  <th>House</th> 
+                  <th>Paid for</th>
+                  <th>Date</th>
+                  <th>Charge amount</th>
+                  <th>Amount paid</th>
+                  <th>Balance</th>
+                  <th>Received by</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th class="small">Receipt No.</th>
+                  <th class="small">House</th>
+                  <th class="small">Paid for</th>
+                  <th class="small">Date</th>
+                  <th class="small">Charge amount</th>
+                  <th class="small">Amount paid</th>
+                  <th class="small">Balance</th>
+                  <th class="small">Received by</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td>{{ bill['id'] }}</td>
+                  <td>{{ bill['house'] }}</td>
+                  <td>{{ bill['charge'] }}</td>
+                  <td>{{ bill['date'] }}</td>
+                  <td>{{ bill['chargedamnt'] }}</td>
+                  <td>{{ bill['amount'] }}</td>
+                  <td>{{ bill['balance'] }}</td>
+                  <td>{{ bill['receivedby'] }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+
+            </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="divbg center-btn">
+    <button id="close-bottom" type="reset" class="bg-gradient-danger borderless text-white">Close</button>
+  </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script> -->
+
+<!-- Core plugin JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script> -->
+
+<!-- Custom scripts for all pages-->
+<!-- <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script> -->
+
+  <!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='src/jquery.table2excel.js') }}"></script>
+
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+  
+
+</div>
+<script>
+  $("#close-top").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    // $("#detailedreport").innerHTML = "";
+
+  });
+</script>
+<script>
+  $("#close-bottom").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    // $("#detailedreport").innerHTML = "";
+
+  });
+</script>

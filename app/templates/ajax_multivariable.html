@@ -1,0 +1,26 @@
+
+<!-- <span class="dispnone code">>> {{item}}</span> -->
+
+
+<option disabled selected value> -- {{placeholder}} -- </option>
+{% for o in items %}
+<option value="{{ o }}">{{ o }}</option>
+{% endfor %}
+
+<span id="access" class="dispnone">{{access}}</span>
+
+<span id="propid_snapper" class="dispnone">{{propid}}</span>
+
+<script>
+    var contents =  $("#propid_snapper").text();
+    $("#propid").text(contents);
+</script>
+
+<!-- <script>
+    var contents =  $(".title").text();
+    $("#code").html(contents);
+    $("#code").addClass("text-info")
+    $("#code").removeClass("text-warning")
+</script> -->
+
+

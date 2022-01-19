@@ -1,0 +1,103 @@
+<!-- <div class="toggleswitch divbg center-btn mb-2">
+    <span>
+      <span class="small">Last month data</span>
+      <label class="switch">
+        <input id="periodtoggle" type="checkbox">
+        <span class="slider round"></span>
+      </label>
+    </span>
+</div> -->
+<div class="table-responsive">
+    
+    <table id="reportData" class="table shadow table-hover" width="100%" cellspacing="0">
+        <thead>
+            <tr class="center-btn text-white">
+                <th class="p-0 m-0 hide" colspan="2"></th>
+                <th class="bg-gradient-primary p-0 m-0" colspan="2">Payments</th>
+                <th class="bg-gradient-success p-0 m-0" colspan="2">Bills</th>
+                <th class="p-0 m-0 hide"></th>
+            </tr>
+            <tr>
+            <th class="text-info font-weight-bold">Plot</th>
+            <th class="text-info font-weight-bold">House</th>
+            <!-- <th class="text-success track-title-cell">Payments</th> -->
+            <th class="text-primary track-title-cell">Payments</th>
+            <th class="text-primary track-title-cell">Total paid</th>
+            <th class="text-success track-title-cell">Amount Due</th>
+            <th class="text-success track-title-cell">Cumulative Paid</th>
+            <th class="text-success track-title-cell">Balance</th>
+            <!-- <th class="text-success track-title-cell">Pledge</th> -->
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in bills%}
+            <tr class="{{i['outline']}}">
+            <td class="first-data-cell">{{ i['prop']|safe }}</td>
+            <td class="data-cell font-weight-bold">{{ i['hst']|safe }}</td>
+            <!-- <td class="data-cell text-primary">{{ i['payments'] }}</td> -->
+            <td class="data-cell text-primary ">{{ i['values']|safe }}</td>
+            <td class="data-cell text-danger font-weight-bold text-right">{{ i['total']|safe }}</td>
+            <td class="data-cell text-right">{{ i['due']|safe }}</td>
+            <td class="data-cell text-danger font-weight-bold text-right">{{ i['paid']|safe }}</td>
+            <td class="data-cell text-right">{{ i['balance']|safe }}</td>
+            <!-- <td class="data-cell">{{ i['pledge'] }}</td> -->
+
+            </tr>
+            {% endfor %}
+        </tbody>
+        <!-- <tfoot>
+
+            <tr class="bg-black">
+            <td colspan="3" class="first-data-cell text-white text-3 center-btn">Grand total</td>
+            <td class="data-cell text-danger font-weight-bold text-3">{{maintotal}}</td>
+            <td class="data-cell text-3 text-white font-weight-bold">{{maindue}}</td>
+            <td class="data-cell text-danger font-weight-bold text-3">{{maincp}}</td>
+            <td class="data-cell text-3 text-warning font-weight-bold">{{mainbal}}</td>
+            </tr>
+
+        </tfoot> -->
+    </table>
+</div>
+
+<!-- <script type="text/javascript">
+    $(document).ready(function () {
+      $('#reportData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        // "searching":false,
+        "order": [[ 0, "desc" ]],
+        columnDefs: [ { targets: [0,1], type: 'natural' } ],
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,3,4,5,6 ],type: 'natural' }],
+        // "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script> -->
+
+
+<script>
+    $(function () {
+      $("#reportData").DataTable({
+        // "responsive": true,
+        "lengthChange": false,
+        "pageLength": 100,
+        "autoWidth": false,
+        "order": [[ 0, "desc" ]],
+        columnDefs: [ { targets: [0,1], type: 'natural' } ],
+        "buttons": ["csv", "excel", "pdf", "print"]
+      }).buttons().container().appendTo('#reportData_wrapper .col-md-6:eq(0)');
+
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "info": true,
+        "ordering": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+    });
+  </script>
+
+  

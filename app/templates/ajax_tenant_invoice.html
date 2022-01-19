@@ -1,0 +1,688 @@
+<div id="biginv">
+
+<div id="inv" class="justify-content-cente text-black m-2">
+        <div class="divcol-inv">
+            
+                <div class="card-body no-padding-sm">
+                    <div class="row pl-2">
+
+
+                        <div class="col-lg-4">
+                            <div class="mb-2">
+                                <div class="text-left">
+                                    <h4 class="invoice-color mb-2 mt-md-2">Invoice</h4>
+                                    <!-- <ul class="list list-unstyled mb-0">
+                                        <li>Date: <span class="font-weight-semibold">June 20th, 2021</span></li>
+                                        <li>Due date: <span class="font-weight-semibold">July 1st, 2021</span></li>
+                                    </ul> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="mb-2 text-right">
+                                <img class="" src={{logo}} alt="{{company.name}}">
+                                <!-- <ul class="list list-unstyled mb-0 text-left">
+                                    <li>New york city</li>
+                                    <li>+1 474 44737 47 </li>
+                                </ul> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divjust-end smallify pl-2">
+                        <div class="">
+                            <div class="mb-0 mb-md-2 text-left small"> <span class="text-muted">Bill To:</span>
+                                <ul class="list list-unstyled mb-0">
+                                    <li>
+                                        <h5 class="my-2 font-weight-bold">{{client.name}}</h5>
+                                    </li>
+                                    <li>{{client.apartment.name}}</li>
+                                    <li>House: {{house}}</li>
+
+                                    <li>{{client.phone}}</li>
+                                    <li type="email" class="text-primary">{{client.email}}</li>
+                                </ul>
+                            </div>
+    
+                        </div>
+
+                        <div class="divjust-end">
+                            <div class="mr-2">
+                                <div class="mb-0 mb-md-2 text-right pt-1"> 
+                                    <ul class="list list-unstyled ln-14">    
+                                        <li class="font-weight-bold">Invoice date</li>
+                                        <li>{{invdate}}</li>
+    
+                                        <li class="mt-2 font-weight-bold">Due date</li>
+                                        <li>{{invdue}}</li>
+
+                                        <li class="mt-2 font-weight-bold">Invoice number</li>
+                                        <li class="text-danger">#{{invnum}}</li>
+                                    </ul>
+                                </div>
+        
+                            </div>
+                            <div class="pl-2 border-left-semidark">
+                                <div class="mb-0 mb-md-2 text-left">
+                                    <ul class="list list-unstyled mb-0">
+                                        <li class="font-weight-bold text-info text-xx">{{company.name}}</li>
+                                        <li>{{company.mail_box}}</li>
+                                        <li>{{company.street_address}}</li>
+                                        <li>Email: <span class="text-primary">{{company.email}}</span></li>
+                                        <li>Tel: {{company.phone}}</li>
+                                        <!-- <li>Website: <span class="text-primary">website</span></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <table class="table ml-4">
+                        <thead>
+                            
+                            <tr>
+                                <th class="no-wrap pl-0 text-info font-weight-bold text-125">Description</th>
+                                <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Previous</th>
+                                <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Current</th>
+                                <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Units</th>
+                                <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Rate</th>
+                                <th class="no-wrap text-info font-weight-bold text-125">Amount</th>
+                            </tr>
+                            
+                        </thead>
+                        <tbody>
+                            {%if readings%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Water readings</td>
+                                <td>{{readings.last_reading}}</td>
+                                <td>{{readings.reading}}</td>
+                                <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
+                                <td>{{house.housecode.waterrate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *readings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if house.housecode.watercharge%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Water standing charges</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.watercharge}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if ereadings%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Electricity readings</td>
+                                <td>{{ereadings.last_reading}}</td>
+                                <td>{{ereadings.reading}}</td>
+                                <td>{{ereadings.units}}<span class="text-danger font-weight-bold text-xx {{e_edited}}">*</span></td>
+                                <td>{{house.housecode.electricityrate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.electricityrate *ereadings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
+
+
+                            {%if bill.rent%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Rent</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.rent}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if bill.deposit%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Deposit</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.deposit}}</span></td>
+                            </tr>
+
+                            {%endif%}
+
+                            {%if bill.security%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Security</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.security}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if bill.maintenance%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Service charge</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.maintenance}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if bill.garbage%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Garbage</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.garbage}}</span></td>
+                            </tr>
+                            {%endif%}
+
+
+                            {%if bill.penalty%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Fines</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.penalty}}</span></td>
+                            </tr>
+                            {%endif%}
+
+
+                            {%if arrears%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0 {{bbfhighlight}}">{{arrtitle}}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{arrears}}</span></td>
+                            </tr>
+                            {%endif%}
+                           
+                        </tbody>
+                    </table>
+                </div>
+                
+                
+                <div class="">
+                        <div class="row">
+                            <div class="col-6 hide">hide</div>
+
+                            <div class="col-6">
+                                <div class="">
+                                    <table class="table">
+                                        <tbody>   
+                                            <tr>
+                                                <td class="text-left">Total:</td>
+                                                <td class="text-right text-info">
+                                                    <h5 class="font-weight-bold mr-5">Kes {{total}}</h5>
+                                                </td>
+                                            </tr>
+                                            
+                                            {%if bill.paid_amount%}
+                                            <tr>
+                                                <td class="text-left text-success">Paid:</td>
+                                                <td class="text-right text-success">
+                                                    <h5 class="font-weight-bold mr-5">Kes {{billpaid}}</h5>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left text-danger">Balance:</td>
+                                                <td class="text-right text-danger">
+                                                    <h5 class="font-weight-bold mr-5">Kes {{billbal}}</h5>
+                                                </td>
+                                            </tr>
+                                            {%endif%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                {% if not w_edited or not e_edited%}
+                <div class="text-left">
+                    <span class="text-danger font-weight-bold text-xx"> * <span class="small text-black">Adjusted</span></span>
+                </div>
+                {%endif%}
+
+
+                    <span class="text-muted dispnone">
+                        Payment will be done on Cheque, funds transfer or Mobile money to:
+                    </span>
+                    <p class="small text-muted dispnone">
+                        BANK: EQUITY BANK<br>
+                        BRANCH: PARLIAMENT ROAD BRANCH<br>
+                        ACCOUNT NAME: PROMINENCE TECH & BUILD SYSTEMS LTD<br>
+                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 0020275280370</span><br>
+                        Safaricom Paybill: <span class="text-gray-900 font-weight-bold">4012401 </span> Account: <span class="text-gray-900 font-weight-bold">Kiotapay</span><br>
+                    </p>
+
+                    <div class="divjust-end">
+                        <p class="small text-muted text-center mt-5">
+                            powered by <img class="" src={{slogo}} alt="KiotaPay">
+                        </p>
+    
+                        <p class="small text-muted text-right">
+                            Signed by <img class="" src={{sign}} alt="Signature"><br>
+                            for {{company.name}}
+                        </p>
+                    </div>
+            </div>
+
+</div>
+
+
+
+
+{%if bill2%}
+<div id="inv2" class="justify-content-cente text-black m-2">
+    <div class="divcol-inv">
+        
+            <div class="card-body no-padding-sm">
+                <div class="row pl-2">
+
+
+                    <div class="col-lg-4">
+                        <div class="mb-2">
+                            <div class="text-left">
+                                <h4 class="invoice-color mb-2 mt-md-2">Invoice</h4>
+                                <!-- <ul class="list list-unstyled mb-0">
+                                    <li>Date: <span class="font-weight-semibold">June 20th, 2021</span></li>
+                                    <li>Due date: <span class="font-weight-semibold">July 1st, 2021</span></li>
+                                </ul> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="mb-2 text-right">
+                            <img class="" src={{logo}} alt="{{company.name}}">
+                            <!-- <ul class="list list-unstyled mb-0 text-left">
+                                <li>New york city</li>
+                                <li>+1 474 44737 47 </li>
+                            </ul> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="divjust-end smallify pl-2">
+                    <div class="">
+                        <div class="mb-0 mb-md-2 text-left small"> <span class="text-muted">Bill To:</span>
+                            <ul class="list list-unstyled mb-0">
+                                <li>
+                                    <h5 class="my-2 font-weight-bold">{{client2.name}}</h5>
+                                </li>
+                                <li>{{client2.apartment.name}}</li>
+                                <li>House: {{house2}}</li>
+
+                                <li>{{client2.phone}}</li>
+                                <li type="email" class="text-primary">{{client2.email}}</li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="divjust-end">
+                        <div class="mr-2">
+                            <div class="mb-0 mb-md-2 text-right pt-1"> 
+                                <ul class="list list-unstyled ln-14">    
+                                    <li class="font-weight-bold">Invoice date</li>
+                                    <li>{{invdate}}</li>
+
+                                    <li class="mt-2 font-weight-bold">Due date</li>
+                                    <li>{{invdue}}</li>
+
+                                    <li class="mt-2 font-weight-bold">Invoice number</li>
+                                    <li class="text-danger">#{{invnum2}}</li>
+                                </ul>
+                            </div>
+    
+                        </div>
+                        <div class="pl-2 border-left-semidark">
+                            <div class="mb-0 mb-md-2 text-left">
+                                <ul class="list list-unstyled mb-0">
+                                    <li class="font-weight-bold text-info text-xx">{{company.name}}</li>
+                                    <li>{{company.mail_box}}</li>
+                                    <li>{{company.street_address}}</li>
+                                    <li>Email: <span class="text-primary">{{company.email}}</span></li>
+                                    <li>Tel: {{company.phone}}</li>
+                                    <!-- <li>Website: <span class="text-primary">website</span></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <table class="table ml-4">
+                    <thead>
+                        
+                        <tr>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Description</th>
+                            <th class="no-wrap text-info font-weight-bold text-125 {{visibility2}}">Previous</th>
+                            <th class="no-wrap text-info font-weight-bold text-125 {{visibility2}}">Current</th>
+                            <th class="no-wrap text-info font-weight-bold text-125 {{visibility2}}">Units</th>
+                            <th class="no-wrap text-info font-weight-bold text-125 {{visibility2}}">Rate</th>
+                            <th class="no-wrap text-info font-weight-bold text-125">Amount</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        {%if readings2%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Water readings</td>
+                            <td>{{readings2.last_reading}}</td>
+                            <td>{{readings2.reading}}</td>
+                            <td>{{readings2.units}}<span class="text-danger font-weight-bold text-xx {{w_edited2}}">*</span></td>
+                            <td>{{house2.housecode.waterrate}}</td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house2.housecode.waterrate *readings.units|float)}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if house2.housecode.watercharge%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Water standing charges</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{house2.housecode.watercharge}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if ereadings2%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Electricity readings</td>
+                            <td>{{ereadings2.last_reading}}</td>
+                            <td>{{ereadings2.reading}}</td>
+                            <td>{{ereadings2.units}}<span class="text-danger font-weight-bold text-xx {{e_edited2}}">*</span></td>
+                            <td>{{house2.housecode.electricityrate}}</td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house2.housecode.electricityrate *ereadings.units|float)}}</span></td>
+                        </tr>
+                        {%endif%}
+
+
+                        {%if bill2.rent%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Rent</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.rent}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if bill2.deposit%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Deposit</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.deposit}}</span></td>
+                        </tr>
+
+                        {%endif%}
+
+                        {%if bill2.security%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Security</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.security}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if bill2.maintenance%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Service charge</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.maintenance}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if bill2.garbage%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Garbage</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.garbage}}</span></td>
+                        </tr>
+                        {%endif%}
+
+
+                        {%if bill2.penalty%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Fines</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill2.penalty}}</span></td>
+                        </tr>
+                        {%endif%}
+
+
+                        {%if arrears2%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0 {{bbfhighlight}}">{{arrtitle2}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{arrears2}}</span></td>
+                        </tr>
+                        {%endif%}
+                       
+                    </tbody>
+                </table>
+            </div>
+            
+            
+            <div class="">
+                    <div class="row">
+                        <div class="col-6 hide">hide</div>
+
+                        <div class="col-6">
+                            <div class="">
+                                <table class="table">
+                                    <tbody>   
+                                        <tr>
+                                            <td class="text-left">Total:</td>
+                                            <td class="text-right text-info">
+                                                <h5 class="font-weight-bold mr-5">Kes {{total2}}</h5>
+                                            </td>
+                                        </tr>
+                                        
+                                        {%if bill2.paid_amount%}
+                                        <tr>
+                                            <td class="text-left text-success">Paid:</td>
+                                            <td class="text-right text-success">
+                                                <h5 class="font-weight-bold mr-5">Kes {{billpaid2}}</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left text-danger">Balance:</td>
+                                            <td class="text-right text-danger">
+                                                <h5 class="font-weight-bold mr-5">Kes {{billbal2}}</h5>
+                                            </td>
+                                        </tr>
+                                        {%endif%}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            {% if not w_edited2 or not e_edited2%}
+            <div class="text-left">
+                <span class="text-danger font-weight-bold text-xx"> * <span class="small text-black">Adjusted</span></span>
+            </div>
+            {%endif%}
+        
+
+                <span class="text-muted dispnone">
+                    Payment will be done on Cheque, funds transfer or Mobile money to:
+                </span>
+                <p class="small text-muted dispnone">
+                    BANK: EQUITY BANK<br>
+                    BRANCH: PARLIAMENT ROAD BRANCH<br>
+                    ACCOUNT NAME: PROMINENCE TECH & BUILD SYSTEMS LTD<br>
+                    ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 0020275280370</span><br>
+                    Safaricom Paybill: <span class="text-gray-900 font-weight-bold">4012401 </span> Account: <span class="text-gray-900 font-weight-bold">Kiotapay</span><br>
+                </p>
+
+                <div class="divjust-end">
+                    <p class="small text-muted text-center mt-5">
+                        powered by <img class="" src={{slogo}} alt="KiotaPay">
+                    </p>
+
+                    <p class="small text-muted text-right">
+                        Signed by <img class="" src={{sign}} alt="Signature"><br>
+                        for {{company.name}}
+                    </p>
+                </div>
+            </div>
+
+</div>
+{%endif %}
+
+</div>
+
+
+
+
+<span id="randid" class="dispnone">{{randid}}</span>
+<a id="downbtn" href="/download/invoice/{{randid}}" class="dispnone">download</a>
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+
+<script>
+    //   window.addEventListener("load", window.print());
+    
+    function PrintElem(elem)
+    {
+        var mywindow = window.open('', 'PRINT', 'height=800,width=600');
+        var title = document.title.split(' ').slice(0, 1).join(' ');
+        mywindow.document.write('<html><head><title>' + title  + '</title>');
+        mywindow.document.write('<link rel="stylesheet" href="./static/mystyle.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write('<h1>' + title  + '</h1>');
+        mywindow.document.write(document.getElementById(elem).innerHTML);
+        mywindow.document.write('</body></html>');
+    
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+    
+        mywindow.print();
+        mywindow.close();
+    
+        return true;
+    }
+    
+    
+</script>
+
+<script>
+    $("#printinv").on("click", function() {
+        $('#printinv').html('<i class="fas fa-spinner fa-spin mr-1"></i>Printing...');
+
+        // PrintElem("inv")
+        $('#inv').printThis({});
+
+        $('#printinv').html('<i class="fas fa-print mr-2"></i>Print');
+
+    })
+</script>
+
+<script>
+    $("#printinv2").on("click", function() {
+        $('#printinv2').html('<i class="fas fa-spinner fa-spin mr-1"></i>Printing...');
+
+        // PrintElem("inv")
+        $('#biginv').printThis({});
+
+        $('#printinv2').html('<i class="fas fa-print mr-2"></i>Print');
+
+    })
+</script>
+
+
+
+
+
+
+<script>
+    $("#saveinv").click(function(){ 
+        $('#saveinv').html('<i class="fas fa-spinner fa-spin mr-1"></i>Saving...');
+
+
+      if($("#randid").text().length > 0) {
+
+        $("#downbtn")[0].click();
+        }else{
+            const element = document.getElementById("inv");
+            html2pdf()
+            .from(element)
+            .set({
+                margin:       [0.2, 0, 0.2, 0],
+                filename:"Invoice",
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: {
+                    dpi: 192,
+                    scale:4,
+                    letterRendering: true,
+                    // useCORS: true
+                },
+                pageBreak: { mode: 'css', before:'#nextpage1'},
+                jsPDF: {orientation: 'portrait', unit: 'in', format: 'a4'}
+    
+                })
+            .save();
+            }
+          setTimeout(function(){
+              $('#saveinv').html("<i class='fas fa-file-download mr-2'></i>Save")
+          },10000);
+      });
+  </script>
+
+<script>
+    
+    $("#mailbtn").on('click',function(){   
+      $('#mailbtn').html('<span class="spinner-border spinner-border-sm mr-1 text-info" role="status" aria-hidden="true"></span>sending'); 
+      $.ajax({
+        url: "{{ url_for('api.sendmail') }}",
+        type: "get",
+        data: {
+              invid:$("#bill_identifier").text(),
+              target: "clientinvoice"
+            },
+        success: function(response) {
+          $('#mailbtn').html('<i class="fas fa-envelope text-success mr-2"></i>Sent!');
+          $('#mailbtn').attr('disabled', 'disabled');
+        },
+        error: function(xhr) {
+          $('#mailbtn').html('<i class="fas fa-ban text-danger mr-2"></i>Failed');
+          $('#mailbtn').attr('disabled', 'disabled');
+            alert("Not ready yet");
+        }
+      });
+    });
+    
+    </script>

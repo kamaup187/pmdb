@@ -1,0 +1,354 @@
+
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="statement" class="dispnone">tenant statement</span>
+<span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="filename" class="dispnone">{{tenant_name}} {{timeline}} tenant statement report.pdf</span>
+
+<div class="row">
+  <div class="col-lg-6 offset-lg-3 no-padding">
+    <div class="formwrapper">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div class="divjust-end topbar-bg">
+          <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <div class="font-weight-bold text-white small card-header-form">
+              <span class="mr-4">Tenant Statement: ({{tenant_name}}) </span>
+              <span><i class="fas fa-angle-down"></i></span>
+            </div>
+          </a>
+          <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+        </div>
+        <!-- Card Content - Collapse -->
+        <div class="" id="collapseCardExample">
+          <div class="card-body pl-2 pr-2 pb-1 pt-1">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
+                      <span>{{ message }}</span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+              {% endfor %}
+              {% endif %}
+              {% endwith %}
+              <form method="POST" action="/tenant/statement">
+
+                  <div class="form-group">
+                      <select name="selected_apartment" class="select-css" id ="selected_apartment" required>
+                        <option disabled selected value> -- Select apartment -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                    <select name="selected_tenant" class="select-css" id ="selected_tenant" required>
+                      <option disabled selected value> -- Select tenant (?) -- </option>
+                      {% for o in houses %}
+                      <option value="{{ o }}">{{ o }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="divjust-end mb-3">
+                    <span class="form-input">
+                      <select name="year" class="select-css" id ="url-box">
+                        <option disabled selected value> -- Year({{yearnow}}) -- </option>
+                        {% for o in year_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="start_month" class="select-css" id ="url-bo">
+                        <option disabled selected value> -- Start -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+                    <span class="form-input">
+                      <select name="end_month" class="select-css" id ="url-box">
+                        <option disabled selected value> -- End -- </option>
+                        {% for o in month_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </span>
+
+                  </div>
+                  <button class="btn btn-block btn-primary btn-user">View</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 no-padding">
+      <div class="card shadow">
+        <!-- Card Header - Accordion -->
+        <div  class="d-block card-header topbar-bg card-header-report">
+          <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-gray-200">
+            <div class="mobile-malaysian small">
+              <div><i class="fas fa-fw fa-calendar-check mr-2"></i>Transaction History: {{tenant_name}}</div>
+            </div> 
+            {%if bills%}
+
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Download</button>
+            <button type="button" class="mobile-malaysian d-sm-inline-block btn btn-sm btn-info shadow-sm mr-1" data-toggle="modal" data-target="#" disabled><i class="fas fa-envelope fa-sm text-white mr-1"></i>Send to tenant</button>
+
+            {%endif%}
+          </div>
+        </div>
+        
+        <div class="collapse show" id="collapseCardExample2">
+          <div class="card-body">
+            {% if bills %}
+            <div class="center-btn">
+              <h5 class="font-weight-bold underline">{{tenant_name}}'s <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>statement</h5>
+              <br>
+              <!-- <div>
+                <span class="mr-3">{{endmonth}} :</span>
+                <span class="text-info">Total Bills:</span>
+                <span class="font-weight-bold mr-3"> Kshs {{billtotals}}</span>
+                <span class="text-success"> Paid:</span>
+                <span class="font-weight-bold mr-3"> Kshs {{paidbills}}</span>
+                <span class="text-danger">Balance:</span>
+                <span class="font-weight-bold"> Kshs {{balances}}</span>
+              </div> -->
+            </div>
+            <div class="table-responsive">
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th class="header-cell">Period</th>
+                    <th class="header-cell" data-orderable="false">House</th> 
+                    <th class="header-cell {{rentshow}}" data-orderable="false">Rent</th>
+                    <th class="header-cell {{watershow}}" data-orderable="false">Water</th>
+                    <th class="header-cell {{elecshow}}" data-orderable="false">Elec</th>
+                    <th class="header-cell {{garbageshow}}" data-orderable="false">Garbage</th>
+                    <th class="header-cell {{securityshow}}" data-orderable="false">Security</th>
+                    <th class="header-cell {{serviceshow}}" data-orderable="false">Service</th>                                      
+                    <th class="header-cell {{fineshow}}" data-orderable="false">Fine</th>
+                    <th class="header-cell" data-orderable="false">Arrears</th>
+                    <th class="header-cell" data-orderable="false">Due</th>
+                    <th class="header-cell" data-orderable="false">Paid</th>
+                    <th class="header-cell" data-orderable="false">Values</th>
+                    <th class="header-cell" data-orderable="false">Balance</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for bill in bills%}
+                  <tr>
+                    <td class="data-cell">{{ bill['period'] }}</td>
+                    <td class="data-cell">{{ bill['house'] }}</td>  
+                    <td class="data-cell {{rentshow}}">{{ bill['rent'] }}</td>
+                    <td class="data-cell {{watershow}}">{{ bill['water'] }}</td>
+                    <td class="data-cell {{elecshow}}">{{ bill['elec'] }}</td>
+                    <td class="data-cell {{garbageshow}}">{{ bill['garbage'] }}</td>
+                    <td class="data-cell {{securityshow}}">{{ bill['security'] }}</td>     
+                    <td class="data-cell {{serviceshow}}">{{ bill['service'] }}</td>                                         
+                    <td class="data-cell {{fineshow}}">{{ bill['fine'] }}</td>
+                    <td class="data-cell">{{ bill['arrears'] }}</td>
+                    <td class="data-cell">{{ bill['due'] }}</td>
+                    <td class="data-cell">{{ bill['paid'] }}</td>
+                    <td class="data-cell no-wrap">{{ bill['values']|safe }}</td>
+                    <td class="data-cell">{{ bill['balance'] }}</td>
+
+                  </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr class="bg-info">
+                    <td colspan="2" class="footer-cell squeeze font-weight-bold text-black">Total</td>    
+                    <td class="footer-cell squeeze font-weight-bold text-black {{rentshow}}">{{renttotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{watershow}}">{{watertotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{elecshow}}">{{electotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{garbageshow}}">{{garbagetotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{securityshow}}">{{securitytotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{serviceshow}}">{{servicetotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black {{fineshow}}">{{finetotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold">-</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black">{{duetotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black">{{paidtotal}}</td>
+                    <td class="footer-cell squeeze font-weight-bold">-</td>
+                    <td class="footer-cell squeeze font-weight-bold text-black">{{balance}}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div id="invoice" class="col-lg-12 no-padding dispnon">
+    <div class="car shadow">
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body">
+          {% if bills %}
+          <div class="underline center-btn">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>     
+
+          <div class="center-btn">
+            <h5 class="font-weight-bold">{{tenant_name}}'s <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>statement</h5>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" id="data-table" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th class="header-cell squeeze">Period</th>
+                  <th class="header-cell squeeze" data-orderable="false">House</th> 
+                  <th class="header-cell squeeze {{rentshow}}" data-orderable="false">Rent</th>
+                  <th class="header-cell squeeze {{watershow}}" data-orderable="false">Water</th>
+                  <th class="header-cell squeeze {{elecshow}}" data-orderable="false">Elec</th>
+                  <th class="header-cell squeeze {{garbageshow}}" data-orderable="false">Garbage</th>
+                  <th class="header-cell squeeze {{securityshow}}" data-orderable="false">Security</th>
+                  <th class="header-cell squeeze {{serviceshow}}" data-orderable="false">Service</th>                                        
+                  <th class="header-cell squeeze {{fineshow}}" data-orderable="false">Fine</th>
+                  <th class="header-cell squeeze" data-orderable="false">Arrears</th>
+                  <th class="header-cell squeeze" data-orderable="false">Due</th>
+                  <th class="header-cell squeeze" data-orderable="false">Paid</th>
+                  <!-- <th class="header-cell squeeze" data-orderable="false">Values</th> -->
+                  <th class="header-cell squeeze" data-orderable="false">Balance</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="text-cell squeeze">{{ bill['period'] }}</td>
+                  <td class="text-cell squeeze">{{ bill['house'] }}</td>  
+                  <td class="text-cell squeeze {{rentshow}}">{{ bill['rent'] }}</td>
+                  <td class="text-cell squeeze {{watershow}}">{{ bill['water'] }}</td>
+                  <td class="text-cell squeeze {{elecshow}}">{{ bill['elec'] }}</td>
+                  <td class="text-cell squeeze {{garbageshow}}">{{ bill['garbage'] }}</td>
+                  <td class="text-cell squeeze {{securityshow}}">{{ bill['security'] }}</td>   
+                  <td class="text-cell squeeze {{serviceshow}}">{{ bill['service'] }}</td>                                                                                    
+                  <td class="text-cell squeeze {{fineshow}}">{{ bill['fine'] }}</td>
+                  <td class="text-cell squeeze">{{ bill['arrears'] }}</td>
+                  <td class="text-cell squeeze">{{ bill['due'] }}</td>
+                  <td class="text-cell squeeze">{{ bill['paid'] }}</td>
+                  <!-- <td class="text-cell squeeze no-wrap">{{ bill['values']|safe }}</td> -->
+                  <td class="text-cell squeeze">{{ bill['balance'] }}</td>
+
+                </tr>
+              {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr class="bg-info">
+                  <td colspan="2" class="footer-cell squeeze font-weight-bold text-black">Total</td>    
+                  <td class="footer-cell squeeze font-weight-bold text-black {{rentshow}}">{{renttotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{watershow}}">{{watertotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{elecshow}}">{{electotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{garbageshow}}">{{garbagetotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{securityshow}}">{{securitytotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{serviceshow}}">{{servicetotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black {{fineshow}}">{{finetotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold">-</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black">{{duetotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black">{{paidtotal}}</td>
+                  <td class="footer-cell squeeze font-weight-bold text-black">{{balance}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+          "date-range-pre": function ( a ) {
+              var monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              return monthArr.indexOf(a);	
+          },
+          "date-range-asc": function ( a, b ) {
+              return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+          },
+          "date-range-desc": function ( a, b ) {
+              return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+          }
+      } );
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { type: 'date-range', targets: 0 },{ targets: 0, type: 'natural' } ],
+      columnDefs: [ { type: 'date-range', targets: 0 } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    // $('#data-table').DataTable({
+    //   "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+    //   "pageLength": 100,
+    //   // "bPaginate": false, //hide pagination control
+    //   // "bFilter": false, //hide filter control
+    //   "searching":false,
+    //   // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+    //   // "targets": 'no-sort',
+    //   // "bSort": false,
+    //   // columnDefs: [ { type: 'date-range', targets: 0 },{ targets: 0, type: 'natural' } ],
+    //   columnDefs: [ { type: 'date-range', targets: 0 } ],
+    //   // "info" : false,
+    //   "order": [[ 0, "asc" ]],
+    //   "bLengthChange": false
+    // });
+    // $('.dataTables_length').addClass('bs-select');
+
+    
+    });
+
+    
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

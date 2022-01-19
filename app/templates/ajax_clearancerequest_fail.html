@@ -1,0 +1,42 @@
+
+<div class="card-body">
+  <div class="has-margin-bottom">
+    <span class="text-danger font-weight-bold">{{status}}</span>
+  </div>
+
+  <div class="divbg center-btn">
+    <button id="try-request" type="button" class="bg-gradient-success borderless text-white">Try again</button>
+    <button id="close" type="button" class="bg-gradient-danger borderless text-white"><a class="text-white" href="{{ url_for('api.index') }}">Close</a></button>
+  </div>
+  
+
+</div>
+
+<script>
+  $("#try-request").on('click',function(){
+    $('#proceed-request').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.houseclearancerequest') }}",
+            data: {
+                clr_month:$("#selected_clr_month").val(),
+                description:$("#description").val(),
+                run: "runbalance"
+            },
+            success: function(response) {
+                $("#balance-display").html(response);
+            }
+        });
+  });
+</script>
+
+<!-- <script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script> -->

@@ -1,0 +1,84 @@
+<style>
+    #tt {
+        font-size: 40px;
+        font-family:Calibri;
+        color: blue;
+    }
+    
+    /* #tt table {
+        font-size: 60px;
+        font-family:Calibri;
+    } */
+    
+    </style>
+    
+    <table id="tt" style="width:100%">
+    
+    <tr>
+        <td align ="left">SALE ORDER NO</td>
+        <td align ="right">S01</td>
+    </tr>
+    <tr>
+        <td align ="left">SALE ORDER D/TIME</td>
+        <td align ="right">2009/01/01</td>
+    </tr>
+    
+    <tr>
+        <td align ="left">CUSTOMER</td>
+        <td align ="right">JOHN DOE</td>
+    </tr>
+    
+    </table>
+
+    <span id="randid" class="dispnone">{{randid}}</span>
+    <a id="downbtn" href="/download/receipt/{{randid}}" class="dispnone">download</a>
+  
+  
+  
+
+<script>
+    $(".printbtn").on("click", function() {
+        $('.printbtn').html('<i class="fas fa-spinner fa-spin mr-1"></i>Printing...');
+  
+        // PrintElem("inv")
+        $('#tt').printThis({});
+  
+        $('.printbtn').html('<i class="fas fa-print mr-2"></i>Print');
+  
+    })
+  </script>
+
+<script>
+    $(".savebtn").click(function(){ 
+        $('.savebtn').html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>');
+  
+        if($("#randid").text().length > 9) {
+  
+          $("#downbtn")[0].click();
+        }else{
+  
+            const element = document.getElementById("tt");
+            html2pdf()
+              .from(element)
+              .set({
+                  margin:       [0.2, 0, 0.2, 0], 
+                  filename:"receipt",
+                  image: { type: 'jpeg', quality: 1 },
+                  html2canvas: {
+                    dpi: 192,
+                    scale:4,
+                    letterRendering: true,
+                    useCORS: true
+                  },
+                  pageBreak: { mode: 'css', before:'#nextpage1'},
+                  jsPDF: {orientation: 'portrait', unit: 'in', format: 'a4'}
+      
+                  })
+              .save();
+        }
+  
+        setTimeout(function(){
+            $('.savebtn').html("<i class='fas fa-file-download text-primary mr-2'></i>Save")
+        },5000);
+      });
+  </script>

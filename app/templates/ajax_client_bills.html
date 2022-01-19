@@ -1,0 +1,408 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+      <span id="bill_identifier" class="dispnone"></span>
+      <span id="edit_bill_identifier" class="dispnone"></span>
+      <span id="del_bill_identifier" class="dispnone"></span>
+
+        <div class="container no-padding">
+          <div class="col-12 no-padding mb-1">
+            <div class="card-header py-1 card-bg-alt divjust-end" >
+                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-coins mr-2"></i>Manage client bills</div>
+                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
+            </div>
+          </div>
+
+        </div>
+
+
+        </div>
+        
+        <div class="row">
+          <div id="titletoggler" class="col-lg-12 font-weight-bold text-dark center-btn mb-1 desktop-malaysian">{{current_month}} bills: Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div>
+          <div id="arr-view" class="col-lg-12 no-padding d-none"></div>
+          <div id="result-view" class="col-lg-12 no-padding">
+              <div id="reqdata" class="table-responsive">
+                  <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+                      <thead>
+                          <tr>
+                          <th class="text-info font-weight-bold">Client</th>
+                          <th class="text-primary track-title-cell">Invoice</th>
+                          <th class="text-info track-title-cell">Subscription</th>
+                          <th class="text-danger track-title-cell">Arrears</th>
+                          <th class="text-info track-title-cell">Total</th>
+                          <th class="text-info track-title-cell ">Paid</th>
+                          <th class="text-info track-title-cell  text-danger">BCF</th>
+                          <th class="text-primary track-title-cell">SMS</th>
+                          <th class="text-primary track-title-cell ">Edit</th>
+                          <th class="text-danger track-title-cell ">Delete</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for i in bills%}
+                          <tr>
+                          <td class="first-data-cell font-weight-bold ">{{ i['client']|safe }}</td>
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#invoiceModal"><i class="fas fa-receipt mr-1"></i>View</button>
+                            </div>
+                          </td>
+                          <!-- <td class="data-cell">{{ i['tenant'] }}</td> -->
+                          <td class="data-cell  ">{{ i['sub'] }}</td>
+                          <td class="data-cell {{fieldshow_arr}} text-danger">{{ i['arrears'] }}</td>
+                          <td class="data-cell text-dark font-weight-bold">{{ i['total'] }}</td>
+                          <td class="data-cell  {{i['payhighlight']}} font-weight-bold">{{ i['paid'] }}</td>
+                          
+                          <td class="data-cell  {{i['highlight']}} font-weight-bold">{{ i['balance'] }}</td>
+
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{i['delid']}}" type="button" class="btn action-btn {{i['smsoutline']}} font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="">{{ i['smsstatus']|safe }}</button>
+                            </div>
+                          </td>
+                          <td class="text-s data-cell ">
+                            <div>
+                              <button id="{{i['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  modalTrigger no-wrap"data-toggle="modal" data-target="#editBillModa"><i class="fas fa-cog mr-1"></i>Edit</button>
+                            </div>
+                          </td>
+                          <td class="text-s data-cell ">
+                            <div>
+                              <button id="{{i['billid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" disabled data-toggle="modal" data-target="#discardBillModal"><i class="fas fa-trash-alt mr-1"></i>Discard</button>
+                            </div>
+                          </td>
+
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit monthly bill</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="billeditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editbill" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <span id="update-reloader" class="dispnon"></span>
+          <div class="modal-header pb-0 text-center dispnon">
+            <!-- <h5 class="modal-title text-info" id="paymentDetailModalLabel">INVOICE</h5> -->
+            <div class="modal-title header-elements-inline pb-2 divjust-end">
+              <h5 class="card-title mobile-malaysian">Client invoice</h5>
+              <div class="header-elements">
+                <button id="saveinv" type="button" class="btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button> 
+                <button id="printinv" type="button" class="mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button> 
+                <button id="mailbtn" type="button" class="btn btn-light btn-sm"><i class="fa fa-envelope text-primary mr-2"></i>Email</button>
+                
+              </div>
+
+              <div>
+                <button type="button" class="btn btn-light btn-sm ml-3" data-dismiss="modal"><i class="fa fa-times text-danger mr-2"></i>Close</button>
+              </div>
+          </div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <div class="divjust-end mt-2 dispnone">
+
+                      <!-- <button  id="printinv" class="ml-3 btn btn-outline-success" type="button"></i>Print</button>
+                      <button id="closeModal" class=" mr-3 btn btn-outline-danger"  type="button" data-dismiss="modal"></i>Dismiss</button> -->
+
+                    </div>
+                    
+                    <div class="mt-2" id="invoicebed">
+                      <div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <script>
+      $("#close-propdisp").on('click',function(){
+        $('#body-block').removeClass('dispnone')
+        $('#propdisp').addClass('dispnone');
+      });
+    </script> -->
+    <script>
+      $("#close-propdisp").on('click',function(){
+        $('#body-block').removeClass('dispnone')
+        $('#dynamic-content').addClass('dispnone');
+      });
+    </script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#tenantData').DataTable({
+          "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+          "pageLength": 100,
+          "searching":false,
+          "order": [[ 0, "asc" ]],
+          columnDefs: [ { targets: 0, type: 'natural' } ],
+          // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
+          "bLengthChange": false
+        });
+        $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+
+    <script>
+      var rawIds = "{{ billids|safe }}";
+      var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+      console.log(ids)
+      $.each(ids, function(i,item) {
+      
+        $("#"+item).on('click',function(){
+          console.log("clicked",item)
+          if( isNaN(parseInt(item)) ){
+            if(item.startsWith("deli")){
+              $("#del_bill_identifier").html(item)
+              
+              $("#"+item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+                $.ajax({
+                    url: "{{ url_for('api.sendinvoices') }}",
+                    type: "POST",
+                    data: {
+                          billid:item,
+                          prop:$("#prop_identifier").text(),
+                          target:"isolated"
+                        },
+                    success: function(response) {
+
+                      setTimeout(function(){
+                        $.ajax({
+                          url: "{{ url_for('api.fetchbills') }}",
+                          type: "get",
+                          data: {
+                            propid:  $("#prop_identifier").text(),
+                            target:"sometarget"
+                          },
+                          success: function(response) {
+                            
+                            $("#result-view").html(response);
+                          }
+                      });
+                      }, 5000);
+
+                    },
+                    error: function(xhr) {
+                      $("#"+item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+                      }
+                  });
+
+            }else{
+              $("#edit_bill_identifier").html(item)
+            }
+            
+          }else{
+            $("#bill_identifier").html(item)
+          }
+        });
+      });
+    </script>
+
+<script>
+  $("#editBillModal").on('shown.bs.modal', function(){
+    $("#editbill").removeClass("dispnone");
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text()
+          },
+      success: function(response) {
+        $("#billeditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $('#editBillModal').on('hidden.bs.modal', function () {
+    $("#edit_bill_identifier").empty();
+})
+</script>
+
+<script>
+  $("#editbill").click(function(){   
+    $("#editbill").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent").val(),
+                water: $("#edit_water").val(),
+                garbage: $("#edit_garbage").val(),
+                security: $("#edit_security").val(),
+                electricity: $("#edit_electricity").val(),
+                agreement: $("#edit_agreement").val(),
+                fine: $("#edit_penalty").val(),
+                deposit: $("#edit_deposit").val(),
+                maintenance: $("#edit_maintenance").val(),
+                arrears: $("#edit_arrears").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+          $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"sometarget"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+            });
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#editbill").html("Update")
+            $("#closeModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#invoiceModal").on('shown.bs.modal', function(){
+    $('#mailbtn').removeAttr('disabled');
+    $('#mailbtn').html('<i class="fas fa-envelope text-primary mr-2"></i>Email');
+
+    $("#invoicebill").removeClass("dispnone");
+
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.clientinvoice') }}",
+      type: "get",
+      data: {
+            clientbillid: $("#bill_identifier").text()
+          },
+      success: function(response) {
+        $("#invoicebed").html(response);
+      },
+      error: function(xhr) {
+        $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $('#invoiceModal').on('hidden.bs.modal', function () {
+    $("#bill_identifier").empty();
+    $("#invoicebed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+})
+</script>
+
+
+<script>
+    function tabletoggler() {
+      var x = document.getElementById("expandtoggler");
+      if (x.innerHTML === "expand") {
+        x.innerHTML = "minimise";
+      } else {
+        x.innerHTML = "expand";
+      }
+    }
+</script>
+
+<script>
+  $('#expand').click(function(){
+    $('.expand').toggleClass("dispnone-alt")
+    tabletoggler();
+  })
+</script>
+
+<script>
+  $("#arrbtn").on('click',function(){
+    $("#arrbtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+    $.ajax({
+      url: "/arrears",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier").text()
+          },
+      success: function(response) {
+        $('#result-view').toggleClass("d-none");
+        $('#arr-view').toggleClass("d-none");
+        $('#arrbtn').toggleClass("d-none");
+        $('#titletoggler').toggleClass("d-none");
+        $('#closebtn').toggleClass("d-none");
+        $("#arr-view").html(response);
+      },
+      error: function(xhr) {
+        // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+        }
+    });
+
+  });
+</script>
+
+
+<script>
+  $("#closebtn").on('click',function(){
+    $("#arrbtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Arrears comparison report</span>")
+    $('#result-view').toggleClass("d-none");
+    $('#arr-view').toggleClass("d-none");
+    $('#arrbtn').toggleClass("d-none");
+    $('#titletoggler').toggleClass("d-none");
+    $('#closebtn').toggleClass("d-none");
+  });
+</script>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>KiotaPay - Receipt</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
+
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div class="mb-2 hide center-btn">
+    Official receipt
+  </div>
+
+  <div id="invoice">
+    <div id="invoice-PO" class="invalid">
+
+      <div id="invalid">
+
+        <div class="r-border">
+          <div class="center-btn svg underline m-4 shadow">
+            <div class="svg-child">
+              <div class="logo">
+                <span><img src={{logopath}} alt="logo"></span>
+              </div>
+    
+              <div class="center-btn mb-4 small ln-16 text-info"> 
+                <div class="">Address : {{company.street_address}}</div>
+                <div class="">PO BOX : {{company.mail_box}}</div>
+                <div class="">Tel : {{company.phone}}</div>
+                <div class="">Email: {{company.email}}</div>
+              </div>
+              
+            </div>
+          </div>
+
+          <div class="hide mb-2 pt-2">
+            HIDDEN
+          </div>
+        
+          <div class="svg">
+            <div class="svg-child text-left">         
+              <div class="small mb-4 center-btn watermark">
+                <span class="">LINK INVALID</span>                 
+              </div>
+            </div>
+          </div>
+  
+    
+          <div class="svg">
+            <div class="small service mb-1 pb-1 svg-child">
+                <div class="text-danger itemtext center-btn p-4" style="font-style: oblique;">Receipt not found. The link may be broken or invalid. Kindly check the link and try again. <a href="https://kiotapay.com">Learn more</a></div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+      </div>
+
+  </div>
+
+</body>

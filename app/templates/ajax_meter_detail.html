@@ -1,0 +1,1882 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+      <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+      <span id="meter_identifier" class="dispnon"></span>
+      <span id="edit_meter_identifier" class="dispnone"></span>
+      <span id="del_meter_identifier" class="dispnone"></span>
+      <span id="reading_identifier" class="dispnone"></span>
+      <span id="edit_reading_identifier" class="dispnone"></span>
+      <span id="del_reading_identifier" class="dispnone"></span>
+      <span id="current-reloader" class="dispnone">default</span>
+      <a id="download_meters" href="/download/template/meters" class="dispnone">download</a>
+      <a id="download_readings" href="/download/template/readings" class="dispnone">download</a>
+
+
+
+        <div class="">
+            <div class="divjust-end mb-2 underline-thin">
+              
+              <i class="fa fa-building fa-2x text-info"></i>
+              <div class="center-btn font-weight-bold text-success mb-2 text-xx">Meters & Reading</div>
+              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
+             
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="">
+                        <div class="text-xx mb-2 center-btn text-info font-weight-bold">{{prop.name}}</div>
+
+                        <div class="mb-3 center-btn">
+                          
+                          <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal" data-target="#exampleModal"><span class="fixed-width-prop"><img src="{{ prop.image_url }}" alt="No image"/></span></button>
+                          
+                        </div>
+  
+                    </div>
+                </div>
+
+                <div class="col-lg-4 text-info">
+                  <div class="info-item">
+                    <button type="button" class="borderless btn-success fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#meterReadingModal"><i class="fas fa-pen ml-4"></i><span class="mr-4">Readings input</span></button>
+                  </div>
+                  <div class="info_item">
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#manualBillingModal"><i class="fas fa-upload ml-4"></i><span class="mr-4">Readings upload</span></button>
+                  </div>
+                  <div class="info_item">
+                    <button type="button" class="borderless btn-dark fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#newMeterModal"><i class="fas fa-plus ml-4"></i><span class="mr-4">Add new Meter</span></button>
+                  </div>
+
+
+                </div>
+
+                <div class="col-lg-3 dispnone">
+
+                  <div class="toggleswitch divcol text-success mt-2">
+                    <span>
+                      <label class="switch">
+                        <input id="watertoggle" type="checkbox" checked>
+                        <span class="slider round"></span>
+                      </label>
+                      <span class="smallify ml-3">Water</span>
+                    </span>
+          
+                    <span>
+                      <label class="switch">
+                        <input id="electoggle" type="checkbox">
+                        <span class="slider round"></span>
+                      </label>
+                      <span class="smallify ml-3">Electricity</span>
+                    </span>
+          
+                  </div>
+
+                </div>
+                <div id="meter_overview" class="col-lg-4">
+
+                  <div class="info_item pt-2">
+                    <i class="fas fa-house-user"></i>
+                    <span>Metered Units:</span>
+                    <span class="text-info">{{metered_units}}</span><br>
+
+                    <i class="fas fa-house-user"></i>
+                    <span>Read units:</span>
+                    <span class="text-info">{{read_units}}</span><br>
+                    
+                    <i class="fas fa-house-user"></i>
+                    <span>Unread units units:</span>
+                    <span class="text-info"> {{unread_units}}</span>
+                  </div>
+
+              </div>
+            </div>
+        
+
+        <div class="toggleswitch divbg mb-3 underline text-info mt-2">
+          <span>
+            <span class="smallify">Meters</span>
+            <label class="switch">
+              <input id="metertoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+          <span>
+            <span class="smallify">{{current_month}} readings</span>
+            <label class="switch">
+              <input id="reporttoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+        
+          <span class="">
+            <span class="smallify">{{period}} readings</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+        </div>
+
+        <div id="result-view" class="row">
+          <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Next billing period (<span class="text-info">{{period}}</span>) readings:</div>
+          <div class="col-lg-12 no-padding">
+              <div id="reqdata" class="table-responsive">
+                  <table id="readingData" class="table shadow" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th class="text-info font-weight-bold">Meter.</th>
+                          <th class="text-info track-title-cell">House.</th>
+                          <th class="text-info track-title-cell">Prev.</th>
+                          <th class="text-info track-title-cell">Curr</th>
+                          <th class="text-info track-title-cell">Units</th>
+                          <th class="text-info track-title-cell">Rate</th>
+                          <th class="text-info track-title-cell">Charge</th>
+                          <th class="text-info track-title-cell">Month</th>
+                          <th class="text-info track-title-cell">Date</th>
+                          <th class="text-info track-title-cell">Edit</th>
+                          <th class="text-info track-title-cell">Edit</th>
+                          <th class="text-info track-title-cell">Delete</th>
+
+
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for bill in bills%}
+                        <tr>
+                          <td class="first-data-cell text-dark font-weight-bold">{{ bill['meter'] }}</td>
+                          <td class="data-cell">{{ bill['house'] }}</td>
+                          <td class="data-cell">{{ bill['last_reading'] }}</td>
+                          <td class="data-cell">{{ bill['reading'] }}</td>
+                          <td class="data-cell">{{ bill['units'] }}</td>
+                          <td class="data-cell">{{ bill['rate'] }}</td>
+                          <td class="data-cell {{bill['highlight']}}">{{ bill['charged'] }}</td>
+                          <td class="data-cell">{{ bill['period'] }}</td>
+                          <td class="data-cell">{{ bill['date'] }}</td>
+
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['id']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editUnitsModal"><i class="fas fa-cog mr-1"></i>units</button>
+                            </div>
+                          </td>
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editReadingModal"><i class="fas fa-cog mr-1"></i>readings</button>
+                            </div>
+                          </td>
+
+                          <td class="text-s data-cell">
+                            <div>
+                              <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#deleteReadingModal"><i class="fas fa-trash-alt mr-1"></i>readings</button>
+                            </div>
+                          </td>
+
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+        </div>
+    </section>
+    <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editReadingModal"></button> -->
+    <!--================Contact Area =================-->
+
+    <div class="text-center">
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload property photo</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+
+                  <div class="position-relative">
+                    <form class="divbg" action="/change/prop/image" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected" multiple required/>
+                        <label for="file-1"><span>Choose an image&hellip;</span></label>
+                        <input type="text" name="propid" class="d-none" value="{{prop.id}}">
+                        <input type="submit" class="borderless bg-danger" value="Upload">
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foote">
+              <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="meterReadingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Water readings <span class="ml-5"><button id="switch-elec" class="borderless btn btn-outline-info" data-toggle="modal" data-target="#elecReadingModal"><i class="fas fa-sync-alt"></i></button></span></h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons mt-2">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="house" class="form-control" id ="select_house" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="center-btn mb-1" id="alerts-meterreading"></div>
+                      <div id="dynamic_div">
+                        <div class="form-group">
+                          <input id="reading" class="form-control" type="text" name="rentrate" placeholder="type reading here" disabled>
+                        </div>
+                      </div>
+                      <div id="units_consumed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="capture" type="button" class="btn-secondary borderless text-white" disabled>Capture</button>
+                        <button id="close-water" class="btn btn-danger" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="manualBillingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload water readings</span>
+              <div>
+                <button id="downloadreadings" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <span>Upload current readings:</span>
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Excel File: <input class="ph" id="waterbillfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadwaterbill" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="elecReadingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info">Electricity readings <span class="ml-5"><button id="switch-water" class="borderless btn btn-outline-info" data-toggle="modal" data-target="#meterReadingModal"><i class="fas fa-exchange-alt"></i></button></span></h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons mt-2">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="house" class="form-control" id ="select_house_alt" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="center-btn mb-1" id="alerts-meterreading-alt"></div>
+                      <div id="dynamic_div_alt">
+                        <div class="form-group">
+                          <input id="reading-alt" class="form-control" type="text" name="rentrate" placeholder="type reading here" disabled>
+                        </div>
+                      </div>
+                      <div id="units_consumed_alt"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="capture-alt" type="button" class="btn-secondary borderless text-white" disabled>Capture</button>
+                        <button id="close-elec" class="btn btn-danger" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editReadingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Edit readings</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="alerts-editreading mb-2 mt-2">
+                        <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+                      </div>
+
+                      <div class="form-group row">
+                        <div class="col-sm-4">
+                          <input id="edit-lreading" class="form-control" type="text" placeholder="edit lastreading">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <input id="edit-creading" class="form-control" type="text" placeholder="edit currentreading">
+                        </div>
+
+                        <div class="col-sm-4">
+                          <input id="new-units" class="form-control text-danger" type="text" placeholder="" disabled>
+                        </div>
+                      </div>
+                      <hr>
+
+                    
+                      <div class="divbg center-btn">
+                        <button id="updatereading" type="button" class="btn-secondary borderless text-white" disabled>Update</button>
+                        <button class="btn btn-danger closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editUnitsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Edit units</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="alerts-editreading"></div>
+                     
+                        <div class="form-group">
+                          <input id="editunits" class="form-control" type="text" placeholder="edit units here">
+                        </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="updateunits" type="button" class="btn-secondary borderless text-white" disabled>Update</button>
+                        <button class="btn btn-danger closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="deleteReadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to permanently delete this reading?</span>
+          </div>
+          <div class="has-margin-bottom divbg">
+              <button id="del_reading" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newMeterModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Add new <span id="metertype-persist" class="text-warning"></span> meter</span>
+              <div>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#meterUploadModal"><i class="fa fa-upload"></i></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group">
+                        <select class="form-control" id="metertype">
+                          <option disabled selected value> -- Select meter type -- </option>
+                          <option value="water">Water</option>
+                          <option value="electricity">Electricity</option>
+                        </select>
+                        <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
+                      </div>
+
+          
+                      <div class="form-group mt-2">                        
+                        <input id="meternum" class="form-control text-info pl-5" type="text" placeholder="Meter number">
+                        <span class="fa fa-fw fa-circle-notch field-icon-two text-info"></span>
+                      </div>
+
+                      <div id="alerts-newmeter"></div>
+
+                      <div class="form-group dispnone">
+                        <input type="text" id="serialnum" class="form-control pl-5" id="url-box" placeholder="Serial  number...">
+                        <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                      </div>
+            
+                      <div class="form-group dispnon">
+                        <select class="form-control" id="decitype">
+                          <option disabled selected value> -- Select decimal type -- </option>
+                          <option value="0">0</option>
+                          <option value="1">0.0</option>
+                          <option value="2">0.00</option>
+                        </select>
+                        <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
+                      </div>
+
+                      <div class="form-group">
+                        <input id="initreading"  type="text" class="form-control pl-5"placeholder="Initial reading...">
+                        <span class="fa fa-fw fa-clock field-icon-two text-info"></span>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="submit-meter" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="meterUploadModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload meters</span>
+              <div>
+                <button id="downloadmeters" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <span>Upload excel meter data:</span>
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Excel File: <input class="ph" id="meterfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadmeterexcel" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="modal fade" id="editMeterModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Edit meter</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+            
+                      <div class="form-group">
+                        <select class="form-control" id="edit_decitype">
+                          <option disabled selected value> -- Select decimal type -- </option>
+                          <option value="0">0</option>
+                          <option value="1">0.0</option>
+                          <option value="2">0.00</option>
+
+                        </select>
+                        <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
+                      </div>
+
+                      <div class="form-group">
+                        <input id="edit_initreading"  type="text" class="form-control pl-5"placeholder="edit initial reading">
+                        <span class="fas fa-edit field-icon-two text-info"></span>
+                      </div>
+                    
+                      <div id="buttons" class="divbg center-btn">
+                        <button id="update-meter" type="button" class="btn-success borderless text-white">Submit</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="allocateMeterModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Meter allocation</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="selected_house" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="allocate-meter" type="button" class="btn-secondary borderless text-white" disabled>Allocate</button>
+                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="meterRemovalModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title mb-3" id="paymentDetailModalLabel">Meter removal</h5>
+            <span class="text-gray-900"><span id="metername" class="text-info">
+              <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+            </span></span>
+            <div class="alert-msgs mb-3"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div id="clearance_notifications"></div>
+                   
+                      <div class="divbg center-btn mt-3">
+                        <button id="removemeterbtn" type="button" class="btn-danger borderless text-white">Remove</button>
+                        <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+
+<script>
+  $("#close-propdisp").on('click',function(){
+    $('#proplist').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+    $('#content-area').removeClass("isopen text-danger");
+  });
+</script>
+
+<script>
+    $("#metertoggle").on('change',function(){
+    var cb2 = document.getElementById("metertoggle");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb3 = document.getElementById("reporttoggle2");
+      cb3.checked = false;
+      // $("#update-reloader").html("current");
+      // $("#allocate-reloader").html("current");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchmeters') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle").on('change',function(){
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb3 = document.getElementById("metertoggle");
+      cb3.checked = false;
+
+      $("#current-reloader").html("old");
+
+      // $("#update-reloader").html("new");
+      // $("#allocate-reloader").html("new");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"old"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb3 = document.getElementById("metertoggle");
+      cb3.checked = false;
+
+      $("#current-reloader").html("default");
+      // $("#update-reloader").html("current");
+      // $("#allocate-reloader").html("current");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+    }
+  
+  });
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#readingData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 1, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+  var rawIds = "{{ readingids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_reading_identifier").html(item)
+        }else{
+          $("#edit_reading_identifier").html(item)
+        }
+      }else{
+        $("#reading_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
+
+
+<script>
+  $("#uploadwaterbill").on('click',function(){
+      $("#uploadwaterbill").html("Uploading...") 
+
+      url = "{{ url_for('api.capturereading') }}"
+
+      var fd = new FormData();
+      var files = $('#waterbillfile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadwaterbill").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadwaterbill").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              // setTimeout(function(){
+              //   $.ajax({
+              //     url: "{{ url_for('api.fetchtenants') }}",
+              //     type: "get",
+              //     data: {
+              //       propid:  $("#prop_identifier").text(),
+              //       target: "somestring"
+              //     },
+              //     success: function(response) {
+                    
+              //       $("#result-view").html(response);
+              //     }
+              //   });
+              // },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadwaterbill").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadwaterbill").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+
+<script>
+  $("#downloadmeters").click(function(){ 
+      $('#downloadmeters').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_meters")[0].click();
+
+        setTimeout(function(){
+            $('#downloadmeters').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
+
+<script>
+  $("#downloadreadings").click(function(){ 
+      $('#downloadreadings').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_readings")[0].click();
+
+        setTimeout(function(){
+            $('#downloadreadings').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
+
+<script>
+      
+  $("#meterUploadModal").on('shown.bs.modal', function(){
+    $(".dismissparent").click();
+  });
+
+</script>
+
+
+<script>
+  $("#uploadmeterexcel").on('click',function(){
+      $("#uploadmeterexcel").html("Uploading...") 
+
+      url = "{{ url_for('api.createmeter') }}"
+
+      var fd = new FormData();
+      var files = $('#meterfile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadmeterexcel").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadmeterexcel").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              // setTimeout(function(){
+              //   $.ajax({
+              //     url: "{{ url_for('api.fetchtenants') }}",
+              //     type: "get",
+              //     data: {
+              //       propid:  $("#prop_identifier").text(),
+              //       target: "somestring"
+              //     },
+              //     success: function(response) {
+                    
+              //       $("#result-view").html(response);
+              //     }
+              //   });
+              // },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadmeterexcel").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadmeterexcel").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+
+
+  <script>
+    $(document).ready(function(){
+      $("#newMeterModal").on('shown.bs.modal', function(){
+        $(this).find('#meternum').focus();
+      });
+    });
+  </script>
+
+<script>
+    
+  $("#metertype").on('change',function(){
+    $("#metertype-persist").html($("#metertype").val());
+  });
+  
+  </script>
+
+  <script>
+    $("#meternum").keyup(function(){
+      var metertype = $("#metertype-persist").text()
+      if (!metertype){
+        metertype = $("#metertype").val()
+      }
+
+      var empty = false;
+    
+      if ($('#meternum').val() == "") {
+          empty = true;
+      }
+
+      if (empty) {
+          $('#submit-meter').attr('disabled', 'disabled');
+          $('#submit-meter').removeClass('btn-success')
+          $('#submit-meter').addClass('btn-secondary')
+      } else {
+        $('#submit-meter').removeAttr('disabled');
+        $('#submit-meter').removeClass('btn-secondary')
+        $('#submit-meter').addClass('btn-success')
+      }    
+        $.ajax({
+          url: "{{ url_for('api.createmeter') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  metertype:metertype,
+                  meternum: $("#meternum").val(),
+                  runalert: "run"
+              },
+          success: function(response) {
+            $("#alerts-newmeter").html(response);
+            // setTimeout(function(){
+            //   $("#notifications").empty();
+            // }, 2000);
+          }
+        });
+    });
+    </script>
+
+<script>
+  $("#submit-meter").click(function(){
+    var metertype = $("#metertype-persist").text()
+      if (!metertype){
+        metertype = $("#metertype").val()
+      }
+    $("#submit-meter").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.createmeter') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                metertype:metertype,
+                meternum: $("#meternum").val(),
+                serialnum: $("#serialnum").val(),
+                initreading: $("#initreading").val(),
+                decitypee: $("#decitype").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+
+          $.ajax({
+                url: "{{ url_for('api.fetchmeters') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#alerts-newmeter").empty();
+            $('#submit-meter').attr('disabled', 'disabled');
+            $('#submit-meter').removeClass('btn-success')
+            $('#submit-meter').addClass('btn-secondary')
+            $("#submit-meter").html("submit")
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+<script>
+      
+  $("#editMeterModal").on('shown.bs.modal', function(){
+    $("#update-meter").html('Update');
+  });
+
+</script>
+
+
+
+
+
+<script>
+  $("#update-meter").click(function(){   
+    $("#update-meter").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatemeter') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                meter_id: $("#edit_meter_identifier").text(),
+                decitype: $("#edit_decitype").val(),
+                reading: $("#edit_initreading").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html("<span class='text-success font-weight-bold'>Success</span>");
+          $.ajax({
+                url: "{{ url_for('api.fetchmeters') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#update-meter").html("Updated !")
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+
+<script>
+      
+  $("#allocateMeterModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatemeters') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            meterid: $("#meter_identifier").text(),
+            run:"houselist"
+          },
+      success: function(response) {
+        $("#selected_house").html(response); 
+      }
+    });
+  });
+
+</script>
+
+
+<script>
+    
+  $("#selected_house").on('change',function(){
+    $("#allocate-meter").removeAttr('disabled');
+    $("#allocate-meter").removeClass('btn-secondary')
+    $("#allocate-meter").addClass('btn-success')
+   
+  });
+  
+  </script>
+
+
+<script>
+  $("#allocate-meter").click(function(){   
+    $("#allocate-meter").html('<i class="fas fa-sync-alt fa-spin mr-2"></i><span class="smallify">Allocating...</span>')
+      $.ajax({
+        url: "{{ url_for('api.allocatemeters') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#selected_house").val(),
+                meterid: $("#meter_identifier").text()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+
+          $.ajax({
+                url: "{{ url_for('api.fetchmeters') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $(".closemodal").click();
+            $('#allocate-meter').attr('disabled', 'disabled');
+            $('#allocate-meter').removeClass('btn-success')
+            $('#allocate-meter').addClass('btn-secondary')
+            $("#allocate-meter").html('<span class="smallify">Allocate</span>')
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#meterRemovalModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.meterremoval') }}",
+      type: "get",
+      data: {
+            meter_id: $("#del_meter_identifier").text(),
+            target:"somestring"
+          },
+      success: function(response) {
+        $("#metername").html(response);  
+      }
+    });
+  });
+</script>
+
+
+<script>
+  // this script perrforms actual clearance
+  $("#removemeterbtn").click(function(){   
+      $("#metername").empty();
+
+      $("#removemeterbtn").html("Removing...")  
+      $.ajax({
+        url: "{{ url_for('api.meterremoval') }}",
+        type: "POST",
+        data: {
+                meter_id: $("#del_meter_identifier").text()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".dismissmodal").click();
+            $("#clearance_notifications").empty();
+            $("#removemeterbtn").html("Remove")
+          }, 2000);
+          $.ajax({
+                url: "{{ url_for('api.fetchmeters') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"default"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<script>
+      
+  $("#meterReadingModal").on('shown.bs.modal', function(){
+    $("#alerts-meterreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.capturereading') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            run:"houselist"
+          },
+      success: function(response) {
+        $("#select_house").html(response);
+        $("#select_house option:eq('1')").attr("selected", "selected");
+        $("#select_house").change();     
+      }
+    });
+  });
+
+  $("#elecReadingModal").on('shown.bs.modal', function(){
+    $("#alerts-meterreading-alt").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.capturereading') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            run:"houselist-alt"
+          },
+      success: function(response) {
+        $("#select_house_alt").html(response);
+        $("#select_house_alt option:eq('1')").attr("selected", "selected");
+        $("#select_house_alt").change();     
+      }
+    });
+  });
+
+</script>
+
+<script>
+    
+$("#select_house").on('change',function(){
+  $("#reading").removeAttr('disabled');
+ 
+  $.ajax({
+    url: "{{ url_for('api.capturereading') }}",
+    type: "POST",
+    data: {
+          propid: $("#prop_identifier").text(),
+          house: $("#select_house").val(),
+          readtype:"water",
+          run:"run-reading"
+        },
+    success: function(response) {
+      $("#alerts-meterreading").html(response);
+      
+    }
+  });
+});
+
+$("#select_house_alt").on('change',function(){
+  $("#reading-alt").removeAttr('disabled');
+ 
+  $.ajax({
+    url: "{{ url_for('api.capturereading') }}",
+    type: "POST",
+    data: {
+          propid: $("#prop_identifier").text(),
+          house: $("#select_house_alt").val(),
+          readtype:"electricity",
+          run:"run-reading"
+        },
+    success: function(response) {
+      $("#alerts-meterreading-alt").html(response);
+      
+    }
+  });
+});
+
+</script>
+
+<script>
+  $("#reading").keyup(function(){
+    var empty = false;
+    // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+    if ($('#reading').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#capture').attr('disabled', 'disabled');
+        $('#capture').removeClass('btn-success')
+        $('#capture').addClass('btn-secondary')
+    } else {
+      $('#capture').removeAttr('disabled');
+      $('#capture').removeClass('btn-secondary')
+      $('#capture').addClass('btn-success')
+    }  
+  
+      $.ajax({
+        url: "{{ url_for('api.capturereading') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#select_house").val(),
+                reading: $("#reading").val(),
+                readtype:"water",
+                run:"run-units"
+            },
+        success: function(response) {
+          $("#units_consumed").html(response);
+        },
+        error: function(xhr) {
+          //alert(xhr);
+        }
+      });
+  });
+
+  $("#reading-alt").keyup(function(){
+    var empty = false;
+    // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+    if ($('#reading-alt').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#capture-alt').attr('disabled', 'disabled');
+        $('#capture-alt').removeClass('btn-success')
+        $('#capture-alt').addClass('btn-secondary')
+    } else {
+      $('#capture-alt').removeAttr('disabled');
+      $('#capture-alt').removeClass('btn-secondary')
+      $('#capture-alt').addClass('btn-success')
+    }  
+  
+      $.ajax({
+        url: "{{ url_for('api.capturereading') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#select_house_alt").val(),
+                reading: $("#reading-alt").val(),
+                readtype:"electricity",
+                run:"run-units"
+            },
+        success: function(response) {
+          $("#units_consumed_alt").html(response);
+        },
+        error: function(xhr) {
+          //alert(xhr);
+        }
+      });
+  });
+
+  </script>
+
+
+<script>
+  $("#capture").click(function(){   
+    $("#capture").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.capturereading') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#select_house").val(),
+                reading: $("#reading").val(),
+                readtype:"water"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $("#alerts-meterreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+          
+          setTimeout(function(){
+            $("#units_consumed").empty();
+            // $("#alerts-meterreading").empty();
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#capture').attr('disabled', 'disabled');
+            $('#capture').removeClass('btn-success')
+            $('#capture').addClass('btn-secondary')
+            $("#capture").html("Capture")
+          }, 2000);
+
+          $.ajax({
+            url: "{{ url_for('api.capturereading') }}",
+            type: "POST",
+            data: {
+                  propid: $("#prop_identifier").text(),
+                  run:"houselist"
+                },
+            success: function(response) {
+              $("#select_house").html(response);
+              $("#select_house option:eq('1')").attr("selected", "selected");
+              // $("#select_house").change();
+              $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:"default"
+                    },
+                success: function(response) {
+                  $("#result-view").html(response);
+                  // $("#select_house option:eq('1')").attr("selected", "selected");
+                  $("#select_house").change();     
+                }
+                
+              });
+            }
+            
+          });
+
+          $.ajax({
+                url: "{{ url_for('api.capturereading') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:"meter overview"
+                    },
+                success: function(response) {
+                  $("#meter_overview").html(response);   
+                }
+                
+              });
+          
+        }
+      });
+  });
+
+  $("#capture-alt").click(function(){   
+    $("#capture-alt").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.capturereading') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                house: $("#select_house_alt").val(),
+                reading: $("#reading-alt").val(),
+                readtype:"electricity"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $("#alerts-meterreading-alt").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+          
+          setTimeout(function(){
+            $("#units_consumed_alt").empty();
+            // $("#alerts-meterreading").empty();
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#capture-alt').attr('disabled', 'disabled');
+            $('#capture-alt').removeClass('btn-success')
+            $('#capture-alt').addClass('btn-secondary')
+            $("#capture-alt").html("Capture")
+          }, 2000);
+
+          $.ajax({
+            url: "{{ url_for('api.capturereading') }}",
+            type: "POST",
+            data: {
+                  propid: $("#prop_identifier").text(),
+                  run:"houselist-alt"
+                },
+            success: function(response) {
+              $("#select_house_alt").html(response);
+              $("#select_house_alt option:eq('1')").attr("selected", "selected");
+              // $("#select_house").change();
+              $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:"default"
+                    },
+                success: function(response) {
+                  $("#result-view").html(response);
+                  // $("#select_house option:eq('1')").attr("selected", "selected");
+                  $("#select_house_alt").change();     
+                }
+                
+              });
+            }
+            
+          });
+          
+        }
+      });
+  });
+
+</script>
+
+
+
+<script>
+  // This script displays reading data to be edited
+  $("#editReadingModal").on('shown.bs.modal', function(){
+    $.ajax({
+              type: "get",
+              url: "{{ url_for('api.editreading') }}",
+              data: {
+                  reading_id:$("#edit_reading_identifier").text(),
+                  target: "default"
+              },
+              success: function(response) {
+                $(".alerts-editreading").html(response);
+              }
+          });
+  });
+</script>
+
+<script>
+  // This script resets preloader
+  $("#editReadingModal").on('hidden.bs.modal', function(){
+    $(".alerts-editreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+  });
+</script>
+
+<script>
+  // This script displays reading data to be edited
+  $("#editUnitsModal").on('shown.bs.modal', function(){
+    $.ajax({
+              type: "get",
+              url: "{{ url_for('api.editreading') }}",
+              data: {
+                  reading_id:$("#reading_identifier").text(),
+                  target: "edit units"
+              },
+              success: function(response) {
+                $(".alerts-editreading").html(response);
+              }
+          });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+<script>
+  $("#edit-creading").keyup(function(){
+    var empty = false;
+    if ($('#edit-creading').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#updatereading').attr('disabled', 'disabled');
+        $('#updatereading').removeClass('btn-success')
+        $('#updatereading').addClass('btn-secondary')
+    } else {
+      $('#updatereading').removeAttr('disabled');
+      $('#updatereading').removeClass('btn-secondary')
+      $('#updatereading').addClass('btn-success')
+    }  
+  
+      $.ajax({
+        url: "{{ url_for('api.editreading') }}",
+        type: "POST",
+        data: {
+                reading_id: $("#edit_reading_identifier").text(),
+                lreading: $("#edit-lreading").val(),
+                reading: $("#edit-creading").val(),
+                target: "dispunits"
+            },
+        success: function(response) {
+          $("#new-units").val(response);
+        },
+        error: function(xhr) {
+          //alert(xhr);
+        }
+      });
+  });
+  </script>
+
+<script>
+  $("#edit-lreading").keyup(function(){
+    var empty = false;
+    if ($('#edit-lreading').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#updatereading').attr('disabled', 'disabled');
+        $('#updatereading').removeClass('btn-success')
+        $('#updatereading').addClass('btn-secondary')
+    } else {
+      $('#updatereading').removeAttr('disabled');
+      $('#updatereading').removeClass('btn-secondary')
+      $('#updatereading').addClass('btn-success')
+    }  
+  
+      $.ajax({
+        url: "{{ url_for('api.editreading') }}",
+        type: "POST",
+        data: {
+                reading_id: $("#edit_reading_identifier").text(),
+                lreading: $("#edit-lreading").val(),
+                reading: $("#edit-creading").val(),
+                target: "dispunits"
+            },
+        success: function(response) {
+          $("#new-units").val(response);
+        },
+        error: function(xhr) {
+          //alert(xhr);
+        }
+      });
+  });
+  </script>
+
+<script>
+  $("#editunits").keyup(function(){
+    var empty = false;
+    if ($('#editunits').val() == "" ) {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#updateunits').attr('disabled', 'disabled');
+        $('#updateunits').removeClass('btn-success')
+        $('#updateunits').addClass('btn-secondary')
+    } else {
+      $('#updateunits').removeAttr('disabled');
+      $('#updateunits').removeClass('btn-secondary')
+      $('#updateunits').addClass('btn-success')
+    }  
+  
+  });
+  </script>
+
+<script>
+  $("#updatereading").click(function(){   
+    $("#updatereading").html("Updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editreading') }}",
+        type: "POST",
+        data: {
+          reading_id: $("#edit_reading_identifier").text(),
+          lreading: $("#edit-lreading").val(),
+          reading: $("#edit-creading").val(),
+          target: "edit readings"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:$("#current-reloader").text()
+                    },
+                success: function(response) {
+                  $("#result-view").html(response);   
+                }
+                
+              });
+          
+          setTimeout(function(){
+            $("#new_units").empty();
+            $(".alerts-editreading").empty();
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#updatereading').attr('disabled', 'disabled');
+            $('#updatereading').removeClass('btn-success')
+            $('#updatereading').addClass('btn-secondary')
+            $("#updatereading").html("Update")
+          }, 1200);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#updateunits").click(function(){   
+    $("#updateunits").html("Updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editreading') }}",
+        type: "POST",
+        data: {
+          reading_id: $("#reading_identifier").text(),
+          units: $("#editunits").val(),
+          target: "edit units"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $.ajax({
+                url: "{{ url_for('api.fetchreadings') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:$("#current-reloader").text()
+                    },
+                success: function(response) {
+                  $("#result-view").html(response);  
+                }
+                
+              });
+          
+          setTimeout(function(){
+            $(".alerts-editreading").empty();
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#updateunits').attr('disabled', 'disabled');
+            $('#updateunits').removeClass('btn-success')
+            $('#updateunits').addClass('btn-secondary')
+            $("#updateunits").html("Update")
+          }, 1200);
+        }
+      });
+  });
+</script>
+
+<script>
+      
+  $("#del_reading").on('click',function(){   
+    $('#del_reading').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>removing...'); 
+    $.ajax({
+      url: "{{ url_for('api.editreading') }}",
+      type: "POST",
+      data: {
+            reading_id:$("#del_reading_identifier").text(),
+            target:"delete"
+          },
+      success: function(response) {
+        
+        // $(".alert-msgs").html(response);
+        $('#del_reading').html('Delete');
+
+        $.ajax({
+                url: "{{ url_for('api.capturereading') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier").text(),
+                      target:"meter overview"
+                    },
+                success: function(response) {
+                  $("#meter_overview").html(response);   
+                }
+                
+              });
+
+        $.ajax({
+              url: "{{ url_for('api.fetchreadings') }}",
+              type: "get",
+              data: {
+                    propid: $("#prop_identifier").text(),
+                    target:$("#current-reloader").text()
+                  },
+              success: function(response) {
+                $("#result-view").html(response);  
+              }
+              
+            });
+
+          $(".closemodal").click();
+                   
+      }
+    });
+  });
+  
+  </script>
+
+
+
+
+<script>
+  $("#switch-elec").click(function(){   
+    // $("#edithouse").html("")
+    $("#close-water").click();
+  });
+</script>
+
+<script>
+  $("#switch-water").click(function(){   
+    // $("#edithouse").html("")
+    $("#close-elec").click();
+  });
+</script>
+
+
+

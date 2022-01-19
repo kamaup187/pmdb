@@ -1,0 +1,107 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="formwrapper">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 bg-gradient-dark divjust-end" >
+                        <h6 class="m-0 font-weight-bold text-info"><span><i class="fas fa-fw fa-user-edit"></i></span>&nbsp;&nbsp;Update user info</h6>
+                        <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                    </div>
+                    <div class="card-body myforms">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                                <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                        {% endwith %}
+                      
+                        <span class="hide">hide</span>
+                        <form method="POST" action="/update/user">
+
+                            <div class="form-group">
+                                <select name="username" class="form-control" id ="select_user" >
+                                  <option disabled selected value> -- Select User -- </option>
+                                  {% for o in option_list %}
+                                  <option value="{{ o }}">{{ o }}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                
+                            <div id="updatebox"> 
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="name" placeholder="Name">
+                                </div>
+                    
+                                <div class="form-group">
+                                    <input class="form-control" type="tel" name="phone" placeholder="07...">
+                                </div>
+                    
+                                <div class="form-group">
+                                    <input class="form-control" type="email" name="email" placeholder="email">
+                                </div>
+    
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="natid" placeholder="National Id">
+                                </div>
+    
+                                <div class="form-group">
+                                    <input class="form-control" type="password" name="p1" placeholder="Password">
+                                </div>
+                    
+                    
+                                <div class="form-group">
+                                    <input class="form-control" type="password" name="p2" placeholder="Re-type password">
+                                </div>
+                    
+                                <div class="form-group">
+                                    <select name="usergroup" class="form-control" id ="url-box" >
+                                      <option disabled selected value> -- Select Usergroup -- </option>
+                                      {% for o in usergroup_option_list %}
+                                      <option value="{{ o }}">{{ o }}</option>
+                                      {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="divbg center-btn">
+                                <button type="submit" class="bg-gradient-dark borderless text-success"><i class="fas fa-edit"></i>&nbsp;Save</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>  
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(500,"swing");
+    }, 2000);
+</script>
+
+<script>
+    $("#select_user").on('change',function(){
+    
+        $.ajax({
+                type: "POST",
+                url: "{{ url_for('api.updateuser') }}",
+                data: {
+                    tenantcheck: "check",
+                    username: $("#select_user").val()
+                },
+                success: function(response) {
+                    $("#updatebox").html(response);
+                }
+            });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+/* body{
+	font:15px/1.5 Arial,Helvetica,sans-serif;
+	padding:0;
+	margin:0;
+    background-color:#1e6e7c;
+}
+*/
+.container{
+    background-color: rgb(124, 144, 6);
+    min-height: 580px;
+}
+.heading{
+    background-color: crimson;
+}
+/* .login{
+    background-color: rgb(95, 95, 240);
+    margin: auto;
+    padding-top: 30px;
+    padding-bottom: 80px;
+    border-radius: 10px;
+    width:90%;
+    max-height: 420px;
+	color:rgb(244, 248, 244);
+}
+.login-title{
+    text-align: center;
+    font-size: larger;
+    color: rgb(236, 236, 234);
+}
+
+.login-form{
+    text-align: center;
+    border-radius: 10px;
+    padding-top: 10px;
+    margin:auto;
+    padding-bottom: 20px;
+}
+.usercode-div{
+    text-align: left;
+    width: 95%;
+    margin: auto;
+}
+.input-is-medium{
+    width: 40%;
+    padding-top: 15px;
+    margin: auto;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: groove;
+    background-color: rgb(95, 95, 240);
+    font-size:1.5rem;
+}
+.enter-btn{
+    
+    background-color: rgb(16, 29, 172);
+    text-align: center;
+    height: 1.9em;
+    width: 5em;
+    color: rgb(250, 246, 246);
+    border-radius: 5px;
+    border-style: hidden;
+    position: relative;
+    left: 20px;
+}
+.login-exit-btn{
+    text-decoration: none;
+    color: red;
+    position: relative;
+    left: 45px;
+    background-color: rgb(240, 241, 245);
+    padding: 3px 11px;
+    border-radius: 4px;
+}
+.input-is-large{
+    width: 95%;
+    padding-top: 15px;
+    margin: auto;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: groove;
+    background-color: rgb(95, 95, 240);
+    font-size:1.5rem;
+}
+::placeholder { 
+    color: rgb(248, 242, 246);
+    opacity: 1;
+  }
+
+.login-btn{
+    width: 95%;
+    height: 3em;
+    margin: auto;
+    border-style: hidden;
+    border-radius: 10px;
+    background-color: rgb(6, 20, 146);
+    color: ivory;
+    font-size:20px;
+}
+.forgot-pass{
+    text-align: center;
+}
+.forgot-btn{
+    background-color: rgb(95, 95, 240);
+    border-style: hidden;
+    color: thistle;
+}
+.name{
+    background-color: rgb(138, 138, 246);
+    color: white;
+    width: 95%;
+    height: 29px;
+    margin: auto;
+    text-align:left;
+    font-size: 25px;
+    padding-bottom:3px;
+} */

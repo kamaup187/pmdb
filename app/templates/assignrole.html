@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-4 is-offset-4">
+    <p class="formtitle">Assign roles to groups</p>
+    <div class="box">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+            <div class="notification {{ category }} alert-dismissible fade show" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+        <form method="POST" action="/assign/role">
+              <div class="input is-large">
+                <select name="usergroup" class="form-control" id ="url-box" >
+                  <option disabled selected value> -- Select Usergroup -- </option>
+                  {% for o in usergroup_option_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="input is-large">
+                <select name="role" class="form-control" id ="url-box" >
+                  <option disabled selected value> -Select Role to assign- </option>
+                  {% for o in role_option_list %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            <br>
+            <br>
+
+            <button class="button is-block is-info is-large is-fullwidth">Update</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

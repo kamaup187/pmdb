@@ -1,0 +1,142 @@
+<!-- <div class="card-header py-2 bg-gradient-dark divjust-end" >
+    <h6 class="m-0 font-weight-bold text-success small"><span><i class="fas fa-fw fa-money-bill-wave"></i></span>&nbsp;&nbsp;Invoice</h6>
+</div> -->
+<div class="card-body bg-gradient-dark mobile-malaysian">
+  <div class="center-btn">
+    <h5 class="text-info font-weight-bold">{{apartment}}</h5>
+  </div>
+  <div>
+    <span class="text-white bolder">Invoice No. {{bill.id}}</span>
+  </div>
+  <!-- <hr class="sidebar-divider d-none d-md-block"> -->
+  <div>
+    <span class="text-white">Tenant : {{tenant_name}}</span>
+  </div>
+  <div>
+    <span class="text-white">House : {{house}}</span>
+  </div><br>
+
+  <div>
+    <span class="text-white">Your bill for the current month is as follows;</span>
+  </div>
+
+  <div class="table-responsiv">
+    <table class="table bg-gradient-dark text-info table-bordere" width="100%" cellspacing="0">
+          <thead >
+            <tr >
+              <th class="text-white">Rent</th>
+              <th class="text-white">Water</th>
+              <th class="text-white">Electricity</th>
+              <th class="text-white">Garbage</th>
+              <th class="text-white">Security</th>
+              <th class="text-white">Repairs</th>
+              <th class="text-white">Arrears</th>
+              <th class="text-white ">Total</th>
+              <th class="text-white">Paid</th>
+              <th class="text-white">Balance</th>
+            </tr>
+          </thead>
+            <tr>
+              <td>{{ bill.rent}}</td>
+              <td>{{ bill.water }}</td>
+              <td>{{ bill.electricity }}</td>
+              <td>{{ bill.garbage }}</td>
+              <td>{{ bill.security }}</td>
+              <td>{{ bill.maintenance }}</td>
+              <td>{{ bill.arrears }}</td>
+              <td>{{ bill.total_bill }}</td>
+              <td>{{ bill.paid_amount }}</td>
+              <td>{{ bill.balance }}</td>
+            </tr>
+         
+        </table>
+  </div>
+
+  <!-- <div>
+    <span class="text-white">Paid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Kshs {{amount}}</span><br>
+  </div>
+  <div>
+    <span class="text-white">Balance: Kshs {{balance}}</span><br>
+  </div><br> -->
+  <!-- <div>
+    <span class="text-white">Paid for: {{chargetype}}</span><br>
+  </div> -->
+  
+  <div class="divbg center-btn">
+    <button id="close" type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i>&nbsp;Close</button>
+  </div>
+</div>
+
+<div class="card-body bg-gradient-dark desktop-malaysian">
+  <div class="center-btn">
+    <h5 class="text-info font-weight-bold">{{apartment}}</h5>
+  </div>
+  <div>
+    <span class="text-white bolder">Invoice No. {{bill.id}}</span>
+  </div>
+  <hr class="sidebar-divider d-md-block">
+
+  <div>
+    <span class="text-white">Tenant : {{tenant_name}}</span>
+  </div>
+  <div>
+    <span class="text-white">House : {{house}}</span>
+  </div><br>
+
+  <div>
+    <span class="text-white">Rent : Kshs {{bill.rent}}</span>
+  </div>
+  <div>
+    <span class="text-white">Water : Kshs {{bill.water}}</span>
+  </div>
+  <div>
+    <span class="text-white">Garbage : Kshs {{bill.garbage}}</span>
+  </div>
+  <div>
+    <span class="text-white">Repairs : Kshs {{bill.maintenance}}</span>
+  </div>
+  <div>
+    <span class="text-white">Arrears : Kshs {{bill.arrears}}</span>
+  </div>
+  <hr class="sidebar-divider d-md-block">
+  <div>
+    <span class="text-info font-weight-bold">Total bill : Kshs {{bill.total_bill}}</span>
+  </div>
+  <div>
+    <span class="text-success font-weight-bold">Paid &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;: Kshs {{bill.paid_amount}}</span>
+  </div>
+  <div>
+    <span class="text-danger sss">Balance: Kshs {{bill.balance}}</span><br>
+  </div>
+  <!-- <div>
+    <span class="text-white">Paid for: {{chargetype}}</span><br>
+  </div> -->
+  <hr class="sidebar-divider d-md-block">
+  <br>
+  <div class="divbg center-btn">
+    <button id="close2" type="button" class="bg-gradient-light borderless text-primary"><i class="fas fa-times"></i>&nbsp;Close</button>
+  </div>
+  
+
+</div>
+
+<script>
+  $("#close").on('click',function(){
+
+    $('#detailed-bill').toggleClass('dispnone invoice');
+    $('#invoice-report').toggleClass('dispnone row');
+    $('#mybill').html('My bill');
+    $('#mybill2').html('My bill');
+
+  });
+</script>
+<script>
+  $("#close2").on('click',function(){
+
+    $('#detailed-bill').toggleClass('dispnone invoice');
+    $('#invoice-report').toggleClass('dispnone row');
+    $('#mybill').html('My bill');
+    $('#mybill2').html('My bill');
+
+  });
+</script>

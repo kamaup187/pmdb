@@ -1,0 +1,114 @@
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-7 no-padding">
+        <div class="card shadow mb-4 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <a href="{{ url_for('api.internaldetail') }}"><h6 class="m-0 font-weight-bold text-info"><i class="fas fa-chart mr-2"></i>Client Collections Overview</h6></a>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Reports:</div>
+                <a class="dropdown-item" href="#">View all Reports</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Monthly Payments</a>
+                <a class="dropdown-item" href="#">Monthly Bills</a>
+                </div>
+            </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-area mb-4">
+                <p id="theInput" class="dispnone">{{chartstring}}</p>
+                <canvas id="myAreaChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="col-xl-4 col-lg-5 no-padding">
+        <div class="card shadow bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-info"><i class="fas fa-users mr-2"></i>Client Stats Overview</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Actions:</div>
+                <a class="dropdown-item" href="#"></a>
+                <a class="dropdown-item" href="#"></a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"></a>
+                </div>
+            </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body mb-0">
+                <div class="mt-1 divjust-end">
+                    <span class=""><i class="fas fa-circle mr-3 text-primary"></i>No. of clients</span>
+                    <span class="text-primary  font-weight-bold">{{clients}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class=""><i class="fas fa-circle mr-3 text-primary"></i>No. of active clients</span>
+                    <span class="text-primary  font-weight-bold">{{active_clients}}</span>
+                </div>
+
+                <!-- <div class="mt-1 divjust-end">
+                    <span class=""><i class="fas fa-circle mr-3 text-primary"></i>No. of registered users</span>
+                    <span class="text-primary  font-weight-bold">{{registered_users}}</span>
+                </div> -->
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-success"><i class="fas fa-circle mr-3 text-success"></i>Listed properties</span>
+                    <span class="text-success  font-weight-bold">{{props}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-success"><i class="fas fa-circle mr-3 text-success"></i>Houses</span>
+                    <span class="text-success  font-weight-bold">{{houses}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-success"><i class="fas fa-circle mr-3 text-success"></i>Tenant database</span>
+                    <span class="text-success  font-weight-bold">{{tenants}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-success"><i class="fas fa-circle mr-3 text-success"></i>Actual Tenants</span>
+                    <span class="text-success  font-weight-bold">{{active_tenants}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-info"><i class="fas fa-circle mr-3 text-info"></i>Sms Estimate</span>
+                    <span class="text-info  font-weight-bold">{{smsestimate}}</span>
+                </div>
+
+                <div class="mt-1 divjust-end">
+                    <span class="text-info"><i class="fas fa-circle mr-3 text-info"></i>Sms sent</span>
+                    <span class="text-info  font-weight-bold">{{smssent}}</span>
+                </div>
+                <div class="mt-1 mb-3  divjust-end">
+                    <span class="text-info"><i class="fas fa-circle mr-3 text-info"></i>Actual costs</span>
+                    <span class="text-danger  font-weight-bold">{{actualcosts}}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-12 mb-4 no-padding mobile-malaysian">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Special Notes</h6>
+            </div>
+            <div class="card-body">
+                <p>Empty.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>

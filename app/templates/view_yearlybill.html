@@ -1,0 +1,173 @@
+{% extends 'reportbase.html' %}
+
+{% block content %}
+                    <div class="containe">
+                        <div class="row">
+                            <div class="col-lg-6 offset-lg-3">
+                                <div class="formwrapper">
+
+                                    <div class="card shadow mb-4">
+                                      <!-- Card Header - Accordion -->
+                                      <a href="#collapseCardExample" class="d-block card-header py-3 bg-gradient-info" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                                        <h6 class="m-0 font-weight-bold text-white">Yearly summarized Report: <span class="text-gray-300"> ({{apartment_name}})</span></h6>
+                                      </a>
+                                      <!-- Card Content - Collapse -->
+                                      <div class="collapse" id="collapseCardExample">
+                                        <div class="card-body">
+                                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                            {% if messages %}
+                                            {% for category, message in messages %}
+                                                <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
+                                                    <span>{{ message }}</span>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
+                                            <form method="POST" action="/view/yearlybill">
+                                                <div class="input is-small">
+                                                    <select name="selected_apartment" class="form-control" id ="url-box" required>
+                                                    <option disabled selected value> -- Select apartment -- </option>
+                                                    {% for o in apartment_list %}
+                                                    <option value="{{ o }}">{{ o }}</option>
+                                                    {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <br>
+                                                <button class="btn btn-block btn-primary">View</button>
+                                            </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- <div class="col-sm-12 col-sm-offset-2">{{table}}</div> -->
+                    
+                    <div class="card shadow mb-4">
+                      <!-- Card Header - Accordion -->
+                      <div class="d-block card-header py- bg-gradient-dark">
+                        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
+                          <span class="mobile-malaysian"><i class="fas fa-fw fa-list"></i> All Bills </span>
+                          {%if bills%}
+                          <div>
+                            <div class="small divjust-end">
+                              <span class="mr-2">Total Bill:</span>
+                              <span class="text-info"> Kshs {{billtotals}}</span>
+                            </div>
+
+                            <div class="small divjust-end">
+                              <span> Paid:</span>
+                              <span class="text-success font-weight-bold"> Kshs {{paidbills}}</span>
+                            </div>
+                            <!-- <span class=""><i class="fas fa-fw fa-exclamation-circle"></i> Arrears:<span class="text-danger"> Kshs {{balances}}</span></span> -->
+                          </div>
+                          <button id="export-btn"class=" d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i></button>
+                          {%endif%}
+                        </div>
+                      </div>
+                      <!-- Card Content - Collapse -->
+                      <div class="collapse show" id="collapseCardExample2">
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            {% if bills %}
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                  <thead>
+                                    <tr>
+                                      <th>Year</th>
+                                      <th>Month</th>
+                                      <th>House</th>
+                                      <th>Tenant</th>
+                                      <th>Total</th>
+                                      <th>Paid</th>
+                                      <th>Balance</th>
+                                      <th>Date</th>
+                                      <th>Billedby</th>
+                                    </tr>
+                                  </thead>
+                                  <tfoot>
+                                    <tr>
+                                      <th>Year</th>
+                                      <th>Month</th>
+                                      <th>House</th>
+                                      <th>Tenant</th>
+                                      <th>Total</th>
+                                      <th>Paid</th>
+                                      <th>Balance</th>
+                                      <th>Date</th>
+                                      <th>Billedby</th>
+                                    </tr>
+                                  </tfoot>
+                                  {% for bill in bills%}
+                                    <tr>
+                                      <td>{{ bill['year'] }}</td>
+                                      <td>{{ bill['month'] }}</td>
+                                      <td>{{ bill['house'] }}</td>
+                                      <td>{{ bill['tenant'] }}</td>
+                                      <td>{{ bill['total'] }}</td>
+                                      <td>{{ bill['paid'] }}</td>
+                                      <td>{{ bill['balance'] }}</td>
+                                      <td>{{ bill['date'] }}</td>
+                                      <td>{{ bill['billedby'] }}</td>
+                                    </tr>
+                                  {% endfor %}
+                                </table>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+<script>
+    setTimeout(function(){
+    $("#alert-msgs").fadeOut(7000,"swing");
+    }, 10);
+</script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+  $('#sidebarToggleTop').on('click',function(){
+
+    $('#accordionSidebar').css('display','block');
+    
+  })
+
+});
+</script>
+<script>
+$("#export-btn").click(function(){
+  $("#dataTable").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Worksheet Name",
+    filename: "Monthly Bill.xls" //do include extension
+  }); 
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

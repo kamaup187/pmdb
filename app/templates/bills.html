@@ -1,0 +1,141 @@
+{% extends "base2.html" %}
+
+{% block content %}
+
+<div class="containe">
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding mt-5">
+      <div class="formwrapper">
+        <div class="card shadow mb-4 bg-light">
+          <div class="card-header topbar-bg py-2 divjust-end" >
+            <h5 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-dollar-sign mr-2"></i></span>Billing</h5>
+            <a href="{{ url_for('api.index') }}"><span class="text-white">Close</span></a>
+          </div>
+          <div class="card-body myforms">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                      <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                  </div>
+              {% endfor %}
+            {% endwith %}
+            
+            <span class="hide">hide</span>
+            <form method="POST" action="/billing">
+              <br>
+              <div class="input is-large form-group">
+                  <select name="apartment" class="form-control trigger" id ="select_prop" required>
+                    <option disabled selected value> -- Select apartment -- </option>
+                    {% for o in apartment_list %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              
+              <div class="input is-large form-group dispnone">
+                <select name="chargetype" class="form-control trigger" id ="select_chargetype">
+                  <option disabled selected value> -- Select chargetype -- </option>
+                  {% for o in chargetypelist %}
+                  <option value="{{ o }}">{{ o }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="row mb-3">
+                <span class="col-6 form-input">
+                  <select name="year" class="select-css" id ="url-box">
+                    <option disabled selected value> -- Year({{yearnow}}) -- </option>
+                    {% for o in year_list %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </span>
+                <span class="col-6 form-input">
+                  <select name="month" class="select-css" id ="url-bo">
+                    <option disabled selected value> -- Month({{monthnow}}) -- </option>
+                    {% for o in month_list %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </span>
+
+              </div>
+
+              <button id="bill-btn" class="btn btn-block btn-success">Bill</button>
+              
+              <!-- <button class="btn btn-primary" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button> -->
+            </form>
+          </div>
+        </div>
+      </div><br>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+<script>
+
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(3000,"swing");
+  }, 30000);
+</script>
+
+<script>
+
+  $("#bill-btn").on('click',function(){
+    $('#bill-btn').html('<span class="spinner-border spinner-border mr-2" role="status" aria-hidden="true"></span>Billing...');
+    // setTimeout(function(){
+    //   $('#bill-btn').html('Bill');
+    //   }, 3000);
+    
+    // $("#spin").toggleClass('unhide hide');
+  })
+
+</script>
+
+<!-- <script>
+
+    $('#select_prop').change(function() {
+        var empty = false;
+        // console.log($('#select_chargetype').val());
+        if ($('#select_chargetype').val() == null) {
+          empty = true;
+        }
+     
+        if (empty) {
+            $('#bill-btn').attr('disabled', 'disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+        } else {
+            $('#bill-btn').attr('disabled', 'disabled')
+            $('#bill-btn').removeAttr('disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+            $('#bill-btn').removeClass('btn-secondary')
+            $('#bill-btn').addClass('btn-success')
+        }
+    });
+
+</script> -->
+
+<!-- <script>
+
+  $('#select_chargetype').change(function() {
+      var empty = false;
+      
+          if ($('#select_prop').val() == null) {
+              empty = true;
+          }
+   
+      if (empty) {
+          $('#bill-btn').attr('disabled', 'disabled');
+      } else {
+        $('#bill-btn').attr('disabled', 'disabled')
+        $('#bill-btn').removeAttr('disabled');
+        $('#bill-btn').removeClass('btn-secondary')
+        $('#bill-btn').addClass('btn-success')
+      }
+  });
+
+</script> -->
+
+
+{% endblock %}

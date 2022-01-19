@@ -1,0 +1,3436 @@
+from dateutil.parser import parse
+
+from flask_login import login_required, current_user
+from flask_restful import Resource
+from flask_mail import Message
+from flask import render_template,Response,request,flash,redirect,url_for,json
+
+# from ..forms.forms import PaymentForm,AmendChargeForm
+
+from app.v1.models.operations import *
+from ..views.helperfuncs import *
+from app import mail
+
+class Reports(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        time = datetime.datetime.now()
+        present_month = time.month
+        present_year = time.year
+        # apartment_list = fetch_all_apartments_by_user(current_user)
+        apartment_list = []
+
+        monthly_collection=[] #list of amounts from all payment objs
+        tenant_balances=[]
+        monthly_bill_members=[] #list of monthlybill amounts from monthly charge objs
+
+        update_login_history("reports",current_user)
+
+        for apartment in apartment_list:
+            db.session.expire(apartment)
+            ######################################
+            tenants = tenantauto(apartment.id)
+            for i in tenants:
+                db.session.expire(i)
+                bal_item = i.balance
+                tenant_balances.append(bal_item)
+            #######################################
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == present_month and item.year == present_year:
+                    sum_member = item.total_bill
+                    monthly_bill_members.append(sum_member) #TODO vacated tenant whose bills have been discarded will have no record of water charges here, rectify this.
+
+            payment_collection = apartment.payment_data
+            for item in payment_collection:
+                if item.pay_period.month == present_month and item.pay_period.year == present_year and not item.voided:
+                    sum_member = item.amount
+                    monthly_collection.append(sum_member)
+
+        monthly_bill_total = sum_positive_values(monthly_bill_members)
+        monthly_total = sum_positive_values(monthly_collection)
+        monthlybal_total = sum_positive_values(tenant_balances)
+        ############################################################    
+        formatted_monthly_bill_total = (f"{monthly_bill_total:,}")    
+        formatted_monthly_total = (f"{monthly_total:,}")
+        formatted_monthlybal_total = (f"{monthlybal_total:,}")
+        return Response(render_template(
+            "reports.html",
+            tenantlist=[],
+            month_string=get_str_month(present_month),
+            monthly_bills = formatted_monthly_bill_total,
+            monthly_rent_collection=formatted_monthly_total,
+            monthly_bal=formatted_monthlybal_total,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name))
+
+class RentReport(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        apartments = fetch_all_apartments_by_user(current_user)
+        return Response(render_template(
+            "rent_report.html",
+            props=apartments,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            suggestions=generate_suggestions(apartments),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name))
+
+    @login_required
+    def post(self):
+        prop = request.form.get("prop")
+        year = request.form.get("year")
+        month = request.form.get("month")
+
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+
+        if not year:
+            int_year = present_year
+        else:
+            int_year = int(year)
+
+        if not month:
+            int_month = present_month
+        else:
+            int_month = get_numeric_month(month)
+
+        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        monthly_bills = prop_obj.monthlybills
+
+        raw_target_bills = []
+        rent_sum_members = []
+        deposit_sum_members = []
+
+        for bill in monthly_bills:
+            if bill.year == int_year and bill.month == int_month:
+                raw_target_bills.append(bill)
+
+        target_bills = []
+        for item in raw_target_bills:
+            new_item = MonthlyChargeOp.minimal_view(item)
+            target_bills.append(new_item)
+
+            deposit = bill.deposit if bill.deposit else 0.0
+            rent_sum_members.append(item.rent)
+            deposit_sum_members.append(deposit)
+
+        # for n in target_bills:
+        #     start += 1
+        #     n['rentdeposit'] = 0.0
+        #     n['waterdeposit'] = 0.0
+        #     n['pos'] = start
+
+        #get new tenants to fetch their deposits
+        
+        # new_tenants = new_tenants_injector(prop_obj.id,int_month,int_year)
+        # for i in new_tenants:
+
+        #     for n in target_bills:
+        #         if i.id == n['tenantid']:
+        #             house_obj = check_house_occupied(i)[1]
+        #             n['rentdeposit'] = house_obj.housecode.rentrate
+        #             n['waterdeposit'] = house_obj.housecode.waterdep
+
+
+        vacants = filter_out_occupied_houses(prop)
+        for vac in vacants:
+            new_item = {
+                'house':vac.name,
+                'tenant':"--VACANT--",
+                'vacancy':"text-danger",
+                'space':vac.description,
+                'rent':0.0,
+                'dep': 0.0
+            }
+            target_bills.append(new_item)
+        
+        rent_sum = sum_values(rent_sum_members)
+        dep_sum = sum_values(deposit_sum_members)
+
+        grand_total = rent_sum+dep_sum
+        
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        str_month = get_str_month(int_month)
+        timeline = f'{str_month} - ({int_year})'
+
+        props = fetch_all_apartments_by_user(current_user)
+
+        return Response(render_template(
+            'rent_report.html',
+            tenantlist=[],
+            bills=target_bills,
+            paging=page(target_bills),
+            renttotal=(f"{rent_sum:,}"),
+            deposittotal=(f"{dep_sum:,}"),
+            grandtotal=(f"{grand_total:,}"),
+            props = props,
+            prop=prop,
+            month_list=month_list,
+            year_list=year_list,
+            timeline=timeline,
+            suggestions=generate_suggestions(props),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name
+        )) 
+
+class Settings(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        return Response(render_template(
+            'settings.html',
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        ))
+    @login_required
+    def post(self):
+        date = request.form.get("date")
+        prop = request.form.get("prop")
+        rate = request.form.get("rate")
+        if prop:
+            props = [prop]
+        else:
+            raw_props = fetch_all_apartments_by_user(current_user)
+            props = stringify_list_items(raw_props)
+
+        logopath = logo(current_user.company)[1]
+
+        for prop in props:
+            auto_generate_report(request,prop,logopath,rate,date)
+
+        # msg = "settings saved"
+        # flash(msg,"success")
+
+        return redirect(url_for('api.settings'))
+
+
+class MonthlyStatement(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+        now_month = get_str_month(present_month)
+        apartments = fetch_all_apartments_by_user(current_user)
+
+        return Response(render_template(
+            'report_monthly_statement.html',
+            props=apartments,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            monthnow=now_month,
+            suggestions=generate_suggestions(apartments),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        ))
+
+    @login_required
+    def post(self):
+
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+        now_month = get_str_month(present_month)
+        apartments = fetch_all_apartments_by_user(current_user)
+
+        prop = request.form.get("prop")
+        year = request.form.get("year")
+        month = request.form.get("month")
+
+        if not year:
+            int_year = present_year
+        else:
+            int_year = int(year)
+
+        if not month:
+            int_month = present_month
+        else:
+            int_month = get_numeric_month(month)
+
+        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        db.session.expire(prop_obj)
+        monthly_bills = prop_obj.monthlybills
+
+        rent_collection = []
+        water_collection = []
+        e_collection = []
+        deposit_collection = []
+
+        for bill in monthly_bills:
+            if bill.year == int_year and bill.month == int_month:
+
+                deposit = bill.deposit if bill.deposit else 0.0
+                rent_collection.append(bill.rent)
+                deposit_collection.append(deposit)
+
+        raw_charges = prop_obj.charges
+        charges = []
+        echarges = []
+        for c in raw_charges:
+            if c.charge_type_id == 2:
+                charges.append(c)
+            if c.charge_type_id == 5:
+                echarges.append(c)
+
+        for waterbill in charges:
+            if waterbill.date.year == int_year and waterbill.date.month == int_month:
+                # if waterbill.house_id != 37: #TO DO
+                water_collection_member = waterbill.amount
+                water_collection.append(water_collection_member)
+
+        for ebill in echarges:
+            if ebill.date.year == int_year and ebill.date.month == int_month:
+                e_collection_member = ebill.amount
+                e_collection.append(e_collection_member)
+
+        renttotal = sum_values(rent_collection)
+        watertotal = sum_values(water_collection)
+        electricitytotal = sum_values(e_collection)
+        depositcredit = sum_values(deposit_collection)
+
+        credittotal = renttotal + watertotal + electricitytotal + depositcredit
+
+        expenses = prop_obj.expenses
+        current_month_expenses = []
+        for exp in expenses:
+            if exp.date.month == int_month and exp.status == "completed":
+                current_month_expenses.append(exp)
+
+        tokenamount = 0.0
+        waterbillamount = 0.0
+        salaries = 0.0
+        miscellaneous = 0.0
+        electricityservice = 0.0
+        plumbingservice = 0.0
+        depositrefund = 0.0
+        paint = 0.0
+        bills = []
+        electricity_str_store = ""
+        plumbing_str_store = ""
+        paint_str_store = ""
+        depositrefund_str_store = ""
+
+
+        for item in current_month_expenses:
+            if item.expense_type == "token":
+                tokenamount += item.amount
+                
+            elif item.expense_type == "water_bill":
+                waterbillamount += item.amount
+            elif item.expense_type == "salaries":
+                salaries += item.amount
+            elif item.expense_type == "deposit_refund":
+                depositrefund += item.amount
+                depositrefund_str_store = depositrefund_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "electricity_service":
+                electricityservice += item.amount
+                electricity_str_store = electricity_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "plumbing_service":
+                plumbingservice += item.amount
+                plumbing_str_store = plumbing_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "paint":
+                paint += item.amount
+                paint_str_store = paint_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            else:
+                bill = {
+                    "name":item.name,
+                    "amount":item.amount,
+                    "targethouse":" - " + item.house if item.house and not item.house == "-" else ""
+                }
+                bills.append(bill)
+                miscellaneous += item.amount
+
+        commission = prop_obj.commission if prop_obj.commission else 0.0
+        management_fee = renttotal*commission*0.01
+        if commission:
+            commission_percentage = f"({commission} %)"
+        else:
+            commission_percentage = ""
+
+        if not commission:
+            commission = prop_obj.int_commission if prop_obj.int_commission else 0.0
+            management_fee = commission
+       
+
+        debittotal  = management_fee+tokenamount+waterbillamount+salaries+electricityservice+plumbingservice+miscellaneous+depositrefund+paint
+
+        nettotal = credittotal-debittotal
+        month=get_str_month(int_month)
+        timeline = f"{month} - ({int_year})"
+
+        # stringwater = (f"{waterbillamount:,}") if waterbillamount > 0 else None
+        # stringelec = (f"{electricityservice:,}") if electricityservice > 0 else None
+
+        # elec = True if current_user.company == "Rikena Property Solutions" else False
+        # watershow = False if prop_obj.name == "Joseph Muraya Apartments" else True
+
+        return Response(render_template(
+            'report_monthly_statement.html',
+            tenantlist=[],
+            bills=bills,
+            renttotal=(f"{renttotal:,}"),
+            watertotal=string_formatter(watertotal),
+            electricitytotal=string_formatter(electricitytotal),
+            depositcredit=string_formatter(depositcredit),
+            credittotal=(f"{credittotal:,}"),
+            managementfee=string_formatter(management_fee),
+            commission_percentage=commission_percentage,
+            tokenbill=string_formatter(tokenamount),
+            waterbill=string_formatter(waterbillamount),
+            salaries=string_formatter(salaries),
+            electricityservice=string_formatter(electricityservice),
+            plumbingservice=string_formatter(plumbingservice),
+            plumbing_str_store=string_formatter_alt(plumbing_str_store),
+            depositrefund_str_store=string_formatter_alt(depositrefund_str_store),
+            electricity_str_store=string_formatter_alt(electricity_str_store),
+            paint_str_store=string_formatter_alt(paint_str_store),
+            paint=string_formatter(paint),
+            depositrefund=string_formatter(depositrefund),
+            otherexpenses=(f"{miscellaneous:,}"),
+            debittotal=(f"{debittotal:,.2f}"),
+            netamount=(f"{nettotal:,.2f}"),
+            props = apartments,
+            prop=prop,
+            month_list=month_list,
+            year_list=year_list,
+            year=year,
+            timeline=timeline,
+            yearnow=present_year,
+            monthnow=now_month,
+            suggestions=generate_suggestions(apartments),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name
+        )) 
+
+
+class SummarisedCombinedBill(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        present_year = datetime.datetime.now().year
+
+        apartments = fetch_all_apartments_by_user(current_user)
+        raw_owners =  []
+        for prop in apartments:
+            owner_name = prop.owner
+            raw_owners.append(owner_name)
+        owners = remove_dups(raw_owners)
+
+        return Response(render_template(
+            'report_summarised_combined_bill.html',
+            owners=owners,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        ))
+
+    @login_required
+    def post(self):
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+        all_apartments_monthlybills = []
+        apartment_combinedbill_objs = []
+        plain_apartment_combinedbill_objs = []
+
+        owner = request.form.get("owner")
+        year = request.form.get("year")
+        start_month = request.form.get("start_month")
+        end_month = request.form.get("end_month")
+
+        if start_month:
+            start_month = get_numeric_month(start_month)
+        else:
+            start_month = present_month
+
+        if not year:
+            year = datetime.datetime.now().year
+        else:
+            year = int(year)
+
+        if not end_month:
+            end_month = present_month
+        else:
+            end_month = get_numeric_month(end_month)
+
+        #######validate inputs##########
+
+        if start_month>end_month:
+            start_month = present_month
+
+        # we are not in future yet, restriction applies
+        if present_year==year:
+            if end_month > present_month:
+                end_month = present_month
+            if start_month > present_month:
+                start_month = present_month
+
+        prop_list = fetch_all_apartments_by_user(current_user)
+        owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
+        target_apartments = owner_obj.apartments
+
+        apartments_list = []
+        for prop in prop_list:
+            if prop in target_apartments:
+                apartments_list.append(prop)
+        # import pdb; pdb.set_trace()
+        raw_all_apartments_monthlybills = []
+        for apartment in apartments_list:
+            item = apartment.monthlybills
+            raw_all_apartments_monthlybills.append(item) #list of lists to one huge list
+
+        unfiltered_bills = flatten(raw_all_apartments_monthlybills)
+        year_filtered = []
+        for bill in unfiltered_bills:
+            if bill.year == year:
+                year_filtered.append(bill)
+
+        months = [*range(start_month, end_month +1, 1)]
+        # print(start_month,end_month)
+        # print(months)
+        for bill in year_filtered:
+            if bill.month in months:
+                all_apartments_monthlybills.append(bill)
+
+        for apart_item in apartments_list:
+            apartment_bills = []
+            total_bill_members = []
+            total_paid_members = []
+            total_balance_members = []
+                
+            for bill in all_apartments_monthlybills:
+                if bill.apartment_id == apart_item.id:
+                    apartment_bills.append(bill)
+
+            for month in months:
+                specific_month_bills = []
+                for bill in apartment_bills:
+                    if bill.month == month:
+                        specific_month_bills.append(bill)
+
+                for bill in specific_month_bills:
+                    total_bill_member = bill.total_bill
+                    total_bill_members.append(total_bill_member)
+
+                    total_paid_member = bill.paid_amount
+                    total_paid_members.append(total_paid_member)
+
+                    total_balance_member = bill.balance
+                    total_balance_members.append(total_balance_member)
+
+                total_bills = 0.0
+                for item in total_bill_members:
+                    total_bills+=item
+
+                totalbills = (f"{total_bills:,}")
+
+                paid_totals = 0.0
+                for item in total_paid_members:
+                    paid_totals+=item
+
+                paidtotals = (f"{paid_totals:,}")
+
+                balances = 0.0
+                for bal in total_balance_members:
+                    if bal > 0.0:
+                        balances+=bal
+
+                bal = (f"{balances:,}")
+
+                bill_obj = {
+                    "year":year,
+                    "month":get_str_month(month),
+                    "apartment":apart_item.name,
+                    "owner":apart_item.owner,
+                    "total_bill":totalbills,
+                    "total_paid":paidtotals,
+                    "total_balance":bal
+                }
+                apartment_combinedbill_objs.append(bill_obj)
+
+                plain_bill_obj = {
+                    "year":year,
+                    "month":get_str_month(month),
+                    "apartment":apart_item.name,
+                    "total_bill":total_bills,
+                    "total_paid":paid_totals,
+                    "total_balance":balances
+                }#without comma formatting
+                plain_apartment_combinedbill_objs.append(plain_bill_obj)
+
+        total_balance_members = []
+        total_paid_members = []
+        total_bill_members = []
+
+        for obj in plain_apartment_combinedbill_objs:
+            total_bill_member = obj["total_bill"]
+            total_bill_members.append(total_bill_member)
+
+            total_paid_member = obj["total_paid"]
+            total_paid_members.append(total_paid_member)
+
+            total_balance_member = obj["total_balance"]
+            total_balance_members.append(total_balance_member)
+
+        total_bills = 0.0
+        for item in total_bill_members:
+            total_bills+=item
+
+        totalbills = (f"{total_bills:,}")
+
+        paid_totals = 0.0
+        for item in total_paid_members:
+            paid_totals+=item
+
+        paidtotals = (f"{paid_totals:,}")
+
+        balances = 0.0
+        for bal in total_balance_members:
+            if bal > 0.0:
+                balances+=bal
+
+        bal = (f"{balances:,}")
+
+
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+
+        apartments = fetch_all_apartments_by_user(current_user)
+        raw_owners =  []
+        for prop in apartments:
+            owner_name = prop.owner
+            raw_owners.append(owner_name)
+        owners = remove_dups(raw_owners)
+
+        return Response(render_template(
+            'report_summarised_combined_bill.html',
+            owners=owners,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            year=year,
+            startmonth=get_str_month(start_month) + " to",
+            endmonth = get_str_month(end_month),
+            bills=apartment_combinedbill_objs,
+            billtotals=totalbills,
+            paidbills=paidtotals,
+            balances=bal,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        )) 
+
+class InternalSummary(Resource):
+    """class reports"""
+    @login_required
+    def get(self):
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        present_year = datetime.datetime.now().year
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+
+        return Response(render_template(
+            'report_internal_summary.html',
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            apartments = apartment_list,
+            apartment="per property",
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        ))
+
+    @login_required
+    def post(self):
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+        all_apartments_monthlybills = []
+        detailed_bills = []
+
+        year = request.form.get("year")
+        start_month = request.form.get("start_month")
+        end_month = request.form.get("end_month")
+        selected_apartment = request.form.get("selected_apartment")
+
+        if start_month:
+            start_month = get_numeric_month(start_month)
+        else:
+            start_month = 1
+
+        if not year:
+            year = datetime.datetime.now().year
+        else:
+            year = int(year)
+
+        if not end_month:
+            end_month = present_month
+        else:
+            end_month = get_numeric_month(end_month)
+
+        #######validate inputs##########
+
+        if start_month>end_month:
+            start_month = 1 #restrict start_month to January
+
+        # we are not in future yet, restriction applies
+        if present_year==year:
+            if end_month > present_month:
+                end_month = present_month
+            if start_month > present_month:
+                start_month = present_month
+
+        month_range = [*range(start_month, end_month +1, 1)]
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        items = apartment_obj.monthlybills
+
+        year_filtered = [] #filter specific year bills
+        for bill in items:
+            if bill.year == year:
+                year_filtered.append(bill)
+
+        for bill in year_filtered:
+            if bill.month in month_range:
+                all_apartments_monthlybills.append(bill)
+            
+        for bill in all_apartments_monthlybills: # bills in specified months only
+            bill_item = MonthlyChargeOp.view_detail(bill)
+            detailed_bills.append(bill_item)
+
+        total_bill_members = []
+        total_paid_members = []
+        total_balance_members = []
+
+        for bill in all_apartments_monthlybills:
+            total_bill_member = bill.total_bill
+            total_bill_members.append(total_bill_member)
+
+            total_paid_member = bill.paid_amount
+            total_paid_members.append(total_paid_member)
+
+            total_balance_member = bill.balance
+            total_balance_members.append(total_balance_member)
+
+        total_bills = 0.0
+        for item in total_bill_members:
+            total_bills+=item
+
+        totalbills = (f"{total_bills:,}")
+
+        paid_totals = 0.0
+        for item in total_paid_members:
+            paid_totals+=item
+
+        paidtotals = (f"{paid_totals:,}")
+
+        balances = 0.0
+        for bal in total_balance_members:
+            if bal > 0.0:
+                balances+=bal
+
+        bal = (f"{balances:,}")
+
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        props = fetch_all_apartments_by_user(current_user)
+        return Response(render_template(
+            'report_internal_summary.html',
+            prop=selected_apartment,
+            apartments = props,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            year=year,
+            startmonth=get_str_month(start_month),
+            endmonth = get_str_month(end_month),
+            bills=detailed_bills,
+            billtotals=totalbills,
+            paidbills=paidtotals,
+            balances=bal,
+            suggestions=generate_suggestions(props),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name
+        ))
+
+class Balances(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+        txt = f"balances by {current_user.name}"
+        advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+
+        target = request.args.get("target")
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        main = []
+        for prop in apartment_list:
+            bills = prop.monthlybills
+            if target == "old":
+                targetbills = fetch_prev_billing_period_bills(prop.billing_period,bills)
+            else:
+                targetbills = fetch_current_billing_period_bills(prop.billing_period,bills)
+            for i in targetbills:
+                if not i.paid_amount and i.balance > 0:
+                    main.append(i)
+
+        bills = bill_details(main)
+
+        return render_template("ajax_balances.html",bills=bills)
+
+
+class ArrearsComparison(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        print("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
+        propid = request.args.get("propid")
+        if not propid:
+            props = fetch_all_apartments_by_user(current_user)
+        else:
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            props = []
+            props.append(prop)
+
+        main = []
+
+        for prop in props:
+            monthlybills = prop.monthlybills
+            period = prop.billing_period
+
+            if period.month == 1:
+                #TODO URGENT BY DECEMBER
+                return "Reports failed"
+
+
+
+            
+            targetbills = []
+
+            for bill in monthlybills:
+                if bill.month == period.month and bill.year == period.year:
+                    targetbills.append(bill)
+                if bill.month == period.month-1 and bill.year == period.year:
+                    targetbills.append(bill)
+
+            houses = houseauto(prop.id)
+            for hse in houses:
+                pair = []
+
+                for bill in targetbills:
+                    if str(bill) == str(hse):
+                        pair.append(bill)
+
+
+                if len(pair) > 1:
+                    elder = pair[0] if pair[0].month == period.month - 1 else pair[1]
+                    child = pair[0] if pair[0].month == period.month else pair[1]
+
+                    tname = child.tenant.name
+                    fname = tname.split()[0]
+                    house =  child.house.name
+                    hst = f'{house} <span class="text-gray-600">({fname})</span>' 
+
+                    arr_dict = {
+                        "hst":hst,
+                        "earr":elder.arrears,
+                        "edue":elder.total_bill,
+                        "epaid":elder.paid_amount,
+                        "ebal":elder.balance,
+                        "carr":child.arrears,
+                        "cdue":child.total_bill,
+                        "cpaid":child.paid_amount,
+                        "cbal":child.balance,
+                    }
+                    main.append(arr_dict)
+                
+        return render_template("ajax_arrears.html",bills=main,elder=f"{get_str_month(period.month-1)}", child=f"{ get_str_month(period.month)}")
+
+class PaymentsComparison(Resource):
+    """class"""
+    @login_required
+    def get(self):
+
+        target = request.args.get("target")
+
+        main = []
+        props = fetch_all_apartments_by_user(current_user)
+
+        maintotal = 0.0
+        maindue = 0.0
+        maincp = 0.0
+        mainbal = 0.0
+
+        for prop in props:
+            subtotal = 0.0
+            subdue = 0.0
+            subcp = 0.0
+            subbal = 0.0
+            if target == "old":
+                targetbills = fetch_prev_billing_period_bills(prop.billing_period,prop.monthlybills)
+            else:
+                targetbills = fetch_current_billing_period_bills(prop.billing_period,prop.monthlybills)
+
+
+            for i in targetbills:
+                amount = 0.0
+                individual_amounts = []
+
+                tname = i.tenant.name
+                fname = tname.split()[0]
+                house =  i.house.name
+                hst = f'{house} <span class="text-gray-600">({fname})</span>' 
+
+                if target == "old":
+                    all_payments = fetch_prev_billing_period_payments(prop.billing_period,i.house.payments)
+                    all_payments += fetch_prev_billing_period_payments(prop.billing_period,i.house.split_payments)
+                else:
+                    all_payments = fetch_current_billing_period_payments(prop.billing_period,i.house.payments)
+                    all_payments += fetch_current_billing_period_payments(prop.billing_period,i.house.split_payments)
+                    
+
+                for x in all_payments:
+                    amount += x.amount
+
+                    individual_amounts.append((f" <span class=\"text-black font--weight-bold small\">Kes </span>{x.amount:,.0f} "))
+
+                values = ' '.join(map(str, individual_amounts))
+
+                paydict = {
+                    # "prop":f"<span>{prop.name}</span> <span class=\"hid\">totali</span",
+                    "prop":f"<div class=\"divjust-end\"><span>{prop.name}</span></div>",
+                    "hst":hst,
+                    "values":values if values else "<span class = \"text-danger\">Not paid</span>",
+                    "total":amount,
+                    "due":i.total_bill,
+                    "paid":i.paid_amount,
+                    "balance":i.balance
+                }
+
+                main.append(paydict)
+                subtotal += amount
+                subdue += i.total_bill
+                subcp += i.paid_amount
+                subbal += i.balance
+
+                maintotal += amount
+                maindue += i.total_bill
+                maincp += i.paid_amount
+                mainbal += i.balance
+
+            total_dict = {
+                "outline":"bg-black",
+                "prop":f"<div class=\"divjust-end\"><span>{prop.name}</span> <span class=\"text-info font-weight-bold text-4\">Subtotal</span></div>",
+                # "prop":f"<span>{prop.name}</span> <span>hi</span> subtotal",
+                "hst":"",
+                "values":"-",
+                "total": f"<span class=\"text-white font-weight-bold text-4\">{subtotal:,}</span>",
+                "due":f"<span class=\"text-white-50 font-weight-bold text-4\">{subdue:,}</span>",
+                "paid":f"<span class=\"text-white font-weight-bold text-4\">{subcp:,}</span>",
+                "balance":f"<span class=\"text-warning font-weight-bold text-4\">{subbal:,}</span>"
+                }
+
+            main.append(total_dict)
+
+        grand_total_dict = {
+            "outline":"bg-black",
+            "prop":f"<div class=\"divjust-end\"><span></span><span class=\"text-info font-weight-bold text-4\">Grand Total</span></div>",
+            "hst":"",
+            "values":"-",
+            "total": f"<span class=\"text-white font-weight-bold text-4\">{maintotal:,}</span>",
+            "due":f"<span class=\"text-white-50 font-weight-bold text-4\">{maindue:,}</span>",
+            "paid":f"<span class=\"text-white font-weight-bold text-4\">{maincp:,}</span>",
+            "balance":f"<span class=\"text-warning font-weight-bold text-4\">{mainbal:,}</span>"
+        }
+        main.append(grand_total_dict)
+                
+        return render_template("ajax_payments.html",bills=main,maintotal=f"{maintotal:,}",maindue=f"{maindue:,}",maincp=f"{maincp:,}",mainbal=f"{mainbal:,}")
+
+class InternalDetail(Resource):
+    @login_required
+    def get(self):
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        return Response(render_template(
+            'report_internal_detailed.html',
+            tenantlist=[],
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name))
+
+    def post(self):
+        current_month_bill = []
+
+        
+
+        renttotal_sum_members = []
+        watertotal_sum_members = []
+        electricitytotal_sum_members = []
+        garbagesectotal_sum_members = []
+        depargtotal_sum_members = []
+        finetotal_sum_members = []
+        arrearstotal_sum_members = []
+        billtotal_sum_members = []
+        paidtotal_sum_members = []
+        balancetotal_sum_members = []
+
+        bill_list = []
+        houses = []
+
+        selected_apartment = request.form.get("selected_apartment")
+        selected_month = request.form.get("selected_month")
+        selected_year = request.form.get("selected_year")
+        present_year = datetime.datetime.now().year
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        apartment_id = apartment_obj.id
+
+        monthlybills = MonthlyChargeOp.fetch_all_monthlycharges_by_apartment_id(apartment_id)
+
+        if selected_month:
+            month =  get_numeric_month(selected_month)
+        else:
+            month = datetime.datetime.now().month
+
+        if not selected_year:
+            selected_year =  present_year
+        else:
+            selected_year = int(selected_year)
+            
+        str_month = get_str_month(month)
+        
+        for bill in monthlybills:
+            if bill.month == month and bill.year == selected_year:
+                current_month_bill.append(bill)
+
+        for bill in current_month_bill:
+            houses.append(bill.house)
+            bill_item = MonthlyChargeOp.view_detail(bill)
+            bill_list.append(bill_item)
+
+
+            deposit = bill.deposit if bill.deposit else 0.0
+            agreement = bill.agreement if bill.agreement else 0.0
+
+            renttotal_sum_members.append(bill.rent)
+
+            watertotal_sum_members.append(bill.water)
+
+            electricitytotal_sum_members.append(bill.electricity)
+
+            garbagesectotal_sum_members.append(bill.garbage)
+
+            garbagesectotal_sum_members.append(bill.security)
+
+            depargtotal_sum_members.append(agreement)
+
+            depargtotal_sum_members.append(deposit)
+
+            finetotal_sum_members.append(bill.penalty)
+
+            arrearstotal_sum_members.append(bill.arrears)
+
+            billtotal_sum_members.append(bill.total_bill)
+
+            paidtotal_sum_members.append(bill.paid_amount)
+
+            balancetotal_sum_members.append(bill.balance)
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        for vac in vacants:
+            if vac in houses:
+                continue
+            all_charges = vac.charges
+            water_charge = 0.0
+            electricity_charge = 0.0
+            for charge in all_charges:
+                if charge.date.month == month and charge.date.year == selected_year and charge.charge_type_id == 2:
+                    water_charge = charge.amount
+                if charge.date.month == month and charge.date.year == selected_year and charge.charge_type_id == 5:
+                    electricity_charge = charge.amount
+
+            house_tenant = vac.name + "# " + "VACANT"
+
+            new_item = {
+                'hsetenant':house_tenant,
+                'vacancy':"text-danger",
+                'rent':0.0,
+                'water':water_charge,
+                'electricity':electricity_charge,
+                'garbsec':0.0,
+                'deparg':0.0,
+                'fine': 0.0,
+                'arrears': 0.0,
+                'total': water_charge,
+                'paid': water_charge,
+                'payment_date': "N/A",
+                'balance':0.0
+            }
+            bill_list.append(new_item)
+
+            watertotal_sum_members.append(new_item['water'])
+            electricitytotal_sum_members.append(new_item['electricity'])
+            billtotal_sum_members.append(new_item['total'])
+            paidtotal_sum_members.append(new_item['paid'])
+
+        expenses = apartment_obj.expenses
+        current_month_expenses = []
+
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == month and exp.date.year == selected_year and exp.status == "completed":
+                current_month_expenses.append(exp)
+
+        for item in current_month_expenses:
+            expenses_amount += item.amount
+
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalwater = sum_values(watertotal_sum_members)
+        watertotal = (f"{totalwater:,}")
+        
+        totalelectricity = sum_values(electricitytotal_sum_members)
+        electricitytotal = (f"{totalelectricity:,}")
+
+        totalgarbagesec = sum_values(garbagesectotal_sum_members)
+        garbagesectotal = (f"{totalgarbagesec:,}")
+
+        totaldeparg = sum_values(depargtotal_sum_members)
+        depargtotal = (f"{totaldeparg:,}")
+
+        totalfine = sum_values(finetotal_sum_members)
+        finetotal = (f"{totalfine:,}")
+
+        totalarrears = sum_positive_values(arrearstotal_sum_members)
+        arrearstotal = (f"{totalarrears:,}")
+        
+        totalbill = sum_positive_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbalance = sum_positive_values(balancetotal_sum_members)
+        balancetotal = (f"{totalbalance:,}")
+
+        commission = totalrent * apartment_obj.commission * 0.01
+        str_commission = f'{apartment_obj.commission} %'
+
+        formatted_commission = (f"{commission:,.1f}")
+        formatted_expenses = (f"{expenses_amount:,.1f}")
+
+        netpay = totalpaid - commission - expenses_amount
+        formatted_netpay = (f"{netpay:,.1f}")
+
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        timeline = f"{str_month} - ({selected_year})"
+
+        return Response(render_template(
+            'report_internal_detailed.html',
+            prop=selected_apartment,
+            tenantlist=[],
+            year=selected_year,
+            string_month = str_month,
+            timeline = timeline,
+            renttotal=renttotal,
+            watertotal=watertotal,
+            electricitytotal=electricitytotal,
+            garbagesectotal=garbagesectotal,
+            depargtotal=depargtotal,
+            finetotal=finetotal,
+            arrearstotal=arrearstotal,
+            paidbills=paidtotal,
+            billtotals=billtotal,
+            balances=balancetotal,
+            bills=bill_list,
+            paging=page(bill_list),
+            str_commission=str_commission,
+            commission=formatted_commission,
+            expenses=formatted_expenses,
+            formatted_netpay=formatted_netpay,
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            apartment_name=selected_apartment,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name))
+
+
+class LandlordProfitAndLoss(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_landlord_profitandloss.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+
+        renttotal_sum_members = []
+        watertotal_sum_members = []
+        garbagetotal_sum_members = []
+        securitytotal_sum_members = []
+        servicetotal_sum_members = []
+        penaltytotal_sum_members = []
+        deposittotal_sum_members = []
+
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        paid_rent = 0
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.view_detail(bill)
+            detailed_bills.append(bill_item)
+
+            bff = bill.arrears
+            rent = bill.rent
+            water = bill.water
+            garbage = bill.garbage
+            security = bill.security
+            service = bill.maintenance
+            deposit = bill.deposit
+            penalty = bill.penalty
+
+            total = bff + rent + water + garbage + security + service + deposit + penalty
+
+            paid = bill.paid_amount
+            paid_rent += bill.rent_paid if bill.rent_paid else 0
+            bcf = bill.balance
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bff)
+
+            renttotal_sum_members.append(rent)
+            watertotal_sum_members.append(water)
+            garbagetotal_sum_members.append(garbage)
+            securitytotal_sum_members.append(security)
+            servicetotal_sum_members.append(service)
+            deposittotal_sum_members.append(deposit)
+            penaltytotal_sum_members.append(penalty)
+
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalwater = sum_values(watertotal_sum_members)
+        watertotal = (f"{totalwater:,}")
+
+        totalgarbage = sum_values(garbagetotal_sum_members)
+        garbagetotal = (f"{totalgarbage:,}")
+
+        totalsecurity = sum_values(securitytotal_sum_members)
+        securitytotal = (f"{totalsecurity:,}")
+
+        totalservice = sum_values(servicetotal_sum_members)
+        servicetotal = (f"{totalservice:,}")
+
+        totaldeposit = sum_values(deposittotal_sum_members)
+        deposittotal = (f"{totaldeposit:,}")
+
+        totalpenalty = sum_values(penaltytotal_sum_members)
+        penaltytotal = (f"{totalpenalty:,}")
+
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+                expenses_amount += exp.amount
+
+        if apartment_obj.id == 33:
+            loan = 60000
+        else:
+            loan = 0
+
+            
+        netrent = paid_rent
+
+        formatted_netrent = (f"{netrent:,.1f}")
+
+        if apartment_obj.commission:
+        
+            commission = netrent * apartment_obj.commission * 0.01
+
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+
+
+
+        formatted_commision = (f"{commission:,.1f}")
+        formatted_loan = (f"{loan:,.1f}")
+            
+        raw_netpay = netrent - commission - expenses_amount - loan
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} - ({target_period.year})"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_landlord_profitandloss.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+
+            renttotal=renttotal,
+            watertotal=watertotal,
+            garbagetotal=garbagetotal,
+            securitytotal=securitytotal,
+            servicetotal=servicetotal,
+            deposittotal=deposittotal,
+            penaltytotal=penaltytotal,
+
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            expenses = f"{expenses_amount:,.1f}",
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class RentStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+        selected_year = request.args.get("selected_year")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_rent_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.external_view(bill)
+            detailed_bills.append(bill_item)
+
+            bbf = bill.rent_balance if bill.rent_balance else 0.0
+            rent = bill.rent if bill.rent else 0.0
+            total = rent + bbf
+            paid = bill.rent_paid if bill.rent_paid else 0.0
+            bcf = bill.rent_due if bill.rent_due else 0.0
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bbf)
+            renttotal_sum_members.append(rent)
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        print("totalbiiiil",totalbill)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+                expenses_amount += exp.amount
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        commission = netrent * apartment_obj.commission * 0.01
+
+        if apartment_obj.id == 33:
+            loan = 60000
+        else:
+            loan = 0
+
+        if apartment_obj.commission:
+            commission = netrent * apartment_obj.commission * 0.01
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+        debits = commission + expenses_amount
+
+        formatted_debits = f"{debits:,.1f}"
+
+        formatted_commision = (f"{commission:,.1f}")
+        formatted_loan = (f"{loan:,.1f}")
+            
+        raw_netpay = netrent - commission - expenses_amount - loan
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} - ({target_period.year})"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_rent_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            expenses = f"{expenses_amount:,.1f}",
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            debits=formatted_debits,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class WaterStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_water_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.external_view(bill)
+            detailed_bills.append(bill_item)
+
+            bbf = bill.water_balance if bill.water_balance else 0.0
+            water = bill.water if bill.water else 0.0
+            total = water + bbf
+            paid = bill.water_paid if bill.water_paid else 0.0
+            bcf = bill.water_due if bill.water_due else 0.0
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bbf)
+            renttotal_sum_members.append(water)
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} - ({target_period.year})"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_water_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            formatted_netrent=formatted_netrent,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class GarbageStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_garbage_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.external_view(bill)
+            detailed_bills.append(bill_item)
+
+            bbf = bill.garbage_balance if bill.garbage_balance else 0.0
+            garbage = bill.garbage if bill.garbage else 0.0
+            total = garbage + bbf
+            paid = bill.garbage_paid if bill.garbage_paid else 0.0
+            bcf = bill.garbage_due if bill.garbage_due else 0.0
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bbf)
+            renttotal_sum_members.append(garbage)
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} - ({target_period.year})"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_garbage_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            formatted_netrent=formatted_netrent,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class ExternalDetail(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("selected_apartment")
+        selected_month = request.args.get("selected_month")
+        selected_year = request.args.get("selected_year")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            # suggestions = generate_suggestions(apartment_list)
+            suggestions = []
+            month_list = generate_month_list()
+            return Response(render_template(
+                'report_external_detailed.html',
+                tenantlist=[],
+                prop_obj=None,
+                apartment_list=apartment_list,
+                month_list=month_list,
+                year_list=[2020,2021,2022,2024],
+                suggestions=suggestions,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+        present_year = datetime.datetime.now().year
+
+        if selected_month:
+            month =  get_numeric_month(selected_month)
+        else:
+            month = datetime.datetime.now().month
+
+        if not selected_year:
+            selected_year =  present_year
+        else:
+            selected_year = int(selected_year)
+            
+        str_month = get_str_month(month)
+        ##################################################################################################
+        current_month_bills = []
+        current_month_summaries = []
+        house_ids = []
+        summary_house_ids = []
+        detailed_bills = []
+
+        billtotal_sum_members = []
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        watertotal_sum_members = []
+        garbagetotal_sum_members = []
+        securitytotal_sum_members = []
+        deposittotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        landlordsummaries = apartment_obj.landlordsummaries
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == month and bill.year == selected_year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+        for bill in landlordsummaries:
+            if bill.month == month and bill.year == selected_year:
+                current_month_summaries.append(bill)
+                summary_house_ids.append(bill.house_id)
+        ###################################################################################################
+        if not current_month_summaries:
+            #create summary
+            for bill in current_month_bills:
+
+                bill_value = bill.rent + bill.water + bill.garbage + bill.security + bill.deposit
+                
+                if bill.balance > bill.rent *2 and  bill.deposit == 0 and bill.apartment_id in [3,4]:
+                    paid = 0.0
+                    bcf = bill_value
+
+                else:
+                    paid = bill_value
+                    bcf = 0
+                    
+                summary = LandlordSummaryOp(selected_year,month,bill.rent,bill.water,bill.garbage,bill.security,bill.electricity,bill.deposit,0,bill_value,paid,bcf,bill.apartment_id,bill.house_id,bill.tenant_id,bill.user_id)
+                summary.save()
+                current_month_summaries.append(summary)
+        else:
+            for house_id in house_ids:    
+                                   
+                if house_id not in summary_house_ids:
+                    # target_bill = None
+                    target_bill = MonthlyChargeOp.fetch_monthlycharge_by_house_id(house_id)
+                    # for i in tenant_bills:
+                    #     if i.month == month and i.year == selected_year:
+                    #         target_bill = i
+
+                    if target_bill:
+                        bill_value = target_bill.rent + target_bill.water + target_bill.garbage + target_bill.security + target_bill.deposit
+                        
+                        if target_bill.balance > target_bill.rent *2 and  target_bill.deposit == 0 and target_bill.apartment_id in [3,4,33,34]:
+                            paid = 0.0
+                            bcf = bill_value
+
+                        else:
+                            paid = bill_value
+                            bcf = 0
+                            
+                        summary = LandlordSummaryOp(selected_year,month,target_bill.rent,target_bill.water,target_bill.garbage,target_bill.security,target_bill.electricity,target_bill.deposit,0,bill_value,paid,bcf,target_bill.apartment_id,target_bill.house_id,target_bill.tenant_id,target_bill.user_id)
+                        summary.save()
+                        current_month_summaries.append(summary)
+
+
+
+        ###################################################################################################
+        
+        for bill in current_month_summaries:
+            """compute subtotals"""
+            bill_item = LandlordSummaryOp.external_view(bill)
+            detailed_bills.append(bill_item)
+
+            rent = bill.rent if bill.rent else 0.0
+            water = bill.water if bill.water else 0.0
+            garbage = bill.garbage if bill.garbage else 0.0
+            security = bill.security if bill.security else 0.0
+            deposit = bill.deposit if bill.deposit else 0.0
+            bbf = bill.arrears if bill.arrears else 0.0
+            total = bill.total_bill if bill.total_bill else 0.0
+            paid = bill.paid_amount if bill.paid_amount else 0.0
+            bcf = bill.balance if bill.balance else 0.0
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            renttotal_sum_members.append(rent)
+            watertotal_sum_members.append(water)
+            garbagetotal_sum_members.append(garbage)
+            securitytotal_sum_members.append(security)
+            deposittotal_sum_members.append(deposit)
+
+            billtotal_sum_members.append(total)
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+            bbftotal_sum_members.append(bbf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+
+        for vac in vacants:
+            all_charges = vac.charges
+            water_charge = 0.0
+            for charge in all_charges:
+                if charge.date.month == month and charge.date.year == selected_year and charge.charge_type_id == 2:
+                    water_charge = charge.amount
+
+            # if apartment_obj.id in [3,4,33,34]:
+            if apartment_obj.id not in [4000000]:
+                found = True if apartment_obj.id in [33,34] else False # URGENT TODO reconsider this condition
+                recently_vacated_tenants = last_month_vacation_injector(apartment_obj.id)
+                for item in recently_vacated_tenants:
+                    if item.house_id == vac.id:
+                        found = True
+                        break
+
+
+                if found:
+                    # garbage_charge = vac.housecode.garbagerate
+                    garbage_charge = 0.0
+                else:
+                    garbage_charge = 0.0
+                
+
+                # c_total = garbage_charge + water_charge
+                c_total = 0
+
+                new_item = {
+                    'id':"0",
+                    'delid':"0",
+                    'editid':"0",
+                    'house':vac.name,
+                    'tenant':"--VACANT--",
+                    'vacancy':"text-danger",
+                    'rent':0.0,
+                    'water':0.0,
+                    'garbage':0.0,
+                    'security':0.0,
+                    'dep': 0.0,
+                    'arrears':0,
+                    'calc_total':c_total,
+                    'paid':0.0,
+                    'balance': 0.0
+                }
+                detailed_bills.append(new_item)
+
+            else:
+                new_item = {
+                    'id':"0",
+                    'delid':"0",
+                    'editid':"0",
+                    'house':vac.name,
+                    'tenant':"--VACANT--",
+                    'vacancy':"text-danger",
+                    'rent':0.0,
+                    'water':water_charge,
+                    'garbage':0.0,
+                    'security':0.0,
+                    'dep': 0.0,
+                    'arrears':0,
+                    'calc_total':0.0,
+                    'paid':0.0,
+                    'balance': 0.0
+                }
+                detailed_bills.append(new_item)
+
+            watertotal_sum_members.append(new_item['water'])
+            garbagetotal_sum_members.append(new_item['garbage'])
+            billtotal_sum_members.append(new_item['calc_total'])
+            paidtotal_sum_members.append(new_item['paid'])
+
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalwater = sum_values(watertotal_sum_members)
+        watertotal = (f"{totalwater:,}")
+
+        totalgarbage = sum_values(garbagetotal_sum_members)
+        garbagetotal = (f"{totalgarbage:,}")
+
+        totalsecurity = sum_values(securitytotal_sum_members)
+        securitytotal = (f"{totalsecurity:,}")
+
+        totaldeposit = sum_values(deposittotal_sum_members)
+        deposittotal = (f"{totaldeposit:,}")
+
+        expenses = apartment_obj.expenses
+        current_month_expenses = []
+        expense_list = []
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == month and exp.date.year == selected_year and exp.status == "completed":
+                current_month_expenses.append(exp)
+
+        for item in current_month_expenses:
+            expenses_amount += item.amount
+
+            if item.expense_type == "deposit_refund":
+                ename = item.name + "(Refund)"
+            else:
+                ename = item.name
+
+            exp = {
+                "house":item.house,
+                "name":ename,
+                "amount":item.amount,
+            }
+            expense_list.append(exp)
+
+        # mathrent = sum_values(mathrent_sum_members)
+        # mathwater = sum_values(mathwater_sum_members)
+        # mathgarb = sum_values(mathgarb_sum_members)
+        # mathsec = sum_values(mathsec_sum_members)
+        # mathdep = sum_values(mathdep_sum_members)
+
+        mathrentt = totalpaid - totalwater - totalgarbage - totaldeposit
+
+        # if apartment_obj.id in [3]:#TEMP
+        #     journal_balance = -18900
+        # else:
+        #     journal_balance = 0
+        journal_balance = 0
+            
+        netrent = mathrentt - journal_balance
+
+        formatted_netrent = (f"{netrent:,.1f}")
+
+        
+        commission = netrent * apartment_obj.commission * 0.01
+
+        if apartment_obj.id == 33:
+            loan = 60000
+        else:
+            loan = 0
+
+        if commission:
+            commission_percentage = f"({apartment_obj.commission} %)"
+        else:
+            commission_percentage = ""
+
+        formatted_commision = (f"{commission:,.1f}")
+        formatted_loan = (f"{loan:,.1f}")
+            
+        raw_netpay = netrent - commission - expenses_amount - loan + totaldeposit + totalwater
+        netpay = (f"{raw_netpay:,.1f}")
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        timeline = f"{str_month} - ({selected_year})"
+
+        
+        fieldshow_sec = "dispnone" if not totalsecurity else ""
+        fieldshow_garb = "dispnone" if not totalgarbage else ""
+        fieldshow_water = "dispnone" if not totalwater else ""
+        fieldshow_dep = "dispnone" if not totaldeposit else ""
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        # suggestions = generate_suggestions(apartment_list)
+        suggestions = []
+
+        return Response(render_template(
+            'report_external_detailed.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            fieldshow_sec=fieldshow_sec,
+            fieldshow_garb=fieldshow_garb,
+            fieldshow_water=fieldshow_water,
+            fieldshow_dep=fieldshow_dep,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            year=selected_year,
+            string_month = str_month,
+            timeline = timeline,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            watertotal=watertotal,
+            garbagetotal=garbagetotal,
+            securitytotal=securitytotal,
+            deposittotal=deposittotal,
+            expenses = expenses_amount,
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            expenselist=expense_list,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            apartment_name=selected_apartment,
+            suggestions=suggestions,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            name=current_user.name))
+
+class ViewPayment(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        prop = request.args.get("prop")
+        print("PROPPPPPP>>>>",prop)
+        if target:
+            print("I'M UNSTOPPABLE TODAY")
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        # return Response(render_template('report_payments.html',props=apartment_list, name=current_user.name,tenantlist=[]))
+
+        if not prop:
+            return Response(render_template(
+                'report_payments2.html',
+                props=apartment_list,
+                prop_obj=None,
+                name=current_user.name,
+                tenantlist=[],
+                month_list=month_list,
+                year_list=year_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+
+        # present_year = datetime.datetime.now().year
+        # present_month = datetime.datetime.now().month
+        raw_payments_list = []
+        payments_list = []
+        
+        year = request.args.get("year")
+        mode = request.args.get("selected_mode")
+        raw_tenant = request.args.get("selected_tenant")
+
+        start_month = request.args.get("month")
+
+
+        if start_month:
+            datestring = date_formatter_alt(start_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        # end_month = request.args.get("end_month")
+
+        # if start_month:
+        #     start_month = get_numeric_month(start_month)
+        # else:
+        #     start_month = present_month
+
+        # if not year:
+        #     year = datetime.datetime.now().year
+        # else:
+        #     year = int(year)
+
+        # if not end_month:
+        #     end_month = present_month
+        # else:
+        #     end_month = get_numeric_month(end_month)
+
+        # #######validate inputs##########
+
+        # if start_month>end_month:
+        #     start_month = present_month #restrict start_month to current month
+
+        # # we are not in future yet, restriction applies
+        # # if present_year==year:
+    
+        # #     if end_month-present_month == 1:
+        # #         print("it got into this section")
+        # #         pass
+        # #     elif end_month > present_month:
+        # #         print("never got here")
+        # #         end_month = present_month
+        # #     else:
+        # #         pass
+
+        # #     # if start_month > present_month:
+        # #     #     start_month = present_month
+
+        month_range = [*range(target_period.month, target_period.month +1, 1)]
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        payments = apartment_obj.payment_data
+
+        if raw_tenant:
+            if raw_tenant.startswith("Vac"):
+                tenant_obj = extract_tenant(raw_tenant)
+                tenant_id = tenant_obj.id
+            else:
+                house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
+                tenant_obj = check_occupancy(house_obj)[1]
+                tenant_id = tenant_obj.id
+
+        else:
+            tenant_id = None
+
+        if mode and not tenant_id:
+            for bill in payments:
+                if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.paymode == mode:
+                    raw_payments_list.append(bill)
+        elif mode and tenant_id:
+            for bill in payments:
+                if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.paymode == mode and bill.tenant_id == tenant_id:
+                    raw_payments_list.append(bill)
+        elif tenant_id and not mode:
+            for bill in payments:
+                if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.tenant_id == tenant_id:
+                    raw_payments_list.append(bill)
+        else:
+            for bill in payments:
+                if not bill.pay_period:
+                    
+                    # PaymentOp.update_payment(bill,bill.date,0,0) #TODO quickfix for legacy payments
+                    # print("Updating >>>>>>>>>>>>>>>>>>", bill.amount, bill.apartment, "Date>>>>>", bill.date.month)
+                    pass
+                else: 
+                    if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided:
+                        raw_payments_list.append(bill)
+
+        # actual_payments = fetch_actual_payments(raw_payments_list)
+        actual_payments = raw_payments_list
+
+        for payment in actual_payments:
+            pay_item = PaymentOp.view(payment)
+            payments_list.append(pay_item)
+
+        #####################################################################################################
+        total_bill_members = []
+        total_paid_members = []
+        total_balance_members = []
+
+        # items = apartment_obj.monthlybills
+
+        # year_filtered = [] #filter specific year bills
+        # for bill in items:
+        #     if bill.year == year:
+        #         year_filtered.append(bill)
+
+        # for bill in year_filtered:
+        #     if bill.month == end_month:
+        #         monthlybills.append(bill)
+
+        for bill in actual_payments:
+            total_bill_member = bill.charged_amount
+            total_bill_members.append(total_bill_member)
+
+            total_paid_member = bill.amount
+            total_paid_members.append(total_paid_member)
+
+            total_balance_member = bill.balance
+            total_balance_members.append(total_balance_member)
+
+        total_bills = sum_positive_values(total_bill_members)
+        totalbills = (f"{total_bills:,}")
+
+        paid_totals = sum_values(total_paid_members)
+        paidtotals = (f"{paid_totals:,}")
+
+        balances = sum_positive_values(total_balance_members)
+        bal = (f"{balances:,}")
+        ########################################################
+        startmonth=get_str_month(target_period.month)
+        endmonth = get_str_month(target_period.month)
+        if startmonth == endmonth:
+            timeline = f"{startmonth} - ({target_period.year})"
+        else:
+            timeline = f"{startmonth} to {endmonth} - ({target_period.year})"
+        ########################################################
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        return Response(render_template(
+            'report_payments2.html',
+            bills=payments_list,
+            billtotals=totalbills,
+            paidtotals=paidtotals,
+            balances=bal,
+            props=apartment_list,
+            prop=prop,
+            prop_obj=apartment_obj,
+            apartment_name=prop,
+            name=current_user.name,
+            tenantlist=[],
+            endmonth=endmonth,
+            timeline=timeline,
+            month_list=month_list,
+            year_list=year_list,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company
+        ))
+
+class TenantStatement(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        if target:
+            print("I'M UNSTOPPABLE TODAY")
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        present_year = datetime.datetime.now().year
+        
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        # return Response(render_template('report_payments.html',props=apartment_list, name=current_user.name,tenantlist=[]))
+        return Response(render_template(
+            'report_tenant_statement.html',
+            props=apartment_list,
+            name=current_user.name,
+            tenantlist=[],
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1]
+        ))
+
+    def post(self):
+        present_year = datetime.datetime.now().year
+        present_month = datetime.datetime.now().month
+        
+        year = request.form.get("year")
+        mode = request.form.get("selected_mode")
+        raw_tenant = request.form.get("selected_tenant")
+        start_month = request.form.get("start_month")
+        end_month = request.form.get("end_month")
+
+        if start_month:
+            start_month = get_numeric_month(start_month)
+        else:
+            start_month = 1
+
+        if not year:
+            year = datetime.datetime.now().year
+        else:
+            year = int(year)
+
+        if not end_month:
+            end_month = present_month
+        else:
+            end_month = get_numeric_month(end_month)
+
+        #######validate inputs##########
+
+        if start_month>end_month:
+            start_month = 1 #restrict start_month to current month
+
+        # we are not in future yet, restriction applies
+        # if present_year==year:
+    
+        #     if end_month-present_month == 1:
+        #         print("it got into this section")
+        #         pass
+        #     elif end_month > present_month:
+        #         print("never got here")
+        #         end_month = present_month
+        #     else:
+        #         pass
+
+        #     # if start_month > present_month:
+        #     #     start_month = present_month
+
+        month_range = [*range(start_month, end_month +1, 1)]
+
+        selected_apartment = request.form.get("selected_apartment")
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+
+        if raw_tenant:
+            if raw_tenant.startswith("Vac"):
+                tenant_obj = extract_tenant(raw_tenant)
+                print("VACATED TENANT >>>>STATEMENT",tenant_obj.monthly_charges)
+                tenant_id = tenant_obj.id
+            else:
+                house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
+                tenant_obj = check_occupancy(house_obj)[1]
+                tenant_id = tenant_obj.id
+
+        else:
+            tenant_id = None
+
+        if tenant_id:
+            
+            range_period_data = []
+            for i in tenant_obj.monthly_charges:
+                if i.month in month_range and i.year == year:
+                    range_period_data.append(i)
+
+            renttotal = 0.0
+            watertotal = 0.0
+            electotal = 0.0
+            garbagetotal = 0.0
+            securitytotal = 0.0
+            servicetotal = 0.0
+            finetotal = 0.0
+            duetotal = 0.0
+            paidtotal = 0.0
+
+            main = []
+            try:
+                initial_set = min(range_period_data, key=lambda x: x.month)
+                latest_set = max(range_period_data, key=lambda x: x.month)
+                # current_bal = latest_set.balance
+                current_bal = tenant_obj.balance
+                print("lamba",initial_set.month)
+            except:
+                initial_set = None
+                latest_set = None
+                # current_bal = 0.0
+                current_bal = tenant_obj.balance
+
+
+
+            for item in range_period_data:
+                
+                individual_amounts = []
+
+                # if tenant_obj.multiple_houses:
+                #     that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.split_payments)
+                # else:
+                #     that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
+
+                that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
+
+                for x in that_month_payments:
+                    if item.house == x.house:
+                        individual_amounts.append((f" <span class=\"text-black font--weight-bold small\">Kes </span>{x.amount:,.0f} "))
+                values = ' '.join(map(str, individual_amounts))
+
+                period = get_str_mnth(item.month)
+
+                renttotal += item.rent
+                watertotal += item.water
+                electotal += item.electricity
+                garbagetotal += item.garbage
+                securitytotal += item.security
+                servicetotal += item.maintenance
+                finetotal += item.penalty
+                duetotal += item.total_bill
+                duetotal -= item.arrears if item != initial_set else 0.0
+                paidtotal += item.paid_amount
+
+                datadict = {
+                    "period":period,
+                    "house":item.house.name,
+                    "rent":f"{item.rent:,.0f}",
+                    "water":f"{item.water:,.0f}",
+                    "elec":f"{item.electricity:,.0f}",
+                    "garbage":f"{item.garbage:,.0f}",
+                    "security":f"{item.security:,.0f}",
+                    "service":f"{item.maintenance:,.0f}",
+                    "fine":f"{item.penalty:,.0f}",
+                    "arrears":f"{item.arrears:,.0f}",
+                    "values":values if values else "<span class = \"text-danger\">Not paid</span>", #TODO
+                    "due":f"{item.total_bill:,.0f}",
+                    "paid":f"{item.paid_amount:,.0f}",
+                    "balance":f"{item.balance:,.0f}"
+                }
+                main.append(datadict)
+                  
+
+        ########################################################
+        startmonth=get_str_month(start_month)
+        endmonth = get_str_month(end_month)
+        if start_month == end_month:
+            timeline = f"{startmonth} - ({year})"
+        else:
+            timeline = f"{startmonth} to {endmonth} - ({year})"
+        ########################################################
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        year_list = [2020,2021,2022,2023,2024]
+        return Response(render_template(
+            'report_tenant_statement.html',
+            bills=main,
+            renttotal= f"{renttotal:,.0f}",
+            watertotal= f"{watertotal:,.0f}",
+            electotal= f"{electotal:,.0f}",
+            garbagetotal= f"{garbagetotal:,.0f}",
+            securitytotal= f"{securitytotal:,.0f}",
+            finetotal= f"{finetotal:,.0f}",
+            duetotal= f"{duetotal:,.0f}",
+            paidtotal= f"{paidtotal:,.0f}",
+            balance= f"{current_bal:,.0f}",
+            rentshow="" if renttotal else "dispnone",
+            watershow="" if watertotal else "dispnone",
+            elecshow="" if electotal else "dispnone",
+            garbageshow="" if garbagetotal else "dispnone",
+            securityshow="" if securitytotal else "dispnone",
+            serviceshow ="" if servicetotal else "dispnone",
+            fineshow="" if finetotal else "dispnone",
+            props=apartment_list,
+            prop=apartment_obj,
+            tenant_name=tenant_obj.name,
+            name=current_user.name,
+            tenantlist=[],
+            endmonth=endmonth,
+            timeline=timeline,
+            year=year,
+            month_list=month_list,
+            year_list=year_list,
+            yearnow=present_year,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company
+        ))
+
+class ExpenseDetail(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        return Response(render_template(
+            'report_expenses_detailed.html',
+            tenantlist=[],
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name))
+
+    def post(self):
+        current_month_bill = []
+        amount_sum_members = []
+        bill_list = []
+
+        selected_apartment = request.form.get("selected_apartment")
+        selected_month = request.form.get("selected_month")
+        selected_year = request.form.get("selected_year")
+        present_year = datetime.datetime.now().year
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        apartment_id = apartment_obj.id
+
+        monthlybills = apartment_obj.expenses
+
+        if selected_month:
+            month =  get_numeric_month(selected_month)
+        else:
+            month = datetime.datetime.now().month
+
+        if not selected_year:
+            selected_year =  present_year
+        else:
+            selected_year = int(selected_year)
+            
+        str_month = get_str_month(month)
+        
+        for bill in monthlybills:
+            if bill.date.month == month and bill.date.year == selected_year and bill.status == "completed":
+                current_month_bill.append(bill)
+
+        for bill in current_month_bill:
+            bill_item = InternalExpenseOp.view(bill)
+            bill_list.append(bill_item)
+
+
+            amount_sum_members.append(bill.amount)
+
+
+        totalamount = sum_values(amount_sum_members)
+        amounttotal = (f"{totalamount:,}")
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        timeline = f"{str_month} - ({selected_year})"
+
+        return Response(render_template(
+            'report_expenses_detailed.html',
+            prop=selected_apartment,
+            tenantlist=[],
+            year=selected_year,
+            string_month = str_month,
+            timeline = timeline,
+            amounttotal=amounttotal,
+            bills=bill_list,
+            paging=page(bill_list),
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            apartment_name=selected_apartment,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name))
+
+
+class SubmissionsReport(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        return Response(render_template(
+            'report_submissions_detailed.html',
+            tenantlist=[],
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            name=current_user.name))
+
+    def post(self):
+        current_month_bill = []
+        amount_sum_members = []
+        bill_list = []
+
+        selected_apartment = request.form.get("selected_apartment")
+        selected_month = request.form.get("selected_month")
+        selected_year = request.form.get("selected_year")
+        present_year = datetime.datetime.now().year
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        apartment_id = apartment_obj.id
+
+        monthlybills = apartment_obj.submissions
+
+        if selected_month:
+            month =  get_numeric_month(selected_month)
+        else:
+            month = datetime.datetime.now().month
+
+        if not selected_year:
+            selected_year =  present_year
+        else:
+            selected_year = int(selected_year)
+            
+        str_month = get_str_month(month)
+        
+        for bill in monthlybills:
+            if bill.pay_period.month == month and bill.pay_period.year == selected_year:
+                current_month_bill.append(bill)
+        print("hhjkkvcxfcgvh",month,selected_year,current_month_bill)
+        for bill in current_month_bill:
+            bill_item = SubmissionOp.view(bill)
+            bill_list.append(bill_item)
+
+            amount_sum_members.append(bill.amount_paid)
+
+        totalamount = sum_values(amount_sum_members)
+        amounttotal = (f"{totalamount:,}")
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        month_list = generate_month_list()
+        timeline = f"{str_month} - ({selected_year})"
+
+        return Response(render_template(
+            'report_submissions_detailed.html',
+            prop=selected_apartment,
+            tenantlist=[],
+            year=selected_year,
+            string_month = str_month,
+            timeline = timeline,
+            amounttotal=amounttotal,
+            bills=bill_list,
+            paging=page(bill_list),
+            apartment_list=apartment_list,
+            month_list=month_list,
+            year_list=[2020,2021,2022,2024],
+            apartment_name=selected_apartment,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name))
+
+class FetchTenants(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        target = request.args.get('target')
+
+        if target == "tenant details":
+            tenantid = request.args.get('tenantid')
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            tenant_info = [tenant_obj]
+            tenant_data = tenant_details(tenant_info)
+            tenantids = get_obj_ids(tenant_data)
+            return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
+        
+        elif target == "old":
+            tenancy = xtenantauto(propid)
+            tenantlist = tenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            return render_template("ajax_oldtenantlist.html",items=tenantlist,tenantids=tenantids)
+        elif target == "new":
+            tenancy = newtenantsauto(propid)
+            tenantlist = tenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            return render_template("ajax_newtenantlist.html",items=tenantlist,tenantids=tenantids)
+        else:
+            tenancy = tenantauto(propid)
+            tenantlist = tenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+
+            return render_template("ajax_tenantlist.html",items=tenantlist,tenantids=full_ids)
+
+class FetchReadings(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        target = request.args.get('target')
+
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        
+        billing_period = get_billing_period(prop_obj)
+        
+        if target == "old":
+            next_billing_month = billing_period.month
+            str_month = get_str_month(next_billing_month)
+            readings = readingsauto(billing_period,prop_obj)
+            readinglist = reading_details(readings)
+            readingids = get_obj_ids(readinglist)
+            return render_template("ajax_oldreadings.html",period=str_month,items=readinglist,readingids=readingids)
+        else:
+            next_billing_month = billing_period.month + 1 if billing_period.month != 12 else 1
+            str_month = get_str_month(next_billing_month)
+            readings = readingsauto_new(billing_period,prop_obj)
+            readinglist = reading_details(readings)
+            readingids = get_obj_ids(readinglist)
+            return render_template("ajax_currentreadings.html",period=str_month,items=readinglist,readingids=readingids)
+
+
+class FetchHouses(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        houses = prop_obj.houses
+
+        houselist = house_details(houses)
+        houseids = get_obj_ids(houselist)
+
+        return render_template("ajax_houselist.html",items=houselist,houseids=houseids)
+
+class FetchRates(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        housecodes = prop_obj.housecodes
+
+        housecodelist = group_details(housecodes)
+        groupids = get_obj_ids(housecodelist)
+
+        return render_template("ajax_housecodelist.html",items=housecodelist,groupids=groupids)
+
+class FetchMeters(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        meters = prop_obj.meters
+
+        meterlist = meter_details(meters)
+        meterids = get_obj_ids(meterlist)
+
+        return render_template("ajax_meterlist.html",items=meterlist,meterids=meterids)
+
+class FetchPayments(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        if target == "new":
+            propid = request.args.get("propid")
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            db.session.expire(prop)
+            payments = prop.payment_data
+
+            period = get_billing_period(prop)
+
+            filtered_payments = fetch_current_billing_period_payments(period,payments)
+            dict_item = ""
+            if filtered_payments:
+                latest_set = max(filtered_payments, key=lambda x: x.id)
+                for i in filtered_payments:
+                    if i == latest_set:
+                        latest_set_index = filtered_payments.index(i)
+                        break
+                popped_latest_set = filtered_payments.pop(latest_set_index)
+
+                item = popped_latest_set
+
+                dict_item={
+                    'id':item.id,
+                    'editid':PaymentOp.generate_editid(item),
+                    'delid':PaymentOp.generate_delid(item),
+                    'tenant':item.tenant.name,
+                    'house':item.house.name,
+                    'hst':PaymentOp.combine_house_tenant_alt(item),
+                    'mode':PaymentOp.fname_extracter(item.paymode),
+                    'payid':item.id,
+                    'ref':item.ref_number,
+                    'chargedamnt':PaymentOp.fig_format(item.charged_amount),
+                    'highlight':PaymentOp.highlight(item),
+                    'amount':PaymentOp.fig_format(item.amount),
+                    'charge':item.payment_name,
+                    'month':PaymentOp.get_month(item),
+                    'date':PaymentOp.get_date_time(item)[0],
+                    'time':PaymentOp.get_date_time(item)[1],
+                    'balance':PaymentOp.fig_format(item.balance),
+                    'ref':item.ref_number,
+                    'smsstatus':PaymentOp.get_sms_status(item),
+                    'emailstatus':item.email_status if item.email_status else "-",
+                    'by':PaymentOp.get_name(item),
+                    'new':"new",
+                    'on':PaymentOp.get_date(item)
+                }
+
+            detailed_payments_list = payment_details(filtered_payments)
+
+            if dict_item:
+                detailed_payments_list.append(dict_item)
+
+            payids = get_obj_ids(detailed_payments_list)
+
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month))
+
+        if target == "new alt":
+            propid = request.args.get("propid")
+            if propid.startswith("prp"):
+                prop_id = propid[3:]
+            else:
+                prop_id = propid
+
+            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+            db.session.expire(prop)
+            payments = prop.payment_data
+
+            period = get_billing_period(prop)
+
+            filtered_payments = fetch_current_billing_period_payments(period,payments)
+            dict_item = ""
+            if filtered_payments:
+                latest_set = max(filtered_payments, key=lambda x: x.id)
+                for i in filtered_payments:
+                    if i == latest_set:
+                        latest_set_index = filtered_payments.index(i)
+                        break
+                popped_latest_set = filtered_payments.pop(latest_set_index)
+
+                item = popped_latest_set
+
+                dict_item={
+                    'id':item.id,
+                    'editid':PaymentOp.generate_editid(item),
+                    'delid':PaymentOp.generate_delid(item),
+                    'tenant':item.tenant.name,
+                    'house':item.house.name,
+                    'hst':PaymentOp.combine_house_tenant_alt(item),
+                    'mode':PaymentOp.fname_extracter(item.paymode),
+                    'payid':item.id,
+                    'ref':item.ref_number,
+                    'chargedamnt':PaymentOp.fig_format(item.charged_amount),
+                    'highlight':PaymentOp.highlight(item),
+                    'amount':PaymentOp.fig_format(item.amount),
+                    'charge':item.payment_name,
+                    'month':PaymentOp.get_month(item),
+                    'date':PaymentOp.get_date_time(item)[0],
+                    'time':PaymentOp.get_date_time(item)[1],
+                    'balance':PaymentOp.fig_format(item.balance),
+                    'ref':item.ref_number,
+                    'smsstatus':PaymentOp.get_sms_status(item),
+                    'emailstatus':item.email_status if item.email_status else "-",
+                    'by':PaymentOp.get_name(item),
+                    'new':"new",
+                    'on':PaymentOp.get_date(item)
+                }
+
+            detailed_payments_list = payment_details(filtered_payments)
+
+            if dict_item:
+                detailed_payments_list.append(dict_item)
+
+            payids = get_obj_ids(detailed_payments_list)
+
+            return render_template("ajax_payments_refresh_alt.html",payids=payids,items=detailed_payments_list,prop=prop,dataperiod=get_str_month(period.month))
+
+        if target == "voided":
+            propid = request.args.get("propid")
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            db.session.expire(prop)
+
+            if str(current_user.user_group) != "Owner":
+                payments = prop.payment_data
+            else:
+                payments = []
+
+            period = get_billing_period(prop)
+
+            filtered_payments = fetch_current_billing_period_voided_payments(period,payments)
+
+            detailed_payments_list = payment_details(filtered_payments)
+
+            payids = get_obj_ids(detailed_payments_list)
+
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
+
+        elif target == "old":
+            propid = request.args.get("propid")
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            db.session.expire(prop)
+            payments = prop.payment_data
+
+            period = get_billing_period(prop)
+
+            month = period.month -1 if period.month != 1 else 12
+            year = period.year if period.month != 1 else period.year - 1
+
+            filtered_payments = fetch_last_months_payments(month,year,payments)
+            print(">>>>>",payments)
+
+            detailed_payments_list = payment_details(filtered_payments)
+
+            payids = get_obj_ids(detailed_payments_list)
+
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
+
+        else:
+            tenantid = request.args.get('tenantid')
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+
+            tenant_payments = tenant_obj.payments
+
+            filtered_payments = filter_in_recent_data(tenant_payments)
+
+            actual_payments = fetch_actual_payments(filtered_payments)
+
+            detailed_payments_list = payment_details(actual_payments)
+
+            payids = get_obj_ids(detailed_payments_list)
+
+            return render_template("ajax_tenant_payments_refresh.html",items=detailed_payments_list,payids=payids)
+
+class FetchSubmissions(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+
+        propname = request.args.get("prop")
+        prop = ApartmentOp.fetch_apartment_by_name(propname)
+        db.session.expire(prop)
+        submissions = prop.submissions
+
+        if not target:
+            period = get_billing_period(prop)
+        else:
+            num_month = get_numeric_month(target)
+            period = generate_date(num_month, prop.billing_period.year)
+
+        gtotal = 0.0
+
+        print(period,"MMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+
+        filtered_submissions = fetch_current_billing_period_data_alt(period,submissions)
+
+        for i in filtered_submissions:
+            gtotal += i.amount_paid
+
+        detailed_submissions_list = submission_details(filtered_submissions)
+
+        payids = get_obj_ids(detailed_submissions_list)
+        
+        print(detailed_submissions_list,">>>>>>>>>>>>>>>>>>>>>>>>>")
+
+        return render_template("ajax_submissions_refresh.html",payids=payids,items=detailed_submissions_list,gtotal=f"{gtotal:,.1f}",dataperiod=get_str_month(period.month))
+
+
+class FetchBills(Resource):
+    @login_required
+    def get(self):
+        propid = request.args.get('propid')
+        target = request.args.get('target')
+
+        co = current_user.company
+        period = co.billing_period
+
+        if target == "tenant bill":
+            tenant_id = request.args.get('tenantid')
+            if tenant_id.startswith("tnt"):
+                tenantid = tenant_id[3:]
+            else:
+                tenantid = tenant_id
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            db.session.expire(tenant_obj)
+
+            tenant_bills = tenant_obj.monthly_charges
+            
+            recent_bills = fetch_recent_bills(period,tenant_bills)
+
+            if recent_bills:
+                detailed_bills = bill_details(recent_bills)
+
+                billids = get_obj_ids(detailed_bills)
+
+                if len(recent_bills)>1:
+                    return render_template(
+                        "ajax_tenantbill.html",
+                        fieldshow_sec = "dispnone" if not recent_bills[0].security and not recent_bills[1].security else "",
+                        fieldshow_sev = "dispnone" if not recent_bills[0].maintenance and not recent_bills[1].maintenance else "",
+                        fieldshow_elec = "dispnone" if not recent_bills[0].electricity and not recent_bills[1].electricity else "",
+                        fieldshow_garb = "dispnone" if not recent_bills[0].garbage and not recent_bills[1].garbage else "",
+                        fieldshow_water = "dispnone" if not recent_bills[0].water and not recent_bills[1].water else "",
+                        fieldshow_rent = "dispnone" if not recent_bills[0].rent and not recent_bills[1].rent else "",
+                        fieldshow_dep = "dispnone" if not recent_bills[0].deposit and not recent_bills[1].deposit else "",
+                        fieldshow_arg = "dispnone" if not recent_bills[0].agreement  and not recent_bills[1].agreement else "",
+                        fieldshow_fine = "dispnone" if not recent_bills[0].penalty and not recent_bills[1].penalty else "",
+                        fieldshow_arr = "dispnone" if not recent_bills[0].arrears and not recent_bills[1].arrears else "",
+                        items=detailed_bills,
+                        billids=billids
+                        )
+                else:
+                    return render_template(
+                        "ajax_tenantbill.html",
+                        fieldshow_sec = "dispnone" if not recent_bills[0].security else "",
+                        fieldshow_sev = "dispnone" if not recent_bills[0].maintenance else "",
+                        fieldshow_elec = "dispnone" if not recent_bills[0].electricity else "",
+                        fieldshow_garb = "dispnone" if not recent_bills[0].garbage else "",
+                        fieldshow_water = "dispnone" if not recent_bills[0].water else "",
+                        fieldshow_rent = "dispnone" if not recent_bills[0].rent else "",
+                        fieldshow_dep = "dispnone" if not recent_bills[0].deposit else "",
+                        fieldshow_arg = "dispnone" if not recent_bills[0].agreement else "",
+                        fieldshow_fine = "dispnone" if not recent_bills[0].penalty else "",
+                        fieldshow_arr = "dispnone" if not recent_bills[0].arrears else "",
+                        items=detailed_bills,
+                        billids=billids
+                        )
+            else:
+                return "Unavailable"
+        
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+            db.session.expire(prop_obj)
+            
+            bills = prop_obj.monthlybills
+
+            current_bills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+
+            detailed_bills = []
+
+            renttotal_sum_members = []
+            watertotal_sum_members = []
+            electricitytotal_sum_members = []
+            garbagetotal_sum_members = []
+            securitytotal_sum_members = []
+            deposittotal_sum_members = []
+            agreementtotal_sum_members = []
+            finetotal_sum_members = []
+            arrearstotal_sum_members = []
+            billtotal_sum_members = []
+            paidtotal_sum_members = []
+            balancetotal_sum_members = []
+
+            for bill in current_bills:
+
+                deposit = bill.deposit if bill.deposit else 0.0
+                agreement = bill.agreement if bill.agreement else 0.0
+
+                renttotal_sum_members.append(bill.rent)
+
+                watertotal_sum_members.append(bill.water)
+
+                electricitytotal_sum_members.append(bill.electricity)
+
+                garbagetotal_sum_members.append(bill.garbage)
+
+                securitytotal_sum_members.append(bill.security)
+
+                deposittotal_sum_members.append(deposit)
+
+                agreementtotal_sum_members.append(agreement)
+
+                finetotal_sum_members.append(bill.penalty)
+
+                arrearstotal_sum_members.append(bill.arrears)
+
+                billtotal_sum_members.append(bill.total_bill)
+
+                paidtotal_sum_members.append(bill.paid_amount)
+
+                balancetotal_sum_members.append(bill.balance)
+
+            vacants = filter_out_occupied_houses(prop_obj.name)
+            for vac in vacants:
+                all_charges = vac.charges
+                water_charge = 0.0
+                electricity_charge = 0.0
+                for charge in all_charges:
+                    if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 2:
+                        water_charge = charge.amount
+                    if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 5:
+                        electricity_charge = charge.amount
+
+                house_tenant = vac.name  + "(Vacant)"
+
+                new_item = {
+                    'id':"0",
+                    'viewid':"0",
+                    'delid':"0",
+                    'editid':"0",
+                    'hst':house_tenant,
+                    'vacancy':"text-danger",
+                    'rent':0.0,
+                    'water':f"{water_charge:,.1f}",
+                    'electricity':electricity_charge,
+                    'garbage':0.0,
+                    'security':0.0,
+                    'agreement':0.0,
+                    'deposit':0.0,
+                    'fine': 0.0,
+                    'arrears': 0.0,
+                    'total': water_charge + electricity_charge,
+                    'paid': water_charge + electricity_charge,
+                    'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                    'active':"disabled",
+                    'balance':0.0
+                }
+                detailed_bills.append(new_item)
+
+                watertotal_sum_members.append(new_item['water'])
+                electricitytotal_sum_members.append(new_item['electricity'])
+                billtotal_sum_members.append(new_item['total'])
+                paidtotal_sum_members.append(new_item['paid'])
+
+            totalrent = sum_values(renttotal_sum_members)
+            renttotal = (f"{totalrent:,}")
+
+            totalwater = sum_values(watertotal_sum_members)
+            watertotal = (f"{totalwater:,}")
+            
+            totalelectricity = sum_values(electricitytotal_sum_members)
+            electricitytotal = (f"{totalelectricity:,}")
+
+            totalgarbage = sum_values(garbagetotal_sum_members)
+            garbagesectotal = (f"{totalgarbage:,}")
+
+            totalsecurity = sum_values(securitytotal_sum_members)
+            garbagesectotal = (f"{totalsecurity:,}")
+
+            totalagreement = sum_values(agreementtotal_sum_members)
+            agreementtotal = (f"{totalagreement:,}")
+
+            totaldeposit = sum_values(deposittotal_sum_members)
+            deposittotal = (f"{totaldeposit:,}")
+
+            totalfine = sum_values(finetotal_sum_members)
+            finetotal = (f"{totalfine:,}")
+
+            totalarrears = sum_positive_values(arrearstotal_sum_members)
+            arrearstotal = (f"{totalarrears:,}")
+            
+            totalbill = sum_values(billtotal_sum_members)
+            billtotal = (f"{totalbill:,}")
+
+            totalpaid = sum_values(paidtotal_sum_members)
+            paidtotal = (f"{totalpaid:,}")
+
+            totalbalance = sum_positive_values(balancetotal_sum_members)
+            balancetotal = (f"{totalbalance:,}")
+
+            fieldshow_sec = "dispnone" if not totalsecurity else ""
+            fieldshow_elec = "dispnone" if not totalelectricity else ""
+            fieldshow_garb = "dispnone" if not totalgarbage else ""
+            fieldshow_water = "dispnone" if not totalwater else ""
+            fieldshow_rent = "dispnone" if not totalrent else ""
+            fieldshow_dep = "dispnone" if not totaldeposit else ""
+            fieldshow_arg = "dispnone" if not totalagreement else ""
+            fieldshow_fine = "dispnone" if not totalfine else ""
+            fieldshow_arr = "dispnone" if not totalarrears else ""
+
+            print(totalagreement,fieldshow_arg)
+
+            detailed_bills_alt = bill_details(current_bills)
+
+            detailed_bills += detailed_bills_alt
+
+            billids = get_obj_ids_alt(detailed_bills)
+
+            str_month = get_str_month(prop_obj.billing_period.month)
+
+            return render_template(
+                "ajax_prop_bills.html",
+                prop=prop_obj,
+                fieldshow_dep=fieldshow_dep,
+                fieldshow_water=fieldshow_water,
+                fieldshow_rent=fieldshow_rent,
+                fieldshow_garb=fieldshow_garb,
+                fieldshow_elec=fieldshow_elec,
+                fieldshow_arg=fieldshow_arg,
+                fieldshow_fine=fieldshow_fine,
+                fieldshow_sec=fieldshow_sec,
+                fieldshow_arr=fieldshow_arr,
+                current_month=str_month,
+                bills=detailed_bills,
+                billids=billids
+                )

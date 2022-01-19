@@ -1,0 +1,106 @@
+
+<span class="font-weight-bold mr-2 smallify mt-1 {{datahighlight}}">{{data_group}}:</span>
+<!-- <span>
+  <label>
+    <span class="smallify text-gray-500">Recent data only</span>
+    <input id="date-check" type="checkbox" checked>
+  </label>
+</span> -->
+<table id="expenseData" class="table shadow" width="100%" cellspacing="0">
+  <thead>
+    <tr>
+      <th class="text-info font-weight-bold">No.</th>
+      <th class="text-info font-weight-bold">Item/Service</th>
+      <th class="text-info track-title-cell">Category</th>
+      <th class="text-info track-title-cell">Qty</th>
+      <!-- <th class="text-info track-title-cell">Description</th> -->
+      <th class="text-info track-title-cell">House</th>
+      <th class="text-info track-title-cell">Cost</th>
+      <th class="text-info track-title-cell">Labour</th>
+      <th class="text-info track-title-cell">Total</th>
+      <th class="text-info track-title-cell">Status</th>
+      <th class="text-info track-title-cell">Date</th>
+      <th class="text-info track-title-cell">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bill in bills%}
+    <tr>
+      <td class="first-data-cell">{{ bill['id'] }}</td>
+      <td class="data-cell text-dark font-weight-bold">{{ bill['name'] }}</td>
+      <td class="data-cell">{{ bill['type'] }}</td>
+      <td class="data-cell">{{ bill['qty'] }}</td>
+      <td class="data-cell">{{ bill['house'] }}</td>
+      <td class="data-cell">{{ bill['cost'] }}</td>
+      <td class="data-cell">{{ bill['labour'] }}</td>
+      <td class="data-cell">{{ bill['amount'] }}</td>
+      <td class="data-cell">{{ bill['status'] }}</td>
+      <td class="data-cell">{{ bill['date'] }}</td>
+      <td class="data-cell"> 
+        <div class="dropdown no-arrow">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-header underline">Item: <span class="text-info font-weight-bold">{{bill['name']}}</span></div>
+
+            <div>
+              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{bill['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#approveModal">approve/reject</span>
+            </div>
+            <div>
+              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{bill['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editExpenseModal">Edit</span>
+            </div>
+            <div>
+              <i class="fas fa-trash-alt text-danger ml-3 mr-2"></i><span id="{{bill['delid']}}" type="button" class="borderless ellipsis btn-outline-info modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteExpenseModal">Delete</span>
+            </div>
+            
+          </div>
+      </div>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+     
+  </table>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#expenseData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 1000,
+        "searching":false,
+        "order": [[ 3, "desc" ]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+
+<script>
+  var expids = "{{ expids|safe }}";
+  var exp_ids = expids.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(exp_ids)
+  $.each(exp_ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#delexp_identifier").html(item)
+        }else{
+          $("#editexp_identifier").html(item)
+        }
+        
+      }else{
+        $("#exp_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
+
+<!-- <script>
+  var new_modal = $("#new_modal")
+  $("#dynamic_modal").html(new_modal)
+</script> -->

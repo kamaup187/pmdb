@@ -1,0 +1,440 @@
+{% extends 'reportbase.html' %}
+
+{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+<!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
+<span id="filename" class="dispnone">{{prop}} {{timeline}} payments statement.pdf</span>
+<span id="orientation" class="dispnone">{{paging}}</span>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div class="formwrapper">
+            <div class="card shadow">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-white underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black card-header-form">
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                    <span class="mr-4 font-weight-bold text-125">Select property below</span>
+                  </div>
+                </a>
+                
+                <a class="text-white close-report" href="{{ url_for('api.reports') }}">
+                  <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
+                </a>
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body">
+                    <form method="GET" action="/view/payments">
+
+                      <div class="row">
+                        <div class="col-6 form-group mb-2">
+                          <label class="text-danger font-weight-bold">Select property:</label>
+
+                            <select name="prop" class="select-css" id ="prop" required>
+                              <option disabled selected value> -- none selected -- </option>
+                              {% for o in props %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-6 form-group">
+                          <label class="text-danger font-weight-bold">Select month:</label>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" readonly />
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="overline">
+                        <span class="text-danger">Fields to display:</span>
+                        <div class="divbg form-group mb-0 x-smallify text-black">
+                                  
+                          <span class="spanwidth ml-4">
+                            <input type="checkbox" id="ref" class="check-btn ml-md-3" name="ref" value="ref" checked>
+                            <label for="rent">Reference</label>
+                          </span>
+          
+                          <span class="spanwidth">
+                            <input type="checkbox" id="item" class="check-btn ml-md-3" name="item" value="item" checked>
+                            <label for="water">Particulars</label> 
+                          </span>
+                          
+                          <span class="spanwidth">
+                            <input type="checkbox" id="mode" class="check-btn ml-md-2" name="mode" value="mode" checked>
+                            <label for="garbage">Mode</label> 
+                          </span>
+                          
+                        </div>
+                      </div>
+
+
+
+                          <!-- <div class="col-6 form-group">
+                            <label class="text-danger font-weight-bold">Select month:</label>
+                            <input class="form-control ph-dark
+                            " type="text" id="from" name="from" placeholder="none set">
+                          </div> -->
+
+                        <button class="btn btn-block btn-primary mt-2">View</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 no-padding"></div> -->
+  <div class="col-lg-12 no-padding">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+      <div  class="d-block card-header card-header-report card-bg dispnon">
+        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
+
+          <div class="smallify">
+            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>Payment statement</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body pt-0">
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn mt-2 overline">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3 text-uppercase">PAYMENT STATEMENT FOR {{timeline}}</span></h5>
+          </div>
+
+          <div class="divjust-end underline text-black font-weight-bold no-padding text-110">
+            <div class="">
+              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Property : {{prop_obj.name}}</div>
+              <div>Estate : {{prop_obj.location}}</div>
+            </div>
+            <div class="pr-3">
+              <div>Date remitted : {{reportdate}}</div>
+              <div>Pin No : </div>
+            </div>
+
+          </div>
+
+          <div class="text-right mt-1">
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
+          </div>
+
+                    
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">PNO</th>
+                      <th class="">TENANT NAME</th>
+
+                      <th class="text-left no">No.</th>
+                      <th class="text-right ref">Ref</th>
+                      <th class="text-right item" data-orderable="false">Item</th>
+                      <th class="text-right mode" data-orderable="false">Mode</th>
+
+
+                      <!-- <th class="penalty">LPF</th> -->
+                      <th class="text-right">TOTAL DUE</th>
+                      <th class="text-right">TOTAL PAID</th>
+                      <th class="text-right">BC/F</th>
+
+
+                      <th class="text-right">Date</th>
+                      <th class="text-right" data-orderable="false">Time</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+
+                      <td class="data-cell text-right">{{ bill['id'] }}</td>  
+                      <td class="data-cell text-right">{{ bill['ref'] }}</td>
+                      <td class="data-cell text-right">{{ bill['charge'] }}</td>
+                      <td class="data-cell text-right">{{ bill['mode'] }}</td>
+                      <td class="data-cell text-right">{{bill['chargedamnt']}}</td>
+                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['date'] }}</td>
+                      <td class="data-cell text-right">{{ bill['time'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="6" class="font-weight-bold">TOTALS ...</td>
+ 
+                      <td class="font-weight-bold text-right">{{billtotals}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotals}}</td>
+                      <td class="font-weight-bold text-right">{{balances}}</td>
+                      <td colspan="2" class="font-weight-bold text-right"></td>
+
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12 no-padding dispnone">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+          {% if bills %}
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
+
+          <div class="center-btn mt-2 overline">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3 text-uppercase">PAYMENT STATEMENT FOR {{timeline}}</span></h5>
+          </div>
+
+          <div class="divjust-end underline mb-3 text-black font-weight-bold no-padding text-110">
+            <div class="">
+              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Property : {{prop_obj.name}}</div>
+              <div>Estate : {{prop_obj.location}}</div>
+            </div>
+            <div class="pr-3">
+              <div>Date remitted : {{reportdate}}</div>
+              <div>Pin No : </div>
+            </div>
+
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">PNO</th>
+                  <th class="">TENANT NAME</th>
+
+                  <th class="text-left no">No.</th>
+                  <th class="text-right ref">Ref</th>
+                  <th class="text-right item" data-orderable="false">Item</th>
+                  <th class="text-right mode" data-orderable="false">Mode</th>
+
+
+                  <!-- <th class="penalty">LPF</th> -->
+                  <th class="text-right">TOTAL DUE</th>
+                  <th class="text-right">TOTAL PAID</th>
+                  <th class="text-right">BC/F</th>
+
+
+                  <th class="text-right">Date</th>
+                  <th class="text-right" data-orderable="false">Time</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+
+                  <td class="data-cell text-right">{{ bill['id'] }}</td>  
+                  <td class="data-cell text-right">{{ bill['ref'] }}</td>
+                  <td class="data-cell text-right">{{ bill['charge'] }}</td>
+                  <td class="data-cell text-right">{{ bill['mode'] }}</td>
+                  <td class="data-cell text-right">{{bill['chargedamnt']}}</td>
+                  <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-right">{{ bill['date'] }}</td>
+                  <td class="data-cell text-right">{{ bill['time'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                    <td colspan="6" class="font-weight-bold">TOTALS ...</td>
+
+                    <td class="font-weight-bold text-right">{{billtotals}}</td>
+                    <td class="font-weight-bold text-right">{{paidtotals}}</td>
+                    <td class="font-weight-bold text-right">{{balances}}</td>
+                    <td colspan="2" class="font-weight-bold text-right"></td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="divjust-end ln-16 mobile-malaysian nobreak mt-3">
+              <div>
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
+                  <div class="col-6">........................</div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-6 text-right text-black no-wrap">Date:</div>
+                  <div class="col-6">........................</div>
+                </div>
+              </div>
+  
+
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title" id="paymentDetailModalLabel">Edit monthly bill summary record</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div class="mt-2" id="billeditbed"></div>
+                
+                  <div class="divbg center-btn">
+                    <button id="editbill" type="button" class="btn btn-outline-danger borderles">Update</button>
+                    <button class="btn btn-outline-secondary" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $("#month").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "MM-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+  let myarr = ["rent","water","garbage","security","service","deposit","penalty"]
+
+
+  $.each(myarr, function(i,item) {
+  
+    $("#"+item).on('change',function(){
+      let cb = document.getElementById(item);
+      if (cb.checked){
+        $("."+item).removeClass("dispnone")
+      }else{
+        $("."+item).addClass("dispnone")
+      }
+
+    });
+
+  });
+
+
+  </script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

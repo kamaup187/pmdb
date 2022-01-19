@@ -1,0 +1,58 @@
+<!-- <div class="row">
+    <div class="col-6 center-btn text-white font-weight-bold bg-gradient-primary">{{elder}}</div>
+    <div class="col-6 center-btn text-white font-weight-bold bg-gradient-success">{{child}}</div>
+</div> -->
+<div class="table-responsive">
+    <table id="reportData" class="table shadow" width="100%" cellspacing="0">
+        <thead>
+            <tr class="center-btn text-white">
+                <th class="p-0 m-0 hide"></th>
+                <th class="bg-gradient-primary p-0 m-0" colspan="4">{{elder}}</th>
+                <th class="bg-gradient-success p-0 m-0" colspan="4">{{child}}</th>
+            </tr>
+            <tr>
+            <th class="text-info font-weight-bold">house</th>
+            <th class="text-primary track-title-cell">Arrears</th>
+            <th class="text-primary track-title-cell">Due</th>
+            <th class="text-primary track-title-cell">Paid</th>
+            <th class="text-primary track-title-cell">Bal</th>
+            <th class="text-success track-title-cell">Arrears</th>
+            <th class="text-success track-title-cell">Due</th>
+            <th class="text-success track-title-cell">Paid</th>
+            <th class="text-success track-title-cell">Balance</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in bills%}
+            <tr>
+            <td class="first-data-cell font-weight-bold">{{ i['hst']|safe }}</td>
+            <td class="data-cell">{{ i['earr'] }}</td>
+            <td class="data-cell">{{ i['edue'] }}</td>
+            <td class="data-cell">{{ i['epaid'] }}</td>
+            <td class="data-cell text-danger font-weight-bold">{{ i['ebal'] }}</td>
+            <td class="data-cell text-danger font-weight-bold">{{ i['carr'] }}</td>
+            <td class="data-cell">{{ i['cdue'] }}</td>
+            <td class="data-cell">{{ i['cpaid'] }}</td>
+            <td class="data-cell text-info font-weight-bold">{{ i['cbal'] }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#reportData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        // columnDefs: [ { targets: 0, type: 'natural' } ],
+        "aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0,1,2,3,4,5,6 ],type: 'natural' }],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>

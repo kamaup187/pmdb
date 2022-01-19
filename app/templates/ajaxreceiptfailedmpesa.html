@@ -1,0 +1,34 @@
+<div class="center-btn h5 font-weight-bold text-danger mb-2"> Payment failed</div>
+<div class="card-body text-dark">
+  <div>
+    <span class="text-gray-600 mr-3">Receipt</span><span class="text-warning font-weight-bold">N/A</span>
+  </div>
+  <hr>
+  <div>
+    <span>Tenant : {{tenant}}</span>
+  </div>
+  <div>
+    <span>Debit no : {{tel}}</span>
+  </div>
+
+  <div class="mb-2">
+    <span class="text-warning">{{response}}</span><br>
+  </div>
+  <hr>
+
+  <div class="divbg center-btn">
+    <button id="close" type="button" class="bg-gradient-danger borderless text-white"><a class="text-white" href="{{ url_for('api.index') }}">Close</a></button>
+  </div>
+  
+
+</div>
+<!-- <script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script> -->

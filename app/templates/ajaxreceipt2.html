@@ -1,0 +1,41 @@
+<div class="card-header py-2 bg-gradient-dark divjust-end" >
+    <h3 class="font-weight-bold text-success">Payment successful</h3>
+    <a href="{{ url_for('api.receivepayment') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+</div>
+<div class="card-body">
+  <div>
+    <span class="text-white bolder">Receipt No. {{receiptno}}</span>
+  </div>
+  <hr>
+  <div>
+    <span class="text-white">Tenant : {{tenant}}</span>
+  </div><br>
+  <div>
+    <span class="text-white">House : {{house}}</span>
+  </div><br>
+  <div>
+    <span class="text-white">Total bill : Kshs {{bill}}</span><br>
+  </div>
+  <div>
+    <span class="text-white">Paid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Kshs {{amount}}</span><br>
+  </div>
+  <div>
+    <span class="text-white">Balance: Kshs {{balance}}</span><br>
+  </div><br>
+  <div>
+    <span class="text-white">Paid for: {{chargetype}}</span><br>
+  </div>
+  <hr>
+  <br>  
+
+</div>
+<script>
+  $("#close").on('click',function(){
+
+    $('#receipt').toggleClass('bg-gradient-danger bg-gradient-dark');
+    $('#receipt').toggleClass('dispnone receipt');
+    document.getElementById("balance").innerHTML = "";
+    $('#submit').html('<i class="fas fa-check"></i>&nbsp;Submit');
+
+  });
+</script>

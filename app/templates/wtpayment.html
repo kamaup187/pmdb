@@ -1,0 +1,363 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+<div class="containe">
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3 no-padding">
+      <div class="formwrapper">
+        <div class="card shadow mb-4 bg-light">
+          <div class="card-header py-2 topbar-bg divjust-end" >
+            <h5 class="m-0 font-weight-bold text-white"><span><i class="fas fa-fw fa-money-check-alt mr-2"></i></span>Payments</h5>
+            <a href="{{ url_for('api.index') }}"><span class="text-white">Close</span></a>
+          </div>
+          <div class="card-body myforms">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                      <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                  </div>
+              {% endfor %}
+            {% endwith %}
+            
+            <!-- <span class="hide">hide</span> -->
+
+            <div id="receipt" class="dispnone">
+              <div class="card-header py-2 bg-gradient-dark divjust-end" >
+                <h6 class="m-0 font-weight-bold text-danger"><span><i class="fas fa-fw fa-info"></i></span>&nbsp;&nbsp;Payment failed</h6>
+                <a href="{{ url_for('api.receivepayment') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+                
+              </div>
+              <div>
+                Please fill all fields before submitting!
+              </div>
+            </div>
+
+            <form class="dispform" id="form" autocomplete="off" method="POST" action="/receive/payment">
+
+              {{ form.csrf_token }}
+        
+              <div class="form-group">{{ form.apartment(class="form-control")}}</div>
+
+              <div id="apartment" class="form-group bg-gradient-dark center-btn">
+                <span class="text-white"><i class="fas fa-fw fa-info-circle"></i>&nbsp;&nbsp;Apartment: </span><span class="text-success makebig">{{apartment_name}}</span>
+              </div>
+
+              <div class="form-group">{{ form.house(class="form-control")}}</div>
+
+              <div id="balance" class="form-group bg-gradient-light center-btn"></div>
+
+              <div class="center-btn form-control bg-gradient-info">
+                <label class="text-white text-small">Payment for:</label>
+                <div class="divbg small">
+                  
+                  <span>
+                    <label for="chargetype1">Water</label>
+                    <input type="checkbox" id="chargetype1" class="check-btn" name="chargetype1" value="Water">
+                  </span>
+  
+                  <span>
+                    <label for="chargetype2">Rent</label> 
+                    <input type="checkbox" id="chargetype2" class="check-btn" name="chargetype2" value="Rent">
+                  </span>
+                  
+                  <span>
+                    <label for="chargetype3">Garb</label> 
+                    <input type="checkbox" id="chargetype3" class="check-btn" name="chargetype3" value="Garbage">
+                  </span>
+                  
+                  <span>
+                    <label for="chargetype4">Elec</label>
+                    <input type="checkbox" id="chargetype4" class="check-btn" name="chargetype4" value="Electricity">
+                  </span>
+                  
+                  <span>
+                    <label for="chargetype5">Sec</label>
+                    <input type="checkbox" id="chargetype5" class="check-btn" name="chargetype5" value="Security">
+                  </span>
+
+                </div>
+                
+              </div>
+              
+              <hr style="opacity: 0;"><br>
+              
+              <div class="form-group">
+                <select class="form-control" name="paymode" class="form-control" id="select_paymode" required>
+              
+                  <option disabled selected value> -- Select Payment method -- </option>
+                  <option value="Bank deposit">Bank deposit</option>
+                  <option value="Cash payment">Cash payment</option>
+                  <option value="Mpesa payment">Mpesa payment</option>
+                  
+                </select>
+              </div>
+
+              <div class="form-group">
+                <input id="bill_ref" class="form-control" type="text" name="bill_ref" placeholder="Payment reference...?">
+              </div>
+
+              <div class="form-group">
+                <input id="paidamount" class="form-control" type="text" name="paidamount" placeholder="amount to pay..." required>
+              </div>
+
+              <input id="apvar" style="display: none;" type="text" name="apartmentsessionvariable">
+
+              <div class="divbg center-btn">
+                  <button id="submit" type="button" class="borderless font-weight-bold text-success" disabled><i class="fas fa-ban mr-2"></i>Submit</button>
+                  <button id="clearBtn" type="reset" class="bg-light borderless font-weight-bold text-danger">Clear</button>
+              </div>
+                
+            </form>
+          </div>
+        </div>
+      </div><br>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="receipt-btn" class="dispnone" data-toggle="modal" data-target="#receiptModal"></button>
+
+<div class="">
+  <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="divbg">
+          <button type="button" class="btn borderless" id="downloadPdf"><i class="fas fa-file-download text-primary"></i></button>
+          <button class="btn borderless" type="button" data-dismiss="modal"><i class="fas fa-times text-danger"></i></button>
+        </div>
+        <div class="modal-body no-padding">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div id="receipt-bed" class="position-relative"></div>
+              <div class="hide">spacing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+<script>
+  $("#select_apartment").on('change',function(){
+      var apartmentvar = $("#select_apartment").val();
+      localStorage.setItem('apartmentvar',apartmentvar);
+      var sessionapvar = localStorage.getItem('apartmentvar');
+      console.log(sessionapvar);
+      document.getElementById('apvar').value = sessionapvar;
+
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.receivepayment') }}",
+              data: {
+                apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                runhseopt:"somestring"
+              },
+              success: function(response) {
+                  $("#select_house").html(response);
+              }
+          });
+  });
+</script>
+
+<script>
+
+  $("#select_apartment").on('change',function(){
+    setTimeout(function(){
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.receivepayment') }}",
+              data: {
+                apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                runapartnm:"somestring"
+              },
+              success: function(response) {
+                  $("#apartment").html(response);
+              }
+          });
+    },0);
+  
+
+  });
+  </script>
+
+<script>
+    $("#select_house").on('change',function(){
+    
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.receivepayment') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  house: $("#select_house").val(),
+                  runbalance:"somebalance"
+              },
+              success: function(response) {
+                  $("#balance").html(response);
+              }
+          });
+    });
+</script>
+
+<script>
+  $("#submit").on('click',function(){
+    $('#submit').attr('disabled', 'disabled')
+    $('#submit').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
+    var cb = document.getElementById("chargetype1");
+    if (cb.checked){
+      var chargetype1 = "Water";
+    }else{
+      var chargetype1 = "";
+    }
+
+    var cb = document.getElementById("chargetype2");
+    if (cb.checked){
+      var chargetype2 = "Rent";
+    }else{
+      var chargetype2 = "";
+    }
+
+    var cb = document.getElementById("chargetype3");
+    if (cb.checked){
+      var chargetype3 = "Garbage";
+    }else{
+      var chargetype3 = "";
+    }
+
+    var cb = document.getElementById("chargetype4");
+    if (cb.checked){
+      var chargetype4 = "Electricity";
+    }else{
+      var chargetype4 = "";
+    }
+
+    var cb = document.getElementById("chargetype5");
+    if (cb.checked){
+      var chargetype5 = "Security";
+    }else{
+      var chargetype5 = "";
+    }
+  
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.receivepayment') }}",
+            data: {
+                apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                house: $("#select_house").val(),
+                chargetype1:chargetype1,
+                chargetype2:chargetype2,
+                chargetype3:chargetype3,
+                chargetype4:chargetype4,
+                chargetype5:chargetype5,
+                paymode:$("#select_paymode").val(),
+                bill_ref:$("#bill_ref").val(),
+                paidamount:$("#paidamount").val()
+            },
+            success: function(response) {
+                // $('#receipt').toggleClass('bg-white bg-gradient-danger');
+                // $('#submit').html('Submit');
+                $('#submit').html('<i class="fas fa-ban mr-2"></i>Submit');
+                // $('#receipt').toggleClass('receipt-pos dispnone');
+                // $('#form').toggleClass('dispnone dispform');
+                // $("#receipt").html(response);
+                $("#balance").empty();
+                $("#clearBtn").click();
+                $("#receipt-btn").click();
+                // $('#submit').removeAttr('disabled');
+                $("#receipt-bed").html(response);
+            }
+        });
+  });
+</script>
+
+<script>
+  var sessionapvar = localStorage.getItem('apartmentvar');
+  console.log(sessionapvar);
+  document.getElementById('apvar').value = sessionapvar;
+</script>
+
+<script>
+
+  $("#select_paymode").on('change',function(){
+    $('#bill_ref').removeClass('dispnone');
+    $('#bill_ref').val("");
+    var empty = false;
+    if($('#select_paymode').val() == "Cash payment"){
+      $('#bill_ref').val("N/A");
+      $('#bill_ref').addClass('dispnone');
+    }else if($('#select_paymode').val()=="Bank deposit"){
+      $('#bill_ref').attr("placeholder","Enter deposit slip reference");
+    }else{
+      $('#bill_ref').attr("placeholder","Enter Mpesa reference");
+    }
+    if ($('#bill_ref').val() == "") {
+      empty = true;
+    }else if($('#paidamount').val() == ""){
+      empty = true;
+    }
+
+    if (empty) {
+        $('#submit').attr('disabled', 'disabled');
+        $('#submit').html('<i class="fas fa-ban mr-2"></i>Submit');
+    } else {
+        $('#submit').removeAttr('disabled');
+        $('#submit').html('Submit');
+    }
+  })
+
+</script>
+
+<script>
+
+  $("#bill_ref").on('keyup',function(){
+    var empty = false;
+    if ($('#bill_ref').val() == "") {
+      empty = true;
+    }else if($('#paidamount').val() =="") {
+      empty = true;
+    }
+    
+    if (empty) {
+        $('#submit').attr('disabled', 'disabled');
+        $('#submit').html('<i class="fas fa-ban mr-2"></i>Submit');
+    } else {
+        $('#submit').removeAttr('disabled');
+        $('#submit').html('Submit');
+    }
+  })
+
+</script>
+
+<script>
+
+  $("#paidamount").on('keyup',function(){
+    var empty = false;
+    if ($('#paidamount').val() == "") {
+      empty = true;
+    }else if($('#bill_ref').val() =="") {
+      empty = true;
+    }
+    
+    if (empty) {
+        $('#submit').attr('disabled', 'disabled');
+        $('#submit').html('<i class="fas fa-ban mr-2"></i>Submit');
+    } else {
+        $('#submit').removeAttr('disabled');
+        $('#submit').html('Submit');
+    }
+  })
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,1132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>KiotaPay | Reports</title>
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <!-- Custom fonts-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery-ui.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}">
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <!-- Custom styles-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datatables.min.css') }}">
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='modal.css') }}"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay-alt22.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
+
+
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script> -->
+<!-- 
+  <script>
+    $( function() {
+      var date = new Date();
+      var dateFormat = "MM yy",
+        from = $( "#from" )
+          .datepicker({
+            dateFormat: "MM yy",
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 1
+          }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1))
+          .on( "change", function() {
+            to.datepicker( "option", "minDate", getDate( this ) );
+          }),
+          
+        to = $( "#to" ).datepicker({
+          dateFormat: "MM yy",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1
+        }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth() + 1, 0))
+        .on( "change", function() {
+          from.datepicker( "option", "maxDate", getDate( this ) );
+        });
+   
+      function getDate( element ) {
+        var date;
+        try {
+          date = $.datepicker.parseDate( dateFormat, element.value );
+        } catch( error ) {
+          date = null;
+        }
+   
+        return date;
+      }
+    } );
+    </script> -->
+
+</head>
+
+<body id="page-top" class="calibri">
+  <div id="preloder">
+		<h1 class="loading">preparing your reports...</h1>
+		<div class="loader"></div>
+	</div>
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle dispnone" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand bg-white d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+        <div class="sidebar-brand-icon rotate-n-0">
+          <img class="mobile-malaysian" src={{logopath}} alt="">
+          <img class="desktop-malaysian" src={{mobilelogopath}} alt="">
+        </div>
+        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-2">
+
+      <!-- <div class="sidebar-heading text-white">
+        Reports
+      </div> -->
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseIncome" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-poll"></i>
+          <span>Reports</span>
+        </a>
+        <div id="collapseIncome" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.viewpayment') }}"><i class="fas  fa-coins mr-1 text-success font-weight-bold"></i>Payments report</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.tenantstatement') }}"><i class="fas fa-file-contract mr-1 text-success"></i>Tenant Statement</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.monthlystatement') }}"><i class="fas fa-receipt mr-1 text-success"></i>Landord summary</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.externaldetail') }}"><i class="fas  fa-clipboard-list mr-1 text-success"></i>Landlord detailed</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.internaldetail') }}"><i class="fas  fa-calendar-alt mr-1 text-success"></i>Internal report</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.rentreport') }}"><i class="fas  fa-file-alt mr-1 text-success"></i>Rent statement</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.viewmonthlyreading') }}"><i class="fas  fa-tint mr-1 text-success"></i>Readings report</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.expensedetail') }}"><i class="fas  fa-layer-group mr-1 text-success"></i>Internal expenses</a>
+            <!-- <a class="collapse-item text-black text-125" href="{{ url_for('api.summarisedcombinedbill') }}"><i class="fas  fa-file mr-1 text-success"></i>General report</a> -->
+
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <!-- <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMonthlyBill" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Monthly</span>
+        </a>
+        <div id="collapseMonthlyBill" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">:</h6>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.internaldetail') }}"><span><i class="fas fa-fw fa-calendar-check mr-2"></i></span>Monthly SR</a>
+            <a class="collapse-item mylinks" href="{{ url_for('api.viewwatercharge') }}"><span><i class="fas fa-fw fa-pen"></i></span>Water Bills</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-pen"></i></span>Tenant Repairs</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li> -->
+
+
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePayments" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Payments</span>
+        </a>
+        <div id="collapsePayments" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">:</h6>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.viewpayment') }}"><span><i class="fas fa-fw fa-list-alt mr-2"></i></span>Payments</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseExpenses" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Expenses</span>
+        </a>
+        <div id="collapseExpenses" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">:</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-clock"></i></span>Internal Expenses</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+      
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePropertyDetail" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Property Detail</span>
+        </a>
+        <div id="collapsePropertyDetail" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">:</h6>
+            <a class="collapse-item text-dark" href="{{ url_for('api.viewhouses') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Houses</a>
+            <a class="collapse-item text-black text-125" href="{{ url_for('api.viewmeters') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Meters</a>
+            <a class="collapse-item text-dark" href="{{ url_for('api.viewbookings') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>Pending Allocations</a>
+            <a class="collapse-item text-dark" href="{{ url_for('api.viewtenancy') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Resident Tenants</a>
+            <a class="collapse-item text-dark" href="{{ url_for('api.viewvacatedtenants') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Vacated Tenants</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBillDefaulters" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Bill Defaulters</span>
+        </a>
+        <div id="collapseBillDefaulters" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">:</h6>
+            <a class="collapse-item mylinks" href=""><span><i class="fas fa-fw fa-clock"></i></span>Bill Defaulters</a>
+
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li> -->
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+          <nav class="navbar fixed-nav navbar-expand navbar-light topbar bg-white mb-4 static-top shadow mobile-malaysian">
+            <a class="sidebar-brand {{logobg}} d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+              <div class="sidebar-brand-icon rotate-n-0">
+                <img id="logol" class="mobile-malaysian" src={{logopath}} alt="">
+                <img id="logos" class="desktop-malaysian" src={{mobilelogopath}} alt="">
+              </div>
+            </a>
+
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+
+
+
+              <li class="nav-item dropdown no-arrow mx-1">
+
+                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-chart-bar fa-fw text-info mr-2"></i>
+                  <span class="mobile-malaysian text-info font-weight-bold">REPORTS</span>
+                </a>
+
+              </li>
+              <div class="topbar-divider d-none d-sm-block"></div>
+
+
+              <li class="nav-item dropdown no-arrow mx-1">
+
+                <a class="nav-link dropdown-toggle text-danger" href="{{ url_for('api.index') }}" id="messagesDropdown" role="button" aria-expanded="false">
+                  <i class="fas fa-sign-out-alt mr-2"></i>Exit
+
+                </a>
+
+              </li>
+
+
+              <!-- Nav Item - User Information -->
+              <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <div class="text-gray-700 mr-2">
+                    {{group}}
+                  </div>
+                  <div class="topbar-divider d-none d-sm-block"></div>
+                  <!-- <span class="font-weight-bold mr-2 text-white">-</span> -->
+                  <span class="mr-2 d-none d-lg-inline text-gray-700 font-weight-bold">{{name}}</span>
+                  <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                  <div class="sidebar-brand-icon rotate-n-0">
+                    <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                  </div>
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="{{ url_for('api.updateuser') }}">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profile ({{name}})
+                  </a>
+                  <a class="dropdown-item" href="#">
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Settings
+                  </a>
+                  <a class="dropdown-item" href="#">
+                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Activity Log
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Logout
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+
+
+          <div class="row mobile-malaysian fixed-bar">
+
+            <div class="col-xl-12 no-padding mobile-malaysian">
+              <div class="card shadow h-0 py-0">
+                <div class="card-body bg-white report-card-padding">
+                      <div class="divjust-start center-btn">
+  
+                        <!-- <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-city text-gray-600"></i>
+                          <button class="propbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Properties</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-home text-gray-600"></i>
+                          <button class="housebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Houses</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-users text-gray-600"></i>
+                          <button class="tenantbtn btn btn-outline-info borderless p-0 m-0  font-weight-bold btn-sm">Tenants</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-bezier-curve text-gray-600"></i>
+                          <button class="meterbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Meters</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-receipt text-gray-600"></i>
+                          <button class="billbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Invoices</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-coins text-gray-600"></i>
+                          <button class="paybtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-coins text-gray-600"></i>
+                          <button class="paybtn2 btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments <span class="badge badge-success badge-counter">beta</span></button>
+                        </div>
+                        <div class="fixed-width-btn">
+                          <i class="fas fa-fw fa-clipboard text-gray-600"></i>
+                          <button class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Expenses</button>
+                        </div> -->
+                        <span class="fixed-width-bt mr-2">
+                          <button id="landlord-statements" class="btn btn-outline-info btn-info text-white borderless p-0 m-0 font-weight-bold btn-sm">Landlord statements</button>
+                        </span>
+                        <div class="fixed-width-bt mr-2">
+                          |
+                          <button id="office-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Office statements</button>
+                        </div>
+                        <div class="fixed-width-bt">
+                          |
+                          <button id="tenant-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Tenant statements</button>
+                        </div>
+
+          
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid report-fluid">
+              <div id="results-body" class="dispnone">
+                <div class="center-btn">
+                  <span id="result-loader"></span>
+                </div>
+              </div>
+              <div id="propdisp" class="dispnone"></div>
+              <div id="body-block" class="myblock">
+                {% block content %}
+          
+                {% endblock %}
+
+              </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <!-- <span>Copyright &copy; kiotapay 2021</span> -->
+                <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> KiotaPay All Rights Reserved</p>
+            </div>
+            </div>
+            <!-- Global site tag (gtag.js) - Google Analytics -->
+
+            <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
+            <script>
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-R7DLP684H1',{cookie_flags: 'SameSite=None;Secure'});
+            </script> -->
+            
+        </footer>
+        <!-- End of Footer -->
+    </div>
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+<i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade center-btn" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sign out</h5>
+      </div>
+      <div class="modal-body">Ready to Leave?</div>
+      <div class="has-margin-bottom divbg">
+        <a class="btn btn-danger" href="{{ url_for('api.userlogout') }}"> <i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+        <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-smile mr-2"></i>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="raiseVisaErr" type="button" class="borderless btn-secondary modalTrigger dispnone" data-toggle="modal" data-target="#exampleModal"></button>
+<div class="modal fade center-btn" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reports Developent</h5>
+      </div>
+      <div class="modal-body">
+        <div class="media mb-2">
+          <div class="media-body">
+
+            <div class="position-relative">
+              <span class="text-danger">This report module is not yet ready.</span>
+              <br>
+              <span class="text-warning">Kindly check back later.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foote divbg">
+        <!-- <button id="submitmodal" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button> -->
+        <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade center-btn" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Download options</h5>
+      </div>
+      <div class="modal-body">
+        <div class="media mb-2">
+          <div class="media-body">
+            <button id="export-xls-btn"class=" d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Excel</button>
+            <button id="export-pdf-btn"class=" d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Pdf</button>
+
+            <!-- <div class="position-relative">
+              <span class="text-danger">This report module is not yet ready yet.</span>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foote divbg">
+        <!-- <button id="submitmod" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button> -->
+        <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade center-btn" id="downloadModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Download options</h5>
+      </div>
+      <div class="modal-body">
+        <div class="media mb-2">
+          <div class="media-body">
+            <button id="export-xls-btn2"class=" d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Excel</button>
+            <button id="export-pdf-btn2"class=" d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Pdf</button>
+
+            <!-- <div class="position-relative">
+              <span class="text-danger">This report module is not yet ready yet.</span>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foote divbg">
+        <!-- <button id="submitmod" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button> -->
+        <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal center-btn" id="preloaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title text-danger" id="exampleModalLabel">Warning!</h5>
+      </div> -->
+      <div class="text-info pt-3 pb-3">
+        <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+      </div>       
+
+      <div class="dispnone">
+          <button type="button" id="postloader-btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="preloader-btn" class="dispnone" data-toggle="modal" data-target="#preloaderModal"></button>
+
+<!-- Bootstrap core JavaScript-->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{{ url_for('static', filename='eapartment-min.js') }}"></script>
+
+  <!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
+
+<script src="{{ url_for('static', filename='src/jquery.table2excel.js') }}"></script>
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+
+
+<!-- Page level custom scripts -->
+<script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+<script src="{{ url_for('static', filename='customjs.js') }}"></script>
+
+
+<script>
+
+    $("#submit").on('click',function(){
+      // $("#collapseCardExample").addClass("collapse");
+      $("#submit").html("Generating...");
+    })
+
+</script>
+
+<script>
+  var collapser =  $("#collapseid").text();
+  if (collapser){
+    $("#collapseCardExample").addClass("collapse");
+  } else{}
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $('#sidebarToggleTopa').on('click',function(){
+      $('#myi').toggleClass('fa-bars fa-arrow-left')
+      $('#myii').toggleClass('dispnone')
+      $('#accordionSidebar').toggleClass('mobile-toggle')      
+    })
+
+  });
+</script>
+
+<script>
+  $("#editBillModal").on('shown.bs.modal', function(){
+    $("#editbill").removeClass("dispnone");
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editsummary') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text()
+          },
+      success: function(response) {
+        $("#billeditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $('#editBillModal').on('hidden.bs.modal', function () {
+    $("#edit_bill_identifier").empty();
+})
+</script>
+
+<script>
+  $("#editbill").click(function(){   
+    $("#editbill").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editsummary') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent").val(),
+                water: $("#edit_water").val(),
+                deposit: $("#edit_deposit").val(),
+                arrears: $("#edit_arrears").val(),
+                paid: $("#edit_paid").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#closeModal").click();
+            $("#editbill").html("Update")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 1000,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "bPaginate": false, //hide pagination control
+      "bFilter": false, //hide filter control
+      "searching":false,
+      "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { targets: 0, type: 'natural' } ],
+      "info" : false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+<script>
+$("#export-xls-btn").click(function(){
+  $('#export-xls-btn').html("Downloading...")
+  $('#invoice').removeClass("dispnone")
+  $("#data-table").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Worksheet Name",
+    filename: "summarised bill.xls" //do include extension
+  });
+  setTimeout(function(){
+            $('#export-xls-btn').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Excel");
+            $('#invoice').addClass("dispnone");
+        },2000);
+});
+</script>
+
+<!-- <script>
+  document
+    .getElementById("export-pdf-btn")
+    .addEventListener("click", function download() {
+        $('#export-pdf-btn').html("Downloading...")
+        $('#invoice').removeClass("dispnone")
+      const element = document.getElementById("invoice");
+      html2pdf()
+        .from(element)
+        .save();
+        
+        setTimeout(function(){
+            $('#export-pdf-btn').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Pdf")
+            $('#invoice').addClass("dispnone")
+        },2000);
+    });
+</script> -->
+
+<!-- <script>
+  document
+    .getElementById("export-pdf-btn")
+    .addEventListener("click", function download() {
+        $('#export-pdf-btn').html("Downloading...")
+        $('#invoice').removeClass("dispnone")
+      const element = document.getElementById("invoice");
+      html2pdf()
+        .from(element)
+        .save();
+        
+        setTimeout(function(){
+            $('#export-pdf-btn').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Pdf")
+            $('#invoice').addClass("dispnone")
+        },2000);
+    });
+</script> -->
+
+
+
+
+
+
+<script>
+
+    if ($("#statement").text() == "tenant statement"){
+
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+          "date-range-pre": function ( a ) {
+              var monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              return monthArr.indexOf(a); 
+          },
+          "date-range-asc": function ( a, b ) {
+              return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+          },
+          "date-range-desc": function ( a, b ) {
+              return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+          }
+        });
+    
+        $('#data-table').DataTable({
+          "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+          "pageLength": 100,
+          // "bPaginate": false, //hide pagination control
+          // "bFilter": false, //hide filter control
+          "searching":false,
+          // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+          // "targets": 'no-sort',
+          // "bSort": false,
+          // columnDefs: [ { type: 'date-range', targets: 0 },{ targets: 0, type: 'natural' } ],
+          columnDefs: [ { type: 'date-range', targets: 0 } ],
+          // "info" : false,
+          "order": [[ 0, "asc" ]],
+          "bLengthChange": false
+        });
+        $('.dataTables_length').addClass('bs-select');
+
+    }else{
+        $('#data-table').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "bPaginate": false, //hide pagination control
+        "bFilter": false, //hide filter control
+        "searching":false,
+        "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
+        // "targets": 'no-sort',
+        // "bSort": false,
+        // columnDefs: [ { targets: 0, type: 'natural' } ],
+        "info" : false,
+        "order": [[ 0, "asc" ]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    }
+
+
+
+
+
+    const getFilename = $("#filename").text();
+    const getOrientation = $("#orientation").text();
+    document
+    .getElementById("export-pdf-btn")
+    .addEventListener("click", function download(){
+        $('#export-pdf-btn').html("Downloading...")
+        $('#invoice').removeClass("dispnone")
+      const element = document.getElementById("invoice");
+      html2pdf().from(element).set({
+      margin:       [0.2, 0, 0.2, 0], 
+      filename:getFilename,
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: {
+        dpi: 192,
+        scale:4,
+        letterRendering: true,
+        useCORS: true
+      },
+      pagebreak: { avoid: ['tr', 'tfoot', '.nobreak']},
+      jsPDF: {orientation: getOrientation, unit: 'in', format: 'a4'}
+
+    }).toPdf().get('pdf').then(function (pdf) {
+
+    var totalPages = pdf.internal.getNumberOfPages();
+    for (i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(10);
+        pdf.setTextColor(150);
+        pdf.text('Page ' + i + ' of ' + totalPages, pdf.internal.pageSize.getWidth()/2.25), (pdf.internal.pageSize.getHeight() - 1);  
+
+      }
+    }).save();
+    setTimeout(function(){
+            $('#export-pdf-btn').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Pdf")
+            $('#invoice').addClass("dispnone")
+        },2000);
+    })
+
+
+</script>
+
+
+
+
+
+<script>
+  $("#export-xls-btn2").click(function(){
+    $('#export-xls-btn2').html("Downloading...")
+    $('#tenant-data-download').removeClass("dispnone")
+    $("#data-table2").table2excel({
+      // exclude CSS class
+      exclude: ".noExl",
+      name: "Worksheet Name",
+      filename: "summarised bill.xls" //do include extension
+    });
+    setTimeout(function(){
+              $('#export-xls-btn2').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Excel");
+              $('#tenant-data-download').addClass("dispnone");
+          },2000);
+  });
+  </script>
+  
+  <script>
+    document
+      .getElementById("export-pdf-btn2")
+      .addEventListener("click", function download() {
+          $('#export-pdf-btn2').html("Downloading...")
+          $('#tenant-data-download').removeClass("dispnone")
+        const element = document.getElementById("tenant-data-download");
+        html2pdf()
+          .from(element)
+          .save();
+          
+          setTimeout(function(){
+              $('#export-pdf-btn2').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Pdf")
+              $('#tenant-data-download').addClass("dispnone")
+          },2000);
+      });
+  </script>
+
+<script>
+  $("#selected_apartment").on('change',function(){
+      var apartmentvar = $("#selected_apartment").val();
+      localStorage.setItem('apartmentvar',apartmentvar);
+      console.log(apartmentvar);
+  });
+</script>
+
+
+
+
+
+
+<script>
+  $("#selected_apartment").on('change',function(){
+      
+      $.ajax({
+              type: "get",
+              url: "{{ url_for('api.viewpayment') }}",
+              data: {
+                apartment: $("#selected_apartment").val(),
+                target:"tenants"
+              },
+              success: function(response) {
+                  $("#selected_tenant").html(response);
+              }
+          });
+  });
+</script>
+
+<script>
+    $("#mode").on('change',function(){
+    var cb = document.getElementById("mode");
+    if (cb.checked){
+      $("#mode-display").removeClass("dispnone");
+
+    }else{
+      $("#mode-display").addClass("dispnone");
+    }
+  
+  });
+  
+  $("#tenant").on('change',function(){
+    var cb2 = document.getElementById("tenant");
+    if (cb2.checked){
+      $("#tenant-display").removeClass("dispnone")
+
+    }else{
+      $("#tenant-display").addClass("dispnone")
+    }
+  
+  });
+</script>
+
+<script>
+  $(".dev").on('click',function(){
+    $("#raiseVisaErr").click();
+  });
+</script>
+
+<script>
+  $("#close-top").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#report").removeClass("dispnone")
+
+  });
+</script>
+<script>
+  $("#close-bottom").on('click',function(){
+
+    // $("#detailedreport").toggleClass('bg-gradient-dark bg-gradient-light');
+    $("#detailedreport").toggleClass('dispnone tenantdata');
+    $("#report").removeClass("dispnone")
+
+  });
+</script>
+
+
+<script>
+
+  $("#landlord-statements").click(function(){
+    $("#landlord_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+
+    $("#landlord-statements").addClass("btn-info text-white")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+  })
+
+  $("#office-statements").click(function(){
+    $("#office_statements").removeClass("dispnone")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+
+    $("#office-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+  })
+
+  $("#tenant-statements").click(function(){
+    $("#tenant_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+
+    $("#tenant-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+  })
+</script>
+
+
+
+<script>
+  $(".btn1").on('click',function(){
+    $(".loader1").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader1").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn2").on('click',function(){
+    $(".loader2").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader2").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn3").on('click',function(){
+    $(".loader3").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader3").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn4").on('click',function(){
+    $(".loader4").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader4").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn5").on('click',function(){
+    $(".loader5").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader5").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn6").on('click',function(){
+    $(".loader6").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader6").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn7").on('click',function(){
+    $(".loader7").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader7").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn8").on('click',function(){
+    $(".loader8").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader8").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn9").on('click',function(){
+    $(".loader9").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader9").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn10").on('click',function(){
+    $(".loader10").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader10").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn11").on('click',function(){
+    $(".loader11").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader11").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<script>
+  $(".btn12").on('click',function(){
+    $(".loader12").html('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    setTimeout(function(){
+      $(".loader12").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
+    },20000);
+});
+</script>
+
+<!-- <script>
+  var addNumeration = function(cl){
+    var table = document.querySelector('table.' + cl)
+    var trs = table.querySelectorAll('tr')
+    var counter = 1
+    
+    Array.prototype.forEach.call(trs, function(x,i){
+      var firstChild = x.children[0]
+      if (firstChild.tagName === 'TD') {
+        var cell = document.createElement('td')
+        cell.textContent = counter ++
+        x.insertBefore(cell,firstChild)
+      } else {
+        firstChild.setAttribute('colspan',2)
+      }
+    })
+  }
+  
+  addNumeration("test")
+  </script> -->
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

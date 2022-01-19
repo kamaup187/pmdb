@@ -1,0 +1,25 @@
+<table class="table common-bg-2 text-white shadow no-margin-bottom" width="100%" cellspacing="0">
+    <thead>
+      <tr>
+        <th class="text-info font-weight-bold">Type</th>
+        <th class="text-white track-title-cell">Pending</th>
+        <th class="text-white track-title-cell">Queued</th>
+        <th class="text-white track-title-cell">Running</th>
+        <th class="text-white track-title-cell mobile-malaysian">Completed</th>
+        <th class="text-white track-title-cell mobile-malaysian">Rejected</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for bill in bills%}
+      <tr>
+        <td class="track-data-cell text-info">{{ bill['type'] }}</td>
+        <td class="track-data-cell">{{ bill['pending'] }}</td>
+        <td class="track-data-cell">{{ bill['queued'] }}</td>
+        <td class="track-data-cell">{{ bill['running'] }}</td>
+        <td class="track-data-cell mobile-malaysian">{{ bill['completed'] }}</td>
+        <td class="track-data-cell mobile-malaysian">{{ bill['rejected'] }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+       
+    </table>

@@ -1,0 +1,137 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+
+<div class="containe">
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3">
+      <div class="formwrapper">
+        <div class="card shadow mb-4 bg-gradient-light">
+          <div class="card-header py-3 bg-gradient-dark divjust-end" >
+            <h6 class="m-0 font-weight-bold text-info"><span><i class="fas fa-fw fa-edit"></i></span>&nbsp;&nbsp;Charge Update</h6>
+            <a href="{{ url_for('api.index') }}"><span class="text-danger"><i class="fas fa-fw fa-times"></i></span></a>
+          </div>
+          <div class="card-body myforms">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                  <div id="alert-msgs"class="noti-{{ category }} show" role="alert">
+                      <span><span><i class="fas fa-fw fa-info-circle"></i></span>&nbsp;&nbsp;{{ message }}</span>
+                  </div>
+              {% endfor %}
+            {% endwith %}
+            
+            <span class="hide">hide</span>
+            <form autocomplete="off" method="POST" action="/amend/charge">
+              {{ form.csrf_token }}
+        
+              <div class="form-group">{{ form.apartment(class="form-control")}}</div>
+
+              <div id="apartment"class="form-group bg-gradient-dark center-btn">
+                <span class="text-white"><i class="fas fa-fw fa-info-circle"></i>&nbsp;&nbsp;Apartment: </span><span class="text-success makebig">{{apartment_name}}</span>
+              </div>
+
+              <div class="form-group">{{ form.tenant(class="form-control")}}</div>
+              <div class="form-group">{{ form.chargetype(class="form-control")}}</div>
+
+              <div id="chargeamount"></div>
+              
+
+              <div class="form-group">
+                <input class="form-control" type="text" name="amount" placeholder="Set new bill..." required>
+              </div>
+              <div class="form-group">
+                <input class="form-control" type="text" name="desc" placeholder="Reason..." required>
+              </div>
+              <input id="apvar" style="display: none;" type="text" name="apartmentsessionvariable">
+
+              <div class="divbg center-btn">
+                  <button type="submit" class="bg-gradient-dark borderless text-success"><i class="fas fa-check"></i>&nbsp;Submit</button>
+                  <!-- <button type="button" class="bg-gradient-dark borderless"><a class="text-info" href="{{ url_for('api.createmeter') }}"><i class="fas fa-clock"></i>&nbsp;Meters</a></button> -->
+                  <!-- <button type="button" class="bg-gradient-dark borderless text-warning"onclick="history.back()"><i class="fas fa-arrow-left"></i>&nbsp;Back</button> -->
+                  <button type="reset" class="bg-gradient-dark borderless text-warning"><i class="fas fa-redo-alt"></i>&nbsp;Reset</button>
+              </div>
+                
+            </form>
+          </div>
+        </div>
+      </div><br>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+
+<script>
+  setTimeout(function(){
+  $("#alert-msgs").fadeOut(500,"swing");
+  }, 2000);
+</script>
+
+<script>
+$("#select_apartment").on('change',function(){
+    var apartmentvar = $("#select_apartment").val();
+    localStorage.setItem('apartmentvar',apartmentvar);
+    var sessionapvar = localStorage.getItem('apartmentvar');
+    console.log(sessionapvar);
+    document.getElementById('apvar').value = sessionapvar;
+
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.amendcharge') }}",
+            data: {
+              apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+              runapartnm:"somestring"
+            },
+            success: function(response) {
+                $("#select_tenant").html(response);
+            }
+        });
+});
+</script>
+
+<script>
+
+  $("#select_apartment").on('change',function(){
+    setTimeout(function(){
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.amendcharge') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  run: "run"
+              },
+              success: function(response) {
+                  $("#apartment").html(response);
+              }
+          });
+    },0);
+  
+
+  });
+  </script>
+
+<script>
+    $("#select_chargetype").on('change',function(){
+    
+      $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.amendcharge') }}",
+              data: {
+                  apartmentsessionvariable: localStorage.getItem('apartmentvar'),
+                  tenant: $("#select_tenant").val(),
+                  chargetype: $("#select_chargetype").val(),
+                  dispreq: "dispreq"
+              },
+              success: function(response) {
+                  $("#chargeamount").html(response);
+              }
+          });
+    });
+</script>
+<script>
+  var sessionapvar = localStorage.getItem('apartmentvar');
+  console.log(sessionapvar);
+  document.getElementById('apvar').value = sessionapvar;
+</script>
+{% endblock %}

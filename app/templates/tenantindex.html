@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-R7DLP684H1');
+  </script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>KiotaPay | Tenant</title>
+
+  <!-- Custom fonts-->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <!-- Custom styles-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='modal.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='tracking.css') }}">
+
+</head>
+
+<body onload="startTime()" id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand bg-gradient-light d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+        <div class="sidebar-brand-icon rotate-n-0">
+          <!-- <i class="fas fa-home"></i> -->
+          <img class="mobile-malaysian" src="../static/img/logos/kiotapay/l-logo.png" alt="">
+          <img class="desktop-malaysian" src="../static/img/logos/kiotapay/s-logo.png" alt="">
+        </div>
+        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
+      </a>
+
+      <!-- Divider -->
+      <hr style="visibility: hidden;" class="sidebar-divider my-2">
+
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Main menu
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Lease Agreement</span>
+        </a>
+        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Lease:</h6>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMeters" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-clock"></i>
+          <span>Transfer</span>
+        </a>
+        <div id="collapseMeters" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Transfer requests:</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-clock"></i></span>&nbsp;Apartment transfer</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;House transfer</a>
+            <a class="collapse-item active " href="#"><span><i class="fas fa-fw fa-clipboard-list"></i></span>&nbsp;Clearance</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTenants" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-wrench"></i>
+          <span>Repairs</span>
+        </a>
+        <div id="collapseTenants" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">Maintenance Requests:</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-wrench"></i></span>&nbsp;Repair</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Paint</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;New Fittings</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Nav Item - Tables -->
+      <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapsePages">
+          <i class="fas fa-fw fa-hand-holding-usd"></i>
+          <span>My Bills</span>
+        </a>
+        <div id="collapseBilling" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-gradient-light py-2 collapse-inner rounded">
+            <h6 class="collapse-header text-info">monthly bills</h6>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-dollar-sign"></i></span>&nbsp;View bills</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-cogs"></i></span>&nbsp;View payments</a>
+            <a class="collapse-item mylinks" href="#"><span><i class="fas fa-fw fa-hand-holding-usd"></i></span>&nbsp;Bill complaint</a>
+            <div class="collapse-divider"></div>
+          </div>
+        </div>
+      </li>
+    
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline desktop-malaysian">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+        
+       
+
+
+
+
+
+
+
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light topbar-bg topbar mb-4 static-top shadow mobile-malaysian">
+          <span class="mobile-malaysian floating-apartment-desktop kiota-col">{{propertyname}} - <span class="kiota-col"> {{house}}</span></span>
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm kiota-col"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw text-white"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter">1</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-info">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">September 22, 2020</div>
+                    <span class="font-weight-bold">Remember to set a secure password!</span>
+                  </div>
+                </a>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw text-white"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-imag mr-1">
+                    <!-- <img class="rounded-circle" src="" alt=""> -->
+                    <!-- <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i></span>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="text-gray-400 mr-2">
+                  {{group}}
+                </div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <span class="mr-2 d-none d-lg-inline text-gray-100 font-weight-bold">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user text-secondary"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+
+
+
+
+
+
+
+
+        <nav class="navbar navbar-expand navbar-light topbar-b bg-white bg-gradient-ligh topbar mb-4 static-top shadow desktop-malaysian">
+           <!-- <span class="desktop-malaysian floating-apartment-mobile text-xs font-weight-bold mb-0 text-gray-500">{{house}} <span class="text-primary">-</span>{{propertyname}}</span> -->
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTopa" class="btn btn-link d-md-none rounded-circle mr-0 text-info">
+            <i id = "myi"class="fa fa-bars"></i>
+          </button>
+          <a class="d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+            <i id = "myii"class="collapselogo desktop-malaysian mr-2"></i>
+          </a>
+
+          <!-- <a href="{{ url_for('api.index') }}">
+            <img class="desktop-malaysian" src="../static/img/smkiotapaylogo.png" alt="">
+          </a> -->
+
+          <!-- Topbar Search -->
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+              <input type="text" class="form-control topbar-bg border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-light" type="button">
+                  <i class="fas fa-search fa-sm kiota-col"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw kiota-col"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-info badge-counter">1</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-info">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">September 22, 2020</div>
+                    <span class="font-weight-bold">Remember to set a secure password!</span>
+                  </div>
+                </a>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw kiota-col"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                  Message
+                </h6>
+                {% for msg in unread_msgs %}
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="dropdown-list-imag mr-1">
+                    <!-- <img class="rounded-circle" src="" alt=""> -->
+                    <!-- <div class="status-indicator bg-success"></div> -->
+                    <span class=""><i class="fas fa-circle text-success"></i></span>
+                  </div>
+                  
+                  <div class="font-weight-bold">
+                    <div class="text-truncate">{{msg.txt}}</div>
+                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                  </div>
+                </a>
+                {% endfor %}
+
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+              </div>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="text-gray-500 mr-2">
+                  {{group}}
+                </div>
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <span class="mr-2 d-none d-lg-inline kiota-col small">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-user kiota-col"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile ({{name}})
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Settings
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Activity Log
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+  
+          <div class="myblock">
+            <div class="d-sm-fle align-items-center justify-content-between divjust mb-1">
+              
+              <span>
+                <div>
+                  <span><span id="greetings" class="h6 text-gray-600 mr-2"></span><span class="kiota-col">{{tenantname}}</span></span>
+                </div>
+                <div>
+                  <span class="text-xs mb-0 text-danger "><span class="text-gray-800">Balance</span> Kshs {{my_balance}}</span>
+                </div>
+              </span>
+              
+              <span>
+                <li class="nav-item dropdown no-arrow d-sm-none no-li-marker">
+                  <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-out searchbtn" aria-labelledby="searchDropdown">
+                    <form class="form-inline mr-auto w-100 navbar-search">
+                      <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </li>
+              </span>
+
+              <!-- <div class="text-xs center-btn font-weight-bold text-danger mb-0">Balance</div> -->
+            
+              <span class="iceberg-x-sm">
+                <div class="small">
+                  <span class="sss" id="txt"></span>
+                  <div>{{weekday}}, {{current_day}} {{month_string}} {{current_year}}</div>
+                </div>
+              </span>
+
+            
+            </div>
+            
+
+            <div id ="invoice-report" class="dispnone">
+              <div class="col-lg-12 mb-1 no-padding">
+                  <div class="card shadow mb-0">
+                      <div class="card-header bg-gradient-dark py-2 divjust-end">
+                        <span><h5 class="m-0 font-weight-bol text-info">{{month_string}} Invoice</h5></span>
+                        <span>
+                          <div class="divbg center-btn">
+                            <button id="close3" type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i></button>
+                          </div>
+                        </span>
+                      </div>
+                      <div class="card-body bg-gradient-dark">
+                          <div id="detailed-bill" class="dispnone"></div>
+                          <!-- <p>Empty.</p> -->
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div id ="payments-report" class="dispnone">
+              <div class="col-lg-12 mb-1 no-padding">
+                  <div class="card shadow mb-0">
+                      <div class="card-header topbar-bg py-2 divjust-end">
+                        <span><h5 class="text-info">My payments</h5></span>
+                        <button id="export-pdf-btn"class="dispnone d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1"><i class="fas fa-download fa-sm text-white-50 mr-1"></i>Pdf</button>
+                        <span>
+                          <div class="divbg center-btn">
+                            <button id="close-payment-btn-top" type="button" class="bg-gradient-danger borderless text-white"><i class="fas fa-times"></i></button>
+                          </div>
+                        </span>
+                      </div>
+                      <div class="card-body topbar-bg">
+                        <form action="">
+                          <div class="form-group payment-input">
+                            <select class="form-control" name="month" class="form-control" id="selected_month" required>
+                          
+                              <option disabled selected value> Select month </option>
+                              <option value="January">January</option>
+                              <option value="February">February</option>
+                              <option value="March">March</option>
+                              <option value="April">April</option>
+                              <option value="May">May</option>
+                              <option value="June">June</option>
+                              <option value="July">July</option>
+                              <option value="August">August</option>
+                              <option value="September">September</option>
+                              <option value="October">October</option>
+                              <option value="November">November</option>
+                              <option value="December">December</option>
+                              
+                            </select>
+                          </div>
+
+                        </form>
+                        
+                          <div id="detailed-payments" class="dispnone"></div>
+                          <!-- <p>Empty.</p> -->
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="mpesa-popup bg-white animated--grow-in" id="payment-form">
+              <div id="payment-form-response" class="">
+
+              </div>
+              <div id="payment-form-request" class="">
+                <form method="POST" action="/tenant/payment">
+                  <div class="center-btn font-weight-bold text-gray-900 mb-2"> Make Payment</div>
+                
+                  <div class="form-group">
+                    <select name="paymode" class="form-control" id="select_paymode" required>
+                      <option disabled selected value> Select Payment mode </option>
+                      
+                      <option value="mpesa">M-Pesa</option>
+                      <option value="visa">Visa</option>
+                      
+                    </select>
+                  </div>
+  
+                  <div class="form-group">
+                    <select class="form-control user-input" name="decitype" id="chargetype" required>
+                      <option disabled selected value> Paying for?</option>
+                      <option value="Rent">Rent</option>
+                      <option value="Rent & Garbage">Rent & Garbage</option>
+                      <option value="Rent & Water">Rent & Water</option>
+                      
+                      <option value="Water">Water</option>
+                      <option value="Water & Garbage">Water & Garbage</option>
+                      <option value="Water & Electricity">Water & Electricity</option>
+                      <option value="Rent, Water, Garbage & Electricity">Rent, Water, Garbage & Electricity</option>
+                    </select>
+                  </div>
+  
+                  <div class="form-group">
+                    <input id="paidamount" class="form-control" type="text" name="paidamount" placeholder="Amount to Pay..." required>
+                  </div>
+  
+                  <div class="divbg center-btn">
+                    <button id ="make-payment" type="button" class="bg-white borderless text-success font-weight-bold">Pay</button>
+                    <button id="clearBtn" type="reset" class="bg-white borderless text-danger" onclick="closeMpesaForm()">Close</button>
+                  </div>
+  
+                </form>
+              </div>
+
+            </div>
+            <button id="raiseVisaErr" type="button" class="borderless btn-secondary modalTrigger dispnone" data-toggle="modal" data-target="#exampleModal"></button>
+
+            <div class="text-center">
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="indicator"></div>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Visa Payment</h5>
+                    </div>
+                    <div class="modal-body">
+                      <div class="media mb-2">
+                        <div class="media-body">
+            
+                          <div class="position-relative">
+                            <span class="text-success">Visa payment is coming soon.</span>
+                            <br>
+                            <span class="text-warning">Kindly use Mpesa option.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+            
+                    <div class="modal-foote divbg">
+                      <!-- <button id="submitmodal" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button> -->
+                      <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mpesa-popup bg-white animated--grow-in" id="request-form">
+              <form method="POST" action="/tenant/request">
+                <div class="center-btn font-weight-bold text-gray-900 mb-2">Make Request</div>
+              
+                <div class="form-group">
+                  <select name="paymode" class="form-control" id="requesttype" required>
+                    <option disabled selected value> Select request type </option>
+                    
+                    <option value="repair">Repair</option>
+                    <option value="paint">Painting</option>
+                    <option value="fitting">New fittings</option>
+                    
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input id="title" list="titles" class="form-control" type="text" name="title" placeholder="Title" required>
+                  <datalist id="titles">
+                    <option value="Clogged sink">
+                    <option value="Damp walls">
+                    <option value="Leaking tap">
+                    <option value="Damaged socket">
+                    <option value="Broken switch">
+                    <option value="Broken drawer">
+                    <option value="Spoilt shower">
+
+                  </datalist>
+                </div>
+
+                <div class="form-group">
+                  <textarea id="description" class="form-control" name="description" placeholder="Brief description(optional)" required></textarea>
+                </div>
+                <div id="request-response">
+                  <div class="divbg center-btn">
+                    <button id ="make-request" type="button" class="bg-gradient-success borderless text-white">Submit request</button>
+                    <button type="reset" class="bg-gradient-danger borderless text-white" onclick="closeRequestForm()">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="track-popup bg-white animated--grow-in" id="my-requests">
+              <div class="divjust-end">
+                <span class="center-btn font-weight-bold text-white mb-1">Request tracking</span>
+                <span>
+                  <a class="text-white" href="{{ url_for('api.index') }}"><button type="button" class="close-req-btn text-danger">Close</button></a>
+                </span>
+              </div>
+
+                <div id="trackrefresh"></div>
+                <div id="trackrequest" class="table-responsiv">
+                  <div class="has-margin-bottom" id="tabledata"></div>
+                  <table class="table bg-gradient-dark text-info" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="text-white track-title-cell">Date</th>
+                        <th class="text-white track-title-cell">Type</th>
+                        <th class="text-white track-title-cell">Title</th>
+                        <th class="text-white track-title-cell">Cost</th>
+                        <!-- <th class="text-white track-title-cell">Status</th> -->
+                        <th class="text-white track-title-cell">View</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill in bills%}
+                      <tr>
+                        <td class="track-data-cell">{{ bill['date'] }}</td>
+                        <td class="track-data-cell">{{ bill['requesttype'] }}</td>
+                        <td class="track-data-cell">{{ bill['title'] }}</td>
+                        <td class="track-data-cell">{{ bill['cost'] }}</td>
+                        <!-- <td class="track-data-cell">{{ bill['status'] }}</td> -->
+                        <td class="track-data-cell"><a class="text-warning" id ="{{bill['id']}}" href="#">Track</a></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                       
+                    </table>
+                      
+
+                      
+                </div>
+            </div>
+
+            <div class="mpesa-popup bg-white animated--grow-in" id="transfer-form">
+              <form>
+                <div class="center-btn font-weight-bold text-gray-900 mb-2">House transfer request</div>
+              
+                <div class="form-group">
+                  
+                  <select name="trans_house" class="form-control" id="selected_trans_house" required>
+                    <option disabled selected value> Select available house </option>
+                    
+                    {% for o in vacants %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                    
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <textarea id="trans-description" class="form-control" name="trans_description" placeholder="Reason for transfer(optional)" required></textarea>
+                </div>
+                <div id="transmessage">
+                  <div class="divbg center-btn">
+                    <button id ="make-trans-request" type="button" class="bg-gradient-success borderless text-white">Submit request</button>
+                    <button type="reset" class="bg-gradient-danger borderless text-white" onclick="closeTransferForm()">Cancel</button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+
+            <div class="mpesa-popup bg-white animated--grow-in" id="clearance-form">
+              <form>
+                <div class="center-btn font-weight-bold text-gray-900 mb-2">House clearance request</div>
+              
+                <div class="form-group">
+                  <p class="small text-danger font-weight-bold">Note: Requests submitted one month prior to actual clearance date are eligible for deposit refund.</p>
+                  <select name="selected-clr-month" class="form-control" id="selected_clr_month" required>
+                    <option disabled selected value> Select month of clearance </option>
+                    
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                    
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <textarea id="clr-description" class="form-control textarea-height-sm" name="clr_description" placeholder="Reason for vacating(optional)" required></textarea>
+                </div>
+                <div id="balance-display">
+                  <div class="divbg center-btn">
+                    <button id ="make-clr-request" type="button" class="bg-gradient-success borderless text-white">Submit request</button>
+                    <button type="reset" class="bg-gradient-danger borderless text-white" onclick="closeClearanceForm()">Cancel</button>
+                  </div>
+                </div>
+
+
+              </form>
+            </div>
+
+            <div class="mpesa-popup bg-white animated--grow-in" id="contact-form">
+              <form>
+                <div class="center-btn font-weight-bold text-gray-900 mb-2">Make a contact</div>
+
+                <div class="form-group">
+                  <textarea id="contact-description" class="form-control textarea-height" name="contact_description" placeholder="Send a general message" required></textarea>
+                </div>
+                <div class="center-btn">
+                  <button id ="make-contact-request" type="button" class="bg-gradient-success borderless full-w text-white">Send</button>
+                </div>
+                
+                <div class="center-btn  text-info font-weight-bold text-xx mb-2">Alternatively make a call</div>
+                <div class="has-margin-bottom divbg desktop-malaysian">
+                  <span class="text-dark"><a class="text-warning font-weight-bold" href="{{agenttel_url}}"><i class="fas fa-phone-alt text-white mr-2"></i>Agent</a></span>
+                  <span class="text-dark"><a class="text-warning font-weight-bold" href="{{caretakertel_url}}"><i class="fas fa-phone-alt text-white mr-2"></i>Caretaker</a></span>
+                </div>
+                <div class="has-margin-bottom divbg mobile-malaysian">
+                  <span class="text-dark"><span class="mr-3">Agent:</span><a class="text-warning font-weight-bold" href="{{agenttel_url}}"><i class="fas fa-phone-alt mr-2"></i>{{agenttel}}</a></span>
+                  <span class="text-dark"><span class="mr-3">Caretaker:</span><a class="text-warning font-weight-bold" href="{{caretakertel_url}}"><i class="fas fa-phone-alt mr-2"></i>{{caretakertel}}</a></span>
+                </div>
+                <div class="divbg center-btn">
+                  <button type="reset" class="bg-gradient-danger borderless text-white" onclick="closeContactForm()">Close</button>
+                </div>
+
+              </form>
+            </div>
+
+            <div class="row mobile-malaysian">
+              <div class="col-xl-6 col-md-6 mb-2 no-padding">
+                <div class="card border-left-success shadow h-100 py-0">
+                    <div class="card-body bg-white titanic-iceberg-bottom titanic-iceberg-top">
+                        <div class="row no-gutters align-items-center">
+  
+                            <div class="col mr-3">
+                              <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" id="invoice">
+                                <div><img src="../static/img/64/mybills.png"></div>
+                                <span id="mybill" class="small mobile-malaysian sss">My bill</span>
+                              </button>  
+                            </div>
+  
+                            <div class="col mr-3">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openMpesaForm()">
+                                  <div><img src="../static/img/64/mpesa2.png"></div>
+                                  <span class="small mobile-malaysian sss">Pay now</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Pay now</h6></span>
+                                </button>                       
+                            </div>
+  
+                            <div class="col">
+                              <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" id="payment-lg">
+                                <div><img src="../static/img/64/payments2.png"></div>
+                                <span id="view-payment-btn-lg" class="small mobile-malaysian sss">My payments</span>
+                                
+                              </button>  
+                            </div>
+  
+                        </div>
+                        <div class="row no-gutters align-items-center">
+
+                          <div class="col mr-3">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2">
+                              <div><img src="../static/img/64/kplc.png"></div>
+                              <span class="small mobile-malaysian sss">Buy Tokens</span>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Check &nbsp;out</h6></span>
+                            </button>
+                          </div>
+                    
+                          <div class="col mr-3">
+                            <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2">
+                              <div><img src="../static/img/64/tv.png"></div>
+                              <span class="small mobile-malaysian sss">Pay DSTV/ZUKU</span>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Contact Management</h6></span>
+                            </button>
+                          </div>
+
+                          <div class="col">
+                              <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2">
+                                <div><img src="../static/img/64/mobile-network.png"></div>
+                                <span class="small mobile-malaysian sss">Pay Internet</span>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Check Vacancy</h6></span>
+                              </button>
+                          </div>
+
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-xl-6 col-md-6 mb-1 no-padding">
+                  <div class="card border-left-success shadow h-0 py-0">
+                      <div class="card-body bg-white titanic-iceberg-top titanic-iceberg-bottom">
+                          <div class="row no-gutters align-items-center">
+
+                              <div class="col mr-3">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openRequestForm()">
+                                  <div><img src="../static/img/64/repair.png"></div>
+                                  <span class="small mobile-malaysian sss">Request repairs</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span>
+                                </button>
+                              </div>
+
+                              <div class="col mr-3">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openMyRequests()">
+                                  <div><img src="../static/img/64/status2.png"></div>
+                                  <span class="small mobile-malaysian sss">Track repairs</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Track repairs</h6></span>
+                                </button>
+                              </div>
+
+                              <div class="col ">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openTransferForm()">
+                                  <div><img src="../static/img/64/transfer.png"></div>
+                                  <span class="small mobile-malaysian sss">House transfer</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">House change</h6></span>
+                                </button>
+                              </div>
+
+                          </div>
+
+                          <div class="row no-gutters align-items-center">
+
+                              <div class="col mr-3">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openClearanceForm()">
+                                  <div><img src="../static/img/64/moving.png"></div>
+                                  <span class="small mobile-malaysian sss">House clearance</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Check &nbsp;out</h6></span>
+                                </button>
+                              </div>
+                        
+                              <div class="col mr-3">
+                                <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2" onclick="openContactForm()">
+                                  <div><img src="../static/img/64/contact-us.png"></div>
+                                  <span class="small mobile-malaysian sss">Contact Management</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Contact Management</h6></span>
+                                </button>
+                              </div>
+
+                              <div class="col">
+                                <a href="{{ url_for('api.checkvacancy') }}">
+                                  <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2">
+                                    <div><img src="../static/img/64/search.png"></div>
+                                    <span class="small mobile-malaysian sss">Check Vacancy</span>
+                                    <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Check Vacancy</h6></span>
+                                  </button>
+                                </a>
+
+                              </div>
+
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="row desktop-malaysian">
+              <div class="col-xl-6 col-md-6 no-padding">
+                <div class="card shadow h-100 py-0">
+                    <div class="card-body bg-white report-card-padding">
+
+                        <div class="divjust-end center-btn">
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width" id="invoice2">
+                                <div><img src="../static/img/40/mybills_40x40.png"></div>
+                                <span class="small"><h6 id="mybill2" class="small titanic-iceberg sss">My bill</h6></span>
+                              </button>  
+                            </div>
+
+                            <div class="fixed-width-btn">
+                                <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width" onclick="openMpesaForm()">
+                                  <div><img src="../static/img/40/mpesa-40.png"></div>
+                                  <span class="small"><h6 class="small titanic-iceberg sss">Pay now</h6></span>
+                                </button>                       
+                            </div>
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width" id="payment-sm">
+                                <div><img src="../static/img/40/payments2-40.png"></div>
+                                <span class="small "><h6 id="view-payment-btn-sm" class="small titanic-iceberg sss">My payments</h6></span>
+                              </button>  
+                            </div>
+
+                        </div>
+
+                        <div class="divjust-end center-btn">
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width" onclick="openRequestForm()">
+                                <div><img src="../static/img/40/repair-40.png"></div>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span>
+                              </button>
+                            </div>
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width" onclick="openMyRequests()"> 
+                                <div><img src="../static/img/40/progress-40.png"></div>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Track repairs</h6></span>
+                              </button>
+                            </div>
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless mb-1 my-width"  onclick="openTransferForm()">
+                                <div><img src="../static/img/40/transfer-40.png"></div>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">House transfer</h6></span>
+                              </button>
+                            </div>
+
+                        </div>
+
+                        <div class="divjust-end center-btn">
+
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless my-width mb-1" onclick="openClearanceForm()">
+                                <div><img src="../static/img/40/moving-40x40.png"></div>
+                                <span class="small mobile-malaysian sss">Check out</span>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">House clearance</h6></span>
+                              </button>
+                            </div>
+                      
+                            <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless my-width mb-1" onclick="openContactForm()">
+                                <div><img src="../static/img/40/contact-40.png"></div>
+                                <span class="small mobile-malaysian sss">Contact Us</span>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Contact management</h6></span>
+                              </button>
+                            </div>
+
+                            <div class="fixed-width-btn">
+                              <a href="{{ url_for('api.checkvacancy') }}">
+                                <button class="bt text-gray-600 bg-white shadow borderless my-width mb-1">
+                                  <div><img src="../static/img/40/search_40x40.png"></div>
+                                  <span class="small mobile-malaysian sss">Check Vacancy</span>
+                                  <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Check Vacancy</h6></span>
+                                </button>
+                              </a>
+
+                            </div>
+
+                        </div>
+                        <div class="divjust-end center-btn">
+
+                          <div class="fixed-width-btn">
+                            <button class="bt text-gray-600 bg-white shadow borderless my-width">
+                              <div><img src="../static/img/40/kplc.png"></div>
+                              <span class="small mobile-malaysian sss">Pay Tokens</span>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Pay Tokens</h6></span>
+                            </button>
+                          </div>
+                    
+                          <div class="fixed-width-btn">
+                            <button class="bt text-gray-600 bg-white shadow borderless my-width">
+                              <div><img src="../static/img/40/tv.png"></div>
+                              <span class="small mobile-malaysian sss">Pay TV</span>
+                              <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Pay TV</h6></span>
+                            </button>
+                          </div>
+
+                          <div class="fixed-width-btn">
+                              <button class="bt text-gray-600 bg-white shadow borderless my-width">
+                                <div><img src="../static/img/40/internet.png"></div>
+                                <span class="small mobile-malaysian sss">Pay Internet</span>
+                                <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Pay Internet</h6></span>
+                              </button>
+                          </div>
+
+                      </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            <!-- Content Row -->
+
+            <div class="row">
+              <div class="col-lg-12 mb-0 no-padding">
+                  <div class="card shadow mb-1">
+                      <div class="card-header py-0">
+                          <h6 class="m-0 font-weight-bold text-primary"></h6>
+                      </div>
+                      <div class="card-body ad-h bg-light">
+                          <!-- <p class="small text-gray-400">ads.</p> -->
+                          <!-- <i class="fas fa-ad"></i> -->
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Page Heading -->
+          <!-- <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> -->
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer id="footer" class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; kiotapay 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade center-btn" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign out</h5>
+        </div>
+        <div class="modal-body">Ready to Leave?</div>
+        <div class="has-margin-bottom divbg">
+          <a class="btn btn-danger" href="{{ url_for('api.userlogout') }}"> <i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+          <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-smile mr-2"></i>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{{ url_for('static', filename='eapartment-min.js') }}"></script>
+
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+
+
+  <script>
+    document
+      .getElementById("export-pdf-btn")
+      .addEventListener("click", function download() {
+          $('#export-pdf-btn').html("Downloading...")
+        const element = document.getElementById("ppp");
+        html2pdf()
+          .from(element)
+          .save();
+          setTimeout(function(){
+              $('#export-pdf-btn').html("<i class='fas fa-download fa-sm text-white-50 mr-1'></i>Pdf")
+          },4000);
+      });
+  </script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $('#sidebarToggleTopa').on('click',function(){
+        // <img class="desktop-malaysian" src="../static/img/smkiotapaylogo.png" alt="">
+        // $('#myi').removeClass('collapselogo')
+        // $('#myi').toggleClass('collapselogo2')
+        $('#myi').toggleClass('fa-bars fa-arrow-left')
+        $('#myii').toggleClass('dispnone')
+        $('#accordionSidebar').toggleClass('mobile-toggle')
+        // $('#accordionSidebar').removeClass('mobile-toggle')
+        // $('#myii').toggleClass('dispnone disp')
+
+
+        // $('#accordionSidebar').css('display','block');
+        
+      })
+
+    });
+  </script>
+
+  <script>
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML =
+      h + ":" + m + ":" + s;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
+    }
+  </script>
+
+<script>
+  var myDate = new Date();
+  var hrs = myDate.getHours();
+
+  var greet;
+
+  if (hrs < 12)
+      greet = 'Good Morning';
+  else if (hrs >= 12 && hrs <= 17)
+      greet = 'Good Afternoon';
+  else if (hrs >= 17 && hrs <= 24)
+      greet = 'Good Evening';
+
+  document.getElementById('greetings').innerHTML = greet ;
+</script> 
+
+  <script>
+    function openMpesaForm() {
+      document.getElementById("payment-form").style.display = "block";
+      // $('#payment-form').removeClass("dispnone")
+    }
+    function closeMpesaForm() {
+      document.getElementById("payment-form").style.display = "none";
+    }
+    function openRequestForm() {
+      document.getElementById("request-form").style.display = "block";
+    }
+    function closeRequestForm() {
+      document.getElementById("request-form").style.display = "none";
+    }
+    function openMyRequests() {
+      document.getElementById("my-requests").style.display = "block";
+    }
+    function closeMyRequests() {
+      document.getElementById("my-requests").style.display = "none";
+    }
+    function openTransferForm() {
+      document.getElementById("transfer-form").style.display = "block";
+    }
+    function closeTransferForm() {
+      document.getElementById("transfer-form").style.display = "none";
+    }
+    function openClearanceForm() {
+      document.getElementById("clearance-form").style.display = "block";
+    }
+    function closeClearanceForm() {
+      document.getElementById("clearance-form").style.display = "none";
+    }
+    function openContactForm() {
+      document.getElementById("contact-form").style.display = "block";
+    }
+    function closeContactForm() {
+      document.getElementById("contact-form").style.display = "none";
+    }
+  </script>
+
+
+  <!-- <script>
+    $("#viewpayments").on('click',function(){
+        url2 = "{{ url_for('api.viewtenantdetailtwo') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                none:"none"
+              },
+              success: function(response) {
+                // $("#detailedreport").toggleClass('bg-gradient-light bg-gradient-dark');
+                $("#detailedreport").toggleClass('tenantdata dispnone');
+                $("#bill-report").toggleClass('row dispnone');
+                $("#detailedreport").html(response);
+              }
+          });
+    
+    });
+  </script> -->
+
+<script>
+  $("#invoice").on('click',function(){
+
+      $('#mybill').html('<i class="fa fa-spinner fa-spin mr-2"></i>Retrieving');
+      url2 = "{{ url_for('api.invoice') }}";
+
+      setTimeout(function(){
+        $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+                none: "none",
+            },
+            success: function(response) {
+              $("#detailed-bill").toggleClass('invoice dispnone');
+              $("#invoice-report").toggleClass('row dispnone');
+              $("#detailed-bill").html(response);
+            }
+        });
+
+      },300);
+  
+    });
+
+    $("#invoice2").on('click',function(){
+      $('#mybill2').html('<i class="fa fa-spinner fa-spin mr-0"></i>Retrieving');
+      url2 = "{{ url_for('api.invoice') }}";
+
+      setTimeout(function(){
+        $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+                none: "none",
+            },
+            success: function(response) {
+              $("#detailed-bill").toggleClass('invoice dispnone');
+              $("#invoice-report").toggleClass('row dispnone');
+              $("#detailed-bill").html(response);
+            }
+        });
+
+      },300);
+
+    });
+
+</script>
+
+<script>
+  $("#payment-lg").on('click',function(){
+
+      $('#view-payment-btn-lg').html('<i class="fa fa-spinner fa-spin mr-2"></i>Retrieving');
+      url2 = "{{ url_for('api.mypayments') }}";
+
+      setTimeout(function(){
+        $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+                runcheck:"none"
+            },
+            success: function(response) {
+              $("#detailed-payments").toggleClass('invoice dispnone');
+              $("#payments-report").toggleClass('row dispnone');
+              $("#detailed-payments").html(response);
+            }
+        });
+
+      },300);
+  
+    });
+
+
+  $("#payment-sm").on('click',function(){
+    $('#view-payment-btn-sm').html('<i class="fa fa-spinner fa-spin mr-0"></i>Retrieving');
+    url2 = "{{ url_for('api.mypayments') }}";
+
+    setTimeout(function(){
+      $.ajax({
+          type: "POST",
+          url: url2,
+          data: {
+              runcheck: "none",
+          },
+          success: function(response) {
+            $("#detailed-payments").toggleClass('invoice dispnone');
+            $("#payments-report").toggleClass('row dispnone');
+            $("#detailed-payments").html(response);
+          }
+      });
+
+    },300);
+
+  });
+
+  $("#selected_month").on('change',function(){
+      url2 = "{{ url_for('api.mypayments') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+                selected_month: $("#selected_month").val(),
+                runcheck:"run_report"
+            },
+            success: function(response) {
+              // $("#detailed-payments").toggleClass('invoice dispnone');
+              // $("#payments-report").toggleClass('row dispnone');
+              $('#export-pdf-btn').removeClass("dispnone")
+              $("#detailed-payments").html(response);
+          }
+      });
+  });
+</script>
+
+<script>
+  $("#make-payment").on('click',function(){
+    $('#make-payment').html('<i class="fa fa-spinner fa-spin mr-2"></i>Requesting...');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.tenantpayment') }}",
+            data: {
+                paymode:$("#select_paymode").val(),
+                payingfor:$("#chargetype").val(),
+                paidamount:$("#paidamount").val()
+            },
+            success: function(response) {
+              $('#make-payment').html('Pay');
+              $("#payment-form-request").addClass("dispnone")
+              $("#payment-form-response").removeClass("dispnone")
+              $("#payment-form-response").html(response);
+            }
+        });
+  });
+
+  $("#select_paymode").on('change',function(){
+      var paymode = $("#select_paymode").val();
+      $('#make-payment').removeClass("dispnone");
+      // $("#make-payment").attr("disabled", false);
+      // $('#make-payment').removeClass("bg-gradient-secondary text-gray-700");
+      // $('#make-payment').addClass("bg-gradient-success text-white");
+      if (paymode == "visa"){
+        $("#raiseVisaErr").click();
+        $('#make-payment').addClass("dispnone");
+        // $("#make-payment").attr("disabled", true);
+        // $('#make-payment').removeClass("bg-gradient-success text-white");
+        // $('#make-payment').addClass("bg-gradient-secondary text-gray-700");
+      }
+
+  });
+</script>
+
+<script>
+  $("#make-request").on('click',function(){
+    $('#make-request').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting...');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.tenanthouserequest') }}",
+            data: {
+                requesttype:$("#requesttype").val(),
+                title:$("#title").val(),
+                description:$("#description").val()
+            },
+            success: function(response) {
+                $("#request-response").html(response);
+            }
+        });
+  });
+</script>
+
+<script>
+  $("#make-clr-request").on('click',function(){
+    $('#make-clr-request').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting...');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.houseclearancerequest') }}",
+            data: {
+                clr_month:$("#selected_clr_month").val(),
+                description:$("#description").val(),
+                run: "runbalance"
+            },
+            success: function(response) {
+                $("#balance-display").html(response);
+            }
+        });
+  });
+</script>
+
+<script>
+  $("#make-contact-request").on('click',function(){
+    var validator = $("#contact-description").val();
+    if (validator){
+      if(validator == "Send another message" || validator == "Your message has been sent successfully"){
+        $('#make-contact-request').html('Type your new message!');
+        setTimeout(function(){
+          $('#make-contact-request').html('Send');
+        },700);
+        $("#contact-description").val("");
+      }else{
+        $('#make-contact-request').html('Sending...');
+        setTimeout(function(){
+          $.ajax({
+              type: "POST",
+              url: "{{ url_for('api.contactmanagement') }}",
+              data: {
+                  message:$("#contact-description").val()
+              },
+              success: function(response) {
+                  // $("#balance-display").html(response);
+                  $("#contact-description").val("Your message has been sent successfully");
+                  $('#make-contact-request').html('Send');
+                  setTimeout(function(){
+                    $("#contact-description").val("Send another message");
+                  },3000);
+              }
+          });
+        },300);
+      }
+    } else{
+      $('#make-contact-request').html('Message field is empty!');
+      $('#make-contact-request').removeClass("bg-gradient-success");
+      $('#make-contact-request').addClass("bg-gradient-danger");
+      setTimeout(function(){
+        $('#make-contact-request').html('Try again');
+        $('#make-contact-request').addClass("bg-gradient-success");
+        $('#make-contact-request').removeClass("bg-gradient-danger");
+      },700);
+    };
+
+  });
+</script>
+
+<script>
+  $("#make-trans-request").on('click',function(){
+    $('#make-trans-request').html('<i class="fa fa-spinner fa-spin mr-2"></i>Submitting...');
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.housetransferrequest') }}",
+            data: {
+                trans_house:$("#selected_trans_house").val(),
+                description:$("#description").val(),
+                run: "runmessage"
+            },
+            success: function(response) {
+                $("#transmessage").html(response);
+            }
+        });
+  });
+</script>
+
+<script>
+  $("#close3").on('click',function(){
+
+    $('#detailed-bill').toggleClass('dispnone invoice');
+    $('#invoice-report').toggleClass('dispnone row');
+    $('#mybill').html('My bill');
+    $('#mybill2').html('My bill');
+
+  });
+</script>
+
+<script>
+  $("#close-payment-btn-top").on('click',function(){
+
+    $('#detailed-payments').toggleClass('dispnone invoice');
+    $('#payments-report').toggleClass('dispnone row');
+    $('#view-payment-btn-lg').html('My payments');
+    $('#view-payment-btn-sm').html('My payments');
+
+    $('#selected_month option').prop('selected', function() {
+        return this.defaultSelected;
+    });
+
+  });
+</script>
+
+<script>
+var requestIdData = {{ requestids|tojson }};
+
+$.each(requestIdData, function(i,item) {
+
+  $("#"+item).on('click',function(){
+    // console.log(item);
+    // localStorage.setItem('tenantvar',item);
+    $.ajax({
+            type: "POST",
+            url: "{{ url_for('api.trackrequest') }}",
+            data: {
+                requestid:item
+            },
+            success: function(response) {
+              // $("#detailedreport").toggleClass('bg-gradient-light bg-gradient-dark');
+              // $("#detailedreport").toggleClass('tenantdata dispnone');
+              $("#tabledata").html(response);
+            }
+        });
+   
+  });
+});
+</script>
+
+</body>
+
+</html>

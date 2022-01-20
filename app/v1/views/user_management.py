@@ -225,23 +225,75 @@ class Users(Resource):
     """class"""
     @login_required
     def get(self):
-
         update_login_history("users",current_user)
 
-        users = current_user.company.users
 
-        if current_user.username == "admin":
-            users = fetch_all_users()
+        target = request.args.get('target')
 
-        user_data = user_details(users)
 
-        userids = get_obj_ids(user_data)
+        if target == "add user":
+            user = current_user
 
-        return render_template(
-            "ajax_users.html",
-            userids=userids,
-            items=user_data
-            )
+            usergroup_list = user.company.groups
+
+            tenant_group = CompanyUserGroupOp.fetch_usergroup_by_name("Tenant")
+            try:
+                usergroup_list.remove(tenant_group)
+            except:
+                pass
+
+            return render_template(
+                'ajax_userform.html',
+                groups=usergroup_list,
+                savecontext="Submit",
+                user_status="Active",
+                user=None)
+
+        elif target == "check email":
+            email = request.args.get('email')
+            if "@" not in email or ".com" not in email:
+                return err + "invalid"
+            user = fetch_user(email)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        elif target == "check tel":
+            tel = request.args.get('tel')
+            if "+" in tel:
+                return err + "invalid"
+            user = fetch_user(tel)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        elif target == "check id":
+            natid = request.args.get('natid')
+            if len(natid) < 6:
+                return err + "invalid"
+            user = fetch_user(natid)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        else:
+            users = current_user.company.users
+            if current_user.username == "admin":
+                users = fetch_all_users()
+
+            user_data = user_details(users)
+
+            userids = get_obj_ids(user_data)
+
+            return render_template(
+                "ajax_users.html",
+                userids=userids,
+                items=user_data
+                )
+
 
 class AdminRegisterUser(Resource):
     """This class registers a new user --agents or caretakers."""
@@ -1055,6 +1107,8 @@ class UpdateUser(Resource):
         return render_template(
             'ajax_userform.html',
             groups=usergroup_list,
+            user_status="Active" if user.active else "Dormant",
+            savecontext="Save Changes",
             user=user)
 
     @login_required

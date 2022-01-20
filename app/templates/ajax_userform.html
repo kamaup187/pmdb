@@ -33,15 +33,37 @@
                             <div class="row gx-3 mb-3">
                               <!-- Form Group (first name)-->
                               <div class="col-md-6">
-                                  <label class="small mb-1" for="inputID">ID</label>
-                                  <input class="form-control" id="inputID" type="text" placeholder="Enter your ID" value="{{user.national_id}}" />
+                                  <label class="small mb-1" for="inputId">ID</label>
+                                  <span id="idResp" class="ml-3"></span>
+
+                                  <input class="form-control" id="inputId" type="text" placeholder="Enter your ID" value="{{user.national_id}}" />
                               </div>
                               <!-- Form Group (last name)-->
                               <div class="col-md-6">
                                   <label class="small mb-1" for="inputEmail">Email</label>
+                                  <span id="emailResp" class="ml-3"></span>
+
                                   <input class="form-control" id="inputEmail" type="text" placeholder="Enter your Email" value="{{user.email}}" />
                               </div>
                           </div>
+                          <div class="row gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputTel">Mobile</label>
+                                <span id="telResp" class="ml-3"></span>
+
+                                <input class="form-control" id="inputTel" type="text" placeholder="Enter your mobile number" value="{{user.phone}}" />
+                            </div>
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputStatus">Select status</label>
+                                <select id="inputStatus" class="form-control" aria-label="Default select example">
+                                    <option selected disabled  value="">{{user_status}}</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Dormant</option>
+                                </select>
+                            </div>
+                        </div>
                           <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
@@ -75,7 +97,7 @@
                             </div>
                             <!-- Submit button-->
                             <div class="text-center">
-                                <button id="saveprofile" class="btn btn-primary" type="button">Save changes</button>
+                                <button id="saveprofile" class="btn btn-primary" type="button">{{savecontext}}</button>
                             </div>
                         </form>
                     </div>
@@ -101,10 +123,12 @@
     });
   
   
-    let resetpass1 = document.querySelector('#pass1');
-    let resetpass2 = document.querySelector('#pass2');
+
   
     function someFun () {
+        let resetpass1 = document.querySelector('#pass1');
+        let resetpass2 = document.querySelector('#pass2');
+
         resetpass1.value = '';
         resetpass2.value = '';
     }
@@ -147,6 +171,49 @@
             $(".passmatch").removeClass("text-success")
 
         }
+    })
+
+
+    $("#inputEmail").keyup(function(){
+        $.ajax({
+            url: "{{ url_for('api.users') }}",
+            type: "get",
+            data: {
+                email:$("#inputEmail").val(),
+                target:"check email"
+            },
+            success: function(response) {
+                $("#emailResp").html(response); 
+            }
+        });
+    })
+
+    $("#inputTel").keyup(function(){
+        $.ajax({
+            url: "{{ url_for('api.users') }}",
+            type: "get",
+            data: {
+                tel:$("#inputTel").val(),
+                target:"check tel"
+            },
+            success: function(response) {
+                $("#telResp").html(response); 
+            }
+        });
+    })
+
+    $("#inputId").keyup(function(){
+        $.ajax({
+            url: "{{ url_for('api.users') }}",
+            type: "get",
+            data: {
+                natid:$("#inputId").val(),
+                target:"check id"
+            },
+            success: function(response) {
+                $("#idResp").html(response); 
+            }
+        });
     })
   </script>
 

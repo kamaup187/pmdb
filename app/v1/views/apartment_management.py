@@ -274,6 +274,12 @@ class Index(Resource):
             companyname = company.name.split(" ")[0] if len(company.name) > 15 else company.name
             companyname2 = company.name.split(" ")[0]
 
+            if company.name == "Lesama Ltd":
+                shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
+            else:
+                shortcode = "Paybill: 969610 Acc: LesamaKe"
+                
+
             return Response(render_template(
                 'agentindex.html',
                 clientaccess = "access",
@@ -284,7 +290,7 @@ class Index(Resource):
                 companyname = companyname,
                 logobg=logobg,
                 numsms=smsfrac,
-                shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}",
+                shortcode = shortcode,
                 smshighlight=color,
                 username = fname_extracter(current_user.name),
                 unread_num = unread_num,

@@ -37,6 +37,9 @@ kiotanum = "+254716674695"
 
 configuration = os.getenv('APP_SETTINGS')
 
+proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
+err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
+
 flatten = lambda l: [item for sublist in l for item in sublist]
 
 def mbogi():
@@ -1322,7 +1325,10 @@ def fetch_user(varying_id):
             if not third_try:
                 fourth_try = UserOp.fetch_user_by_email(varying_id)
                 if not fourth_try:
-                    return None
+                    fifth_try = UserOp.fetch_user_by_phone(varying_id)
+                    if not fifth_try:
+                        return None
+                    return fifth_try
                 return fourth_try
             return third_try
         return second_try

@@ -275,10 +275,10 @@ class Index(Resource):
             companyname2 = company.name.split(" ")[0]
 
             if company.name == "Lesama Ltd":
-                shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
-            else:
                 shortcode = "Paybill: 969610 Acc: LesamaKe"
-                
+            else:
+                shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
+
 
             return Response(render_template(
                 'agentindex.html',

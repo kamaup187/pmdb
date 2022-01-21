@@ -983,7 +983,10 @@ class TenantUserSignUpStageTwo(Resource):
 
 class LandingPage(Resource):
     def get(self):
-        return Response(render_template("landingtwo.html"))
+        if os.getenv("CURRENT_APP") == "app1":
+            return Response(render_template("landingtwo.html"))
+        else:
+            return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass
@@ -1072,7 +1075,9 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-        return Response(render_template('login.html'))
+        loginpage = "login.html" if os.getenv("CURRENT_APP") == "app1" else "login2.html"
+
+        return Response(render_template(loginpage))
 
     def post(self):
         identity = request.form.get('identifier')
@@ -1080,6 +1085,8 @@ class UserLogin(Resource):
         password = request.form.get('password')
         remember = False
         downtime = False
+
+        print("Supplied logins >>>> ", "IDENTITY:",identity,"PASSW:",password)
         ### remember = True if request.form.get('remember') else False
         try:
             user = fetch_user(identity)

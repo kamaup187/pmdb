@@ -287,4 +287,4 @@
         # monthly_charge_obj = get_specific_monthly_charge_obj(tenant_obj.monthly_charges,2)
         # MonthlyChargeOp.update_payment(monthly_charge_obj,17000)
         # MonthlyChargeOp.update_balance(monthly_charge_obj,700)
-        #end
+        ##end

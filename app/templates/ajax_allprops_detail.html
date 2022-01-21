@@ -23,12 +23,12 @@
             <div class="row mb-3">
                 <div class="col-lg-6 center-btn">
                   <div class="info_item">
-                    <button type="button" class="borderless btn-info" data-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">list property</span></button>
+                    <button type="button" class="borderless btn-info" data-toggle="modal" data-bs-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">list property</span></button>
                   </div>
                 </div>
                 <div class="col-lg-6 center-btn">
                   <div class="info_item">
-                    <button type="button" class="borderless btn-info" data-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-upload mr-4"></i><span class="mr-4">upload data</span></button>
+                    <button type="button" class="borderless btn-info" data-toggle="modal" data-bs-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-upload mr-4"></i><span class="mr-4">upload data</span></button>
                   </div>
                 </div>
 
@@ -87,22 +87,22 @@
 
                         <td class="data-cell">
                           <div>
-                            <span id="{{item['identity']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700 {{item['status-disp']}}" data-toggle="modal" data-target="#editMeterModal"><i class="fas fa-info-circle mr-1 text-primary"><span class="text-success">active</span></i></span>
+                            <span id="{{item['identity']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700 {{item['status-disp']}}" data-toggle="modal" data-bs-toggle="modal" data-target="#editMeterModal" data-bs-target="#editMeterModal"><i class="fas fa-info-circle mr-1 text-primary"></i><span class="text-success">active</span></span>
                           </div>
                         </td>
                         <td class="data-cell">
                           <div>
-                            <span id="{{item['id']}}" type="button" class="{{item['link-target']}} ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#linkModal">{{item['link'] | safe}}</span>
+                            <span id="{{item['id']}}" type="button" class="{{item['link-target']}} ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-bs-toggle="modal" data-target="#linkModal">{{item['link'] | safe}}</span>
                           </div>
                         </td>
                         <td class="data-cell">
                           <div>
-                            <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#editPropModal"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
+                            <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-bs-toggle="modal" data-target="#editPropModal"><i class="fas fa-i-cursor mr-1 text-primary"></i><span class="text-gray-900">edit</span></span>
                           </div>
                         </td>
                         <td class="data-cell">
                           <div>
-                            <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModal"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+                            <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModal"><i class="fas fa-trash-alt mr-1 text-danger"></i><span class="text-gray-900">del</span></span>
                           </div>
                         </td>
                         <td class="data-cell">{{ item['createdby'] }}</td>
@@ -142,7 +142,7 @@
                               <option value="{{ o }}">{{ o }}</option>
                               {% endfor %}
                           </select>
-                          <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-target="#addOwnerModal"><i class="fas fa-plus-circle text-danger"></i>Owner</button>
+                          <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-bs-toggle="modal" data-target="#addOwnerModal"><i class="fas fa-plus-circle text-danger"></i>Owner</button>
                         </div>
 
                         <div class="form-group divjust-end">
@@ -153,7 +153,7 @@
                           {% endfor %}
                           </select>
   
-                         <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-target="#addRegionModal"><i class="fas fa-plus-circle text-danger"></i>Region</button>
+                         <button type="button" class="btn btn-outline-success text-info small-text" data-toggle="modal" data-bs-toggle="modal" data-target="#addRegionModal"><i class="fas fa-plus-circle text-danger"></i>Region</button>
                         </div>
 
 
@@ -195,7 +195,7 @@
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
               <span class="mr-3 smallify">List new property</span>
               <div>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadPropModal"><i class="fa fa-upload"></i></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-bs-toggle="modal" data-target="#uploadPropModal"><i class="fa fa-upload"></i></button>
                 <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
               </div>
             </h5>
@@ -426,7 +426,7 @@
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
               <span class="mr-3 mb-1 smallify font-weight-bold">Property settings | update</span>
               <div>
-                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal" data-bs-dismiss="modal">X</button>
               </div>
             </h5>
             <div class="alert-msgs"></div>
@@ -434,7 +434,7 @@
           <div class="text-info payment-info"></div>
           <div class="modal-body text-gray-900">
 
-            <div id="layoutSidenav_content">
+            <div id="">
               <main>
                   <!-- <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
                       <div class="container-xl px-4">
@@ -535,6 +535,7 @@
         </div>
       </div>
     </div>
+    </div>
 
     <div class="modal fade center-btn" id="deletePropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -570,8 +571,8 @@
   $("#close-propdisp").on('click',function(){
     $('#body-block').removeClass('dispnone')
     $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-    $('#list-area').removeClass("isopen text-danger");
+    // $('#content-area').removeClass("isopen text-danger");
+    // $('#list-area').removeClass("isopen text-danger");
     $('#sidebarToggle').click();
     $('#smaccordionSidebar').removeClass("toggled");
   });
@@ -615,7 +616,7 @@
         
       }else{
         $("#prop_identifier").html(item)
-        var linkTarget = $( "#"+item ).children( "i" ).children("span").text()
+        var linkTarget = $( "#"+item ).children("span").text()
         $("#link_identifier").html(linkTarget)
 
       }

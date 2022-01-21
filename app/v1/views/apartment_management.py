@@ -279,9 +279,11 @@ class Index(Resource):
             else:
                 shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
+            indexpage = "agentindex.html" if os.getenv("CURRENT_APP") == "app1" else "agentindex2.html"
+
 
             return Response(render_template(
-                'agentindex.html',
+                indexpage,
                 clientaccess = "access",
                 sidebar_theme = "premier-sidebar-theme" if str(company) == "Premier Realty" else "sidebar-bg",
                 topbar_theme = "premier-topbar-theme" if str(company) == "Premier Realty" else "bg-white",
@@ -3390,7 +3392,14 @@ class AddTenant(Resource):
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
-                    tenantphone = "0" + str(int(sheet.row_values(row)[2]) if sheet.row_values(row)[2] else "" )
+                    telle = sheet.row_values(row)[2]
+                    if telle:
+                        telle2 = telle.replace(" ", "")
+                        strtelle = str(int(telle2))
+                    else:
+                        strtelle = ""
+
+                    tenantphone = "0" + strtelle
                     
                     tenantemail = sheet.row_values(row)[3]
                     tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )

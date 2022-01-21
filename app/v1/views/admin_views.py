@@ -444,7 +444,7 @@ class AllProperties(Resource):
                 'tenants':tenants,
                 'occupancy':occ,
                 'status':"active",
-                'link':'<i class="fas fa-share-alt mr-1 text-success"><span class="text-gray-900">link</span></i>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"><span class="text-gray-900">unlink</span></i>',
+                'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
                 'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",
                 'client-disp':"" if current_user.id == 1 else "dispnone",
                 # 'unlink-disp':"dispnone" if not prop.company_id else "",

@@ -1,5 +1,6 @@
     <!-- Main page content-->
-    <div class="container-xl px-4 mt-4">
+    <span id="func" class="dispnone">{{target_func}}</span>
+    <div id="workarea" class="container-xl px-4 mt-4">
         <div class="row">
             <div class="col-xl-4">
                 <!-- Profile picture card-->
@@ -33,10 +34,10 @@
                             <div class="row gx-3 mb-3">
                               <!-- Form Group (first name)-->
                               <div class="col-md-6">
-                                  <label class="small mb-1" for="inputId">ID</label>
+                                  <label class="small mb-1" for="inputNatid">ID</label>
                                   <span id="idResp" class="ml-3"></span>
 
-                                  <input class="form-control" id="inputId" type="text" placeholder="Enter your ID" value="{{user.national_id}}" />
+                                  <input class="form-control" id="inputNatid" type="text" placeholder="Enter your ID" value="{{user.national_id}}" />
                               </div>
                               <!-- Form Group (last name)-->
                               <div class="col-md-6">
@@ -87,7 +88,7 @@
                             <!-- Form Group (Roles)-->
                             <div class="mb-3 form-group">
                                 <label class="small mb-1">Group</label>
-                                <select class="form-control" aria-label="Default select example">
+                                <select class="form-control" aria-label="Default select example" id="inputUsergroup">
                                     <option selected disabled>Select a role:</option>
                                     <!-- <option disabled selected value> -- none selected -- </option> -->
                                     {% for o in groups %}
@@ -202,12 +203,12 @@
         });
     })
 
-    $("#inputId").keyup(function(){
+    $("#inputNatid").keyup(function(){
         $.ajax({
             url: "{{ url_for('api.users') }}",
             type: "get",
             data: {
-                natid:$("#inputId").val(),
+                natid:$("#inputNatid").val(),
                 target:"check id"
             },
             success: function(response) {
@@ -217,34 +218,60 @@
     })
   </script>
 
+
+
+
 <script>
-    $("#saveprofile").click(function(){  
-      $("#saveprofile").html("updating...")  
+    $("#saveprofile").click(function(){
+        let target_func = $("#func").text()
+        let baseurl = "{{ url_for('api.users') }}"
+        let target
+        let successResponse
+        let afterSuccess
+
+        if (target_func == "new"){
+            target = "add new user"
+            successResponse = "Saved !"
+            afterSuccess = "Submit"
+            $("#saveprofile").html("submitting...")  
+        }else{
+            $("#saveprofile").html("updating...")
+            target = "update user"
+            successResponse = "Updated !"
+            afterSuccess = "Update user"
+        }
+
         $.ajax({
-          url: "{{ url_for('api.updateuser') }}",
-          type: "POST",
-          data: {
+        url: baseurl,
+        type: "POST",
+        data: {
             userid:$("#edit_user_identifier").text(),
+            name:$("#inputName").val(),
+            email:$("#inputEmail").val(),
+            phone:$("#inputTel").val(),
+            natid:$("#inputNatid").val(),
+            usergroup:$("#inputUsergroup").val(),
             pass1: $("#pass1").val(),
             pass2: $("#pass2").val(),
-
-
-              },
-          success: function(response) {
+            target:target
+            },
+        success: function(response) {
+            $("#workarea").addClass("dispnone")
             $(".alert-msgs").html(response);
-            $("#saveprofile").html("Updated")
+            $("#saveprofile").html(successResponse)
 
             
             setTimeout(function(){
-              $(".alert-msgs").empty();
-              
-              $(".reset").click();
-              // $('#saveprofile').attr('disabled', 'disabled');
+            $("#workarea").removeClass("dispnone")
+            $(".alert-msgs").empty();            
+            $("#saveprofile").html(afterSuccess)
+            $(".reset").click();
+            // $('#saveprofile').attr('disabled', 'disabled');
             //   $('#closeeditTenantModal').click();
             //   $('#saveprofile').removeClass('btn-success')
             //   $('#saveprofile').addClass('btn-secondary')
-              $("#saveprofile").html("save changes")
-            }, 1500);
+            }, 2500);
+            
             // $.ajax({
             //       url: "{{ url_for('api.fetchtenants') }}",
             //       type: "get",
@@ -257,7 +284,11 @@
             //         $("#result-view").html(response);
             //       }
             //     });
-          }
+        }
         });
+        
+
+
+
     });
   </script>

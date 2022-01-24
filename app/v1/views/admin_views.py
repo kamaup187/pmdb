@@ -442,6 +442,7 @@ class AllProperties(Resource):
                 'agent':agent,
                 'houses':houses,
                 'tenants':tenants,
+                'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
                 'occupancy':occ,
                 'status':"active",
                 'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',

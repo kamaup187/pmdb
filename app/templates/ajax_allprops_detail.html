@@ -65,6 +65,7 @@
                         <th class="text-info font-weight-bold">Property</th>
                         <th class="text-info font-weight-bold">Houses</th>
                         <th class="text-info font-weight-bold">Tenants</th>
+                        <th class="text-info font-weight-bold">Reminders</th>
                         <th class="text-info font-weight-bold">Occupancy</th>
                         <th class="text-info font-weight-bold">Owner</th>
                         <th class="text-info font-weight-bold {{access['client-disp']}}">Client</th>
@@ -81,6 +82,7 @@
                         <td class="first-data-cell text-primary font-weight-bold"><span class="text-info">{{item['id']}}</span> -{{ item['name'] }}</td>
                         <td class="data-cell">{{ item['houses'] }}</td>
                         <td class="data-cell">{{ item['tenants'] }}</td>
+                        <td class="data-cell">{{ item['reminders']|safe }}</td>
                         <td class="data-cell">{{ item['occupancy'] }} %</td>
                         <td class="data-cell text-gray-700 small">{{ item['owner'] }}</td>
                         <td class="data-cell text-gray-900 small {{item['client-disp']}}">{{ item['agent'] }}</td>

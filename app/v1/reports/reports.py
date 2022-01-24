@@ -1939,7 +1939,7 @@ class ListedProperties(Resource):
     @login_required
     def get(self):
         target_period = datetime.datetime.now()
-        if current_user.username.startswith("qc"):
+        if current_user.username == "kiotapay":
             raw_props = ApartmentOp.fetch_all_apartments()
         else:
             raw_props = fetch_all_apartments_by_user(current_user)

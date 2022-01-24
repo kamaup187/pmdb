@@ -343,7 +343,7 @@ class UserOp(User,Base):
             abr_year = year[:2]
             month = str(self.date.month)
             day = str(self.date.day)
-            return day+"/"+month
+            return day+"/"+month+"/"+abr_year
         else:
             return "Not available"
 
@@ -356,6 +356,7 @@ class UserOp(User,Base):
             "name":self.name,
             "tel":self.phone,
             "natid":self.national_id,
+            "usercode":self.usercode,
             "email":self.email,
             "group":self.company_user_group,
             "company":self.company,

@@ -114,7 +114,6 @@ class User(db.Model,UserMixin):
     user_group_id = db.Column(db.Integer, db.ForeignKey(UserGroup.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
-    # associated_membership = db.relationship('Member', backref='associated_users', cascade="all, delete-orphan")
 
     apartments = db.relationship("Apartment",secondary=apartment_table,backref=db.backref('users'))
     expenses = db.relationship('InternalExpense', backref='user', cascade="all, delete-orphan")
@@ -216,6 +215,8 @@ class Apartment(db.Model):
     billprogress = db.Column(db.String)
     consumer_key = db.Column(db.VARCHAR)
     consumer_secret = db.Column(db.VARCHAR)
+    reminder_status = db.Column(db.String,default="no")
+
     garbage_collector = db.Column(db.VARCHAR)
     garbage_collector_tel = db.Column(db.VARCHAR)
     garbage_collector_bank = db.Column(db.VARCHAR)

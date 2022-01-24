@@ -2847,6 +2847,17 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
                     recipient = [phonenum]
                     message = f"Dear {fname}, \n{temp_txt}. \nBalance: Kshs. {tenant_obj.balance} \n\n~{str_co}."
 
+                    char_count = len(message)
+                    if char_count <= 160:
+                        cost = 1
+                    elif char_count <= 320:
+                        cost = 2
+                    else:
+                        cost = 3
+                    
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj.save()
+
                     if target_company.name == "Lesama Ltd":
                         advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
                     elif target_company.name == "KEVMA REAL ESTATE":
@@ -2935,6 +2946,17 @@ def autosend_pending_smsreceipts(payids):
         message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
         if tenant_obj.sms:
+
+            char_count = len(message)
+            if char_count <= 160:
+                cost = 1
+            elif char_count <= 320:
+                cost = 2
+            else:
+                cost = 3
+            
+            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
+            sms_obj.save()
 
             if payment_obj.apartment.company.name == "Lesama Ltd":
                 advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
@@ -3524,6 +3546,17 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 message = f"Dear {tname}, your {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                         # if prop_obj.company.name == "KIGAKA ENTERPRISES":
                         #     continue
+
+                        char_count = len(message)
+                        if char_count <= 160:
+                            cost = 1
+                        elif char_count <= 320:
+                            cost = 2
+                        else:
+                            cost = 3
+                        
+                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
+                        sms_obj.save()
 
                         if co.name == "KEVMA REAL ESTATE":
                             advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")

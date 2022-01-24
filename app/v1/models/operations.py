@@ -73,6 +73,10 @@ class Base():
         except:
             return name
 
+    def date_format(date):
+        str_date = date.strftime("%d/%b/%y")
+        return str_date
+
 class BugsReportOp(BugsReport,Base):
     def __init__(self,description,created_by):
         self.description = description
@@ -3114,3 +3118,43 @@ class InternalMessagesOp(InternalMessages,Base):
     def update_status(self,status):
         self.status = status
         db.session.commit()
+
+class SentMessagesOp(SentMessages,Base):
+    """class"""
+    def __init__(self,text,characters,cost,tenant_id,apartment_id,company_id):
+        self.text = text
+        self.characters = characters
+        self.cost = cost
+        self.tenant_id = tenant_id
+        self.apartment_id = apartment_id
+        self.company_id = company_id
+
+    def fetch_a_message_by_id(id):
+        return SentMessages.query.filter_by(id=id).first()
+
+    def fetch_undelivered_messages(status):
+        return SentMessages.query.filter_by(status=status).all()
+
+    def fetch_all_messages():
+        return SentMessages.query.all()
+
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
+    def combine_house_tenant_alt(self):
+        fname = self.tenant.name if self.tenant.name else "Tenant"
+        house =  TenantOp.get_houseno(self.tenant)
+        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+
+    def view(self):
+        return {
+            'id':self.id,
+            'prop':self.apartment,
+            'hst':SentMessagesOp.combine_house_tenant_alt(self),
+            'text':self.text,
+            'chars':self.characters,
+            'cost':self.cost,
+            'status':self.status,
+            'date':SentMessagesOp.date_format(self.date)
+        }

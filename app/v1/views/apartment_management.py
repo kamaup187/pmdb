@@ -286,7 +286,7 @@ class Index(Resource):
                 indexpage,
                 clientaccess = "access",
                 sidebar_theme = "premier-sidebar-theme" if str(company) == "Premier Realty" else "sidebar-bg",
-                topbar_theme = "premier-topbar-theme" if str(company) == "Premier Realty" else "bg-white",
+                topbar_theme = "bg-white" if str(company) == "Premier Realty" else "bg-white",
                 card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg",
                 co=company,
                 companyname = companyname,

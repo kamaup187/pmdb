@@ -312,7 +312,7 @@
                                     <div class="report-btn">
                                         <a class="btn8" href="{{ url_for('api.expensedetail') }}">
                                             <button class="btn btn-outline-success borderles report-card mb-1">
-                                                <div class="loader8"><i class="fas fa-file fa-2x"></i></div>
+                                                <div class=""><i class="fas fa-file fa-2x"></i></div>
                                                 <span class="sss text-black">Expenses</span>
                                                 <span class="badge badge-primary badge-counter">disbursements</span>
                                             </button>
@@ -323,7 +323,7 @@
                                     <div class="report-btn">
                                         <a class="btn3" href="{{ url_for('api.internaldetail') }}">
                                             <button class="btn btn-outline-success  report-card mb-1">
-                                                <div class="loader3"><i class="fas fa-receipt fa-2x "></i></div>
+                                                <div class=""><i class="fas fa-receipt fa-2x "></i></div>
                                                 <span class="sss text-black">Invoices report</span>
                                                 <span class="badge badge-primary badge-counter">general statement</span>
                 
@@ -342,11 +342,12 @@
                                         </a>
                                     </div>
         
-                                    <div class="report-btn hide">
-                                        <a class="btn2" href="{{ url_for('api.tenantstatement') }}">
+                                    <div class="report-btn">
+                                        <a class="btn2" href="{{ url_for('api.listedproperties') }}">
                                             <button class="btn btn-outline-success report-card mb-1">
-                                                <div class="loader2"><i class="fas fa-file-contract fa-2x"></i></div>
-                                                <span class="sss text-black">Tenant Statement I
+                                                <div class=""><i class="fas fa-file-contract fa-2x"></i></div>
+                                                <span class="sss text-black">Properties report
+                                                <span class="badge badge-primary badge-counter">listed properties</span>
                                             </span>
                 
                                             </button>

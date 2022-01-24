@@ -1935,6 +1935,83 @@ class GarbageStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+class ListedProperties(Resource):
+    @login_required
+    def get(self):
+        target_period = datetime.datetime.now()
+        raw_props = fetch_all_apartments_by_user(current_user)
+        new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
+        for i in new_props:
+            raw_props.append(i)
+
+        props = remove_dups(raw_props)
+
+        items = []
+
+        sum_tenants = 0
+        sum_houses = 0
+        
+        for prop in props:
+            tenants = len(tenantauto(prop.id))
+            houses = len(prop.houses)
+            try:
+                occupancy = tenants/houses * 100
+            except:
+                occupancy = 0
+                
+            occ = f"{occupancy:,.0f}%"
+            agent_user = UserOp.fetch_user_by_username(prop.agent_id)
+            agent = agent_user.company if agent_user else "N/A"
+
+            dict_obj = {
+                'id':prop.id,
+                'identity':"prp"+str(prop.id),
+                'editid':"edit"+str(prop.id),
+                'delid':"del"+str(prop.id),
+                'name':prop.name,
+                'owner':prop.owner.name,
+                'agent':agent,
+                'houses':houses,
+                'tenants':tenants,
+                'occupancy':occ,
+                'status':"active",
+                'client-disp':"" if current_user.username.startswith("qc") else "dispnone",
+                'createdby':prop.user_id,
+            }
+
+            sum_tenants += tenants
+            sum_houses += houses
+
+            items.append(dict_obj)
+
+        overall_occupancy = sum_tenants/sum_houses * 100
+
+
+        access = {
+            'client-disp':"" if current_user.id == 1 else "dispnone"
+        }
+        
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} - ({target_period.year})"
+
+        return Response(render_template(
+            'report_listed_properties.html',
+            tenantlist=[],
+            timeline = timeline,
+            houses=sum_houses,
+            tenants=sum_tenants,
+            occupancy=f"{overall_occupancy:,.0f}%",
+            access=access,
+            items=items,
+            paging=page(items),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
 class ExternalDetail(Resource):
     @login_required
     def get(self):

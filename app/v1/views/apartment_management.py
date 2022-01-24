@@ -107,8 +107,8 @@ class Index(Resource):
             # uss = UserOp.fetch_user_by_national_id("24142460")
             # UserOp.update_status(uss,False)
 
-            run_scripts(current_user)
-            run_company_data()
+            # run_scripts(current_user)
+            # run_company_data()
 
             print("TIME NOW IN US: ", (time + relativedelta(hours=0)).strftime("%X"))
 
@@ -2566,7 +2566,6 @@ class BulkSms(Resource):
                 texttemplate = TextTemplateOp(rem_txt,current_user.company.id)
                 texttemplate.save()
 
-
         else:
             try:
                 raw_date = date_formatter(rem_date)
@@ -2586,16 +2585,26 @@ class BulkSms(Resource):
             text = f'Bulk sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],"KIOTAPAY")
 
+            userid = current_user.id
+
             if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
-                job8 = q.enqueue_call(
-                    func=send_bulk_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
-                )
+                if prop_obj.reminder_status == "sent":
+                    pass
+                else:
+                    ApartmentOp.update_reminder_status(prop_obj,"sent")
+                    job8 = q.enqueue_call(
+                        func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                    )
             else:
-                # job8 = q.enqueue_call(
-                #     func=send_bulk_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
-                # )
-                pass
-            
+                if prop_obj.reminder_status == "sent":
+                    text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
+                    response = sms.send(text, ["+254716674695"],"KIOTAPAY")
+                else:
+                    ApartmentOp.update_reminder_status(prop_obj,"sent")
+                    job8 = q.enqueue_call(
+                        func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                    )
+                    # pass
             return "success"
         
 

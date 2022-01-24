@@ -95,7 +95,8 @@ class Index(Resource):
         time = datetime.datetime.now() + relativedelta(hours=3)
 
 
-        if current_user.username.startswith('qc') or current_user.usercode =="3551":
+        # if current_user.username.startswith('qc') or current_user.usercode =="3551":
+        if current_user.username == "kiotapay":
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:
@@ -107,7 +108,7 @@ class Index(Resource):
             # UserOp.update_status(uss,False)
 
             run_scripts(current_user)
-            # run_company_data()
+            run_company_data()
 
             print("TIME NOW IN US: ", (time + relativedelta(hours=0)).strftime("%X"))
 

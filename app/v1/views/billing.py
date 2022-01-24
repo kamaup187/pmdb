@@ -1481,6 +1481,13 @@ class SendSms(Resource):
             raw_rem_sms =co.remainingsms
             message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
+            char_count = len(message)
+
+            cost = 1 if char_count <= 160 else 2
+            
+            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
+            sms_obj.save()
+
             if tenant_obj.sms:
                 if payment_obj.apartment.company.name == "Lesama Ltd":
                     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")

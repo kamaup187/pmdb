@@ -369,6 +369,22 @@ class PropData(Resource):
             propids=propids
         ))
 
+class FetchSentSms(Resource):
+    @login_required
+    def get(self):
+        company = current_user.company
+        sent_texts = company.sent_messages
+        target_texts = []
+        items = []
+        for m in sent_texts:
+            if m.date.month == company.billing_period.month and m.date.year == company.billing_period.year:
+                target_texts.append(m)
+
+        for t in target_texts:
+            items.append(SentMessagesOp.view(t))
+
+        return render_template("ajax_sent_messages.html",items=items)
+
 class PropSearchData(Resource):
     @login_required
     def get(self):      
@@ -2643,6 +2659,18 @@ class TenantSms(Resource):
                         new_text = current_user.company.name
                         message_body = f"{sms_text} \n~ {new_text}"
                         message = message_body
+
+                        char_count = len(message)
+                        if char_count <= 160:
+                            cost = 1
+                        elif char_count <= 320:
+                            cost = 2
+                        else:
+                            cost = 3
+                        
+                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,tenant.apartment.id,co.id)
+                        sms_obj.save()
+
                         sender = "KIOTAPAY"
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient,sender)

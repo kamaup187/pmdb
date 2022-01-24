@@ -57,6 +57,8 @@ class Company(db.Model):
     bills = db.relationship('ClientBill', backref='company',order_by='ClientBill.id', cascade="all, delete-orphan")
     payments = db.relationship('ClientPayment', backref='company',order_by='ClientPayment.id', cascade="all, delete-orphan")
     template = db.relationship('TextTemplate',backref='company', cascade="all, delete-orphan")
+    sent_messages = db.relationship('SentMessages',backref='company',order_by='SentMessages.date', cascade="all, delete-orphan")
+
 
 
     def __repr__(self):
@@ -266,6 +268,8 @@ class Apartment(db.Model):
     expenses = db.relationship('InternalExpense', backref='apartment', cascade="all, delete-orphan")
     messages = db.relationship('InternalMessages',backref='apartment',order_by='InternalMessages.date', cascade="all, delete-orphan")
     reminders = db.relationship('Reminder',backref='apartment',order_by='Reminder.date', cascade="all, delete-orphan")
+    sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
+
 
 
     def __repr__(self):
@@ -556,6 +560,8 @@ class Tenant(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='tenant',order_by='TenantRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='tenant',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
     messages = db.relationship('InternalMessages',backref='tenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
+    sent_messages = db.relationship('SentMessages',backref='tenant',order_by='SentMessages.date', cascade="all, delete-orphan")
+
 
 
     def __repr__(self):
@@ -1100,3 +1106,19 @@ class InternalMessages(db.Model):
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+
+class SentMessages(db.Model):
+    """class"""
+
+    __tablename__ = 'sentmessages'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    text = db.Column(db.VARCHAR)
+    characters = db.Column(db.Integer, default=0)
+    cost = db.Column(db.Float,default=0.0)
+    status = db.Column(db.String,default="sent")
+
+    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))

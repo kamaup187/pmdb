@@ -1986,31 +1986,7 @@
                   </div>
 
                   <div id="senttexts" class="table-responsive dispnone">
-                    <table id="reportData" class="table shadow" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                            <th class="text-info font-weight-bold">Property</th>
-                            <th class="text-info font-weight-bold">Tenant</th>
-                            <th class="text-info track-title-cell">Message</th>
-                            <th class="text-info track-title-cell">Cost</th>
-                            <th class="text-info track-title-cell">Report</th>
-                            <th class="text-info track-title-cell">Date</th>                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for i in msgs%}
-                            <tr>
-                                <td class="first-data-cell">{{ i['prop'] }}</td>
-                            <td class="data-cell font-weight-bold">{{ i['hst']|safe }}</td>
-                            <td class="data-cell text-danger">{{ i['arrears'] }}</td>
-                            <td class="data-cell">{{ i['total'] }}</td>
-                            <td class="data-cell {{i['payhighlight']}}">{{ i['paid'] }}</td>
-                            <td class="data-cell">{{ i['payment_date'] }}</td>
-                
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+
                 </div>
       
                 </div>
@@ -2862,6 +2838,17 @@ function animateHH(element) {
     $("#remindertexts").addClass("dispnone")
     $("#generaltexts").addClass("dispnone")
     $("#topuptexts").addClass("dispnone")
+
+    $.ajax({
+      url: "{{ url_for('api.fetchsentsms') }}",
+      type: "get",
+      data: {
+            target:"",
+          },
+      success: function(response) {
+        $("#senttexts").html(response)
+      },
+    });    
 
 
   });

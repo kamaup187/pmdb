@@ -1,0 +1,41 @@
+<table id="smsData" class="table table-striped table-bordered shadow" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+        <th class="text-info font-weight-bold">Property</th>
+        <th class="text-info font-weight-bold">Tenant</th>
+        <th class="text-info track-title-cell">Message</th>
+        <th class="text-info track-title-cell">Characters</th>
+        <th class="text-info track-title-cell">Cost</th>
+        <th class="text-info track-title-cell">Report</th>
+        <th class="text-info track-title-cell">Date</th>                
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in items%}
+        <tr>
+            <td class="first-data-cell">{{ i['prop'] }}</td>
+            <td class="data-cell">{{ i['hst']|safe }}</td>
+            <td class="data-cell">{{ i['text'] }}</td>
+            <td class="data-cell">{{ i['chars'] }}</td>
+            <td class="data-cell">{{ i['cost'] }}</td>
+            <td class="data-cell">{{ i['status'] }}</td>
+            <td class="data-cell">{{ i['date'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#smsData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>

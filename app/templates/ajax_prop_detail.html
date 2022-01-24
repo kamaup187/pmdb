@@ -13,18 +13,20 @@
 
 
 
-        <div class="container no-padding">
-            <div class="divjust-end mb-2">
-              
-              <i class="fa fa-building fa-2x text-info"></i>
-              <div class="center-btn font-weight-bold text-success mb-2 text-xx">Units & Groups</div>
-              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
-             
-            </div>
-            <hr>
+        <div class="no-padding">
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h3 class="modal-title text-info divjust-end">
+              <span class="mr-3 smallify font-weight-bold">Units/Houses</span>
+              <div>
+                <span class="btn mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger text-105" type="button" id="close-propdisp">X</span>
+              </div>
+            </h3>
+          </div>
+          
+
             
             <div class="row">
-                <div class="col-lg-2">
+                <div class="col-lg-4">
                     <div class="">
                         <div class="text-xx mb-2 center-btn text-info font-weight-bold">#{{prop.id}} {{prop.name}}</div>
 
@@ -37,11 +39,11 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 text-info">
+                <div class="col-lg-4 text-info">
                   <div class="info_item">
-                    <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#newHouseCodeModal"><i class="fas fa-plus-circle ml-4"></i><span class="mr-5">New Group</span></button>
+                    <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end" data-bs-toggle="modal" data-bs-target="#newHouseCodeModal" data-toggle="modal" data-target="#newHouseCodeModal"><i class="fas fa-plus-circle ml-4"></i><span class="mr-5">New Group</span></button>
                   </div>
-                  <div class="info_item">
+                  <div class="info_item dispnone">
                     <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end modalTrigger" data-toggle="modal" data-target="#paymentDetailModal"><i class="fas fa-edit text-danger ml-4"></i><span class="mr-4">Property details</span></button>
                   </div>
                   <div class="info_item">
@@ -50,7 +52,7 @@
 
                 </div>
 
-                <div class="col-lg-2 small">
+                <div class="col-lg-2 small mt-2">
 
                     <div class="info_item">
                         <i class="fas fa-map-marker"></i>
@@ -61,7 +63,11 @@
                       <span class="text-info">
                         <span>Current Bills: {{period}}</span><br>
                       <!-- <button type="button" class="borderless btn-light modalTrigger text-info" data-toggle="modal" data-target="#paymentDetailModal"><i class="fas fa-edit text-danger"></i>Property details</button> -->
-                      </span><br>
+                      </span>
+
+                  </div>
+                </div>
+                  <div class="col-lg-2 small mt-2">
                       <i class="fas fa-house-user"></i>
                       <span>Number of units:</span>
                       <span class="text-info">{{num_units}}</span><br>
@@ -71,61 +77,9 @@
                     </div>
 
                 </div>
-                <div class="col-lg-5">
-
-                  <div class="info_item small row">
-                      <span class="col-lg-4">Owner</span>
-                      <span class="col-lg-8">
-                        <span class="divjust-end">
-                          <span class="text-info"><i class="fas fa-user mr-1"></i>{{owner.name}}</span>
-                          <span class="text-info mr-5">-</span>
-                        </span>
-                      </span>
-                  </div>
-
-                  <div class="info_item small row">
-                    <span class="col-lg-4">Managed by:</span>
-                    <span class="col-lg-8">
-                      <span class="divjust-end">
-                        <span class="text-info"><i class="fas fa-user mr-1"></i>{{agent}}</span>
-                        <span class="text-info"><i class="fas fa-phone-alt mr-1"></i>{{contact}}</span>
-                      </span>
-                    </span>
-                  </div>
-                  {%if caretaker%}
-                  <div class="info_item small row">
-                    <span class="col-lg-4">Caretaker:</span>
-                    <span class="col-lg-8">
-                      <span class="divjust-end">
-                        <span class="text-info"><i class="fas fa-user mr-1"></i>{{caretaker.name}}</span>
-                        <span class="text-info"><i class="fas fa-phone-alt mr-1"></i>{{caretaker.phone}}</span>
-                      </span>
-                    </span>
-                 </div>
-                 {%endif%}
-                 <br>
-                 <div class="info_item small row">
-                  <span class="col-lg-4">Garbage Collector:</span>
-                  <span class="col-lg-8">
-                    <span class="divjust-end">
-                      <span class="text-info"><i class="fas fa-user mr-1"></i>{{prop.garbage_collector}}</span>
-                      <span class="text-info"><i class="fas fa-phone-alt mr-1"></i>{{prop.garbage_collector_tel}}</span>
-                    </span>
-                  </span>
-                </div>
-                <div class="info_item small row">
-                  <span class="col-lg-4"></span>
-                  <span class="col-lg-8">
-                    <span class="divjust-end">
-                      <span class="text-info"><i class="fas fa-landmark mr-2"> Bank</i>{{prop.garbage_collector_bank}}</span>
-                      <span class="text-info"><i class="fas fa-hashtag mr-2">Acc</i>{{prop.garbage_collector_bankacc}}</span>
-                    </span>
-                  </span>
-                </div>
-              </div>
             </div>
-        </div>
-        <hr class="mt-0">
+        
+ 
         <div class="toggleswitch divbg text-info underline font-weight-bold">
           <span class="dispnone">
             <span class="smallify">Tenants</span>
@@ -136,41 +90,36 @@
           </span>
         
           <span>
-            <span class="smallify">Houses</span>
-            <label class="switch">
-              <input id="reporttoggle2" type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
+            <label class="smallify" for="reporttoggle2">View Houses</label>
+              <input id="reporttoggle2" type="checkbox" checked>           
           </span>
 
           <span>
-            <span class="smallify">Rates</span>
-            <label class="switch">
+            <label class="smallify" for="reporttoggle3">View groups</label>
+
               <input id="reporttoggle3" type="checkbox">
-              <span class="slider round"></span>
-            </label>
+            
           </span>
 
         </div>
         <div id="result-view" class="row">
-          <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">All houses:</div>
           <div class="col-lg-12 no-padding">
               <div id="reqdata" class="table-responsive">
                   <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
                     <thead>
                       <tr>
-                      <th class="text-kiota font-weight-bold">House</th>
-                      <th class="text-kiota track-title-cell">Type</th>
-                      <th class="text-kiota track-title-cell">Group</th>
-                      <th class="text-kiota track-title-cell">Tenant</th>
-                      <th class="text-kiota track-title-cell">Rent</th>
-                      <th class="text-kiota track-title-cell">W.Rate</th>
-                      <th class="text-kiota track-title-cell">W.fixed</th>
-                      <th class="text-kiota track-title-cell">Service</th>
-                      <th class="text-kiota track-title-cell">Garbage</th>
-                      <th class="text-kiota track-title-cell">Security</th>
-                      <th class="text-kiota track-title-cell">By</th>
-                      <th class="text-kiota track-title-cell">Action</th>
+                      <th class="text-black">House</th>
+                      <th class="text-black">Type</th>
+                      <th class="text-black">Group</th>
+                      <th class="text-black">Tenant</th>
+                      <th class="text-black">Rent</th>
+                      <th class="text-black">W.Rate</th>
+                      <th class="text-black">W.fixed</th>
+                      <th class="text-black">Service</th>
+                      <th class="text-black">Garbage</th>
+                      <th class="text-black">Security</th>
+                      <th class="text-black">By</th>
+                      <th class="text-black">Action</th>
                       
                       </tr>
                   </thead>
@@ -869,6 +818,7 @@
     $('#tenantData').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,
+      "searching":false,
       // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
       columnDefs: [ { targets: 0, type: 'natural' } ],
       "bLengthChange": false

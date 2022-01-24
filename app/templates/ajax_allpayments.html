@@ -7,9 +7,9 @@
 
         <div class="no-padding row">
           <div class="col-12 no-padding mb-2">
-            <div class="card-header py-0 card-bg-alt divjust-end" >
-                <div class="mt-2 font-weight-bold text-white text-xx"><i class="fas fa-fw fa-calendar-day mr-1"></i>All properties payments</div>
-                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
+            <div class="card-header py-0 bg-white divjust-end" >
+                <div class="mt-2 font-weight-bold text-black text-xx">Payments</div>
+                <button id="close-propdisp" class="btn borderless"><div class="x-large"><i class="fas fa-times text-danger"></i></div></button>
             </div>
           </div>
 
@@ -644,10 +644,10 @@
     $("#close-propdisp").on('click',function(){
       $('#body-block').removeClass('dispnone')
       $('#propdisp').addClass('dispnone');
-      $('#content-area').removeClass("isopen text-danger");
-      $('#list-area').removeClass("isopen text-danger");
-      $('#sidebarToggle').click();
-      $('#smaccordionSidebar').removeClass("toggled");
+      // $('#content-area').removeClass("isopen text-danger");
+      // $('#list-area').removeClass("isopen text-danger");
+      // $('#sidebarToggle').click();
+      // $('#smaccordionSidebar').removeClass("toggled");
     });
   </script>
 

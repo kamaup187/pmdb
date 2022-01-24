@@ -782,13 +782,13 @@ body {
 .invoice-color {
   color: red !important;
 }
-/* 
+
 .card-header {
-    padding: .9375rem 1.25rem;
+    padding: .9375rem 0.95rem;
     margin-bottom: 0;
     background-color: rgba(0, 0, 0, .02);
     border-bottom: 1px solid rgba(0, 0, 0, .125)
-} */
+}
 
 a {
   text-decoration: none !important;

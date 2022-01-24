@@ -44,8 +44,8 @@
 
 <body onload="startTime()" id="page-top" class="calibri overflow-x-hidden">
 
-  <div id="hellobar-bar" class="regular overflow-x-hidde closable dispnon topmost">
-    <div id="banne" class="hb-content-wrapper dispnon">
+  <div id="hellobar-bar" class="regular overflow-x-hidde closable dispnone topmost">
+    <div id="banne" class="hb-content-wrapper dispnone">
         <div class="hb-text-wrapper">
 
             <div class="hb-headline-text">
@@ -649,8 +649,8 @@
                         <button class="reqsbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Requests</button>
                       </div>
                       <div class="mr-2">
-                        <i class="fas fa-fw fa-file text-gray-600"></i>
-                        <a href="{{ url_for('api.reports') }}">Reports</a>
+                        <i class="fas fa-fw fa-poll text-gray-600"></i>
+                        <a class="text-info font-weight-bold btn btn-outline-info btn-sm borderless p-0 m-0" href="{{ url_for('api.reports') }}">Reports</a>
                       </div>
 
                       <!-- <div class="fixed-width-btn">
@@ -2034,7 +2034,7 @@
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
             </div>
           </h5>
-          <div class="alert-msgs"></div>
+          <div class="alert-msgs font-weight-bold"></div>
         </div>
         <div class="modal-body pt-0">
           <div class="media mb-2">
@@ -2043,6 +2043,36 @@
                 <div class="card-body modal-forms">
 
                   <div id="profileModalBed"></div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify font-weight-bold">Add user</span>
+            <div>
+              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div id="profileModalBed2"></div>
 
                 </div>
               </div>
@@ -3212,10 +3242,7 @@ $("#closemodule").on('click',function(){
 </script>
 
 <script>
-  // This script displays alerts and tenant name before clearance
   $("#profileModal").on('shown.bs.modal', function(){
-
-    console.log("yeeeeeuuuuuuu",$("#edit_user_identifier").text())
 
     $.ajax({
       url: "{{ url_for('api.updateuser') }}",
@@ -3229,12 +3256,41 @@ $("#closemodule").on('click',function(){
       }
     });
 
+  });
+</script>
+
+
+<script>
+  $("#addUserModal").on('shown.bs.modal', function(){
+
+    $.ajax({
+      url: "{{ url_for('api.users') }}",
+      type: "get",
+      data: {
+        target:"add user"
+      },
+      success: function(response) {
+        $("#profileModalBed2").html(response); 
+      }
+    });
 
   });
 </script>
 
 
+<script>
+  $("#profileModal").on('hidden.bs.modal', function(){
 
+    $("#profileModalBed").html("empty"); 
+
+  });
+
+  $("#addUserModal").on('hidden.bs.modal', function(){
+
+    $("#profileModalBed2").html("empty"); 
+
+  });
+</script>
 
 
 </body>

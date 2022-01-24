@@ -227,21 +227,170 @@ class Users(Resource):
     def get(self):
 
         update_login_history("users",current_user)
+        target = request.args.get('target')
 
-        users = current_user.company.users
 
-        if current_user.username == "admin":
-            users = fetch_all_users()
+        if target == "add user":
+            user = current_user
 
-        user_data = user_details(users)
+            usergroup_list = user.company.groups
 
-        userids = get_obj_ids(user_data)
+            tenant_group = CompanyUserGroupOp.fetch_usergroup_by_name("Tenant")
+            try:
+                usergroup_list.remove(tenant_group)
+            except:
+                pass
 
-        return render_template(
-            "ajax_users.html",
-            userids=userids,
-            items=user_data
-            )
+            return render_template(
+                'ajax_userform.html',
+                groups=usergroup_list,
+                savecontext="Submit",
+                target_func="new",
+                user_status="Active",
+                user=None)
+
+        elif target == "check email":
+            email = request.args.get('email')
+            if "@" not in email or ".com" not in email:
+                return err + "invalid"
+            user = fetch_user(email)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        elif target == "check tel":
+            tel = request.args.get('tel')
+            if "+" in tel:
+                return err + "invalid"
+            user = fetch_user(tel)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        elif target == "check id":
+            natid = request.args.get('natid')
+            if len(natid) < 6:
+                return err + "invalid"
+            user = fetch_user(natid)
+            if user:
+                return err + "user exists"
+            else:
+                return proceed
+
+        else:
+            users = current_user.company.users
+            if current_user.username == "admin":
+                users = fetch_all_users()
+
+            user_data = user_details(users)
+
+            userids = get_obj_ids(user_data)
+
+            return render_template(
+                "ajax_users.html",
+                userids=userids,
+                items=user_data
+                )
+
+    def post(self):
+        #GLOBAL
+        company = current_user.company
+
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        national_id = request.form.get('natid')
+        pass1 = request.form.get('pass1')
+        pass2 = request.form.get('pass2')
+        usergroup=request.form.get('usergroup')
+
+        tenantcheck = request.form.get('tenantcheck')
+
+        target = request.form.get('target')
+
+        print("EMMMMMMAIL",email)
+
+        if email:
+            if "@" not in email or ".com" not in email:
+                return err + "invalid"
+            user = fetch_user(email)
+            if user and user.email != email:
+                return err + "user exists"
+
+        if phone:
+            if "+" in phone:
+                return err + "invalid"
+            user = fetch_user(phone)
+            if user and user.phone != user.phone:
+                return err + "user exists"
+
+        if national_id:
+            if len(national_id) < 6:
+                return err + "invalid"
+            user = fetch_user(national_id)
+            if user and user.national_id != national_id:
+                return err + "user exists"
+
+        if pass1:
+            validate_pass = ValidatePass.validate_password(pass1,pass2)
+            if  validate_pass=="no match":
+                return err + "password no match"
+
+        user_group_id=None
+        if usergroup:               
+            user_group_id = get_company_usergroup_id(usergroup,company)
+            
+
+        if target == "update user":
+            userid = request.form.get('userid')
+
+            if not userid:
+                update_user = current_user
+            else:
+                user_id = get_identifier(userid)
+                update_user = UserOp.fetch_user_by_id(user_id)
+
+            modified_by = current_user.id
+            company_id = None
+
+            UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
+
+            return "Updated successfully" + proceed
+
+        else:
+
+            if not user_group_id:
+                return err + "usergroup not defined"
+
+            usercode = usercode_generator()
+            is_present  = UserOp.fetch_user_by_usercode(usercode)
+            if is_present:
+                usercode = usercode_generator()#generate code again
+
+            if not email:
+                username = username_extracter(name)
+                is_present2  = UserOp.fetch_user_by_username(username)
+                if is_present2:
+                    username = username_extracternum(name)#append random numbers to name
+                    is_present3 = UserOp.fetch_user_by_username(username)
+                    if is_present3:
+                        username = username_extracternum(name) #generate username again
+
+            else:
+                username = username_exctractermail(email)
+
+            new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,user_group_id,company.id,current_user.id)
+            new_user.save()
+
+            company_properties = company.props
+            for prop in company_properties:
+                UserOp.relate(new_user,prop)
+
+            return "User created successfully" + proceed
+
+
 
 class AdminRegisterUser(Resource):
     """This class registers a new user --agents or caretakers."""
@@ -834,7 +983,10 @@ class TenantUserSignUpStageTwo(Resource):
 
 class LandingPage(Resource):
     def get(self):
-        return Response(render_template("landingtwo.html"))
+        if os.getenv("CURRENT_APP") == "app1":
+            return Response(render_template("landingtwo.html"))
+        else:
+            return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass
@@ -923,7 +1075,9 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-        return Response(render_template('login.html'))
+        loginpage = "login.html" if os.getenv("CURRENT_APP") == "app1" else "login2.html"
+
+        return Response(render_template(loginpage))
 
     def post(self):
         identity = request.form.get('identifier')
@@ -931,6 +1085,8 @@ class UserLogin(Resource):
         password = request.form.get('password')
         remember = False
         downtime = False
+
+        print("Supplied logins >>>> ", "IDENTITY:",identity,"PASSW:",password)
         ### remember = True if request.form.get('remember') else False
         try:
             user = fetch_user(identity)
@@ -1055,6 +1211,8 @@ class UpdateUser(Resource):
         return render_template(
             'ajax_userform.html',
             groups=usergroup_list,
+            user_status="Active" if user.active else "Dormant",
+            savecontext="Save Changes",
             user=user)
 
     @login_required

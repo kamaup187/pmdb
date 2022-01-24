@@ -1,22 +1,21 @@
 
-<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">All houses:</div>
 <div class="col-lg-12 no-padding">
     <div id="reqdata" class="table-responsive">
         <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
-            <thead>
+            <thead class="custom-header">
                 <tr>
-                    <th class="text-info font-weight-bold">House</th>
-                    <th class="text-info track-title-cell">Type</th>
-                    <th class="text-info track-title-cell">Group</th>
-                    <th class="text-info track-title-cell">Tenant</th>
-                    <th class="text-info track-title-cell">Rent</th>
-                    <th class="text-info track-title-cell">W.Rate</th>
-                    <th class="text-info track-title-cell">W.fixed</th>
-                    <th class="text-info track-title-cell">Service</th>
-                    <th class="text-info track-title-cell">Garbage</th>
-                    <th class="text-info track-title-cell">Security</th>
-                    <th class="text-info track-title-cell">By</th>
-                    <th class="text-info track-title-cell">Action</th>
+                    <th class="text-blackfont-weight-bold">House</th>
+                    <th class="text-black">Type</th>
+                    <th class="text-black">Group</th>
+                    <th class="text-black">Tenant</th>
+                    <th class="text-black">Rent</th>
+                    <th class="text-black">W.Rate</th>
+                    <th class="text-black">W.fixed</th>
+                    <th class="text-black">Service</th>
+                    <th class="text-black">Garbage</th>
+                    <th class="text-black">Security</th>
+                    <th class="text-black">By</th>
+                    <th class="text-black">Action</th>
                 
                 </tr>
             </thead>
@@ -68,6 +67,7 @@
       $('#tenantData').DataTable({
         "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
         "pageLength": 100,
+        "searching":false,
         columnDefs: [ { targets: 0, type: 'natural' } ],
         "bLengthChange": false
       });

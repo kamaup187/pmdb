@@ -1939,10 +1939,13 @@ class ListedProperties(Resource):
     @login_required
     def get(self):
         target_period = datetime.datetime.now()
-        raw_props = fetch_all_apartments_by_user(current_user)
-        new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
-        for i in new_props:
-            raw_props.append(i)
+        if current_user.username.startswith("qc"):
+            raw_props = ApartmentOp.fetch_all_apartments()
+        else:
+            raw_props = fetch_all_apartments_by_user(current_user)
+        # new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
+        # for i in new_props:
+        #     raw_props.append(i)
 
         props = remove_dups(raw_props)
 

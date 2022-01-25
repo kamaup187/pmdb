@@ -10,53 +10,36 @@
       <a id="downbtn" href="/download/template/properties" class="dispnone">download</a>
 
 
-        <div class="container no-padding">
-            <div class="divjust-end mb-2 smallify">
-              
-              <span><i class="fa fa-building fa-2x text-info mr-2"></i><span class="text-xx">{{company.name}}</span></span>
-              <div class="center-btn font-weight-bold text-success mb-2 text-xx mr-5">All properties</div>
-              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
-             
-            </div>
-            <hr>
-            
-            <div class="row mb-3">
-                <div class="col-lg-6 center-btn">
-                  <div class="info_item">
-                    <button type="button" class="borderless btn-info" data-toggle="modal" data-bs-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">list property</span></button>
-                  </div>
-                </div>
-                <div class="col-lg-6 center-btn">
-                  <div class="info_item">
-                    <button type="button" class="borderless btn-info" data-toggle="modal" data-bs-toggle="modal" data-target="#addPropertyModal"><i class="fas fa-upload mr-4"></i><span class="mr-4">upload data</span></button>
-                  </div>
-                </div>
+      <div class="row no-padding">
+        <div class="col-12 no-padding mb-2">
+          <div class="card-heade py-0 card-bg-al bg-light divjust-end" >
+              <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div>
+              <button id="close-propdisp" class="btn borderless text-danger"><div class="x-large xbutton-black"><i class="fas fa-times"></i></div></button>
+          </div>
+        </div>
+      </div>
 
+      <div class="row pt-2 pb-1 bg-white">
+        <div class="col-6 pt-2">
+            <div class="text-black font-weight-bold hide">
+                <div class="page-header-icon"><i data-feather="user"></i></div>
+                Users List
             </div>
         </div>
-
-        <div class="toggleswitch divbg mb-3 dispnone">
-          <span>
-            <span class="small">View current payments</span>
-            <label class="switch">
-              <input id="reporttoggle" type="checkbox" checked disabled>
-              <span class="slider round"></span>
-            </label>
-          </span>
-        
-          <span class="">
-            <span class="small">View previous payments</span>
-            <label class="switch">
-              <input id="reporttoggle2" type="checkbox" disabled>
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-
+        <div class="col-6 mb-1 text-right">
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
+                <i class="me-1" data-feather="users"></i>
+                List property
+            </span>
+            <span class="btn btn-sm btn-light text-black">
+                <i class="me-1" data-feather="user-plus"></i>
+                Upload data
+            </span>
         </div>
+    </div>
+
         
         <div id="result-view" class="row">
-          <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Apartments:</div>
           <div class="col-lg-12 no-padding">
             <div id="props" class="table-responsive">
                 <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
@@ -438,95 +421,9 @@
 
             <div id="">
               <main>
-                  <!-- <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
-                      <div class="container-xl px-4">
-                          <div class="page-header-content">
-                              <div class="row align-items-center justify-content-between pt-3">
-                                  <div class="col-auto mb-3">
-                                      <h1 class="page-header-title">
-                                          <div class="page-header-icon"><i data-feather="user"></i></div>
-                                          Account Settings - Profile
-                                      </h1>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </header> -->
                   <!-- Main page content-->
-                  <div class="">
-                      <!-- Account page navigation-->
-                      <nav class="nav nav-borders">
-                          <a class="nav-link active ms-0" href="#">Profile</a>
-                          <a class="nav-link" href="#">Billing</a>
-                          <a class="nav-link" href="#">Notifications</a>
-                      </nav>
-                      <hr class="mt-0 mb-1" />
-                      <div class="row">
-                          <div class="col-xl-4">
-                              <!-- Profile picture card-->
-                              <div class="card mb-4 mb-xl-0">
-                                  <div class="card-header">Property Picture</div>
-                                  <div class="card-body text-center">
-                                      <!-- Profile picture image-->
-                                      <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" />
-                                      <!-- Profile picture help block-->
-                                      <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                      <!-- Profile picture upload button-->
-                                      <button class="btn btn-primary" type="button">Upload new image</button>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="col-xl-8">
-                              <!-- Account details card-->
-                              <div class="card mb-4">
-                                  <div class="card-header">Property Details</div>
-                                  <div class="card-body">
-                                      <form>
-                                          <!-- Form Group (username)-->
-                                          <div class="mb-3">
-                                              <label class="small mb-1" for="inputUsername">Property name</label>
-                                              <input class="form-control" id="propname" type="text" placeholder="edit property name" value="{{propertyname}}" />
-                                          </div>
-                                          <!-- Form Row-->
-                                          <div class="row gx-3 mb-3">
-                                            <!-- Form Group (organization name)-->
-                                            <div class="col-md-6">
-                                                <label class="small mb-1" for="colltype">Collected rent</label>
-                                                <input class="" id="colltype" name="colltype" type="radio" checked/>
-                                            </div>
-                                            <!-- Form Group (location)-->
-                                            <div class="col-md-6">
-                                                <label class="small mb-1" for="colltype2">Projected rent</label>
-                                                <input class="" id="colltype2" name="colltype" type="radio" />
-                                            </div>
-                                        </div>
-                                          <!-- Form Row        -->
-                                          <div class="row">
-                                              <!-- Form Group (organization name)-->
-                                              <div class="col-md-6 form-group">
-                                                  <label class="small mb-1" for="commtype">Percentage value</label>
-                                                  <input class="" id="commtype" name="commtype" type="radio" checked/>
-                                              </div>
-                                              <!-- Form Group (location)-->
-                                              <div class="col-md-6">
-                                                  <label class="small mb-1" for="commtype2">Static value</label>
-                                                  <input class="" id="commtype2" name="commtype" type="radio" />
-                                              </div>
-                                          </div>
+                  <div id="propBed" class="">
 
-                                          <!-- Form Group (email address)-->
-                                          <div class="mb-3">
-                                              <label class="small mb-1" for="inputEmailAddress">Commision value</label>
-                                              <input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter commision value" value="{{commision}}" />
-                                          </div>
- 
-                                          <!-- Save changes button-->
-                                          <button class="btn btn-primary" type="button">Save changes</button>
-                                      </form>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
                   </div>
 
           </div>
@@ -671,6 +568,34 @@
       }
     });
   });
+</script>
+
+
+<script>
+  $("#editPropModal").on('shown.bs.modal', function(){
+
+    $.ajax({
+      url: "{{ url_for('api.allproperties') }}",
+      type: "get",
+      data: {
+        propid:  $("#edit_prop_identifier").text(),
+        target:"prop update"
+      },
+      success: function(response) {
+        $("#propBed").html(response); 
+      }
+    });
+
+  });
+</script>
+
+<script>
+  $("#editPropModal").on('hidden.bs.modal', function(){
+
+    $("#propBed").html("empty"); 
+
+  });
+
 </script>
 
 

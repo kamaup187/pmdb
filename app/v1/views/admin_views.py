@@ -396,19 +396,29 @@ class DeleteReceipt(Resource):
 
 class AllProperties(Resource):
     def get(self):
-        # propa = ApartmentOp.fetch_apartment_by_id(3)
-        # print(propa)
-        # print(propa.company)
-        # print(propa.company_id)
-        # com = CompanyOp.fetch_company_by_id(4)
-        # print("test props",com.props)
-        # print("*********************************************************")
-        # ApartmentOp.update_company(propa,None)
-        # print("*********************************************************")
-        # print(propa.company)
-        # print(propa.company_id)
-        # com = CompanyOp.fetch_company_by_id(1)
-        # print("kiotap props",com.props)
+        target =  request.args.get("target")
+        if target == "prop update":
+            print("lolla")
+            propid = request.args.get("propid")
+            prop_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+
+            if prop.commission:
+                commission = prop.commission
+                commtype = "percent"
+            else:
+                commission = prop.int_commission
+                commtype = "static"
+
+            if prop.commission_type:
+                if prop.commission_type == "collected":
+                    colltype = "collected"
+                else:
+                    colltype = "projected"
+            else:
+                colltype = "not set"
+
+            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
 
         raw_props = fetch_all_apartments_by_user(current_user)
         new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
@@ -464,7 +474,34 @@ class AllProperties(Resource):
             'client-disp':"" if current_user.id == 1 else "dispnone"
         }
 
-        return render_template("ajax_allprops_detail.html",propids=propids,items=items,access=access,company=current_user.company)
+        return render_template("ajax_allprops_detail.html",propids=propids,prop=None,items=items,access=access,company=current_user.company)
+    
+    def post(self):
+        target = request.form.get("target")
+        if target == "update prop":
+            prop_id = request.form.get("propid")
+            propname = request.form.get("name")
+            colltype = request.form.get("colltype")
+            commtype = request.form.get("commtype")
+            commission = request.form.get("commission")
+
+            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+
+            valid_commission = validate_input(commission)
+
+            if propname:
+                existing_prop = ApartmentOp.fetch_apartment_by_name(propname)
+                if existing_prop and prop.name != propname:
+                    return err + "name already taken"
+
+            if commtype == "percent":
+                ApartmentOp.update_commission(prop,valid_commission)
+            else:
+                ApartmentOp.update_int_commission(prop,valid_commission)
+
+            ApartmentOp.update_details(prop,propname,colltype)
+
+            return "Updated successfully" + proceed
 
 class AllOwners(Resource):
     def get(self):

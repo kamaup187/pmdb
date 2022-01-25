@@ -312,6 +312,10 @@ class Users(Resource):
 
         print("EMMMMMMAIL",email)
 
+        if name:
+            if len(name) < 4:
+                return err + "name too short"
+
         if email:
             if "@" not in email or ".com" not in email:
                 return err + "invalid"
@@ -363,6 +367,12 @@ class Users(Resource):
 
             if not user_group_id:
                 return err + "usergroup not defined"
+
+            if not pass1 and not pass2:
+                return err + "passwords missing"
+
+            if not name:
+                return err + "name is missing"
 
             usercode = usercode_generator()
             is_present  = UserOp.fetch_user_by_usercode(usercode)

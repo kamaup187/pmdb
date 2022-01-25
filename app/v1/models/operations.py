@@ -628,6 +628,29 @@ class ApartmentOp(Apartment,Base):
     def update_reminder_status(self,status):
         self.reminder_status = status
         db.session.commit()
+
+    def update_commission(self,commission):
+        if commission:
+            self.int_commission = 0.0
+            self.commission = commission
+        db.session.commit()
+
+    def update_int_commission(self,commission):
+        if commission:
+            self.commission = 0.0
+            self.int_commission = commission
+        db.session.commit()
+
+    def update_commtype(self,commtype):
+        self.commission_type = commtype
+        db.session.commit()
+
+    def update_details(self,name,colltype):
+        if name:
+            self.name = name
+        if colltype:
+            self.commission_type = colltype
+        db.session.commit()
         
     def update_prop_details(self,shortcode=None,consumer_key=None,consumer_secret=None,prop_garb=None,prop_garb_tel=None,prop_garbbank=None,prop_garbacc=None,prop_bank=None,prop_bankaccname=None,prop_bankacc=None,landlord_bank=None,landlord_bankaccname=None,landlord_bankacc=None,landlord_bank_two=None,landlord_bankaccname_two=None,landlord_bankacc_two=None,agreement=None,commission=None,int_commission=None):
         if shortcode:

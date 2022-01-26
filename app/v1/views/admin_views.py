@@ -398,7 +398,6 @@ class AllProperties(Resource):
     def get(self):
         target =  request.args.get("target")
         if target == "prop update":
-            print("lolla")
             propid = request.args.get("propid")
             prop_id = get_identifier(propid)
             prop = ApartmentOp.fetch_apartment_by_id(prop_id)
@@ -478,18 +477,20 @@ class AllProperties(Resource):
     
     def post(self):
         target = request.form.get("target")
+        prop_id = request.form.get("propid")
+
+        prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+
         if target == "update prop":
-            prop_id = request.form.get("propid")
             propname = request.form.get("name")
             colltype = request.form.get("colltype")
             commtype = request.form.get("commtype")
             commission = request.form.get("commission")
 
-            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
-
             valid_commission = validate_input(commission)
 
             if propname:
+                prop_name = propname.title()
                 existing_prop = ApartmentOp.fetch_apartment_by_name(propname)
                 if existing_prop and prop.name != propname:
                     return err + "name already taken"
@@ -499,9 +500,19 @@ class AllProperties(Resource):
             else:
                 ApartmentOp.update_int_commission(prop,valid_commission)
 
-            ApartmentOp.update_details(prop,propname,colltype)
+            ApartmentOp.update_details(prop,prop_name,colltype)
 
             return "Updated successfully" + proceed
+
+        if target == "update prop billing info":
+            bank = request.form.get("bank")
+            accname = request.form.get("accname")
+            accno = request.form.get("accno")
+
+            ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
+
+            return "Updated successfully" + proceed
+
 
 class AllOwners(Resource):
     def get(self):

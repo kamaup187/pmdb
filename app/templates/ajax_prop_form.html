@@ -1,154 +1,287 @@
-                      <!-- Account page navigation-->
-                    <div id="workarea">
+<!-- Account page navigation-->
 
-                        <nav class="nav nav-borders">
-                            <a class="nav-link active ms-0" href="#">Profile</a>
-                            <a class="nav-link" href="#">Billing</a>
-                            <a class="nav-link" href="#">Notifications</a>
-                        </nav>
-                        <hr class="mt-0 mb-1" />
-                        <div class="row">
-                            <div class="col-xl-4">
-                                <!-- Profile picture card-->
-                                <div class="card mb-4 mb-xl-0">
-                                    <div class="card-header">Property Picture</div>
-                                    <div class="card-body text-center">
-                                        <!-- Profile picture image-->
-                                        <img class="img-account-profile rounded-circle mb-2" src="" alt="" />
-                                        <!-- Profile picture help block-->
-                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                        <!-- Profile picture upload button-->
-                                        <button class="btn btn-primary" type="button">Upload new image</button>
-                                    </div>
-                                </div>
+
+<nav class="nav nav-borders">
+    <a id="profile" class="nav-link pl-0 pb-0 text-info underline active ms-0" href="#">Profile</a>
+    <a id="billing" class="nav-link pb-0 text-info" href="#">Billing</a>
+    <a id="notifications" class="nav-link pb-0 text-info" href="#">Notifications</a>
+</nav>
+
+<div class="" id="profile-area">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0 mt-1">
+                <div class="card-header">Property Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="" alt="" />
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4 mt-1">
+                <div class="card-header">Property Details ({{prop.name}})</div>
+                <div class="card-body">
+                    <form>
+                        <!-- Form Group (username)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="propName">Property name</label>
+                            <input class="form-control" id="propName" type="text" value="{{prop.name}}"
+                                placeholder="edit property name" />
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <span class="dispnone" id="check_colltype">{{colltype}}</span>
+
+                            <!-- Form Group (organization name)-->
+                            <div class="col-md-6">
+                                <input class="" id="colltype" name="colltype" type="radio" value="collected" />
+                                <label class="small mb-1" for="colltype">Collected rent</label>
                             </div>
-                            <div class="col-xl-8">
-                                <!-- Account details card-->
-                                <div class="card mb-4">
-                                    <div class="card-header">Property Details  ({{prop.name}})</div>
-                                    <div class="card-body">
-                                        <form>
-                                            <!-- Form Group (username)-->
-                                            <div class="mb-3">
-                                                <label class="small mb-1" for="propName">Property name</label>
-                                                <input class="form-control" id="propName" type="text" placeholder="edit property name" value="{{prop.name}}" />
-                                            </div>
-                                            <!-- Form Row-->
-                                            <div class="row gx-3 mb-3">
-                                                <span class="dispnone" id="check_colltype">{{colltype}}</span>
-
-                                            <!-- Form Group (organization name)-->
-                                            <div class="col-md-6">
-                                                <input class="" id="colltype" name="colltype" type="radio" value="collected"/>
-                                                <label class="small mb-1" for="colltype">Collected rent</label>
-                                            </div>
-                                            <!-- Form Group (location)-->
-                                            <div class="col-md-6">
-                                                <input class="" id="colltype2" name="colltype" type="radio" value="projected"/>
-                                                <label class="small mb-1" for="colltype2">Projected rent</label>
-                                            </div>
-                                        </div>
-                                            <!-- Form Row        -->
-                                            <div class="row">
-                                                <!-- Form Group (organization name)-->
-                                                <span class="dispnone" id="check_commtype">{{commtype}}</span>
-                                                <div class="col-md-6 form-group">
-                                                <input class="" id="commtype" name="commtype" type="radio" value="percent"/>
-                                                <label class="small mb-1" for="commtype">% Percentage value</label>
-                                                </div>
-                                                <!-- Form Group (location)-->
-                                                <div class="col-md-6">
-                                                <input class="" id="commtype2" name="commtype" type="radio" value="static"/>
-                                                <label class="small mb-1" for="commtype2">Static value</label>
-                                                </div>
-                                            </div>
-
-                                            <!-- Form Group (email address)-->
-                                            <div class="mb-3">
-                                                <label class="small mb-1" for="inputEmailAddress">Commision value</label>
-                                                <input class="form-control" id="commission" type="email" placeholder="Enter commision value/percentage" value="{{commission}}" />
-                                            </div>
-
-                                            <!-- Save changes button-->
-                                            <button id="saveprofile" class="btn btn-primary" type="button">Save changes</button>
-                                        </form>
-                                    </div>
-                                </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <input class="" id="colltype2" name="colltype" type="radio" value="projected" />
+                                <label class="small mb-1" for="colltype2">Projected rent</label>
                             </div>
                         </div>
-                    </div>
+                        <!-- Form Row        -->
+                        <div class="row">
+                            <!-- Form Group (organization name)-->
+                            <span class="dispnone" id="check_commtype">{{commtype}}</span>
+                            <div class="col-md-6 form-group">
+                                <input class="" id="commtype" name="commtype" type="radio" value="percent" />
+                                <label class="small mb-1" for="commtype">% Percentage value</label>
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <input class="" id="commtype2" name="commtype" type="radio" value="static" />
+                                <label class="small mb-1" for="commtype2">Static value</label>
+                            </div>
+                        </div>
 
-                    <script>
+                        <!-- Form Group (email address)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="inputEmailAddress">Commision value</label>
+                            <input class="form-control" id="commission" type="email"
+                                placeholder="Enter commision value/percentage" value="{{commission}}" />
+                        </div>
 
-                        $(document).ready(function(){
+                        <!-- Save changes button-->
+                        <button id="saveprofile" class="btn btn-primary" type="button">Save changes</button>
+                        <button class="reset dispnone" type="reset">reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                            let checkCommtype = $("#check_commtype").text()
+<div class="dispnone" id="billing-area">
+    <div class="row">
+        <div class="col-xl-12">
+            <!-- Account details card-->
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Property billing info ({{prop.name}})</div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label class="small mb-1" for="bank">Bank name</label>
 
-                            if (checkCommtype == "percent"){
-                                
-                                    $("input[id=commtype]").attr("checked", "checked");
-                                
-                            }else{
-                                
-                                    $("input[id=commtype2]").attr("checked", "checked");
-                                
-                            }
+                                <input class="form-control" type="text" id="bank" value="{{prop.landlord_bank}}">
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="small mb-1" for="accname">Account name</label>
 
-                            let checkColltype = $("#check_colltype").text()
+                              <input class="form-control" type="text" id="accname" value="{{prop.landlord_bankaccname}}">
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="small mb-1" for="accno">Account no</label>
 
-                            if (checkColltype == "collected"){
-                                
-                                    $("input[id=colltype]").attr("checked", "checked");
-                                
-                            }else if(checkColltype == "projected"){
-                                
-                                    $("input[id=colltype2]").attr("checked", "checked");
-                                
-                            }else{}
-                        })
-                    </script>
+                              <input class="form-control" type="text" id="accno" value="{{prop.landlord_bankacc}}">
+                            </div>
+                        </div>
 
-                    <script>
-                            $("#saveprofile").click(function(){
+                        <!-- Save changes button-->
+                        <div class="text-right">
+                            <button id="savebilling" class="btn btn-primary" type="button">Save changes</button>
+                            <button class="reset dispnone" type="reset">reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                $.ajax({
-                                url: "{{ url_for('api.allproperties') }}",
-                                type: "POST",
-                                data: {
-                                    propid:$("#edit_prop_identifier").text(),
-                                    name:$("#propName").val(),
-                                    colltype:$("input[name=colltype]:checked").val(),
-                                    commtype:$("input[name=commtype]:checked").val(),
-                                    commission:$("#commission").val(),
-                                    target:"update prop"
-                                    },
-                                success: function(response) {
-                                    $("#workarea").addClass("dispnone")
-                                    $(".alert-msgs").html(response);
-
-                                    setTimeout(function(){
-                                    $("#workarea").removeClass("dispnone")
-                                    $(".alert-msgs").empty();            
-                                    $(".reset").click();
-                                    }, 2500);
-                                    
-                                    // $.ajax({
-                                    //       url: "{{ url_for('api.fetchtenants') }}",
-                                    //       type: "get",
-                                    //       data: {
-                                    //         propid:  $("#prop_identifier").text(),
-                                    //         target:$("#current-reloader").text()
-                                    //       },
-                                    //       success: function(response) {
-                                            
-                                    //         $("#result-view").html(response);
-                                    //       }
-                                    //     });
-                                }
-                                });
-                                
+<div class="dispnone" id="notifications-area">
+    <div class="center-btn text-danger">In development</div>
+</div>
 
 
+<script>
+    $("#profile").click(function(){
+        $(this).addClass("underline")
+        $("#notifications").removeClass("underline")
+        $("#billing").removeClass("underline")
 
-                            });
-                    </script>
+        $("#profile-area").removeClass("dispnone")
+        $("#billing-area").addClass("dispnone")
+        $("#notifications-area").addClass("dispnone")
+    })
+
+    $("#billing").click(function(){
+        $(this).addClass("underline")
+        $("#profile").removeClass("underline")
+        $("#notifications").removeClass("underline")
+
+        $("#billing-area").removeClass("dispnone")
+        $("#profile-area").addClass("dispnone")
+        $("#notifications-area").addClass("dispnone")
+    })
+
+    $("#notifications").click(function(){
+        $(this).addClass("underline")
+        $("#profile").removeClass("underline")
+        $("#billing").removeClass("underline")
+
+        $("#notifications-area").removeClass("dispnone")
+        $("#billing-area").addClass("dispnone")
+        $("#profile-area").addClass("dispnone")
+    })
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        let checkCommtype = $("#check_commtype").text()
+
+        if (checkCommtype == "percent") {
+
+            $("input[id=commtype]").attr("checked", "checked");
+
+        } else {
+
+            $("input[id=commtype2]").attr("checked", "checked");
+
+        }
+
+        let checkColltype = $("#check_colltype").text()
+
+        if (checkColltype == "collected") {
+
+            $("input[id=colltype]").attr("checked", "checked");
+
+        } else if (checkColltype == "projected") {
+
+            $("input[id=colltype2]").attr("checked", "checked");
+
+        } else { }
+    })
+</script>
+
+<script>
+    $("#saveprofile").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                name: $("#propName").val(),
+                colltype: $("input[name=colltype]:checked").val(),
+                commtype: $("input[name=commtype]:checked").val(),
+                commission: $("#commission").val(),
+                target: "update prop"
+            },
+            success: function (response) {
+                $("#profile-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+    });
+</script>
+
+
+<script>
+    $("#savebilling").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                bank: $("#bank").val(),
+                accname: $("#accname").val(),
+                accno: $("#accno").val(),
+                target: "update prop billing info"
+            },
+            success: function (response) {
+                $("#billing-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+    });
+</script>

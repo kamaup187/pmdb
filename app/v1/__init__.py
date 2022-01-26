@@ -177,6 +177,8 @@ api.add_resource(ListedProperties,"/listed/properties")
 api.add_resource(GarbageStatement,"/garbage/statement")
 api.add_resource(InternalSummary,"/internal/summarised")
 api.add_resource(InternalDetail,"/internal/detailed")
+api.add_resource(InternalDetailAlt,"/general/statement")
+
 api.add_resource(ExpenseDetail,"/expenses/detailed")
 api.add_resource(SubmissionsReport,"/submissions/report")
 

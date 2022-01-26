@@ -651,6 +651,16 @@ class ApartmentOp(Apartment,Base):
         if colltype:
             self.commission_type = colltype
         db.session.commit()
+
+    def update_landlord_bank_details(self,bank,accname,accno):
+        if bank:
+            self.landlord_bank = bank
+        if accname:
+            self.landlord_bankaccname = accname
+        if accno:
+            self.landlord_bankacc = accno
+
+        db.session.commit()
         
     def update_prop_details(self,shortcode=None,consumer_key=None,consumer_secret=None,prop_garb=None,prop_garb_tel=None,prop_garbbank=None,prop_garbacc=None,prop_bank=None,prop_bankaccname=None,prop_bankacc=None,landlord_bank=None,landlord_bankaccname=None,landlord_bankacc=None,landlord_bank_two=None,landlord_bankaccname_two=None,landlord_bankacc_two=None,agreement=None,commission=None,int_commission=None):
         if shortcode:

@@ -1594,8 +1594,10 @@ clear: both;
   }
 
   .container-fluid {
-    padding: 16px !important;
-    margin-top: 100px !important;
+    /* padding: 16px !important; */
+    padding: 6px !important;
+
+    margin-top: 106px !important;
   }
 
   .report-fluid {
@@ -2859,9 +2861,9 @@ input:checked + .slider:before {
 .no-margin-bottom {
   margin-bottom: 0px !important;
 }
-.no-padding {
+/* .no-padding {
   padding: 0px !important;
-}
+} */
 .has-margin-bottom {
   margin-bottom: 20px !important;
 }

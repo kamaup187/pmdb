@@ -3,7 +3,7 @@
 {% block content %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
-<span id="filename" class="dispnone">{{prop}} {{timeline}} water statement.pdf</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} landlord statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
 <div class="row">
@@ -27,7 +27,7 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body">
-                    <form class="row" method="GET" action="/water/statement">
+                    <form class="row" method="GET" action="/general/statement">
 
                         <div class="col-6 form-group mb-2">
                           <label class="text-danger font-weight-bold">Select property:</label>
@@ -63,14 +63,14 @@
     </div>
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
-  <div class="col-lg-12 ">
+  <div class="col-lg-12 dispnon">
     <div class="card shadow mb-0">
       <!-- Card Header - Accordion -->
       <div  class="d-block card-header card-header-report card-bg dispnon">
         <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
 
           <div class="smallify">
-            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>Water statement</div>
+            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>General statement</div>
           </div>
 
         </div>
@@ -85,7 +85,7 @@
 
           <div class="center-btn mt-2 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR WATER FOR {{timeline}}</span></h5>
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3">LANDLORD STATEMENT FOR {{timeline}}</span></h5>
           </div>
 
           <div class="divjust-end underline text-black font-weight-bold  text-110">
@@ -107,29 +107,33 @@
 
                     
           <div class="table-responsive">
-            <table class="table" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
+                      <th class="">DEPOSIT</th>
+                      <th class="">RENT</th>
                       <th class="">BB/F</th>
-                      <th class="">WATER BILL</th>
                       <th class="">TOTAL DUE</th>
                       <th class="">TOTAL PAID</th>
                       <th class="">BC/F</th>
-
+                      <th class="">DATE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for bill in bills%}
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
-                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['water-arr'] }}</td>
-                      <td class="data-cell text-right">{{ bill['water'] }}</td>
-                      <td class="data-cell text-right">{{bill['water-total']}}</td>
-                      <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                      <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant']}}</td>
+                      <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{ bill['arrears'] }}</td>
+                      <td class="data-cell text-right">{{bill['total']}}</td>
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
+
                     </tr>
                   {% endfor %}
 
@@ -137,11 +141,14 @@
                   <tfoot class="custom-footer-alt">
                     <tr>
                       <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{deptotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                      <td class="font-weight-bold text-right"></td>
+
                     </tr>
                   </tfoot>
                 </table>
@@ -149,36 +156,38 @@
           </div>
 
           <div class="divjust-end ln-16 mobile-malaysian">
-            {%if not expenselist%}
             <div class="hide">space</div>
-            {%endif%}
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                <div class="mb-1 text-gray-900">WATER TOTAl COLLECTION</div>
-                <div class="text-gray-900 mb-1">PREV UNREMMITED</div>
-                <div class="text-gray-900 mb-1">TOTALS</div>
+                <div class="mb-1 text-gray-900">TOTAL COLLECTION</div>
+
                 <div class="hide mb-2">space</div>
 
 
-                <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
-                <div class="mb-1">TOTAL DEDUCTIONS</div>
+
+
+                <!-- <div class="mb-1 pt-1">MGT FEES @ {{commission_percentage}}</div> -->
+
+
+                <!-- <div class="mb-1">OTHER DEDUCTIONS</div> -->
+                <div class="mb-1">EXPENSES</div>
                 <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
                 <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
-                <div class="mb-1 text-gray-900">0.0</div>
-                <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
-                <div class="hide mb-2">space</div>
-
-                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
 
                 <div class="hide mb-2">space</div>
 
-                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div>
+                <!-- <div class="mb-2">Kshs {{commission}}</div> -->
+
+                <div class="mb-1">Kshs {{expenses}}</div>
+
+                <!-- <div class="mb-1">Kshs {{debits}}</div> -->
+
+                <div class="hide mb-2">space</div>
+
               </div>
             </div>
           </div>
@@ -201,7 +210,7 @@
 
           <div class="center-btn mt-2 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR WATER FOR {{timeline}}</span></h5>
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3">LANDLORD STATEMENT FOR {{timeline}}</span></h5>
           </div>
 
           <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
@@ -213,7 +222,6 @@
             <div class="pr-3">
               <div>Date remitted : {{reportdate}}</div>
               <div>Pin No : </div>
-              <div>Vat No : </div>
             </div>
 
           </div>
@@ -224,24 +232,27 @@
                 <tr>
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
+                  <th class="">DEPOSIT</th>
+                  <th class="">RENT</th>
                   <th class="">BB/F</th>
-                  <th class="">WATER BILL</th>
                   <th class="">TOTAL DUE</th>
                   <th class="">TOTAL PAID</th>
                   <th class="">BC/F</th>
-
+                  <th class="">DATE</th>
                 </tr>
               </thead>
               <tbody>
                 {% for bill in bills%}
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
-                  <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['water-arr'] }}</td>
-                  <td class="data-cell text-right">{{ bill['water'] }}</td>
-                  <td class="data-cell text-right">{{bill['water-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                  <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant']}}</td>
+                  <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right">{{ bill['arrears'] }}</td>
+                  <td class="data-cell text-right">{{bill['total']}}</td>
+                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
                 </tr>
               {% endfor %}
 
@@ -249,64 +260,82 @@
               <tfoot class="custom-footer-alt">
                 <tr>
                   <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                  <td class="font-weight-bold text-right">{{deptotal}}</td>
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
                   <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                  <td class="font-weight-bold text-right"></td>
                 </tr>
               </tfoot>
             </table>
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
               <div>
+                <div class="row mb-3 mt-2">
+                  <div class="col-6 text-right text-black no-wrap">ACC NAME:</div>
+                  <div class="col-6">{{prop_obj.landlord_bankaccname}}</div>
+                </div>
+                <div class="row mb-3 mt-2">
+                  <div class="col-6 text-right text-black no-wrap">ACC NO:</div>
+                  <div class="col-6">{{prop_obj.landlord_bankacc}}</div>
+                </div>
+                <div class="row mb-3 mt-2">
+                  <div class="col-6 text-right text-black no-wrap">BANK:</div>
+                  <div class="col-6">{{prop_obj.landlord_bank}}</div>
+                </div>
+                
+                <br>
+
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Approved By:</div>
                   <div class="col-6">........................</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
                   <div class="col-6">........................</div>
                 </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
-                  <div class="col-6">........................</div>
-                </div>
+
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Date:</div>
                   <div class="col-6">........................</div>
                 </div>
               </div>
   
-              <div class="divjust-end mr-5">
-                <div class="mr-4">
-                  <div class="mb-1 text-gray-900">WATER TOTAl COLLECTION</div>
-                  <div class="text-gray-900 mb-1">PREV UNREMMITED</div>
-                  <div class="text-gray-900 mb-1">TOTALS</div>
-                  <div class="hide mb-2">space</div>
-  
-  
-                  <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
-                  <div class="mb-1">TOTAL DEDUCTIONS</div>
-                  <div class="hide mb-2">space</div>
-                  <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
-                </div>
-  
-                <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
-                  <div class="mb-1 text-gray-900">0.0</div>
-                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-  
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div>
+              <div class="divjust-end ln-16 mobile-malaysian">
+                <div class="hide">space</div>
+    
+                <div class="divjust-end mt-3 mr-5">
+                  <div class="mr-4">
+                    <div class="mb-1 text-gray-900">TOTAL COLLECTION</div>
+    
+                    <div class="hide mb-2">space</div>
+    
+    
+    
+    
+                    <!-- <div class="mb-1 pt-1">MGT FEES @ {{commission_percentage}}</div> -->
+    
+    
+                    <!-- <div class="mb-1">OTHER DEDUCTIONS</div> -->
+                    <div class="mb-1">EXPENSES</div>
+                    <div class="hide mb-2">space</div>
+                  </div>
+    
+                  <div class="text-black">
+                    <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
+    
+                    <div class="hide mb-2">space</div>
+    
+                    <!-- <div class="mb-2">Kshs {{commission}}</div> -->
+    
+                    <div class="mb-1">Kshs {{expenses}}</div>
+    
+                    <!-- <div class="mb-1">Kshs {{debits}}</div> -->
+    
+                    <div class="hide mb-2">space</div>
+    
+                  </div>
                 </div>
               </div>
             </div>

@@ -1556,6 +1556,7 @@ class TenantOp(Tenant,Base):
         return "tnt"+str(self.id)
 
     def view(self):
+        print("NAME >>>>",self.name)
         return {
             'id':self.id,
             'identity':TenantOp.generate_identity(self),

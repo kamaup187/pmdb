@@ -76,7 +76,7 @@ class SwitchPeriod(Resource):
         #     pass
 class Replenish(Resource):
     def post(self):
-        if current_user.username.startswith("qc") or current_user.national_id == "12345678":
+        if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.username.startswith("quality"):
             co = current_user.company
             CompanyOp.set_rem_quota(co,500)
             CompanyOp.set_smsquota(co,500)

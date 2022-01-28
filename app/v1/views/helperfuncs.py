@@ -312,7 +312,7 @@ def run_company_data():
     set_sphone("Rikena Property Solutions",0.0,"0717121612",0.0) #4
 
     set_sphone("Nairuti & Associates",4500.0,"0717121612",4500.0) #6
-    set_sphone("Chase N Rainbow Properties Ltd",0.0,"0721465478",3000.0) #1
+    set_sphone("Chaise River Properties",0.0,"0721465478",3000.0) #1
     set_sphone("KIGAKA ENTERPRISES",0.0,"0768333904",3000.0) #12
     set_sphone("MULTIDIME AGENCIES",0.0,"0112036366",2500.0) #2
     set_sphone("MojaMbili Homes",2000.0,"0729009009",2000.0) #3

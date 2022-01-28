@@ -1555,6 +1555,13 @@ class TenantOp(Tenant,Base):
     def generate_identity(self):
         return "tnt"+str(self.id)
 
+    def generate_name(self):
+        if self.name:
+            name = self.name.split()[0]
+            return name.lower() 
+        else:
+            return "Tenant"
+
     def view(self):
         print("NAME >>>>",self.name)
         return {
@@ -1562,7 +1569,7 @@ class TenantOp(Tenant,Base):
             'identity':TenantOp.generate_identity(self),
             'editid':TenantOp.generate_editid(self),
             'delid':TenantOp.generate_delid(self),
-            'name':self.name.split()[0] if self.name else "Tenant",
+            'name':TenantOp.generate_name(self),
             'fullname':self.name,
             'hst':TenantOp.combine_house_tenant(self),
             'hstalt':TenantOp.combine_house_tenant_alt(self),

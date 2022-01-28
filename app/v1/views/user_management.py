@@ -312,25 +312,25 @@ class Users(Resource):
 
         print("EMMMMMMAIL",email)
 
-        if name:
+        if name and name != 'None':
             if len(name) < 4:
                 return err + "name too short"
 
-        if email:
+        if email and email != 'None':
             if "@" not in email or ".com" not in email:
                 return err + "invalid email"
             user = fetch_user(email)
             if user and user.email != email:
                 return err + "user exists"
 
-        if phone:
+        if phone and phone != "None":
             if "+" in phone:
                 return err + "invalid number"
             user = fetch_user(phone)
             if user and user.phone != user.phone:
                 return err + "user exists"
 
-        if national_id:
+        if national_id and national_id != "None":
             if len(national_id) < 6:
                 return err + "invalid id"
             user = fetch_user(national_id)

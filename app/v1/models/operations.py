@@ -1478,7 +1478,10 @@ class TenantOp(Tenant,Base):
         return "-pending-"
 
     def combine_house_tenant(self):
-        fname = self.name.split()[0] if self.name else "Tenant"
+        try:
+            fname = self.name.split()[0] if self.name else "Tenant"
+        except:
+            fname = "Tenant"
         house =  TenantOp.get_houseno(self)
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
 

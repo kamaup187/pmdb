@@ -310,13 +310,13 @@ class UserOp(User,Base):
         db.session.commit()
     
     def update_user(self,name=None,phone=None,national_id=None,email=None,password=None,user_group_id=None,company_id=None,modified_by=None):
-        if name:
+        if name and name != "None":
             self.name = name
-        if phone:
+        if phone and phone != "None":
             self.phone = phone
-        if national_id:
+        if national_id and national_id != "None":
             self.national_id = national_id
-        if email:
+        if email and email != "None":
             self.email = email
         if password:
             self.password = Bcrypt().generate_password_hash(password).decode()

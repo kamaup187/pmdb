@@ -339,7 +339,7 @@ def logo(co):
     str_name_company = str(co)
     sign = ""
     try:
-        if str_name_company == "Chase N Rainbow Properties Ltd":
+        if str_name_company == "Chaise River Properties":
             ##################################################
             logopath = "../static/img/logos/chase/l-logo.png"
             mobilelogopath = "../static/img/logos/chase/s-logo.png"

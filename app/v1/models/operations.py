@@ -1557,8 +1557,12 @@ class TenantOp(Tenant,Base):
 
     def generate_name(self):
         if self.name:
-            name = self.name.split()[0]
-            return name.lower() 
+            try:
+                name = self.name.split()[0]
+                return name.lower() 
+            except Exception as e:
+                print("err len>>",len(self.name),"name:",self.name)
+                return "Tenant"
         else:
             return "Tenant"
 

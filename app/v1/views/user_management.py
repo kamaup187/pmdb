@@ -318,21 +318,21 @@ class Users(Resource):
 
         if email:
             if "@" not in email or ".com" not in email:
-                return err + "invalid"
+                return err + "invalid email"
             user = fetch_user(email)
             if user and user.email != email:
                 return err + "user exists"
 
         if phone:
             if "+" in phone:
-                return err + "invalid"
+                return err + "invalid number"
             user = fetch_user(phone)
             if user and user.phone != user.phone:
                 return err + "user exists"
 
         if national_id:
             if len(national_id) < 6:
-                return err + "invalid"
+                return err + "invalid id"
             user = fetch_user(national_id)
             if user and user.national_id != national_id:
                 return err + "user exists"

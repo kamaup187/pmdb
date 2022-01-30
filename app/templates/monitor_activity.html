@@ -233,10 +233,14 @@
 
                   <div class="mt-2 divbg">
                     <div>
-                      <span id="tablelogins" type="button" class="btn btn-sm btn-danger text-gray-danger">View tabular</span>
+                      <span id="daylogins" type="button" class="btn btn-sm btn-danger text-gray-danger">View daily</span>
                     </div>
 
                     <div>
+                      <span id="monthlogins" type="button" class="btn btn-sm btn-danger text-gray-danger">View monthly</span>
+                    </div>
+
+                    <div class="dispnone">
                       <span id="smslogins" type="button" class="btn btn-sm btn-danger text-gray-danger">Send via sms</span>
                     </div>
 
@@ -372,16 +376,16 @@
 
 <script>
     
-  $("#tablelogins").on('click',function(){   
+  $("#daylogins").on('click',function(){   
     $("#barloader").removeClass("dispnone")
 
-    $('#tablelogins').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Generating...');
+    $('#daylogins').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Generating...');
     $.ajax({
       url: "{{ url_for('api.monitoractivity') }}",
       type: "GET",
       data: {
           date:$("#loginperiod").val(),
-          target:"tablelogins"
+          target:"daylogins"
           },
       success: function(response) {
         $("#propdisp").html(response)
@@ -391,13 +395,47 @@
 
         $("#barloader").addClass("dispnone")
 
-        $('#tablelogins').html('View tabular');
+        $('#daylogins').html('View daily');
 
       },
       error: function(xhr) {
         $("#barloader").addClass("dispnone")
 
-        $('#tablelogins').html('Retry');
+        $('#daylogins').html('Retry');
+      }
+    });
+  });
+  
+  </script>
+
+<script>
+    
+  $("#monthlogins").on('click',function(){   
+    $("#barloader").removeClass("dispnone")
+
+    $('#monthlogins').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Generating...');
+    $.ajax({
+      url: "{{ url_for('api.monitoractivity') }}",
+      type: "GET",
+      data: {
+          date:$("#loginperiod").val(),
+          target:"monthlogins"
+          },
+      success: function(response) {
+        $("#propdisp").html(response)
+
+        $(".dismissparent").click();
+
+
+        $("#barloader").addClass("dispnone")
+
+        $('#monthlogins').html('View monthly');
+
+      },
+      error: function(xhr) {
+        $("#barloader").addClass("dispnone")
+
+        $('#monthlogins').html('Retry');
       }
     });
   });
@@ -415,7 +453,7 @@
       type: "GET",
       data: {
           date:"",
-          target:"tablelogins"
+          target:"daylogins"
           },
       success: function(response) {
         $("#propdisp").html(response)

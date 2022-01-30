@@ -386,10 +386,10 @@ class UserLoginDataOp(UserLoginData,Base):
         return UserLoginData.query.filter_by(user_id=user_id).all()
 
     def fetch_logins_by_day(date):
-        return UserLoginData.query.filter(extract('day', UserLoginData.logged_on)==date.day).filter(extract('month', UserLoginData.logged_on)==date.month).all()
+        return UserLoginData.query.filter(extract('day', UserLoginData.logged_on)==date.day).filter(extract('month', UserLoginData.logged_on)==date.month).filter(extract('year', UserLoginData.logged_on)==date.year).all()
 
-    def fetch_logins_by_month(month):
-        return UserLoginData.query.filter(extract('month',UserLoginData.logged_on)==month).all()
+    def fetch_logins_by_month(date):
+        return UserLoginData.query.filter(extract('month',UserLoginData.logged_on)==date.month).filter(extract('year', UserLoginData.logged_on)==date.year).all()
 
     @staticmethod
     def fetch_all_logins():
@@ -442,6 +442,7 @@ class UserLoginDataOp(UserLoginData,Base):
                 "invoice":self.invoice_frequency,
                 "tenant":self.tenant_frequency,
                 "search":self.search_frequency,
+                "date":(self.logged_on + relativedelta(hours=3)).strftime("%d/%b"),
                 "initial":(self.logged_on + relativedelta(hours=3)).strftime('%H:%M %p'),
                 "latest":(self.logged_on_last + relativedelta(hours=3)).strftime('%H:%M %p'),
                 "frequency":self.frequency
@@ -457,6 +458,7 @@ class UserLoginDataOp(UserLoginData,Base):
                 "invoice":self.invoice_frequency,
                 "tenant":self.tenant_frequency,
                 "search":self.search_frequency,
+                "date":(self.logged_on + relativedelta(hours=3)).strftime("%d/%b"),
                 "initial":(self.logged_on + relativedelta(hours=3)).strftime('%H:%M %p'),
                 "latest":(self.logged_on_last + relativedelta(hours=3)).strftime('%H:%M %p'),
                 "frequency":self.frequency

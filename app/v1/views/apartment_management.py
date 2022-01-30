@@ -38,49 +38,41 @@ Cloud.config.update = ({
 class MonitorActivity(Resource):
     def get(self):
         target = request.args.get("target")
+        datevar = request.args.get("date")
 
-        if target == "smslogins":
-            print("111111111111111111111111")
-            datevar = request.args.get("date")
+        if not datevar:
+            obj_date = datetime.datetime.now()
+            datevar = obj_date.strftime("%d %B, %Y")
 
+        else:
             raw_date = date_formatter_weekday(datevar)
-
             from dateutil.parser import parse
-
             obj_date = parse(raw_date)
 
+
+
+        if target == "smslogins":
             logsjob = q.enqueue_call(
                 func=sendlogs, args=(obj_date,), result_ttl=5000
             )
-        elif target == "tablelogins":
-            print("22222222222222222222222222")
-            datevar = request.args.get("date")
 
-            if not datevar:
-                obj_date = datetime.datetime.now()
-                
-                datevar = obj_date.strftime("%d %B, %Y")
-
-            else:
-                raw_date = date_formatter_weekday(datevar)
-                from dateutil.parser import parse
-
-                obj_date = parse(raw_date)
-            
+        elif target == "daylogins":
             all_logins = UserLoginDataOp.fetch_logins_by_day(obj_date)
-
             logs = login_details(all_logins)
-
             # payids = get_obj_ids(detailed_payments_list)
             logins = f"{len(all_logins)} logins"
+            return render_template("ajax_logs.html",items=logs,targetdate=datevar,logins=logins)
 
+        elif target == "monthlogins":
+            all_logins = UserLoginDataOp.fetch_logins_by_month(obj_date)
+            logs = login_details(all_logins)
+            # payids = get_obj_ids(detailed_payments_list)
+            logins = f"{len(all_logins)} logins"
             return render_template("ajax_logs.html",items=logs,targetdate=datevar,logins=logins)
 
 
         else:
-            print("33333333333333333333333333333")
             time = datetime.datetime.now()
-
             return Response(render_template(
                 'monitor_activity.html',
                 logins = len(UserLoginDataOp.fetch_logins_by_day(time))

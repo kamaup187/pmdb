@@ -40,6 +40,7 @@ class MonitorActivity(Resource):
         target = request.args.get("target")
 
         if target == "smslogins":
+            print("111111111111111111111111")
             datevar = request.args.get("date")
 
             raw_date = date_formatter_weekday(datevar)
@@ -48,28 +49,25 @@ class MonitorActivity(Resource):
 
             obj_date = parse(raw_date)
 
-            target_day = obj_date.day
-
             logsjob = q.enqueue_call(
-                func=sendlogs, args=(target_day,), result_ttl=5000
+                func=sendlogs, args=(obj_date,), result_ttl=5000
             )
         elif target == "tablelogins":
+            print("22222222222222222222222222")
             datevar = request.args.get("date")
 
             if not datevar:
-                time = datetime.datetime.now() + relativedelta(hours=3)
-                target_day = time.day
-                datevar = time.strftime("%d %B, %Y")
+                obj_date = datetime.datetime.now()
+                
+                datevar = obj_date.strftime("%d %B, %Y")
 
             else:
                 raw_date = date_formatter_weekday(datevar)
                 from dateutil.parser import parse
 
                 obj_date = parse(raw_date)
-
-                target_day = obj_date.day
             
-            all_logins = UserLoginDataOp.fetch_logins_by_day(target_day)
+            all_logins = UserLoginDataOp.fetch_logins_by_day(obj_date)
 
             logs = login_details(all_logins)
 
@@ -80,11 +78,12 @@ class MonitorActivity(Resource):
 
 
         else:
-            time = datetime.datetime.now() + relativedelta(hours=3)
+            print("33333333333333333333333333333")
+            time = datetime.datetime.now()
 
             return Response(render_template(
                 'monitor_activity.html',
-                logins = len(UserLoginDataOp.fetch_logins_by_day(time.day))
+                logins = len(UserLoginDataOp.fetch_logins_by_day(time))
             ))
 
 class Index(Resource):

@@ -1593,15 +1593,23 @@ clear: both;
     z-index: 10;
   }
 
-  .fixed-header {
+  .fixed-headerr {
     /* overflow: hidden !important; */
     /* background-color: #333 !important; */
     position: fixed !important;
     /* top: 0 !important; */
-    margin-top: 79px !important;
+    margin-top: 0px !important;
     margin-left: 0px !important;
-    width: 100% !important;
+    
+    width: 99% !important;
     z-index: 10;
+  }
+
+  .flowing-body {
+    /* padding: 16px !important; */
+    /* padding: 6px !important; */
+
+    margin-top: 50px !important;
   }
 
   .container-fluid {

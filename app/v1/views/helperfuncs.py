@@ -4048,19 +4048,19 @@ def upload_handler(file,current_user):
 
     return [rows,sheet]
 
-def sendlogs(day):
+def sendlogs(date):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     time = datetime.datetime.now() + relativedelta(hours=3)
 
-    if day:
-        all_logins = UserLoginDataOp.fetch_logins_by_day(day)
-        sms_text = f"Date {day} logins [{len(all_logins)}]: "
+    if date:
+        all_logins = UserLoginDataOp.fetch_logins_by_day(date)
+        sms_text = f"Date {date.day} logins [{len(all_logins)}]: "
 
     else:
-        all_logins = UserLoginDataOp.fetch_logins_by_day(time.day)
+        all_logins = UserLoginDataOp.fetch_logins_by_day(time)
         sms_text = f"Today's logins [{len(all_logins)}] as of {time.strftime('%X')}: "
 
 

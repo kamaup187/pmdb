@@ -385,8 +385,8 @@ class UserLoginDataOp(UserLoginData,Base):
     def fetch_logins_by_user_id(user_id):
         return UserLoginData.query.filter_by(user_id=user_id).all()
 
-    def fetch_logins_by_day(day):
-        return UserLoginData.query.filter(extract('day', UserLoginData.logged_on)==day).all()
+    def fetch_logins_by_day(date):
+        return UserLoginData.query.filter(extract('day', UserLoginData.logged_on)==date.day).filter(extract('month', UserLoginData.logged_on)==date.month).all()
 
     def fetch_logins_by_month(month):
         return UserLoginData.query.filter(extract('month',UserLoginData.logged_on)==month).all()

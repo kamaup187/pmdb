@@ -9,21 +9,23 @@
 
       <span class="multisave dispnone"></span>
 
-        <div id="parent-section">
+        <!-- <div id="parent-section">
           <div class="col-12 no-padding mb-1">
             <div class="card-header py-1 card-bg-alt divjust-end" >
                 <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>New tenants & Allocation</div>
                 <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
             </div>
-          </div>
+          </div> -->
 
 
 
-          <div class="col-lg-12 center-btn mb-3">
+          <!-- <div class="col-lg-12 center-btn mb-3">
             <span class="text-black text-xx smallify underline shadow-alt">{{prop.name}}</span>
-          </div>
+          </div> -->
           
-          <div class="row mb-3">
+
+          
+          <!-- <div class="row mb-3">
               <div class="col-lg-12 center-btn">
                 <div class="info_item">
                   <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add new tenant</span></button>
@@ -34,10 +36,10 @@
 
               </div>
 
-          </div>
+          </div> -->
         
 
-        <div class="toggleswitch text-info font-weight-bold divbg mb-3">
+        <!-- <div class="toggleswitch text-info font-weight-bold divbg mb-3">
           <span>
             <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
             <span class="small desktop-malaysian">Pending</span>
@@ -65,11 +67,30 @@
             </label>
           </span>
 
+        </div> -->
+
+        <div class="pb-2 bg-white divjust-end">
+
+          <div class="">
+            <span id="backbtn" class="btn btn-sm btn-light text-black">
+              <i class="me-1" data-feather="user-plus"></i>
+              Back to properties
+            </span>
+          </div>
+
+          <div class="">
+            <nav class="nav nav-borders">
+              <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+              <a id="billing" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+              <a id="notifications" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a>
+            </nav>
+          </div>
+
         </div>
 
         <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
         
-        <div id="result-view" class="row">
+        <div id="child-result-view" class="row">
         
           <div class="col-lg-12 no-padding">
               <div id="reqdata" class="table-responsive">
@@ -167,7 +188,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -244,7 +265,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
     <div class="modal fade" id="uploadTenantExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
@@ -542,14 +563,15 @@
     var url = "{{ url_for('static', filename='upload.js') }}";
     $.getScript(url);
   </script>
-<script>
+  
+<!-- <script>
   $("#close-propdisp").on('click',function(){
     $('#proplist').removeClass('dispnone')
     $('#propdisp').addClass('dispnone');
     $('#tenant-area').removeClass('isactive')
     $('#content-area').removeClass("isopen text-danger");
   });
-</script>
+</script> -->
 
 <script>
   var rawIds = "{{ tenantids|safe }}";
@@ -616,6 +638,14 @@
     });
 </script>
 
+<script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
+</script>
+
 
 
 <script>
@@ -628,7 +658,7 @@
 
     var cb = document.getElementById("reporttoggle");
     if (cb.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
       var cb2 = document.getElementById("reporttoggle2");
       cb2.checked = false;
       var cb3 = document.getElementById("reporttoggle3");
@@ -645,7 +675,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -659,7 +689,7 @@
 
     var cb2 = document.getElementById("reporttoggle2");
     if (cb2.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
       var cb = document.getElementById("reporttoggle");
       cb.checked = false;
       var cb3 = document.getElementById("reporttoggle3");
@@ -677,7 +707,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -692,7 +722,7 @@
 
     var cb3 = document.getElementById("reporttoggle3");
     if (cb3.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
       var cb = document.getElementById("reporttoggle");
       cb.checked = false;
       var cb2 = document.getElementById("reporttoggle2");
@@ -710,7 +740,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -720,13 +750,13 @@
 </script>
 
 
-  <script>
+  <!-- <script>
     $(document).ready(function(){
       $("#addTenantModal").on('shown.bs.modal', function(){
         $(this).find('#new_name').focus();
       });
     });
-  </script>
+  </script> -->
 
 
 
@@ -791,7 +821,7 @@
                     },
                     success: function(response) {
                       
-                      $("#result-view").html(response);
+                      $("#child-result-view").html(response);
                     }
                   });
                 },5000);
@@ -851,7 +881,7 @@
                   },
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
                   }
                 });
               },5000);
@@ -911,7 +941,7 @@
                   },
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
                   }
                 });
               },5000);
@@ -932,7 +962,7 @@
   });
 </script>
 
-<script>
+<!-- <script>
   $("#newtenant").click(function(){   
     var cb2 = document.getElementById("migrate2");
     if (cb2.checked){
@@ -974,13 +1004,13 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
       });
   });
-</script>
+</script> -->
 
 <script>
   $("#editTenantModal").on('shown.bs.modal', function(){
@@ -1007,7 +1037,8 @@
 </script>
 
 <script>
-  $("#edittenant").click(function(){  
+  $("#edittenant").click(function(){
+
     $("#edittenant").html("updating...")  
       $.ajax({
         url: "{{ url_for('api.updatetenant') }}",
@@ -1046,7 +1077,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1055,7 +1086,7 @@
 </script>
 
 
-<script>
+<!-- <script>
   // This script autopulate house options and displays tenant name
   $("#addTenantModal").on('shown.bs.modal', function(){
     $.ajax({
@@ -1070,8 +1101,7 @@
       }
     });
   });
-
-</script>
+</script> -->
 
 <script>
   // This script autopulate house options and displays tenant name
@@ -1198,7 +1228,7 @@
                   target:$("#current-reloader").text()                },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1289,7 +1319,7 @@
                   target:$("#current-reloader").text()                },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1326,7 +1356,7 @@
             },
               success: function(response) {
                 
-                $("#result-view").html(response);
+                $("#child-result-view").html(response);
               }
             });
 

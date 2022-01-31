@@ -2155,14 +2155,17 @@ def fetch_specific_metered_house(meter_obj):
 #     return new_list
 
 def sort_items(arr):
-    str_arr = []
-    for i in arr:
-        str_arr.append(str(i))
-    if str_arr:
-        sorted_items = natsorted(str_arr, key=lambda y: y.lower())
-    else:
-        sorted_items = []
-    return sorted_items
+    try:
+        str_arr = []
+        for i in arr:
+            str_arr.append(str(i))
+        if str_arr:
+            sorted_items = natsorted(str_arr, key=lambda y: y.lower())
+        else:
+            sorted_items = []
+        return sorted_items
+    except:
+        return []
 
 def generate_house_tenants(arr):
     """combine house and tenant"""

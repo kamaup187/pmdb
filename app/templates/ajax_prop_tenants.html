@@ -1,0 +1,957 @@
+<!--================Contact Area =================-->
+<section class="contact_area section_gap">
+    <!-- <span id="prop_identifier" class="dispnone"></span>
+    <span id="link_identifier" class="dispnone"></span>
+    <span id="prop_id_identifier" class="dispnone"></span> -->
+
+    <span id="edit_prop_identifier" class="dispnone"></span>
+    <span id="del_prop_identifier" class="dispnone"></span>
+    <a id="downbtn" href="/download/template/properties" class="dispnone">download</a>
+  
+  
+    <div class="card mb-2 mt-1">
+  
+      <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+        <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
+        <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant listings <span id="activeprop" class="text-primary ml-3"></span></span>
+        <div>
+          <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+            type="button">X</button>
+        </div>
+      </div>
+  
+      <div class="card-body flowing-body pt-2 pl-2">
+  
+        <!-- <div class="pb-1 bg-white">
+          <div class="mb-1">
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
+              <i class="me-1" data-feather="users"></i>
+              Add New Tenant
+            </span>
+            <span class="btn btn-sm btn-light text-black">
+              <i class="me-1" data-feather="user-plus"></i>
+              Upload data
+            </span>
+          </div>
+        </div> -->
+  
+  
+        <div id="result-view" class="">
+          <div id="props" class="table-responsive">
+            <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="text-info font-weight-bold pl-0">Property</th>
+                        <th class="text-info font-weight-bold">Houses</th>
+                        <th class="text-info font-weight-bold">Tenants</th>
+                        <th class="text-info font-weight-bold">Vacant</th>
+                        <th class="text-info font-weight-bold">Occupancy</th>
+                        <th class="text-info font-weight-bold">Reminders</th>
+            
+                        <th class="text-info track-title-cell">Add tenant</th>
+                        <th class="text-info track-title-cell">Upload data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items%}
+                    <tr>
+
+
+                        <td class="data-cell">
+                            <div>
+                                <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                            </div>
+                        </td>
+            
+                        <td class="data-cell">{{ item['houses'] }}</td>
+                        <td class="data-cell">{{ item['tenants'] }}</td>
+                        <td class="data-cell">{{ item['vacant'] }}</td>
+                        <td class="data-cell">{{ item['occupancy'] }} %</td>
+                        <td class="data-cell">{{ item['reminders']|safe }}</td>
+            
+            
+                        <td class="data-cell">
+                            <div>
+                                <span id="{{item['editid']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                                    data-toggle="modal" data-bs-toggle="modal" data-target="#addTenantModal">add new</span>
+                            </div>
+                        </td>
+                        <td class="data-cell">
+                            <div>
+                                <span id="{{item['delid']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                                    data-toggle="modal" data-bs-toggle="modal" data-target="#editPropModa"><i
+                                        class="fas fa-upload mr-1"></i>Upload</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+  
+        </div>
+        <div id="child-view" class="dispnone"></div>
+      </div>
+    </div>
+  </section>
+  
+  
+  <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify">Add new tenant</span>
+            <div>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <form autocomplete="off" method="POST" action="">
+   
+                    <div class="mt-2">
+
+                      <div class="form-group input-icons">
+                        <span>Tenant name<span class="text-danger small">(mandatory)</span></span>
+                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group no-paddin input-icons">
+                        <span>Select house to allocate <span class="text-primary small">(recommended)</span></span>
+                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
+                          <option disabled selected value> loading... </option>
+                        </select>
+                        <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Tenant mobile number <span class="text-primary small">(recommended)</span></span>
+                          <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Tenant Email<span class="text-primary small">(optional)</span></span>
+                          <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>National id number <span class="text-primary small">(optional)</span></span>
+                          <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="fancy-checkbox-group form-control mb-4 divjust">
+                        <div>
+                          <input type="checkbox" id="migrate2"/>
+                          <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                        </div>       
+                      </div>
+
+                    </div>
+                  
+                    <div class="divbg center-btn">
+                      <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+ 
+  
+  
+
+
+  
+
+
+  
+  <div class="modal fade" id="editPropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-kubwa" role="document">
+      <div class="modal-content">
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title divjust-end">
+            <span class="mr-3 mb-1 smallify text-black font-weight-bold text-uppercase">Property settings | update</span>
+            <div>
+              <button class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white" type="button"
+                data-dismiss="modal" data-bs-dismiss="modal">X</button>
+            </div>
+          </h5>
+        </div>
+        <div class="text-info payment-info"></div>
+        <div class="modal-body pt-0 text-gray-900">
+  
+          <div id="">
+            <main>
+              <!-- Main page content-->
+              <div id="propBed" class="">
+  
+              </div>
+  
+          </div>
+          <div class="has-margin-bottom divbg dispnone">
+            <button id="edit_prop" type="button"
+              class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Edit</button>
+            <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal"
+              data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  
+  
+  
+  
+  
+  
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+  
+  
+  <script>
+    $("#close-propdisp").on('click', function () {
+      $('#body-block').removeClass('dispnone')
+      $('#propdisp').addClass('dispnone');
+      // $('#content-area').removeClass("isopen text-danger");
+      // $('#list-area').removeClass("isopen text-danger");
+      $('#sidebarToggle').click();
+      $('#smaccordionSidebar').removeClass("toggled");
+    });
+  </script>
+  
+  <script>
+  
+    $("#uploadPropModal").on('shown.bs.modal', function () {
+      $(".dismissparent").click();
+    });
+  
+  </script>
+  
+  <script>
+    var rawIds = "{{ propids|safe }}";
+    // var props = "{{ propnames|safe }}";
+    // var propnames= props.replace(/'/g,'"');
+    // propObjs = JSON.parse(propnames)
+
+    var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function (i, item) {
+  
+      $("#" + item).on('click', function () {
+        console.log("clicked", item)
+        if (isNaN(parseInt(item))) {
+          if (item.startsWith("del")) {
+            $("#del_prop_identifier").html(item)
+          }
+          else if (item.startsWith("prp")) {
+            $("#prop_id_identifier").html(item)
+
+
+            // propObjs.forEach(element =>{
+            //     if(Object.keys(element) == item){
+            //         var cc = element[item]
+            //         console.log(cc)
+            //     }
+            // });
+
+
+            $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+            $("#activeprop-child").text($(this).text())
+
+
+
+            // $("#spinner").removeClass("dispnone")
+            // $.ajax({
+            //   url: "/results",
+            //   type: "get",
+            //   data: {id: item},
+            //   success: function(response) {
+            //     $("#spinner").addClass("dispnone")
+            //     $("#propdisp").html(response);
+            //   }
+            // });
+            $("#barloader").removeClass("dispnone")
+
+            $.ajax({
+                type: "get",
+                url: "{{ url_for('api.tenantmanagement') }}",
+                data: {
+                    propid:item
+                },
+                success: function(response) {
+                //   if (!$('#content-area').hasClass("isopen") && !$('#list-area').hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                //         $('#sidebarToggle').click();
+                //         $('#smaccordionSidebar').removeClass("toggled");
+                //       }
+                //   $('#content-area').addClass("isopen text-danger")
+                  // $("#postloader-btn").click();
+                  $("#barloader").addClass("dispnone")
+                //   $("#body-block").addClass("dispnone");
+                  $("#result-view").addClass("dispnone");
+                  $("#child-view").removeClass("dispnone")
+
+                  $("#child-view").html(response);
+                }
+            });
+          } else {
+            $("#edit_prop_identifier").html(item)
+          }
+  
+        } else {
+          $("#prop_identifier").html(item)
+          var linkTarget = $("#" + item).children("span").text()
+          $("#link_identifier").html(linkTarget)
+  
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        "order": [[0, "asc"]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>
+
+
+
+<script>
+    $(document).ready(function(){
+      $("#addTenantModal").on('shown.bs.modal', function(){
+        $(this).find('#new_name').focus();
+      });
+    });
+  </script>
+
+<script>
+    // This script autopulate house options and displays tenant name
+    $("#addTenantModal").on('shown.bs.modal', function(){
+      $.ajax({
+        url: "{{ url_for('api.allocatetenants') }}",
+        type: "POST",
+        data: {
+              propid: $("#edit_prop_identifier").text(),
+              target:"house options"
+            },
+        success: function(response) {
+          $("#select_house2").html(response);
+        }
+      });
+    });
+  </script>
+
+<script>
+    $("#newtenant").click(function(){   
+      var cb2 = document.getElementById("migrate2");
+      if (cb2.checked){
+        var migrate2 = "True";
+      }else{
+        var migrate2 = "False";
+      }
+      $("#newtenant").html("saving...")  
+        $.ajax({
+          url: "{{ url_for('api.addtenant') }}",
+          type: "POST",
+          data: {
+                  propid: $("#edit_prop_identifier").text(),
+                  house: $("#select_house2").val(),
+                  name: $("#new_name").val(),
+                  national_id: $("#new_natid").val(),
+                  tel: $("#new_tel").val(),
+                  email: $("#new_email").val(),
+                  migrate: migrate2,
+                  arr: $("#new_arr").val()
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              // $('#newtenant').attr('disabled', 'disabled');
+              $('#newtenant').removeClass('btn-success')
+              $('#newtenant').addClass('btn-secondary')
+              $("#newtenant").html("submit")
+            }, 2000);
+            
+
+            $.ajax({
+                type: "get",
+                url: "{{ url_for('api.allproperties') }}",
+                data: {
+                target:"tenant list"
+                },
+                success: function(response) {
+                    $("#result-view").html(response);
+                }
+            });
+          }
+        });
+    });
+  </script>
+  
+  
+  
+  
+  
+  <script>
+    // This script displays alerts and tenant name before clearance
+    $("#addPropertyModal").on('shown.bs.modal', function () {
+  
+      $.ajax({
+        url: "{{ url_for('api.addprop') }}",
+        type: "get",
+        data: {
+          target: "owners"
+        },
+        success: function (response) {
+          $("#select_owner").html(response);
+          $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+              target: "regions"
+            },
+            success: function (response) {
+              $("#region_list").html(response);
+            }
+          });
+        }
+      });
+    });
+  </script>
+  
+  
+  <script>
+    $("#editPropModal").on('shown.bs.modal', function () {
+  
+      $.ajax({
+        url: "{{ url_for('api.allproperties') }}",
+        type: "get",
+        data: {
+          propid: $("#edit_prop_identifier").text(),
+          target: "prop update"
+        },
+        success: function (response) {
+          $("#propBed").html(response);
+        }
+      });
+  
+    });
+  </script>
+  
+  <script>
+    $("#editPropModal").on('hidden.bs.modal', function () {
+  
+      $("#propBed").html("empty");
+  
+    });
+  
+  </script>
+  
+  
+  <script>
+    $("#downloadprops").click(function () {
+      $('#downloadprops').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+  
+  
+      $("#downbtn")[0].click();
+  
+      setTimeout(function () {
+        $('#downloadprops').html("<i class='fas fa-file-download mr-2'></i>Template")
+      }, 3000);
+    });
+  </script>
+  
+  
+  <script>
+    $("#uploadprops").on('click', function () {
+      $("#uploadprops").html("Uploading...")
+  
+      url = "{{ url_for('api.addprop') }}"
+  
+      var fd = new FormData();
+      var files = $('#propfile')[0].files;
+      fd.append('file', files[0]);
+      fd.append('target', "excelupload");
+  
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // $("#postloader-btn").click();
+          // $("#body-block").addClass("dispnone")
+          // $("#dynamic-content").removeClass("dispnone")
+          $("#uploadprops").html("Uploaded")
+          $(".alert-msgs").html(response);
+  
+          setTimeout(function () {
+            $("#uploadprops").html("Upload")
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $(".closemodal").click();
+          }, 3000)
+  
+          $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "get",
+            success: function (response) {
+              $("#dynamic-content").html(response);
+  
+            }
+          });
+  
+        },
+        error: function () {
+          $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+          $("#uploadprops").html("Retry")
+  
+          setTimeout(function () {
+            $("#uploadprops").html("Upload")
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $(".closemodal").click();
+          }, 5000)
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  <script>
+    $("#add_prop").on('click', function () {
+      $('#add_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
+  
+      // var cb = document.getElementById("cb1");
+      // if (cb.checked){
+      //   var agency = "True";
+      // }else{
+      //   var agency = "False";
+      // }
+  
+      $.ajax({
+        type: "POST",
+        url: "{{ url_for('api.addprop') }}",
+        data: {
+          landlord: $("#cname").val(),
+          tel: $("#ctel").val(),
+          region: $("#select_region").val(),
+          prop: $("#prop").val(),
+          agency: "True",
+          target: ""
+        },
+        success: function (response) {
+          $(".alert-msgs").html(response);
+          $('#add_prop').html('Submit');
+          $(".reset").click();
+          setTimeout(function () {
+            $(".dismissparent").click();
+          }, 2000);
+          // setTimeout(function(){
+          //   $.ajax({
+          //     url: "{{ url_for('api.allproperties') }}",
+          //     type: "get",
+          //     success: function(response) {
+          //       // $("#result-view").html(response);
+  
+          //     }
+          //   });
+  
+          //     }, 4000);           
+  
+          // setTimeout(function(){
+  
+          //   $(".reset").click();
+          //   $(".closemodal").click();
+          //   }, 1000);
+        },
+        error: function () {
+          $(".alert-msgs").html('<span class="text-danger">Similar property exists</span>');
+          $('#add_prop').html('Re-submit');
+  
+        }
+  
+      });
+    });
+  </script>
+  
+  
+  <script>
+    // This script displays alerts and tenant name before clearance
+    $("#deletePropModal").on('shown.bs.modal', function () {
+      $(".payment-info").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>retrieving...');
+      $.ajax({
+        url: "{{ url_for('api.editprop') }}",
+        type: "get",
+        data: {
+          delid: $("#del_prop_identifier").text(),
+          target: "delete"
+        },
+        success: function (response) {
+          $(".payment-info").html(response);
+        }
+      });
+    });
+  </script>
+  
+  <script>
+  
+    $("#del_prop").on('click', function () {
+      $('#del_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...');
+      $.ajax({
+        url: "{{ url_for('api.editprop') }}",
+        type: "POST",
+        data: {
+          delid: $("#del_prop_identifier").text(),
+          target: "delete"
+        },
+        success: function (response) {
+          $(".payment-info").html(response);
+          $('#del_prop').html('Delete');
+          setTimeout(function () {
+            $(".closemodal").click();
+          }, 2000);
+          setTimeout(function () {
+  
+            $.ajax({
+              url: "{{ url_for('api.allproperties') }}",
+              type: "get",
+              success: function (response) {
+                $("#dynamic-content").html(response);
+  
+              }
+            });
+  
+          }, 3000);
+  
+        }
+      });
+    });
+  
+  </script>
+  
+  
+  
+  <script>
+  
+    $("#add_owner").on('click', function () {
+  
+      $('#add_owner').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...');
+      $.ajax({
+        url: "{{ url_for('api.addowner') }}",
+        type: "POST",
+        data: {
+          fname: $("#fname").val(),
+          lname: $("#lname").val(),
+          tel: $("#tel").val(),
+          target: ""
+        },
+        success: function (response) {
+          $(".modal-info").show();
+          $(".closemodal-small").click();
+          $(".modal-info").html("<span class='text-success'>Owner added successfully</span>");
+          $('#add_owner').html('Submit');
+          $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+              target: "owners"
+            },
+            success: function (response) {
+              $("#select_owner").html(response);
+  
+            }
+          });
+          setTimeout(function () {
+            $(".modal-info").fadeOut(4000, "swing");
+          }, 1000);
+  
+        }
+      });
+    });
+  
+  </script>
+  
+  <script>
+  
+    $("#add_region").on('click', function () {
+  
+      $('#add_region').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...');
+      $.ajax({
+        url: "{{ url_for('api.addregion') }}",
+        type: "POST",
+        data: {
+          name: $("#region").val(),
+          target: ""
+        },
+        success: function (response) {
+          $(".modal-info").show();
+          $(".closemodal-small").click();
+          $(".modal-info").html("<span class='text-success'>Region added successfully</span>");
+          $('#add_region').html('Submit');
+          $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+              target: "regions"
+            },
+            success: function (response) {
+              $("#select_region").html(response);
+  
+            }
+          });
+          setTimeout(function () {
+            $(".modal-info").fadeOut(4000, "swing");
+          }, 1000);
+  
+        }
+      });
+    });
+  
+  </script>
+  
+  <script>
+    // This script displays alerts and tenant name before clearance
+    $("#linkModal").on('shown.bs.modal', function () {
+      var targetLink = $("#link_identifier").text();
+      if (targetLink == "link") {
+        $("#linkModalLabel").html("Link to Agent");
+        $("#link-btn").html("Link");
+      } else {
+        $("#linkModalLabel").html("Unlink property");
+        $("#link-btn").html("Unlink");
+      }
+  
+      $.ajax({
+        url: "{{ url_for('api.linkproperty') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier").text(),
+          target: targetLink
+        },
+        success: function (response) {
+          $("#select_company").html(response);
+        }
+      });
+    });
+  </script>
+  
+  <script>
+  
+    $("#link-btn").on('click', function () {
+      var targetLink = $("#link_identifier").text();
+      if (targetLink == "link") {
+        $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>linking...');
+      } else {
+        $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Unlinking...');
+      }
+  
+      $.ajax({
+        url: "{{ url_for('api.linkproperty') }}",
+        type: "POST",
+        data: {
+          company: $("#select_company").val(),
+          propid: $("#prop_identifier").text(),
+          target: targetLink
+        },
+        success: function (response) {
+          $(".modal-info").show();
+          $(".modal-info").html("<span class='text-success'>Property link success</span>");
+          $('#link-btn').html('Link');
+  
+          setTimeout(function () {
+            $(".modal-info").fadeOut(4000, "swing");
+            $(".closemodal").click();
+          }, 1000);
+  
+          setTimeout(function () {
+  
+            $.ajax({
+              url: "{{ url_for('api.allproperties') }}",
+              type: "get",
+              success: function (response) {
+                $("#dynamic-content").html(response);
+  
+              }
+            });
+  
+          }, 3000);
+  
+        }
+      });
+    });
+  
+  </script>
+  
+  
+  <script>
+    // This script displays alerts and tenant name before clearance
+    $("#addPaymentModal").on('shown.bs.modal', function () {
+      $(function () {
+        $("#datepicker").datepicker({
+          autoclose: true,
+          todayHighlight: true
+        });
+      });
+  
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier").text(),
+          target: "houselist"
+        },
+        success: function (response) {
+          $("#select_house").html(response);
+        }
+      });
+    });
+  </script>
+  
+  
+  <script>
+    // This script displays alerts and tenant name before clearance
+    $("#select_house").on('change', function () {
+      $("#tenantbed").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      // $("#tenantbed").removeClass("dispnone")
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier").text(),
+          house: $("#select_house").val(),
+          target: "tenant name"
+        },
+        success: function (response) {
+          $("#tenantbed").html(response);
+        }
+      });
+    });
+  </script>
+  
+  <script>
+  
+    $("#select_paymode").on('change', function () {
+      $('#bill_ref').removeClass('dispnone');
+      $('#bill_ref').val("");
+      var empty = false;
+      if ($('#select_paymode').val() == "Cash payment") {
+        $('#bill_ref').val("N/A");
+        $('#bill_ref').addClass('dispnone');
+      } else if ($('#select_paymode').val() == "Bank deposit") {
+        $('#bill_ref').attr("placeholder", "Enter deposit slip reference");
+      } else {
+        $('#bill_ref').attr("placeholder", "Enter Mpesa reference");
+      }
+      if ($('#bill_ref').val() == "") {
+        empty = true;
+      } else if ($('#paidamount').val() == "") {
+        empty = true;
+      }
+  
+      if (empty) {
+        $('#paybtn').addClass("dispnone");
+      } else {
+        $('#paybtn').removeClass("dispnone")
+      }
+    })
+  
+  </script>
+  
+  <script>
+  
+    $("#bill_ref").on('keyup', function () {
+      var empty = false;
+      if ($('#bill_ref').val() == "") {
+        empty = true;
+      } else if ($('#paidamount').val() == "") {
+        empty = true;
+      }
+  
+      if (empty) {
+        $('#paybtn').addClass("dispnone");
+      } else {
+        $('#paybtn').removeClass("dispnone")
+      }
+    })
+  
+  </script>
+  
+  <script>
+  
+    $("#paidamount").on('keyup', function () {
+      var empty = false;
+      if ($('#paidamount').val() == "") {
+        empty = true;
+      } else if ($('#bill_ref').val() == "") {
+        empty = true;
+      }
+  
+      if (empty) {
+        $('#paybtn').addClass("dispnone");
+      } else {
+        $('#paybtn').removeClass("dispnone")
+      }
+    })
+  
+  </script>
+  
+  
+  
+  <script>
+    // This script autopulate house options and displays tenant name
+    $("#receiptModal").on('shown.bs.modal', function () {
+      // $('#tenantbed').addClass("dispnone");
+      $("#receipt-bed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+      $.ajax({
+        url: "{{ url_for('api.receipt') }}",
+        type: "get",
+        data: {
+          payid: $("#payment_identifier").text()
+        },
+        success: function (response) {
+          $("#receipt-bed").html(response);
+        }
+      });
+    });
+  
+  </script>

@@ -1,0 +1,148 @@
+<div id="props" class="table-responsive">
+    <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th class="text-info font-weight-bold pl-0">Property</th>
+                <th class="text-info font-weight-bold">Houses</th>
+                <th class="text-info font-weight-bold">Tenants</th>
+                <th class="text-info font-weight-bold">Vacant</th>
+                <th class="text-info font-weight-bold">Occupancy</th>
+                <th class="text-info font-weight-bold">Reminders</th>
+    
+                <th class="text-info track-title-cell">Add tenant</th>
+                <th class="text-info track-title-cell">Upload data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items%}
+            <tr>
+
+
+                <td class="data-cell">
+                    <div>
+                        <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                    </div>
+                </td>
+    
+                <td class="data-cell">{{ item['houses'] }}</td>
+                <td class="data-cell">{{ item['tenants'] }}</td>
+                <td class="data-cell">{{ item['vacant'] }}</td>
+                <td class="data-cell">{{ item['occupancy'] }} %</td>
+                <td class="data-cell">{{ item['reminders']|safe }}</td>
+    
+    
+                <td class="data-cell">
+                    <div>
+                        <span id="{{item['editid']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                            data-toggle="modal" data-bs-toggle="modal" data-target="#addTenantModal">add new</span>
+                    </div>
+                </td>
+                <td class="data-cell">
+                    <div>
+                        <span id="{{item['delid']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                            data-toggle="modal" data-bs-toggle="modal" data-target="#editPropModa"><i
+                                class="fas fa-upload mr-1"></i>Upload</span>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+
+
+  <script>
+    var rawIds = "{{ propids|safe }}";
+    // var props = "{{ propnames|safe }}";
+    // var propnames= props.replace(/'/g,'"');
+    // propObjs = JSON.parse(propnames)
+
+    var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function (i, item) {
+  
+      $("#" + item).on('click', function () {
+        console.log("clicked", item)
+        if (isNaN(parseInt(item))) {
+          if (item.startsWith("del")) {
+            $("#del_prop_identifier").html(item)
+          }
+          else if (item.startsWith("prp")) {
+            $("#prop_id_identifier").html(item)
+
+
+            // propObjs.forEach(element =>{
+            //     if(Object.keys(element) == item){
+            //         var cc = element[item]
+            //         console.log(cc)
+            //     }
+            // });
+
+
+            $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+            $("#activeprop-child").text($(this).text())
+
+
+
+            // $("#spinner").removeClass("dispnone")
+            // $.ajax({
+            //   url: "/results",
+            //   type: "get",
+            //   data: {id: item},
+            //   success: function(response) {
+            //     $("#spinner").addClass("dispnone")
+            //     $("#propdisp").html(response);
+            //   }
+            // });
+            $("#barloader").removeClass("dispnone")
+
+            $.ajax({
+                type: "get",
+                url: "{{ url_for('api.tenantmanagement') }}",
+                data: {
+                    propid:item
+                },
+                success: function(response) {
+                //   if (!$('#content-area').hasClass("isopen") && !$('#list-area').hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                //         $('#sidebarToggle').click();
+                //         $('#smaccordionSidebar').removeClass("toggled");
+                //       }
+                //   $('#content-area').addClass("isopen text-danger")
+                  // $("#postloader-btn").click();
+                  $("#barloader").addClass("dispnone")
+                //   $("#body-block").addClass("dispnone");
+                  $("#result-view").addClass("dispnone");
+                  $("#child-view").removeClass("dispnone")
+
+                  $("#child-view").html(response);
+                }
+            });
+          } else {
+            $("#edit_prop_identifier").html(item)
+          }
+  
+        } else {
+          $("#prop_identifier").html(item)
+          var linkTarget = $("#" + item).children("span").text()
+          $("#link_identifier").html(linkTarget)
+  
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        "order": [[0, "asc"]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>

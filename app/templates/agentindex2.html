@@ -12,7 +12,7 @@
     <link href="/static/css/style.css" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="static/assets/img/favicon.png" />
 
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay-alt222.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay-new.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
 
@@ -1196,7 +1196,7 @@
         });
 
 
-        $(".tenantbtn").on('click', function () {
+        $(".tenantbtnn").on('click', function () {
             $("#barloader").removeClass("dispnone")
             setTimeout(function () {
                 $("#barloader").addClass("dispnone")
@@ -1225,6 +1225,39 @@
             $("#sidebarToggle").click();
         });
     </script>
+
+<script>
+    $(".tenantbtn").on('click',function(){
+        // $("#body-block").addClass("dispnone")
+        // $("#preloader-btn").click();
+        $("#barloader").removeClass("dispnone")
+  
+        url = "{{ url_for('api.allproperties') }}"
+  
+        $.ajax({
+            type: "get",
+            url: url,
+            data: {
+              target:"tenants"
+            },
+            success: function(response) {
+                if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                    $('#sidebarToggle').click();
+                    $('#smaccordionSidebar').removeClass("toggled");
+                  }
+                $('#content-area').addClass("isopen text-danger");
+                // $("#postloader-btn").click();
+                $("#barloader").addClass("dispnone")
+                $("#body-block").addClass("dispnone")
+                $("#propdisp").removeClass("dispnone")
+                $("#proplist").addClass("dispnone")
+                $("#searchresults").html("empty")
+                $("#searchresults").addClass("dispnone")
+                $("#propdisp").html(response);
+            }
+        });
+    });
+  </script>
 
 
 

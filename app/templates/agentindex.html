@@ -2890,6 +2890,39 @@ function animateHH(element) {
 </script>
 
 <script>
+  $(".tenantbtn").on('click',function(){
+      // $("#body-block").addClass("dispnone")
+      // $("#preloader-btn").click();
+      $("#barloader").removeClass("dispnone")
+
+      url = "{{ url_for('api.allproperties') }}"
+
+      $.ajax({
+          type: "get",
+          url: url,
+          data: {
+            target:"tenants"
+          },
+          success: function(response) {
+              if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                  $('#sidebarToggle').click();
+                  $('#smaccordionSidebar').removeClass("toggled");
+                }
+              $('#content-area').addClass("isopen text-danger");
+              // $("#postloader-btn").click();
+              $("#barloader").addClass("dispnone")
+              $("#body-block").addClass("dispnone")
+              $("#propdisp").removeClass("dispnone")
+              $("#proplist").addClass("dispnone")
+              $("#searchresults").html("empty")
+              $("#searchresults").addClass("dispnone")
+              $("#propdisp").html(response);
+          }
+      });
+  });
+</script>
+
+<script>
   $(".userbtn").on('click',function(){
       // $("#body-block").addClass("dispnone")
       // $("#preloader-btn").click();
@@ -3101,7 +3134,7 @@ $(".expensebtn").on('click',function(){
     $("#searchresults").addClass("dispnone")
 });
 
-$(".tenantbtn").on('click',function(){
+$(".tenantbtnn").on('click',function(){
   $("#barloader").removeClass("dispnone")
     setTimeout(function(){
       $("#barloader").addClass("dispnone")

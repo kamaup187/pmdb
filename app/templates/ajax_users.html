@@ -7,91 +7,93 @@
       <span id="del_user_identifier" class="dispnone"></span>
 
 
-        <div class="row no-padding">
+        <!-- <div class="row no-padding">
           <div class="col-12 no-padding mb-2">
             <div class="card-header py-0 card-bg-al bg-light divjust-end" >
                 <div class="mt-1 font-weight-bold text-black text-xx">User management</div>
                 <button id="close-propdisp" class="btn borderless text-danger"><div class="x-large xbutton-black"><i class="fas fa-times"></i></div></button>
             </div>
           </div>
+        </div> -->
+      <div class="card  mb-2 mt-1">
+
+        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
+          <span class="smallify text-black font-weight-bold text-uppercase">Users panel</span>
+          <div>
+            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+              type="button">X</button>
+          </div>
         </div>
 
+        <div class="card-body flowing-body pt-2 pl-2">
 
-
-                
-          <div class="row pt-1 mb-2">
-              <div class="col-6 pt-2">
-                  <div class="text-black font-weight-bold hide">
-                      <div class="page-header-icon"><i data-feather="user"></i></div>
-                      Users List
-                  </div>
-              </div>
-              <div class="col-6 mb-2 text-right">
-                  <span class="btn btn-sm btn-light text-black">
-                      <i class="me-1" data-feather="users"></i>
-                      Manage Groups
-                  </span>
-                  <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addUserModal">
-                      <i class="me-1" data-feather="user-plus"></i>
-                      Add New User
-                  </span>
-              </div>
+          <div class="pb-1 bg-white">
+            <div class="mb-1">
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addUserModal">
+                <i class="me-1" data-feather="users"></i>
+                Add New User
+              </span>
+              <span class="btn btn-sm btn-light text-black">
+                <i class="me-1" data-feather="user-plus"></i>
+                Manage Groups
+              </span>
+            </div>
           </div>
   
+          <div id="result-view" class="row">
+            <div class="col-lg-12 no-padding">
+              <div id="props" class="table-responsive">
+                  <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                      <thead>
+                        <tr>
+                          <th class="text-info font-weight-bold">Name</th>
+                          <th class="text-info font-weight-bold">Phone</th>
+                          <th class="text-info font-weight-bold">Email</th>
+                          <th class="text-info font-weight-bold">Id</th>
+                          <th class="text-info font-weight-bold">Code</th>
+
+                          <th class="text-info font-weight-bold">Group</th>
+                          <th class="text-info track-title-cell">Active</th>                    
+                          <th class="text-info track-title-cell">Date</th>
+
+                          <th class="text-info track-title-cell">Edit</th>
+                          <th class="text-info track-title-cell">Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in items%}
+                        <tr>
+                          <td class="data-cell">{{ item['name'] }}</td>
+                          <td class="data-cell">{{ item['tel'] }}</td>
+                          <td class="data-cell">{{ item['email'] }}</td>
+                          <td class="data-cell">{{ item['natid'] }}</td>
+                          <td class="data-cell">{{ item['usercode'] }}</td>
+
+                          <td class="data-cell text-gray-700 small">{{ item['group'] }}</td>
+                          <td class="data-cell">{{ item['status'] }}</td>
+                          <td class="data-cell">{{ item['date_reg'] }}</td>
 
 
-        
-        <div id="result-view" class="row">
-          <div class="col-lg-12 no-padding">
-            <div id="props" class="table-responsive">
-                <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
-                    <thead>
-                      <tr>
-                        <th class="text-info font-weight-bold">Name</th>
-                        <th class="text-info font-weight-bold">Phone</th>
-                        <th class="text-info font-weight-bold">Email</th>
-                        <th class="text-info font-weight-bold">Id</th>
-                        <th class="text-info font-weight-bold">Code</th>
-
-                        <th class="text-info font-weight-bold">Group</th>
-                        <th class="text-info track-title-cell">Active</th>                    
-                        <th class="text-info track-title-cell">Date</th>
-
-                        <th class="text-info track-title-cell">Edit</th>
-                        <th class="text-info track-title-cell">Remove</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in items%}
-                      <tr>
-                        <td class="data-cell">{{ item['name'] }}</td>
-                        <td class="data-cell">{{ item['tel'] }}</td>
-                        <td class="data-cell">{{ item['email'] }}</td>
-                        <td class="data-cell">{{ item['natid'] }}</td>
-                        <td class="data-cell">{{ item['usercode'] }}</td>
-
-                        <td class="data-cell text-gray-700 small">{{ item['group'] }}</td>
-                        <td class="data-cell">{{ item['status'] }}</td>
-                        <td class="data-cell">{{ item['date_reg'] }}</td>
-
-
-                        <td class="data-cell">
-                          <div>
-                            <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#profileModal"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
-                          </div>
-                        </td>
-                        <td class="data-cell">
-                          <div>
-                            <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModa"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
-                          </div>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                          <td class="data-cell">
+                            <div>
+                              <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#profileModal"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
+                            </div>
+                          </td>
+                          <td class="data-cell">
+                            <div>
+                              <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModa"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+                            </div>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
             </div>
           </div>
         </div>
+      </div>
     </section>
 
 

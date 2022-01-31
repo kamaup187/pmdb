@@ -420,14 +420,16 @@ class AllProperties(Resource):
             return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
 
         raw_props = fetch_all_apartments_by_user(current_user)
-        new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
-        for i in new_props:
-            raw_props.append(i)
+        if target != "tenants" and target != "tenant list":
+            new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
+            for i in new_props:
+                raw_props.append(i)
 
         props = remove_dups(raw_props)
 
         items = []
         prop_ids = []
+        prop_names = []
         
         for prop in props:
             tenants = len(tenantauto(prop.id))
@@ -441,27 +443,67 @@ class AllProperties(Resource):
             agent_user = UserOp.fetch_user_by_username(prop.agent_id)
             agent = agent_user.company if agent_user else "N/A"
 
-            dict_obj = {
-                'id':prop.id,
-                'identity':"prp"+str(prop.id),
-                'editid':"edit"+str(prop.id),
-                'delid':"del"+str(prop.id),
-                'name':prop.name,
-                'owner':prop.owner.name,
-                'agent':agent,
-                'houses':houses,
-                'tenants':tenants,
-                'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
-                'occupancy':occ,
-                'status':"active",
-                'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
-                'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",
-                'client-disp':"" if current_user.id == 1 else "dispnone",
-                # 'unlink-disp':"dispnone" if not prop.company_id else "",
-                'createdby':prop.user_id,
-            }
+            if target == "tenants":
+                template = "ajax_prop_tenants.html" 
+                dict_obj = {
+                    'id':prop.id,
+                    'identity':"prp"+str(prop.id),
+                    'editid':"edit"+str(prop.id),
+                    'delid':"del"+str(prop.id),
+                    'name':prop.name,
+                    'houses':houses,
+                    'tenants':tenants,
+                    'vacant':houses - tenants,
+                    'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
+                    'occupancy':occ,
+                    'createdby':prop.user_id,
+                }
+
+            elif target == "tenant list":
+                template = "ajax_prop_tenant_list.html" 
+                dict_obj = {
+                    'id':prop.id,
+                    'identity':"prp"+str(prop.id),
+                    'editid':"edit"+str(prop.id),
+                    'delid':"del"+str(prop.id),
+                    'name':prop.name,
+                    'houses':houses,
+                    'tenants':tenants,
+                    'vacant':houses - tenants,
+                    'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
+                    'occupancy':occ,
+                    'createdby':prop.user_id,
+                }
+
+            else:
+                template = "ajax_allprops_detail.html"
+                dict_obj = {
+                    'id':prop.id,
+                    'identity':"prp"+str(prop.id),
+                    'editid':"edit"+str(prop.id),
+                    'delid':"del"+str(prop.id),
+                    'name':prop.name,
+                    'owner':prop.owner.name,
+                    'agent':agent,
+                    'houses':houses,
+                    'tenants':tenants,
+                    'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
+                    'occupancy':occ,
+                    'status':"active",
+                    'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
+                    'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",
+                    'client-disp':"" if current_user.id == 1 else "dispnone",
+                    # 'unlink-disp':"dispnone" if not prop.company_id else "",
+                    'createdby':prop.user_id,
+                }
+
+            # prop_name_dict = {
+            #     "prp"+str(prop.id):prop.name
+            # }
+
 
             items.append(dict_obj)
+            # prop_names.append(prop_name_dict)
             prop_ids.append(prop.id)
             prop_ids.append("prp"+str(prop.id))
             prop_ids.append("edit"+str(prop.id))
@@ -473,7 +515,8 @@ class AllProperties(Resource):
             'client-disp':"" if current_user.id == 1 else "dispnone"
         }
 
-        return render_template("ajax_allprops_detail.html",propids=propids,prop=None,items=items,access=access,company=current_user.company)
+
+        return render_template(template,propids=propids,propnames=prop_names,prop=None,items=items,access=access,company=current_user.company)
     
     def post(self):
         target = request.form.get("target")

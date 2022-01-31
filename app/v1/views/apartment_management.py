@@ -393,7 +393,7 @@ class PropSearchData(Resource):
         houses = flatten(raw_units)
 
 
-        suggestions = generate_suggestions_alt(props,houses,tenancy)           
+        suggestions = generate_suggestions_alt(props,houses,tenancy)  
         return Response(render_template(
             'ajax_load_searchdata.html',
             suggestions=suggestions
@@ -1146,7 +1146,8 @@ class TenantManagement(Resource):
     @login_required
     def get(self):
         prop_id = request.args.get("propid")
-        prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
+        propid = get_identifier(prop_id)
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
         db.session.expire(prop_obj)
         house_list = prop_obj.houses
         houses = len(house_list)
@@ -1168,7 +1169,7 @@ class TenantManagement(Resource):
 
         tenantlist = []
 
-        all_tenants = tenantauto(prop_id)
+        all_tenants = tenantauto(propid)
         for i in all_tenants:
             new_i = TenantOp.view(i)
             tenantlist.append(new_i)
@@ -3388,7 +3389,9 @@ class AddTenant(Resource):
 
     def post(self):
         target = request.form.get('target')
-        apartment_id = request.form.get('propid')
+        prop_id = request.form.get('propid')
+
+        apartment_id = get_identifier(prop_id)
 
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
 
@@ -3800,7 +3803,7 @@ class AllocateTenants(Resource):
     @login_required
     def post(self):
 
-        apartment_id = request.form.get('propid')
+        prop_id = request.form.get('propid')
         tenant_id = request.form.get('tenant_id')
         house_num = request.form.get('house')#auto populated dropdown
 
@@ -3811,8 +3814,10 @@ class AllocateTenants(Resource):
         if not migrate:
             migrate = "False"
         bool_migrate = return_bool(migrate)
+
+        apartment_id = get_identifier(prop_id)
         
-        stored_apartment = ApartmentOp.fetch_apartment_by_id(apartment_id) if apartment_id else None
+        stored_apartment = ApartmentOp.fetch_apartment_by_id(apartment_id) if prop_id else None
         house_list = filter_out_occupied_houses(stored_apartment.name) if stored_apartment else None
         tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id) if tenant_id else None
 

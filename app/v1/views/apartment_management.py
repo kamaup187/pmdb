@@ -1470,11 +1470,11 @@ class Bills(Resource):
             numerator = smsstatus.count("1")
 
             if numerator == 0 and len(smsstatus) != 0:
-                sms_outline = "btn-danger"
+                sms_outline = "btn-outline-primary"
             # elif numerator < len(smsstatus) and len(smsstatus) != 0:
             #     sms_outline = "btn-warning"
             else:
-                sms_outline = "btn-success"
+                sms_outline = "btn-outline-success"
 
             sms = f'{numerator}/{len(smsstatus)}'
 
@@ -1498,9 +1498,9 @@ class Bills(Resource):
             ftotalbalance += totalbalance
 
             if prop.billing_period.month != co.billing_period.month:
-                bill_outline = "btn-primary"
+                bill_outline = "btn-outline-primary"
             else:
-                bill_outline = "btn-secondary"
+                bill_outline = "btn-outline-dark"
 
             if prop.billprogress == "billing":
                 progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Billing'
@@ -1509,6 +1509,11 @@ class Bills(Resource):
             else:
                 progress = 'Generate'
 
+            if len(smsstatus) < 1:
+                invs = '<span class="text-danger font-weight-bold">not billed</span'
+            else:
+                invs = len(smsstatus)
+
             dict_obj = {
                 'propid':prop.id,
                 'identity':"prp"+str(prop.id),
@@ -1516,7 +1521,7 @@ class Bills(Resource):
                 'smsid':"sms"+str(prop.id),
                 'name':fname_extracter(prop.name),
                 'tenants':num_units,
-                'invs':len(smsstatus),
+                'invs':invs,
                 'progress':progress,
                 'water':(f"{watertotal:,.1f} "),
                 'deposit':(f"{deptotal:,.1f} "),

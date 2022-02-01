@@ -248,7 +248,7 @@ def example_func(param):
     app = create_app(configuration)
     app.app_context().push()
     user_obj = UserOp.fetch_user_by_national_id("00000000")
-    UserOp.update_user(user_obj,phone="777666999")
+    # UserOp.update_user(user_obj,phone="777666999")
     # email_addr = "emmp45@gmail.com"
     # txt = Message('Rent Invoice', sender = 'kiotapay@gmail.com', recipients = [email_addr])
     # txt.body = param
@@ -1250,8 +1250,9 @@ def fname_extracter(name):
 
         one = splitted[0]
         two = splitted[1] if len(splitted) > 1 else ""
+        three = splitted[2] if len(splitted) > 2 else ""
 
-        return one + " "+ two
+        return one + " "+ two + " " + three
     except:
         return ""
     

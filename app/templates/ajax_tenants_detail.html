@@ -81,9 +81,9 @@
 
           <div class="">
             <nav class="nav nav-borders">
-              <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
-              <a id="billing" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
-              <a id="notifications" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a>
+              <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+              <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+              <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a>
             </nav>
           </div>
 
@@ -247,7 +247,7 @@
                         <div class="fancy-checkbox-group form-control mb-4 divjust">
                           <div>
                             <input type="checkbox" id="migrate2"/>
-                            <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                            <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit resident</span>)</label>
                           </div>       
                         </div>
 
@@ -644,6 +644,74 @@
     $("#result-view").removeClass("dispnone");
     $("#child-view").addClass("dispnone")
     $("#activeprop").empty();
+  })
+</script>
+
+
+<script>
+  $("#booked").click(function(){
+      $(this).addClass("underline")
+      $("#vacated").removeClass("underline")
+      $("#resident").removeClass("underline")
+
+      $("#current-reloader").html("new");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"new"
+                },
+                success: function(response) {
+                  
+                  $("#child-result-view").html(response);
+                }
+              });
+  })
+
+  $("#resident").click(function(){
+      $(this).addClass("underline")
+      $("#booked").removeClass("underline")
+      $("#vacated").removeClass("underline")
+
+      $("#current-reloader").html("current");
+
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"somestring"
+                },
+                success: function(response) {
+                  
+                  $("#child-result-view").html(response);
+                }
+              });
+  })
+
+  $("#vacated").click(function(){
+      $(this).addClass("underline")
+      $("#booked").removeClass("underline")
+      $("#resident").removeClass("underline")
+
+      $("#current-reloader").html("old");
+
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"old"
+                },
+                success: function(response) {
+                  
+                  $("#child-result-view").html(response);
+                }
+              });
   })
 </script>
 

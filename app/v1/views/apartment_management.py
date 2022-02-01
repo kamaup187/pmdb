@@ -99,7 +99,7 @@ class Index(Resource):
             # UserOp.update_status(uss,False)
 
             # run_scripts(current_user)
-            run_company_data()
+            # run_company_data()
 
             print("TIME NOW IN US: ", (time + relativedelta(hours=0)).strftime("%X"))
 

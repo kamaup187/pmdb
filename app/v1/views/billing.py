@@ -1064,11 +1064,14 @@ class EditBill(Resource):
                     
                     update_payments = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
-                    if bill.paid_amount != update_payments:
+                    if bill.paid_amount != update_payments and bill.paid_amount != 0.0:
                         print("MASTER PAYMENT IS NOT TALLYING WITH NEW PAYMENT>>>>","MASTER:",bill.paid_amount,"CHILD:",update_payments)
                         return None
-
-                    MonthlyChargeOp.update_payment(bill,update_payments)
+                    if bill.paid_amount != update_payments:
+                        pass
+                    else:
+                        MonthlyChargeOp.update_payment(bill,update_payments)
+                        
                     MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 

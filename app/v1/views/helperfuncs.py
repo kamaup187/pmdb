@@ -313,7 +313,7 @@ def run_company_data():
 
     set_sphone("Nairuti & Associates",4500.0,"0717121612",4500.0) #6
     set_sphone("Chaise River Properties",0.0,"0721465478",3000.0) #1
-    set_sphone("KIGAKA ENTERPRISES",0.0,"0768333904",3000.0) #12
+    set_sphone("KIGAKA ENTERPRISES",0.0,"0768333904",0.0) #12
     set_sphone("MULTIDIME AGENCIES",0.0,"0112036366",2500.0) #2
     set_sphone("MojaMbili Homes",2000.0,"0729009009",2000.0) #3
     set_sphone("Grashar Property Care",0.0,"0723798023",1500.0) #5
@@ -321,7 +321,7 @@ def run_company_data():
     set_sphone("Courtland Realtors Limited",0.0,"0703759351",1000.0) #8
 
     set_sphone("Premier Realty",4000.0,"0790001035",4000.0) #10
-    set_sphone("S & P Realtors",0.0,"070742404839",5000.0) #13
+    set_sphone("S & P Realtors",0.0,"070742404839",0.0) #13
     set_sphone("Lesama Ltd",3000.0,"0710250350",3000.0) #11
     set_sphone("KEVMA REAL ESTATE",0.0,"0716674695",2500.0) #7
 
@@ -329,7 +329,8 @@ def run_company_data():
     set_sphone("Stan-G Properties",0.0,"0716674695",1000.0) #15
     set_sphone("Supersite Ltd",0.0,"0716674695",1000.0) #16
     set_sphone("Bulpark Square",0.0,"0716674695",0.0) #17
-    set_sphone("7EDGE DEVELOPERS & MANAGERS",0.0,"0716674695",2000.0) #18
+    set_sphone("7EDGE DEVELOPERS & MANAGERS",0.0,"0702666480",2000.0) #18
+    set_sphone("THE OAKS",0.0,"0740570117",2000.0) #20
     set_sphone("SIAN REALTORS",0.0,"0716674695",0.0) #19
 
 

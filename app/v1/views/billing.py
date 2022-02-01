@@ -2188,7 +2188,7 @@ class ReceivePayment(Resource):
 
 
             return render_template(
-                'ajax_pay.html',
+                'ajax_receiptpay.html',
                 voided = "dispnone",
                 tenant = tenant_name,
                 house= house,
@@ -2340,7 +2340,7 @@ class Receipt(Resource):
         co = current_user.company
 
         return render_template(
-            'ajax_pay.html',
+            'ajax_receiptpay.html',
             voided = disp,
             tenant = payment_obj.tenant.name,
             house= payment_obj.house.name,

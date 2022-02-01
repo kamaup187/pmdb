@@ -3289,7 +3289,8 @@ class FetchPayments(Resource):
     def get(self):
         target = request.args.get("target")
         if target == "new":
-            propid = request.args.get("propid")
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             db.session.expire(prop)
             payments = prop.payment_data
@@ -3344,13 +3345,10 @@ class FetchPayments(Resource):
             return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month))
 
         if target == "new alt":
-            propid = request.args.get("propid")
-            if propid.startswith("prp"):
-                prop_id = propid[3:]
-            else:
-                prop_id = propid
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
 
-            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
             db.session.expire(prop)
             payments = prop.payment_data
 
@@ -3401,10 +3399,11 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh_alt.html",payids=payids,items=detailed_payments_list,prop=prop,dataperiod=get_str_month(period.month))
+            return render_template("ajax_tenant_payments.html",payids=payids,items=detailed_payments_list,prop=prop,dataperiod=get_str_month(period.month))
 
         if target == "voided":
-            propid = request.args.get("propid")
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             db.session.expire(prop)
 
@@ -3424,7 +3423,8 @@ class FetchPayments(Resource):
             return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
 
         elif target == "old":
-            propid = request.args.get("propid")
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             db.session.expire(prop)
             payments = prop.payment_data

@@ -522,7 +522,6 @@ class BillInvoice(Resource):
         
         if target == "double email":
 
-
             identifier2 = bill.id + 1
 
             bill2 = MonthlyChargeOp.fetch_specific_bill(identifier2)
@@ -585,52 +584,79 @@ class BillInvoice(Resource):
                     arrtitle2 = ""
                     bbfhighlight2 = ""
 
-        if second_bill:
+            if second_bill:
 
-            return render_template(
-                "ajax_tenant_invoice.html",
-                bill=bill,
-                readings = wbill,
-                w_edited = w_edited,
-                ereadings = ebill,
-                e_edited = e_edited,
-                visibility=visibility,
-                arrears=arrears,
-                bbfhighlight = bbfhighlight,
-                arrtitle=arrtitle,
-                billpaid=billpaid,
-                billbal=billbal,
-                house=house,
-                total=f"{bill.total_bill:,.2f}",
- 
-                client=tenant,
-                invnum=invnum,
-                randid=bill.id,
+                return render_template(
+                    "ajax_tenant_invoice.html",
+                    bill=bill,
+                    readings = wbill,
+                    w_edited = w_edited,
+                    ereadings = ebill,
+                    e_edited = e_edited,
+                    visibility=visibility,
+                    arrears=arrears,
+                    bbfhighlight = bbfhighlight,
+                    arrtitle=arrtitle,
+                    billpaid=billpaid,
+                    billbal=billbal,
+                    house=house,
+                    total=f"{bill.total_bill:,.2f}",
+    
+                    client=tenant,
+                    invnum=invnum,
+                    randid=bill.id,
 
-                bill2=bill2,
-                readings2 = wbill2,
-                w_edited2 = w_edited2,
-                ereadings2 = ebill2,
-                e_edited2 = e_edited2,
-                visibility2=visibility2,
-                arrears2=arrears2,
-                bbfhighlight2 = bbfhighlight2,
-                arrtitle2=arrtitle2,
-                billpaid2=billpaid2,
-                billbal2=billbal2,
-                house2=house2,
-                total2=f"{bill2.total_bill:,.2f}",
-                client2=tenant2,
-                invnum2=invnum2,
-                randid2=bill2.id,
+                    bill2=bill2,
+                    readings2 = wbill2,
+                    w_edited2 = w_edited2,
+                    ereadings2 = ebill2,
+                    e_edited2 = e_edited2,
+                    visibility2=visibility2,
+                    arrears2=arrears2,
+                    bbfhighlight2 = bbfhighlight2,
+                    arrtitle2=arrtitle2,
+                    billpaid2=billpaid2,
+                    billbal2=billbal2,
+                    house2=house2,
+                    total2=f"{bill2.total_bill:,.2f}",
+                    client2=tenant2,
+                    invnum2=invnum2,
+                    randid2=bill2.id,
 
-                invdate=inv_date,
-                invdue=inv_due,
-                company=current_user.company,
-                logo=logo(current_user.company)[2],
-                slogo=logo(kiotapay)[1],
-                sign=logo(kiotapay)[4]
-                )
+                    invdate=inv_date,
+                    invdue=inv_due,
+                    company=current_user.company,
+                    logo=logo(current_user.company)[2],
+                    slogo=logo(kiotapay)[1],
+                    sign=logo(kiotapay)[4]
+                    )
+
+            else:
+                return render_template(
+                    "ajax_tenant_invoice.html",
+                    bill=bill,
+                    readings = wbill,
+                    w_edited = w_edited,
+                    ereadings = ebill,
+                    e_edited = e_edited,
+                    visibility=visibility,
+                    arrears=arrears,
+                    bbfhighlight = bbfhighlight,
+                    arrtitle=arrtitle,
+                    billpaid=billpaid,
+                    billbal=billbal,
+                    house=house,
+                    total=f"{bill.total_bill:,.2f}",
+                    invdate=inv_date,
+                    invdue=inv_due,
+                    client=tenant,
+                    company=current_user.company,
+                    invnum=invnum,
+                    randid=bill.id,
+                    logo=logo(current_user.company)[2],
+                    slogo=logo(kiotapay)[1],
+                    sign=logo(kiotapay)[4]
+                    )
 
         elif target == 'email':
 
@@ -661,6 +687,7 @@ class BillInvoice(Resource):
                 )
 
         else:
+
             smsstatus = bill.sms_invoice
 
             action = "Resend"
@@ -1161,7 +1188,7 @@ class EditBill(Resource):
                         electricitybal = bill.electricity_balance + bill.electricity
 
                     if bill.maintenance_paid:
-                        servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid_paid
+                        servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
                     else:
                         servicebal = bill.maintenance_balance + update_maintenance
 

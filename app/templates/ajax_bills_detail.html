@@ -9,7 +9,7 @@
       <span id="del_bill_identifier" class="dispnone"></span>
       <span id="target_payment_id" class="dispnone"></span>
 
-        <div class="containe no-padding">
+        <!-- <div class="containe no-padding">
           <div class="col-12 no-padding mb-1">
             <div class="py-1 divjust-end underline" >
                 <div class="font-weight-bold text-black pt-3"><i class="fas fa-fw fa-coins mr-2"></i>{{prop.name}} Tenant bills</div>
@@ -27,14 +27,34 @@
               </div>
 
           </div>
+        </div> -->
+
+
+        <div class="pb-2 bg-white divjust-end">
+
+          <div class="">
+            <span id="backbtn" class="btn btn-sm btn-light text-black">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-long-arrow-alt-left"></i>
+              Back to properties
+            </span>
+          </div>
+
+          <div class="">
+            <nav class="nav nav-borders">
+              <a id="arrbtn2" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">Arrears comparison statement</a>
+              <a id="closebtn" class="nav-link pb-0 pt-1 text-danger underline d-none active ms-0" href="#">Close comparison sheet</a>
+            </nav>
+          </div>
+
         </div>
 
 
         
-        <div class="row">
+        <div class="ro">
           <div id="titletoggler" class="col-lg-12 font-weight-bold text-dark center-btn mb-1 desktop-malaysian">{{current_month}} bills: Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div>
-          <div id="arr-view2" class="col-lg-12 no-padding d-none"></div>
-          <div id="result-view2" class="col-lg-12 no-padding">
+          <div id="arr-view2" class="d-none"></div>
+          <div id="result-view2" class="">
               <div id="reqdata" class="table-responsive">
                   <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
                       <thead class="custom-header">
@@ -704,11 +724,19 @@
 
 <script>
   $("#closebtn").on('click',function(){
-    $("#arrbtn2").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Arrears comparison report</span>")
+    $("#arrbtn2").html("<span class=\"mr-4\">Arrears comparison statement</span>")
     $('#result-view2').toggleClass("d-none");
     $('#arr-view2').toggleClass("d-none");
     $('#arrbtn2').toggleClass("d-none");
     $('#titletoggler').toggleClass("d-none");
     $('#closebtn').toggleClass("d-none");
   });
+</script>
+
+<script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").toggleClass("d-none");
+    $("#arr-view").toggleClass("d-none")
+    $("#activeprop").empty();
+  })
 </script>

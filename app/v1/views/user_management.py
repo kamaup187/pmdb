@@ -306,7 +306,7 @@ class Users(Resource):
         pass2 = request.form.get('pass2')
         usergroup=request.form.get('usergroup')
 
-        tenantcheck = request.form.get('tenantcheck')
+        status = request.form.get('status')
 
         target = request.form.get('target')
 
@@ -360,6 +360,10 @@ class Users(Resource):
             company_id = None
 
             UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
+
+            if status:
+                status_bool = get_bool(status)
+                UserOp.update_status(update_user,status_bool)
 
             return "Updated successfully" + proceed
 

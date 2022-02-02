@@ -288,3 +288,16 @@
         # MonthlyChargeOp.update_payment(monthly_charge_obj,17000)
         # MonthlyChargeOp.update_balance(monthly_charge_obj,700)
         ##end
+
+
+#     for bill in all_bills:
+#         if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and bill.arrears == 0.0:
+#             print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
+#             MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+#             MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.maintenance,bill.penalty,bill.deposit,bill.agreement)
+
+        # for bill in all_bills:
+        # if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and bill.arrears > 0 and not bill.paid_amount:
+        #     print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
+        #     MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+        #     MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.maintenance,bill.penalty,bill.deposit,bill.agreement)

@@ -1798,6 +1798,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
+    def update_rent_balance(self,rent):
+        self.rent_balance = rent
+
+        print("RENT ARREARS UPDATE DONE")
+
+        db.session.commit()
+
     def update_payments(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.rent_paid = rent
         self.water_paid = water

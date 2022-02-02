@@ -1071,7 +1071,7 @@ class EditBill(Resource):
                         pass
                     else:
                         MonthlyChargeOp.update_payment(bill,update_payments)
-                        
+
                     MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
@@ -1180,6 +1180,11 @@ class EditBill(Resource):
                     else:
                         rentbal = bill.rent_balance + update_rent
 
+                    rentarr = bill.rent_balance # supplied arrears to effect rent only
+                    if values[6] != "null":
+                        rentarr = bill.rent_balance + values[6]
+                        rentbal += values[6]
+
                     if bill.water_paid:
                         waterbal = bill.water_balance + update_water - bill.water_paid
                     else:
@@ -1222,6 +1227,7 @@ class EditBill(Resource):
                         agreementbal = bill.agreement_balance + update_agreement
 
                     MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_rent_balance(bill,rentarr)
 
 
                     diff = total_amount - original_amount

@@ -78,8 +78,12 @@ def run_scripts(user):
         print("NO BILLS TO ITERATE")
 
     for bill in all_bills:
-        if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and not bill.arrears:
+        if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and bill.arrears == 0.0:
             print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
+            MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+            MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.service,bill.penalty,bill.deposit,bill.agreement)
+
+
 
 
     # jendi = ApartmentOp.fetch_apartment_by_id(228)
@@ -2737,7 +2741,7 @@ def fetch_total_deposit(hse_obj,billable):
     return dep
 
 def generate_date(month,year):
-    print("Month",month,"Year",year)
+    # print("Month",month,"Year",year)
     # if month == 2:
     #     day = datetime.datetime.now()
     

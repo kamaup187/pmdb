@@ -81,7 +81,7 @@ def run_scripts(user):
         if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and bill.arrears == 0.0:
             print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
             MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
-            MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.service,bill.penalty,bill.deposit,bill.agreement)
+            MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.maintenance,bill.penalty,bill.deposit,bill.agreement)
 
 
 

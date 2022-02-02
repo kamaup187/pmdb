@@ -77,12 +77,12 @@ def run_scripts(user):
     if len(all_bills) == 0:
         print("NO BILLS TO ITERATE")
 
-    for bill in all_bills:
-        if bill.month == 2 and bill.year == 2022 and not bill.rent_paid and bill.arrears > 0 and not bill.paid_amount:
-            print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
-            MonthlyChargeOp.update_rent_balance(bill,bill.arrears)
-            due = bill.rent + bill.arrears
-            MonthlyChargeOp.update_rent_due(bill,due)
+    # for bill in all_bills:
+    #     if bill.month == 2 and bill.year == 2022 and not bill.rent_paid and bill.arrears > 0 and not bill.paid_amount:
+    #         print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
+    #         MonthlyChargeOp.update_rent_balance(bill,bill.arrears)
+    #         due = bill.rent + bill.arrears
+    #         MonthlyChargeOp.update_rent_due(bill,due)
 
 
 

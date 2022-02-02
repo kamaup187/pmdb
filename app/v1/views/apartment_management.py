@@ -98,7 +98,7 @@ class Index(Resource):
             # uss = UserOp.fetch_user_by_national_id("24142460")
             # UserOp.update_status(uss,False)
 
-            # run_scripts(current_user)
+            run_scripts(current_user)
             # run_company_data()
 
             print("TIME NOW IN US: ", (time + relativedelta(hours=0)).strftime("%X"))

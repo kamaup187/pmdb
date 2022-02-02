@@ -78,8 +78,8 @@ def run_scripts(user):
         print("NO BILLS TO ITERATE")
 
     for bill in all_bills:
-        if bill.month == 12 and bill.year == 2021 and bill.paid_amount and not bill.rent_paid:
-            print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
+        if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and not bill.arrears:
+            print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
 
 
     # jendi = ApartmentOp.fetch_apartment_by_id(228)

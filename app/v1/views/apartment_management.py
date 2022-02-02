@@ -86,7 +86,7 @@ class Index(Resource):
         time = datetime.datetime.now() + relativedelta(hours=3)
 
 
-        if current_user.username.startswith('qc') or current_user.usercode =="3551":
+        if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)

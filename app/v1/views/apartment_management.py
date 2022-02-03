@@ -2693,7 +2693,23 @@ class CreateHouseCode(Resource):
 
     @login_required
     def get(self):
-        pass
+
+        groupid = request.args.get('groupid')
+        group_id = get_identifier(groupid)
+
+        housegroup = HouseCodeOp.fetch_group_by_id(group_id)
+
+        if not housegroup:
+            savecontext = "Submit"
+        else:
+            savecontext = "Update"
+
+        return render_template(
+            'ajax_groupform.html',
+            savecontext=savecontext,
+            group=housegroup)
+
+
     def post(self):
 
         target = request.form.get('target')
@@ -2835,7 +2851,7 @@ class EditHouseCode(Resource):
 
         else:
             groupid = request.form.get("groupid")
-            codename = request.form.get('codename')
+            codename = request.form.get('housecode')
             rentrate = request.form.get('rentrate')
             watercharge = request.form.get('waterrate')
             waterrate = request.form.get('unitrate')
@@ -2853,17 +2869,22 @@ class EditHouseCode(Resource):
 
             try:
                 int_codename = int(codename)
-                check_for_int = True
+                is_int = True
             except:
-                check_for_int = False
+                is_int = False
 
-            if codename and not check_for_int:
-                housecode = codename.upper()
-                code_obj = get_specific_code_obj(apartment_id,housecode)
-                if code_obj:
-                    msg = "Update failed, House code name unavailable"
-                    return render_template('ajaxghosthouse.html',alert=msg)
+            if codename:
+                if not is_int:
+                    housecode = codename.upper()
+                    code_obj = get_specific_code_obj(apartment_id,housecode)
+                    if code_obj:
+                        msg = "Update failed, House code name unavailable"
+                        return render_template('ajaxghosthouse.html',alert=msg)
+                else:
+                    housecode = codename
+                
             else:
+                print("Group name missing")
                 housecode = "null"
 
             result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate)

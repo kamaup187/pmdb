@@ -487,21 +487,40 @@ def logo(co):
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
         else:
-            ##################################################
-            logopath = "../static/img/logos/kiotapay/l-logo.png"
-            mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
-            fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
-            letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
-            sign = ""
+            if os.getenv("CURRENT_APP") == "app1":
+                ##################################################
+                logopath = "../static/img/logos/kiotapay/l-logo.png"
+                mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
+                fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
+                letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+                sign = ""
+            else:
+                ##################################################
+                logopath = "../static/img/logos/kiotapa/l-logo.png"
+                mobilelogopath = "../static/img/logos/kiotapa/s-logo.png"
+                fulllogopath = "../static/img/logos/kiotapa/full-logo.jpg"
+                letterhead = "../static/img/logos/kiotapa/letterhead.jpg"
+                sign = ""
 
     except Exception as e:
         print("failing big time",e)
-        logopath = "../static/img/logos/kiotapay/l-logo.png"
-        mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
-        fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
-        letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+        if os.getenv("CURRENT_APP") == "app1":
+            logopath = "../static/img/logos/kiotapay/l-logo.png"
+            mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
+            fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
+            letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+        else:
+            logopath = "../static/img/logos/kiotapa/l-logo.png"
+            mobilelogopath = "../static/img/logos/kiotapa/s-logo.png"
+            fulllogopath = "../static/img/logos/kiotapa/full-logo.png"
+            letterhead = "../static/img/logos/kiotapa/letterhead.jpg"
 
-    return logopath,mobilelogopath,fulllogopath,letterhead,sign
+    if os.getenv("CURRENT_APP") == "app1":
+        parent = "KiotaPay"
+    else:
+        parent = "Kodimann"
+        
+    return logopath,mobilelogopath,fulllogopath,letterhead,sign,parent
 
 def update_login_history(location,user):
     logins = user.logins

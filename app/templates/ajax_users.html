@@ -168,16 +168,15 @@
       </div>
     </div> -->
 
-    <div class="modal fade" id="addPropertyModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
-              <span class="mr-3 smallify">List new property</span>
+              <span class="mr-3 smallify font-weight-bold">Add user</span>
               <div>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadPropModal"><i class="fa fa-upload"></i></button>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
               </div>
             </h5>
             <div class="alert-msgs"></div>
@@ -187,56 +186,9 @@
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="">
-     
-                      <div class="mt-2 mb-3">
-
-                        <div class="row underline-thin">
-                          <div class="form-group col-md-6 no-paddin input-icons">
-                            <span>Property name? <span class="text-danger mr-5">*</span><span class="text-danger iconotifications">--</span></span>
-                              <input id="prop" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="City View Heights"/>
-                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
-                          </div>
-
-                          <div class="form-group col-md-6 input-icons">
-                            <span>Region/Estate</span>
-                            <input id="select_region" list="region_list" class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title" placeholder="Ruaka" required>
-                            <datalist id="region_list">
-
-                              {% for o in regions %}
-                              <option value="{{ o }}">
-                              {% endfor %}
-              
-                                </datalist>
-                              </div>
-                          </div>
-
-                        </div>
-                        <div class="row underline-thin">
-
-                          <div class="form-group col-md-6 no-paddin input-icons">
-                            <span>Landlord <span class="text-primary small">(optional)</span></span>
-                              <input id="cname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
-                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                          </div>
-
-                          <div class="form-group col-md-6 no-paddin input-icons">
-                            <span>Mobile number <span class="text-primary small">(optional)</span></span>
-                              <input id="ctel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="0712345678"/>
-                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-phone text-info"></i></span>
-                          </div>
-
-                        </div>
-                                         
-
-                      </div>
-                    
-                      <div class="divbg center-btn mt-3">
-                        <button id="add_prop" type="button" class="btn-secondary borderless text-white">Submit</button>
-                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
-                      </div>
-                      
-                    </form>
+  
+                    <div id="profileModalBed2"></div>
+  
                   </div>
                 </div>
               </div>
@@ -247,37 +199,27 @@
     </div>
 
 
-    <div class="modal fade" id="uploadPropModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
-              <span class="mr-3 smallify">Upload properties</span>
+              <span class="mr-3 smallify font-weight-bold">My profile</span>
               <div>
-                <button id="downloadprops" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
               </div>
             </h5>
-            <div class="alert-msgs"></div>
+            <div class="alert-msgs font-weight-bold"></div>
           </div>
           <div class="modal-body pt-0">
             <div class="media mb-2">
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
-     
-                      <div class="mt-2 form-group center-btn">
-                        <p class="text-black">Excel File: <input class="ph" id="propfile" type = "file" name = "filename" /></p>
-                      </div>
-                    
-                      <div class="divbg center-btn">
-                        <button id="uploadprops" type="button" class="btn btn-outline-secondary"><i class="fa fa-upload mr-2"></i>Upload</button>
-                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
-                      </div>
-                      
-                    </form>
+  
+                    <div id="profileModalBed"></div>
+  
                   </div>
                 </div>
               </div>
@@ -287,154 +229,17 @@
       </div>
     </div>
 
-    <div class="modal fade center-btn" id="addOwnerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog mt-5" role="document">
-        <div class="modal-content bg-gradient-dark">
-          <div class="modal-header">
-            <h5 class="modal-title text-info" id="exampleModalLabel">Add new owner</h5>
-          </div>
-          <div class="modal-body">
-            <div class="media">
-              <div class="media-body">
-                <div class="position-relative">
-                  <form class="" action="" method="POST">
 
-                      <div class="form-group row">
-                        <div class="col-sm-6">
-                            <input class="form-control ph" id="fname" placeholder="First name">
-                        </div>
-        
-                        <div class="col-sm-6">
-                          <input class="form-control ph" id="lname" placeholder="Second name">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <input class="form-control ph" id="tel" placeholder="Mobile number">
-                      </div>
 
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="has-margin-bottom divbg">
-              <button id="add_owner" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Submit</button>
-              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal-small" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="modal fade center-btn" id="addRegionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog mt-5" role="document">
-        <div class="modal-content bg-gradient-dark">
-          <div class="modal-header">
-            <h5 class="modal-title text-info" id="exampleModalLabel">Add a new region</h5>
-          </div>
-          <div class="modal-body">
-            
-            <div class="media">
-              <div class="media-body">
-                <div class="position-relative">
-                  <form class="" action="" method="POST">
 
-                      <div class="form-group">
 
-                        <input class="form-control ph" id="region" placeholder="Region name">
 
-                      </div>
 
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div class="has-margin-bottom divbg">
-              <button id="add_region" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Submit</button>
-              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal-small" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="modal fade center-btn" id="linkModal" tabindex="-1" role="dialog" aria-labelledby="linkModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title font-weight-bold text-info mb-1" id="linkModalLabel">Loading</h5>
-            <span class="modal-info"></span>
-          </div>
-          <div class="modal-body">
-            
-            <div class="media">
-              <div class="media-body">
-                <div class="position-relative">
-                  <form class="" action="" method="POST">
 
-                      <div class="form-group">
-
-                        <div class="form-group ">
-                          <select name="owner" class="select-css" id ="select_company" required>
-                              <option disabled selected value> loading... </option>
-                              {% for o in companies %}
-                              <option value="{{ o }}">{{ o }}</option>
-                              {% endfor %}
-                          </select>
-                        </div>
-
-                      </div>
-
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="has-margin-bottom divbg">
-              <button id="link-btn" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Link</button>
-              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade center-btn" id="editPropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-danger" id="exampleModalLabel">Property detail update</h5>
-          </div>
-          <div class="text-info payment-info"></div>
-          <div class="modal-body text-gray-900">
-            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger">IN DEVELOPMENT</span>: Check back in a couple of days.</span>
-          </div>
-          <div class="has-margin-bottom divbg dispnone">
-              <button id="edit_prop" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Edit</button>
-              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade center-btn" id="deletePropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-danger" id="exampleModalLabel">Confirm Removal</h5>
-          </div>
-          <div class="text-info payment-info"></div>
-          <div class="modal-body text-gray-900">
-            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to permanently remove this property from your listings?</span>
-          </div>
-          <div class="has-margin-bottom divbg">
-              <button id="del_prop" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
-              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
 
 
@@ -510,503 +315,63 @@
 
 
 <script>
-  // This script displays alerts and tenant name before clearance
-  $("#addPropertyModal").on('shown.bs.modal', function(){
+  $("#addUserModal").on('shown.bs.modal', function(){
 
     $.ajax({
-      url: "{{ url_for('api.addprop') }}",
+      url: "{{ url_for('api.users') }}",
       type: "get",
       data: {
-            target:"owners"
-          },
-      success: function(response) {
-        $("#select_owner").html(response);
-        $.ajax({
-          url: "{{ url_for('api.addprop') }}",
-          type: "get",
-          data: {
-                target:"regions"
-              },
-          success: function(response) {
-            $("#region_list").html(response); 
-          }
-    });
-      }
-    });
-  });
-</script>
-
-
-<script>
-  $("#downloadprops").click(function(){ 
-      $('#downloadprops').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
-
-
-      $("#downbtn")[0].click();
-
-        setTimeout(function(){
-            $('#downloadprops').html("<i class='fas fa-file-download mr-2'></i>Template")
-        },3000);
-    });
-</script>
-
-
-<script>
-  $("#uploadprops").on('click',function(){
-      $("#uploadprops").html("Uploading...") 
-
-      url = "{{ url_for('api.addprop') }}"
-
-      var fd = new FormData();
-      var files = $('#propfile')[0].files;
-      fd.append('file',files[0]);
-      fd.append('target',"excelupload");
-
-      $.ajax({
-          type: "POST",
-          url: url,
-          data:fd,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-              // $("#postloader-btn").click();
-              // $("#body-block").addClass("dispnone")
-              // $("#dynamic-content").removeClass("dispnone")
-              $("#uploadprops").html("Uploaded") 
-              $(".alert-msgs").html(response);
-
-              setTimeout(function(){
-                $("#uploadprops").html("Upload") 
-                $(".alert-msgs").empty();
-                $(".reset").click();
-                $(".closemodal").click();
-              },3000)
-
-              $.ajax({
-                    url: "{{ url_for('api.allproperties') }}",
-                    type: "get",
-                    success: function(response) {
-                      $("#dynamic-content").html(response);
-                      
-                    }
-                  });
-
-          },
-          error:function(){
-            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
-            $("#uploadprops").html("Retry") 
-
-            setTimeout(function(){
-                $("#uploadprops").html("Upload")
-                $(".alert-msgs").empty();
-                $(".reset").click();
-                $(".closemodal").click();
-              },5000)
-          }
-      });
-  });
-</script>
-
-
-
-<script>
-  $("#add_prop").on('click',function(){
-    $('#add_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
-
-    // var cb = document.getElementById("cb1");
-    // if (cb.checked){
-    //   var agency = "True";
-    // }else{
-    //   var agency = "False";
-    // }
-  
-    $.ajax({
-            type: "POST",
-            url: "{{ url_for('api.addprop') }}",
-            data: {
-                landlord:$("#cname").val(),
-                tel:$("#ctel").val(),
-                region:$("#select_region").val(),
-                prop:$("#prop").val(),
-                agency:"True",
-                target:""
-            },
-            success: function(response) {
-                $(".alert-msgs").html(response);  
-                $('#add_prop').html('Submit');
-                $(".reset").click();
-                setTimeout(function(){
-                  $(".dismissparent").click();
-                    }, 2000);
-                // setTimeout(function(){
-                //   $.ajax({
-                //     url: "{{ url_for('api.allproperties') }}",
-                //     type: "get",
-                //     success: function(response) {
-                //       // $("#result-view").html(response);
-                      
-                //     }
-                //   });
-
-                //     }, 4000);           
-
-                  // setTimeout(function(){
-                    
-                  //   $(".reset").click();
-                  //   $(".closemodal").click();
-                  //   }, 1000);
-            },
-            error:function(){
-            $(".alert-msgs").html('<span class="text-danger">Similar property exists</span>');
-            $('#add_prop').html('Re-submit');
-
-          }
-
-        });
-  });
-</script>
-
-
-<script>
-  // This script displays alerts and tenant name before clearance
-  $("#deletePropModal").on('shown.bs.modal', function(){
-    $(".payment-info").html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>retrieving...');
-    $.ajax({
-      url: "{{ url_for('api.editprop') }}",
-      type: "get",
-      data: {
-            delid: $("#del_prop_identifier").text(),
-            target: "delete"
-          },
-      success: function(response) {
-        $(".payment-info").html(response); 
-      }
-    });
-  });
-</script>
-
-<script>
-    
-  $("#del_prop").on('click',function(){   
-    $('#del_prop').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
-    $.ajax({
-      url: "{{ url_for('api.editprop') }}",
-      type: "POST",
-      data: {
-            delid:$("#del_prop_identifier").text(),
-            target:"delete"
-          },
-      success: function(response) {
-        $(".payment-info").html(response);  
-        $('#del_prop').html('Delete');
-        setTimeout(function(){
-          $(".closemodal").click();
-            }, 2000);
-        setTimeout(function(){
-
-          $.ajax({
-            url: "{{ url_for('api.allproperties') }}",
-            type: "get",
-            success: function(response) {
-              $("#dynamic-content").html(response);
-              
-            }
-          });
-
-            }, 3000);  
-        
-      }
-    });
-  });
-  
-  </script>
-
-
-
-<script>
-    
-  $("#add_owner").on('click',function(){   
-    
-    $('#add_owner').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...'); 
-    $.ajax({
-      url: "{{ url_for('api.addowner') }}",
-      type: "POST",
-      data: {
-            fname:$("#fname").val(),
-            lname:$("#lname").val(),
-            tel:$("#tel").val(),
-            target:""
-          },
-      success: function(response) {
-        $(".modal-info").show();
-        $(".closemodal-small").click();
-        $(".modal-info").html("<span class='text-success'>Owner added successfully</span>");  
-        $('#add_owner').html('Submit');
-        $.ajax({
-            url: "{{ url_for('api.addprop') }}",
-            type: "get",
-            data: {
-                  target:"owners"
-                },
-            success: function(response) {
-              $("#select_owner").html(response);
-              
-            }
-          });
-        setTimeout(function(){
-          $(".modal-info").fadeOut(4000,"swing");
-          }, 1000);
-        
-      }
-    });
-  });
-  
-  </script>
-
-<script>
-    
-  $("#add_region").on('click',function(){   
-    
-    $('#add_region').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...'); 
-    $.ajax({
-      url: "{{ url_for('api.addregion') }}",
-      type: "POST",
-      data: {
-            name:$("#region").val(),
-            target:""
-          },
-      success: function(response) {
-        $(".modal-info").show();
-        $(".closemodal-small").click();
-        $(".modal-info").html("<span class='text-success'>Region added successfully</span>");  
-        $('#add_region').html('Submit');
-        $.ajax({
-            url: "{{ url_for('api.addprop') }}",
-            type: "get",
-            data: {
-                  target:"regions"
-                },
-            success: function(response) {
-              $("#select_region").html(response);
-              
-            }
-          });
-        setTimeout(function(){
-          $(".modal-info").fadeOut(4000,"swing");
-          }, 1000);
-        
-      }
-    });
-  });
-  
-  </script>
-
-<script>
-  // This script displays alerts and tenant name before clearance
-  $("#linkModal").on('shown.bs.modal', function(){
-    var targetLink = $("#link_identifier").text();
-    if(targetLink == "link"){
-      $("#linkModalLabel").html("Link to Agent");
-      $("#link-btn").html("Link");
-    }else{
-      $("#linkModalLabel").html("Unlink property");
-      $("#link-btn").html("Unlink");
-    }
-    
-    $.ajax({
-      url: "{{ url_for('api.linkproperty') }}",
-      type: "get",
-      data:{
-        userid:$("#user_identifier").text(),
-        target:targetLink
+        target:"add user"
       },
       success: function(response) {
-        $("#select_company").html(response); 
+        $("#profileModalBed2").html(response); 
       }
     });
+
   });
 </script>
 
+
+
 <script>
-    
-  $("#link-btn").on('click',function(){   
-    var targetLink = $("#link_identifier").text();
-    if(targetLink == "link"){
-      $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>linking...'); 
-    }else{
-      $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Unlinking...'); 
-    }
-        
+  $("#profileModal").on('shown.bs.modal', function(){
+
     $.ajax({
-      url: "{{ url_for('api.linkproperty') }}",
-      type: "POST",
+      url: "{{ url_for('api.updateuser') }}",
+      type: "get",
       data: {
-            company:$("#select_company").val(),
-            userid:$("#user_identifier").text(),
-            target:targetLink
-          },
+        userid:  $("#edit_user_identifier").text(),
+        target:"self profile"
+      },
       success: function(response) {
-        $(".modal-info").show();
-        $(".modal-info").html("<span class='text-success'>Property link success</span>");  
-        $('#link-btn').html('Link');
-
-        setTimeout(function(){
-          $(".modal-info").fadeOut(4000,"swing");
-          $(".closemodal").click();
-          }, 1000);
-
-          setTimeout(function(){
-
-            $.ajax({
-              url: "{{ url_for('api.allproperties') }}",
-              type: "get",
-              success: function(response) {
-                $("#dynamic-content").html(response);
-                
-              }
-            });
-
-              }, 3000);
-        
+        $("#profileModalBed").html(response); 
       }
     });
+
   });
-  
+</script>
+
+
+<script>
+  $("#profileModal").on('hidden.bs.modal', function(){
+
+    $("#profileModalBed").html("empty"); 
+
+  });
+
   </script>
 
 
-<script>
-  // This script displays alerts and tenant name before clearance
-  $("#addPaymentModal").on('shown.bs.modal', function(){
-    $(function () {
-      $("#datepicker").datepicker({ 
-            autoclose: true, 
-            todayHighlight: true
-      });
-    });
+  <script>
+  $("#addUserModal").on('hidden.bs.modal', function(){
 
-    $.ajax({
-      url: "{{ url_for('api.receivepayment') }}",
-      type: "get",
-      data: {
-            userid: $("#user_identifier").text(),
-            target:"houselist"
-          },
-      success: function(response) {
-        $("#select_house").html(response); 
-      }
-    });
+    $("#profileModalBed2").html("empty"); 
+
   });
 </script>
 
 
-<script>
-  // This script displays alerts and tenant name before clearance
-  $("#select_house").on('change',function(){
-    $("#tenantbed").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-    // $("#tenantbed").removeClass("dispnone")
-    $.ajax({
-      url: "{{ url_for('api.receivepayment') }}",
-      type: "get",
-      data: {
-            userid: $("#user_identifier").text(),
-            house: $("#select_house").val(),
-            target:"tenant name"
-          },
-      success: function(response) {
-        $("#tenantbed").html(response); 
-      }
-    });
-  });
-</script>
 
-<script>
-
-  $("#select_paymode").on('change',function(){
-    $('#bill_ref').removeClass('dispnone');
-    $('#bill_ref').val("");
-    var empty = false;
-    if($('#select_paymode').val() == "Cash payment"){
-      $('#bill_ref').val("N/A");
-      $('#bill_ref').addClass('dispnone');
-    }else if($('#select_paymode').val()=="Bank deposit"){
-      $('#bill_ref').attr("placeholder","Enter deposit slip reference");
-    }else{
-      $('#bill_ref').attr("placeholder","Enter Mpesa reference");
-    }
-    if ($('#bill_ref').val() == "") {
-      empty = true;
-    }else if($('#paidamount').val() == ""){
-      empty = true;
-    }
-
-    if (empty) {
-        $('#paybtn').addClass("dispnone");
-    } else {
-        $('#paybtn').removeClass("dispnone")
-    }
-  })
-
-</script>
-
-<script>
-
-  $("#bill_ref").on('keyup',function(){
-    var empty = false;
-    if ($('#bill_ref').val() == "") {
-      empty = true;
-    }else if($('#paidamount').val() =="") {
-      empty = true;
-    }
-    
-    if (empty) {
-        $('#paybtn').addClass("dispnone");
-    } else {
-        $('#paybtn').removeClass("dispnone")
-    }
-  })
-
-</script>
-
-<script>
-
-  $("#paidamount").on('keyup',function(){
-    var empty = false;
-    if ($('#paidamount').val() == "") {
-      empty = true;
-    }else if($('#bill_ref').val() =="") {
-      empty = true;
-    }
-    
-    if (empty) {
-        $('#paybtn').addClass("dispnone");
-    } else {
-        $('#paybtn').removeClass("dispnone")
-    }
-  })
-
-</script>
-
-
-
-<script>
-  // This script autopulate house options and displays tenant name
-  $("#receiptModal").on('shown.bs.modal', function(){
-    // $('#tenantbed').addClass("dispnone");
-    $("#receipt-bed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
-    $.ajax({
-      url: "{{ url_for('api.receipt') }}",
-      type: "get",
-      data: {
-            payid: $("#payment_identifier").text()
-          },
-      success: function(response) {
-        $("#receipt-bed").html(response); 
-      }
-    });
-  });
-
-</script>
 
 
 

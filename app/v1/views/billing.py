@@ -64,11 +64,14 @@ class SwitchPeriod(Resource):
             CompanyOp.update_billing_period(co,switchperiod)
             print("DANGEROUS MOVE TO ADVANCE TO NEXT PERIOD")
 
-        try:
-            txt = f'{co.name} wants to advance to {get_str_month(switchperiod.month)}'
-            response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-        except Exception as e:
-            print("billing notification failed >>>>>>>>>>>>>>>>>>>>>>>> ",e)
+        txt = f'{co.name} has switched to {get_str_month(switchperiod.month)}'
+        send_internal_email_notifications(txt)
+
+        # try:
+        #     txt = f'{co.name} wants to advance to {get_str_month(switchperiod.month)}'
+        #     response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+        # except Exception as e:
+        #     print("billing notification failed >>>>>>>>>>>>>>>>>>>>>>>> ",e)
         # timenow = datetime.datetime.now()
         # if timenow.day < 20:
         #     CompanyOp.set_rem_quota(company,200)
@@ -211,7 +214,8 @@ class Billing(Resource):
             str_month = get_str_month(month)
 
             txt = f"{str_month} Billing has been requested by {current_user.company} for {apartment_name}"
-            advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+            send_internal_email_notifications(txt)
+            # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
             # try:
             #     response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
@@ -1415,10 +1419,12 @@ class SendInvoices(Resource):
             print("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
             override = False
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
-            try:
-                advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-            except:
-                pass
+            send_internal_email_notifications(txt)
+
+            # try:
+            #     advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+            # except:
+            #     pass
 
         # THIS IS INTENTIONAL, JOB IS NOT WITHIN THE IF BLOCK
 
@@ -1440,7 +1446,9 @@ class SendMail(Resource):
         payment_id = request.args.get("payid")
 
         txt = f'Receipting requested by {current_user.company} for {payment_id}'
-        response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+        send_internal_email_notifications(txt)
+
+        # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
 
         job99 = q.enqueue_call(
             func=auto_send_mail_receipt, args=(payment_id,created_by,), result_ttl=5000
@@ -1461,10 +1469,13 @@ class DiscardBills(Resource):
 
         txt = f'All bills discard requested by {current_user.company} for {prop_obj.name}'
 
-        try:
-            response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-        except:
-            pass
+        send_internal_email_notifications(txt)
+
+
+        # try:
+        #     response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+        # except:
+        #     pass
 
         if current_user.username.startswith('qc') or current_user.username.startswith('quality') or current_user.usercode == "3551" or current_user.usercode == "9672":
             job34 = q.enqueue_call(

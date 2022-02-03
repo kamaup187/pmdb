@@ -262,6 +262,12 @@ def example_func(param):
     # mail.send(txt)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
+def send_internal_email_notifications(param):
+    email_addr = "koechpetersn@gmail.com"
+    txt = Message('Internal communication', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+    txt.body = param
+    mail.send(txt)
+
 def good_print(arr):
     import json
     print(json.dumps(arr, indent=4, sort_keys=True))
@@ -3635,6 +3641,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 else:
                     txt = f"{co} has depleted sms"
                     # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                    send_internal_email_notifications(txt)
                     print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",txt)
             else:
                 MonthlyChargeOp.update_sms_status(bill,"off")

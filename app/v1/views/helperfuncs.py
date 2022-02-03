@@ -564,7 +564,7 @@ def update_login_history(location,user):
         new_login = UserLoginDataOp(user.id)
         new_login.save()
         title = f'{(new_login.logged_on + relativedelta(hours=3)).strftime("%d/%b")} logins'
-        txt = f"{user.name} of {user.company.name} has logged in at {new_login.logged_on + relativedelta(hours=3).strftime('%H:%M %p')}"
+        txt = f"{user.name} of {user.company.name} has logged in at {(new_login.logged_on + relativedelta(hours=3)).strftime('%H:%M %p')}"
         send_internal_email_notifications(title,txt)
         
      

@@ -1,0 +1,213 @@
+<!-- Main page content-->
+<span id="func" class="dispnone">{{savecontext}}</span>
+<div id="workarea" class="container-xl px-4 mt-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Group info</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
+                    <form autocomplete="off">
+
+                        <div class="gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <label class="small mb-1" for="groupName">Group name (rent amount or letters
+                                A,B,C...</label>
+                            <input class="form-control" id="groupName" type="text"
+                                placeholder="Provide a name for the group" value="{{group.codename}}" />
+
+                        </div>
+                        <button type="reset" class="reset dispnone"></button>
+                    </form>
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">Groups are used to cluster units/houses with similar
+                        rent and utility rates</div>
+                    <!-- Profile picture upload button-->
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Group details  >> {{group.codename}}</div>
+                <div class="card-body">
+                    <form autocomplete="off">
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="rentrate">Monthly rent</label>
+
+                                <input class="form-control" id="rentrate" type="text" placeholder="Rent amount"
+                                    value="{{group.rentrate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="servicerate">Service charge</label>
+
+                                <input class="form-control" id="servicerate" type="text" placeholder="Service amount"
+                                    value="{{group.servicerate}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="unitrate">Metered water unit rates</label>
+
+                                <input class="form-control" id="unitrate" type="text" placeholder="Unit rate amount"
+                                    value="{{group.waterrate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="waterrate">Water standard charges</label>
+
+                                <input class="form-control" id="waterrate" type="text" placeholder="Standard charge amount"
+                                    value="{{group.watercharge}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="garbagerate">Garbage charge</label>
+
+                                <input class="form-control" id="garbagerate" type="text" placeholder="Garbage fee"
+                                    value="{{group.garbagerate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="securityrate">Security charge</label>
+
+                                <input class="form-control" id="securityrate" type="text" placeholder="Security fee"
+                                    value="{{group.securityrate}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="finerate">Penalty percentage</label>
+
+                                <input class="form-control" id="finerate" type="text" placeholder="Penalty percentage"
+                                    value="{{group.finerate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="elecunitrate">Metered electricity unit rate</label>
+
+                                <input class="form-control" id="elecunitrate" type="text" placeholder="Unit rate amount"
+                                    value="{{group.electricityrate}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="waterdep">Water deposit</label>
+
+                                <input class="form-control" id="waterdep" type="text" placeholder="Deposit amount"
+                                    value="{{group.waterdep}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="elecdep">Electricity deposit</label>
+
+                                <input class="form-control" id="elecdep" type="text" placeholder="Deposit amount"
+                                    value="{{group.elecdep}}" />
+                            </div>
+                        </div>
+
+                        <!-- Submit button-->
+                        <div class="text-center">
+                            <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
+                            <button type="reset" class="reset dispnone"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    $("#submitgroup").click(function(){
+        let target_func = $("#func").text()
+        let baseurl
+        let target
+        let successResponse
+        let afterSuccess
+
+        if (target_func == "Submit"){
+            
+            baseurl = "{{ url_for('api.createhousecode') }}"
+            target = "add new group"
+            successResponse = "Saved !"
+            afterSuccess = "Submit"
+            $("#submitgroup").html("submitting...")  
+        }else{
+            baseurl = "{{ url_for('api.edithousecode') }}"
+            $("#submitgroup").html("updating...")
+            target = "update group"
+            successResponse = "Updated !"
+            afterSuccess = "Update group"
+        }
+
+        $.ajax({
+        url: baseurl,
+        type: "POST",
+        data: {
+            propid: $("#prop_identifier").text(),
+            groupid: $("#group_identifier").text(),
+            housecode: $("#groupName").val(),
+            rentrate: $("#rentrate").val(),
+            waterrate: $("#waterrate").val(),
+            unitrate: $("#unitrate").val(),
+            elecunitrate: $("#elecunitrate").val(),
+            garbagerate: $("#garbagerate").val(),
+            securityrate: $("#securityrate").val(),
+            servicerate: $("#servicerate").val(),
+            waterdep: $("#waterdep").val(),
+            elecdep: $("#elecdep").val(),
+            finerate: $("#finerate").val(),
+            target:target
+            },
+        success: function(response) {
+            $("#workarea").addClass("dispnone")
+            $(".alert-msgs").html(response);
+            $("#submitgroup").html(successResponse)
+
+            
+            setTimeout(function(){
+            $("#workarea").removeClass("dispnone")
+            $(".alert-msgs").empty();            
+            $("#submitgroup").html(afterSuccess)
+            
+            if (target_func == "Submit"){
+                $(".reset").click();
+                $('.dismissModal').click();
+            }
+            // $('#submitgroup').attr('disabled', 'disabled');
+            //   $('#submitgroup').removeClass('btn-success')
+            //   $('#submitgroup').addClass('btn-secondary')
+            }, 2500);
+            
+            $.ajax({
+              url: "{{ url_for('api.fetchrates') }}",
+              type: "get",
+              data: {propid:  $("#prop_identifier").text()},
+              success: function(response) {
+                
+                $("#result-view").html(response);
+              }
+            });
+        }
+        });
+        
+
+
+
+    });
+  </script>

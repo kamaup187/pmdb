@@ -45,8 +45,8 @@
             <div class="col-lg-4 text-info">
               <div class="info_item">
                 <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end"
-                  data-bs-toggle="modal" data-bs-target="#newHouseCodeModal" data-toggle="modal"
-                  data-target="#newHouseCodeModal"><i class="fas fa-plus-circle ml-4"></i><span class="mr-5">New
+                   data-toggle="modal"
+                  data-target="#groupModal"><i class="fas fa-plus-circle ml-4"></i><span class="mr-5">New
                     Group</span></button>
               </div>
               <div class="info_item dispnone">
@@ -223,90 +223,29 @@
       </div>
     </div>
 
-    <div class="modal fade" id="newHouseCodeModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+
+
+    <div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
-              <span class="mr-3 smallify">Add new group</span>
+              <span class="mr-3 smallify font-weight-bold">Add/Update Group</span>
               <div>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fa fa-upload"></i></button>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger dismissModal" type="button" data-dismiss="modal">X</button>
               </div>
             </h5>
-            <div class="alert-msgs"></div>
+            <div class="alert-msgs font-weight-bold"></div>
           </div>
           <div class="modal-body pt-0">
             <div class="media mb-2">
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="/create/housecode">
-          
-                      <div class="form-group input-icons">
-                        <i class="fa fa-hashtag icon text-info"></i> 
-                        <input id="enter_house_code" class="form-control input-field text-info" style="text-align: center;" type="text" name="housecode" placeholder="Group name" autofocus>
-                      </div>
-        
-                      <div id="notifications"></div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-home icon text-info"></i> 
-                        <input id="rentrate" class="form-control input-field" type="text" name="rentrate" placeholder="Rent charge" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-water icon text-info"></i> 
-                        <input id="waterrate" class="form-control input-field" type="text" name="waterrate" placeholder="Fixed charge(water)" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-faucet icon text-info"></i> 
-                        <input id="unitrate" class="form-control input-field" type="text" name="unitrate" placeholder="Unit rate(water)" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-faucet icon text-info"></i> 
-                        <input id="elecunitrate" class="form-control input-field" type="text" name="unitrate" placeholder="Unit rate(electricity)" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-biohazard icon text-info"></i> 
-                        <input id="garbagerate" class="form-control input-field" type="text" name="garbagerate" placeholder="Garbage fee" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-dollar-sign icon text-info"></i> 
-                        <input id="securityrate" class="form-control input-field" type="text" name="securityrate" placeholder="Security fee" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-dollar-sign icon text-info"></i> 
-                        <input id="servicerate" class="form-control input-field" type="text" name="servicerate" placeholder="Service charge" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-percent icon text-info"></i> 
-                        <input id="finerate" class="form-control input-field" type="text" name="finerate" placeholder="Fine percentage" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-dollar-sign icon text-info"></i> 
-                        <input id="waterdep" class="form-control input-field" type="text" name="waterdep" placeholder="Water deposit fee" required>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-dollar-sign icon text-info"></i> 
-                        <input id="elecdep" class="form-control input-field" type="text" name="elecdep" placeholder="Electricity deposit fee" required>
-                      </div>
-                    
-                      <div class="divbg center-btn">
-                        <button id="addhousecode" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
-                        <button class="btn btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
-                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
-                      </div>
-                    </form>
+  
+                    <div id="groupModalBed"></div>
+  
                   </div>
                 </div>
               </div>
@@ -357,88 +296,6 @@
       </div>
     </div>
 
-
-    <div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Update Rates</h5>
-            <div class="alert-msgs mb-1"></div>
-          </div>
-          <div class="modal-body pt-0">
-            <div class="media mb-2">
-              <div class="media-body">
-                <div class="position-relative">
-                  <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="">
-
-                      <div class="form-group input-icons">
-                        <i class="fa fa-hashtag icon text-info"></i> 
-                        <input id="edit_house_code" class="form-control input-field text-info" style="text-align: center;" type="text" name="housecode" placeholder="Change group name" autofocus>
-                      </div>
-        
-                      <div id="dynamic_div">
-                        <div class="form-group input-icons">
-                          <i class="fa fa-home icon text-info"></i> 
-                          <input id="edit_rentrate" class="form-control input-field" type="text" name="rentrate" placeholder="Rent charge" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-water icon text-info"></i> 
-                          <input id="edit_waterrate" class="form-control input-field" type="text" name="waterrate" placeholder="Fixed charge(water)" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-faucet icon text-info"></i> 
-                          <input id="edit_unitrate" class="form-control input-field" type="text" name="unitrate" placeholder="Unit rate(water)" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-faucet icon text-info"></i> 
-                          <input id="edit_unitelecrate" class="form-control input-field" type="text" name="unitrate" placeholder="Unit rate(electricity)" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-biohazard icon text-info"></i> 
-                          <input id="edit_garbagerate" class="form-control input-field" type="text" name="garbagerate" placeholder="Garbage fee" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-dollar-sign icon text-info"></i> 
-                          <input id="edit_securityrate" class="form-control input-field" type="text" name="securityrate" placeholder="Security fee" required>
-                        </div>
-
-                        <div class="form-group input-icons">
-                          <i class="fa fa-percent icon text-info"></i> 
-                          <input id="edit_finerate" class="form-control input-field" type="text" name="finerate" placeholder="Fine percentage" required>
-                        </div>
-                        <div class="form-group input-icons">
-                          <i class="fa fa-dollar-sign icon text-info"></i> 
-                          <input id="edit_waterdep" class="form-control input-field" type="text" name="waterdep" placeholder="Water deposit fee" required>
-                        </div>
-  
-                        <div class="form-group input-icons">
-                          <i class="fa fa-dollar-sign icon text-info"></i> 
-                          <input id="edit_elecdep" class="form-control input-field" type="text" name="elecdep" placeholder="Electricity deposit fee" required>
-                        </div>
-                      </div>
-                    
-                      <div class="divbg center-btn">
-                        <button id="editgroup" type="button" class="btn-danger borderless text-white">Update</button>
-                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
-                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
-                      </div>
-                      
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="modal fade center-btn" id="deleteHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -945,20 +802,48 @@
 </script>
 
 
-  <script>
-    // this script gives focus
-    $(document).ready(function(){
-      $("#newHouseCodeModal").on('shown.bs.modal', function(){
-        $(this).find('#enter_house_code').focus();
-      });
+<script>
+  $("#groupModal").on('shown.bs.modal', function(){
+
+    $.ajax({
+      url: "{{ url_for('api.createhousecode') }}",
+      type: "get",
+      data: {
+        groupid:  $("#group_identifier").text(),
+      },
+      success: function(response) {
+        $("#groupModalBed").html(response); 
+      }
     });
+
+  });
+</script>
+
+
+<script>
+  $("#groupModal").on('hidden.bs.modal', function(){
+
+    $("#groupModalBed").html("empty"); 
+
+  });
+
   </script>
 
-  <script>
-    $("#enter_house_code").keyup(function(){  
+
+  <!-- <script>
+    // this script gives focus
+    $(document).ready(function(){
+      $("#groupModal").on('shown.bs.modal', function(){
+        $(this).find('#groupName').focus();
+      });
+    });
+  </script> -->
+
+  <!-- <script>
+    $("#groupName").keyup(function(){  
       var empty = false;
     
-      if ($('#enter_house_code').val() == "") {
+      if ($('#groupName').val() == "") {
           empty = true;
       }
 
@@ -976,7 +861,7 @@
           type: "POST",
           data: {
                   propid: $("#prop_identifier").text(),
-                  housecode: $("#enter_house_code").val(),
+                  housecode: $("#groupName").val(),
                   runalert: "run"
               },
           success: function(response) {
@@ -987,7 +872,7 @@
           }
         });
     });
-    </script>
+    </script> -->
 
 <script>
   $("#addhousecode").click(function(){   
@@ -997,7 +882,7 @@
         type: "POST",
         data: {
                 propid: $("#prop_identifier").text(),
-                housecode: $("#enter_house_code").val(),
+                housecode: $("#groupName").val(),
                 rentrate: $("#rentrate").val(),
                 waterrate: $("#waterrate").val(),
                 unitrate: $("#unitrate").val(),
@@ -1133,35 +1018,7 @@
 </script>
 
 
-<script>
-      
-  $("#editGroupModal").on('shown.bs.modal', function(){
-    $.ajax({
-      url: "{{ url_for('api.edithousecode') }}",
-      type: "get",
-      data: {
-            groupid: $("#group_identifier").text(),
-            target:"groupname"
-          },
-      success: function(response) {
-        $(".alert-msgs").html(response);
-        $.ajax({
-          url: "{{ url_for('api.edithousecode') }}",
-          type: "get",
-          data: {
-                groupid: $("#group_identifier").text(),
-                target:"default"
-              },
-          success: function(response) {
-            $("#dynamic_div").html(response);
-            
-          }
-        });
-      }
-    });
-  });
 
-</script>
 
 
 <script>

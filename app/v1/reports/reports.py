@@ -65,6 +65,7 @@ class Reports(Resource):
             suggestions=generate_suggestions(apartment_list),
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
+            parent=logo(current_user.company)[5],
             name=current_user.name))
 
 class RentReport(Resource):

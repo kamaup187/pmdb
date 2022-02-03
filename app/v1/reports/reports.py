@@ -797,7 +797,7 @@ class Balances(Resource):
     def get(self):
         print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
         txt = f"balances by {current_user.name}"
-        send_internal_email_notifications(txt)
+        send_internal_email_notifications(current_user.company.name,txt)
 
         # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 

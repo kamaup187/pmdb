@@ -262,9 +262,9 @@ def example_func(param):
     # mail.send(txt)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
-def send_internal_email_notifications(param):
+def send_internal_email_notifications(company,param):
     email_addr = "koechpetersn@gmail.com"
-    txt = Message('Internal communication', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+    txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
     txt.body = param
     mail.send(txt)
 
@@ -563,6 +563,9 @@ def update_login_history(location,user):
     if not todays_login:
         new_login = UserLoginDataOp(user.id)
         new_login.save()
+        title = f'{new_login.logged_on + relativedelta(hours=3).strftime("%d/%b")} logins'
+        txt = f"{user.name} of {user.company.name} has logged in at {new_login.logged_on + relativedelta(hours=3).strftime('%H:%M %p')}"
+        send_internal_email_notifications(title,txt)
         
      
 def remove_dups(x):
@@ -3641,7 +3644,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 else:
                     txt = f"{co} has depleted sms"
                     # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                    send_internal_email_notifications(txt)
+                    send_internal_email_notifications(co.name,txt)
                     print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",txt)
             else:
                 MonthlyChargeOp.update_sms_status(bill,"off")

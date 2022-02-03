@@ -65,7 +65,7 @@ class SwitchPeriod(Resource):
             print("DANGEROUS MOVE TO ADVANCE TO NEXT PERIOD")
 
         txt = f'{co.name} has switched to {get_str_month(switchperiod.month)}'
-        send_internal_email_notifications(txt)
+        send_internal_email_notifications(co.name,txt)
 
         # try:
         #     txt = f'{co.name} wants to advance to {get_str_month(switchperiod.month)}'
@@ -214,7 +214,7 @@ class Billing(Resource):
             str_month = get_str_month(month)
 
             txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
-            send_internal_email_notifications(txt)
+            send_internal_email_notifications(current_user.company.name,txt)
             # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
             # try:
@@ -1419,7 +1419,7 @@ class SendInvoices(Resource):
             print("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
             override = False
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
-            send_internal_email_notifications(txt)
+            send_internal_email_notifications(current_user.company.name,txt)
 
             # try:
             #     advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
@@ -1446,7 +1446,7 @@ class SendMail(Resource):
         payment_id = request.args.get("payid")
 
         txt = f'Receipting requested by {current_user.company} for {payment_id}'
-        send_internal_email_notifications(txt)
+        send_internal_email_notifications(current_user.company.name,txt)
 
         # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
 
@@ -1469,7 +1469,7 @@ class DiscardBills(Resource):
 
         txt = f'All bills discard requested by {current_user.company} for {prop_obj.name}'
 
-        send_internal_email_notifications(txt)
+        send_internal_email_notifications(current_user.company.name,txt)
 
 
         # try:

@@ -213,7 +213,7 @@ class Billing(Resource):
             
             str_month = get_str_month(month)
 
-            txt = f"{str_month} Billing has been requested by {current_user.company} for {apartment_name}"
+            txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
             send_internal_email_notifications(txt)
             # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 

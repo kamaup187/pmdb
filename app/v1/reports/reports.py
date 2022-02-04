@@ -3626,6 +3626,8 @@ class FetchBills(Resource):
                 new_item = {
                     'id':"0",
                     'viewid':"0",
+                    'smsid':"0",
+                    'mailid':"0",
                     'delid':"0",
                     'editid':"0",
                     'hst':house_tenant,
@@ -3642,6 +3644,9 @@ class FetchBills(Resource):
                     'total': water_charge + electricity_charge,
                     'paid': water_charge + electricity_charge,
                     'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                    'smsactive':"disabled",
+                    'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                    'mailactive':"disabled",
                     'active':"disabled",
                     'balance':0.0
                 }

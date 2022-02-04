@@ -49,7 +49,7 @@
               </div>
               
               <nav class="nav nav-borders">
-                <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}(previous)</a>
+                <!-- <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}(previous)</a> -->
                 <a id="billing" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
               </nav>
               
@@ -429,8 +429,8 @@
               <button type="button" class="savebtn btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button> 
               <button type="button" class="printbtn mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button>
 
-              <button id="smsbtn" type="button" class="btn btn-light btn-sm"><i class="fas fa-sms text-primary mr-2">Sms</i></button>
-              <button id="mailbtn" type="button" class="btn btn-light btn-sm"><i class="fa fa-envelope text-primary mr-2"></i>Email</button>
+              <button id="smsbtn" type="button" class="btn btn-light btn-sm"><i class="fas fa-sms text-primary mr-2">sms</i></button>
+              <button id="mailbtn" type="button" class="btn btn-light btn-sm"><i class="fa fa-envelope text-primary mr-2"></i>email</button>
             </div>
           </div>
 
@@ -846,6 +846,37 @@
   });
 
 </script>
+
+<script>
+    
+  $("#smsbtn").on('click',function(){   
+    $('#smsbtn').html('<span class="spinner-border spinner-border-sm mr-1 text-info" role="status" aria-hidden="true"></span>sending sms...'); 
+    $.ajax({
+      url: "{{ url_for('api.sendsms') }}",
+      type: "get",
+      data: {
+            payid:$("#payment_identifier").text()
+          },
+      success: function(response) {
+        $('#smsbtn').html(response);
+        $('#smsbtn').attr('disabled', 'disabled');
+        $.ajax({
+            url: "{{ url_for('api.fetchpayments') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier").text(),
+                  target:"new"
+                },
+            success: function(response) {
+              $("#child-result-view").html(response);
+              
+            }
+          });
+      }
+    });
+  });
+  
+  </script>
 
 <script>
   // This script displays alerts and tenant name before clearance

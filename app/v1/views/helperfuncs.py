@@ -263,10 +263,11 @@ def example_func(param):
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
 def send_internal_email_notifications(company,param):
-    email_addr = "koechpetersn@gmail.com"
-    txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
-    txt.body = param
-    mail.send(txt)
+    if os.getenv("CURRENT_APP") == "app1":
+        email_addr = "koechpetersn@gmail.com"
+        txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
+        txt.body = param
+        mail.send(txt)
 
 def good_print(arr):
     import json
@@ -3055,7 +3056,6 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
     app = create_app(configuration)
     app.app_context().push()
 
-
     try:
         prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
         update = False
@@ -3126,6 +3126,8 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                 multitenant_specific_bills.append(bill)
 
                         for bill in multitenant_specific_bills:
+                            print("wa hara", bill.email_invoice)
+
                             print("TENANTS BILLS LENGTH>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOR",tenant,"ARE>>>>>>>",len(multitenant_specific_bills))
 
 
@@ -3246,13 +3248,17 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                             thouses = get_active_houses(tenant)[1]
                             str_thouses = ','.join(map(str, thouses))
 
-                            txt = Message('August water bill invoices', sender = 'kiotapay@gmail.com', recipients = [email_addr])
-                            txt.body = f"Dear {tname}  \nYour August water bills are now available for {str_thouses}. Kindly find the attached invoices. \n\n{co.name}"
+                            period = f"{get_str_month(bill.month)} invoices"
+
+                            filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+
+                            txt = Message(period, sender = 'kiotapay@gmail.com', recipients = [email_addr])
+                            txt.body = f"Dear {tname}  \nYour invoice(s) are now available for {str_thouses}. Kindly find the attached invoices. \n\n{co.name}"
                             for inv in invoices:
                                 with open(inv,'rb') as fh:
                                     billid = inv.split("_")[1].rstrip(".pdf")
                                     tbill = MonthlyChargeOp.fetch_specific_bill(billid)
-                                    txt.attach(filename=f"{tbill.house.name} August_water_bill.pdf",disposition="attachment",content_type="application/pdf",data=fh.read())
+                                    txt.attach(filename=f"{tbill.house.name} {filename_ext}",disposition="attachment",content_type="application/pdf",data=fh.read())
                                     # mail.send(txt)
                                     MonthlyChargeOp.update_email_status(tbill,"sent")
                                 os.remove(inv)
@@ -3261,7 +3267,8 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                         except Exception as e:
                             print(str(e))
                             
-                    for bill in target_bills:  
+                    for bill in target_bills:
+                        print("wa hara", bill.email_invoice)
 
                         co = bill.apartment.company
                 
@@ -3378,10 +3385,13 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                     except:
                                         tname = tenant.name
 
-                                    txt = Message('August water bill invoice', sender = 'kiotapay@gmail.com', recipients = [email_addr])
-                                    txt.body = f"Dear {tname}  \nYour August water bill is now available. Kindly find the attached invoice. \n\n{co.name}"
+                                    period = f"{get_str_month(bill.month)} invoice"
+                                    filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+
+                                    txt = Message(period, sender = 'kiotapay@gmail.com', recipients = [email_addr])
+                                    txt.body = f"Dear {tname}  \nYour invoice is now available. Kindly find the attached invoice. \n\n{co.name}"
                                     # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
-                                    txt.attach(filename="August_water_bill.pdf",disposition="attachment",content_type="application/pdf",data=fh.read())
+                                    txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
                                     # mail.send(txt)
                                     conn.send(txt)
                                     MonthlyChargeOp.update_email_status(bill,"sent")
@@ -5288,6 +5298,10 @@ def get_obj_ids_alt(arr):
             obj_id_list.append(req_id)
             viewid = req["viewid"]
             obj_id_list.append(viewid)
+            smsid = req["smsid"]
+            obj_id_list.append(smsid)
+            mailid = req["mailid"]
+            obj_id_list.append(mailid)
             editid = req["editid"]
             obj_id_list.append(editid)
             delid = req["delid"]

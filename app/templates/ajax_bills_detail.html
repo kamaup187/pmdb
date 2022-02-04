@@ -75,6 +75,7 @@
                           <th class="text-info track-title-cell expand dispnone-alt">Paid</th>
                           <th class="text-info track-title-cell expand dispnone-alt text-danger">BCF</th>
                           <th class="text-primary track-title-cell">SMS</th>
+                          <th class="text-primary track-title-cell">EMAIL</th>
                           <th class="text-primary track-title-cell expand dispnone-alt">Edit</th>
                           <th class="text-danger track-title-cell expand dispnone-alt">Delete</th>
                           <th class="text-danger track-title-cell expand dispnone-alt">By</th>
@@ -84,9 +85,9 @@
                           {% for i in bills%}
                           <tr>
                           <td class="first-data-cell font-weight-bold {{i['vacancy']}}">{{ i['hst']|safe }}</td>
-                          <td class="text-s data-cell">
+                          <td class="text-center data-cell">
                             <div>
-                              <button id="{{i['id']}}" type="button" class="btn action-btn {{i['viewable']}} font-weight-bold  modalTrigger no-wrap" {{i['active']}} data-toggle="modal" data-target="#invoiceModal"><i class="fas fa-receipt mr-1"></i>View</button>
+                              <button id="{{i['id']}}" type="button" class="btn btn-sm {{i['viewable']}} font-weight-bold  ellipsis no-wrap" {{i['active']}} data-toggle="modal" data-target="#invoiceModal"><i class="fas fa-receipt mr-1"></i>View</button>
                             </div>
                           </td>
                           <!-- <td class="data-cell">{{ i['tenant'] }}</td> -->
@@ -105,41 +106,46 @@
                           
                           <td class="data-cell expand dispnone-alt {{i['highlight']}} font-weight-bold text-right">{{ i['balance'] }}</td>
 
-                          <td class="text-s data-cell">
+                          <td class="text-center data-cell">
                             <div>
-                              <button id="{{i['viewid']}}" type="button" class="btn action-btn {{i['smsoutline']}} font-weight-bold  modalTrigger no-wrap" {{i['smsactive']}} data-toggle="modal" data-target="">{{ i['smsstatus']|safe }}</button>
+                              <button id="{{i['smsid']}}" type="button" class="btn {{i['smsoutline']}} font-weight-bold  btn-sm ellipsis no-wrap" {{i['smsactive']}}>{{ i['smsstatus']|safe }}</button>
                             </div>
                           </td>
-                          <td class="text-s data-cell expand dispnone-alt">
+                          <td class="data-cell text-center">
                             <div>
-                              <button id="{{i['editid']}}" type="button" class="btn action-btn {{i['editoutline']}} font-weight-bold  modalTrigger no-wrap" {{i['active']}} data-toggle="modal" data-target="#editBillModal"><i class="fas fa-cog mr-1"></i>Edit</button>
+                                <span id="{{i['mailid']}}" type="button" class="btn {{i['mailoutline']}} font-weight-bold btn-sm ellipsis no-wrap" {{i['mailactive']}} >{{i['mailstatus']|safe}}</span>
+                            </div>
+                        </td>
+                          <td class="text-center data-cell expand dispnone-alt">
+                            <div>
+                              <button id="{{i['editid']}}" type="button" class="btn btn-sm {{i['editoutline']}} font-weight-bold  ellipsis no-wrap" {{i['active']}} data-toggle="modal" data-target="#editBillModal"><i class="fas fa-cog mr-1"></i>Edit</button>
                             </div>
                           </td>
-                          <td class="text-s data-cell expand dispnone-alt">
+                          <td class="text-center data-cell expand dispnone-alt">
                             <div>
-                              <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#discardBillModal"><i class="fas fa-trash-alt mr-1"></i>Discard</button>
+                              <button id="{{i['delid']}}" type="button" class="btn btn-sm btn-outline-danger font-weight-bold  ellipsis no-wrap" data-toggle="modal" data-target="#discardBillModal"><i class="fas fa-trash-alt mr-1"></i>Discard</button>
                             </div>
                           </td>
-                          <td class="data-cell text-dark font-weight-bold expand dispnone-alt">{{ i['billedby'] }}</td>
+                          <td class="data-cell text-center text-dark font-weight-bold expand dispnone-alt">{{ i['billedby'] }}</td>
                           </tr>
                           {% endfor %}
                       </tbody>
                       <tfoot>
                         <tr>
                           <td colspan="2" class="center-btn font-weight-bold data-cell text-black">Total</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_rent}}">{{rent}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_water}}">{{water}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_elec}}">{{elec}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_garb}}">{{garb}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_sec}}">{{sec}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_sev}}">{{serv}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_dep}}">{{dep}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_arg}}">{{agr}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_fine}}">{{fine}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right {{fieldshow_arr}}">{{arrears}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right">{{total}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right">{{paid}}</td>
-                          <td class="font-weight-bold data-cell text-info text-right">{{bal}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_rent}}">{{rent}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_water}}">{{water}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_elec}}">{{elec}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_garb}}">{{garb}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_sec}}">{{sec}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_sev}}">{{serv}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_dep}}">{{dep}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_arg}}">{{agr}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_fine}}">{{fine}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_arr}}">{{arrears}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right">{{total}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right">{{paid}}</td>
+                          <td class="font-weight-bold data-cell text-black text-right">{{bal}}</td>
   
                         </tr>
                       </tfoot>
@@ -392,56 +398,96 @@
 
     <script>
       var rawIds = "{{ billids|safe }}";
-      var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+      var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
       console.log(ids)
-      $.each(ids, function(i,item) {
-      
-        $("#"+item).on('click',function(){
-          console.log("clicked",item)
-          if( isNaN(parseInt(item)) ){
-            if(item.startsWith("view")){
-              $("#view_bill_identifier").html(item)
-              
-              $("#"+item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
-                $.ajax({
-                    url: "{{ url_for('api.sendinvoices') }}",
-                    type: "POST",
-                    data: {
-                          billid:item,
-                          prop:$("#prop_identifier").text(),
-                          target:"isolated"
-                        },
-                    success: function(response) {
+      $.each(ids, function (i, item) {
 
-                      setTimeout(function(){
-                        $.ajax({
-                          url: "{{ url_for('api.fetchbills') }}",
-                          type: "get",
-                          data: {
-                            propid:  $("#prop_identifier").text(),
-                            target:"sometarget"
-                          },
-                          success: function(response) {
-                            
-                            $("#result-view2").html(response);
-                          }
-                      });
-                      }, 5000);
+        $("#" + item).on('click', function () {
+          console.log("clicked", item)
+          if (isNaN(parseInt(item))) {
+            if (item.startsWith("sms")) {
+              // $("#view_bill_identifier").html(item)
 
-                    },
-                    error: function(xhr) {
-                      $("#"+item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+              console.log("sending sms")
+
+
+              $("#" + item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+              $.ajax({
+                url: "{{ url_for('api.sendinvoices') }}",
+                type: "POST",
+                data: {
+                  billid: item,
+                  prop: $("#prop_identifier").text(),
+                  target: "isolated"
+                },
+                success: function (response) {
+
+                  setTimeout(function () {
+                    $.ajax({
+                      url: "{{ url_for('api.fetchbills') }}",
+                      type: "get",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        target: "sometarget"
+                      },
+                      success: function (response) {
+
+                        $("#result-view2").html(response);
                       }
-                  });
+                    });
+                  }, 5000);
 
-            }else if(item.startsWith("del")){
+                },
+                error: function (xhr) {
+                  $("#" + item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+                }
+              });
+
+            } else if (item.startsWith("mail")) {
+              // $("#view_bill_identifier").html(item)
+
+              console.log("sending mail")
+
+              $("#" + item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
+              $.ajax({
+                url: "{{ url_for('api.sendinvoices') }}",
+                type: "POST",
+                data: {
+                  billid: item,
+                  prop: $("#prop_identifier").text(),
+                  target: "mail"
+                },
+                success: function (response) {
+
+                  setTimeout(function () {
+                    $.ajax({
+                      url: "{{ url_for('api.fetchbills') }}",
+                      type: "get",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        target: "sometarget"
+                      },
+                      success: function (response) {
+
+                        $("#result-view2").html(response);
+                      }
+                    });
+                  }, 5000);
+
+                },
+                error: function (xhr) {
+                  $("#" + item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
+                }
+              });
+
+            } else if (item.startsWith("del")) {
               $("#del_bill_identifier").html(item)
             }
-            else{
+            else {
               $("#edit_bill_identifier").html(item)
             }
-            
-          }else{
+
+          } else {
             $("#bill_identifier").html(item)
           }
         });

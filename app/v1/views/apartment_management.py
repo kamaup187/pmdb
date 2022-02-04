@@ -1866,8 +1866,10 @@ class UpdateCompanyDetails(Resource):
         co_region = request.form.get("co_region")
         co_mail = request.form.get("co_mail")
         co_phone = request.form.get("co_tel")
+        co_sphone = request.form.get("co_stel")
 
         CompanyOp.update_details(co,co_name,co_street,co_city,co_region,co_mailbox,co_mail,co_phone)
+        CompanyOp.update_sphone(co,co_sphone)
 
         return redirect(url_for("api.index"))
 

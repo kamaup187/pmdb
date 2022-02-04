@@ -29,6 +29,12 @@ class Base():
     def generate_viewid(self):
         return "view" + str(self.id)
 
+    def generate_smsid(self):
+        return "sms" + str(self.id)
+
+    def generate_mailid(self):
+        return "mail" + str(self.id)
+
     def generate_delid(self):
         return "del" + str(self.id)
 
@@ -156,7 +162,8 @@ class CompanyOp(Company,Base):
         db.session.commit()
 
     def update_sphone(self,sphone):
-        self.sphone = sphone
+        if sphone:
+            self.sphone = sphone
         db.session.commit()
 
     def set_smsquota(self,quota):
@@ -1122,6 +1129,10 @@ class MeterReadingOp(MeterReading,Base):
 
     def update_sms_status(self,status):
         self.sms_invoice = status
+        db.session.commit()
+
+    def update_mail_status(self,status):
+        self.email_invoice = status
         db.session.commit()
 
     def update_smsid(self,smsid):
@@ -2117,7 +2128,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             if self.sms_invoice == "Success":
                 status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
             elif self.sms_invoice == "success-alt":
-                status = '<span class="text-primary"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+                status = '<span class="text-danger"><i class="fas fa-check-double mr-1"></i>blocked</span>'
             elif self.sms_invoice == "waiting":
                 status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>Resend</span>'
             elif self.sms_invoice == "sent":
@@ -2125,11 +2136,58 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             elif self.sms_invoice == "pending":
                 status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
             elif self.sms_invoice == "fail":
-                status = '<span class="text-danger"><i class="fas fa-exclamation-triangle mr-1">Resend</i></span>'
+                status = '<span class="text-danger"><i class="fas fa-hourglass-end mr-1">Resend</i></span>'
             elif self.sms_invoice == "off":
                 status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
             else:
-                status = '<span class="text-danger"><i class="fas fa-exclamation mr-1"></i>Resend</span>'
+                status = '<span class="text-danger"><i class="fas fa-reply mr-1"></i>Resend</span>'
+        else:
+            status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
+
+        return status
+
+    def get_sms_status(self):
+        if self.apartment_id == 76:
+            return '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+        if self.sms_invoice:
+            if self.sms_invoice == "Success":
+                status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+            elif self.sms_invoice == "success-alt":
+                status = '<span class="text-danger"><i class="fas fa-check-double mr-1"></i>blocked</span>'
+            elif self.sms_invoice == "waiting":
+                status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>queued</span>'
+            elif self.sms_invoice == "sent":
+                status = '<span class="text-primary"><i class="fas fa-check mr-1"></i>Sent</span>'
+            elif self.sms_invoice == "pending":
+                status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
+            elif self.sms_invoice == "fail":
+                status = '<span class="text-danger"><i class="fas fa-hourglass-end mr-1">Resend</i></span>'
+            elif self.sms_invoice == "off":
+                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+            else:
+                status = '<span class="text-danger"><i class="fas fa-reply mr-1"></i>Resend</span>'
+        else:
+            status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
+
+        return status
+
+    def get_mail_status(self):
+
+        if self.email_invoice:
+            if self.email_invoice == "Success":
+                status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+            elif self.email_invoice == "waiting":
+                status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>queued</span>'
+            elif self.email_invoice == "sent":
+                status = '<span class="text-primary"><i class="fas fa-check mr-1"></i>Sent</span>'
+            elif self.email_invoice == "pending":
+                status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
+            elif self.email_invoice == "fail":
+                status = '<span class="text-danger"><i class="fas fa-clock mr-1">Resend</i></span>'
+            elif self.email_invoice == "off":
+                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+            else:
+                status = '<span class="text-danger"><i class="fas fa-reply mr-1"></i>Resend</span>'
         else:
             status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
 
@@ -2155,6 +2213,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return {
             'id':self.id,
             'viewid':MonthlyChargeOp.generate_viewid(self),
+            'smsid':MonthlyChargeOp.generate_smsid(self),
+            'mailid':MonthlyChargeOp.generate_mailid(self),
             'editid':MonthlyChargeOp.generate_editid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'highlight':MonthlyChargeOp.highlight(self),
@@ -2192,6 +2252,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'smsstatus':MonthlyChargeOp.get_sms_status(self),
             'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
             'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
+            'mailstatus':MonthlyChargeOp.get_mail_status(self),
+            'mailoutline': "" if self.email_invoice == "sent" or self.email_invoice == "Success" else "btn-outline-primary",
+            'mailactive': "disabled" if self.email_invoice == "sent" or self.email_invoice == "Success" else "",
             'active':"",
             'viewable':"btn-outline-success",
             'editoutline':"btn-outline-danger",

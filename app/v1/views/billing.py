@@ -1349,7 +1349,7 @@ class SendInvoices(Resource):
             apartment_id = propid[3:]
             prop = str(ApartmentOp.fetch_apartment_by_id(apartment_id))
 
-        print("Sending out invoices",prop)
+        print("Sending out invoices",prop,target)
 
         user_id = current_user.id
 
@@ -1358,7 +1358,6 @@ class SendInvoices(Resource):
         override = True
 
         if target == "isolated":
-            print("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
 
             if ctype == "water":
                 charge = "water"
@@ -1403,12 +1402,20 @@ class SendInvoices(Resource):
                 houses = str(bill.house)
 
         elif target == "mail":
+
+            prop = str(ApartmentOp.fetch_apartment_by_id(prop))
+
+            billid = request.form.get('billid')
+
+            identifier = get_identifier(billid)
+
+            bill = MonthlyChargeOp.fetch_specific_bill(identifier)
+
+            houses = str(bill.house)
+            
             override = False
-            txt = f'Email Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
-            try:
-                response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-            except:
-                pass
+            # txt = f'Email Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
+            # send_internal_email_notifications(current_user.company.name,txt)
 
             job563 = q.enqueue_call(
                 func=send_out_email_invoices, args=(prop,houses,override,charge,user_id,), result_ttl=5000
@@ -1416,7 +1423,6 @@ class SendInvoices(Resource):
             return None
 
         else:
-            print("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
             override = False
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
             send_internal_email_notifications(current_user.company.name,txt)

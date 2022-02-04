@@ -3291,6 +3291,10 @@ class FetchPayments(Resource):
     @login_required
     def get(self):
         target = request.args.get("target")
+
+        if target == "unclaimed":
+            return render_template("ajax_payments_refresh.html",payids=[],items=[],data=">>>>>>>>>  unclaimed payments",dataperiod="")
+
         if target == "new":
             prop_id = request.args.get("propid")
             propid = get_identifier(prop_id)
@@ -3345,7 +3349,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month))
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>>>  current payments",dataperiod=get_str_month(period.month))
 
         if target == "new alt":
             prop_id = request.args.get("propid")
@@ -3423,7 +3427,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>>> voided payments",dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
 
         elif target == "old":
             prop_id = request.args.get("propid")
@@ -3444,7 +3448,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="disabled")
 
         else:
             tenantid = request.args.get('tenantid')

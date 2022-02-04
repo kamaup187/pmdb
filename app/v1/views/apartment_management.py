@@ -5711,6 +5711,8 @@ class Results(Resource):
                 new_item = {
                     'id':"0",
                     'viewid':"0",
+                    'smsid':"0",
+                    'mailid':"0",
                     'delid':"0",
                     'editid':"0",
                     'hst':house_tenant,
@@ -5727,9 +5729,11 @@ class Results(Resource):
                     'arrears': 0.0,
                     'total': water_charge + electricity_charge,
                     'paid': 0.0,
-                    'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
                     'active':"disabled",
+                    'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
                     'smsactive':"disabled",
+                    'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                    'mailactive':"disabled",
                     'balance':0.0
                 }
                 detailed_bills.append(new_item)

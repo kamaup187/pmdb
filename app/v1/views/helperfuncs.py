@@ -263,11 +263,14 @@ def example_func(param):
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
 def send_internal_email_notifications(company,param):
-    if os.getenv("CURRENT_APP") == "app1":
-        email_addr = "koechpetersn@gmail.com"
-        txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
-        txt.body = param
-        mail.send(txt)
+    try:
+        if os.getenv("CURRENT_APP") == "app1":
+            email_addr = "koechpetersn@gmail.com"
+            txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr,"paulmch4@gmail.com"])
+            txt.body = param
+            mail.send(txt)
+    except:
+        pass
 
 def good_print(arr):
     import json

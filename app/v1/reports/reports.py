@@ -1161,11 +1161,19 @@ class InternalDetail(Resource):
         totalbalance = sum_positive_values(balancetotal_sum_members)
         balancetotal = (f"{totalbalance:,}")
 
-        commission = totalrent * apartment_obj.commission * 0.01
-        str_commission = f'{apartment_obj.commission} %'
+        # commission = totalrent * apartment_obj.commission * 0.01
+        # str_commission = f'{apartment_obj.commission} %'
+        # formatted_commission = (f"{commission:,.1f}")
 
-        formatted_commission = (f"{commission:,.1f}")
         formatted_expenses = (f"{expenses_amount:,.1f}")
+
+        if apartment_obj.commission:
+            commission = totalrent * apartment_obj.commission * 0.01
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
 
         netpay = totalpaid - commission - expenses_amount
         formatted_netpay = (f"{netpay:,.1f}")
@@ -1194,8 +1202,8 @@ class InternalDetail(Resource):
             balances=balancetotal,
             bills=bill_list,
             paging=page(bill_list),
-            str_commission=str_commission,
-            commission=formatted_commission,
+            str_commission=commission_percentage,
+            commission=commission,
             expenses=formatted_expenses,
             formatted_netpay=formatted_netpay,
             apartment_list=apartment_list,
@@ -2751,14 +2759,25 @@ class ViewPayment(Resource):
         #     if bill.month == end_month:
         #         monthlybills.append(bill)
 
+        house_cluster = []
+
         for bill in actual_payments:
             total_bill_member = bill.charged_amount
             total_bill_members.append(total_bill_member)
 
+
             total_paid_member = bill.amount
             total_paid_members.append(total_paid_member)
 
-            total_balance_member = bill.balance
+            house_cluster.append(bill.house)
+
+        trimmed_cluster = remove_dups(house_cluster)
+        for i in trimmed_cluster:
+            actual_bill = max(i.monthlybills, key=lambda x: x.id)
+            try:
+                total_balance_member = actual_bill.balance
+            except:
+                total_balance_member = 0.0
             total_balance_members.append(total_balance_member)
 
         total_bills = sum_positive_values(total_bill_members)

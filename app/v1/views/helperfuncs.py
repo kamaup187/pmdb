@@ -265,8 +265,8 @@ def example_func(param):
 def send_internal_email_notifications(company,param):
     try:
         if os.getenv("CURRENT_APP") == "app1":
-            email_addr = "koechpetersn@gmail.com"
-            txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr,"paulmch4@gmail.com"])
+            email_addr = "notifications.kiotapay@gmail.com"
+            txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
             txt.body = param
             mail.send(txt)
     except:

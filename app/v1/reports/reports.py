@@ -2700,6 +2700,7 @@ class ViewPayment(Resource):
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
         payments = apartment_obj.payment_data
+        bills = apartment_obj.monthlybills
 
         if raw_tenant:
             if raw_tenant.startswith("Vac"):
@@ -2714,18 +2715,24 @@ class ViewPayment(Resource):
             tenant_id = None
 
         if mode and not tenant_id:
+            target_bills = fetch_current_billing_period_bills(target_period,bills)
             for bill in payments:
                 if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.paymode == mode:
                     raw_payments_list.append(bill)
         elif mode and tenant_id:
+            bills = tenant_obj.monthly_charges
+            target_bills = fetch_current_billing_period_bills(target_period,bills)
             for bill in payments:
                 if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.paymode == mode and bill.tenant_id == tenant_id:
                     raw_payments_list.append(bill)
         elif tenant_id and not mode:
+            bills = tenant_obj.monthly_charges
+            target_bills = fetch_current_billing_period_bills(target_period,bills)
             for bill in payments:
                 if bill.pay_period.month in month_range and bill.pay_period.year == target_period.year and not bill.voided and bill.tenant_id == tenant_id:
                     raw_payments_list.append(bill)
         else:
+            target_bills = fetch_current_billing_period_bills(target_period,bills)
             for bill in payments:
                 if not bill.pay_period:
                     
@@ -2771,11 +2778,12 @@ class ViewPayment(Resource):
 
             house_cluster.append(bill.house)
 
-        trimmed_cluster = remove_dups(house_cluster)
-        for i in trimmed_cluster:
-            actual_bill = max(i.monthlybills, key=lambda x: x.id)
+        # trimmed_cluster = remove_dups(house_cluster)
+        # for i in trimmed_cluster:
+        for i in target_bills:
+            # actual_bill = max(i.monthlybills, key=lambda x: x.id)
             try:
-                total_balance_member = actual_bill.balance
+                total_balance_member = i.balance if i.balance > 0 else 0.0
             except:
                 total_balance_member = 0.0
             total_balance_members.append(total_balance_member)

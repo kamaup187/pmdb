@@ -430,6 +430,8 @@ class AllProperties(Resource):
         items = []
         prop_ids = []
         prop_names = []
+
+        template = "ajax_allprops_detail.html"
         
         for prop in props:
             tenants = len(tenantauto(prop.id))

@@ -3388,3 +3388,20 @@ select {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+
+.card-headera {
+  position: fixed;
+  top: 50;
+  /* left: 0; */
+  width: 200px;
+  background: #bbb;
+  z-index: 244444;
+  height: 20px;
+}
+
+.card-block {
+  margin-top: 20px;
+  height: 600px;
+  overflow: auto;
+}

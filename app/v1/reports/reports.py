@@ -2592,7 +2592,7 @@ class ExternalDetail(Resource):
             netpay=netpay,
             expenselist=expense_list,
             bills=detailed_bills,
-            paging=page(detailed_bills),
+            paging="landscape",
             apartment_list=apartment_list,
             month_list=month_list,
             year_list=[2020,2021,2022,2024],

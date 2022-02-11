@@ -1557,7 +1557,6 @@ class SendSms(Resource):
                         try:
                             print("Payment sms sending initiated")
                             recipient = [phonenum]
-                            sender = "KIOTAPAY"
                             #Once this is done, that's it! We'll handle the rest
                             response = sms.send(message, recipient,sender)
                             print(response)
@@ -1984,15 +1983,15 @@ class ReceivePayment(Resource):
             rand_id = random_generator()
             if PaymentOp.fetch_payment_by_rand_id(rand_id):
                 rand_id = random_generator(size=11)
-                awe = sms.send("Ran random the second time !", ["+254716674695"],"KIOTAPAY")
+                awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
                 if PaymentOp.fetch_payment_by_rand_id(rand_id):
                     rand_id = random_generator(size=12)
-                    awe = sms.send("Ran random the third time !", ["+254716674695"],"KIOTAPAY")
+                    awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
                     if PaymentOp.fetch_payment_by_rand_id(rand_id):
                         rand_id = random_generator(size=13)
-                        awe = sms.send("Ran random the fouth time !", ["+254716674695"],"KIOTAPAY")
+                        awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
                         if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                            awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],"KIOTAPAY")
+                            awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
                             return "Payment could not be processed at this time! Try again later"
 
             tenant_bal = tenant_obj.balance
@@ -2592,7 +2591,7 @@ class EditPayment(Resource):
                         print(f"Houston, we have a problem {e}")
                 else:
                     txt = f"{co} has depleted sms"
-                    response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                    response = sms.send(txt, ["+254716674695"],sender)
                     print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
             else:
                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")

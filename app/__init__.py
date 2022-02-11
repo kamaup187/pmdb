@@ -19,8 +19,8 @@ mail = Mail()
 # api_key = "744ef1a5d352fb3edd3f66e6e93a1c0c1122c9918c176ac8a8c7baaab3f74a4c"
 
 #production key
-username = "eapartment"
-api_key = "4f501cae150c2bf1ac987dc89d8a724aedbea5b6d248dd3790c4ee7da421c957"
+username = os.getenv('SMS_USERNAME')
+api_key = os.getenv('SMS_API_KEY')
 
 # username = "eapartmentapp"
 # api_key = "d232d0d25c18be83717469452f76e60d7171cf1a5977619e93a23676fe4fc98b"

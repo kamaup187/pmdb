@@ -25,6 +25,8 @@ from .advanta import *
 from app import mail
 from app import sms
 
+sender = os.getenv("SENDER_ID")
+
 kiotapay_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
 kiotapay_partner_id = 3886
 
@@ -41,6 +43,8 @@ proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 
 flatten = lambda l: [item for sublist in l for item in sublist]
+get_initials = lambda xx: ''.join(i[0] for i in xx.split())
+
 
 def mbogi():
     print("Hi there")
@@ -506,10 +510,10 @@ def logo(co):
                 sign = ""
             else:
                 ##################################################
-                logopath = "../static/img/logos/kiotapa/l-logo.png"
-                mobilelogopath = "../static/img/logos/kiotapa/s-logo.png"
-                fulllogopath = "../static/img/logos/kiotapa/full-logo.jpg"
-                letterhead = "../static/img/logos/kiotapa/letterhead.jpg"
+                logopath = "../static/img/logos/spry/l-logo.png"
+                mobilelogopath = "../static/img/logos/spry/s-logo.png"
+                fulllogopath = "../static/img/logos/spry/full-logo.jpg"
+                letterhead = "../static/img/logos/spry/letterhead.jpg"
                 sign = ""
 
     except Exception as e:
@@ -520,10 +524,10 @@ def logo(co):
             fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
         else:
-            logopath = "../static/img/logos/kiotapa/l-logo.png"
-            mobilelogopath = "../static/img/logos/kiotapa/s-logo.png"
-            fulllogopath = "../static/img/logos/kiotapa/full-logo.png"
-            letterhead = "../static/img/logos/kiotapa/letterhead.jpg"
+            logopath = "../static/img/logos/spry/l-logo.png"
+            mobilelogopath = "../static/img/logos/spry/s-logo.png"
+            fulllogopath = "../static/img/logos/spry/full-logo.png"
+            letterhead = "../static/img/logos/spry/letterhead.jpg"
 
     if os.getenv("CURRENT_APP") == "app1":
         parent = "KiotaPay"
@@ -2905,7 +2909,6 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
                     elif target_company.name == "KEVMA REAL ESTATE":
                         advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                     else:
-                        sender = "KIOTAPAY"
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient, sender)
                         print(response)
@@ -2938,7 +2941,7 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
                     print(f"Houston, we have a problem {e}")
             else:
                 txt = f"{co} has depleted sms"
-                response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                response = sms.send(txt, ["+254716674695"],sender)
                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                 break
         else:
@@ -3014,7 +3017,6 @@ def autosend_pending_smsreceipts(payids):
                         print("Payment sms sending initiated")
                         recipient = [phonenum]
 
-                        sender = "KIOTAPAY"
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient,sender)
                         print(response)
@@ -3619,7 +3621,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                         #     MonthlyChargeOp.update_sms_status(bill,"sent")
                         else:
-                            response = sms.send(message, recipient, "KIOTAPAY")
+                            response = sms.send(message, recipient, sender)
                             print(response)
                             resp = response["SMSMessageData"]["Recipients"][0]
 
@@ -3737,7 +3739,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 message = f"Dear {tenant.name}, \nYour {str_month} water bill reading is as follows: \n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill} \n\n~{str_co}"
 
-                            response = sms.send(message, recipient, "KIOTAPAY")
+                            response = sms.send(message, recipient, sender)
                             print(response)
                             resp = response["SMSMessageData"]["Recipients"][0]
 
@@ -3848,7 +3850,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 message = f"Dear {tenant.name}, \nYour {str_month} electricity bill reading is as follows: \n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \nBill: {smsbill} \n\n~{str_co}"
                                 
-                            response = sms.send(message, recipient, "KIOTAPAY")
+                            response = sms.send(message, recipient, sender)
                             # response = sms.send(message, ["+254716674695","+254717121612"], "KIOTAPAY")
                             print(response)
                             rem_sms -= 1
@@ -4124,7 +4126,7 @@ def sendlogs(date):
         sms_text += new_line
 
     try:
-        notify = sms.send(sms_text, ["+254716674695"],"KIOTAPAY")
+        notify = sms.send(sms_text, ["+254716674695"],sender)
         print(notify)
     except Exception as e:
         print("sending logs failed",e)
@@ -5098,15 +5100,15 @@ def auto_consume_ctob(ctob_obj):
         rand_id = random_generator()
         if PaymentOp.fetch_payment_by_rand_id(rand_id):
             rand_id = random_generator(size=11)
-            awe = sms.send("Ran random the second time !", ["+254716674695"],"KIOTAPAY")
+            awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
             if PaymentOp.fetch_payment_by_rand_id(rand_id):
                 rand_id = random_generator(size=12)
-                awe = sms.send("Ran random the third time !", ["+254716674695"],"KIOTAPAY")
+                awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
                 if PaymentOp.fetch_payment_by_rand_id(rand_id):
                     rand_id = random_generator(size=13)
-                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],"KIOTAPAY")
+                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
                     if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],"KIOTAPAY")
+                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
                         return "Payment could not be processed at this time! Try again later"
 
         PaymentOp.update_rand_id(payment_obj,rand_id)
@@ -5215,7 +5217,7 @@ def auto_consume_ctob(ctob_obj):
                 message = f"Rental payment Ref {ref}, sum of {paid} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
                 # message = f"Rental payment #ref-{ref_number} Confirmed. We have received sum of Kshs {paid}. {running_bal}"
-                sender = "KIOTAPAY"
+
                 #Once this is done, that's it! We'll handle the rest
                 response = sms.send(message, recipient, sender)
                 print(response)
@@ -5257,7 +5259,7 @@ def auto_consume_ctob2(ctob_obj):
         try:
             recipient = [phonenum]
             message = f"Hi {ctob_obj.fname}, \n{co.name} has been successfully credited with {int(units)} sms units for payment of KES {ctob_obj.trans_amnt} (ref- {ctob_obj.trans_id}. \nAvailable sms units: {new_units}  \n\nThank you."
-            sender = "KIOTAPAY"
+            
             response = sms.send(message, recipient, sender)
             print(response)
         except Exception as e:

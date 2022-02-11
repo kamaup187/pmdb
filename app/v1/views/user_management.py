@@ -824,11 +824,11 @@ class SelfUserRegisterAgent(Resource):
         try:
             message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
-            response = sms.send(message1, ["+254716674695"],"KIOTAPAY")
+            response = sms.send(message1, ["+254716674695"],sender)
 
             recipient = [sms_phone_number_formatter(phone)]
             message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay customer relations manager."
-            response = sms.send(message2, recipient,"KIOTAPAY")
+            response = sms.send(message2, recipient,sender)
 
         except:
             pass
@@ -898,11 +898,11 @@ class SelfUserRegisterOwner(Resource):
 
         try:
             message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an owner({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
-            response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
+            response = sms.send(message1, ["+254716674695"],sender)
 
             recipient = [sms_phone_number_formatter(phone)]
             message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay Customer relations manager."
-            response = sms.send(message2, recipient,"KIOTAPAY")
+            response = sms.send(message2, recipient,sender)
 
         except:
             pass
@@ -1125,7 +1125,7 @@ class UserLogin(Resource):
             flash('Incorrect password!','fail')
             return redirect(url_for('api.userlogin'))
         elif downtime:
-            response = sms.send("Login is experiencing issues", ["+254716674695"],"KIOTAPAY")
+            response = sms.send("Login is experiencing issues", ["+254716674695"],sender)
             flash('Login failed, system undergoing maintenance!','fail')
             return redirect(url_for('api.userlogin'))
         flash('It seems you have no account yet!.','fail')

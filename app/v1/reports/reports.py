@@ -15,6 +15,8 @@ class Reports(Resource):
     """report class"""
     @login_required
     def get(self):
+
+        delay = "yes" if os.getenv("CURRENT_APP") == "app2" else "no"
         time = datetime.datetime.now()
         present_month = time.month
         present_year = time.year
@@ -57,6 +59,7 @@ class Reports(Resource):
         formatted_monthlybal_total = (f"{monthlybal_total:,}")
         return Response(render_template(
             "reports.html",
+            delay=delay,
             tenantlist=[],
             month_string=get_str_month(present_month),
             monthly_bills = formatted_monthly_bill_total,

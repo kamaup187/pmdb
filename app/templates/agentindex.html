@@ -42,6 +42,7 @@
 
   <script src="{{ url_for('static', filename='js/timepicker.js') }}"></script>
 
+
 </head>
 
 <body onload="startTime()" id="page-top" class="calibri overflow-x-hidden">
@@ -456,8 +457,8 @@
 
             <!-- Nav Item - Messages -->
             <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="modal" data-target="#approvalModal" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-tasks fa-fw text-black"></i>
+              <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#approvalModal" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-tasks fa-fw text-black mr-2"></i><span class="text-black font-weight-bold">Tasks</span>
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter">{{unread_num}}</span>
               </a>
@@ -577,13 +578,13 @@
                   <div class="text-black font-weight-bold">{{companyname}}</div>
                   <!-- <i class="fas fa-chevron-right dropdown-arrow"></i> -->
               </a>
-              <div style="min-width: 400px;" class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up"
+              <div style="min-width: 240px;" class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up"
                   aria-labelledby="navbarDropdownDocs">
-                  <a class="dropdown-item py-3 userbtn" href="#">
-                      <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="users"></i></div>
-                      <div>
-                          <div class="small text-gray-500"><i class="fas fa-user fa-fw"></i>User management</div>
-                          Add and manage users
+                  <a class="dropdown-item py-2 userbtn" href="#">
+                      <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="users"></i></div>
+                      <div class="">
+                          <div class="small text-gray-500 d-inline">User management</div>
+                          <div class="text-black font-weight-bold">Add and manage users</div>
                       </div>
                   </a>
                   <div class="dropdown-divider m-0"></div>
@@ -591,20 +592,20 @@
 
 
                   <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#billModal">
-                      <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="settings"></i></div>
+                      <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="settings"></i></div>
                       <div>
-                          <div class="small text-gray-500"><i class="fas fa-cog fa-fw"></i>Settings</div>
-                          Set app preferences
+                          <div class="small text-gray-500">Settings</div>
+                          <div class="text-black font-weight-bold">Set app preferences</div>
                       </div>
                   </a>
 
                   <div class="dropdown-divider m-0"></div>
                   
                   <a class="dropdown-item py-3" href="#" type="button" data-toggle="modal" data-target="#companyDetailModal">
-                      <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="grid"></i></div>
+                      <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="grid"></i></div>
                       <div>
-                          <div class="small text-gray-500"><i class="fas fa-city fa-fw"></i>Company details</div>
-                          About Company ({{companyname}})
+                          <div class="small text-gray-500">Company details</div>
+                          <div class="text-black font-weight-bold">Set company details</div>
                       </div>
                   </a>
 
@@ -628,7 +629,9 @@
 
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0">
-                  <i class="fas fa-user-circle fa-2x text-success"></i>
+                  <div class="icon-stack bg-gradient-secondary text-white font-weight-bold">{{user_initials}}</div>
+
+                  <!-- <i class="fas fa-user-circle fa-2x text-success"></i> -->
                 </div>
               </a>
               <!-- Dropdown - User Information -->
@@ -659,48 +662,48 @@
                     <div class="divjust-end center-btn">
 
                       <div class="">
-                        <i class="fas fa-fw fa-city text-gray-600 ml-2"></i>
-                        <button class="propbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Properties</button>
+                        <i class="feather-16 text-black" data-feather="grid"></i>
+                        <button class="propbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold">Properties</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-fw fa-home text-gray-600"></i>
-                        <button class="housebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Houses</button>
+                        <i class="feather-16 text-black" data-feather="home"></i>
+                        <button class="housebtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Houses</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-fw fa-users text-gray-600"></i>
-                        <button class="tenantbtn btn btn-outline-info borderless p-0 m-0  font-weight-bold btn-sm">Tenants</button>
+                        <i class="feather-16 text-black" data-feather="users"></i>
+                        <button class="tenantbtn btn btn-outline-info border-none p-0 m-0  font-weight-bold ">Tenants</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-network-wired text-gray-600"></i>
-                        <button class="meterbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Meters</button>
+                        <i class="feather-16 text-black" data-feather="thermometer"></i>
+                        <button class="meterbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Meters</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-fw fa-receipt text-gray-600"></i>
-                        <button class="billbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Invoices</button>
+                        <i class="feather-16 text-black" data-feather="file-text"></i>
+                        <button class="billbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Invoices</button>
                       </div>
                       <div class="dispnone">
                         <i class="fas fa-fw fa-coins text-gray-600"></i>
-                        <button class="paybtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
+                        <button class="paybtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Payments</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-fw fa-coins text-gray-600"></i>
-                        <button class="paybtn2 btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments <span class="badge badge-success badge-counter">new</span></button>
+                        <i class="feather-16 text-black" data-feather="dollar-sign"></i>
+                        <button class="paybtn2 btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Payments</button>
                       </div>
                       <div class="">
-                        <i class="fas fa-fw fa-clipboard text-gray-600"></i>
-                        <button class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Expenses</button>
+                        <i class="feather-16 text-black" data-feather="layers"></i>
+                        <button class="expensebtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Expenses</button>
                       </div>
                       <div class=" dispnone">
                         <i class="fas fa-fw fa-calendar-check text-gray-600"></i>
-                        <button class="subbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Submissions</button>
+                        <button class="subbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Submissions</button>
                       </div>
                       <div class=" dispnone">
                         <i class="fas fa-fw fa-comments text-gray-600"></i>
-                        <button class="reqsbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Requests</button>
+                        <button class="reqsbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Requests</button>
                       </div>
                       <div class="mr-2">
-                        <i class="fas fa-fw fa-poll text-gray-600"></i>
-                        <a class="text-info font-weight-bold btn btn-outline-info btn-sm borderless p-0 m-0" href="{{ url_for('api.reports') }}">Reports</a>
+                        <i class="feather-16 text-black" data-feather="printer"></i>
+                        <a class="text-info font-weight-bold btn btn-outline-info  border-none p-0 m-0" href="{{ url_for('api.reports') }}">Reports</a>
                       </div>
 
                       <!-- <div class="fixed-width-btn">
@@ -1624,14 +1627,14 @@
           </div>
         </div>
           <!-- Global site tag (gtag.js) - Google Analytics -->
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
+          <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7DLP684H1"></script>
           <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
             gtag('config', 'G-R7DLP684H1',{cookie_flags: 'SameSite=None;Secure'});
-          </script>
+          </script> -->
       </footer>
       <!-- End of Footer -->
 
@@ -2143,14 +2146,22 @@
 
   <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180359985-1"></script>
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180359985-1"></script>
 	<script>
 	window.dataLayer = window.dataLayer || [];
 	function gtag(){dataLayer.push(arguments);}
 	gtag('js', new Date());
 
 	gtag('config', 'UA-180359985-1');
-	</script>
+	</script> -->
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> -->
+
+  <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+  
+  <script>
+    feather.replace()
+  </script>
 
 <script>
   const para1 = document.getElementById("rolling");

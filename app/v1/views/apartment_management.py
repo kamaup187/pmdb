@@ -85,7 +85,6 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-
         if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":
 
@@ -262,9 +261,16 @@ class Index(Resource):
             else:
                 logobg = "bg-white"
                 # logobg = "bg-white"
+            try:
+                companyname = company.name.split(" ")[0].title() if len(company.name) > 15 else company.name
+            except:
+                txt = "COMPANY NAME IS FAILING"
+                send_internal_email_notifications(current_user.company.name,txt)
+                companyname = "Company"
 
-            companyname = company.name.split(" ")[0] if len(company.name) > 15 else company.name
             companyname2 = company.name.split(" ")[0]
+
+
 
             if company.name == "Lesama Ltd":
                 shortcode = "Paybill: 969610 Acc: LesamaKe"
@@ -305,6 +311,7 @@ class Index(Resource):
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
                 name=current_user.name,
+                user_initials = get_initials(current_user.name),
                 code=current_user.usercode
             ))
 
@@ -2598,7 +2605,7 @@ class BulkSms(Resource):
             rem_obj.save()
 
             text = f'Bulk sms requested by {prop_obj.company} for {prop_obj.name}'
-            response = sms.send(text, ["+254716674695"],"KIOTAPAY")
+            response = sms.send(text, ["+254716674695"],sender)
 
             userid = current_user.id
 
@@ -2613,7 +2620,7 @@ class BulkSms(Resource):
             else:
                 if prop_obj.reminder_status == "sent":
                     text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
-                    response = sms.send(text, ["+254716674695"],"KIOTAPAY")
+                    response = sms.send(text, ["+254716674695"],sender)
                 else:
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
@@ -2670,9 +2677,11 @@ class TenantSms(Resource):
                         sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,tenant.apartment.id,co.id)
                         sms_obj.save()
 
-                        sender = "KIOTAPAY"
-                        #Once this is done, that's it! We'll handle the rest
-                        response = sms.send(message, recipient,sender)
+                        if sender == "AFRICASTKNG":
+                            response = sms.send(message, recipient)
+                        else:
+                            response = sms.send(message, recipient,sender)
+                            
                         print(response)
                         rem_sms -= 1
                         CompanyOp.set_rem_quota(co,rem_sms)
@@ -3232,7 +3241,7 @@ class SmsDelivery(Resource):
                 # txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref-{reference} Confirmed. \nDear {fname}, we have received sum of Kshs. {payment_obj.amount}. \n{running_bal} \n\n~{str_co}."
                 txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref {reference}, sum of {paid} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
-                response = sms.send(txt, recipient ,"KIOTAPAY")
+                response = sms.send(txt, recipient ,sender)
 
                 resp = response["SMSMessageData"]["Recipients"][0]
                 raw_cost = resp["cost"]
@@ -3342,7 +3351,7 @@ class SmsDelivery(Resource):
                     else:
                         message = f"Failed delivery to {tenant.name} of {tele} ({prop_obj.name}). \n\nDear {fname}, your {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {bankdetails} \n\n ~ {str_co}."
 
-                    response = sms.send(message, recipient, "KIOTAPAY")
+                    response = sms.send(message, recipient, sender)
 
                     resp = response["SMSMessageData"]["Recipients"][0]
                     raw_cost = resp["cost"]
@@ -3396,7 +3405,7 @@ class SmsDelivery(Resource):
                     message = f"Failed delivery to {tenantname} of {tele} ({prop_obj.name}). \n\nDear {tenantname}, \nYour updated {str_month} water bill reading is as follows: \n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill} \n\n~{str_co}"
 
                     # message = f"Dear {tenant.name}, \nYour {str_month} water bill reading is as follows: \n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill} \n\n~{str_co}"
-                    response = sms.send(message, recipient, "KIOTAPAY")
+                    response = sms.send(message, recipient, sender)
 
                     resp = response["SMSMessageData"]["Recipients"][0]
                     raw_cost = resp["cost"]
@@ -5199,7 +5208,7 @@ class ReactToRequest(Resource):
                     try:
                         recipient = [phonenum]
                         message = f"Dear Tenant, We have received request No.{req_id}. The estimated costs are Kshs.{c_estimate}. To cancel this request, log into your account https://kiotapay.com/signin"
-                        sender = "KIOTAPAY"
+                        
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient, sender)
                         print(response)

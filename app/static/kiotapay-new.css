@@ -1622,6 +1622,13 @@ clear: both;
     margin-top: 106px !important;
   }
 
+  .container-fluid-tenant {
+    /* padding: 16px !important; */
+    padding: 16px !important;
+
+    margin-top: 0px !important;
+  }
+
   .report-fluid {
     /* padding: 16px !important; */
     margin-top: 110px !important;
@@ -2073,6 +2080,11 @@ clear: both;
   .container-fluid {
     padding: 16px !important;
     margin-top: 50px !important;
+  }
+
+  .container-fluid-tenant {
+    padding: 16px !important;
+    margin-top: 0px !important;
   }
 
   .min-30 {

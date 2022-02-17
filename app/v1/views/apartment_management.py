@@ -115,8 +115,11 @@ class Index(Resource):
             present_year = time.year
 
         apartment_list = fetch_all_apartments_by_user(current_user)
+        try:
+            reminder = current_user.company.template
+        except:
+            reminder = ""
 
-        reminder = current_user.company.template
         if reminder:
             setreminder = f"{reminder[0].txt}"
         else:

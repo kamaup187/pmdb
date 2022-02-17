@@ -998,7 +998,8 @@ class TenantUserSignUpStageTwo(Resource):
 class LandingPage(Resource):
     def get(self):
         if os.getenv("CURRENT_APP") == "app1":
-            return Response(render_template("landingtwo.html"))
+            # return Response(render_template("landingtwo.html"))
+            return redirect("https://kiotapay.co.ke")
         else:
             return redirect(url_for('api.userlogin'))
  

@@ -992,6 +992,13 @@
   });
 </script>
 
+<script>
+  $('#receiptPaymentModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+
 
 
 
@@ -1186,10 +1193,12 @@
                 $('#paybtn_alt').addClass("dispnone")
                 // $('#pay-date').attr("type","text")
                 $(".reset").click();
-                $(".closemodal").click();
+                // $(".closemodal").click();
+
                 $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
                     $('body').addClass('modal-open');
                 });
+
                 $("#tenantbed").empty();
                 $("#billbreakdown").empty();
                 $("#totaldue").empty();

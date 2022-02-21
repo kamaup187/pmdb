@@ -38,7 +38,7 @@
 
 
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-  <!-- <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script> -->
+  <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
 <!-- 
   <script>
     $( function() {
@@ -77,6 +77,47 @@
       }
     } );
     </script> -->
+
+
+  <script>
+    $( function() {
+      var date = new Date();
+      var dateFormat = "d M, y",
+        from = $( "#from" )
+          .datepicker({
+            dateFormat: "d M, y",
+            format: "dd-M-yyyy",
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 1
+          }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1))
+          .on( "change", function() {
+            to.datepicker( "option", "minDate", getDate( this ) );
+          }),
+          
+        to = $( "#to" ).datepicker({
+          dateFormat: "d M, y",
+          format: "d-M-yyyy",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1
+        }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth() + 1, 0))
+        .on( "change", function() {
+          from.datepicker( "option", "maxDate", getDate( this ) );
+        });
+   
+      function getDate( element ) {
+        var date;
+        try {
+          date = $.datepicker.parseDate( dateFormat, element.value );
+        } catch( error ) {
+          date = null;
+        }
+   
+        return date;
+      }
+    } );
+    </script>
 
 </head>
 

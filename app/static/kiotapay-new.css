@@ -641,6 +641,7 @@ body {
 }
 
 .custom-footer-alt td {
+  font-size: 90% !important;
   padding: 4px !important;
   text-transform: uppercase;
   font-weight: bold;

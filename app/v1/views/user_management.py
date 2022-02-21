@@ -1150,6 +1150,17 @@ class LandlordDemoLogin(Resource):
         login_user(user, remember=remember)
         return redirect(url_for('api.index'))
 
+class Demo(Resource):
+    def get(self):
+        print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
+        response = sms.send("Demo account has been accessed",["+254716674695"],"KIOTAPAY")
+        user = UserOp.fetch_user_by_national_id("12345678")
+        if not user:
+            user = UserOp.fetch_user_by_usercode("3551")
+        remember = False
+        login_user(user, remember=remember)
+        return redirect(url_for('api.index'))
+
 class ReportBug(Resource):
     def get(self):
         return Response(render_template('reportbugs.html'))

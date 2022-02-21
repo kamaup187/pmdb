@@ -178,11 +178,13 @@ api.add_resource(GarbageStatement,"/garbage/statement")
 api.add_resource(InternalSummary,"/internal/summarised")
 api.add_resource(InternalDetail,"/internal/detailed")
 api.add_resource(InternalDetailAlt,"/general/statement")
+api.add_resource(TenantStatement,"/tenant/statement")
+api.add_resource(TenantStatementTwo,"/tenant/statement2")
+
 
 api.add_resource(ExpenseDetail,"/expenses/detailed")
 api.add_resource(SubmissionsReport,"/submissions/report")
 
-api.add_resource(TenantStatement,"/tenant/statement")
 api.add_resource(ArrearsComparison,"/arrears")
 api.add_resource(PaymentsComparison,"/compare/payments")
 

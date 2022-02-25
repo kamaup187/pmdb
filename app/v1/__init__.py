@@ -131,7 +131,8 @@ api.add_resource(CallBackUrlKiotapay,"/kiotapay/payment")
 api.add_resource(CallBackUrlEquity,"/nest/payment")
 api.add_resource(CallBackUrlEquityProd,"/promitech/4012401")
 
-api.add_resource(CallBackUrlCoop,"/v1/cptest")
+api.add_resource(CallBackUrlLes,"/les/45")
+api.add_resource(CallBackUrlTestLes,"/test/les/45")
 
 api.add_resource(ViewHouses, "/view/houses")
 api.add_resource(ViewMeters, "/view/meters")

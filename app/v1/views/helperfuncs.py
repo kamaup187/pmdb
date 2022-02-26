@@ -6,7 +6,10 @@ import xlrd
 import inflect
 import requests
 from natsort import natsorted
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except:
+    HTML = None
 from jinja2 import Environment, FileSystemLoader, Template
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta

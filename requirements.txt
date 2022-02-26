@@ -58,6 +58,8 @@ MarkupSafe==1.1.1
 natsort==7.1.1
 openpyxl==3.0.9
 packaging==21.3
+pangocairocffi==0.6.0
+pangocffi==0.10.0
 pdfkit==0.6.1
 Pillow==9.0.1
 pluggy==1.0.0

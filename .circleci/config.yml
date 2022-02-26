@@ -23,7 +23,7 @@ jobs:
 
     # Service container image
 
-      - image: cimg/postgres:12.0-postgis
+      - image: cimg/postgres:13.6-alpine
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference

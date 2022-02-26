@@ -4,7 +4,11 @@ from dateutil.parser import parse
 
 import requests
 from sqlalchemy import exc
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except:
+    HTML = None
+    
 from jinja2 import Environment, FileSystemLoader, Template
 
 import inflect

@@ -88,7 +88,7 @@ tzlocal==2.1
 urllib3==1.25.10
 vine==5.0.0
 wcwidth==0.2.5
-weasyprint==54.1
+weasyprint==53
 webencodings==0.5.1
 Werkzeug==1.0.1
 wkhtmltopdf==0.2

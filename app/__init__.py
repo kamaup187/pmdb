@@ -25,9 +25,11 @@ api_key = os.getenv('SMS_API_KEY')
 # username = "eapartmentapp"
 # api_key = "d232d0d25c18be83717469452f76e60d7171cf1a5977619e93a23676fe4fc98b"
 
-
-africastalking.initialize(username, api_key)
-sms = africastalking.SMS
+try:
+    africastalking.initialize(username, api_key)
+    sms = africastalking.SMS
+except:
+    sms = None
 
 from .v1.models.datamodel import *
 from .v1 import version_one as v1

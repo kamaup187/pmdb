@@ -962,10 +962,13 @@ class CreateLocation(Resource):
         location_name = request.form.get('region')
         description = request.form.get('description')
 
+        print("yeeeeeeeuuuuuu","name",location_name,"desc",description)
+
         region_obj = LocationOp(location_name,description)
         region_obj.save()
-        flash("region added","success")
-        return redirect(url_for('api.createapartment'))
+
+        
+
 
 class RegisterOwner(Resource):
     """This class registers an owner."""

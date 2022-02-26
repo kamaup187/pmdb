@@ -30,9 +30,12 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL')
 
 configurations = {
     "development":DevelopmentConfig,
     "staging":StagingConfig,
-    "production":ProductionConfig
+    "production":ProductionConfig,
+    "testing":TestingConfig
 }

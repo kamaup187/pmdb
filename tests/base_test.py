@@ -6,8 +6,8 @@ from app import create_app, db
 
 class BaseTest(TestCase):
 
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
-    TESTING = True
+    # SQLALCHEMY_DATABASE_URI = "sqlite://"
+    # TESTING = True
 
     def create_app(self):
 

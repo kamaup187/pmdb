@@ -58,6 +58,7 @@ MarkupSafe==1.1.1
 natsort==7.1.1
 openpyxl==3.0.9
 packaging==21.3
+pangocffi==0.10.0
 pdfkit==0.6.1
 Pillow==9.0.1
 pluggy==1.0.0
@@ -88,7 +89,7 @@ tzlocal==2.1
 urllib3==1.25.10
 vine==5.0.0
 wcwidth==0.2.5
-weasyprint==53
+weasyprint==54.1
 webencodings==0.5.1
 Werkzeug==1.0.1
 wkhtmltopdf==0.2

@@ -1,6 +1,7 @@
 '''Tests product resource.'''
 import json
 from app import db
+from flask_login import login_user,current_user
 from app.v1.models.operations import *
 
 from tests.base_test import BaseTest
@@ -16,13 +17,7 @@ class SomeTest(BaseTest):
         db.session.commit()
 
         self.assertEqual(region.name, "Tumoi")
-        # this works
-        # assert region in db.session
 
-        # response = self.client.get("/")
-
-        # # this raises an AssertionError
-        # assert user in db.session
 
     def test_something2(self):
 
@@ -32,6 +27,43 @@ class SomeTest(BaseTest):
         }
 
         response = self.client.post("/add/location", data=datum)
+        result = response.data
+        self.assertEqual(response.status_code, 200)
+
+    def test_add_tenant(self):
+
+        usergroup = UserGroupOp("Manager","desc")
+        usergroup.save()
+
+        company = CompanyOp("Test Co","","","","","")
+        company.save()
+
+        group1 = CompanyUserGroupOp("Manager","administrator","1")
+        group1.save()
+
+        user = UserOp("John Doe","00","testuser","00","00","e@mail.com","1234","1","1","1")
+        user.save()
+
+        login_user(user, remember=True)
+
+        print("this is logeed in",current_user)
+
+        region = LocationOp("Tumoi","Home")
+        region.save()
+
+        landlord = OwnerOp("Owner",None,None,"N/A","1")
+        landlord.save()
+
+        prop = ApartmentOp("Test Apartment","",region.id,landlord.id,True,"1")
+        prop.save()
+
+        datum = {
+        "propid" : "1",
+        "name" :"Test Tenant",
+        "current_user":current_user.id
+        }
+
+        response = self.client.post("/add/tenant", data=datum)
         result = response.data
         # self.assertEqual(result.status_code, 201)
         self.assertEqual(response.status_code, 200)

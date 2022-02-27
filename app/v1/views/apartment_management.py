@@ -3673,8 +3673,10 @@ class AddTenant(Resource):
 
             migrate = request.form.get('migrate')#checkbox
 
-            created_by =current_user.id
-
+            try:
+                created_by = current_user.id
+            except:
+                created_by = request.form.get('current_user')
 
             try:
                 float_arrears=float(existing_arrears)
@@ -3723,9 +3725,8 @@ class AddTenant(Resource):
 
                 house_id = house_obj.id
                 tenant_id = tenant_obj.id
-                user_id = current_user.id
 
-                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,created_by,description=None)
                 allocate_tenant_obj.save()
                 TenantOp.update_status(tenant_obj,"Resident")
                 if bool_migrate:

@@ -3457,3 +3457,41 @@ select {
   width: 32px;
   height: 32px;
   }
+
+
+
+  /* .expand_button {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+} */
+
+  .e-button {
+    color: #fff;
+    border-radius: 6px;
+    background-color: rgb(70, 202, 235);
+    line-height: 12px;
+    /* padding-left: 10px;
+    padding-right: 10px; */
+    position: relative;
+    /* float: left; */
+    overflow: hidden;
+    max-width: 30px;
+    -webkit-transition: max-width 0.3s ease-in-out;
+    -moz-transition: max-width 0.3s ease-in-out;
+    -o-transition: max-width 0.3s ease-in-out;
+    transition: max-width 0.3s linear
+}
+
+.e-button-text {
+    display: block;
+    white-space: nowrap;
+    color: #fff
+}
+
+.e-button:hover {
+    background-color: rgb(23, 136, 151);
+    color: #fff;
+    max-width: 280px
+}

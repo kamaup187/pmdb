@@ -1,68 +1,103 @@
-{% extends 'reportbase.html' %}
+{% extends 'reports.html' %}
 
-{% block content %}
+{% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} detailed landlord statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
 <div class="row">
-    <div class="col-lg-6 offset-lg-3 no-padding">
+    <div class="col-lg-12">
         <div class="formwrapper">
             <div class="card shadow">
               <!-- Card Header - Accordion -->
-              <div class="divjust-end topbar-bg">
+              <div class="divjust-end bg-white underline">
                 
-                <a href="#collapseCardExample" class="d-block card-expand-form center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                  <div class="font-weight-bold text-white small card-header-form">
-                    <span class="mr-4">Generate report</span>
-                    <span><i class="fas fa-angle-down"></i></span>
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-4 font-weight-bold text-125 text-uppercase">Landlord statement</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
                   </div>
                 </a>
-                <a class="text-white close-report" href="{{ url_for('api.reports') }}"><button type="button" class="bg-gradient-danger close-req-btn text-white small">Close</button></a>
+
+                <div>
+                  <a class="text-white close-report" href="{{ url_for('api.reports') }}">
+                    <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
+                  </a>
+                </div>
+                
+
               </div>
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body">
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                    {% for category, message in messages %}
-                        <div id="alert-msgs"class="notification {{ category }} alert-dismissible fade show" role="alert">
-                            <span>{{ message }}</span>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+
+                  <div class="row fixed-ba p-2">
+
+                    <div class="col-12 no-padding">
+                      <div class="card shadow h-0 py-0">
+                        <div class="card-body bg-white report-card-padding">
+                              <div class="center-btn">
+          
+                                <div class="selectbtn" type="button" data-toggle="modal" data-target="#fetchActivesModal">
+                                  <i class="feather-16 text-black" data-feather="menu"></i>
+                                  <button class="btn borderless p-0 m-0 font-weight-bold text-black">
+                                    Select property
+                                  </button>
+                                </div>
+                  
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal fade" id="fetchActivesModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body pt-0">
+                          <div class="media mb-2">
+                            <div class="media-body">
+                              <div class="position-relative">
+                                <div class="card-body modal-forms">
+                                  <div class="center-btn mb-3 mt-3">
+                                  </div>
+                
+                                  <form class="row" method="GET" action="/external/detailed">
+
+                                    <div class="col-lg-6 form-group mb-2">
+                                      <label class="text-danger font-weight-bold">Select property:</label>
+            
+                                        <select name="prop" class="select-css" id ="prop" required>
+                                          <option disabled selected value> -- none selected -- </option>
+                                          {% for o in props %}
+                                          <option value="{{ o }}">{{ o }}</option>
+                                          {% endfor %}
+                                        </select>
+                                    </div>
+            
+                                    <div class="col-lg-6 form-group">
+                                      <label class="text-danger font-weight-bold">Select month:</label>
+                                      <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                                        <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" readonly />
+                                        <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                                      </div>
+                                    </div>
+                                      <div class="col-12 center-btn">
+                                        <button type="submit" class="btn btn-light mt-2 text-black font-weight-bold">View</button>
+                                      </div>
+            
+                                </form>
+                      
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                    <form method="GET" action="/external/detailed">
-                        <div class="form-group">
-                            <select name="selected_apartment" class="form-control" id ="selected_apartment" required>
-                            <option disabled selected value> -- Select apartment -- </option>
-                            {% for o in apartment_list %}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                          <select name="selected_year" class="form-control" id ="url-box" >
-                          <option disabled selected value> -- Year (Default Current year) -- </option>
-                          {% for o in year_list %}
-                          <option value="{{ o }}">{{ o }}</option>
-                          {% endfor %}
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <select name="selected_month" class="form-control" id ="url-box" >
-                          <option disabled selected value> -- Month (Default Current month) -- </option>
-                          {% for o in month_list %}
-                          <option value="{{ o }}">{{ o }}</option>
-                          {% endfor %}
-                          </select>
-                        </div>
-                        <button class="btn btn-block btn-primary">View</button>
-                    </form>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -72,24 +107,25 @@
   <!-- <div id="detailedreport" class="dispnone col-lg-12 no-padding"></div> -->
   <div class="col-lg-12 no-padding">
     <div class="card shadow mb-0">
-      <!-- Card Header - Accordion -->
-      <div  class="d-block card-header card-header-report card-bg">
-        <div class="d-sm-flex align-items-center divjust-end mb-0 m-0 font-weight-bold text-white">
 
-          <div class="smallify">
-            <div class=""><i class="fas fa-fw fa-calendar-check mr-2 mobile-malaysian"></i>Detailed Landlord statement</div>
-          </div>
-          {%if bills%}
-          <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" data-toggle="modal" data-target="#downloadModal"><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
-          {%endif%}
-
-        </div>
-      </div>
       <!-- Card Content - Collapse -->
       <div class="collapse show" id="collapseCardExample2">
+        {% if prop%}
         <div class="card-body pt-0">
+          <div class="text-right mt-1">
+            <button class="btn btn-success btn-sm shadow" data-toggle="modal" data-target="#downloadModal">
+              <i class="text-white feather-16 font-weight-bold" data-feather="download"></i><span class="ml-1 mobile-malaysian text-white">download</span>
+            </button>
+          </div>
+
           <div class="center-btn">
-            <h5 class="font-weight-bold underline">{{prop}} <span style="font-style: oblique;" class="text-primary mr-1">{{timeline}}</span>Landlord detailed statement</h5>
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="letterhead"/>
+          </div>
+
+          <div class="center-btn mt-2 overline">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-black"><span class="underline mt-3">LANDLORD STATEMENT FOR {{timeline}}</span></span>
           </div>
                     
           <div class="table-responsive">
@@ -251,6 +287,7 @@
                 </div>
           </div>
         </div>
+        {% endif%}
       </div>
     </div>
   </div>
@@ -495,6 +532,8 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
     $('#dataTable').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,

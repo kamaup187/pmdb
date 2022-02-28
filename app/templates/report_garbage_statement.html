@@ -1,6 +1,6 @@
-{% extends 'reportbase.html' %}
+{% extends 'reports.html' %}
 
-{% block content %}
+{% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} garbage statement.pdf</span>
@@ -392,6 +392,8 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
     $('#dataTable').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,

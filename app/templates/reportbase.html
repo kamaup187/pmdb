@@ -86,10 +86,13 @@
         from = $( "#from" )
           .datepicker({
             dateFormat: "d M, y",
-            format: "dd-M-yyyy",
+            format: "MM-yyyy",
             defaultDate: "+1w",
             changeMonth: true,
-            numberOfMonths: 1
+            numberOfMonths: 1,
+            startView: "months", 
+            minViewMode: "months",
+            autoclose: true
           }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1))
           .on( "change", function() {
             to.datepicker( "option", "minDate", getDate( this ) );
@@ -97,10 +100,13 @@
           
         to = $( "#to" ).datepicker({
           dateFormat: "d M, y",
-          format: "d-M-yyyy",
+          format: "MM-yyyy",
           defaultDate: "+1w",
           changeMonth: true,
-          numberOfMonths: 1
+          numberOfMonths: 1,
+          startView: "months", 
+          minViewMode: "months",
+          autoclose: true, 
         }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth() + 1, 0))
         .on( "change", function() {
           from.datepicker( "option", "maxDate", getDate( this ) );
@@ -345,7 +351,7 @@
             <div class="col-xl-12 p-0 mobile-malaysian">
               <div class="card shadow h-0 py-0">
                 <div class="card-body bg-white report-card-padding">
-                      <div class="divjust-start center-btn">
+                      <div class="divjust-en divbg center-btn">
   
                         <!-- <div class="fixed-width-btn">
                           <i class="fas fa-fw fa-city text-gray-600"></i>
@@ -366,30 +372,41 @@
                         <div class="fixed-width-btn">
                           <i class="fas fa-fw fa-receipt text-gray-600"></i>
                           <button class="billbtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Invoices</button>
-                        </div>
-                        <div class="fixed-width-btn">
-                          <i class="fas fa-fw fa-coins text-gray-600"></i>
-                          <button class="paybtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
-                        </div>
-                        <div class="fixed-width-btn">
-                          <i class="fas fa-fw fa-coins text-gray-600"></i>
-                          <button class="paybtn2 btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments <span class="badge badge-success badge-counter">beta</span></button>
-                        </div>
-                        <div class="fixed-width-btn">
-                          <i class="fas fa-fw fa-clipboard text-gray-600"></i>
-                          <button class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Expenses</button>
-                        </div> -->
-                        <span class="fixed-width-bt mr-2">
-                          <button id="landlord-statements" class="btn btn-outline-info btn-info text-white borderless p-0 m-0 font-weight-bold btn-sm">Landlord statements</button>
+                        </div>-->
+
+
+                        <span class="mr-2">
+                          <button id="landlord-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Landlord statements</button>
                         </span>
-                        <div class="fixed-width-bt mr-2">
+                        <div class="mr-2">
                           |
                           <button id="office-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Office statements</button>
                         </div>
-                        <div class="fixed-width-bt">
+                        <div class="mr-2">
                           |
                           <button id="tenant-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Tenant statements</button>
                         </div>
+                        <div class="mr-2">
+                          |
+                          <button id="payments-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Payments reports</button>
+                        </div>
+                        <div class="mr-2">
+                          |
+                          <button id="property-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Property listing</button>
+                        </div>
+                        <div class="mr-2">
+                          |
+                          <button id="readings-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Readings reports</button>
+                        </div>
+                        <div class="mr-2">
+                          |
+                          <button id="expenses-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Expenses reports</button>
+                        </div>
+                        <div class="mr-2">
+                          |
+                          <button id="deposit-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Deposit reports</button>
+                        </div>
+
 
           
                       </div>
@@ -593,6 +610,7 @@
 <script>
   feather.replace()
 </script>
+
 
 
 <script>
@@ -996,33 +1014,211 @@ $("#export-xls-btn").click(function(){
 <script>
 
   $("#landlord-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
     $("#landlord_statements").removeClass("dispnone")
     $("#office-statements").removeClass("btn-info text-white")
     $("#tenant-statements").removeClass("btn-info text-white")
 
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+
     $("#landlord-statements").addClass("btn-info text-white")
     $("#office_statements").addClass("dispnone")
     $("#tenant_statements").addClass("dispnone")
+
+    $("#payments_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
   })
 
+
+
+
+
+
   $("#office-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
     $("#office_statements").removeClass("dispnone")
     $("#landlord-statements").removeClass("btn-info text-white")
     $("#tenant-statements").removeClass("btn-info text-white")
 
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
     $("#office-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
     $("#tenant_statements").addClass("dispnone")
+
+    $("#payments_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
   })
 
+
+
+
+
   $("#tenant-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
     $("#tenant_statements").removeClass("dispnone")
     $("#office-statements").removeClass("btn-info text-white")
     $("#landlord-statements").removeClass("btn-info text-white")
 
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
     $("#tenant-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
     $("#office_statements").addClass("dispnone")
+
+    $("#payments_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+  })
+
+
+
+
+  $("#payments-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#payments_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+    $("#payments-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+  })
+
+
+  $("#property-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#property_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+    $("#property-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#payments_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+  }) 
+  
+  
+
+  $("#readings-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#readings_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+    $("#readings-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#payments_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+  })
+
+
+  $("#expenses-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#expenses_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+    $("#expenses-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#payments_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+  })
+
+
+  $("#deposit-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#deposit_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+
+    $("#deposit-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#payments_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
   })
 </script>
 

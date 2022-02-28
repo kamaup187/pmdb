@@ -224,54 +224,34 @@ class Settings(Resource):
         return redirect(url_for('api.settings'))
 
 
-class MonthlyStatement(Resource):
+class LandlordProfitAndLossSummary(Resource):
     """report class"""
     @login_required
     def get(self):
-        month_list = generate_month_list()
-        year_list = [2020,2021,2022,2023,2024]
-        present_year = datetime.datetime.now().year
-        present_month = datetime.datetime.now().month
-        now_month = get_str_month(present_month)
-        apartments = fetch_all_apartments_by_user(current_user)
 
-        return Response(render_template(
-            'report_monthly_statement.html',
-            props=apartments,
-            tenantlist=[],
-            month_list=month_list,
-            year_list=year_list,
-            yearnow=present_year,
-            monthnow=now_month,
-            suggestions=generate_suggestions(apartments),
-            logopath=logo(current_user.company)[0],
-            mobilelogopath=logo(current_user.company)[1],
-            name=current_user.name
-        ))
+        prop = request.args.get('prop')
+        selected_month = request.args.get('selected_month')
 
-    @login_required
-    def post(self):
+        if not prop:
 
-        month_list = generate_month_list()
-        year_list = [2020,2021,2022,2023,2024]
-        present_year = datetime.datetime.now().year
-        present_month = datetime.datetime.now().month
-        now_month = get_str_month(present_month)
-        apartments = fetch_all_apartments_by_user(current_user)
+            apartments = fetch_all_apartments_by_user(current_user)
 
-        prop = request.form.get("prop")
-        year = request.form.get("year")
-        month = request.form.get("month")
+            return Response(render_template(
+                'report_landlord_summary.html',
+                props=apartments,
+                tenantlist=[],
+                suggestions=generate_suggestions(apartments),
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name
+            ))
 
-        if not year:
-            int_year = present_year
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
         else:
-            int_year = int(year)
+            target_period = datetime.datetime.now()
 
-        if not month:
-            int_month = present_month
-        else:
-            int_month = get_numeric_month(month)
 
         prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
         db.session.expire(prop_obj)
@@ -283,31 +263,30 @@ class MonthlyStatement(Resource):
         deposit_collection = []
 
         for bill in monthly_bills:
-            if bill.year == int_year and bill.month == int_month:
-
+            if bill.month == target_period.month and bill.year == target_period.year:
                 deposit = bill.deposit if bill.deposit else 0.0
-                rent_collection.append(bill.rent)
+                rent_collection.append(bill.rent_paid)
                 deposit_collection.append(deposit)
 
         raw_charges = prop_obj.charges
         charges = []
         echarges = []
-        for c in raw_charges:
-            if c.charge_type_id == 2:
-                charges.append(c)
-            if c.charge_type_id == 5:
-                echarges.append(c)
+        # for c in raw_charges:
+        #     if c.charge_type_id == 2:
+        #         charges.append(c)
+        #     if c.charge_type_id == 5:
+        #         echarges.append(c)
 
-        for waterbill in charges:
-            if waterbill.date.year == int_year and waterbill.date.month == int_month:
-                # if waterbill.house_id != 37: #TO DO
-                water_collection_member = waterbill.amount
-                water_collection.append(water_collection_member)
+        # for waterbill in charges:
+        #     if waterbill.date.year == target_period.year and waterbill.date.month == target_period.month:
+        #         # if waterbill.house_id != 37: #TO DO
+        #         water_collection_member = waterbill.amount
+        #         water_collection.append(water_collection_member)
 
-        for ebill in echarges:
-            if ebill.date.year == int_year and ebill.date.month == int_month:
-                e_collection_member = ebill.amount
-                e_collection.append(e_collection_member)
+        # for ebill in echarges:
+        #     if ebill.date.year == target_period.year and ebill.date.month == target_period.month:
+        #         e_collection_member = ebill.amount
+        #         e_collection.append(e_collection_member)
 
         renttotal = sum_values(rent_collection)
         watertotal = sum_values(water_collection)
@@ -319,7 +298,7 @@ class MonthlyStatement(Resource):
         expenses = prop_obj.expenses
         current_month_expenses = []
         for exp in expenses:
-            if exp.date.month == int_month and exp.status == "completed":
+            if exp.date.month == target_period.month and exp.status == "completed":
                 current_month_expenses.append(exp)
 
         tokenamount = 0.0
@@ -381,8 +360,199 @@ class MonthlyStatement(Resource):
         debittotal  = management_fee+tokenamount+waterbillamount+salaries+electricityservice+plumbingservice+miscellaneous+depositrefund+paint
 
         nettotal = credittotal-debittotal
-        month=get_str_month(int_month)
-        timeline = f"{month} - ({int_year})"
+        month=get_str_month(target_period.month)
+
+        timeline = f"{month.upper()} - {target_period.year}"
+
+        apartments = fetch_all_apartments_by_user(current_user)
+
+
+        # stringwater = (f"{waterbillamount:,}") if waterbillamount > 0 else None
+        # stringelec = (f"{electricityservice:,}") if electricityservice > 0 else None
+
+        # elec = True if current_user.company == "Rikena Property Solutions" else False
+        # watershow = False if prop_obj.name == "Joseph Muraya Apartments" else True
+
+        return Response(render_template(
+            'report_landlord_summary.html',
+            tenantlist=[],
+            bills=bills,
+            renttotal=(f"{renttotal:,}"),
+            watertotal=string_formatter(watertotal),
+            electricitytotal=string_formatter(electricitytotal),
+            depositcredit=string_formatter(depositcredit),
+            credittotal=(f"{credittotal:,}"),
+            managementfee=string_formatter(management_fee),
+            commission_percentage=commission_percentage,
+            tokenbill=string_formatter(tokenamount),
+            waterbill=string_formatter(waterbillamount),
+            salaries=string_formatter(salaries),
+            electricityservice=string_formatter(electricityservice),
+            plumbingservice=string_formatter(plumbingservice),
+            plumbing_str_store=string_formatter_alt(plumbing_str_store),
+            depositrefund_str_store=string_formatter_alt(depositrefund_str_store),
+            electricity_str_store=string_formatter_alt(electricity_str_store),
+            paint_str_store=string_formatter_alt(paint_str_store),
+            paint=string_formatter(paint),
+            depositrefund=string_formatter(depositrefund),
+            otherexpenses=(f"{miscellaneous:,}"),
+            debittotal=(f"{debittotal:,.2f}"),
+            netamount=(f"{nettotal:,.2f}"),
+            props = apartments,
+            prop=prop,
+            timeline=timeline,
+            suggestions=generate_suggestions(apartments),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            name=current_user.name
+        )) 
+
+
+class MonthlyStatement(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+        selected_month = request.args.get('selected_month')
+
+        if not prop:
+
+            apartments = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_monthly_statement.html',
+                props=apartments,
+                tenantlist=[],
+                suggestions=generate_suggestions(apartments),
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name
+            ))
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+
+        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        db.session.expire(prop_obj)
+        monthly_bills = prop_obj.monthlybills
+
+        rent_collection = []
+        water_collection = []
+        e_collection = []
+        deposit_collection = []
+
+        for bill in monthly_bills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                deposit = bill.deposit if bill.deposit else 0.0
+                rent_collection.append(bill.rent)
+                deposit_collection.append(deposit)
+
+        raw_charges = prop_obj.charges
+        charges = []
+        echarges = []
+        for c in raw_charges:
+            if c.charge_type_id == 2:
+                charges.append(c)
+            if c.charge_type_id == 5:
+                echarges.append(c)
+
+        for waterbill in charges:
+            if waterbill.date.year == target_period.year and waterbill.date.month == target_period.month:
+                # if waterbill.house_id != 37: #TO DO
+                water_collection_member = waterbill.amount
+                water_collection.append(water_collection_member)
+
+        for ebill in echarges:
+            if ebill.date.year == target_period.year and ebill.date.month == target_period.month:
+                e_collection_member = ebill.amount
+                e_collection.append(e_collection_member)
+
+        renttotal = sum_values(rent_collection)
+        watertotal = sum_values(water_collection)
+        electricitytotal = sum_values(e_collection)
+        depositcredit = sum_values(deposit_collection)
+
+        credittotal = renttotal + watertotal + electricitytotal + depositcredit
+
+        expenses = prop_obj.expenses
+        current_month_expenses = []
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.status == "completed":
+                current_month_expenses.append(exp)
+
+        tokenamount = 0.0
+        waterbillamount = 0.0
+        salaries = 0.0
+        miscellaneous = 0.0
+        electricityservice = 0.0
+        plumbingservice = 0.0
+        depositrefund = 0.0
+        paint = 0.0
+        bills = []
+        electricity_str_store = ""
+        plumbing_str_store = ""
+        paint_str_store = ""
+        depositrefund_str_store = ""
+
+
+        for item in current_month_expenses:
+            if item.expense_type == "token":
+                tokenamount += item.amount
+                
+            elif item.expense_type == "water_bill":
+                waterbillamount += item.amount
+            elif item.expense_type == "salaries":
+                salaries += item.amount
+            elif item.expense_type == "deposit_refund":
+                depositrefund += item.amount
+                depositrefund_str_store = depositrefund_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "electricity_service":
+                electricityservice += item.amount
+                electricity_str_store = electricity_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "plumbing_service":
+                plumbingservice += item.amount
+                plumbing_str_store = plumbing_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            elif item.expense_type == "paint":
+                paint += item.amount
+                paint_str_store = paint_str_store + " " + item.house if item.house and not item.house == "-" else ""
+            else:
+                bill = {
+                    "name":item.name,
+                    "amount":item.amount,
+                    "targethouse":" - " + item.house if item.house and not item.house == "-" else ""
+                }
+                bills.append(bill)
+                miscellaneous += item.amount
+
+        commission = prop_obj.commission if prop_obj.commission else 0.0
+        management_fee = renttotal*commission*0.01
+        if commission:
+            commission_percentage = f"({commission} %)"
+        else:
+            commission_percentage = ""
+
+        if not commission:
+            commission = prop_obj.int_commission if prop_obj.int_commission else 0.0
+            management_fee = commission
+       
+
+        debittotal  = management_fee+tokenamount+waterbillamount+salaries+electricityservice+plumbingservice+miscellaneous+depositrefund+paint
+
+        nettotal = credittotal-debittotal
+        month=get_str_month(target_period.month)
+
+        timeline = f"{month.upper()} - {target_period.year}"
+
+        apartments = fetch_all_apartments_by_user(current_user)
+
 
         # stringwater = (f"{waterbillamount:,}") if waterbillamount > 0 else None
         # stringelec = (f"{electricityservice:,}") if electricityservice > 0 else None
@@ -417,12 +587,7 @@ class MonthlyStatement(Resource):
             netamount=(f"{nettotal:,.2f}"),
             props = apartments,
             prop=prop,
-            month_list=month_list,
-            year_list=year_list,
-            year=year,
             timeline=timeline,
-            yearnow=present_year,
-            monthnow=now_month,
             suggestions=generate_suggestions(apartments),
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
@@ -431,7 +596,6 @@ class MonthlyStatement(Resource):
             company=current_user.company,
             name=current_user.name
         )) 
-
 
 class SummarisedCombinedBill(Resource):
     """report class"""
@@ -1673,7 +1837,6 @@ class RentStatement(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
-        selected_year = request.args.get("selected_year")
 
 
         if not selected_apartment:
@@ -2239,9 +2402,8 @@ class ListedProperties(Resource):
 class ExternalDetail(Resource):
     @login_required
     def get(self):
-        selected_apartment = request.args.get("selected_apartment")
-        selected_month = request.args.get("selected_month")
-        selected_year = request.args.get("selected_year")
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
 
 
         if not selected_apartment:
@@ -2254,7 +2416,7 @@ class ExternalDetail(Resource):
                 'report_external_detailed.html',
                 tenantlist=[],
                 prop_obj=None,
-                apartment_list=apartment_list,
+                props=apartment_list,
                 month_list=month_list,
                 year_list=[2020,2021,2022,2024],
                 suggestions=suggestions,
@@ -2263,19 +2425,12 @@ class ExternalDetail(Resource):
                 name=current_user.name))
 
 
-        present_year = datetime.datetime.now().year
-
         if selected_month:
-            month =  get_numeric_month(selected_month)
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
         else:
-            month = datetime.datetime.now().month
-
-        if not selected_year:
-            selected_year =  present_year
-        else:
-            selected_year = int(selected_year)
+            target_period = datetime.datetime.now()
             
-        str_month = get_str_month(month)
         ##################################################################################################
         current_month_bills = []
         current_month_summaries = []
@@ -2301,11 +2456,11 @@ class ExternalDetail(Resource):
         landlordsummaries = apartment_obj.landlordsummaries
         ###################################################################################################
         for bill in monthlybills:
-            if bill.month == month and bill.year == selected_year:
+            if bill.month == target_period.month and bill.year == target_period.year:
                 house_ids.append(bill.house_id)
                 current_month_bills.append(bill)
         for bill in landlordsummaries:
-            if bill.month == month and bill.year == selected_year:
+            if bill.month == target_period.month and bill.year == target_period.year:
                 current_month_summaries.append(bill)
                 summary_house_ids.append(bill.house_id)
         ###################################################################################################
@@ -2323,7 +2478,7 @@ class ExternalDetail(Resource):
                     paid = bill_value
                     bcf = 0
                     
-                summary = LandlordSummaryOp(selected_year,month,bill.rent,bill.water,bill.garbage,bill.security,bill.electricity,bill.deposit,0,bill_value,paid,bcf,bill.apartment_id,bill.house_id,bill.tenant_id,bill.user_id)
+                summary = LandlordSummaryOp(target_period.year,target_period.month,bill.rent,bill.water,bill.garbage,bill.security,bill.electricity,bill.deposit,0,bill_value,paid,bcf,bill.apartment_id,bill.house_id,bill.tenant_id,bill.user_id)
                 summary.save()
                 current_month_summaries.append(summary)
         else:
@@ -2347,7 +2502,7 @@ class ExternalDetail(Resource):
                             paid = bill_value
                             bcf = 0
                             
-                        summary = LandlordSummaryOp(selected_year,month,target_bill.rent,target_bill.water,target_bill.garbage,target_bill.security,target_bill.electricity,target_bill.deposit,0,bill_value,paid,bcf,target_bill.apartment_id,target_bill.house_id,target_bill.tenant_id,target_bill.user_id)
+                        summary = LandlordSummaryOp(target_period.year,target_period.month,target_bill.rent,target_bill.water,target_bill.garbage,target_bill.security,target_bill.electricity,target_bill.deposit,0,bill_value,paid,bcf,target_bill.apartment_id,target_bill.house_id,target_bill.tenant_id,target_bill.user_id)
                         summary.save()
                         current_month_summaries.append(summary)
 
@@ -2390,7 +2545,7 @@ class ExternalDetail(Resource):
             all_charges = vac.charges
             water_charge = 0.0
             for charge in all_charges:
-                if charge.date.month == month and charge.date.year == selected_year and charge.charge_type_id == 2:
+                if charge.date.month == target_period.month and charge.date.year == target_period.year and charge.charge_type_id == 2:
                     water_charge = charge.amount
 
             # if apartment_obj.id in [3,4,33,34]:
@@ -2491,7 +2646,7 @@ class ExternalDetail(Resource):
         expenses_amount = 0.0
 
         for exp in expenses:
-            if exp.date.month == month and exp.date.year == selected_year and exp.status == "completed":
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed":
                 current_month_expenses.append(exp)
 
         for item in current_month_expenses:
@@ -2548,7 +2703,9 @@ class ExternalDetail(Resource):
 
         apartment_list = fetch_all_apartments_by_user(current_user)
         month_list = generate_month_list()
-        timeline = f"{str_month} - ({selected_year})"
+        str_month = get_str_month(target_period.month)
+
+        timeline = f"{str_month} - ({target_period.year})"
 
         
         fieldshow_sec = "dispnone" if not totalsecurity else ""
@@ -2575,8 +2732,6 @@ class ExternalDetail(Resource):
             fieldshow_dep=fieldshow_dep,
             fieldshow_loan=fieldshow_loan,
             tenantlist=[],
-            year=selected_year,
-            string_month = str_month,
             timeline = timeline,
             billtotal=billtotal,
             paidtotal=paidtotal,
@@ -2596,10 +2751,7 @@ class ExternalDetail(Resource):
             expenselist=expense_list,
             bills=detailed_bills,
             paging="landscape",
-            apartment_list=apartment_list,
-            month_list=month_list,
-            year_list=[2020,2021,2022,2024],
-            apartment_name=selected_apartment,
+            props=apartment_list,
             suggestions=suggestions,
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
@@ -3086,13 +3238,15 @@ class TenantStatementTwo(Resource):
         start = request.args.get("from")
         stop = request.args.get("to")
 
-        begin = date_formatter(start)
-        end = date_formatter(stop)
+        begin = date_formatter_alt(start)
+        end = date_formatter_alt(stop)
 
         begin_date = parse(begin)
         end_date = parse(end)
 
         date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
+
+        print("RANGES",date_range)
 
         raw_tenant = request.args.get("selected_tenant")
 
@@ -3115,24 +3269,59 @@ class TenantStatementTwo(Resource):
             
             range_period_data = []
             for i in tenant_obj.monthly_charges:
-                if i.date.date() in date_range:
+                period_of_billing = generate_date(i.month,i.year)
+                # print("PERIOD",period_of_billing)
+                if period_of_billing.date() in date_range:
+                    print("PERIOD",period_of_billing)
                     range_period_data.append(i)
 
 
             main = []
 
             for item in range_period_data:
-                print(item.month)
                 cb = 0.0
+
+                prev_num = item.month -1 if item != 1 else 12
+                month = get_str_month(item.month)
+                prev_month = get_str_month(prev_num)
+
+                date = item.date.strftime("%d/%b/%y")
+
+                if item.arrears > 0:
+                    cb += item.arrears
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.arrears,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
                                 
                 if item.rent:
                     cb += item.rent
                     datadict = {
-                        "date":item.date.strftime("%d/%b/%y"),
-                        "desc":"Rent invoice",
-                        "ref":f'inv#{item.id}',
+                        "month":month,
+                        "date":date,
+                        "desc":f"{month} rent",
+                        "ref":f'invoice#{item.id}',
                         "debit":item.rent,
                         "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.balance < 0:
+                    cb += item.balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":"Advance payment",
+                        "ref":f'bbf#{item.id}',
+                        "debit":"-",
+                        "credit":item.balance,
                         "balance":cb
                     }
                     main.append(datadict)
@@ -3140,9 +3329,10 @@ class TenantStatementTwo(Resource):
                 if item.water:
                     cb += item.water
                     datadict = {
-                        "date":item.date.strftime("%d/%b/%y"),
-                        "desc":"Water bill",
-                        "ref":f'inv#{item.id}',
+                        "month":month,
+                        "date":date,
+                        "desc":f"{month} water bill",
+                        "ref":f'invoice#{item.id}',
                         "debit":item.water,
                         "credit":"-",
                         "balance":cb
@@ -3152,9 +3342,10 @@ class TenantStatementTwo(Resource):
                 if item.garbage:
                     cb += item.garbage
                     datadict = {
-                        "date":item.date.strftime("%d/%b/%y"),
+                        "month":month,
+                        "date":date,
                         "desc":"Garbage fee",
-                        "ref":f'inv#{item.id}',
+                        "ref":f'invoice#{item.id}',
                         "debit":item.garbage,
                         "credit":"-",
                         "balance":cb
@@ -3164,9 +3355,10 @@ class TenantStatementTwo(Resource):
                 if item.security:
                     cb += item.security
                     datadict = {
-                        "date":item.date.strftime("%d/%b/%y"),
+                        "month":month,
+                        "date":date,
                         "desc":"Security fee",
-                        "ref":f'inv#{item.id}',
+                        "ref":f'invoice#{item.id}',
                         "debit":item.security,
                         "credit":"-",
                         "balance":cb
@@ -3176,83 +3368,39 @@ class TenantStatementTwo(Resource):
                 if item.maintenance:
                     cb += item.maintenance
                     datadict = {
-                        "date":item.date.strftime("%d/%b/%y"),
+                        "month":month,
+                        "date":date,
                         "desc":"Service charge",
-                        "ref":f'inv#{item.id}',
+                        "ref":f'invoice#{item.id}',
                         "debit":item.maintenance,
                         "credit":"-",
                         "balance":cb
                     }
                     main.append(datadict)
 
-
-
                 that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
                 for x in that_month_payments:
+                    paydate = x.pay_date.strftime("%d/%b/%y")
 
-                    if x.rent_paid:
-                        cb -= x.rent_paid
-                        datadict = {
-                            "date":x.pay_date.strftime("%d/%b/%y"),
-                            "desc":"Rent payment",
-                            "ref":f'{x.rand_id} #{x.id}',
-                            "debit":"-",
-                            "credit":x.rent_paid,
-                            "balance":cb
-                        }
-                        main.append(datadict)
+                    ref = f'#{x.id} [{x.ref_number}]',
 
-                    if x.water_paid:
-                        cb -= x.water_paid
-                        datadict = {
-                            "date":x.pay_date.strftime("%d/%b/%y"),
-                            "desc":"Water bill payment",
-                            "ref":f'{x.rand_id} #{x.id}',
-                            "debit":"-",
-                            "credit":x.water_paid,
-                            "balance":cb
-                        }
-                        main.append(datadict)
+                    cb -= x.amount
+                    datadict = {
+                        "month":month,
+                        "date":paydate,
+                        "desc":f"{x.payment_name} payments",
+                        "ref":ref,
+                        "debit":"-",
+                        "credit":x.amount,
+                        "balance":cb
+                    }
+                    main.append(datadict)
 
-                    if x.garbage_paid:
-                        cb -= x.garbage_paid
-                        datadict = {
-                            "date":x.pay_date.strftime("%d/%b/%y"),
-                            "desc":"Garbage fee payment",
-                            "ref":f'{x.rand_id} #{x.id}',
-                            "debit":"-",
-                            "credit":x.garbage_paid,
-                            "balance":cb
-                        }
-                        main.append(datadict)
-
-                    if x.security_paid:
-                        cb -= x.security_paid
-                        datadict = {
-                            "date":x.pay_date.strftime("%d/%b/%y"),
-                            "desc":"Security fee payment",
-                            "ref":f'{x.rand_id} #{x.id}',
-                            "debit":"-",
-                            "credit":x.security_paid,
-                            "balance":cb
-                        }
-                        main.append(datadict)
-
-                    if x.maintenance_paid:
-                        cb -= x.maintenance_paid
-                        datadict = {
-                            "date":x.pay_date.strftime("%d/%b/%y"),
-                            "desc":"Service fee payment",
-                            "ref":f'{x.rand_id} #{x.id}',
-                            "debit":"-",
-                            "credit":x.maintenance_paid,
-                            "balance":cb
-                        }
-                        main.append(datadict)
-
+                period = generate_date(item.month,item.year)
 
                 datadict = {
-                    "date":f'<span class="font-weight-bold">End of {item.date.strftime("%B/%y")}</span>',
+                    "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
+                    "date":"",
                     "desc":"",
                     "ref":"",
                     "debit":"",
@@ -3266,13 +3414,349 @@ class TenantStatementTwo(Resource):
                   
 
         ########################################################
-        timeline = f'{begin_date.strftime("%d/%b/%y")} to {end_date.strftime("%d/%b/%y")}'
+        timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
         ########################################################
 
         apartment_list = fetch_all_apartments_by_user(current_user)
 
         return Response(render_template(
             'report_tenant_statement2.html',
+            bills=main,
+            props=apartment_list,
+            prop=apartment_obj,
+            tenant_obj=tenant_obj,
+            tenant_name=tenant_obj.name,
+            name=current_user.name,
+            tenantlist=[],
+            timeline=timeline,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company
+        ))
+
+class TenantStatementThree(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        prop = request.args.get("selected_apartment")
+
+        if target == "tenants":
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        if not prop:
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_tenant_statement3.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop = "",
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+        start = request.args.get("from")
+        stop = request.args.get("to")
+
+        begin = date_formatter_alt(start)
+        end = date_formatter_alt(stop)
+
+        begin_date = parse(begin)
+        end_date = parse(end)
+
+        date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
+
+        print("RANGES",date_range)
+
+        raw_tenant = request.args.get("selected_tenant")
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
+
+        if raw_tenant:
+            if raw_tenant.startswith("Vac"):
+                tenant_obj = extract_tenant(raw_tenant)
+                print("VACATED TENANT >>>>STATEMENT",tenant_obj.monthly_charges)
+                tenant_id = tenant_obj.id
+            else:
+                house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
+                tenant_obj = check_occupancy(house_obj)[1]
+                tenant_id = tenant_obj.id
+
+        else:
+            tenant_id = None
+
+        if tenant_id:
+            
+            range_period_data = []
+            for i in tenant_obj.monthly_charges:
+                period_of_billing = generate_date(i.month,i.year)
+                # print("PERIOD",period_of_billing)
+                if period_of_billing.date() in date_range:
+                    print("PERIOD",period_of_billing)
+                    range_period_data.append(i)
+
+
+            main = []
+
+            for item in range_period_data:
+                cb = 0.0
+
+                prev_num = item.month -1 if item != 1 else 12
+                month = get_str_month(item.month)
+                prev_month = get_str_month(prev_num)
+
+                date = item.date.strftime("%d/%b/%y")
+                                
+                if item.rent:
+                    cb += item.rent
+                    
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{month} rent",
+                        "ref":f'invoice#{item.id}',
+                        "debit":item.rent,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.rent_balance:
+                    cb += item.rent_balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} rent arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.rent_balance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.rent_due < 0:
+                    cb += item.rent_due
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":"Rent advance payment",
+                        "ref":f'bbf#{item.id}',
+                        "debit":"-",
+                        "credit":item.rent_due,
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.water:
+                    cb += item.water
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{month} water bill",
+                        "ref":f'invoice#{item.id}',
+                        "debit":item.water,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.water_balance:
+                    cb += item.water_balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} water arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.water_balance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.garbage:
+                    cb += item.garbage
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":"Garbage fee",
+                        "ref":f'invoice#{item.id}',
+                        "debit":item.garbage,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.garbage_balance:
+                    cb += item.garbage_balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} garbage arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.garbage_balance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.security:
+                    cb += item.security
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":"Security fee",
+                        "ref":f'invoice#{item.id}',
+                        "debit":item.security,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.security_balance:
+                    cb += item.security_balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} security arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.security_balance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.maintenance:
+                    cb += item.maintenance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":"Service charge",
+                        "ref":f'invoice#{item.id}',
+                        "debit":item.maintenance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+                if item.maintenance_balance:
+                    cb += item.maintenance_balance
+                    datadict = {
+                        "month":month,
+                        "date":date,
+                        "desc":f"{prev_month} service charge arrears",
+                        "ref":f'bbf#{item.id}',
+                        "debit":item.maintenance_balance,
+                        "credit":"-",
+                        "balance":cb
+                    }
+                    main.append(datadict)
+
+
+
+                that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
+                for x in that_month_payments:
+                    paydate = x.pay_date.strftime("%d/%b/%y")
+
+                    ref = f'#{x.id} [{x.ref_number}]',
+
+                    if x.rent_paid:
+                        cb -= x.rent_paid
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":"Rent payment",
+                            "ref":ref,
+                            "debit":"-",
+                            "credit":x.rent_paid,
+                            "balance":cb
+                        }
+                        main.append(datadict)
+
+                    if x.water_paid:
+                        cb -= x.water_paid
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":"Water bill payment",
+                            "ref":ref,
+                            "debit":"-",
+                            "credit":x.water_paid,
+                            "balance":cb
+                        }
+                        main.append(datadict)
+
+                    if x.garbage_paid:
+                        cb -= x.garbage_paid
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":"Garbage fee payment",
+                            "ref":ref,
+                            "debit":"-",
+                            "credit":x.garbage_paid,
+                            "balance":cb
+                        }
+                        main.append(datadict)
+
+                    if x.security_paid:
+                        cb -= x.security_paid
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":"Security fee payment",
+                            "ref":ref,
+                            "debit":"-",
+                            "credit":x.security_paid,
+                            "balance":cb
+                        }
+                        main.append(datadict)
+
+                    if x.maintenance_paid:
+                        cb -= x.maintenance_paid
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":"Service fee payment",
+                            "ref":ref,
+                            "debit":"-",
+                            "credit":x.maintenance_paid,
+                            "balance":cb
+                        }
+                        main.append(datadict)
+
+                period = generate_date(item.month,item.year)
+
+                datadict = {
+                    "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
+                    "date":"",
+                    "desc":"",
+                    "ref":"",
+                    "debit":"",
+                    "credit":"",
+                    "balance":f'<span class="font-weight-bold">{cb}</span>'
+                }
+                main.append(datadict)
+
+
+                
+                  
+
+        ########################################################
+        timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        ########################################################
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+
+        return Response(render_template(
+            'report_tenant_statement3.html',
             bills=main,
             props=apartment_list,
             prop=apartment_obj,

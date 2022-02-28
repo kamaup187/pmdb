@@ -4698,7 +4698,7 @@ def total_bill(apartment_id,user_id,month,year):
                 if prev_bill:
                     arrears = prev_bill[0].balance
 
-                    if prev_bill[0].rent_due:
+                    if prev_bill[0].rent_due: #rent due of last period forms the base of arrears
                         rent_bal = prev_bill[0].rent_due
                         rent_due = rent_bal + rent
                     else:

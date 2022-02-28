@@ -1810,6 +1810,8 @@ class ReceivePayment(Resource):
         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
+        # import pdb; pdb.set_trace()
+
         water = "water" if waterpaid else ""
         rent = "rent" if rentpaid else ""
         garbage = "garbage" if garbagepaid else ""
@@ -2037,7 +2039,7 @@ class ReceivePayment(Resource):
                     agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
                     MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                    PaymentOp.update_payments(payment_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                    PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                     try:
                         rentbal = specific_charge_obj.rent_due - rentpaid

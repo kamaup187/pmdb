@@ -1,6 +1,6 @@
-{% extends 'reportbase.html' %}
+{% extends 'reports.html' %}
 
-{% block content %}
+{% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
@@ -83,12 +83,6 @@
                                         <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                                       </div>
                                     </div>
-            
-                                      <!-- <div class="col-6 form-group">
-                                        <label class="text-danger font-weight-bold">Select month:</label>
-                                        <input class="form-control ph-dark
-                                        " type="text" id="from" name="from" placeholder="none set">
-                                      </div> -->
                                       <div class="col-12 center-btn">
                                         <button type="submit" class="btn btn-light mt-2 text-black font-weight-bold">View</button>
                                       </div>
@@ -104,29 +98,6 @@
                     </div>
                   </div>
 
-                    <!-- <form class="row" method="GET" action="/rent/statement">
-
-                        <div class="col-6 form-group mb-2">
-                          <label class="text-danger font-weight-bold">Select property:</label>
-
-                            <select name="prop" class="select-css" id ="prop" required>
-                              <option disabled selected value> -- none selected -- </option>
-                              {% for o in props %}
-                              <option value="{{ o }}">{{ o }}</option>
-                              {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="col-6 form-group">
-                          <label class="text-danger font-weight-bold">Select month:</label>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" readonly />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
-                          </div>
-                        </div>
-
-                        <button class="btn btn-block btn-primary mt-2">View</button>
-                    </form> -->
                 </div>
               </div>
             </div>
@@ -140,6 +111,7 @@
 
       <!-- Card Content - Collapse -->
       <div class="collapse show" id="collapseCardExample2">
+        {%if prop%}
         <div class="card-body pt-0">
           <div class="text-right mt-1">
             <button class="btn btn-success btn-sm shadow" data-toggle="modal" data-target="#downloadModal">
@@ -149,12 +121,12 @@
 
           <div class="center-btn">
             <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
-            <img class="" src="{{letterhead}}" alt="--no image--"/>
+            <img class="" src="{{letterhead}}" alt="letterhead"/>
           </div>
 
           <div class="center-btn mt-2 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></h5>
+            <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></span>
           </div>
 
           <div class="divjust-end underline text-black font-weight-bold  text-110">
@@ -266,6 +238,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -488,6 +461,8 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
     $('#dataTable').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,

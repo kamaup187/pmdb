@@ -1701,6 +1701,8 @@ class ReceivePayment(Resource):
 
             bills = house_obj.monthlybills
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+
+            # print("heeeeeey",latest_bill.month)
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
             else:
@@ -1852,6 +1854,8 @@ class ReceivePayment(Resource):
         paymode = request.form.get('paymode')#dropdown
         raw_bill_ref = request.form.get('bill_ref')#typed
         amount = request.form.get('paidamount')#typed
+        overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
+
 
         valid_amount = validate_input(amount)
 
@@ -2029,6 +2033,7 @@ class ReceivePayment(Resource):
                     MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
                     rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
+                    rent_paid += overpayment
                     water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
                     penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
                     electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
@@ -2043,6 +2048,7 @@ class ReceivePayment(Resource):
 
                     try:
                         rentbal = specific_charge_obj.rent_due - rentpaid
+                        rentbal -= overpayment
                         waterbal = specific_charge_obj.water_due - waterpaid
                         electricitybal = specific_charge_obj.electricity_due - electricitypaid
                         servicebal = specific_charge_obj.maintenance_due - servicepaid

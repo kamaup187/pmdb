@@ -417,7 +417,7 @@ class MonthlyStatement(Resource):
     def get(self):
 
         prop = request.args.get('prop')
-        selected_month = request.args.get('selected_month')
+        selected_month = request.args.get('month')
 
         if not prop:
 

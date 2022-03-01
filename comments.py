@@ -287,8 +287,6 @@
         # monthly_charge_obj = get_specific_monthly_charge_obj(tenant_obj.monthly_charges,2)
         # MonthlyChargeOp.update_payment(monthly_charge_obj,17000)
         # MonthlyChargeOp.update_balance(monthly_charge_obj,700)
-        ##end
-
 
 #     for bill in all_bills:
 #         if bill.month == 2 and bill.year == 2022 and bill.rent_balance and not bill.rent_paid and bill.arrears == 0.0:

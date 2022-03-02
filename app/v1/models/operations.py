@@ -671,6 +671,13 @@ class ApartmentOp(Apartment,Base):
 
         db.session.commit()
         
+    def update_tenant_account_payment(self,bank,accname,accno):
+        self.payment_bank = bank
+        self.payment_bankaccname = accname
+        self.payment_bankacc = accno
+
+        db.session.commit()
+
     def update_prop_details(self,shortcode=None,consumer_key=None,consumer_secret=None,prop_garb=None,prop_garb_tel=None,prop_garbbank=None,prop_garbacc=None,prop_bank=None,prop_bankaccname=None,prop_bankacc=None,landlord_bank=None,landlord_bankaccname=None,landlord_bankacc=None,landlord_bank_two=None,landlord_bankaccname_two=None,landlord_bankacc_two=None,agreement=None,commission=None,int_commission=None):
         if shortcode:
             self.shortcode = shortcode

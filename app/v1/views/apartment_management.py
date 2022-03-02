@@ -34,6 +34,9 @@ Cloud.config.update = ({
     'api_secret': os.environ.get('CLOUDINARY_API_SECRET')
 })
 
+proppp = ApartmentOp.fetch_apartment_by_name("Alice Properties Tolens")
+if proppp:
+    ApartmentOp.update_tenant_account_payment(proppp,"Equity","GRASHAR PROPERTY CARE","0240190724036")
 
 class MonitorActivity(Resource):
     def get(self):

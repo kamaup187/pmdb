@@ -28,6 +28,10 @@ from rq.job import Job
 from worker import conn
 q = Queue(connection=conn)
 
+y=u
+
+
+
 Cloud.config.update = ({
     'cloud_name':os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'api_key': os.environ.get('CLOUDINARY_API_KEY'),
@@ -84,10 +88,6 @@ class Index(Resource):
     def get(self):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
-
-        proppp = ApartmentOp.fetch_apartment_by_name("Alice Properties Tolens")
-        if proppp:
-            ApartmentOp.update_tenant_account_payment(proppp,"Equity","GRASHAR PROPERTY CARE","0240190724036")
 
         if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":

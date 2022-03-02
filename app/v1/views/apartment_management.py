@@ -28,10 +28,6 @@ from rq.job import Job
 from worker import conn
 q = Queue(connection=conn)
 
-y=u
-
-
-
 Cloud.config.update = ({
     'cloud_name':os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'api_key': os.environ.get('CLOUDINARY_API_KEY'),

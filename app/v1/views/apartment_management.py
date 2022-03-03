@@ -34,6 +34,24 @@ Cloud.config.update = ({
     'api_secret': os.environ.get('CLOUDINARY_API_SECRET')
 })
 
+# urll = "https://api.whatso.net/api/v2/SendMessage"
+
+# request = {
+#     "Username": "60f30a6c321c412ba1b355a971f4056f",
+#     "Password": "582fd28143eb44989a6f6f25091004f7",
+#     "MessageText": "hvipi",
+#     "MobileNumbers":"254716674695",
+#     "ScheduleDate":"",
+#     "FromNumber":"254716674695",
+#     "Channel":"1"
+# }
+
+# try:
+#     response = requests.post(urll, json=request)
+# except:
+#     response = requests.post(urll, json=request, verify=False)
+
+# print(response.text)
 
 class MonitorActivity(Resource):
     def get(self):
@@ -84,6 +102,10 @@ class Index(Resource):
     def get(self):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
+
+        propppp = ApartmentOp.fetch_apartment_by_name("Muya Apartment")
+        if propppp:
+            ApartmentOp.update_tenant_account_payment(propppp,"PayBill","Latitude Properties","4082629")
 
         if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":
@@ -3325,6 +3347,8 @@ class SmsDelivery(Resource):
 
                 if invoice_obj.house.payment_bankacc:
                     bankdetails = f'\n\nBank: {invoice_obj.house.payment_bank} \nAcc: {invoice_obj.house.payment_bankacc}'
+                elif prop_obj.payment_bankaccname == "PayBill":
+                    bankdetails = f'\n\n{prop_obj.payment_bank} \n:{prop_obj.payment_bankacc} \nAcc: {prop_obj.name.upper()}\{invoice_obj.house.name}'
                 elif prop_obj.payment_bank:
                     bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
                 else:

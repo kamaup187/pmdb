@@ -432,6 +432,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/ramata/full-logo.png"
             letterhead = "../static/img/logos/ramata/letterhead.jpg"
 
+        elif str_name_company == "Supersite Ltd":
+            ##################################################
+            logopath = "../static/img/logos/supersite/l-logo.png"
+            mobilelogopath = "../static/img/logos/supersite/s-logo.png"
+            fulllogopath = "../static/img/logos/supersite/full-logo.png"
+            letterhead = "../static/img/logos/supersite/letterhead.jpg"
+
         elif str_name_company == "KEVMA REAL ESTATE":
             ##################################################
             logopath = "../static/img/logos/kevma/l-logo.png"
@@ -3557,7 +3564,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'
             elif prop_obj.payment_bankaccname == "PayBill":
-                bankdetails = f'\n\n{prop_obj.payment_bank} \n:{prop_obj.payment_bankacc} \nAcc: {prop_obj.name.upper()}\{bill.house.name}'
+                bankdetails = f'\n\n {prop_obj.payment_bank} \n:{prop_obj.payment_bankacc} \nAcc: {prop_obj.name.upper()}/{bill.house.name}'
             elif prop_obj.payment_bank:
                 bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
             else:

@@ -3458,6 +3458,7 @@ class AddTenant(Resource):
         target = request.form.get('target')
         prop_id = request.form.get('propid')
 
+
         apartment_id = get_identifier(prop_id)
 
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -3491,7 +3492,11 @@ class AddTenant(Resource):
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
-                    telle = sheet.row_values(row)[2]
+                    try:
+                        telle = str(int(sheet.row_values(row)[2]))
+                    except:
+                        sheet.row_values(row)[2]
+
                     if telle:
                         telle2 = telle.replace(" ", "")
                         strtelle = str(int(telle2))

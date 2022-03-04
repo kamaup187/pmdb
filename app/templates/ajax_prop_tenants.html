@@ -1,18 +1,21 @@
 <!--================Contact Area =================-->
 <section class="contact_area section_gap">
-    <!-- <span id="prop_identifier" class="dispnone"></span>
-    <span id="link_identifier" class="dispnone"></span>
-    <span id="prop_id_identifier" class="dispnone"></span> -->
+    <span id="prop_identifier" class="d-none"></span>
+    <!-- <span id="link_identifier" class="dispnone"></span> -->
+    <span id="prop_id_identifier" class="dispnone"></span>
 
+    <!-- 
     <span id="edit_prop_identifier" class="dispnone"></span>
     <span id="del_prop_identifier" class="dispnone"></span>
     <a id="downbtn" href="/download/template/properties" class="dispnone">download</a>
+    <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
+    -->
+
   
   
     <div class="card mb-2 mt-1">
   
       <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-        <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
         <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant listings <span id="activeprop" class="text-primary ml-3"></span></span>
         <div>
           <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
@@ -78,8 +81,8 @@
                         </td>
                         <td class="data-cell">
                             <div>
-                                <span id="{{item['delid']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
-                                    data-toggle="modal" data-bs-toggle="modal" data-target="#editPropModa"><i
+                                <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                                    data-toggle="modal" data-bs-toggle="modal" data-target="#uploadTenantExcelModal"><i
                                         class="fas fa-upload mr-1"></i>Upload</span>
                             </div>
                         </td>
@@ -106,7 +109,7 @@
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
             <span class="mr-3 smallify">Add new tenant</span>
             <div>
-              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
+              <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
             </div>
           </h5>
@@ -164,6 +167,48 @@
                   
                     <div class="divbg center-btn">
                       <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal fade" id="uploadTenantExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify">Upload tenants</span>
+            <div>
+              <button id="downloadtenants" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+   
+                    <div class="mt-2 form-group center-btn">
+                      <p class="text-black">Select File: <input class="ph" id="tenantfile" type = "file" name = "filename" /></p>
+                    </div>
+                  
+                    <div class="divbg center-btn">
+                      <button id="uploadtenant" type="button" class="btn-success borderless text-white">Upload</button>
                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                     </div>
                     
@@ -271,6 +316,8 @@
             $("#del_prop_identifier").html(item)
           }
           else if (item.startsWith("prp")) {
+            console.log("working here>>>>>>>>>>>>>>>>>>>>>>>>")
+
             $("#prop_id_identifier").html(item)
 
 
@@ -325,6 +372,8 @@
           }
   
         } else {
+          console.log("working >>>>>>>>>>>>>>>>>>>>>>>>")
+
           $("#prop_identifier").html(item)
           var linkTarget = $("#" + item).children("span").text()
           $("#link_identifier").html(linkTarget)
@@ -376,6 +425,19 @@
       });
     });
   </script>
+
+<script>
+  $("#downloadtenants").click(function(){ 
+      $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_tenants")[0].click();
+
+        setTimeout(function(){
+            $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
 
 <script>
     $("#newtenant").click(function(){   
@@ -557,6 +619,66 @@
     });
   </script>
   
+
+  <script>
+    $("#uploadtenant").on('click',function(){
+        $("#uploadtenant").html("Uploading...") 
+  
+        url = "{{ url_for('api.addtenant') }}"
+  
+        var fd = new FormData();
+        var files = $('#tenantfile')[0].files;
+        fd.append('file',files[0]);
+        fd.append('target',"excelupload");
+        fd.append('propid',$("#prop_identifier").text());
+  
+        $.ajax({
+            type: "POST",
+            url: url,
+            data:fd,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $(".alert-msgs").html(response);
+                $("#uploadtenant").html("Uploaded") 
+  
+                setTimeout(function(){
+                  $("#uploadtenant").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },3000)
+  
+                setTimeout(function(){
+                  $.ajax({
+                    url: "{{ url_for('api.fetchtenants') }}",
+                    type: "get",
+                    data: {
+                      propid:  $("#prop_identifier").text(),
+                      target: "somestring"
+                    },
+                    success: function(response) {
+                      
+                      $("#child-result-view").html(response);
+                    }
+                  });
+                },5000);
+  
+            },
+            error:function(){
+              $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+              $("#uploadtenant").html("Retry") 
+  
+              setTimeout(function(){
+                $("#uploadtenant").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },5000)
+            }
+        });
+    });
+  </script>
   
   
   <script>
@@ -777,52 +899,7 @@
     });
   </script>
   
-  <script>
-  
-    $("#link-btn").on('click', function () {
-      var targetLink = $("#link_identifier").text();
-      if (targetLink == "link") {
-        $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>linking...');
-      } else {
-        $('#link-btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Unlinking...');
-      }
-  
-      $.ajax({
-        url: "{{ url_for('api.linkproperty') }}",
-        type: "POST",
-        data: {
-          company: $("#select_company").val(),
-          propid: $("#prop_identifier").text(),
-          target: targetLink
-        },
-        success: function (response) {
-          $(".modal-info").show();
-          $(".modal-info").html("<span class='text-success'>Property link success</span>");
-          $('#link-btn').html('Link');
-  
-          setTimeout(function () {
-            $(".modal-info").fadeOut(4000, "swing");
-            $(".closemodal").click();
-          }, 1000);
-  
-          setTimeout(function () {
-  
-            $.ajax({
-              url: "{{ url_for('api.allproperties') }}",
-              type: "get",
-              success: function (response) {
-                $("#dynamic-content").html(response);
-  
-              }
-            });
-  
-          }, 3000);
-  
-        }
-      });
-    });
-  
-  </script>
+
   
   
   <script>
@@ -850,25 +927,7 @@
   </script>
   
   
-  <script>
-    // This script displays alerts and tenant name before clearance
-    $("#select_house").on('change', function () {
-      $("#tenantbed").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      // $("#tenantbed").removeClass("dispnone")
-      $.ajax({
-        url: "{{ url_for('api.receivepayment') }}",
-        type: "get",
-        data: {
-          propid: $("#prop_identifier").text(),
-          house: $("#select_house").val(),
-          target: "tenant name"
-        },
-        success: function (response) {
-          $("#tenantbed").html(response);
-        }
-      });
-    });
-  </script>
+
   
   <script>
   

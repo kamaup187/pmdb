@@ -2911,12 +2911,22 @@ class EditHouseCode(Resource):
             if codename:
                 if not is_int:
                     housecode = codename.upper()
-                    code_obj = get_specific_code_obj(apartment_id,housecode)
-                    if code_obj:
-                        msg = "Update failed, House code name unavailable"
-                        return render_template('ajaxghosthouse.html',alert=msg)
+                    if housecode == group_obj.codename:
+                        pass
+                    else:
+                        code_obj = get_specific_code_obj(apartment_id,housecode)
+                        if code_obj:
+                            msg = "Update failed, House code name unavailable"
+                            return render_template('ajaxghosthouse.html',alert=msg)
                 else:
                     housecode = codename
+                    if housecode == group_obj.codename:
+                        pass
+                    else:
+                        code_obj = get_specific_code_obj(apartment_id,housecode)
+                        if code_obj:
+                            msg = "Update failed, House code name unavailable"
+                            return render_template('ajaxghosthouse.html',alert=msg)
                 
             else:
                 print("Group name missing")

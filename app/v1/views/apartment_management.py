@@ -3492,7 +3492,7 @@ class AddTenant(Resource):
                     try:
                         telle = str(int(sheet.row_values(row)[2]))
                     except:
-                        sheet.row_values(row)[2]
+                        telle = sheet.row_values(row)[2]
 
                     if telle:
                         telle2 = telle.replace(" ", "")

@@ -438,6 +438,13 @@ def logo(co):
             mobilelogopath = "../static/img/logos/supersite/s-logo.png"
             fulllogopath = "../static/img/logos/supersite/full-logo.png"
             letterhead = "../static/img/logos/supersite/letterhead.jpg"
+        
+        elif str_name_company == "Latitude Properties":
+            ##################################################
+            logopath = "../static/img/logos/latitude/l-logo.png"
+            mobilelogopath = "../static/img/logos/latitude/s-logo.png"
+            fulllogopath = "../static/img/logos/latitude/full-logo.png"
+            letterhead = "../static/img/logos/latitude/letterhead.jpg"
 
         elif str_name_company == "KEVMA REAL ESTATE":
             ##################################################

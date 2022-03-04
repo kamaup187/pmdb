@@ -550,10 +550,15 @@ class AllProperties(Resource):
             return "Updated successfully" + proceed
 
         if target == "update prop billing info":
+            print("hgrsrfcgvhbjnn")
             bank = request.form.get("bank")
             accname = request.form.get("accname")
             accno = request.form.get("accno")
 
+            paybill_no = request.form.get("paybill")
+
+
+            ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
             ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
 
             return "Updated successfully" + proceed

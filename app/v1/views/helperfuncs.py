@@ -3563,8 +3563,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'
-            elif prop_obj.payment_bankaccname == "PayBill":
-                bankdetails = f'\n\n {prop_obj.payment_bank} \n:{prop_obj.payment_bankacc} \nAcc: {prop_obj.name.upper()}/{bill.house.name}'
+            elif prop_obj.payment_bank == "PayBill":
+                prop_name = prop_obj.name.split(" ")[0]
+                bankdetails = f'\n\n {prop_obj.payment_bank}: {prop_obj.payment_bankacc} \nAcc: {prop_name.lower()}/{bill.house.name}'
             elif prop_obj.payment_bank:
                 bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
             else:

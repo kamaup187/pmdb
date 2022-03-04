@@ -103,10 +103,6 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        propppp = ApartmentOp.fetch_apartment_by_name("Muya Apartment")
-        if propppp:
-            ApartmentOp.update_tenant_account_payment(propppp,"PayBill","Latitude Properties","4082629")
-
         if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":
 
@@ -3347,8 +3343,9 @@ class SmsDelivery(Resource):
 
                 if invoice_obj.house.payment_bankacc:
                     bankdetails = f'\n\nBank: {invoice_obj.house.payment_bank} \nAcc: {invoice_obj.house.payment_bankacc}'
-                elif prop_obj.payment_bankaccname == "PayBill":
-                    bankdetails = f'\n\n{prop_obj.payment_bank} \n:{prop_obj.payment_bankacc} \nAcc: {prop_obj.name.upper()}\{invoice_obj.house.name}'
+                elif prop_obj.payment_bank == "PayBill":
+                    prop_name = prop_obj.name.split(" ")[0]
+                    bankdetails = f'\n\n {prop_obj.payment_bank}: {prop_obj.payment_bankacc} \nAcc: {prop_name.lower()}/{invoice_obj.house.name}'
                 elif prop_obj.payment_bank:
                     bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
                 else:

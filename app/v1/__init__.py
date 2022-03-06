@@ -184,7 +184,8 @@ api.add_resource(TenantStatement,"/tenant/statement")
 api.add_resource(TenantStatementTwo,"/tenant/statement2")
 api.add_resource(TenantStatementThree,"/tenant/statement3")
 
-
+api.add_resource(CollectionRatioReport,"/cr/report")
+api.add_resource(ManagementFeeReport,"/commission/report")
 
 api.add_resource(ExpenseDetail,"/expenses/detailed")
 api.add_resource(SubmissionsReport,"/submissions/report")

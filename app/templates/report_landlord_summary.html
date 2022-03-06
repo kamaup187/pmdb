@@ -8,97 +8,63 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="formwrapper">
-      <div class="card shadow">
+      <div class="card bt-none">
         <!-- Card Header - Accordion -->
 
-        <div class="divjust-end bg-white underline">
+        <div class="divjust-end bg-light underline">
                 
           <a href="#collapseCardExampl" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
             <div class="font-weight-bold text-black pt-1">
-              <span class="ml-4 font-weight-bold text-125 text-uppercase">LANDLORD SUMMARY STATEMENT FOR RENT</span>
+              <span class="ml-lg-4 font-weight-bold text-uppercase">LANDLORD SUMMARY STATEMENT FOR RENT</span>
               <span><i class="fas fa-chevron-down ml-3"></i></span>
             </div>
           </a>
 
-          <div>
-            <a class="text-white close-report" href="{{ url_for('api.reports') }}">
-              <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
-            </a>
+{%if prop%}
+          <div class="mr-3 mb-1">
+            <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+            </button>
           </div>
+{%endif%}
           
 
         </div>
         <!-- Card Content - Collapse -->
         <div class="" id="collapseCardExample">
-          <div class="card-body">
-
-            <div class="row fixed-ba p-0">
-
-              <div class="col-12 no-padding">
-                <div class="card shadow h-0 py-0">
-                  <div class="card-body bg-white report-card-padding">
-                        <div class="center-btn">
-    
-                          <div class="selectbtn" type="button" data-toggle="modal" data-target="#fetchActivesModal">
-                            <i class="feather-16 text-black" data-feather="menu"></i>
-                            <button class="btn borderless p-0 m-0 font-weight-bold text-black">
-                              Select property
-                            </button>
-                          </div>
-            
-                        </div>
-                    </div>
+          <div class="card-body p-0">
+              <form class="row bg-light" method="GET" action="/landlord/summary">
+                <div class="col-lg-3 form-group mb-2 ml-lg-5">
+                  <label class="mb-0">Select type:</label>
+                  <select name="reporttype" class="select-css" id="reporttype" required>
+                    <option disabled selected value> type </option>
+                    <option value="uncollected">Based on amount due</option>
+                    <option value="collected">Based on collected amount only</option>
+                  </select>
                 </div>
-              </div>
-            </div>
-
-            <div class="modal fade" id="fetchActivesModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                  <div class="modal-body pt-0">
-                    <div class="media mb-2">
-                      <div class="media-body">
-                        <div class="position-relative">
-                          <div class="card-body modal-forms">
-                            <div class="center-btn mb-3 mt-3">
-                            </div>
-          
-                            <form class="row" method="GET" action="/landlord/summary">
-
-                              <div class="col-lg-6 form-group mb-2">
-                                <label class="text-danger font-weight-bold">Select property:</label>
-      
-                                  <select name="prop" class="select-css" id ="prop" required>
-                                    <option disabled selected value> -- none selected -- </option>
-                                    {% for o in props %}
-                                    <option value="{{ o }}">{{ o }}</option>
-                                    {% endfor %}
-                                  </select>
-                              </div>
-      
-                              <div class="col-lg-6 form-group">
-                                <label class="text-danger font-weight-bold">Select month:</label>
-                                <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                                  <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" readonly />
-                                  <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
-                                </div>
-                              </div>
-      
-                                <div class="col-12 center-btn">
-                                  <button type="submit" class="btn btn-light mt-2 text-black font-weight-bold">View</button>
-                                </div>
-      
-                          </form>
-                
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              
+                <div class="col-lg-3 form-group mb-2">
+                  <label class="mb-0">Select property:</label>
+                  <select name="prop" class="select-css" id="prop" required>
+                    <option disabled selected value> select property </option>
+                    {% for o in props %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              
+                <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                  <label class="mb-0">Select month:</label>
+                  <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                    <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                    <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                   </div>
                 </div>
-              </div>
-            </div>
-
+              
+                <div class="col-lg-2 form-group mb-2">
+                  <button type="submit" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                </div>
+              </form>
           </div>
         </div>
 
@@ -111,45 +77,15 @@
         <!-- Card Header - Accordion -->
 
         <div class="collapse show" id="collapseCardExample2">
-          {%if prop%}
           <div class="card-body pt-0">
-            <div class="text-right mt-1">
-              <button class="btn btn-success btn-sm shadow" data-toggle="modal" data-target="#downloadModal">
-                <i class="text-white feather-16 font-weight-bold" data-feather="download"></i><span class="ml-1 mobile-malaysian text-white">download</span>
-              </button>
-            </div>
-
-            <div class="center-btn">
-              <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
-              <img class="" src="{{letterhead}}" alt="[letterhead]"/>
-            </div>
-
-            <div class="center-btn mt-2 overline mb-3">
+            {%if prop%}
+            <div class="center-btn mt-2 mb-3">
               <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
               <span class="font-weight-bold text-black"><span class="underline mt-3">{{prop.upper()}} SUMMARY STATEMENT FOR {{timeline}}</span></span>
             </div>
 
             <div class="invoice-box">
-              <!-- <div class="d-sm-flex divjust text-gray-600">
-                <div class="mobile-malaysian">
-                  <img class="" src="{{fulllogopath}}" alt="--no image--"/>
-                </div>
-                <div class="desktop-malaysian">
-                  <img class="" src="{{logopath}}" alt="--no image--"/>
-                </div>
-                <div class="mobile-malaysian">
-                  <div class="small">Street Address : {{company.street_address}}</div>
-                  <div class="small">PO BOX : {{company.mail_box}}</div>
-                  <div class="small">Tel : {{company.phone}}</div>
-                  <div class="small">Email: {{company.email}}</div>
-                </div>
-                <div class="desktop-malaysian text-sll mb-3">
-                  <div class="small">Street Address : {{company.street_address}}</div>
-                  <div class="small">PO BOX : {{company.mail_box}}</div>
-                  <div class="small">Tel : {{company.phone}}</div>
-                  <div class="small">Email: {{company.email}}</div>
-                </div>
-              </div> -->
+
               <table cellpadding="0" cellspacing="0">
                   
                   
@@ -751,11 +687,13 @@
   </div>
 </div>
 
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
 <script>
   $("#month").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
-    format: "MM-yyyy",
+    format: "mm-yyyy",
     startView: "months", 
     minViewMode: "months"
   });

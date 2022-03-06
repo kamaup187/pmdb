@@ -440,7 +440,6 @@ def logo(co):
             letterhead = "../static/img/logos/supersite/letterhead.jpg"
         
         elif str_name_company == "Latitude Properties":
-            r=s
             ##################################################
             logopath = "../static/img/logos/latitude/l-logo.png"
             mobilelogopath = "../static/img/logos/latitude/s-logo.png"

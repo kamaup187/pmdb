@@ -166,7 +166,7 @@ class RentReport(Resource):
         month_list = generate_month_list()
         year_list = [2020,2021,2022,2023,2024]
         str_month = get_str_month(int_month)
-        timeline = f'{str_month} - ({int_year})'
+        timeline = f'{str_month} - {int_year}'
 
         props = fetch_all_apartments_by_user(current_user)
 
@@ -230,7 +230,7 @@ class LandlordProfitAndLossSummary(Resource):
     def get(self):
 
         prop = request.args.get('prop')
-        selected_month = request.args.get('selected_month')
+        selected_month = request.args.get('month')
 
         if not prop:
 
@@ -1348,7 +1348,7 @@ class InternalDetail(Resource):
 
         apartment_list = fetch_all_apartments_by_user(current_user)
         month_list = generate_month_list()
-        timeline = f"{str_month} - ({selected_year})"
+        timeline = f"{str_month} / {selected_year}"
 
         return Response(render_template(
             'report_internal_detailed.html',
@@ -1564,7 +1564,7 @@ class InternalDetailAlt(Resource):
 
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         return Response(render_template(
             'report_general_statement.html',
@@ -1785,7 +1785,7 @@ class LandlordProfitAndLoss(Resource):
 
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
@@ -1982,7 +1982,7 @@ class RentStatement(Resource):
 
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
@@ -2036,7 +2036,6 @@ class WaterStatement(Resource):
             return Response(render_template(
                 'report_water_statement.html',
                 tenantlist=[],
-                prop_obj=None,
                 props=apartment_list,
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
@@ -2139,7 +2138,7 @@ class WaterStatement(Resource):
         
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 
@@ -2287,7 +2286,7 @@ class GarbageStatement(Resource):
         
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 
@@ -2379,7 +2378,7 @@ class ListedProperties(Resource):
         }
         
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} - ({target_period.year})"
+        timeline = f"{str_month.upper()} / {target_period.year}"
 
         return Response(render_template(
             'report_listed_properties.html',
@@ -2705,7 +2704,7 @@ class ExternalDetail(Resource):
         month_list = generate_month_list()
         str_month = get_str_month(target_period.month)
 
-        timeline = f"{str_month} - ({target_period.year})"
+        timeline = f"{str_month} / {target_period.year}"
 
         
         fieldshow_sec = "dispnone" if not totalsecurity else ""
@@ -2955,9 +2954,9 @@ class ViewPayment(Resource):
         startmonth=get_str_month(target_period.month)
         endmonth = get_str_month(target_period.month)
         if startmonth == endmonth:
-            timeline = f"{startmonth} - ({target_period.year})"
+            timeline = f"{startmonth} / {target_period.year}"
         else:
-            timeline = f"{startmonth} to {endmonth} - ({target_period.year})"
+            timeline = f"{startmonth} to {endmonth} / {target_period.year}"
         ########################################################
 
         apartment_list = fetch_all_apartments_by_user(current_user)
@@ -3833,7 +3832,7 @@ class ExpenseDetail(Resource):
 
         apartment_list = fetch_all_apartments_by_user(current_user)
         month_list = generate_month_list()
-        timeline = f"{str_month} - ({selected_year})"
+        timeline = f"{str_month} - {selected_year}"
 
         return Response(render_template(
             'report_expenses_detailed.html',
@@ -3917,7 +3916,7 @@ class SubmissionsReport(Resource):
 
         apartment_list = fetch_all_apartments_by_user(current_user)
         month_list = generate_month_list()
-        timeline = f"{str_month} - ({selected_year})"
+        timeline = f"{str_month} - {selected_year}"
 
         return Response(render_template(
             'report_submissions_detailed.html',
@@ -4478,3 +4477,199 @@ class FetchBills(Resource):
                 bills=detailed_bills,
                 billids=billids
                 )
+
+
+class CollectionRatioReport(Resource):
+    @login_required
+    def get(self):
+
+        selected_month = request.args.get("month")
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        collection_ratios = []
+
+        grand_total_bills = 0.0
+        grand_total_balances = 0.0
+        grand_total_collections = 0.0
+        grand_collection_ratio = 0.0
+
+        ###################################################################################################
+        props = fetch_all_apartments_by_user(current_user)
+
+        for apartment in props:
+            total_bills = 0.0
+            total_balances = 0.0
+            total_collections = 0.0
+            real_collections = 0.0
+
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == target_period.month and item.year == target_period.year:
+
+                    total_bills += item.total_bill if item.total_bill > 0 else 0
+                    grand_total_bills += item.total_bill if item.total_bill > 0 else 0
+
+                    total_balances += item.balance if item.balance > 0 else 0
+                    grand_total_balances += item.balance if item.balance > 0 else 0
+
+                    total_collections += item.paid_amount if item.paid_amount > 0 else 0
+                    grand_total_collections += item.paid_amount if item.paid_amount > 0 else 0
+
+                    if item.balance > -0.99999:
+                        real_collections += item.paid_amount if item.paid_amount > 0 else 0
+                    else:
+                        real_collections += item.total_bill if item.total_bill > 0 else 0
+
+                                           
+            try:
+                collection_percentage = real_collections / total_bills * 100
+                grand_collection_ratio += collection_percentage
+            except:
+                collection_percentage = 0
+
+            cr_item = {
+                "code":apartment.id,
+                "name":apartment.name,
+                "bills":total_bills,
+                "paid":real_collections,
+                "unpaid":total_balances,
+                "ratio":f"{collection_percentage:,.1f} %"
+            }
+
+
+            collection_ratios.append(cr_item)
+
+
+        grandtotal = (f"{grand_total_bills:,}")
+
+        grandunpaid = (f"{grand_total_balances:,}")
+
+        grandpaid = (f"{grand_total_collections:,}")
+
+        try:
+            cp = grand_collection_ratio/len(props)
+        except:
+            cp = 0.0
+
+        grandratio = f"{cp:,.1f} %"
+
+        strmonth=get_str_month(target_period.month)
+        timeline = f"{strmonth.upper()} - {target_period.year}"
+
+        return Response(render_template(
+            'report_cr_statement.html',
+            tenantlist=[],
+            timeline = timeline,
+            grandtotal=grandtotal,
+            grandpaid=grandpaid,
+            grandunpaid=grandunpaid,
+            grandratio=grandratio,
+            bills=collection_ratios,
+            paging=page(collection_ratios),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+class ManagementFeeReport(Resource):
+    @login_required
+    def get(self):
+
+        start = request.args.get("from")
+        stop = request.args.get("to")
+
+        if start and stop:
+
+            begin = date_formatter_alt(start)
+            end = date_formatter_alt(stop)
+
+            begin_date = parse(begin)
+            end_date = parse(end)
+
+            date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
+
+            timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        
+        else:
+            date_range = []
+            timeline = None
+
+        ##################################################################################################
+        items = []
+
+        grand_total_collections = 0.0
+        grand_management_fee = 0.0
+
+        ###################################################################################################
+        props = fetch_all_apartments_by_user(current_user)
+
+        for prop in props:
+            total_collections = 0.0
+            
+            for item in prop.monthlybills:
+                period_of_billing = generate_date(item.month,item.year)
+                if period_of_billing.date() in date_range:
+
+                    total_collections += item.rent_paid if item.rent_paid > 0 else 0
+                    grand_total_collections += item.rent_paid if item.rent_paid > 0 else 0
+
+            commission = prop.commission if prop.commission else 0.0
+        
+            management_fee = total_collections*commission*0.01
+
+            if commission:
+                commission_percentage = f"{commission} %"
+            else:
+                commission_percentage = ""
+                
+
+            if not commission:
+                if total_collections:
+                    commission = prop.int_commission if prop.int_commission else 0.0
+                    management_fee = commission
+                else:
+                    commission = prop.int_commission if prop.int_commission else 0.0
+                    management_fee = 0.0
+                commission_percentage = f"{commission} flat rate"
+
+            grand_management_fee += management_fee
+
+            c_item = {
+                "code":prop.id,
+                "name":prop.name,
+                "paid":total_collections,
+                "commission":commission_percentage,
+                "fees":f"{management_fee:,.1f}"
+            }
+
+            items.append(c_item)
+
+
+        grandpaid = (f"{grand_total_collections:,}")
+        grandcommission = (f"{grand_management_fee:,}")
+
+        return Response(render_template(
+            'report_commission_statement.html',
+            tenantlist=[],
+            timeline = timeline,
+            grandpaid=grandpaid,
+            grandcommission=grandcommission,
+            bills=items,
+            paging=page(items),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))

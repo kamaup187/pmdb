@@ -1,13 +1,9 @@
 <!--================Contact Area =================-->
 <section class="contact_area section_gap">
-    <span id="prop_identifier" class="d-none"></span>
-    <!-- <span id="link_identifier" class="dispnone"></span> -->
+    <span id="prop_identifier" class="dispnone"></span>
     <span id="prop_id_identifier" class="dispnone"></span>
-    <!-- 
     <span id="edit_prop_identifier" class="dispnone"></span>
-    <span id="del_prop_identifier" class="dispnone"></span>
-    <a id="downbtn" href="/download/template/properties" class="dispnone">download</a>
-  -->
+
   <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
    
     <div class="card mb-2 mt-1">
@@ -59,7 +55,7 @@
 
                         <td class="data-cell">
                             <div>
-                                <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                                <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
                             </div>
                         </td>
             
@@ -78,7 +74,7 @@
                         </td>
                         <td class="data-cell">
                             <div>
-                                <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
+                                <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis"
                                     data-toggle="modal" data-bs-toggle="modal" data-target="#uploadTenantExcelModal"><i
                                         class="fas fa-upload mr-1"></i>Upload</span>
                             </div>
@@ -318,29 +314,16 @@
             $("#prop_id_identifier").html(item)
 
 
-            // propObjs.forEach(element =>{
-            //     if(Object.keys(element) == item){
-            //         var cc = element[item]
-            //         console.log(cc)
-            //     }
-            // });
+          } else {
+            $("#edit_prop_identifier").html(item)
+          }
+  
+        } else {
+          console.log("working >>>>>>>>>>>>>>>>>>>>>>>>")
 
-
-            $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+          $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
             $("#activeprop-child").text($(this).text())
 
-
-
-            // $("#spinner").removeClass("dispnone")
-            // $.ajax({
-            //   url: "/results",
-            //   type: "get",
-            //   data: {id: item},
-            //   success: function(response) {
-            //     $("#spinner").addClass("dispnone")
-            //     $("#propdisp").html(response);
-            //   }
-            // });
             $("#barloader").removeClass("dispnone")
 
             $.ajax({
@@ -350,26 +333,13 @@
                     propid:item
                 },
                 success: function(response) {
-                //   if (!$('#content-area').hasClass("isopen") && !$('#list-area').hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                //         $('#sidebarToggle').click();
-                //         $('#smaccordionSidebar').removeClass("toggled");
-                //       }
-                //   $('#content-area').addClass("isopen text-danger")
-                  // $("#postloader-btn").click();
                   $("#barloader").addClass("dispnone")
-                //   $("#body-block").addClass("dispnone");
                   $("#result-view").addClass("dispnone");
                   $("#child-view").removeClass("dispnone")
 
                   $("#child-view").html(response);
                 }
             });
-          } else {
-            $("#edit_prop_identifier").html(item)
-          }
-  
-        } else {
-          console.log("working >>>>>>>>>>>>>>>>>>>>>>>>")
 
           $("#prop_identifier").html(item)
           var linkTarget = $("#" + item).children("span").text()
@@ -627,7 +597,7 @@
         var files = $('#tenantfile')[0].files;
         fd.append('file',files[0]);
         fd.append('target',"excelupload");
-        fd.append('propid',$("#prop_identifier").text());
+        fd.append('propid',$("#prop_id_identifier").text());
   
         $.ajax({
             type: "POST",
@@ -651,7 +621,7 @@
                     url: "{{ url_for('api.fetchtenants') }}",
                     type: "get",
                     data: {
-                      propid:  $("#prop_identifier").text(),
+                      propid:  $("#prop_id_identifier").text(),
                       target: "somestring"
                     },
                     success: function(response) {
@@ -869,60 +839,7 @@
     });
   
   </script>
-  
-  <script>
-    // This script displays alerts and tenant name before clearance
-    $("#linkModal").on('shown.bs.modal', function () {
-      var targetLink = $("#link_identifier").text();
-      if (targetLink == "link") {
-        $("#linkModalLabel").html("Link to Agent");
-        $("#link-btn").html("Link");
-      } else {
-        $("#linkModalLabel").html("Unlink property");
-        $("#link-btn").html("Unlink");
-      }
-  
-      $.ajax({
-        url: "{{ url_for('api.linkproperty') }}",
-        type: "get",
-        data: {
-          propid: $("#prop_identifier").text(),
-          target: targetLink
-        },
-        success: function (response) {
-          $("#select_company").html(response);
-        }
-      });
-    });
-  </script>
-  
-
-  
-  
-  <script>
-    // This script displays alerts and tenant name before clearance
-    $("#addPaymentModal").on('shown.bs.modal', function () {
-      $(function () {
-        $("#datepicker").datepicker({
-          autoclose: true,
-          todayHighlight: true
-        });
-      });
-  
-      $.ajax({
-        url: "{{ url_for('api.receivepayment') }}",
-        type: "get",
-        data: {
-          propid: $("#prop_identifier").text(),
-          target: "houselist"
-        },
-        success: function (response) {
-          $("#select_house").html(response);
-        }
-      });
-    });
-  </script>
-  
+   
   
 
   

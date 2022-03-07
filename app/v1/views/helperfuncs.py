@@ -4195,7 +4195,11 @@ def read_excel(dict_obj,apartment_id,user_id):
         tel = mobile
 
     if tel:
-        strtel = tel.replace(" ", "")
+        rawstrtel = tel.replace(" ", "")
+        if len(rawstrtel) > 9:
+            strtel = rawstrtel
+        else:
+            strtel = ""
     else:
         strtel = ""
 
@@ -4218,7 +4222,7 @@ def read_excel(dict_obj,apartment_id,user_id):
     similar = False
 
     if tenant:
-        if tenant.lower() == "vacant":
+        if tenant.lower() == "vacant" or tenant.startswith("-") or tenant.startswith("_") or len(tenant) < 2:
             print(tenant,"name is not allowed")
             similar = True
 
@@ -4256,7 +4260,7 @@ def read_excel(dict_obj,apartment_id,user_id):
             occupancy = check_occupancy(house_obj)
 
             if occupancy[0] == "occupied":
-                print("Specified house occupied: ",tenant_house)
+                print("Specified house occupied: ",house_obj)
                 pass
 
             else:

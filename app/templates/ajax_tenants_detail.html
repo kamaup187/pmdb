@@ -1,6 +1,6 @@
 
     <section class="contact_area section_gap">
-      <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+      <!-- <span id="prop_identifier" class="dispnone">{{prop.id}}</span> -->
       <span id="tenant_identifier" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
@@ -268,46 +268,6 @@
       </div>
     </div> -->
 
-
-    <div class="modal fade" id="uploadTenantExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-info divjust-end underline-thin-fade">
-              <span class="mr-3 smallify">Upload tenants</span>
-              <div>
-                <button id="downloadtenants" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
-                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
-              </div>
-            </h5>
-            <div class="alert-msgs"></div>
-          </div>
-          <div class="modal-body pt-0">
-            <div class="media mb-2">
-              <div class="media-body">
-                <div class="position-relative">
-                  <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
-     
-                      <div class="mt-2 form-group center-btn">
-                        <p class="text-black">Select File: <input class="ph" id="tenantfile" type = "file" name = "filename" /></p>
-                      </div>
-                    
-                      <div class="divbg center-btn">
-                        <button id="uploadtenant" type="button" class="btn-success borderless text-white">Upload</button>
-                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
-                      </div>
-                      
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="modal fade" id="uploadPhoneExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -827,17 +787,15 @@
     });
   </script> -->
 
-
-
-    <script>
+    <!-- <script>
       
       $("#uploadTenantExcelModal").on('shown.bs.modal', function(){
         $(".dismissparent").click();
       });
     
-    </script>
+    </script> -->
 
-<script>
+<!-- <script>
   $("#downloadtenants").click(function(){ 
       $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
@@ -848,10 +806,9 @@
             $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
         },8000);
     });
-</script>
+</script> -->
 
-
-  <script>
+  <!-- <script>
     $("#uploadtenant").on('click',function(){
         $("#uploadtenant").html("Uploading...") 
   
@@ -909,9 +866,9 @@
             }
         });
     });
-  </script>
+  </script> -->
 
-<script>
+<!-- <script>
   $("#uploadmobile").on('click',function(){
       $("#uploadmobile").html("Uploading...") 
 
@@ -969,7 +926,7 @@
           }
       });
   });
-</script>
+</script> -->
 
 <script>
   $("#uploadarrears").on('click',function(){

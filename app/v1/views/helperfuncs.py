@@ -4125,6 +4125,154 @@ def upload_handler(file,current_user):
 
     return [rows,sheet]
 
+
+def read_excel(dict_obj,apartment_id,user_id):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+    unit = dict_obj["unit"]
+    desc = dict_obj["desc"]
+    group = dict_obj["group"]
+    tenant = dict_obj["tenant"]
+    mobile = dict_obj["mobile"]
+    arrears = dict_obj["arrears"]
+    email = dict_obj["email"]
+    natid = dict_obj["natid"]
+
+    if isinstance(group,float):
+        housecode = str(int(group))
+    else:
+        housecode = group
+
+    housecode = housecode.upper()
+
+    code_obj = get_specific_code_obj(apartment_id,housecode)
+
+
+    if code_obj:
+        print("Skipping ",housecode)
+        
+    elif group:
+        valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group)
+
+        print("house & amount",housecode,valid_inputs[0])
+
+        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+        code_obj.save()
+    else:
+        pass
+
+    try:
+        housename = str(int(unit) if unit else "" )
+    except:
+        housename = unit if unit else ""
+
+    if housename == "":
+        print("EMPTY CELL")
+
+    try:
+        house_name = housename.upper()
+    except:
+        house_name = housename
+
+    house_obj = get_specific_house_obj(apartment_id,house_name)
+    
+    if house_obj:
+        print("Skipping ",house_name)
+
+    elif housename:
+        house_obj = HouseOp(house_name,apartment_id,code_obj.id,user_id,desc)
+        house_obj.save()
+    else:
+        pass
+
+    try:
+        tel = str(int(mobile))
+    except:
+        tel = mobile
+
+    if tel:
+        strtel = tel.replace(" ", "")
+    else:
+        strtel = ""
+
+    if strtel.startswith("0"):
+        tenantphone = strtel
+    else:
+        tenantphone = "0" + strtel
+
+    tenantemail = email
+    tenantnatid = str(int(natid) if natid else "" )
+
+    if not tenantnatid:
+        tenantnatid = nationalid_generator()
+        check_dup = TenantOp.fetch_tenant_by_nat_id(tenantnatid)
+        nat_id = nationalid_generator() if check_dup else tenantnatid
+    else:
+        nat_id = tenantnatid
+
+
+    similar = False
+
+    if tenant:
+        if tenant.lower() == "vacant":
+            print(tenant,"name is not allowed")
+            similar = True
+
+        tenants = prop.tenants
+
+        for t in tenants:
+            if t.name.lower() == tenant.lower() and tenantphone == "0":
+                print("SIMILAR TENANT EXISTS: ",t.name,tenant)
+                similar = True
+
+        present = TenantOp.fetch_tenant_by_nat_id(nat_id)
+        if present:
+            print("SIMILAR NATIONAL ID EXISTS: ",nat_id)
+            similar = True
+
+        if tenantemail:
+            present2 = TenantOp.fetch_tenant_by_email(tenantemail)
+            present3 = UserOp.fetch_user_by_email(tenantemail)
+            if present2 or present3:
+                print("SIMILAR EMAIL EXISTS: ",tenantemail)
+                similar = True
+
+        if tenantphone and tenantphone != "0":
+            present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
+            if present4:
+                print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
+                similar = True
+
+        if similar:
+            pass
+        else:
+            tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,apartment_id,user_id)
+            tenant_obj.save()
+
+            occupancy = check_occupancy(house_obj)
+
+            if occupancy[0] == "occupied":
+                print("Specified house occupied: ",tenant_house)
+                pass
+
+            else:
+                house_id = house_obj.id
+                tenant_id = tenant_obj.id
+
+                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                allocate_tenant_obj.save()
+
+                TenantOp.update_status(tenant_obj,"Resident")
+                TenantOp.update_residency(tenant_obj,"Old")
+
+
+    return "completed"
+
+
 def sendlogs(date):
     from app import create_app
     app = create_app(configuration)

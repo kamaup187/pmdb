@@ -518,7 +518,7 @@ class AllProperties(Resource):
         }
 
 
-        return render_template(template,propids=propids,propnames=prop_names,prop=None,items=items,access=access,company=current_user.company)
+        return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)
     
     def post(self):
         target = request.form.get("target")

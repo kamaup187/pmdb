@@ -2731,6 +2731,73 @@ class TenantSms(Resource):
             msg = "Sms turned off for tenant!"
             return render_template('ajaxghosthouse.html',alert=msg)
 
+
+class DataUpload(Resource):
+    """class"""
+
+    @login_required
+    def get(self):
+        pass
+
+    def post(self):
+
+        prop_name = request.form.get('prop')
+
+        if prop_name and prop_name != "null":
+
+            apartment_id = ApartmentOp.fetch_apartment_by_name(prop_name).id
+
+            file = request.files.get('file')
+
+            if file:
+                processed_data = upload_handler(file,current_user)
+            else:
+                return '<span class=text-danger>Select file first</span>'
+
+            rows,sheet = processed_data[0],processed_data[1]
+
+            data_format_error = False
+
+            if sheet:
+                if len(sheet.row_values(1)) != 8:
+                    data_format_error = True
+            try:
+                if data_format_error:
+                    nonexistent_item = sheet.row_values(1)[1000000]
+
+                for row in rows:
+                    dict_obj = {
+                    "unit":sheet.row_values(row)[0],
+                    "desc":sheet.row_values(row)[1],
+                    "group":sheet.row_values(row)[2],
+                    "tenant":sheet.row_values(row)[3],
+                    "mobile":sheet.row_values(row)[4],
+                    "arrears":sheet.row_values(row)[5],
+                    "email":sheet.row_values(row)[6],
+                    "natid":sheet.row_values(row)[7]
+                    }
+
+                    uploadsjob = q.enqueue_call(
+                        func=read_excel, args=(dict_obj,apartment_id,current_user.id,), result_ttl=5000
+                    )
+
+                return '<span class="text-success">Upload successful</span>'
+
+            except Exception as e:
+                if not sheet:
+                    print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                    return '<span class="text-danger">File format not supported</span>'
+                elif type(e) == IndexError:
+                    print("FILE DATA FIELDS INCORRECT")
+                    return '<span class="text-danger">File data fields incorrect</span>'
+                else:
+                    print("RARE FATAL CASE: Error occured while saving item: ",e)
+                    abort(403)
+
+        else:
+            return '<span class=text-danger>Select property first</span>'
+            
+
 class CreateHouseCode(Resource):
     """class"""
 
@@ -2798,7 +2865,7 @@ class CreateHouseCode(Resource):
 
                     code_obj = get_specific_code_obj(apartment_id,housecode)
 
-                    run_validations = validate_float_inputs_to_exclude_zeros_alt(rentrate,waterrate,garbagerate,securityrate,waterdep,elecdep)
+                    # run_validations = validate_float_inputs_to_exclude_zeros_alt(rentrate,waterrate,garbagerate,securityrate,waterdep,elecdep)
 
                     if code_obj:
                         print("Skipping ",housecode)

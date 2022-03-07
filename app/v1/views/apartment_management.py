@@ -103,13 +103,13 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        if current_user.company.name == "Latitude Properties":
-            if current_user.username.startswith('qc'):
-                pass
-            else:
-                send_internal_email_notifications(current_user.name," is trying to login")
+        # if current_user.company.name == "Latitude Properties":
+        #     if current_user.username.startswith('qc'):
+        #         pass
+        #     else:
+        #         send_internal_email_notifications(current_user.name," is trying to login")
 
-                return Response(render_template("under_maintenance.html"))
+        #         return Response(render_template("under_maintenance.html"))
 
         if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         # if current_user.username == "kiotapay":

@@ -3584,18 +3584,39 @@ class AddTenant(Resource):
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
+                    mobile = sheet.row_values(row)[2]
+
                     try:
-                        telle = str(int(sheet.row_values(row)[2]))
+                        tel = str(int(mobile))
                     except:
-                        telle = sheet.row_values(row)[2]
+                        tel = ""
 
-                    if telle:
-                        telle2 = telle.replace(" ", "")
-                        strtelle = str(int(telle2))
+                    if tel:
+                        rawstrtel = tel.replace(" ", "")
+                        if len(rawstrtel) > 9:
+                            strtel = rawstrtel
+                        else:
+                            strtel = ""
                     else:
-                        strtelle = ""
+                        strtel = ""
 
-                    tenantphone = "0" + strtelle
+                    if strtel.startswith("0"):
+                        tenantphone = strtel
+                    else:
+                        tenantphone = "0" + strtel
+
+                    # try:
+                    #     telle = str(int(sheet.row_values(row)[2]))
+                    # except:
+                    #     telle = sheet.row_values(row)[2]
+
+                    # if telle:
+                    #     telle2 = telle.replace(" ", "")
+                    #     strtelle = str(int(telle2))
+                    # else:
+                    #     strtelle = ""
+
+                    # tenantphone = "0" + strtelle
                     
                     tenantemail = sheet.row_values(row)[3]
                     tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )

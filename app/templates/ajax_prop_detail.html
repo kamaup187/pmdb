@@ -11,13 +11,28 @@
       <a id="download_groups" href="/download/template/groups" class="dispnone">download</a>
       <a id="download_units" href="/download/template/houses" class="dispnone">download</a>
     
-    
+      <div class="dispnone">#{{prop.id}} <span id="active_prop">{{prop.name}}</span></div>
+
+      <!-- <div class="col-lg-4 dispnone">
+              <div class="">
+      
+                <div class="mb-3 center-btn">
+      
+                  <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal"
+                    data-target="#exampleModal"><span class="fixed-width-prop"><img src="{{ prop.image_url }}"
+                        alt="No image" /></span></button>
+      
+                </div>
+      
+              </div>
+            </div> -->
+
     
       <div class="card mb-2 mt-1">
     
         <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
           <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase text-110">Houses/Units</span>
+          <span class="smallify text-black font-weight-bold text-uppercase text-110">Houses/Units <span id="activeprop" class="text-primary ml-3"></span></span>
           <div>
             <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
               type="button">X</button>
@@ -25,69 +40,59 @@
         </div>
     
         <div class="card-body flowing-body pt-2 pl-2">
-    
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="">
-                <div class="text-xx mb-2 center-btn text-info font-weight-bold">#{{prop.id}} {{prop.name}}</div>
-    
-                <div class="mb-3 center-btn">
-    
-                  <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal"
-                    data-target="#exampleModal"><span class="fixed-width-prop"><img src="{{ prop.image_url }}"
-                        alt="No image" /></span></button>
-    
+
+          <div class="pb-2 bg-white divjust-end">
+
+            <div class="">
+  
+              <span class="btn btn-sm btn-light text-black mobile-malaysian" data-toggle="modal" data-target="#exampleModal">
+                <i class="fas fa-folder-plus"></i>
+                Upload apartment photo
+              </span>
+  
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#groupModal">
+                <i class="fas fa-plus"></i>
+                Add group
+              </span>
+
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#newHouseModal">
+                <i class="fas fa-plus"></i>
+                Add house
+              </span>
+            </div>
+  
+            <div class="small">
+              <nav class="nav nav-borders">
+                <div class="info_item mr-2">
+                  <i class="fas fa-map-marker mr-2"></i>
+                  <span class="text-black font-weight-bold">{{prop.location}}</span>
+                </div> 
+              </nav>
+
+              <nav class="nav nav-borders">
+                <div class="info_item mr-2">
+                  <i class="fas fa-receipt mr-2"></i>
+                  <span><span class="text-black font-weight-bold">Invoices:</span> {{period}} <i class="fas fa-calendar-day"></i></span>
                 </div>
-    
-              </div>
+
+              </nav>
+
+              <nav class="nav nav-borders dispnone">
+
+                <div class="info_item mr-2">
+                  <i class="fas fa-house-user mr-2"></i>
+                  <span><span class="text-black font-weight-bold">Units:</span> {{num_units}}</span>
+                </div>
+
+                <div class="info_item mr-2">
+                  <i class="fas fa-users mr-2"></i>
+                  <span><span class="text-black font-weight-bold">Tenants:</span> {{num_tenants}}</span>
+                </div>
+
+              </nav>
             </div>
-    
-            <div class="col-lg-4 text-info">
-              <div class="info_item">
-                <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end"
-                   data-toggle="modal"
-                  data-target="#groupModal"><i class="fas fa-plus-circle ml-4"></i><span class="mr-5">New
-                    Group</span></button>
-              </div>
-              <div class="info_item dispnone">
-                <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end modalTrigger"
-                  data-toggle="modal" data-target="#paymentDetailModal"><i class="fas fa-edit text-danger ml-4"></i><span
-                    class="mr-4">Property details</span></button>
-              </div>
-              <div class="info_item">
-                <button type="button" class="borderless btn-outline-info fixed-width-modal-btn divjust-end"
-                  data-toggle="modal" data-target="#newHouseModal"><i class="fas fa-plus-circle ml-4"></i><span
-                    class="mr-5">New house</span></button>
-              </div>
-    
-            </div>
-    
-            <div class="col-lg-2 small mt-2">
-    
-              <div class="info_item">
-                <i class="fas fa-map-marker"></i>
-                <span>{{prop.location}}, Nairobi</span><br>
-              </div>
-              <div class="info_item">
-                <i class="fas fa-calendar"></i>
-                <span class="text-info">
-                  <span>Current Bills: {{period}}</span><br>
-                  <!-- <button type="button" class="borderless btn-light modalTrigger text-info" data-toggle="modal" data-target="#paymentDetailModal"><i class="fas fa-edit text-danger"></i>Property details</button> -->
-                </span>
-    
-              </div>
-            </div>
-            <div class="col-lg-2 small mt-2">
-              <i class="fas fa-house-user"></i>
-              <span>Number of units:</span>
-              <span class="text-info">{{num_units}}</span><br>
-              <i class="fas fa-users"></i>
-              <span>Current tenancy:</span>
-              <span class="text-info">{{num_tenants}}</span>
-            </div>
-    
-          </div>
-    
+  
+          </div> 
     
     
           <div class="toggleswitch divbg text-info underline font-weight-bold">
@@ -359,28 +364,28 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
 
-                      <div class="form-group input-icons">
-                        <i class="fa fa-caret-down icon text-info"></i>
-                        <select name="usergroup" class="form-control" id ="select_housecode2" >
-                          <option disabled selected value> -- Select Housecode -- </option>
+                      <div class="form-group mt-2 input-icons">
+                        <span class="text-black">Select group <span class="text-danger small">*</span></span>
+                        <select class="select-css" id ="select_housecode2" >
+                          <option disabled selected value> -- Select group -- </option>
                           {% for o in items %}
                           <option value="{{ o }}">{{ o }}</option>
-                          {% endfor %}
-                        </select>
+                          {% endfor %}                        </select>
                       </div>
 
                       <span class="dispnone" id="text-code"></span>
           
+
                       <div class="form-group input-icons">
-                        <i class="fa fa-hashtag icon text-info"></i> 
-                        <input id="enter_housename" class="form-control input-field text-info" style="text-align: center;" type="text" name="house" placeholder="House number/name" autofocus>
+                        <span class="text-black">House/Unit No. <span class="text-danger small">*</span></span>
+                          <input id="enter_housename" class="form-control" type="text" placeholder="H1"/>
                       </div>
         
                       <div id="notifications2"></div>
 
-                      <div class="form-group input-icons">
-                        <i class="fa fa-caret-down icon text-info"></i>
-                        <select id="desc" class="form-control" name="desc" required>
+                      <div class="form-group mt-1 mb-3 input-icons">
+                        <span class="text-black">Select description <span class="text-primary small">(optional)</span></span>
+                        <select class="select-css " id ="desc" >
                           <option disabled selected value> -- Select description -- </option>
                           <option value="Single Room">Single Room</option>
                           <option value="Double Room">Double Room</option>
@@ -397,13 +402,14 @@
                           <option value="Barber shop">Barber shop</option>
                           <option value="Salon">Salon</option>
                           <option value="Warehouse">Warehouse</option>
-                          <option value="Other">Other</option>
+                          <option value="Other">Other</option>                      
                         </select>
                       </div>
+
+                      
                     
                       <div class="divbg center-btn">
                         <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
-                        <button class="btn btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
@@ -706,6 +712,15 @@
     });
 </script>
 
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+    $("#activeprop-child").text($("#active_prop").text())
+    });
+</script>
 
 <script>
   var rawIds = "{{ houseids|safe }}";

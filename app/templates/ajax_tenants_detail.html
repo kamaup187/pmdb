@@ -5,7 +5,8 @@
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
       <span id="current-reloader" class="dispnone">current</span>
-      <!-- <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a> -->
+
+      <a id="download_contacts" href="/download/template/contacts" class="dispnone">download</a>
 
       <span class="multisave dispnone"></span>
 
@@ -76,6 +77,16 @@
               <!-- <i class="me-1" data-feather="user-plus"></i> -->
               <i class="fas fa-long-arrow-alt-left"></i>
               Back to properties
+            </span>
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadContactsExcelModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Upload contacts
+            </span>
+
+            <span class="btn btn-sm btn-light text-black dispnone" data-toggle="modal" data-target="#uploadArrearsExcelModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Upload arrears
             </span>
           </div>
 
@@ -269,12 +280,18 @@
     </div> -->
 
 
-    <div class="modal fade" id="uploadPhoneExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="uploadContactsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-black mb-2">Upload phone numbers</h5>
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload tenant contacts</span>
+              <div>
+                <button id="downloadcontacts" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
             <div class="alert-msgs"></div>
           </div>
           <div class="modal-body pt-0">
@@ -285,12 +302,11 @@
                     <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
      
                       <div class="mt-2 form-group center-btn">
-                        <p class="text-black">Tenants mobile numbers Excel File: <input class="ph" id="tenantmobilefile" type = "file" name = "filename" /></p>
+                        <p class="text-black">Select File: <input class="ph" id="tenantmobilefile" type = "file" name = "filename" /></p>
                       </div>
                     
                       <div class="divbg center-btn">
                         <button id="uploadmobile" type="button" class="btn-success borderless text-white">Upload</button>
-                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                       
@@ -303,6 +319,8 @@
         </div>
       </div>
     </div>
+
+    
 
     <div class="modal fade" id="uploadArrearsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -325,7 +343,6 @@
                     
                       <div class="divbg center-btn">
                         <button id="uploadarrears" type="button" class="btn-success borderless text-white">Upload</button>
-                        <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                       
@@ -795,18 +812,7 @@
     
     </script> -->
 
-<!-- <script>
-  $("#downloadtenants").click(function(){ 
-      $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
-
-      $("#download_tenants")[0].click();
-
-        setTimeout(function(){
-            $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
-        },8000);
-    });
-</script> -->
 
   <!-- <script>
     $("#uploadtenant").on('click',function(){
@@ -868,7 +874,22 @@
     });
   </script> -->
 
-<!-- <script>
+
+  <script>
+    $("#downloadcontacts").click(function(){ 
+        $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+  
+  
+        $("#download_contacts")[0].click();
+  
+          setTimeout(function(){
+              $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
+          },8000);
+      });
+  </script>
+
+
+<script>
   $("#uploadmobile").on('click',function(){
       $("#uploadmobile").html("Uploading...") 
 
@@ -926,7 +947,7 @@
           }
       });
   });
-</script> -->
+</script>
 
 <script>
   $("#uploadarrears").on('click',function(){

@@ -3737,14 +3737,28 @@ class AddTenant(Resource):
                         tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
-                
-                    raw_tel = str(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else "" )
 
-                    if raw_tel.startswith("0"):
-                        tenantphone = raw_tel
+                    mobile = sheet.row_values(row)[1]
+
+                    try:
+                        tel = str(int(mobile))
+                    except:
+                        tel = ""
+
+                    if tel:
+                        rawstrtel = tel.replace(" ", "")
+                        if len(rawstrtel) > 9:
+                            strtel = rawstrtel
+                        else:
+                            strtel = ""
                     else:
-                        tenantphone = "0" + raw_tel
+                        strtel = ""
 
+                    if strtel.startswith("0"):
+                        tenantphone = strtel
+                    else:
+                        tenantphone = "0" + strtel
+                
                     tenant_house = tenanthouse.upper()
                     house_obj = get_specific_house_obj(apartment_id,tenant_house)
                     if not house_obj:

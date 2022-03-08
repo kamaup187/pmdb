@@ -53,6 +53,10 @@ Cloud.config.update = ({
 
 # print(response.text)
 
+# phonenuma = sms_phone_number_formatter("0725538750")
+
+# advanta_send_sms("Good morning Paul, it is working!",phonenuma,kiotapay_api_key,kiotapay_partner_id,"LATITUDELTD")
+
 class MonitorActivity(Resource):
     def get(self):
         target = request.args.get("target")
@@ -2759,11 +2763,13 @@ class DataUpload(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 8:
+                if len(sheet.row_values(1)) != 10:
                     data_format_error = True
             try:
                 if data_format_error:
                     nonexistent_item = sheet.row_values(1)[1000000]
+
+                dict_array = []
 
                 for row in rows:
                     dict_obj = {
@@ -2772,14 +2778,18 @@ class DataUpload(Resource):
                     "group":sheet.row_values(row)[2],
                     "tenant":sheet.row_values(row)[3],
                     "mobile":sheet.row_values(row)[4],
-                    "arrears":sheet.row_values(row)[5],
-                    "email":sheet.row_values(row)[6],
-                    "natid":sheet.row_values(row)[7]
+                    "email":sheet.row_values(row)[5],
+                    "water":sheet.row_values(row)[6],
+                    "garb":sheet.row_values(row)[7],
+                    "serv":sheet.row_values(row)[8],
+                    "sec":sheet.row_values(row)[9]
                     }
 
-                    uploadsjob = q.enqueue_call(
-                        func=read_excel, args=(dict_obj,apartment_id,current_user.id,), result_ttl=5000
-                    )
+                    dict_array.append(dict_obj)
+
+                uploadsjob = q.enqueue_call(
+                    func=read_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                )
 
                 return '<span class="text-success">Upload successful</span>'
 
@@ -3713,7 +3723,7 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 2:
+                if len(sheet.row_values(1)) != 3:
                     data_format_error = True
 
             try:
@@ -3727,8 +3737,13 @@ class AddTenant(Resource):
                         tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                
+                    raw_tel = str(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else "" )
 
-                    tenantphone = "0" + str(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else "" )
+                    if raw_tel.startswith("0"):
+                        tenantphone = raw_tel
+                    else:
+                        tenantphone = "0" + raw_tel
 
                     tenant_house = tenanthouse.upper()
                     house_obj = get_specific_house_obj(apartment_id,tenant_house)

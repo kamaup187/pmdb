@@ -3942,8 +3942,10 @@ class SubmissionsReport(Resource):
 
 class FetchTenants(Resource):
     def get(self):
-        propid = request.args.get('propid')
+        prop_id = request.args.get('propid')
         target = request.args.get('target')
+
+        propid = get_identifier(prop_id)
 
         if target == "tenant details":
             tenantid = request.args.get('tenantid')

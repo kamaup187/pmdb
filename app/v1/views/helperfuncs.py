@@ -4145,7 +4145,7 @@ def read_excel(dict_array,apartment_id,user_id):
         garb = item["garb"]
         serv = item["serv"]
         sec = item["sec"]
-        
+
         natid = None
 
         if isinstance(group,float):
@@ -4198,7 +4198,7 @@ def read_excel(dict_array,apartment_id,user_id):
         try:
             tel = str(int(mobile))
         except:
-            tel = mobile
+            tel = ""
 
         if tel:
             rawstrtel = tel.replace(" ", "")

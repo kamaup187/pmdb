@@ -3662,7 +3662,7 @@ class AddTenant(Resource):
                     for tenant in tenants:
                         if tenant.name.lower() == tenantname.lower() and tenantphone == "0":
                             print("SIMILAR TENANT EXISTS: ",tenant.name,tenantname)
-                            similar = True
+                            # similar = True
 
                     if similar:
                         continue

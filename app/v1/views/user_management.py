@@ -833,7 +833,7 @@ class SelfUserRegisterAgent(Resource):
         except:
             pass
 
-        # UserOp.update_status(user,False)
+        UserOp.update_status(user,False)
 
         login_user(user, remember=remember)
         return redirect(url_for('api.index'))

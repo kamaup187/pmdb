@@ -107,6 +107,11 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
+        propp = ApartmentOp.fetch_apartment_by_id(35)
+        if propp:
+            ApartmentOp.delete(propp)
+        
+
         # if current_user.company.name == "Latitude Properties":
         #     if current_user.username.startswith('qc'):
         #         pass

@@ -4675,3 +4675,65 @@ class ManagementFeeReport(Resource):
             company=current_user.company,
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
+
+
+class OfficePnL(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_office_pnl_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+class OfficeExpenses(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_office_expenses_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+class TenantDeposit(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_deposit_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))

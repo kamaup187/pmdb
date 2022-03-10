@@ -188,6 +188,11 @@ api.add_resource(TenantStatementThree,"/tenant/statement3")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")
+api.add_resource(TenantDeposit,"/deposit/report")
+api.add_resource(OfficePnL,"/profitnloss/report")
+api.add_resource(OfficeExpenses,"/office/expenses")
+
+
 
 api.add_resource(ExpenseDetail,"/expenses/detailed")
 api.add_resource(SubmissionsReport,"/submissions/report")

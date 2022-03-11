@@ -604,6 +604,26 @@ def update_login_history(location,user):
             send_internal_email_notifications(title,txt)
         except:
             pass
+
+def sms_sender(company,sms_text,phonenum):
+    if company.title() == "Lesama Ltd":
+        advanta_send_sms(sms_text,phonenum,lesama_api_key,lesama_partner_id,"Lesama Ltd")
+
+    elif company.title() == "Merit Properties Limited":
+        advanta_send_sms(sms_text,phonenum,merit_api_key,merit_partner_id,"MERIT_LTD")
+
+    ################################## OWN SENDER IDS ##################################
+
+    elif company.upper() == "KEVMA REAL ESTATE":
+        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+
+    elif company.title() == "Latitude Properties":
+        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDELTD")
+
+    #########################################################################################
+
+    else:
+        pass
         
      
 def remove_dups(x):

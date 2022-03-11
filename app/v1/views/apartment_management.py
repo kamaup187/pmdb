@@ -269,7 +269,7 @@ class Index(Resource):
                 smsfrac = f"{advanta_sms_balance(lesama_api_key,lesama_partner_id)} units"
                 color = "text-success"
 
-            elif current_user.company.name.title() == "Merit Properties":
+            elif current_user.company.name.title() == "Merit Properties Limited":
                 smsfrac = f"{advanta_sms_balance(merit_api_key,merit_partner_id)} units"
                 color = "text-success"
 

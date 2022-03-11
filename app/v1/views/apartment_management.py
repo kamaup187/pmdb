@@ -107,14 +107,6 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        coss = CompanyOp.fetch_all_companies()
-
-        for cos in coss:
-            if cos.name.title() in ["Merit Properties Limited","Latitude Properties","Lesama Ltd","Kevma Real Estate"]:
-                print(cos.name, "Updated")
-                CompanyOp.update_sms_provider(current_user.company,"Advanta")
-
-
         #### WORST PRODUCTION DB INCIDENT ##############
 
         # propp = ApartmentOp.fetch_apartment_by_id(35)
@@ -2703,6 +2695,8 @@ class TenantSms(Resource):
 
             if co.sms_provider == "Advanta":
                 sms_sender(co.name,sms_text,phonenum)
+
+                msg = "Message sent successfully"
                 return render_template('ajaxproceed.html',alert=msg)            
 
             else:

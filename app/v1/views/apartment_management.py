@@ -3604,10 +3604,10 @@ class AddTenant(Resource):
                     if tel:
                         rawstrtel = tel.replace(" ", "")
                         if len(rawstrtel) > 9:
-                            strtel = rawstrtel
-                        else:
                             print(tel,"is too long")
                             strtel = ""
+                        else:
+                            strtel = rawstrtel
                     else:
                         print(mobile,"mobile does not exist")
                         strtel = ""
@@ -3797,10 +3797,9 @@ class AddTenant(Resource):
                     if tel:
                         rawstrtel = tel.replace(" ", "")
                         if len(rawstrtel) > 9:
-                            strtel = rawstrtel
-                        else:
-                            print(tel,"is too long")
                             strtel = ""
+                        else:
+                            strtel = rawstrtel
                     else:
                         print(mobile,"mobile does not exist")
                         strtel = ""

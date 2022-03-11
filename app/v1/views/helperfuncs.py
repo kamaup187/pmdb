@@ -449,7 +449,7 @@ def logo(co):
             fulllogopath = "../static/img/logos/latitude/full-logo.png"
             letterhead = "../static/img/logos/latitude/letterhead.jpg"
 
-        elif str_name_company == "Merit Properties":
+        elif str_name_company == "Merit Properties Limited":
             ##################################################
             logopath = "../static/img/logos/merit/l-logo.png"
             mobilelogopath = "../static/img/logos/merit/s-logo.png"

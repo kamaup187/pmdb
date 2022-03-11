@@ -3598,6 +3598,7 @@ class AddTenant(Resource):
                     try:
                         tel = str(int(mobile))
                     except:
+                        print("Failed to stringify",mobile)
                         tel = ""
 
                     if tel:
@@ -3605,8 +3606,10 @@ class AddTenant(Resource):
                         if len(rawstrtel) > 9:
                             strtel = rawstrtel
                         else:
+                            print(tel,"is too long")
                             strtel = ""
                     else:
+                        print(mobile,"mobile does not exist")
                         strtel = ""
 
                     if strtel.startswith("0"):
@@ -3770,9 +3773,25 @@ class AddTenant(Resource):
 
                     mobile = sheet.row_values(row)[1]
 
+                    # try:
+                    #     tel = str(int(mobile))
+                    # except:
+                    #     tel = ""
+
+                    # if tel:
+                    #     rawstrtel = tel.replace(" ", "")
+                    #     if len(rawstrtel) > 9:
+                    #         strtel = rawstrtel
+                    #     else:
+                    #         strtel = ""
+                    # else:
+                    #     strtel = ""
+
+
                     try:
                         tel = str(int(mobile))
                     except:
+                        print("Failed to stringify",mobile)
                         tel = ""
 
                     if tel:
@@ -3780,9 +3799,12 @@ class AddTenant(Resource):
                         if len(rawstrtel) > 9:
                             strtel = rawstrtel
                         else:
+                            print(tel,"is too long")
                             strtel = ""
                     else:
+                        print(mobile,"mobile does not exist")
                         strtel = ""
+
 
                     if strtel.startswith("0"):
                         tenantphone = strtel

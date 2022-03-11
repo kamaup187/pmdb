@@ -107,6 +107,11 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
+        propp = ApartmentOp.fetch_apartment_by_id(35)
+        if propp:
+            ApartmentOp.delete(propp)
+        
+
         # if current_user.company.name == "Latitude Properties":
         #     if current_user.username.startswith('qc'):
         #         pass
@@ -262,6 +267,10 @@ class Index(Resource):
 
             if current_user.company.name == "Lesama Ltd":
                 smsfrac = f"{advanta_sms_balance(lesama_api_key,lesama_partner_id)} units"
+                color = "text-success"
+
+            elif current_user.company.name.title() == "Merit Properties":
+                smsfrac = f"{advanta_sms_balance(merit_api_key,merit_partner_id)} units"
                 color = "text-success"
 
             elif current_user.company.name == "KEVMA REAL ESTATE":

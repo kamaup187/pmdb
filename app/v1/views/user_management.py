@@ -833,7 +833,7 @@ class SelfUserRegisterAgent(Resource):
         except:
             pass
 
-        UserOp.update_status(user,False)
+        # UserOp.update_status(user,False)
 
         login_user(user, remember=remember)
         return redirect(url_for('api.index'))
@@ -921,7 +921,8 @@ class SelfUserRegisterOwner(Resource):
                     owner_co_id = no_flush_err_owner_user.company_id
                     ApartmentOp.update_company(apartment,owner_co_id)
         else:
-            UserOp.update_status(user,False)
+            # UserOp.update_status(user,False)
+            pass
 
         login_user(user, remember=remember)
         return redirect(url_for('api.index'))

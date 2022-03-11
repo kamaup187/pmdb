@@ -36,6 +36,9 @@ kiotapay_partner_id = 3886
 lesama_api_key = "cfc7c4382ae6d4277d8c09419a897c9e"
 lesama_partner_id = 3895
 
+merit_api_key = "fad3000bcfdfb541291ebc018bcc7868"
+merit_partner_id = 2627
+
 kiotanum = "+254716674695"
 
 # from ..stkpush.access_token import register_url
@@ -445,6 +448,13 @@ def logo(co):
             mobilelogopath = "../static/img/logos/latitude/s-logo.png"
             fulllogopath = "../static/img/logos/latitude/full-logo.png"
             letterhead = "../static/img/logos/latitude/letterhead.jpg"
+
+        elif str_name_company == "Merit Properties":
+            ##################################################
+            logopath = "../static/img/logos/merit/l-logo.png"
+            mobilelogopath = "../static/img/logos/merit/s-logo.png"
+            fulllogopath = "../static/img/logos/merit/full-logo.png"
+            letterhead = "../static/img/logos/merit/letterhead.jpg"
 
         elif str_name_company == "KEVMA REAL ESTATE":
             ##################################################

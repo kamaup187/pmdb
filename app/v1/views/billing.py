@@ -1236,7 +1236,7 @@ class EditBill(Resource):
                         agreementbal = bill.agreement_balance + update_agreement
 
                     MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                    MonthlyChargeOp.update_rent_balance(bill,rentarr)
+                    # MonthlyChargeOp.update_rent_balance(bill,rentarr)
 
 
                     diff = total_amount - original_amount

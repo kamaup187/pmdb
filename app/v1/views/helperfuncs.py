@@ -4233,9 +4233,9 @@ def read_excel(dict_array,apartment_id,user_id):
         if tel:
             rawstrtel = tel.replace(" ", "")
             if len(rawstrtel) > 9:
-                strtel = rawstrtel
-            else:
                 strtel = ""
+            else:
+                strtel = rawstrtel
         else:
             strtel = ""
 

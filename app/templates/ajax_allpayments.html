@@ -1536,34 +1536,56 @@
         success: function(response) {
           $(".alert-msgs").html(response);
           // location.reload();
+
           $.ajax({
-            url: "{{ url_for('api.receivepayment') }}",
+            url: "{{ url_for('api.editbill') }}",
             type: "get",
             data: {
-                  propid: $("#prop_identifier_main").text(),
-                  house: $("#select_house").val(),
-                  house2: $("#house-holder").text(),
-                  paidamount:$("#paidamount").val(),
-                  target:"breakdown"
-                },
-            success: function(response) {
-              $("#billbreakdown").html(response);
+              billid: $("#edit_bill_identifier").text()
+            },
+            success: function (response) {
+              $("#billeditbed").html(response);
+
 
               $.ajax({
                 url: "{{ url_for('api.receivepayment') }}",
                 type: "get",
                 data: {
+                  propid: $("#prop_identifier_main").text(),
+                  house: $("#select_house").val(),
+                  house2: $("#house-holder").text(),
+                  paidamount: $("#paidamount").val(),
+                  target: "breakdown"
+                },
+                success: function (response) {
+                  $("#billbreakdown").html(response);
+
+                  $.ajax({
+                    url: "{{ url_for('api.receivepayment') }}",
+                    type: "get",
+                    data: {
                       propid: $("#prop_identifier_main").text(),
                       house: $("#select_house").val(),
-                      target:"amount due"
+                      target: "amount due"
                     },
-                success: function(response) {
-                  $("#totaldue").html(response);                  
+                    success: function (response) {
+                      $("#totaldue").html(response);
+                    }
+                  });
+
                 }
               });
 
-              }
-            });
+
+            },
+            error: function (xhr) {
+              $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+              $("#editbill").addClass("dispnone");
+            }
+          });
+
+
+
 
           setTimeout(function(){
             $(".alert-msgs").empty();

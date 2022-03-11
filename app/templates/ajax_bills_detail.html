@@ -189,6 +189,40 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit arrears per invoice item</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="arreditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editarr" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeArrModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="smsInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -517,6 +551,29 @@
 </script>
 
 <script>
+  $("#editArrModal").on('shown.bs.modal', function(){
+    $("#editarr").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"editarrears"
+          },
+      success: function(response) {
+        $("#arreditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#arreditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        $("#editarr").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
   $('#editBillModal').on('hidden.bs.modal', function () {
     $("#edit_bill_identifier").empty();
 })
@@ -539,7 +596,7 @@
                 fine: $("#edit_penalty").val(),
                 deposit: $("#edit_deposit").val(),
                 maintenance: $("#edit_maintenance").val(),
-                arrears: $("#edit_arrears").val()
+                arrears:$("#edit_arrears").val()
             },
         success: function(response) {
           $(".alert-msgs").html(response);
@@ -561,6 +618,67 @@
             $(".reset").click();
             $("#editbill").html("Update")
             $("#closeModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+<script>
+  $("#editarr").click(function(){   
+    $("#editarr").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent_arr").val(),
+                water: $("#edit_water_arr").val(),
+                garbage: $("#edit_garbage_arr").val(),
+                security: $("#edit_security_arr").val(),
+                electricity: $("#edit_electricity_arr").val(),
+                agreement: $("#edit_agreement_arr").val(),
+                fine: $("#edit_penalty_arr").val(),
+                deposit: $("#edit_deposit_arr").val(),
+                maintenance: $("#edit_maintenance_arr").val(),
+                target: "editarrears"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+
+          $.ajax({
+            url: "{{ url_for('api.editbill') }}",
+            type: "get",
+            data: {
+                  billid: $("#edit_bill_identifier").text()
+                },
+            success: function(response) {
+              $("#billeditbed").html(response);
+              $.ajax({
+                  url: "{{ url_for('api.fetchbills') }}",
+                  type: "get",
+                  data: {
+                    propid:  $("#prop_identifier").text(),
+                    target:"sometarget"
+                  },
+                  success: function(response) {
+                    
+                    $("#result-view2").html(response);
+                  }
+              });
+            },
+            error: function(xhr) {
+              $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+              $("#editbill").addClass("dispnone");
+              }
+          });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editarr").html("Update")
+            $("#closeArrModal").click();
           }, 1000);
         }
       });

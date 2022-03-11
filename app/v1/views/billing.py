@@ -1188,10 +1188,11 @@ class EditBill(Resource):
                     else:
                         rentbal = bill.rent_balance + update_rent
 
-                    rentarr = bill.rent_balance # supplied arrears to effect rent only
-                    if values[6] != "null":
-                        rentarr = bill.rent_balance + values[6]
-                        rentbal += values[6]
+                    # # supplied arrears to effect rent only
+                    # rentarr = bill.rent_balance 
+                    # if values[6] != "null":
+                    #     rentarr = bill.rent_balance + values[6]
+                    #     rentbal += values[6]
 
                     if bill.water_paid:
                         waterbal = bill.water_balance + update_water - bill.water_paid

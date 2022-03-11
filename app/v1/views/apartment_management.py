@@ -53,9 +53,9 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# phonenuma = sms_phone_number_formatter("0725538750")
+# phonenuma = sms_phone_number_formatter("0701095028")
 
-# advanta_send_sms("Good morning Paul, it is working!",phonenuma,kiotapay_api_key,kiotapay_partner_id,"LATITUDELTD")
+# advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
 class MonitorActivity(Resource):
     def get(self):
@@ -107,9 +107,21 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        propp = ApartmentOp.fetch_apartment_by_id(35)
-        if propp:
-            ApartmentOp.delete(propp)
+        coss = CompanyOp.fetch_all_companies()
+
+        for cos in coss:
+            if cos.name.title() in ["Merit Properties Limited","Latitude Properties","Lesama Ltd","Kevma Real Estate"]:
+                print(cos.name, "Updated")
+                CompanyOp.update_sms_provider(current_user.company,"Advanta")
+
+
+        #### WORST PRODUCTION DB INCIDENT ##############
+
+        # propp = ApartmentOp.fetch_apartment_by_id(35)
+        # if propp:
+        #     ApartmentOp.delete(propp)
+
+        ################################################
         
 
         # if current_user.company.name == "Latitude Properties":
@@ -2687,20 +2699,14 @@ class TenantSms(Resource):
             tele = tenant.phone
             phonenum = sms_phone_number_formatter(tele)
 
-            if current_user.company.name == "Lesama Ltd":
-                advanta_send_sms(sms_text,phonenum,lesama_api_key,lesama_partner_id,"Lesama Ltd")
-                msg = "Message sent successfully"
-                return render_template('ajaxproceed.html',alert=msg)
+            co = current_user.company
 
-
-            if current_user.company.name == "KEVMA REAL ESTATE":
-                advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-                msg = "Message sent successfully"
+            if co.sms_provider == "Advanta":
+                sms_sender(co.name,sms_text,phonenum)
                 return render_template('ajaxproceed.html',alert=msg)            
 
             else:
-
-                co = current_user.company
+                
                 rem_sms =co.remainingsms
                 if rem_sms > 0:
                     #Send the SMS

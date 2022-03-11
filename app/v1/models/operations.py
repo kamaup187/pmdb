@@ -186,6 +186,10 @@ class CompanyOp(Company,Base):
         self.subscription = sub
         db.session.commit()
 
+    def update_sms_provider(self,provider):
+        self.sms_provider = provider
+        db.session.commit()
+
     def update_status(self,status):
         self.active = status
         db.session.commit()

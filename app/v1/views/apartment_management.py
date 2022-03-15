@@ -269,15 +269,19 @@ class Index(Resource):
                 # CompanyOp.set_quota_month(company,time.month)
                 pass
 
-            if current_user.company.name == "Lesama Ltdd":
+            if current_user.company.name == "Lesama Ltd":
                 sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
-                CompanyOp.set_rem_quota(company,sms_units)
+                raw_smsunits = sms_units.replace(",","")
+                int_units = int(raw_smsunits)
+                CompanyOp.set_rem_quota(company,int_units)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
             elif current_user.company.name.title() == "Merit Properties Limited":
                 sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
-                CompanyOp.set_rem_quota(company,sms_units)
+                raw_smsunits = sms_units.replace(",","")
+                int_units = int(raw_smsunits)
+                CompanyOp.set_rem_quota(company,int_units)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 

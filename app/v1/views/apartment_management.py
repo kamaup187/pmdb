@@ -269,7 +269,7 @@ class Index(Resource):
                 # CompanyOp.set_quota_month(company,time.month)
                 pass
 
-            if current_user.company.name == "Lesama Ltd":
+            if current_user.company.name == "Lesama Ltdd":
                 sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
                 CompanyOp.set_rem_quota(company,sms_units)
                 smsfrac = f"{sms_units} units"

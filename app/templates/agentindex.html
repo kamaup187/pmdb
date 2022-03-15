@@ -2126,6 +2126,114 @@
   <script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
 
 
+  <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
+
+
+
+
+  <script type="text/javascript">
+    function getFeed() {
+      $("#searchInput").attr("placeholder", "Please wait...");
+        $.ajax({
+            url: "{{ url_for('api.propsearchdata') }}",
+            type: 'get',
+            success: function(data) {
+                // $('#dynamic-content').html(data);
+                $('#dynamic-search').html(data);
+                $("#searchInput").attr("placeholder", "Search for...");
+                // $('#searchInput').append('<style>.my_class::placeholder{color:red}</style>')
+            },
+            error:function(xhr) {
+              $("#searchInput").attr("placeholder", "Search is temporarily unavailable");
+            }
+        });
+    }
+    function getPropData() {
+        $.ajax({
+            url: "{{ url_for('api.propdata') }}",
+            type: 'get',
+            success: function(data) {
+                // $('#dynamic-content').html(data);
+                $("#barloader").addClass("dispnone")
+                $('#dynamic-props').html(data);
+  
+            },
+            complete:function(data) {
+                setTimeout(getPropStats, 10);
+            }
+        });
+    }
+  
+    function getPropStats() {
+        $.ajax({
+            url: "{{ url_for('api.propstats') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar')
+                  },
+            success: function(data) {
+                // $('#dynamic-content').html(data);
+                $('#dynamic-stats').html(data);
+  
+            },
+            complete:function(data) {
+                setTimeout(getHouseStats, 10);
+            }
+        });
+    }
+  
+    function getHouseStats() {
+        $.ajax({
+            url: "{{ url_for('api.housestats') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar')
+                  },
+            success: function(data) {
+                // $('#dynamic-content').html(data);
+                $('#house-area').html(data);
+  
+            },
+            complete:function(data) {
+                setTimeout(getGraphStats, 10);
+            }
+        });
+    }
+    function getGraphStats() {
+        $.ajax({
+            url: "{{ url_for('api.graphstats') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar')
+                  },
+            success: function(data) {
+                // $('#dynamic-content').html(data);
+                $('#graph-area').html(data);
+  
+            },
+            // complete:function(data) {
+            //     setTimeout(getFeed, 1000);
+            // }
+        });
+    }
+    
+    // $(document).ready(function() {
+    //     setTimeout(getFeed,1);
+    //     setTimeout(getPropData,10);
+    // });
+  
+    setTimeout(getFeed,1);
+    setTimeout(getPropData,10);
+  
+    // $(document).ready(function() {
+    //     setTimeout(getPropStats,50);
+    // });
+    // $(document).ready(function() {
+    //     setTimeout(getGraphStats,500);
+    // });
+    </script>
+
+
 
   <script type="text/javascript" src="{{ url_for('static', filename='plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -2139,7 +2247,6 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='printThis.js') }}"></script>
 
-  <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
   
   <!-- <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> -->
   <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
@@ -2536,7 +2643,7 @@ function animateHH(element) {
     });
   </script>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   function getFeed() {
     $("#searchInput").attr("placeholder", "Please wait...");
       $.ajax({
@@ -2636,7 +2743,7 @@ function animateHH(element) {
   // $(document).ready(function() {
   //     setTimeout(getGraphStats,500);
   // });
-  </script>
+  </script> -->
 
 <script>
     function startTime() {

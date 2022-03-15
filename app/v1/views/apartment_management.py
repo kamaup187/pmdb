@@ -270,16 +270,24 @@ class Index(Resource):
                 pass
 
             if current_user.company.name == "Lesama Ltd":
-                smsfrac = f"{advanta_sms_balance(lesama_api_key,lesama_partner_id)} units"
+                sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
+                CompanyOp.set_rem_quota(company,sms_units)
+                smsfrac = f"{sms_units} units"
                 color = "text-success"
 
             elif current_user.company.name.title() == "Merit Properties Limited":
-                smsfrac = f"{advanta_sms_balance(merit_api_key,merit_partner_id)} units"
+                sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
+                CompanyOp.set_rem_quota(company,sms_units)
+                smsfrac = f"{sms_units} units"
                 color = "text-success"
 
-            elif current_user.company.name == "KEVMA REAL ESTATE":
-                smsfrac = f"{advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)} units"
-                color = "text-success"
+            # elif current_user.company.name == "KEVMA REAL ESTATE":
+            #     smsfrac = f"{advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)} units"
+            #     color = "text-success"
+
+            # elif current_user.company.name.title() == "Latitude Properties":
+            #     smsfrac = f"{advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)} units"
+            #     color = "text-success"
 
             else:
                 remainingsms = company.remainingsms
@@ -608,7 +616,7 @@ class ComGraphStats(Resource):
 
             try:
                 co_smsspent = client.smsquota - client.remainingsms
-                co_smsspent += 50 #URGENT TODO REMOVE THIS 50
+                # co_smsspent += 50 #URGENT TODO REMOVE THIS 50
                 sms_spent += co_smsspent
                 actual_spent = co_smsspent * 0.8
                 actual_cost += actual_spent

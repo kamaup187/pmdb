@@ -1547,12 +1547,16 @@ class SendSms(Resource):
             sms_obj.save()
 
             if tenant_obj.sms:
-                if payment_obj.apartment.company.name == "Lesama Ltd":
-                    advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
-                    return f'<span class="text-success smallify ln-10">Sent successfully</span>'
+                # if payment_obj.apartment.company.name == "Lesama Ltd":
+                #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+                #     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 
-                elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
-                    advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+                # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
+                #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+                #     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
+
+                if co.sms_provider == "Advanta":
+                    sms_sender(co.name,message,phonenum)
                     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 
                 else:

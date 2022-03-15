@@ -2903,7 +2903,7 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
 
     user_obj = UserOp.fetch_user_by_id(userid)
 
-    target_company = user_obj.company
+    # target_company = user_obj.company
 
     for tenant_obj in tenants:
 
@@ -2954,10 +2954,14 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
                     sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
                     sms_obj.save()
 
-                    if target_company.name == "Lesama Ltd":
-                        advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
-                    elif target_company.name == "KEVMA REAL ESTATE":
-                        advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+
+                    if co.sms_provider == "Advanta":
+                        sms_sender(co.name,message,phonenum)
+
+                    # if co.name == "Lesama Ltd":
+                    #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+                    # elif co.name == "KEVMA REAL ESTATE":
+                    #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                     else:
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient, sender)
@@ -3053,12 +3057,16 @@ def autosend_pending_smsreceipts(payids):
             sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
             sms_obj.save()
 
-            if payment_obj.apartment.company.name == "Lesama Ltd":
-                advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
-                PaymentOp.update_sms_status(payment_obj,"sent")
-            elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
-                advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-                PaymentOp.update_sms_status(payment_obj,"sent")
+            if co.sms_provider == "Advanta":
+                sms_sender(co.name,message,phonenum)
+
+
+            # if payment_obj.apartment.company.name == "Lesama Ltd":
+            #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+            #     PaymentOp.update_sms_status(payment_obj,"sent")
+            # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
+            #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+            #     PaymentOp.update_sms_status(payment_obj,"sent")
             else:
                 if raw_rem_sms > 0:
                     #Send the SMS
@@ -3664,12 +3672,19 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
                         sms_obj.save()
 
-                        if co.name == "KEVMA REAL ESTATE":
-                            advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+                        if co.sms_provider == "Advanta":
+                            sms_sender(co.name,message,phonenum)
                             MonthlyChargeOp.update_sms_status(bill,"sent")
-                        elif co.name == "Lesama Ltd":
-                            advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
-                            MonthlyChargeOp.update_sms_status(bill,"sent")
+
+
+                        # if co.name == "KEVMA REAL ESTATE":
+                        #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+                        #     MonthlyChargeOp.update_sms_status(bill,"sent")
+                        # elif co.name == "Lesama Ltd":
+                        #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+                        #     MonthlyChargeOp.update_sms_status(bill,"sent")
+
+
                         # if message:
                         #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                         #     MonthlyChargeOp.update_sms_status(bill,"sent")
@@ -5459,7 +5474,9 @@ def auto_consume_ctob2(ctob_obj):
     phonenum = sms_phone_number_formatter_mpesa(tele)
     print("PHONENUM",phonenum)
 
-    units = ctob_obj.trans_amnt * 1.25
+    # units = ctob_obj.trans_amnt * 1.25
+
+    units = ctob_obj.trans_amnt / 0.7
 
     old_units = co.remainingsms
     new_units = int(units) + old_units 
@@ -5467,14 +5484,18 @@ def auto_consume_ctob2(ctob_obj):
     CompanyOp.set_rem_quota(co,int(new_units))
 
     if co:
-        try:
-            recipient = [phonenum]
-            message = f"Hi {ctob_obj.fname}, \n{co.name} has been successfully credited with {int(units)} sms units for payment of KES {ctob_obj.trans_amnt} (ref- {ctob_obj.trans_id}. \nAvailable sms units: {new_units}  \n\nThank you."
-            
-            response = sms.send(message, recipient, sender)
-            print(response)
-        except Exception as e:
-            print(f"Houston, we have a problem {e}")
+
+        message = f"Hi {ctob_obj.fname}, \n{co.name} has been successfully credited with {int(units)} sms units for payment of KES {ctob_obj.trans_amnt} (ref- {ctob_obj.trans_id}. \nAvailable sms units: {new_units}  \n\nThank you."
+
+        if co.sms_provider == "Advanta":
+            sms_sender(co.name,message,phonenum)
+        else:
+            try:
+                recipient = [phonenum]                
+                response = sms.send(message, recipient, sender)
+                print(response)
+            except Exception as e:
+                print(f"Houston, we have a problem {e}")
 
 
 def fetch_expenses(current_user):

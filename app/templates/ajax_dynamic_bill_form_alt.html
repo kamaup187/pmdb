@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Rent</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_rent" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.rent}}" placeholder="{{bill.rent}}">
+        <input id="edit_rent" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.rent}}" placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Water</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_water" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.water}}" placeholder="{{bill.water}}" {{waterlock}}>
+        <input id="edit_water" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.water}}" placeholder="type here" {{waterlock}}>
         <span class="fa field-icon-two text-info small">{{waterlock_icon|safe}}</span>
       </div>
     </div>
@@ -22,7 +22,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Garbage</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_garbage" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.garbage}}" placeholder="{{bill.garbage}}">
+        <input id="edit_garbage" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.garbage}}" placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Security</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_security" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.security}}" placeholder="{{bill.security}}">
+        <input id="edit_security" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.security}}" placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -38,7 +38,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Electricity</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_electricity" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.electricity}}" placeholder="{{bill.electricity}}" disabled>
+        <input id="edit_electricity" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.electricity}}" placeholder="type here" disabled>
         <span class="field-icon-two text-info small"><i class="fa fa-lock ml-3 text-danger"></i></span>
       </div>
     </div>
@@ -49,7 +49,7 @@
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Arrears</span></div>
       <div class="form-group col-7 no-paddin input-icons">
         <button id="" type="button" class="borderless" data-toggle="modal" data-target="#editArrModal">
-          <input id="edit_arrears" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.arrears}}" placeholder="{{bill.arrears}}">
+          <input id="edit_arrears" class="form-control pl-5 ph-dark text-right text-black" type="text" value="" placeholder="click to edit">
           <span class="fa field-icon-two text-info small">Kshs</span>
         </button>
       </div>
@@ -58,7 +58,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Deposit</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_deposit" class="form-control pl-5 ph-dark text-right" type="text" value="{{bill.deposit}}"placeholder="{{bill.deposit}}">
+        <input id="edit_deposit" class="form-control pl-5 ph-dark text-right" type="text" value="{{bill.deposit}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -66,7 +66,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Agreement</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_agreement" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.agreement}}"placeholder="{{bill.agreement}}">
+        <input id="edit_agreement" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.agreement}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -74,7 +74,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Penalty</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_penalty" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.penalty}}"placeholder="{{bill.penalty}}">
+        <input id="edit_penalty" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.penalty}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -82,7 +82,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Service</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_maintenance" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.maintenance}}"placeholder="{{bill.maintenance}}">
+        <input id="edit_maintenance" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{bill.maintenance}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>

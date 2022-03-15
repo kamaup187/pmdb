@@ -2472,8 +2472,9 @@ class EditPayment(Resource):
 
 
         if target == "void payment":
-            if str(current_user.company_user_group) == "User":
-                abort(403)
+            # if str(current_user.company_user_group) == "User":
+            #     abort(403)
+            
             # if tenant_obj.multiple_houses:
             #     abort(403)
             #     # return "Voiding rejected"

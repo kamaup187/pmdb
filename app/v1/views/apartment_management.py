@@ -105,11 +105,11 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        appss = ApartmentOp.fetch_all_apartments()
-        for qqq in appss:
-            print("updating",qqq, "currently",qqq.reminder_status)
-            ApartmentOp.update_reminder_status(qqq,"pending")
-            print("Update complete",qqq, "now",qqq.reminder_status)
+        # appss = ApartmentOp.fetch_all_apartments()
+        # for qqq in appss:
+        #     print("updating",qqq, "currently",qqq.reminder_status)
+        #     ApartmentOp.update_reminder_status(qqq,"pending")
+        #     print("Update complete",qqq, "now",qqq.reminder_status)
 
 
         time = datetime.datetime.now() + relativedelta(hours=3)

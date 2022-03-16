@@ -3615,14 +3615,19 @@ class AddTenant(Resource):
 
                     raw_mobile = sheet.row_values(row)[2]
 
-                    if isinstance(raw_mobile,string):
-                        mobile2 = raw_mobile.replace(" ", "")
-                        if mobile2.startswith("0"):
-                            mobile = mobile2.lstrip("0")
+                    print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+
+                    if raw_mobile:
+                        if isinstance(raw_mobile,string):
+                            mobile2 = raw_mobile.replace(" ", "")
+                            if mobile2.startswith("0"):
+                                mobile = mobile2.lstrip("0")
+                            else:
+                                mobile = mobile2
                         else:
-                            mobile = mobile2
+                            mobile = raw_mobile
                     else:
-                        mobile = raw_mobile
+                        mobile = ""
 
                     try:
                         if isinstance(mobile,string):
@@ -3805,14 +3810,20 @@ class AddTenant(Resource):
 
                     raw_mobile = sheet.row_values(row)[1]
 
-                    if isinstance(raw_mobile,string):
-                        mobile2 = raw_mobile.replace(" ", "")
-                        if mobile2.startswith("0"):
-                            mobile = mobile2.lstrip("0")
+                    print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+
+                    if raw_mobile:
+
+                        if isinstance(raw_mobile,string):
+                            mobile2 = raw_mobile.replace(" ", "")
+                            if mobile2.startswith("0"):
+                                mobile = mobile2.lstrip("0")
+                            else:
+                                mobile = mobile2
                         else:
-                            mobile = mobile2
+                            mobile = raw_mobile
                     else:
-                        mobile = raw_mobile
+                        mobile = ""
 
                     try:
                         if isinstance(mobile,string):

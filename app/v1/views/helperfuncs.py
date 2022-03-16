@@ -443,6 +443,9 @@ def logo(co):
             letterhead = "../static/img/logos/supersite/letterhead.jpg"
         
         elif str_name_company == "Latitude Properties":
+            #####################################################
+            coc = CompanyOp.fetch_company_by_name("Latitude Properties")
+            CompanyOp.update_sms_provider(coc,"Latitude Properties")
             ##################################################
             logopath = "../static/img/logos/latitude/l-logo.png"
             mobilelogopath = "../static/img/logos/latitude/s-logo.png"

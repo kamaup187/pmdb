@@ -445,7 +445,7 @@ def logo(co):
         elif str_name_company == "Latitude Properties":
             #####################################################
             coc = CompanyOp.fetch_company_by_name("Latitude Properties")
-            CompanyOp.update_sms_provider(coc,"Latitude Properties")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/latitude/l-logo.png"
             mobilelogopath = "../static/img/logos/latitude/s-logo.png"
@@ -453,6 +453,8 @@ def logo(co):
             letterhead = "../static/img/logos/latitude/letterhead.jpg"
 
         elif str_name_company == "Merit Properties Limited":
+            coc = CompanyOp.fetch_company_by_name("Merit Properties Limited")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/merit/l-logo.png"
             mobilelogopath = "../static/img/logos/merit/s-logo.png"
@@ -460,6 +462,8 @@ def logo(co):
             letterhead = "../static/img/logos/merit/letterhead.jpg"
 
         elif str_name_company == "KEVMA REAL ESTATE":
+            coc = CompanyOp.fetch_company_by_name("KEVMA REAL ESTATE")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/kevma/l-logo.png"
             mobilelogopath = "../static/img/logos/kevma/s-logo.png"
@@ -496,6 +500,8 @@ def logo(co):
             letterhead = "../static/img/logos/premier/letterhead.jpg"
 
         elif str_name_company == "Lesama Ltd":
+            coc = CompanyOp.fetch_company_by_name("Lesama Ltd")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lesama/l-logo.png"
             mobilelogopath = "../static/img/logos/lesama/s-logo.png"

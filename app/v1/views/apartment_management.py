@@ -271,27 +271,33 @@ class Index(Resource):
 
             if current_user.company.name == "Lesama Ltd":
                 sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
-                raw_smsunits = sms_units.replace(",","")
-                int_units = int(raw_smsunits)
-                CompanyOp.set_rem_quota(company,int_units)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
             elif current_user.company.name.title() == "Merit Properties Limited":
                 sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
-                raw_smsunits = sms_units.replace(",","")
-                int_units = int(raw_smsunits)
-                CompanyOp.set_rem_quota(company,int_units)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
-            # elif current_user.company.name == "KEVMA REAL ESTATE":
-            #     smsfrac = f"{advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)} units"
-            #     color = "text-success"
+            elif current_user.company.name == "KEVMA REAL ESTATE":
+                sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
-            # elif current_user.company.name.title() == "Latitude Properties":
-            #     smsfrac = f"{advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)} units"
-            #     color = "text-success"
+                raw_smsunits = sms_units.replace(",","")
+                int_units = int(raw_smsunits)
+                CompanyOp.set_rem_quota(company,int_units)
+
+                smsfrac = f"{sms_units} units"
+                color = "text-success"
+
+            elif current_user.company.name.title() == "Latitude Properties":
+                sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
+
+                raw_smsunits = sms_units.replace(",","")
+                int_units = int(raw_smsunits)
+                CompanyOp.set_rem_quota(company,int_units)
+
+                smsfrac = f"{sms_units} units"
+                color = "text-success"
 
             else:
                 remainingsms = company.remainingsms

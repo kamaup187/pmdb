@@ -627,7 +627,7 @@ def sms_sender(company,sms_text,phonenum):
         advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
-        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDELTD")
+        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
 
     #########################################################################################
 

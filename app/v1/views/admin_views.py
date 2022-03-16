@@ -456,7 +456,7 @@ class AllProperties(Resource):
                     'houses':houses,
                     'tenants':tenants,
                     'vacant':houses - tenants,
-                    'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "Sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
+                    'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,
                     'createdby':prop.user_id,
                 }

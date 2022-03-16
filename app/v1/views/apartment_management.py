@@ -105,6 +105,10 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        appss = ApartmentOp.fetch_all_apartments()
+        for qqq in appss:
+            ApartmentOp.update_reminder_status(qqq,"pending")
+
         time = datetime.datetime.now() + relativedelta(hours=3)
 
         #### WORST PRODUCTION DB INCIDENT ##############
@@ -154,6 +158,7 @@ class Index(Resource):
             present_year = time.year
 
         apartment_list = fetch_all_apartments_by_user(current_user)
+
         try:
             reminder = current_user.company.template
         except:

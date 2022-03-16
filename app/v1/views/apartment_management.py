@@ -3607,10 +3607,22 @@ class AddTenant(Resource):
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
-                    mobile = sheet.row_values(row)[2]
+                    raw_mobile = sheet.row_values(row)[2]
+
+                    if isinstance(raw_mobile,string):
+                        mobile2 = raw_mobile.replace(" ", "")
+                        if mobile2.startswith("0"):
+                            mobile = mobile2.lstrip("0")
+                        else:
+                            mobile = mobile2
+                    else:
+                        mobile = raw_mobile
 
                     try:
-                        tel = str(int(mobile))
+                        if isinstance(mobile,string):
+                            tel = mobile
+                        else:
+                            tel = str(int(mobile))
                     except:
                         print("Failed to stringify",mobile)
                         tel = ""
@@ -3785,25 +3797,22 @@ class AddTenant(Resource):
                     except:
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
-                    mobile = sheet.row_values(row)[1]
+                    raw_mobile = sheet.row_values(row)[1]
 
-                    # try:
-                    #     tel = str(int(mobile))
-                    # except:
-                    #     tel = ""
-
-                    # if tel:
-                    #     rawstrtel = tel.replace(" ", "")
-                    #     if len(rawstrtel) > 9:
-                    #         strtel = rawstrtel
-                    #     else:
-                    #         strtel = ""
-                    # else:
-                    #     strtel = ""
-
+                    if isinstance(raw_mobile,string):
+                        mobile2 = raw_mobile.replace(" ", "")
+                        if mobile2.startswith("0"):
+                            mobile = mobile2.lstrip("0")
+                        else:
+                            mobile = mobile2
+                    else:
+                        mobile = raw_mobile
 
                     try:
-                        tel = str(int(mobile))
+                        if isinstance(mobile,string):
+                            tel = mobile
+                        else:
+                            tel = str(int(mobile))
                     except:
                         print("Failed to stringify",mobile)
                         tel = ""
@@ -3811,13 +3820,13 @@ class AddTenant(Resource):
                     if tel:
                         rawstrtel = tel.replace(" ", "")
                         if len(rawstrtel) > 9:
+                            print(tel,"is too long")
                             strtel = ""
                         else:
                             strtel = rawstrtel
                     else:
                         print(mobile,"mobile does not exist")
                         strtel = ""
-
 
                     if strtel.startswith("0"):
                         tenantphone = strtel

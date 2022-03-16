@@ -3618,7 +3618,7 @@ class AddTenant(Resource):
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
                     if raw_mobile:
-                        if isinstance(raw_mobile,string):
+                        if isinstance(raw_mobile,str):
                             mobile2 = raw_mobile.replace(" ", "")
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
@@ -3630,7 +3630,7 @@ class AddTenant(Resource):
                         mobile = ""
 
                     try:
-                        if isinstance(mobile,string):
+                        if isinstance(mobile,str):
                             tel = mobile
                         else:
                             tel = str(int(mobile))
@@ -3814,7 +3814,7 @@ class AddTenant(Resource):
 
                     if raw_mobile:
 
-                        if isinstance(raw_mobile,string):
+                        if isinstance(raw_mobile,str):
                             mobile2 = raw_mobile.replace(" ", "")
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
@@ -3826,7 +3826,7 @@ class AddTenant(Resource):
                         mobile = ""
 
                     try:
-                        if isinstance(mobile,string):
+                        if isinstance(mobile,str):
                             tel = mobile
                         else:
                             tel = str(int(mobile))

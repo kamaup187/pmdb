@@ -125,9 +125,13 @@ api.add_resource(TestApi,"/testapi")
 api.add_resource(QueryMpesaTrans,"/query")
 api.add_resource(ConsumeMpesaData,"/mpesa/payment")
 api.add_resource(ResetAllMpesaData,"/restricted/datareset")
+
 #c2b urls
 api.add_resource(CallBackUrlProminance,"/promitech/payment")
 api.add_resource(CallBackUrlKiotapay,"/kiotapay/payment")
+api.add_resource(CallBackUrlLatitude,"/latitude/payment")
+api.add_resource(CallBackUrlPremier,"/premier/payment")
+api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
 
 #bank urls
 api.add_resource(CallBackUrlEquity,"/nest/payment")

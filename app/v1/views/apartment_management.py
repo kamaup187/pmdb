@@ -23,10 +23,10 @@ from operator import add
 from app import sms
 from app import mail
 
-from rq import Queue
-from rq.job import Job
-from worker import conn
-q = Queue(connection=conn)
+# from rq import Queue
+# from rq.job import Job
+# from worker import conn
+# q = Queue(connection=conn)
 
 Cloud.config.update = ({
     'cloud_name':os.environ.get('CLOUDINARY_CLOUD_NAME'),

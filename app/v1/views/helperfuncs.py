@@ -28,6 +28,11 @@ from .advanta import *
 from app import mail
 from app import sms
 
+from rq import Queue
+from rq.job import Job
+from worker import conn
+q = Queue(connection=conn,default_timeout=10800)
+
 sender = os.getenv("SENDER_ID")
 
 kiotapay_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
@@ -616,23 +621,34 @@ def update_login_history(location,user):
 
 def sms_sender(company,sms_text,phonenum):
     if company.title() == "Lesama Ltd":
-        advanta_send_sms(sms_text,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+        report = advanta_send_sms(sms_text,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
 
     elif company.title() == "Merit Properties Limited":
-        advanta_send_sms(sms_text,phonenum,merit_api_key,merit_partner_id,"MERIT_LTD")
+        report = advanta_send_sms(sms_text,phonenum,merit_api_key,merit_partner_id,"MERIT_LTD")
 
     ################################## OWN SENDER IDS ##################################
 
     elif company.upper() == "KEVMA REAL ESTATE":
-        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
-        advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
 
     #########################################################################################
-
     else:
-        pass
+        report = None
+        
+    if report:
+        param1 = report["apikey"]
+        param2 = report["partnerID"]
+        param3 = report["msgid"]
+        jb = q.enqueue_in(timedelta(seconds=10), advanta_sms_delivery, args=(param1,param2,param3,))
+        return param3
+    else:
+        print("NO REPORT TO CHECK")
+        return None
+
+
         
      
 def remove_dups(x):
@@ -3067,8 +3083,9 @@ def autosend_pending_smsreceipts(payids):
             sms_obj.save()
 
             if co.sms_provider == "Advanta":
-                sms_sender(co.name,message,phonenum)
-
+                smsid = sms_sender(co.name,message,phonenum)
+                if smsid:
+                    PaymentOp.update_smsid(payment_obj,smsid)
 
             # if payment_obj.apartment.company.name == "Lesama Ltd":
             #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")

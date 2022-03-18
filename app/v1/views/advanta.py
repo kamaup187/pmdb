@@ -103,11 +103,21 @@ def advanta_send_sms(txt,tel,apikey,partnerid,shortcode):
 
     try:
         response = requests.post(url, json=payload)
-        msgid = response.json()["responses"][0]["messageid"]
         print("ADVANTA sms sending successful")
-
     except Exception as e:
+        response = ""
         print("ADVANTA sms sending failed",e)
+
+    try:
+        print(response.json())
+        print(response.json()["responses"])
+        print(response.json()["responses"][0])
+        print(response.json()["responses"][0]["messageid"])
+
+        msgid = response.json()["responses"][0]["messageid"]
+        print("ADVANTA sms response success")
+    except Exception as e:
+        print("ADVANTA sms response error",e)
         msgid = ""
 
     if msgid:

@@ -642,7 +642,7 @@ def sms_sender(company,sms_text,phonenum):
         param1 = report["apikey"]
         param2 = report["partnerID"]
         param3 = report["msgid"]
-        jb = q.enqueue_in(timedelta(seconds=10), advanta_sms_delivery, args=(param1,param2,param3,))
+        jb = q.enqueue_in(timedelta(seconds=60), advanta_sms_delivery, args=(param1,param2,param3,))
         return param3
     else:
         print("NO REPORT TO CHECK")

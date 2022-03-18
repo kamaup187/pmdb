@@ -2549,8 +2549,10 @@ class PaymentOp(Payment,Base):
         if self.sms_status:
             if self.sms_status == "Success":
                 status = '<span class="text-success"><i class="fas fa-check-double"></i></span>'
-            if self.sms_status == "Success-mb":
+            elif self.sms_status == "Success-mb":
                 status = '<span class="text-primary"><i class="fas fa-check-double"></i></span>'
+            elif self.sms_status == "blocked":
+                status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>blocked</span>'
             elif self.sms_status == "sent":
                 status = '<span class="text-primary"><i class="fas fa-check"></i></span>'
             elif self.sms_status == "pending":

@@ -24,10 +24,10 @@ from .helperfuncs import *
 from app import mail
 from app import sms
 
-from rq import Queue
-from rq.job import Job
-from worker import conn
-q = Queue(connection=conn,default_timeout=10800)
+# from rq import Queue
+# from rq.job import Job
+# from worker import conn
+# q = Queue(connection=conn,default_timeout=10800)
 
 # from datetime import timedelta
 # import time

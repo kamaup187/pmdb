@@ -1,4 +1,7 @@
+import os
 import requests
+from app.v1.models.operations import *
+configuration = os.getenv('APP_SETTINGS')
 
 # def advanta_sms(txt,tel):
 
@@ -99,16 +102,26 @@ def advanta_send_sms(txt,tel,apikey,partnerid,shortcode):
     }
 
     try:
-
         response = requests.post(url, json=payload)
-        print(response.json())
+        msgid = response.json()["responses"][0]["messageid"]
+        print("ADVANTA sms sending successful")
+
     except Exception as e:
-        print("SmS sending failed",e)
+        print("ADVANTA sms sending failed",e)
+        msgid = ""
+
+    if msgid:
+        respdict = {
+        "apikey":apikey,
+        "partnerID":partnerid,
+        "msgid":msgid
+        }
+    else:
+        respdict = None
+
+    return respdict
 
 def advanta_sms_balance(apikey,partnerid):
-
-    # api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
-    # partner_id = 3886
 
     payload = {
     "apikey":apikey,
@@ -135,4 +148,44 @@ def advanta_sms_balance(apikey,partnerid):
 
     return f"{balance:,.0f}"
 
+
+def advanta_sms_delivery(apikey,partnerid,msgid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid,
+    "messageID":msgid
+    }
+
+    url = "https://quicksms.advantasms.com/api/services/getdlr/"
+
+    response = requests.get(url, json=payload)
+
+    try:
+        resp = response.json()["delivery-description"]
+        print("DELIVERY REPORT:", resp)
+    except:
+        resp = "unknown error"
+
+    if resp == "DeliveredToTerminal":
+        resp1 = "Success"
+    else:
+        resp1 = "blocked"
+
+    if resp1 == "unknown error":
+        pass
+    else:
+        payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
+        if payment_obj:
+            print("DELIVERY STATUS! PAYMENT FOUND")
+            PaymentOp.update_sms_status(payment_obj,resp1)
+        else:
+            print("DELIVERY STATUS! PAYMENT OF THAT ID NOT FOUND")
+
+
+
+# advanta_sms_delivery("fad3000bcfdfb541291ebc018bcc7868",2627,"ZAgSmYcHm5c1cfq5")
 

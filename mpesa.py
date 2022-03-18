@@ -8,8 +8,8 @@ from requests.auth import HTTPBasicAuth
 def generate_access_token():
     """Generates access token"""
 
-    consumer_key = "WwDEpDuFimmJrRrVAZu2jGFxSGME4TYP"
-    consumer_secret = "MgiQePaEYHO2OCBL"
+    consumer_key = ""
+    consumer_secret = ""
 
     api_URL = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
@@ -31,10 +31,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4082629",
+        "ShortCode": "",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://kiotapay.com/latitude/payment",
-        "ValidationURL":   "https://kiotapay.com/latitude/validation",
+        "ConfirmationURL": "https://kiotapay.com/null/payment",
+        "ValidationURL":   "https://kiotapay.com/null/validation",
     }
 
     try:

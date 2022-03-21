@@ -15,6 +15,14 @@
   overflow-y: scroll;
 } */
 
+.bg-primary-custom{
+  background-color: #f5ac24;
+}
+
+.text-kodi{
+  color: #0e2353
+}
+
 table.dataTable thead th {
   background: transparent !important;
   white-space: nowrap;
@@ -3512,4 +3520,19 @@ select {
 }
 .curve{
   border-radius: 10px !important;
+}
+
+
+.cta-button {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #f5ac24;
+  color: #0e2353;
+  border: 2px solid transparent;
+}
+
+.cta-button:hover {
+  border: 2px solid #f5ac24;
+  background: transparent;
+  color: #0e2353;
 }

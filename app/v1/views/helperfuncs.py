@@ -279,7 +279,7 @@ def example_func(param):
 
 def send_internal_email_notifications(company,param):
     try:
-        if os.getenv("CURRENT_APP") == "app1":
+        if os.getenv("TARGET") != "lasshouse":
             email_addr = "notifications.kiotapay@gmail.com"
             txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
             txt.body = param
@@ -542,7 +542,7 @@ def logo(co):
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
         else:
-            if os.getenv("CURRENT_APP") == "app1":
+            if os.getenv("TARGET") != "lasshouse":
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
@@ -559,7 +559,7 @@ def logo(co):
 
     except Exception as e:
         print("failing big time",e)
-        if os.getenv("CURRENT_APP") == "app1":
+        if os.getenv("TARGET") != "lasshouse":
             logopath = "../static/img/logos/kiotapay/l-logo.png"
             mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
             fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
@@ -570,7 +570,7 @@ def logo(co):
             fulllogopath = "../static/img/logos/spry/full-logo.png"
             letterhead = "../static/img/logos/spry/letterhead.jpg"
 
-    if os.getenv("CURRENT_APP") == "app1":
+    if os.getenv("TARGET") != "lasshouse":
         parent = "KiotaPay"
     else:
         parent = "Kodimann"

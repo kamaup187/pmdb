@@ -998,11 +998,12 @@ class TenantUserSignUpStageTwo(Resource):
 
 class LandingPage(Resource):
     def get(self):
-        if os.getenv("CURRENT_APP") == "app1":
+        if os.getenv("TARGET") != "lasshouse":
             # return Response(render_template("landingtwo.html"))
             return redirect("https://kiotapay.co.ke")
         else:
-            return redirect(url_for('api.userlogin'))
+            return Response(render_template("home.html"))
+            # return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass
@@ -1091,7 +1092,7 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-        loginpage = "login.html" if os.getenv("CURRENT_APP") == "app1" else "login2.html"
+        loginpage = "login2.html" if os.getenv("TARGET") == "lasshouse" else "login.html"
 
         return Response(render_template(loginpage))
 

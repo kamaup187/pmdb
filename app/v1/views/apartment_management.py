@@ -349,7 +349,7 @@ class Index(Resource):
             else:
                 shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
-            indexpage = "agentindex.html" if os.getenv("CURRENT_APP") == "app1" else "agentindex2.html"
+            indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
 
             return Response(render_template(

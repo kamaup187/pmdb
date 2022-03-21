@@ -1,0 +1,582 @@
+<!-- /*
+* Template Name: Active
+* Template Author: Untree.co
+* Tempalte URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Untree.co">
+  <!-- <link rel="shortcut icon" href="favicon.png"> -->
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/images/favico/site.webmanifest">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static/css3/bootstrap.min.css">
+
+  <link rel="stylesheet" href="../static/css3/owl.carousel.min.css">
+  <link rel="stylesheet" href="../static/css3/owl.theme.default.min.css">
+  <link rel="stylesheet" href="../static/fonts/icomoon/style.css">
+  <link rel="stylesheet" href="../static/fonts/flaticon/font/flaticon.css">
+  <link rel="stylesheet" href="../static/css3/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="../static/css3/aos.css">
+  <link rel="stylesheet" href="../static/css3/style.css">
+
+  <title>Kodimann</title>
+</head>
+<body>
+
+
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+  <div class="container">
+
+
+    <nav class="site-nav">
+      <div class="row align-items-center">
+
+        <div class="col-6 col-sm-6 col-lg-3">
+          <span>
+            <a class="d-none d-lg-inline" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/spry/s-logo.png" alt=""></a>
+            <a class="" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/spry/l-logo.png" alt=""></a>
+          </span>
+
+          <!-- <h1><a href="index.html">Active<span class="text-primary">.</span> </h1> -->
+          </div>
+
+          <div class="col-6 col-sm-6 col-lg-9 site-navigation text-right">
+            <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu">
+              <li class="active"><a href="#">Home</a></li>
+              <li class="has-children">
+                <a href="#">Solutions</a>
+                <ul class="dropdown">
+                  <li><a href="#">Property management</a></li>
+                  <li><a href="#">Property Search</a></li>
+                  <!-- <li class="has-children">
+                    <a href="#">Menu Two</a>
+                    <ul class="dropdown">
+                      <li><a href="#">Sub Menu One</a></li>
+                      <li><a href="#">Sub Menu Two</a></li>
+                      <li><a href="#">Sub Menu Three</a></li>
+                    </ul>
+                  </li> -->
+                </ul>
+              </li>
+              
+              <!-- <li><a href="#">Portfolio</a></li> -->
+              <li><a href="#">FAQs</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">About</a></li>
+
+              <li><a href="#">Contact us</a></li>
+
+              <li class="cta-button"><a class="signin" href="{{ url_for('api.userlogin') }}" target="_blank">Log In</a></li>
+              <li class="cta-button"><a href="#" target="_blank">Sign Up Now</a></li>
+
+            </ul>
+
+            <a href="#" class="burger ml-auto site-menu-toggle js-menu-toggle d-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
+              <span></span>
+            </a>
+
+          </div>
+
+        </div>  
+      </nav> <!-- END nav -->
+
+    </div> <!-- END container -->
+
+
+    
+
+    <div class="site-hero">
+
+      <div class="container">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2"  data-aos="fade-up" data-aos="400">
+
+
+
+            <div class="owl-single dots-absolute owl-carousel">
+              <img src="../static/images/pic11.png" alt="Image" class="img-fluid">
+              <img src="../static/images/pic2.png" alt="Image" class="img-fluid">
+              <!-- <img src="../static/images/img_h_8.jpg" alt="Image" class="img-fluid"> -->
+              
+            </div>
+
+          </div>
+          <div class="col-lg-4 order-lg-1">
+            <!-- <span class="section-subtitle" data-aos="fade-up" data-aos="">Welcome</span> -->
+            <h1 class="text-black mb-4" data-aos="fade-up" data-aos="100">Simple but powerful property management software</h1>
+            <p data-aos="fade-up" data-aos="200">Focus on growing your business while we handle your accounting, reporting, and other time consuming tasks.</p>
+            <p class="mt-5" data-aos="fade-up" data-aos="300"><a href="#" class="btn btn-primary btn-primary-hover-outline">Request Demo</a></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="section-grey">
+      <div class="container">
+
+        <div class="block">
+          <div class="row justify-content-center">
+
+            <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 order-lg-2 offset-xl-1 mb-4">
+              <div class="img-wrap text-center text-md-left" data-aos="fade-up">
+                <div class="img">
+                  <video width="160" height="120" autoplay muted loop>
+                    <source src="../static/images/vid.mp4" type="video/mp4">
+                  </video> 
+                  <!-- <img src="../static/images/cottages.jpg" alt="Statue" class="img-fluid"> -->
+                </div>
+
+                <div class="img">
+                  <video width="160" height="120" autoplay muted loop>
+                    <source src="../static/images/vid2.mp4" type="video/mp4">
+                  </video> 
+                  <!-- <img src="../static/images/cottages.jpg" alt="Statue" class="img-fluid"> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="offset-md-0 offset-lg-1 col-sm-12 col-md-5 col-lg-5 col-xl-4">
+              <div class="px-3">
+
+
+                <span class="section-subtitle">FEATURES</span>
+                <div class="">
+                  <ul class="list-unstyled list-check primary">
+                    <li>Automated payment reconciliations</li>
+                    <li>Mobile money & Bank integrations</li>
+                    <li>Tenant statements</li>
+                    <li>Vacancy & prospect tracking</li>
+                    <li>Invoice generation & dispatch</li>
+                    <li>Online maintenance request & tracking</li>
+                    <li>Email & text messaging</li>
+
+
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="block-2">
+          <div class="row">
+
+            <div class="col-md-4 col-lg-4 offset-md-1 order-md-2">
+              <span class="section-subtitle">Why Us</span>
+              <h2 class="section-title">Simple and easy setup,</h2>
+              <p class="lead">Timely reports and automatic payments entry and reconciliations</p>
+              <!-- <p class="mb-5">There live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p> -->
+              <div class="row mb-5 count-numbers">
+                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="100">
+                  <span class="number" data-number="129"></span>
+                  <span class="d-block">Clients</span>
+                </div>
+                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="200">
+                  <span class="number" data-number="421"></span>
+                  <span class="d-block">Apartments managed</span>
+                </div>
+                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="300">
+                  <span class="number" data-number="3914"></span>
+                  <span class="d-block">Onboarded Tenants</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5 col-lg-5 offset-md-1">
+              <div class="images-overlap">
+                <img src="../static/images/apartment.jpg" alt="student" class="img-fluid img-1" data-aos="fade-up">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+    <div class="site-section bg-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 js-custom-dots">
+            <a href="#" class="service link horizontal d-flex active" data-aos="fade-left" data-aos-delay="0">
+              <div class="service-icon color-1 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                </svg>
+              </div>
+              <div class="service-contents">
+                <h3>Residential apartments</h3>
+                <p>Property owners and managers can manage their properties with ease.</p>
+              </div>
+            </a> <!-- /.service -->
+
+            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="100">
+              <div class="service-icon color-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                </svg>
+              </div> <!-- /.icon -->
+              <div class="service-contents">
+                <h3>Commercial properties</h3>
+              </div> <!-- /.service-contents-->
+            </a> <!-- /.service -->
+
+
+            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="200">
+              <div class="service-icon color-3 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                </svg>
+              </div> <!-- /.icon -->
+              <div class="service-contents">
+                <h3>Warehouses and godowns</h3>
+              </div> <!-- /.service-contents-->
+            </a> <!-- /.service -->
+
+            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="300">
+              <div class="service-icon color-4 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                </svg>
+              </div> <!-- /.icon -->
+              <div class="service-contents">
+                <h3>Bring Ideas to Life</h3>
+              </div> <!-- /.service-contents-->
+            </a> <!-- /.service -->
+          </div>
+
+          <div class="col-lg-8">
+            <div class="owl-single-2 no-dots owl-carousel">
+              <div class="item">
+                <img src="../static/images/img_h_1.jpg" alt="Image" class="img-fluid">
+              </div>
+              <div class="item">
+                <img src="../static/images/img_h_2.jpg" alt="Image" class="img-fluid">
+              </div>
+              <div class="item">
+                <img src="../static/images/img_h_3.jpg" alt="Image" class="img-fluid">
+              </div>
+              <div class="item">
+                <img src="../static/images/img_h_4.jpg" alt="Image" class="img-fluid">
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section bg-gray">
+      <div class="container">
+        <div class="row justify-content-center d-none">
+          <div class="col-lg-7 text-center">
+            <span class="section-subtitle">Plans</span>
+            <h2 class="section-title">Pricing Table</h2>
+          </div>
+        </div>
+        <div class="row d-none">
+          <div class="col-6 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
+            <div class="pricing-table text-center">
+              <h3 class="text-black">Free</h3>
+
+              <div class="price-wrap text-black">
+                <sup class="currency">$</sup>
+                <span class="price">0</span>
+                <span class="per">/month</span>
+              </div>
+              
+              <ul class="list-unstyled">
+                <li>Far far away behind</li>
+                <li>The word mountains far from</li>
+                <li class="exclude">The countries Vokalia</li>
+                <li class="exclude">and Consonantia, there</li>
+                <li class="exclude">At the coast</li>
+                <li class="exclude">
+                  Semantics, a large language
+                </li>
+              </ul>
+
+              <p class="mt-5"><a href="#" class="btn btn-outline-primary">Get Started</a></p>
+            </div>
+            
+
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
+            <div class="pricing-table text-center">
+              <h3 class="text-black">Business</h3>
+
+              <div class="price-wrap text-primary">
+                <sup class="currency">$</sup>
+                <span class="price">29</span>
+                <span class="per">/month</span>
+              </div>
+              
+              <ul class="list-unstyled">
+                <li>Far far away behind</li>
+                <li>The word mountains far from</li>
+                <li>The countries Vokalia</li>
+                <li>and Consonantia, there</li>
+                <li class="exclude">At the coast</li>
+                <li class="exclude">
+                  Semantics, a large language
+                </li>
+              </ul>
+
+              <p class="mt-5"><a href="#" class="btn btn-primary-hover-outline">Get Started</a></p>
+            </div>
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
+            <div class="pricing-table text-center">
+              <h3 class="text-black">Developer</h3>
+
+              <div class="price-wrap text-black">
+                <sup class="currency">$</sup>
+                <span class="price">799</span>
+                <span class="per">/month</span>
+              </div>
+              
+              <ul class="list-unstyled">
+                <li>Far far away behind</li>
+                <li>The word mountains far from</li>
+                <li>The countries Vokalia</li>
+                <li>and Consonantia, there</li>
+                <li class="exclude">At the coast</li>
+                <li class="exclude">
+                  Semantics, a large language
+                </li>
+              </ul>
+
+              <p class="mt-5"><a href="#" class="btn btn-outline-primary">Get Started</a></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-12 text-center">
+            <span class="section-subtitle">Plans</span>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+          </div>
+          <div class="col-12">
+            <div class="custom-accordion" id="accordion_1">
+              <div class="accordion-item">
+                <h2 class="mb-0">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">How to signup and use?</button>
+                </h2>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion_1">
+                  <div class="accordion-body">
+                  </div>
+                </div>
+              </div> <!-- .accordion-item -->
+
+              <div class="accordion-item">
+                <h2 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">How to dispatch invoices?</button>
+                </h2>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion_1">
+                  <div class="accordion-body">
+                  </div>
+                </div>
+              </div> <!-- .accordion-item -->
+              <div class="accordion-item">
+                <h2 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">How to link your bank account with kodimann?</button>
+                </h2>
+
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion_1">
+                  <div class="accordion-body">
+                  </div>
+                </div>
+
+              </div> <!-- .accordion-item -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-section testimonial-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <span class="section-subtitle">Happy Clients</span>
+            <h2 class="section-title">Testimonials</h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-lg-7">
+
+            <div class="owl-single owl-carousel">
+              <div class="testimonial mx-auto">
+                <figure class="img-wrap">
+                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                </figure>
+                <h3 class="name">Adam Aderson</h3>
+                <blockquote>
+                  <p>&ldquo;--&rdquo;</p>
+                </blockquote>
+              </div>
+
+              <div class="testimonial mx-auto">
+                <figure class="img-wrap">
+                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                </figure>
+                <h3 class="name">Lukas Devlin</h3>
+                <blockquote>
+                  <p>&ldquo;--.&rdquo;</p>
+                </blockquote>
+              </div>
+
+              <div class="testimonial mx-auto">
+                <figure class="img-wrap">
+                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                </figure>
+                <h3 class="name">Kayla Bryant</h3>
+                <blockquote>
+                  <p>&ldquo;--.&rdquo;</p>
+                </blockquote>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-lg-3">
+            <div class="widget">
+              <h3 class="widget-heading">About Us</h3>
+              <p>We are a cloud based property management software company.</p>
+              <p class="mb-0"><a href="#" class="btn btn-primary btn-primary-hover-outline">Learn more</a></p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 pl-lg-5">
+            <div class="widget">
+              <h3 class="widget-heading">Navigation</h3>
+              <ul class="list-unstyled float-left mr-5">
+                <li><a href="#">Overview</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Find Buyers</a></li>
+                
+
+              </ul>
+              <ul class="list-unstyled float-left">
+                <li><a href="#">Overview</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Solutions</a></li>
+                
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 pl-lg-5">
+            <div class="widget">
+              <h3 class="widget-heading">Recent Posts</h3>
+              <ul class="list-unstyled footer-blog-entry">
+                <li>
+                  <span class="d-block date">March 13, 2022</span>
+                  <a href="#">Ensuring great tenant satisfaction</a>
+                </li>
+                <li>
+                  <span class="d-block date">March 17, 2022</span>
+                  <a href="#">Conservation of the environment</a>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 pl-lg-5">
+            <div class="widget">
+              <h3 class="widget-heading">Connect</h3>
+              <ul class="list-unstyled social-icons light mb-0">
+                <li><a href="#"><span class="icon-facebook"></span></a></li>
+                <li><a href="#"><span class="icon-twitter"></span></a></li>
+                <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                <li><a href="#"><span class="icon-google"></span></a></li>
+                <li><a href="#"><span class="icon-play"></span></a></li>
+              </ul>
+            </div>
+
+            <div class="widget">
+              <div class="footer-subscribe">
+                <h3 class="widget-heading">Subscribe</h3>
+                <form action="#">
+                  <input type="text" class="form-control" placeholder="Enter your email">
+                  <button type="submit" class="btn btn-link">
+                    <span class="icon-keyboard_backspace"></span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row copyright">
+          <div class="col-lg-9 ">
+            <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; &bullet;
+            </p>
+          </div>
+          
+        </div>
+
+      </div>
+    </div>
+
+    <!-- <div id="overlayer"></div>
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div> -->
+
+    <script src="../static/jsx/jquery-3.4.1.min.js"></script>
+    <script src="../static/jsx/popper.min.js"></script>
+    <script src="../static/jsx/bootstrap.min.js"></script>
+    <script src="../static/jsx/owl.carousel.min.js"></script>
+    <script src="../static/jsx/aos.js"></script>
+    <script src="../static/jsx/imagesloaded.pkgd.js"></script>
+    <script src="../static/jsx/isotope.pkgd.min.js"></script>
+    <script src="../static/jsx/jquery.animateNumber.min.js"></script>
+    <script src="../static/jsx/jquery.waypoints.min.js"></script>
+    <script src="../static/jsx/jquery.fancybox.min.js"></script>
+    <script src="../static/jsx/custom.js"></script>
+  </body>
+  </html>

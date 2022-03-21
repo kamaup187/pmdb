@@ -6,17 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+
+        <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favico/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
+        <link rel="manifest" href="../static/images/favico/site.webmanifest">
+
         <title>Login</title>
         <link href="/static/css/style.css" rel="stylesheet" />
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
 
         <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay-alt2.css') }}"> -->
 
-        <link rel="icon" type="image/x-icon" href="static/assets/img/favicon.png" />
         <!-- <script data-search-pseudo-elements defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script> -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" crossorigin="anonymous"></script>
     </head>
-    <body class="bg-primary">
+    <body class="bg-primary-custom">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
@@ -25,13 +30,15 @@
                             <div class="col-lg-5">
                                 <!-- Basic login form-->
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header justify-content-cente divjust-end">
-                                        <span class="text-125 font-weight-bold my-1">Login</span>
-                                        <span class="text-right my-1">
+                                    <div class="card-header center-btn">
+                                        <!-- <span class="text-125 font-weight-bold my-1">Login</span> -->
+                                        <a class="d-none d-lg-inline" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/spry/icon.png" alt=""></a> | <span class="text-kodi">Login</span>
+
+                                        <!-- <span class="text-right my-1">
                                             <a class="sidebar-brand bg-white d-flex align-items-center justify-content-center" href="{{ url_for('api.demo') }}">
                                                 Demo
                                               </a>
-                                        </span>
+                                        </span> -->
                                     </div>
                                     <div class="card-body">
                                         <!-- Login form-->
@@ -56,13 +63,12 @@
                                             <!-- Form Group (login box)-->
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <!-- <button type="submit" class="btn btn-primary">Login</button> -->
-                                                <button id="signin" class="btn btn-primary btn-user btn-block borderless2">
-                                                    <i class="fas fa-lock-open me-3"></i>
+                                                <button id="signin" class="btn cta-button">
                                                     Login
                                                 </button>
 
 
-                                                <div class="small" >Forgot Password?</div>
+                                                <div class="small text-kodi" >Forgot Password?</div>
 
                                             </div>
                                         </form>
@@ -92,6 +98,6 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
+        <script src="../static/jss/scripts.js"></script>
     </body>
 </html>

@@ -32,6 +32,8 @@
   <link rel="stylesheet" href="../static/css3/jquery.fancybox.min.css">
   <link rel="stylesheet" href="../static/css3/aos.css">
   <link rel="stylesheet" href="../static/css3/style.css">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css3/home.css') }}">
+
 
   <title>Kodimann</title>
 </head>
@@ -89,7 +91,7 @@
               <li><a href="#">Contact us</a></li>
 
               <li class="cta-button"><a class="signin" href="{{ url_for('api.userlogin') }}" target="_blank">Log In</a></li>
-              <li class="cta-button"><a href="#" target="_blank">Sign Up Now</a></li>
+              <li class="cta-button"><a href="#" target="_blank" data-toggle="modal" data-target="#editPropModal">Sign Up Now</a></li>
 
             </ul>
 
@@ -107,7 +109,7 @@
 
     
 
-    <div class="site-hero">
+    <div class="site-hero debug">
 
       <div class="container">
         <div class="row align-items-center justify-content-between">
@@ -126,7 +128,7 @@
           <div class="col-lg-4 order-lg-1">
             <!-- <span class="section-subtitle" data-aos="fade-up" data-aos="">Welcome</span> -->
             <h1 class="text-black mb-4" data-aos="fade-up" data-aos="100">Simple but powerful property management software</h1>
-            <p data-aos="fade-up" data-aos="200">Focus on growing your business while we handle your accounting, reporting, and other time consuming tasks.</p>
+            <p class="text-black" data-aos="fade-up" data-aos="200">Focus on growing your business while we handle your accounting, reporting, and other time consuming tasks.</p>
             <p class="mt-5" data-aos="fade-up" data-aos="300"><a href="#" class="btn btn-primary btn-primary-hover-outline">Request Demo</a></p>
           </div>
 
@@ -164,7 +166,7 @@
               <div class="px-3">
 
 
-                <span class="section-subtitle">FEATURES</span>
+                <span class="section-subtitle text-black">FEATURES</span>
                 <div class="">
                   <ul class="list-unstyled list-check primary">
                     <li>Automated payment reconciliations</li>
@@ -174,6 +176,8 @@
                     <li>Invoice generation & dispatch</li>
                     <li>Online maintenance request & tracking</li>
                     <li>Email & text messaging</li>
+                    <li>Manage tenants ​and lease information</li>
+                    <li>Track income ​and expenses</li>
 
 
                   </ul>
@@ -560,6 +564,147 @@
       </div>
     </div>
 
+
+    <div class="modal fade" id="editPropModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-kubwa" role="document">
+    <div class="modal-content">
+      <div class="modal-header pb-0 pt-2 text-center bg-light">
+        <h5 class="modal-title divjust-end">
+          <span class="mr-3 mb-1 smallify text-black">Register for free</span>
+          <div>
+            <button class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white" type="button"
+              data-dismiss="modal" data-bs-dismiss="modal">X</button>
+          </div>
+        </h5>
+      </div>
+      <div class="text-info payment-info"></div>
+      <div class="modal-body pt-0 text-gray-900">
+
+        <main id="">
+        
+          <nav class="nav nav-borders">
+            <a id="profile" class="nav-link pl-0 pb-0 text-info underline active ms-0" href="#">Profile</a>
+            <a id="billing" class="nav-link pb-0 text-info" href="#">Company</a>
+            <a id="notifications" class="nav-link pb-0 text-info" href="#">Finish</a>
+          </nav>
+        
+          <div class="" id="profile-area">
+            <div class="row">
+              <div class="col-xl-12">
+                <!-- Account details card-->
+                <div class="card mb-4 mt-1">
+                  <div class="card-header">Personal Details</div>
+                  <div class="card-body">
+                    <form>
+
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="bank">First name</label>
+        
+                          <input class="form-control" type="text" id="bank" value="">
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="accname">Last name</label>
+        
+                          <input class="form-control" type="text" id="accname" value="">
+                        </div>
+
+                      </div>
+      
+        
+                      <!-- Save changes button-->
+                      <div class="text-right">
+                        <button id="savebilling" class="btn btn-primary" type="button">Next</button>
+                        <button class="reset dispnone" type="reset">reset</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="dispnone" id="billing-area">
+            <div class="row">
+              <div class="col-xl-12">
+                <!-- Account details card-->
+                <div class="card mb-2 mt-1">
+                  <div class="card-header">Company details</div>
+                  <div class="card-body">
+                    <form>
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="bank">Company name</label>
+        
+                          <input class="form-control" type="text" id="bank" value="">
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="accname">Address</label>
+        
+                          <input class="form-control" type="text" id="accname" value="">
+                        </div>
+
+                      </div>
+                
+                      <!-- Save changes button-->
+                      <div class="text-right">
+                        <button id="savebilling" class="btn btn-primary backbtn" type="button">Back</button>
+                        <button id="savebilling" class="btn btn-primary" type="button">Next</button>
+                        <button class="reset dispnone" type="reset">reset</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div class="dispnone" id="notifications-area">
+            <div class="row">
+              <div class="col-xl-12">
+                <!-- Account details card-->
+                <div class="card mb-2 mt-1">
+                  <div class="card-header">Set up password</div>
+                  <div class="card-body">
+                    <form>
+                      <div class="form-group row">
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="bank">Password</label>
+        
+                          <input class="form-control" type="password" id="bank" value="">
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="small mb-1" for="accname">Confirm password</label>
+        
+                          <input class="form-control" type="password" id="accname" value="">
+                        </div>
+
+                      </div>
+        
+                      <!-- Save changes button-->
+                      <div class="text-right">
+                        <button id="savebilling" class="btn btn-primary backbtn" type="button">Back</button>
+                        <button id="savebilling" class="btn btn-primary" type="button">Finish and submit</button>
+                        <button class="reset dispnone" type="reset">reset</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        
+        </main>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
     <div id="overlayer"></div>
     <div class="loader">
       <div class="spinner-border" role="status">
@@ -578,5 +723,38 @@
     <script src="../static/jsx/jquery.waypoints.min.js"></script>
     <script src="../static/jsx/jquery.fancybox.min.js"></script>
     <script src="../static/jsx/custom.js"></script>
+
+    <script>
+      $("#profile").click(function(){
+          $(this).addClass("underline")
+          $("#notifications").removeClass("underline")
+          $("#billing").removeClass("underline")
+  
+          $("#profile-area").removeClass("dispnone")
+          $("#billing-area").addClass("dispnone")
+          $("#notifications-area").addClass("dispnone")
+      })
+  
+      $("#billing").click(function(){
+          $(this).addClass("underline")
+          $("#profile").removeClass("underline")
+          $("#notifications").removeClass("underline")
+  
+          $("#billing-area").removeClass("dispnone")
+          $("#profile-area").addClass("dispnone")
+          $("#notifications-area").addClass("dispnone")
+      })
+  
+      $("#notifications").click(function(){
+          $(this).addClass("underline")
+          $("#profile").removeClass("underline")
+          $("#billing").removeClass("underline")
+  
+          $("#notifications-area").removeClass("dispnone")
+          $("#billing-area").addClass("dispnone")
+          $("#profile-area").addClass("dispnone")
+      })
+  </script>
+
   </body>
   </html>

@@ -771,16 +771,15 @@ class SelfUserRegisterAgent(Resource):
         remember = False
         fname=request.form.get('fname')
         lname=request.form.get('lname')
-        phone=request.form.get('phone')
+        phone=request.form.get('tel1')
         natid=request.form.get('natid')
         email=request.form.get('email')
-        company_name = request.form.get('company')
-        address = request.form.get('address')
-        mail_box = request.form.get('mailbox')
-        tel = request.form.get('company_tel')
-        mail = request.form.get('company_mail')
-        password = request.form.get('password')
-        description = request.form.get('desc')
+        company_name = request.form.get('co')
+        addr1 = request.form.get('addr1')
+        addr2 = request.form.get('addr2')
+        tel = request.form.get('tel2')
+        mail = request.form.get('email2')
+        password = request.form.get('pass1')
 
         created_by = 1
         usergroup_id = 3
@@ -790,8 +789,11 @@ class SelfUserRegisterAgent(Resource):
         is_present  = UserOp.fetch_user_by_national_id(natid)
         
         if is_present:
-            flash("Account exists already","fail")
-            return redirect(url_for('api.userlogin'))
+            return "id taken"
+
+        is_present  = UserOp.fetch_user_by_phone(phone)
+        if is_present:
+            return "tel taken"
 
         usercode = usercode_generator()
         is_present  = UserOp.fetch_user_by_usercode(usercode)
@@ -800,11 +802,15 @@ class SelfUserRegisterAgent(Resource):
 
         check_mail = UserOp.fetch_user_by_email(email) #email provided but lets check duplicates
         if check_mail:
-            flash("Registration failed, email taken, try a different one","fail")
-            return redirect(url_for('api.signupcategory'))
+            msg = "email taken"
+            return msg
         username = username_exctractermail(email)
 
-        company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)
+        co = CompanyOp.fetch_company_by_name(company_name)
+        if co:
+            return "co taken"
+
+        company_obj = CompanyOp(company_name,addr1,"",mail,tel,"")
         company_obj.save()
 
         group1 = CompanyUserGroupOp("Manager","administrator",company_obj.id)
@@ -822,21 +828,27 @@ class SelfUserRegisterAgent(Resource):
         user.save()
 
         try:
-            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
+            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
             response = sms.send(message1, ["+254716674695"],sender)
 
-            recipient = [sms_phone_number_formatter(phone)]
-            message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay customer relations manager."
-            response = sms.send(message2, recipient,sender)
+
+            if os.getenv("TARGET") != "lasshouse":
+                pass
+            else:
+                recipient = [sms_phone_number_formatter(phone)]
+                message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nSales manager."
+                response = sms.send(message2, recipient,sender)
 
         except:
             pass
 
-        # UserOp.update_status(user,False)
+        UserOp.update_status(user,False)
 
         login_user(user, remember=remember)
-        return redirect(url_for('api.index'))
+
+        msg = "success"
+        return msg
 
 class SelfUserRegisterOwner(Resource):
     """class"""

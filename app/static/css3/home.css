@@ -22,6 +22,10 @@
   .text-kodi{
     color: #0e2353
   }
+
+  .text-kodi-alt{
+    color: #f5ac24
+  }
   
   table.dataTable thead th {
     background: transparent !important;
@@ -793,7 +797,7 @@
   }
   
   .card-header {
-      padding: .9375rem 0.95rem;
+      padding: .4375rem 0.45rem;
       margin-bottom: 0;
       background-color: rgba(0, 0, 0, .02);
       border-bottom: 1px solid rgba(0, 0, 0, .125)
@@ -3159,6 +3163,7 @@
   
   .underline {
     border-bottom: 3px solid currentColor;
+    color: #f5ac24;
   }
   
   .underline-thin {
@@ -3524,3 +3529,14 @@
     border-radius: 10px !important;
   }
   
+  .btn.back-btn {
+    border: 2px solid #f5ac24;
+    background: transparent;
+    color: #0e2353;
+  }
+
+  .btn.back-btn:hover {
+    border: 2px solid #0e2353;
+    background: transparent;
+    color: #0e2353;
+  }

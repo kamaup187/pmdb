@@ -1997,3 +1997,11 @@ input[type="password"] {
 .list-check.primary li:before {
   color: #f5ac24;
 }
+
+.kodi-input{
+  border: 1px solid #f5ac24 !important;
+  border-radius: 20px;
+}
+.kodi-input:focus{
+  border: 1px solid #0e2353 !important; 
+}

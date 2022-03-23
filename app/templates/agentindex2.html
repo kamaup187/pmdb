@@ -69,7 +69,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up"
                     aria-labelledby="navbarDropdownDocs">
-                    <a class="dropdown-item py-3" href="#">
+                    <a class="dropdown-item py-3 userbtn" href="#">
                         <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="users"></i></div>
                         <div>
                             <div class="small text-gray-500">User management</div>
@@ -79,7 +79,7 @@
                     <div class="dropdown-divider m-0"></div>
 
                     
-                    <a class="dropdown-item py-3" href="#">
+                    <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#billModal">
                         <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="settings"></i></div>
                         <div>
                             <div class="small text-gray-500">Settings</div>
@@ -89,7 +89,7 @@
 
                     <div class="dropdown-divider m-0"></div>
                     
-                    <a class="dropdown-item py-3" href="#">
+                    <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#companyDetailModal">
                         <div class="icon-stack bg-primary-soft text-primary me-4"><i data-feather="grid"></i></div>
                         <div>
                             <div class="small text-gray-500">Company details</div>
@@ -1027,6 +1027,135 @@
         </div>
     </div>
 
+    <div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info" id="paymentDetailModalLabel">Switch to the next billing month</h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <div class="center-btn mb-3 mt-3">
+                        (<span class="text-black">Currently: <span class="text-info underline">{{billingmonth}} </span></span>)
+                      </div>
+                      <div class="center-btn mb-2 mt-2 dispnone">
+                        <span class="text-black">Confirm to advance to <span class="text-danger underline">{{previousbillingmonth}} </span></span>
+                      </div>
+    
+                      <div class="form-group no-paddin input-icons">
+                        <span class="text-danger font-weight-bold">CAUTION: Choose the next month only! </span>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="switchperiod" class="form-control ph" type="text" placeholder="Select month to bill" readonly />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div>
+    
+                      <div class="center-btn small underline-thin mb-2">
+                        <span class="text-black">Note:</span> <span class="text-danger">This action cannot be reversed</span>
+                      </div>
+    
+                      <div class="mt-2 divbg">
+                        <div>
+                          <span id="nextbilling" type="button" class="btn btn-sm btn-danger text-gray-danger">Advance</span>
+                        </div>
+    
+                        <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+    
+                      </div>
+          
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="indicator"></div>
+              <div class="modal-header">
+                <h5 class="modal-title text-info font-weight-bold" id="paymentDetailModalLabel">Update company details  >> {{co.name}}</h5>
+              </div>
+              <div class="modal-body">
+                <div class="media mb-2">
+                  <div class="media-body">
+                    <div class="position-relative">
+                      <form class="" action="/update/companyinfo" method="POST">
+                          <span class="small text-danger">Note: Fill in fields that you are updating only</span>
+                          <!-- <div class="form-group">
+                            <input type="text" name="co_name" class="form-control" placeholder="Company Name : {{co.name}}" disabled>
+                          </div> -->
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                              <label class="small mb-1" for="inputEmail">Name (disabled)</label>
+                              <input class="form-control" type="text" name="co_name" placeholder="NAME: {{co.name}}" disabled>
+                            </div>
+            
+                            <div class="col-sm-6 text-left">
+                              <label class="small mb-1" for="inputEmail">SMS Number</label>
+                              <input class="form-control" type="text" name="co_stel" placeholder="Tel: {{co.sphone}}">
+                            </div>
+                          </div>
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                              <label class="small mb-1" for="inputEmail">Street address</label>
+                                <input class="form-control" name="co_address" placeholder="Physical address">
+                            </div>
+            
+                            <div class="col-sm-6 text-left">
+                              <label class="small mb-1" for="inputEmail">Postal address</label>
+                                <input class="form-control" name="co_mailbox" placeholder="Mail box">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                              <label class="small mb-1" for="inputEmail">Nearest city</label>
+                                <input class="form-control" type="text" name="co_city" placeholder="City">
+                            </div>
+            
+                            <div class="col-sm-6 text-left">
+                              <label class="small mb-1" for="inputEmail">Locality</label>
+                                <input class="form-control" type="text" name="co_region" placeholder="Region">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                              <label class="small mb-1" for="inputEmail">Company email contact</label>
+                                <input class="form-control" type="text" name="co_mail" placeholder="Email: {{co.email}}">
+                            </div>
+            
+                            <div class="col-sm-6 text-left">
+                              <label class="small mb-1" for="inputEmail">Company voice contact</label>
+                                <input class="form-control" type="tel" name="co_tel" placeholder="Tel: {{co.phone}}">
+                            </div>
+                          </div>
+    
+                          <hr>
+                          <div class="divbg center-btn">
+                            <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check mr-1"></i>Update</button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <button id="preloader-btn" class="dispnone" data-toggle="modal" data-target="#preloaderModal"></button>
     <button id="preloader-btn-alt" class="dispnone" data-toggle="modal" data-target="#preloaderModalAlt"></button>
 
@@ -1284,8 +1413,57 @@
     });
   </script>
 
+<script>
+    $(".userbtn").on('click',function(){
+        // $("#body-block").addClass("dispnone")
+        // $("#preloader-btn").click();
+        $("#barloader").removeClass("dispnone")
+  
+        url = "{{ url_for('api.users') }}"
+  
+        $.ajax({
+            type: "get",
+            url: url,
+            success: function(response) {
+                if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                    $('#sidebarToggle').click();
+                    $('#smaccordionSidebar').removeClass("toggled");
+                  }
+                $('#content-area').addClass("isopen text-danger");
+                // $("#postloader-btn").click();
+                $("#barloader").addClass("dispnone")
+                $("#body-block").addClass("dispnone")
+                $("#propdisp").removeClass("dispnone")
+                $("#proplist").addClass("dispnone")
+                $("#searchresults").html("empty")
+                $("#searchresults").addClass("dispnone")
+                $("#propdisp").html(response);
+            }
+        });
+    });
+  </script>
 
 
+<script>
+    
+    $("#nextbilling").on('click',function(){   
+      
+      $('#nextbilling').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Switching...');
+      $.ajax({
+        url: "{{ url_for('api.switchperiod') }}",
+        type: "POST",
+        data: {
+            month:$("#switchperiod").val()
+            },
+        success: function(response) {
+          $(".dismissparent").click();
+          $('#nextbilling').html('Switch');
+  
+        },
+      });
+    });
+    
+    </script>
 
 
 </body>

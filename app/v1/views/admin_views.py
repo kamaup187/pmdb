@@ -8,7 +8,7 @@ from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 
 from flask_mail import Message
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user,login_user
 from flask_restful import Resource, abort
 from flask import render_template,Response,request,flash,redirect,url_for,send_file,after_this_request
 from dateutil.relativedelta import relativedelta
@@ -125,6 +125,26 @@ class ViewReceipt(Resource):
             prop= prop,
             randid=ri
         ))
+
+class UserActivation(Resource):
+    def get (self,ri):
+        
+        user = UserOp.fetch_user_by_link(ri)
+        if not user:
+            print("chekererere")
+        else:
+            UserOp.update_status(user,True)
+            login_user(user, remember=False)
+            return redirect(url_for("api.index"))
+
+class DemoAccess(Resource):
+    def get (self,ri):
+        
+        user = UserOp.fetch_user_by_link(ri)
+        if ri != "zjdqjpvnkgblhfweikkiloukrqcwijaofdf":
+            print("zhekererere")
+        else:
+            return redirect(url_for("api.demo"))
 
 class DownloadReceipt(Resource):
     """class"""

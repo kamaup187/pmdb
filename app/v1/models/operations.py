@@ -295,6 +295,10 @@ class UserOp(User,Base):
         return User.query.filter_by(phone=phone).first()
 
     @staticmethod
+    def fetch_user_by_link(link):
+        return User.query.filter_by(activation_link=link).first()
+
+    @staticmethod
     def fetch_user_by_username(username):
         return User.query.filter_by(username=username).first()
 
@@ -346,6 +350,10 @@ class UserOp(User,Base):
 
     def update_status(self,status):
         self.active = status
+        db.session.commit()
+
+    def update_link(self,link):
+        self.activation_link = link
         db.session.commit()
 
     def update_national_id(self,natid):

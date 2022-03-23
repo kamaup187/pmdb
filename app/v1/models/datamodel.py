@@ -110,8 +110,9 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String)
     password = db.Column(db.VARCHAR,nullable=False)
     active = db.Column(db.Boolean,default=True)
-    
 
+    activation_link = db.Column(db.String,default="null")
+    
     user_id = db.Column(db.Integer)
 
     user_group_id = db.Column(db.Integer, db.ForeignKey(UserGroup.id))

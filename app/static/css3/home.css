@@ -3540,3 +3540,17 @@
     background: transparent;
     color: #0e2353;
   }
+  .success::before{
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-right: 50px;
+    content: "";
+    background-image: url('../images/success-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+    position: absolute;
+    top: 10px;
+    bottom: 0px;
+  }

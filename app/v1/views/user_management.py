@@ -763,6 +763,34 @@ class AdminCreateAgent(Resource):
 
             return redirect(url_for('api.index'))
 
+class RequestDemo(Resource):
+    """class"""
+    def get(self):
+        fname=request.args.get('fname')
+        lname=request.args.get('lname')
+        phone=request.args.get('tel1')
+        email=request.args.get('email')
+
+        name = fname + " " + lname
+
+        try:
+            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has requested for a demo."
+            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
+            response = sms.send(message1, ["+254716674695"],sender)
+        except:
+            pass
+
+        targeturl = "https://www.kodimann.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        
+        if os.getenv("TARGET") == "lasshouse":
+            print("sending....")
+            job101 = q.enqueue_call(
+                func=send_demo_mail, args=(email,name,targeturl,), result_ttl=5000
+            )
+
+        return "success"
+
+
 class SelfUserRegisterAgent(Resource):
     """class"""
     def get(self):
@@ -845,7 +873,23 @@ class SelfUserRegisterAgent(Resource):
 
         UserOp.update_status(user,False)
 
-        login_user(user, remember=remember)
+        userlink = random_generator(35)
+
+        UserOp.update_link(user,userlink)
+       
+        targeturl = f"https://www.kodimann.com/user/{userlink}"
+        # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
+
+        print(targeturl)
+
+        
+        if os.getenv("TARGET") == "lasshouse":
+            print("sending....")
+            job101 = q.enqueue_call(
+                func=send_activation_mail, args=(email,name,targeturl,), result_ttl=5000
+            )
+
+        # login_user(user, remember=remember)
 
         msg = "success"
         return msg
@@ -1167,8 +1211,11 @@ class LandlordDemoLogin(Resource):
 class Demo(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
-        response = sms.send("Demo account has been accessed",["+254716674695"],"KIOTAPAY")
-        print(response)
+        try:
+            response = sms.send("Demo account has been accessed",["+254716674695"],"KIOTAPAY")
+            print(response)
+        except:
+            pass
         user = UserOp.fetch_user_by_national_id("12345678")
         if not user:
             user = UserOp.fetch_user_by_usercode("3551")

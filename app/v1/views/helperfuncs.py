@@ -10,6 +10,7 @@ try:
     from weasyprint import HTML
 except:
     HTML = None
+from flask import render_template
 from jinja2 import Environment, FileSystemLoader, Template
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
@@ -3961,6 +3962,28 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
     else:
         print("Apartment was not selected")
 
+
+def send_activation_mail(email,name,url):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    print("goooiiing")
+
+    txt = Message('Welcome to Kodimann! Please activate your account.', sender = 'kiotapay@gmail.com', recipients = [email])
+    txt.html = render_template('activation.html',name=name,target_url=url)
+    mail.send(txt)
+
+def send_demo_mail(email,name,url):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    print("goooiiing")
+
+    txt = Message('Welcome to Kodimann! Demo account.', sender = 'kiotapay@gmail.com', recipients = [email])
+    txt.html = render_template('demo.html',name=name,target_url=url)
+    mail.send(txt)
 
 def auto_send_mail_receipt(payment_id,user_id):
     from app import create_app

@@ -773,12 +773,16 @@ class RequestDemo(Resource):
 
         name = fname + " " + lname
 
+        message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has requested for a demo."
+
         try:
-            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has requested for a demo."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
             response = sms.send(message1, ["+254716674695"],sender)
         except:
             pass
+
+        send_internal_email_notifications("DEMO REQUEST",message1)
+
 
         targeturl = "https://www.kodimann.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
         
@@ -859,7 +863,12 @@ class SelfUserRegisterAgent(Resource):
             message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
             response = sms.send(message1, ["+254716674695"],sender)
+        except:
+            pass
 
+        try:
+
+            send_internal_email_notifications("ACCOUNT",message1)
 
             if os.getenv("TARGET") != "lasshouse":
                 pass
@@ -881,7 +890,6 @@ class SelfUserRegisterAgent(Resource):
         # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
 
         print(targeturl)
-
         
         if os.getenv("TARGET") == "lasshouse":
             print("sending....")
@@ -1212,10 +1220,11 @@ class Demo(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
         try:
-            response = sms.send("Demo account has been accessed",["+254716674695"],"KIOTAPAY")
+            response = sms.send("Demo account has been accessed",["+254716674695"],sender)
             print(response)
         except:
             pass
+        send_internal_email_notifications("DEMO HIT","Demo account has been accessed")
         user = UserOp.fetch_user_by_national_id("12345678")
         if not user:
             user = UserOp.fetch_user_by_usercode("3551")

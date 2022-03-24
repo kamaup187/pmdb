@@ -555,6 +555,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
+        elif str_name_company == "Vintage Residence Limited":
+            ##################################################
+            logopath = "../static/img/logos/vintage/l-logo.png"
+            mobilelogopath = "../static/img/logos/vintage/s-logo.png"
+            fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
+            letterhead = "../static/img/logos/vintage/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################

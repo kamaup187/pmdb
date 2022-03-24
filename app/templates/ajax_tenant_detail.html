@@ -7,6 +7,7 @@
 <span id="del_payment_identifier" class="dispnone"></span>
 <span id="bill_identifier" class="dispnone"></span>
 <span id="edit_bill_identifier" class="dispnone"></span>
+<span id="edit_pay_identifier" class="dispnone"></span>
 <span id="del_bill_identifier" class="dispnone"></span>
 <span id="target_payment_id" class="dispnone"></span>
 <span class="multisave dispnone"></span>
@@ -602,6 +603,40 @@
                       <div class="divbg center-btn">
                         <button id="editarr" type="button" class="btn btn-outline-success">Update</button>
                         <button class="btn btn-outline-danger" id="closeArrModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editPayModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit payments</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="payeditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editpay" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closePayModal" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                       
@@ -1314,5 +1349,64 @@
   })
 </script>
 
+<script>
+  $("#editPayModal").on('shown.bs.modal', function(){
+    $("#editpay").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_pay_identifier").text(),
+            target:"editpayments"
+          },
+      success: function(response) {
+        $("#payeditbed").html(response);
+      },
+      error: function(xhr) {
+        // $("#payeditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        // $(".alert-msgs").html("You are not allowed to edit payments")
+        $("#payeditbed").html("You are not allowed to edit payments")
 
+        $("#editpay").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#editpay").click(function(){   
+    $("#editpay").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_pay_identifier").text(),
+                rent: $("#edit_rent_paid").val(),
+                water: $("#edit_water_paid").val(),
+                garbage: $("#edit_garbage_paid").val(),
+                security: $("#edit_security_paid").val(),
+                electricity: $("#edit_electricity_paid").val(),
+                agreement: $("#edit_agreement_paid").val(),
+                fine: $("#edit_penalty_paid").val(),
+                deposit: $("#edit_deposit_paid").val(),
+                maintenance: $("#edit_maintenance_paid").val(),
+                target: "editpayments"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editpay").html("Update")
+            $("#closePayModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
 

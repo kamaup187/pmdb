@@ -26,6 +26,9 @@ class Base():
     def generate_editid(self):
         return "edit" + str(self.id)
 
+    def generate_payid(self):
+        return "pay" + str(self.id)
+
     def generate_viewid(self):
         return "view" + str(self.id)
 
@@ -295,6 +298,10 @@ class UserOp(User,Base):
         return User.query.filter_by(phone=phone).first()
 
     @staticmethod
+    def fetch_user_by_link(link):
+        return User.query.filter_by(activation_link=link).first()
+
+    @staticmethod
     def fetch_user_by_username(username):
         return User.query.filter_by(username=username).first()
 
@@ -346,6 +353,10 @@ class UserOp(User,Base):
 
     def update_status(self,status):
         self.active = status
+        db.session.commit()
+
+    def update_link(self,link):
+        self.activation_link = link
         db.session.commit()
 
     def update_national_id(self,natid):
@@ -2227,6 +2238,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'smsid':MonthlyChargeOp.generate_smsid(self),
             'mailid':MonthlyChargeOp.generate_mailid(self),
             'editid':MonthlyChargeOp.generate_editid(self),
+            'payid':MonthlyChargeOp.generate_payid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'highlight':MonthlyChargeOp.highlight(self),
             'payhighlight':MonthlyChargeOp.payhighlight(self),

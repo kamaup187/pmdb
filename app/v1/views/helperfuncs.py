@@ -10,6 +10,7 @@ try:
     from weasyprint import HTML
 except:
     HTML = None
+from flask import render_template
 from jinja2 import Environment, FileSystemLoader, Template
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
@@ -45,6 +46,9 @@ merit_api_key = "fad3000bcfdfb541291ebc018bcc7868"
 merit_partner_id = 2627
 
 kiotanum = "+254716674695"
+
+mailsender = "kiotapay@gmail.com" if os.getenv("TARGET") != "lasshouse" else os.getenv("G_ACCOUNT")
+
 
 # from ..stkpush.access_token import register_url
 
@@ -270,7 +274,7 @@ def example_func(param):
     user_obj = UserOp.fetch_user_by_national_id("00000000")
     # UserOp.update_user(user_obj,phone="777666999")
     # email_addr = "emmp45@gmail.com"
-    # txt = Message('Rent Invoice', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+    # txt = Message('Rent Invoice', sender = mailsender, recipients = [email_addr])
     # txt.body = param
     # # txt.body = "Dear Tenant;" "\nThis is acknowledge that we have received payment of Kshs " + paid + "\nIn case of any query, feel free to contact us. \nThank you."
     # # txt.html = render_template('billinvoice.html',tenant=tenant,mailrent=mailrent,mailwater=mailwater,mailgarbage=mailgarbage,mailsecurity=mailsecurity,mailarrears=mailarrears,mailtotal=mailtotal)
@@ -278,12 +282,22 @@ def example_func(param):
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
 def send_internal_email_notifications(company,param):
+    job = q.enqueue_call(
+        func=send_mail_notifications, args=(company,param,), result_ttl=5000
+    )
+
+def send_mail_notifications(company,param):
+
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
     try:
-        if os.getenv("CURRENT_APP") == "app1":
-            email_addr = "notifications.kiotapay@gmail.com"
-            txt = Message(company, sender = 'kiotapay@gmail.com', recipients = [email_addr])
-            txt.body = param
-            mail.send(txt)
+        email_addr = "notifications.kiotapay@gmail.com" if os.getenv("TARGET") != "lasshouse" else os.getenv("G_ACCOUNT_ALERTS")
+        
+        txt = Message(company, sender = mailsender, recipients = [email_addr])
+        txt.body = param
+        mail.send(txt)
     except:
         pass
 
@@ -542,7 +556,7 @@ def logo(co):
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
         else:
-            if os.getenv("CURRENT_APP") == "app1":
+            if os.getenv("TARGET") != "lasshouse":
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
@@ -559,7 +573,7 @@ def logo(co):
 
     except Exception as e:
         print("failing big time",e)
-        if os.getenv("CURRENT_APP") == "app1":
+        if os.getenv("TARGET") != "lasshouse":
             logopath = "../static/img/logos/kiotapay/l-logo.png"
             mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
             fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
@@ -570,7 +584,7 @@ def logo(co):
             fulllogopath = "../static/img/logos/spry/full-logo.png"
             letterhead = "../static/img/logos/spry/letterhead.jpg"
 
-    if os.getenv("CURRENT_APP") == "app1":
+    if os.getenv("TARGET") != "lasshouse":
         parent = "KiotaPay"
     else:
         parent = "Kodimann"
@@ -3341,7 +3355,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
                             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
-                            txt = Message(period, sender = 'kiotapay@gmail.com', recipients = [email_addr])
+                            txt = Message(period, sender = mailsender, recipients = [email_addr])
                             txt.body = f"Dear {tname}  \nYour invoice(s) are now available for {str_thouses}. Kindly find the attached invoices. \n\n{co.name}"
                             for inv in invoices:
                                 with open(inv,'rb') as fh:
@@ -3477,7 +3491,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                     period = f"{get_str_month(bill.month)} invoice"
                                     filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
-                                    txt = Message(period, sender = 'kiotapay@gmail.com', recipients = [email_addr])
+                                    txt = Message(period, sender = mailsender, recipients = [email_addr])
                                     txt.body = f"Dear {tname}  \nYour invoice is now available. Kindly find the attached invoice. \n\n{co.name}"
                                     # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
                                     txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
@@ -3962,6 +3976,28 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
         print("Apartment was not selected")
 
 
+def send_activation_mail(email,name,url):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    print("goooiiing")
+
+    txt = Message('Welcome to Kodimann! Please activate your account.', sender = mailsender, recipients = [email])
+    txt.html = render_template('activation.html',name=name,target_url=url)
+    mail.send(txt)
+
+def send_demo_mail(email,name,url):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    print("goooiiing")
+
+    txt = Message('Welcome to Kodimann! Demo account.', sender = mailsender, recipients = [email])
+    txt.html = render_template('demo.html',name=name,target_url=url)
+    mail.send(txt)
+
 def auto_send_mail_receipt(payment_id,user_id):
     from app import create_app
     app = create_app(configuration)
@@ -4047,7 +4083,7 @@ def auto_send_mail_receipt(payment_id,user_id):
         try:
             email_addr = tenant.email
             if email_addr:
-                txt = Message('Payment acknowledgement receipt', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+                txt = Message('Payment acknowledgement receipt', sender = mailsender, recipients = [email_addr])
                 txt.body = "Dear Tenant;" "\nThis is acknowledging that we have received payment of " + stramount +" shillings only."+ "\nIn case of any query, feel free to contact us. \nThank you. \nKindly find the attached receipt. \n\nSender - " + company.name + ","+ "\nProperty managers."
                 # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
                 txt.attach(filename="payment_receipt.pdf",disposition="attachment",content_type="application/pdf",data=fh.read())
@@ -4146,7 +4182,7 @@ def auto_send_sms_receipt(payment_id,user_id):
     #     try:
     #         email_addr = tenant.email
     #         if email_addr:
-    #             txt = Message('Payment acknowledgement receipt', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+    #             txt = Message('Payment acknowledgement receipt', sender = mailsender, recipients = [email_addr])
     #             txt.body = "Dear Tenant;" "\nThis is acknowledging that we have received payment of " + stramount +" shillings only."+ "\nIn case of any query, feel free to contact us. \nThank you. \nKIndly find the attached receipt. \n\nSender - " + company + ","+ "\nProperty managers."
     #             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
     #             txt.attach(filename="payment_receipt.pdf",disposition="attachment",content_type="application/pdf",data=fh.read())
@@ -5444,7 +5480,7 @@ def auto_consume_ctob(ctob_obj):
         #     # print (fh)
         #     try:
         #         email_addr = tenant_obj.email
-        #         txt = Message('Payment Acknowledgement', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+        #         txt = Message('Payment Acknowledgement', sender = mailsender, recipients = [email_addr])
         #         txt.body = "Dear Tenant;" "\nThis is acknowledging that we have received payment of Kshs " + paid + "\nIn case of any query, feel free to contact us. \nThank you. \nKIndly find the attached receipt."
         #         # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
         #         txt.attach(filename="payment_receipt.pdf",disposition="attachment",content_type="application/pdf",data=fh.read())
@@ -5567,6 +5603,8 @@ def get_obj_ids_alt(arr):
             obj_id_list.append(mailid)
             editid = req["editid"]
             obj_id_list.append(editid)
+            payid = req["payid"]
+            obj_id_list.append(payid)
             delid = req["delid"]
             obj_id_list.append(delid)
 
@@ -5703,7 +5741,7 @@ def auto_generate_report(request,prop,logopath,rate,date):
         # print (fh)
         try:
             email_addr = "koechpetersn@gmail.com"
-            txt = Message('Monthly Statememnt', sender = 'kiotapay@gmail.com', recipients = [email_addr])
+            txt = Message('Monthly Statememnt', sender = mailsender, recipients = [email_addr])
             txt.body = "Dear User; \nFind the attached " +month+ " report for "+prop+"."
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=mail_filename+".pdf",disposition="attachment",content_type="application/pdf",data=fh.read())

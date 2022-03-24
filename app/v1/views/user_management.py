@@ -763,6 +763,38 @@ class AdminCreateAgent(Resource):
 
             return redirect(url_for('api.index'))
 
+class RequestDemo(Resource):
+    """class"""
+    def get(self):
+        fname=request.args.get('fname')
+        lname=request.args.get('lname')
+        phone=request.args.get('tel1')
+        email=request.args.get('email')
+
+        name = fname + " " + lname
+
+        message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has requested for a demo."
+
+        try:
+            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
+            response = sms.send(message1, ["+254716674695"],sender)
+        except:
+            pass
+
+        send_internal_email_notifications("DEMO REQUEST",message1)
+
+
+        targeturl = "https://www.kodimann.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        
+        if os.getenv("TARGET") == "lasshouse":
+            print("sending....")
+            job101 = q.enqueue_call(
+                func=send_demo_mail, args=(email,name,targeturl,), result_ttl=5000
+            )
+
+        return "success"
+
+
 class SelfUserRegisterAgent(Resource):
     """class"""
     def get(self):
@@ -771,16 +803,15 @@ class SelfUserRegisterAgent(Resource):
         remember = False
         fname=request.form.get('fname')
         lname=request.form.get('lname')
-        phone=request.form.get('phone')
+        phone=request.form.get('tel1')
         natid=request.form.get('natid')
         email=request.form.get('email')
-        company_name = request.form.get('company')
-        address = request.form.get('address')
-        mail_box = request.form.get('mailbox')
-        tel = request.form.get('company_tel')
-        mail = request.form.get('company_mail')
-        password = request.form.get('password')
-        description = request.form.get('desc')
+        company_name = request.form.get('co')
+        addr1 = request.form.get('addr1')
+        addr2 = request.form.get('addr2')
+        tel = request.form.get('tel2')
+        mail = request.form.get('email2')
+        password = request.form.get('pass1')
 
         created_by = 1
         usergroup_id = 3
@@ -790,8 +821,11 @@ class SelfUserRegisterAgent(Resource):
         is_present  = UserOp.fetch_user_by_national_id(natid)
         
         if is_present:
-            flash("Account exists already","fail")
-            return redirect(url_for('api.userlogin'))
+            return "id taken"
+
+        is_present  = UserOp.fetch_user_by_phone(phone)
+        if is_present:
+            return "tel taken"
 
         usercode = usercode_generator()
         is_present  = UserOp.fetch_user_by_usercode(usercode)
@@ -800,11 +834,15 @@ class SelfUserRegisterAgent(Resource):
 
         check_mail = UserOp.fetch_user_by_email(email) #email provided but lets check duplicates
         if check_mail:
-            flash("Registration failed, email taken, try a different one","fail")
-            return redirect(url_for('api.signupcategory'))
+            msg = "email taken"
+            return msg
         username = username_exctractermail(email)
 
-        company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)
+        co = CompanyOp.fetch_company_by_name(company_name)
+        if co:
+            return "co taken"
+
+        company_obj = CompanyOp(company_name,addr1,"",mail,tel,"")
         company_obj.save()
 
         group1 = CompanyUserGroupOp("Manager","administrator",company_obj.id)
@@ -821,22 +859,48 @@ class SelfUserRegisterAgent(Resource):
         user = UserOp(name,usercode,username,natid,phone,email,password,usergroup_id,group1.id,company_obj.id,created_by)
         user.save()
 
+        message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
         try:
-            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
             response = sms.send(message1, ["+254716674695"],sender)
+        except:
+            pass
 
-            recipient = [sms_phone_number_formatter(phone)]
-            message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay customer relations manager."
-            response = sms.send(message2, recipient,sender)
+        try:
+
+            send_internal_email_notifications("ACCOUNT",message1)
+
+            if os.getenv("TARGET") != "lasshouse":
+                pass
+            else:
+                recipient = [sms_phone_number_formatter(phone)]
+                message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nSales manager."
+                response = sms.send(message2, recipient,sender)
 
         except:
             pass
 
-        # UserOp.update_status(user,False)
+        UserOp.update_status(user,False)
 
-        login_user(user, remember=remember)
-        return redirect(url_for('api.index'))
+        userlink = random_generator(35)
+
+        UserOp.update_link(user,userlink)
+       
+        targeturl = f"https://www.kodimann.com/user/{userlink}"
+        # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
+
+        print(targeturl)
+        
+        if os.getenv("TARGET") == "lasshouse":
+            print("sending....")
+            job101 = q.enqueue_call(
+                func=send_activation_mail, args=(email,name,targeturl,), result_ttl=5000
+            )
+
+        # login_user(user, remember=remember)
+
+        msg = "success"
+        return msg
 
 class SelfUserRegisterOwner(Resource):
     """class"""
@@ -998,11 +1062,12 @@ class TenantUserSignUpStageTwo(Resource):
 
 class LandingPage(Resource):
     def get(self):
-        if os.getenv("CURRENT_APP") == "app1":
+        if os.getenv("TARGET") != "lasshouse":
             # return Response(render_template("landingtwo.html"))
             return redirect("https://kiotapay.co.ke")
         else:
-            return redirect(url_for('api.userlogin'))
+            return Response(render_template("home.html"))
+            # return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass
@@ -1091,7 +1156,7 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-        loginpage = "login.html" if os.getenv("CURRENT_APP") == "app1" else "login2.html"
+        loginpage = "login2.html" if os.getenv("TARGET") == "lasshouse" else "login.html"
 
         return Response(render_template(loginpage))
 
@@ -1154,8 +1219,12 @@ class LandlordDemoLogin(Resource):
 class Demo(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
-        response = sms.send("Demo account has been accessed",["+254716674695"],"KIOTAPAY")
-        print(response)
+        try:
+            response = sms.send("Demo account has been accessed",["+254716674695"],sender)
+            print(response)
+        except:
+            pass
+        send_internal_email_notifications("DEMO HIT","Demo account has been accessed")
         user = UserOp.fetch_user_by_national_id("12345678")
         if not user:
             user = UserOp.fetch_user_by_usercode("3551")

@@ -709,15 +709,18 @@ class PropStats(Resource):
                 proponfocus = fname_extracter(str(prop_obj))
                 props.append(prop_obj)
             else:
-                proponfocus = fname_extracter(str(apartment_list[0]))
-                props.append(apartment_list[0])
+                try:
+                    proponfocus = fname_extracter(str(apartment_list[0]))
+                    props.append(apartment_list[0])
+                except:
+                    proponfocus = None
         else:
             try:
                 proponfocus = fname_extracter(str(apartment_list[0]))
                 props.append(apartment_list[0])
             except:
                 proponfocus = "None"
-                pass
+
         dashboard_props = []
 
         for i in apartment_list:

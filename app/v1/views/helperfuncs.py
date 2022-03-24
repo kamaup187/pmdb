@@ -2715,6 +2715,7 @@ def validate_tel_input(arg):
     return tel
 
 def validate_float_inputs(*args):
+    print("Args>>>>>>>>",args)
     results = []
     for i in args:
         ii = i.replace(',', '')

@@ -790,7 +790,7 @@ class EditBill(Resource):
         if target == "editarrears":
             if warning:
                 warning = "This is a previous month invoice arrears!</span>"
-            return render_template("ajax_dynamic_billarrears.html",bill=bill)
+            return render_template("ajax_dynamic_billarrears.html",bill=bill,warning=warning)
         elif target == "editpayments":
             if warning:
                 warning = "This is a previous month invoice payments!"

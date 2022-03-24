@@ -4270,7 +4270,7 @@ class FetchBills(Resource):
 
             if recent_bills:
                 detailed_bills = bill_details(recent_bills)
-                
+
                 billids = get_obj_ids_alt(detailed_bills)
 
                 # billids = get_obj_ids(detailed_bills)
@@ -4382,6 +4382,7 @@ class FetchBills(Resource):
                     'mailid':"0",
                     'delid':"0",
                     'editid':"0",
+                    'payid':"0",
                     'hst':house_tenant,
                     'vacancy':"text-danger",
                     'rent':0.0,

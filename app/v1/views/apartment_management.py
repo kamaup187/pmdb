@@ -5970,6 +5970,7 @@ class Results(Resource):
                     'mailid':"0",
                     'delid':"0",
                     'editid':"0",
+                    'payid':"0",
                     'hst':house_tenant,
                     'vacancy':"text-danger",
                     'rent':0.0,

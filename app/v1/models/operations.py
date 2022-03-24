@@ -26,6 +26,9 @@ class Base():
     def generate_editid(self):
         return "edit" + str(self.id)
 
+    def generate_payid(self):
+        return "pay" + str(self.id)
+
     def generate_viewid(self):
         return "view" + str(self.id)
 
@@ -2235,6 +2238,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'smsid':MonthlyChargeOp.generate_smsid(self),
             'mailid':MonthlyChargeOp.generate_mailid(self),
             'editid':MonthlyChargeOp.generate_editid(self),
+            'payid':MonthlyChargeOp.generate_payid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'highlight':MonthlyChargeOp.highlight(self),
             'payhighlight':MonthlyChargeOp.payhighlight(self),

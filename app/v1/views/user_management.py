@@ -859,8 +859,8 @@ class SelfUserRegisterAgent(Resource):
         user = UserOp(name,usercode,username,natid,phone,email,password,usergroup_id,group1.id,company_obj.id,created_by)
         user.save()
 
+        message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
         try:
-            message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
             response = sms.send(message1, ["+254716674695"],sender)
         except:

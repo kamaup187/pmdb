@@ -812,7 +812,6 @@ class EditBill(Resource):
         maintenance = request.form.get('maintenance')
         arrears = request.form.get('arrears')
 
-
         identifier = get_identifier(billid)
 
         bill = MonthlyChargeOp.fetch_specific_bill(identifier)
@@ -1049,107 +1048,107 @@ class EditBill(Resource):
 
 
             elif target == "editpayments":
-                if bill.apartment.billing_period.month == bill.month:
+                # if bill.apartment.billing_period.month == bill.month: #DISABLED THIS CHECK TO EDIT PREVIOUS BILL PAYMENTS
 
 
-                    values = validate_float_inputs(rent,water,garbage,security,fine,deposit,"",agreement,electricity,maintenance)
+                values = validate_float_inputs(rent,water,garbage,security,fine,deposit,"",agreement,electricity,maintenance)
 
 
-                    if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
-                        # update_water = bill.water
-                        update_water = values[1] if values[1] != "null" else bill.water_paid
-                    else:
-                        update_water = values[1] if values[1] != "null" else bill.water_paid
+                if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
+                    # update_water = bill.water
+                    update_water = values[1] if values[1] != "null" else bill.water_paid
+                else:
+                    update_water = values[1] if values[1] != "null" else bill.water_paid
 
-                    update_rent = values[0] if values[0] != "null" else bill.rent_paid
-                    update_garbage = values[2] if values[2] != "null" else bill.garbage_paid
-                    update_security = values[3] if values[3] != "null" else bill.security_paid
-                    update_fine = values[4] if values[4] != "null" else bill.penalty_paid
-                    update_agreement = values[7] if values[7] != "null" else bill.agreement_paid
-                    update_deposit = values[5] if values[5] != "null" else bill.deposit_paid
-                    update_electricity = values[8] if values[8] != "null" else bill.electricity_paid
-                    update_maintenance = values[9] if values[9] != "null" else bill.maintenance_paid
-                    
-                    update_payments = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
+                update_rent = values[0] if values[0] != "null" else bill.rent_paid
+                update_garbage = values[2] if values[2] != "null" else bill.garbage_paid
+                update_security = values[3] if values[3] != "null" else bill.security_paid
+                update_fine = values[4] if values[4] != "null" else bill.penalty_paid
+                update_agreement = values[7] if values[7] != "null" else bill.agreement_paid
+                update_deposit = values[5] if values[5] != "null" else bill.deposit_paid
+                update_electricity = values[8] if values[8] != "null" else bill.electricity_paid
+                update_maintenance = values[9] if values[9] != "null" else bill.maintenance_paid
+                
+                update_payments = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
-                    if bill.paid_amount != update_payments and bill.paid_amount != 0.0:
-                        print("MASTER PAYMENT IS NOT TALLYING WITH NEW PAYMENT>>>>","MASTER:",bill.paid_amount,"CHILD:",update_payments)
-                        return None
-                    if bill.paid_amount != update_payments:
-                        pass
-                    else:
-                        MonthlyChargeOp.update_payment(bill,update_payments)
+                if bill.paid_amount != update_payments and bill.paid_amount != 0.0:
+                    print("MASTER PAYMENT IS NOT TALLYING WITH NEW PAYMENT>>>>","MASTER:",bill.paid_amount,"CHILD:",update_payments)
+                    return None
+                if bill.paid_amount != update_payments:
+                    pass
+                else:
+                    MonthlyChargeOp.update_payment(bill,update_payments)
 
-                    MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
-
-
-                    # if bill.rent_balance:
-                    if bill.rent_balance:
-                        rentbal = bill.rent + bill.rent_balance - bill.rent_paid
-                    else:
-                        rentbal = bill.rent - bill.rent_paid
-
-                    if bill.water_balance:
-                        waterbal = bill.water + bill.water_balance - bill.water_paid 
-                    else:
-                        waterbal = bill.water - bill.water_paid
-
-                    if bill.electricity_balance:
-                        electricitybal = bill.electricity + bill.electricity_balance - bill.electricity_paid
-                    else:
-                        electricitybal = bill.electricity - bill.electricity_paid
-
-                    if bill.maintenance_balance:
-                        servicebal = bill.maintenance + bill.maintenance_balance - bill.maintenance_paid
-                    else:
-                        servicebal = bill.maintenance - bill.maintenance_paid
-
-                    if bill.penalty_balance:
-                        penaltybal = bill.penalty + bill.penalty_balance - bill.penalty_paid
-                    else:
-                        penaltybal = bill.penalty - bill.penalty_paid
-
-                    if bill.security_balance:
-                        securitybal = bill.security + bill.security_balance - bill.security_paid
-                    else:
-                        securitybal = bill.security - bill.security_paid
-
-                    if bill.garbage_balance:
-                        garbagebal = bill.garbage + bill.garbage_balance - bill.garbage_paid
-                    else:
-                        garbagebal = bill.garbage - bill.garbage_paid
+                MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
-                    if bill.deposit_balance:
-                        depositbal = bill.deposit + bill.deposit_balance - bill.deposit_paid
-                    else:
-                        depositbal = bill.deposit - bill.deposit_paid
+                # if bill.rent_balance:
+                if bill.rent_balance:
+                    rentbal = bill.rent + bill.rent_balance - bill.rent_paid
+                else:
+                    rentbal = bill.rent - bill.rent_paid
 
-                    if bill.agreement_balance:
-                        agreementbal = bill.agreement + bill.agreement_balance - bill.agreement_paid
-                    else:
-                        agreementbal = bill.agreement - bill.agreement_paid
+                if bill.water_balance:
+                    waterbal = bill.water + bill.water_balance - bill.water_paid 
+                else:
+                    waterbal = bill.water - bill.water_paid
 
-                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                if bill.electricity_balance:
+                    electricitybal = bill.electricity + bill.electricity_balance - bill.electricity_paid
+                else:
+                    electricitybal = bill.electricity - bill.electricity_paid
+
+                if bill.maintenance_balance:
+                    servicebal = bill.maintenance + bill.maintenance_balance - bill.maintenance_paid
+                else:
+                    servicebal = bill.maintenance - bill.maintenance_paid
+
+                if bill.penalty_balance:
+                    penaltybal = bill.penalty + bill.penalty_balance - bill.penalty_paid
+                else:
+                    penaltybal = bill.penalty - bill.penalty_paid
+
+                if bill.security_balance:
+                    securitybal = bill.security + bill.security_balance - bill.security_paid
+                else:
+                    securitybal = bill.security - bill.security_paid
+
+                if bill.garbage_balance:
+                    garbagebal = bill.garbage + bill.garbage_balance - bill.garbage_paid
+                else:
+                    garbagebal = bill.garbage - bill.garbage_paid
+
+
+                if bill.deposit_balance:
+                    depositbal = bill.deposit + bill.deposit_balance - bill.deposit_paid
+                else:
+                    depositbal = bill.deposit - bill.deposit_paid
+
+                if bill.agreement_balance:
+                    agreementbal = bill.agreement + bill.agreement_balance - bill.agreement_paid
+                else:
+                    agreementbal = bill.agreement - bill.agreement_paid
+
+                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
 
-                    # diff = total_amount - original_amount
+                # diff = total_amount - original_amount
 
-                    # tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                    # running_bal = tenant_obj.balance
-                    # running_bal = running_bal + diff
-                    # TenantOp.update_balance(tenant_obj,running_bal)
+                # tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                # running_bal = tenant_obj.balance
+                # running_bal = running_bal + diff
+                # TenantOp.update_balance(tenant_obj,running_bal)
 
-                    # # bal = bill.balance
-                    # # bal = bal + diff
-                    # if bill.paid_amount:
-                    #     bal = total_amount - bill.paid_amount
-                    # else:
-                    #     bal = total_amount
+                # # bal = bill.balance
+                # # bal = bal + diff
+                # if bill.paid_amount:
+                #     bal = total_amount - bill.paid_amount
+                # else:
+                #     bal = total_amount
 
-                    # MonthlyChargeOp.update_balance(bill,bal)
+                # MonthlyChargeOp.update_balance(bill,bal)
 
 
 

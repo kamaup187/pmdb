@@ -889,7 +889,10 @@ class GraphStats(Resource):
             if prop_obj in apartment_list:
                 props.append(prop_obj)
             else:
-                props.append(apartment_list[0])
+                try:
+                    props.append(apartment_list[0])
+                except:
+                    pass
         else:
             try:
                 props.append(apartment_list[0])

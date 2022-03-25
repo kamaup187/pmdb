@@ -3164,8 +3164,8 @@ class CallBackUrlPremier(Resource):
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-        # ctob_obj.save()
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
 
@@ -3192,8 +3192,8 @@ class CallBackUrlPremierRealty(Resource):
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-        # ctob_obj.save()
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
 

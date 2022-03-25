@@ -5142,8 +5142,8 @@ def total_bill(apartment_id,user_id,month,year):
                             const_agreement_due = charge.agreement_due if charge.agreement_due else 0.0
 
                             total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
-                            MonthlyChargeOp.update_monthly_charge(current_month_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,created_by)
 
+                            MonthlyChargeOp.update_monthly_charge(current_month_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,created_by)
                             MonthlyChargeOp.update_dues(current_month_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
 
@@ -5184,8 +5184,14 @@ def total_bill(apartment_id,user_id,month,year):
                         monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,created_by)
                         monthly_charge_obj.save()
 
+                        monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,created_by)
+                        monthly_charge_obj_alt.save()
+
                         MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                         MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+
+                        MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                        MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                         tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
                         running_bal = tenant_obj.balance
@@ -5213,8 +5219,14 @@ def total_bill(apartment_id,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,created_by)
                     monthly_charge_obj.save()
 
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,created_by)
+                    monthly_charge_obj_alt.save()
+
                     MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+
+                    MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
                     running_bal = tenant_obj.balance

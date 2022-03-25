@@ -105,10 +105,10 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        try:
-            print("ndiooooo hiiiiii",CtoBop.fetch_record_by_id(171).trans_amnt)
-        except Exception as e:
-            print("trans amnt is failing",e)
+        # try:
+        #     print("ndiooooo hiiiiii",CtoBop.fetch_record_by_id(171).trans_amnt)
+        # except Exception as e:
+        #     print("trans amnt is failing",e)
 
         # appss = ApartmentOp.fetch_all_apartments()
         # for qqq in appss:
@@ -292,25 +292,25 @@ class Index(Resource):
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
-            elif current_user.company.name == "KEVMA REAL ESTATE":
-                sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
+                # elif current_user.company.name == "KEVMA REAL ESTATE":
+                #     sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
-                raw_smsunits = sms_units.replace(",","")
-                int_units = int(raw_smsunits)
-                CompanyOp.set_rem_quota(company,int_units)
+                #     raw_smsunits = sms_units.replace(",","")
+                #     int_units = int(raw_smsunits)
+                #     CompanyOp.set_rem_quota(company,int_units)
 
-                smsfrac = f"{sms_units} units"
-                color = "text-success"
+                #     smsfrac = f"{sms_units} units"
+                #     color = "text-success"
 
-            elif current_user.company.name.title() == "Latitude Properties":
-                sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
+                # elif current_user.company.name.title() == "Latitude Properties":
+                #     sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
-                raw_smsunits = sms_units.replace(",","")
-                int_units = int(raw_smsunits)
-                CompanyOp.set_rem_quota(company,int_units)
+                #     raw_smsunits = sms_units.replace(",","")
+                #     int_units = int(raw_smsunits)
+                #     CompanyOp.set_rem_quota(company,int_units)
 
-                smsfrac = f"{sms_units} units"
-                color = "text-success"
+                #     smsfrac = f"{sms_units} units"
+                #     color = "text-success"
 
             else:
                 remainingsms = company.remainingsms

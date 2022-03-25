@@ -325,7 +325,6 @@ class Index(Resource):
             # if current_user.username.startswith('qc'):
             #     CompanyOp.set_rem_quota(company,916)
 
-
             propids = ','.join(map(str, prop_ids))
 
             if current_user.company.name == 'Rowam Properties Limited':

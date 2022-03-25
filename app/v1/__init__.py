@@ -227,7 +227,7 @@ api.add_resource(EditProp,"/edit/prop")
 api.add_resource(LandlordDemoLogin,"/demo/kp0716674695mp0725538750landlord")
 api.add_resource(TenantDemoLogin,"/demo/kp0716674695mp0725538750tenant")
 api.add_resource(DemoAccess,"/trial/<string:ri>")
-api.add_resource(Demo,"/demo")
+api.add_resource(Demo,"/demo/abtytbhvgcfxnbh")
 
 
 # api.add_resource(Robots,"/robots")

@@ -105,6 +105,11 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        try:
+            print("ndiooooo hiiiiii",CtoBop.fetch_record_by_id(171).trans_amnt)
+        except Exception as e:
+            print("trans amnt is failing",e)
+
         # appss = ApartmentOp.fetch_all_apartments()
         # for qqq in appss:
         #     print("updating",qqq, "currently",qqq.reminder_status)

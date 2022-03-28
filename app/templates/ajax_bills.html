@@ -232,6 +232,14 @@
       $('#list-area').removeClass("isopen text-danger");
       $('#sidebarToggle').click();
       $('#smaccordionSidebar').removeClass("toggled");
+      $(".fixloader").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
+            );
+            $(".fixloader2").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
+            );
+      setTimeout(getPropStats, 10);
+
     });
   </script>
 

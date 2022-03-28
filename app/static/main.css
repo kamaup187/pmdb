@@ -23,6 +23,10 @@
   color: #0e2353
 }
 
+.text-kodi-alt{
+  color: #f5ac24
+}
+
 table.dataTable thead th {
   background: transparent !important;
   white-space: nowrap;
@@ -1613,7 +1617,7 @@ clear: both;
     margin-top: 0px !important;
     margin-left: 0px !important;
     
-    width: 99% !important;
+    width: 78.5% !important;
     z-index: 10;
   }
 
@@ -1657,6 +1661,12 @@ clear: both;
     height: 10%;
     padding: 3px;
     margin: 0px;
+  }
+  .dashboard-input{
+    width: 25rem !important;
+  }
+  .dashboard-input-alt{
+    width: 15rem !important;
   }
   .namebutton {
     text-align: left !important;

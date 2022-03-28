@@ -183,6 +183,9 @@ class Index(Resource):
 
         for prop in apartment_list:
             prop_ids.append(prop.id)
+
+        apartment_list.append("All properties")
+
             
         usergroup = current_user.user_group
         user_group = str(usergroup)
@@ -324,7 +327,6 @@ class Index(Resource):
                 
             # if current_user.username.startswith('qc'):
             #     CompanyOp.set_rem_quota(company,916)
-
 
             propids = ','.join(map(str, prop_ids))
 
@@ -1031,7 +1033,142 @@ class GraphStats(Resource):
 
 
 
+class PropOverview(Resource):
+    @login_required
+    def get(self):
+        prop = request.args.get('prop')
+        return len(run_props(prop,current_user))
 
+class HouseOverview(Resource):
+    @login_required
+    def get(self):
+        prop = request.args.get('prop')
+        props = run_props(prop,current_user)
+        return len(flatten([prop.houses for prop in props]))
+
+class TenantOverview(Resource):
+    @login_required
+    def get(self):
+        prop = request.args.get('prop')
+        props = run_props(prop,current_user)
+        return len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
+
+class OccupancyOverview(Resource):
+    @login_required
+    def get(self):
+        prop = request.args.get('prop')
+        props = run_props(prop,current_user)
+        occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+        houses_list = [prop.houses for prop in props]
+
+        houses_num = len(flatten(houses_list))
+        occupancy_num = len(flatten(occupancy))
+        
+        try:
+            occfrac = occupancy_num/houses_num 
+        except:
+            occfrac = 0.0
+
+        occupancy_rate = f'{(occfrac * 100):,.0f} %'
+
+        return  occupancy_rate
+
+class InvoiceOverview(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+
+        period = current_user.company.billing_period
+
+        total_bills = 0
+        invs = 0
+
+        props = run_props(prop,current_user)
+
+        for apartment in props:
+
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == period.month and item.year == period.year:
+                    invs += 1
+                    total_bills += item.total_bill if item.total_bill > 0 else 0
+
+        return f'Kes {total_bills:,.1f}'
+
+class PaidOverview(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+
+        period = current_user.company.billing_period
+
+        total_bills = 0
+
+        props = run_props(prop,current_user)
+
+        for apartment in props:
+
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == period.month and item.year == period.year:
+                    total_bills += item.paid_amount if item.paid_amount > 0 else 0
+
+        return f'Kes {total_bills:,.1f}'
+
+class BalanceOverview(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+
+        period = current_user.company.billing_period
+
+        total_bills = 0
+
+        props = run_props(prop,current_user)
+
+        for apartment in props:
+
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == period.month and item.year == period.year:
+                    total_bills += item.balance if item.balance > 0 else 0
+
+        return f'Kes {total_bills:,.1f}'
+
+class CollectionOverview(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+
+        period = current_user.company.billing_period
+
+        total_bills = 0
+        real_collections = 0
+
+        props = run_props(prop,current_user)
+
+        for apartment in props:
+
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == period.month and item.year == period.year:
+
+                    total_bills += item.total_bill if item.total_bill > 0 else 0
+
+                    if item.balance > -0.99999:
+                        real_collections += item.paid_amount if item.paid_amount > 0 else 0
+                    else:
+                        real_collections += item.total_bill if item.total_bill > 0 else 0
+        try:
+            occupancy_rate = f'{(real_collections / total_bills * 100):,.1f} %'
+        except:
+            occupancy_rate = "0 %"
+
+        return occupancy_rate
 
 class CreateLocation(Resource):
     @login_required

@@ -671,7 +671,7 @@ class MonthlyCharge(db.Model):
     modifiedby= db.Column(db.Integer, db.ForeignKey(User.id))
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    histories = db.relationship('MonthlyChargeHistory',backref='invoice',order_by='MonthlyChargeHistory.date', cascade="all, delete-orphan")
+    # histories = db.relationship('MonthlyChargeHistory',backref='invoice',order_by='MonthlyChargeHistory.date', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -680,95 +680,95 @@ class MonthlyCharge(db.Model):
         # return str(self.total_bill)
         return strhouse
 
-class Test(db.Model):
-    """db model class"""
+# class Test(db.Model):
+#     """db model class"""
 
-    __tablename__ = 'tests'
-    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    rent = db.Column(db.Float,default=0)
+#     __tablename__ = 'tests'
+#     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+#     rent = db.Column(db.Float,default=0)
 
 
-class MonthlyChargeHistory(db.Model):
-    """db model class"""
+# class MonthlyChargeHistory(db.Model):
+#     """db model class"""
 
-    __tablename__ = 'monthlychargehistories'
+#     __tablename__ = 'monthlychargehistories'
 
-    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    month = db.Column(db.Integer)
-    year = db.Column(db.Integer)
+#     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+#     month = db.Column(db.Integer)
+#     year = db.Column(db.Integer)
 
-    rent = db.Column(db.Float,default=0)
-    water = db.Column(db.Float,default=0)
-    garbage = db.Column(db.Float,default=0)
-    security = db.Column(db.Float,default=0)
-    electricity = db.Column(db.Float,default=0)
-    maintenance = db.Column(db.Float,default=0)
-    agreement = db.Column(db.Float,default=0)
-    deposit = db.Column(db.Float,default=0)
-    penalty = db.Column(db.Float,default=0)
+#     rent = db.Column(db.Float,default=0)
+#     water = db.Column(db.Float,default=0)
+#     garbage = db.Column(db.Float,default=0)
+#     security = db.Column(db.Float,default=0)
+#     electricity = db.Column(db.Float,default=0)
+#     maintenance = db.Column(db.Float,default=0)
+#     agreement = db.Column(db.Float,default=0)
+#     deposit = db.Column(db.Float,default=0)
+#     penalty = db.Column(db.Float,default=0)
 
-    rent_balance = db.Column(db.Float,default=0)
-    water_balance  = db.Column(db.Float,default=0)
-    garbage_balance  = db.Column(db.Float,default=0)
-    security_balance  = db.Column(db.Float,default=0)
-    electricity_balance  = db.Column(db.Float,default=0)
-    maintenance_balance  = db.Column(db.Float,default=0)
-    agreement_balance  = db.Column(db.Float,default=0)
-    deposit_balance  = db.Column(db.Float,default=0)
-    penalty_balance  = db.Column(db.Float,default=0)
+#     rent_balance = db.Column(db.Float,default=0)
+#     water_balance  = db.Column(db.Float,default=0)
+#     garbage_balance  = db.Column(db.Float,default=0)
+#     security_balance  = db.Column(db.Float,default=0)
+#     electricity_balance  = db.Column(db.Float,default=0)
+#     maintenance_balance  = db.Column(db.Float,default=0)
+#     agreement_balance  = db.Column(db.Float,default=0)
+#     deposit_balance  = db.Column(db.Float,default=0)
+#     penalty_balance  = db.Column(db.Float,default=0)
 
-    rent_paid = db.Column(db.Float,default=0)
-    water_paid = db.Column(db.Float,default=0)
-    garbage_paid = db.Column(db.Float,default=0)
-    security_paid = db.Column(db.Float,default=0)
-    electricity_paid = db.Column(db.Float,default=0)
-    maintenance_paid = db.Column(db.Float,default=0)
-    agreement_paid = db.Column(db.Float,default=0)
-    deposit_paid = db.Column(db.Float,default=0)
-    penalty_paid = db.Column(db.Float,default=0)
+#     rent_paid = db.Column(db.Float,default=0)
+#     water_paid = db.Column(db.Float,default=0)
+#     garbage_paid = db.Column(db.Float,default=0)
+#     security_paid = db.Column(db.Float,default=0)
+#     electricity_paid = db.Column(db.Float,default=0)
+#     maintenance_paid = db.Column(db.Float,default=0)
+#     agreement_paid = db.Column(db.Float,default=0)
+#     deposit_paid = db.Column(db.Float,default=0)
+#     penalty_paid = db.Column(db.Float,default=0)
 
-    rent_due = db.Column(db.Float,default=0)
-    water_due  = db.Column(db.Float,default=0)
-    garbage_due  = db.Column(db.Float,default=0)
-    security_due  = db.Column(db.Float,default=0)
-    electricity_due  = db.Column(db.Float,default=0)
-    maintenance_due  = db.Column(db.Float,default=0)
-    agreement_due  = db.Column(db.Float,default=0)
-    deposit_due  = db.Column(db.Float,default=0)
-    penalty_due  = db.Column(db.Float,default=0)
+#     rent_due = db.Column(db.Float,default=0)
+#     water_due  = db.Column(db.Float,default=0)
+#     garbage_due  = db.Column(db.Float,default=0)
+#     security_due  = db.Column(db.Float,default=0)
+#     electricity_due  = db.Column(db.Float,default=0)
+#     maintenance_due  = db.Column(db.Float,default=0)
+#     agreement_due  = db.Column(db.Float,default=0)
+#     deposit_due  = db.Column(db.Float,default=0)
+#     penalty_due  = db.Column(db.Float,default=0)
     
-    arrears = db.Column(db.Float,default=0)
-    total_bill = db.Column(db.Float,default=0)
-    paid_amount = db.Column(db.Float,default=0)
-    balance = db.Column(db.Float,default=0)
+#     arrears = db.Column(db.Float,default=0)
+#     total_bill = db.Column(db.Float,default=0)
+#     paid_amount = db.Column(db.Float,default=0)
+#     balance = db.Column(db.Float,default=0)
 
-    pay_date = db.Column(db.DateTime)
-    date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    fine_status = db.Column(db.String,default="nil")
-    fine_date = db.Column(db.Integer)
+#     pay_date = db.Column(db.DateTime)
+#     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+#     fine_status = db.Column(db.String,default="nil")
+#     fine_date = db.Column(db.Integer)
 
-    sms_invoice = db.Column(db.String,default="pending")
-    email_invoice = db.Column(db.String,default="pending")
-    smsid = db.Column(db.VARCHAR)
+#     sms_invoice = db.Column(db.String,default="pending")
+#     email_invoice = db.Column(db.String,default="pending")
+#     smsid = db.Column(db.VARCHAR)
 
-    arrears_updated = db.Column(db.Boolean,default=False)
-    updated = db.Column(db.Boolean,default=False)
+#     arrears_updated = db.Column(db.Boolean,default=False)
+#     updated = db.Column(db.Boolean,default=False)
 
-    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
-    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
-    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
-    invoice_id = db.Column(db.Integer, db.ForeignKey(MonthlyCharge.id))
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+#     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+#     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+#     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+#     invoice_id = db.Column(db.Integer, db.ForeignKey(MonthlyCharge.id))
+#     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    createdby = db.Column(db.Integer, db.ForeignKey(User.id))
-    modifiedby= db.Column(db.Integer, db.ForeignKey(User.id))
-    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+#     createdby = db.Column(db.Integer, db.ForeignKey(User.id))
+#     modifiedby= db.Column(db.Integer, db.ForeignKey(User.id))
+#     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    def __repr__(self):
-        house = House.query.filter_by(id=self.house_id).first()
-        strhouse = str(house)
-        # return str(self.total_bill)
-        return strhouse
+#     def __repr__(self):
+#         house = House.query.filter_by(id=self.house_id).first()
+#         strhouse = str(house)
+#         # return str(self.total_bill)
+#         return strhouse
 
 class ClientBill(db.Model):
     """db model class"""

@@ -170,10 +170,10 @@
                         </div>
                     </h6>
                     <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" data-toggle="modal" data-target="#profileModal">
+                    <!-- <button class="dropdown-item" data-toggle="modal" data-target="#profileModal">
                         <div class="dropdown-item-icon"><i data-feather="settings"></i></div>
                         Account
-                    </button>
+                    </button> -->
                     <button class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
                         <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
                         Logout
@@ -1095,6 +1095,9 @@
     <script src="static/assets/demo/chart-pie-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js" crossorigin="anonymous"></script>
     <script src="/static/jss/litepicker.js"></script>
+    
+    <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
 
     <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
 
@@ -1515,6 +1518,16 @@
                 $("#propdisp").html(response);
             }
         });
+    });
+  </script>
+
+<script>
+    $("#switchperiod").datepicker({ 
+      autoclose: true, 
+      todayHighlight: true,
+      format: "mm-yyyy",
+      startView: "months", 
+      minViewMode: "months"
     });
   </script>
 

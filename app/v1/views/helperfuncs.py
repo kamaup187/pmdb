@@ -3627,7 +3627,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 smscurrentreading = (f"{wbill.reading} ")
                 smsunits = (f"{wbill.units} ")
                 smsstd = f"Standing charge: Kes {standing_charge}" if house.housecode.watercharge else ""
-                smsbill = (f"Kes {amount:,} ")
+                smsbill = (f"Kes {amount:,.2f} ")
 
                 wmessage = f"\n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nWater: {smsbill}"
             else:
@@ -3667,7 +3667,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             smsgarb = f"\nGarbage:{bill.garbage}," if bill.garbage else ""
             smssec = f"\nSecurity:{bill.security}," if bill.security else ""
             smssev = f"\nService:{bill.maintenance}," if bill.maintenance else ""
-            smselec = f"\nElectricity:{bill.electricity}," if bill.electricity else ""
+            smselec = f"\nElectricity:{bill.electricity:,.2f}," if bill.electricity else ""
             smsdep = f"\nDeposit:{bill.deposit}" if bill.deposit else ""
             smsarrears = f"\nArrears:{arrears}" if arrears else ""
             smsfine = f"\nPenalty:{bill.penalty}" if bill.penalty else ""

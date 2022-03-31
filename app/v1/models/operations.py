@@ -816,6 +816,10 @@ class HouseCodeOp(HouseCode,Base):
         self.waterrate3 = waterrate3
         db.session.commit()
 
+    def update_sewerage_rate(self,rate):
+        self.seweragerate = rate
+        db.session.commit()
+
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"
         return decor_fig 
@@ -967,6 +971,7 @@ class HouseOp(House,Base):
             'meter':HouseOp.get_meterno(self),
             'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
             'rate':HouseOp.format_amount(self.housecode.waterrate if self.housecode else 0),
+            'srate':HouseOp.format_amount(self.housecode.seweragerate if self.housecode else 0),
             'fixed':HouseOp.format_amount(self.housecode.watercharge if self.housecode else 0),
             'maintenance':HouseOp.format_amount(self.housecode.servicerate if self.housecode else 0),
             'garbage':HouseOp.format_amount(self.housecode.garbagerate if self.housecode else 0),
@@ -1424,6 +1429,199 @@ class ChargeOp(Charge, Base):
         self.compiled = status
         db.session.commit()
 
+
+class PermanentTenantOp(PermanentTenant,Base):
+    def __init__(self,name,phone,national_id,email,arrears,house_id,apartment_id,created_by):
+        self.name = name
+        self.phone = phone
+        self.national_id = national_id
+        self.email = email
+        self.initial_arrears = arrears
+        self.house_id = house_id
+        self.apartment_id = apartment_id
+        self.user_id = created_by
+
+    def fetch_tenant_by_nat_id(nat_id):
+        return PermanentTenant.query.filter_by(national_id=nat_id).first()
+
+    def fetch_tenant_by_tel(tel):
+        return PermanentTenant.query.filter_by(phone=tel).first()
+
+    def fetch_tenant_by_email(email):
+        return PermanentTenant.query.filter_by(email=email).first()
+
+    def fetch_tenant_by_id(id):
+        return PermanentTenant.query.filter_by(id=id).first()
+
+    def fetch_all_tenants():
+        return PermanentTenant.query.order_by(PermanentTenant.date.desc()).all()
+
+    def fetch_all_tenants_by_apartment(apartment_id):
+        return PermanentTenant.query.filter(PermanentTenant.apartment_id==apartment_id).order_by(PermanentTenant.name.asc()).all()
+
+    def update_tenant(self,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
+        if name:
+            self.name = name
+        if phone:
+            if phone == "null":
+                self.phone = None
+            else:
+                self.phone = phone
+
+        if email:
+            if email == "null":
+                self.email = None
+            else:
+                self.email = email
+
+        if national_id:
+            self.national_id = national_id
+        if arr:
+            self.initial_arrears = arr
+        # else:
+        #     self.initial_arrears = 0.0
+        if fine:
+            self.accumulated_fine = fine
+        # else:
+        #     self.fine = 0.0
+        if modified_by:
+            self.user_id = modified_by
+
+        if multi != "null":
+            # self.multiple_houses = multi
+            pass
+        db.session.commit()
+
+    def update_national_id(self,natid):
+        self.national_id = natid
+        db.session.commit()
+
+    def update_phone(self,phone):
+        self.phone = phone
+        db.session.commit()
+
+    def get_houseno(self):
+        """method to get tenant name from tenant alloc id"""
+        return f'{self.house}'
+
+    def combine_house_tenant(self):
+        try:
+            fname = self.name.split()[0] if self.name else "Tenant"
+        except:
+            fname = "Tenant"
+        house =  PermanentTenantOp.get_houseno(self)
+        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+
+    def combine_house_tenant_alt(self):
+        fname = self.name if self.name else "Tenant"
+        house =  PermanentTenantOp.get_houseno(self)
+        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+
+    def format_balance(self):
+        bal = self.balance
+        rounded_bal = round(bal,2)
+        decorated_bal = (f"{rounded_bal:,}")
+        return f"{decorated_bal}"
+
+    def highlight(self):
+        if self.balance > 0.0:
+            return "text-danger"
+        elif self.balance < 0.0:
+            return "text-success"
+        else:
+            return "text-dark"
+
+    def update_balance(self,balance):
+        self.balance = balance
+        db.session.commit()
+
+    def update_can_receive_sms(self,status):
+        self.sms = status
+        db.session.commit()
+
+    def update_fine(self,fine):
+        self.accumulated_fine= fine
+        db.session.commit()
+
+    def update_deposit(self,deposit):
+        self.deposit = deposit
+        db.session.commit()
+
+    def update_initial_arrears(self,initial_arrears):
+        self.initial_arrears = initial_arrears
+        db.session.commit()
+
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
+    def update_residency(self,residency):
+        self.residency = residency
+        db.session.commit()
+
+    def get_contact(self):
+        return self.phone if self.phone else "-"
+
+    def get_email(self):
+        return self.email if self.email else "-"
+
+    def billable(self):
+        return "Yes" if self.sms else "No"
+
+    def checkin_date(self):
+
+        date = self.date.date()
+
+        return date
+
+    # def generate_editid(self):
+    #     return "edit" + str(self.id)
+
+    def generate_identity(self):
+        return "ptnt"+str(self.id)
+
+    def generate_name(self):
+        if self.name:
+            try:
+                name = self.name.split()[0]
+                return name.lower() 
+            except Exception as e:
+                print("err len>>",len(self.name),"name:",self.name)
+                return "Tenant"
+        else:
+            return "Tenant"
+
+    def generate_editid(self):
+        return "pedit" + str(self.id)
+
+    def view(self):
+        print("NAME >>>>",self.name)
+        return {
+            'id':"p" + str(self.id),
+            'identity':PermanentTenantOp.generate_identity(self),
+            'editid':PermanentTenantOp.generate_editid(self),
+            'delid':PermanentTenantOp.generate_delid(self),
+            'name':PermanentTenantOp.generate_name(self),
+            'fullname':self.name,
+            'hst':PermanentTenantOp.combine_house_tenant(self),
+            'hstalt':PermanentTenantOp.combine_house_tenant_alt(self),
+            'idno':self.national_id,
+            'tel':PermanentTenantOp.get_contact(self),
+            'email':PermanentTenantOp.get_email(self),
+            'sms':PermanentTenantOp.billable(self),
+            'housenum':PermanentTenantOp.get_houseno(self),
+            'badge':'<span class="badge badge-warning badge-counter">owner</span>',
+            'checkin':PermanentTenantOp.checkin_date(self),
+            'balance':PermanentTenantOp.format_balance(self),
+            'highlight':PermanentTenantOp.highlight(self),
+            'viewable':"btn-outline-danger" if self.multiple_houses else "",
+            'active':"" if self.multiple_houses else "disabled",
+            'tooltip': "allow tenant to occupy more than one house first" if not self.multiple_houses else "Allocate more houses",
+            'regby':PermanentTenantOp.get_name(self)
+        }
+
+
+
 class TenantOp(Tenant,Base):
     def __init__(self,name,phone,national_id,email,arrears,apartment_id,created_by):
         self.name = name
@@ -1622,6 +1820,7 @@ class TenantOp(Tenant,Base):
             'deposit':self.deposit,
             'housenum':TenantOp.get_houseno(self),
             'status':self.status,
+            'badge':'<span class="badge badge-success badge-counter">tenant</span>',
             'checkin':TenantOp.checkin_date(self),
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),

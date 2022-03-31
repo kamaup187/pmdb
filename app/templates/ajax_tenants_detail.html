@@ -110,6 +110,7 @@
                       <thead class="border-top-info">
                         <tr>
                           <th class="text-info font-weight-bold">Name</th>
+                          <th class="text-info track-title-cell" data-orderable="false">Label</th>
                           <th class="text-info track-title-cell" data-orderable="false">Phone</th>
                           <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
                           <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">sms</th>
@@ -126,6 +127,7 @@
                         {% for bill in bills%}
                         <tr>
                           <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                          <td class="data-cell">{{ bill['badge']|safe }}</td>
                           <td class="data-cell">{{ bill['tel'] }}</td>
                           <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
                           <td class="data-cell expand dispnone-alt">{{ bill['sms'] }}</td>
@@ -562,6 +564,9 @@
       if( isNaN(parseInt(item)) ){
         if(item.startsWith("del")){
           $("#del_tenant_identifier").html(item)
+        }
+        else if(item.startsWith("pedit")){
+          $("#edit_tenant_identifier").html(item)
         }
         else if(item.startsWith("tnt")){
           $("#barloader").removeClass("dispnone")

@@ -256,6 +256,8 @@ class Apartment(db.Model):
     housecodes = db.relationship('HouseCode', backref='prop',order_by='HouseCode.codename', cascade="all, delete-orphan")
     houses = db.relationship('House', backref='apartment', cascade="all, delete-orphan")
     tenants = db.relationship('Tenant', backref='apartment', cascade="all, delete-orphan")
+    ptenants = db.relationship('PermanentTenant', backref='apartment', cascade="all, delete-orphan")
+
     tenants_allocated = db.relationship('Occupancy',backref='apartment',order_by='Occupancy.date' , cascade="all, delete-orphan")
     meters = db.relationship('Meter',backref='apartment',order_by='Meter.meter_number' , cascade="all, delete-orphan")
     # meters_allocation = db.relationship('AllocateMeter',backref='apartment',order_by='AllocateMeter.date' , cascade="all, delete-orphan")
@@ -319,6 +321,8 @@ class HouseCode(db.Model):
     waterrate2 = db.Column(db.Float,default=0)
     waterrate3 = db.Column(db.Float,default=0)
 
+    seweragerate = db.Column(db.Float,default=0)
+
     electricityrate = db.Column(db.Float,default=0)
     securityrate = db.Column(db.Float,default=0)
     servicerate = db.Column(db.Float,default=0)
@@ -370,6 +374,9 @@ class House(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='house',order_by='TenantRequest.date', cascade="all, delete-orphan")
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='house',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
+
+    owner = db.relationship('PermanentTenant',backref='house', uselist=False, cascade="all, delete-orphan")
+
     
     def __repr__(self):
         return self.name
@@ -526,6 +533,43 @@ class Charge(db.Model):
         charge_type_name = ChargeType.query.filter_by(id=self.charge_type_id).first()
         charge_type = str(charge_type_name)
         return charge_type
+
+class PermanentTenant(db.Model):
+    """db model class"""
+
+    __tablename__ = 'permanenttenants'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    uniquenameid = db.Column(db.String)
+    name = db.Column(db.String,nullable=False)
+    phone = db.Column(db.VARCHAR)
+    email = db.Column(db.VARCHAR)
+    national_id = db.Column(db.String)
+    sms = db.Column(db.Boolean,default=True)
+    balance = db.Column(db.Float,default=0)
+    accumulated_fine = db.Column(db.Float,default=0)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    initial_arrears = db.Column(db.Float,default=0)
+
+    multiple_houses =  db.Column(db.Boolean,default=False)
+    # cleared = db.Column(db.Boolean,default=False)
+
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    payments = db.relationship('Payment',backref='ptenant',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    mpesarecords = db.relationship('MpesaPayment',backref='ptenant',order_by='MpesaPayment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    mpesarequests = db.relationship('MpesaRequest',backref='ptenant',order_by='MpesaRequest.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    tenantrequests = db.relationship('TenantRequest',backref='ptenant',order_by='TenantRequest.date', cascade="all, delete-orphan")
+    messages = db.relationship('InternalMessages',backref='ptenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
+    sent_messages = db.relationship('SentMessages',backref='ptenant',order_by='SentMessages.date', cascade="all, delete-orphan")
+
+
+
+    def __repr__(self):
+        return self.name
 
 class Tenant(db.Model):
     """db model class"""
@@ -886,6 +930,7 @@ class Payment(db.Model):
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     createdby = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -1022,6 +1067,8 @@ class MpesaPayment(db.Model):
     claimed = db.Column(db.Boolean,default=False)
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
+
 
 class CtoB(db.Model):
     """class"""
@@ -1060,6 +1107,8 @@ class MpesaRequest(db.Model):
     result = db.Column(db.VARCHAR)
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
+
 
 class TenantRequest(db.Model):
     """db model class"""
@@ -1078,6 +1127,7 @@ class TenantRequest(db.Model):
     handled_description = db.Column(db.String,default="")
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
@@ -1202,6 +1252,7 @@ class InternalMessages(db.Model):
     status = db.Column(db.String,default="pending")
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
 class SentMessages(db.Model):
@@ -1217,5 +1268,6 @@ class SentMessages(db.Model):
     status = db.Column(db.String,default="sent")
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))

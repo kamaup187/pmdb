@@ -117,14 +117,21 @@
    
                     <div class="mt-2">
 
-                      <div class="form-group input-icons">
-                        <span>Tenant name<span class="text-danger small">(mandatory)</span></span>
-                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                      </div>
+                      <div id="tenanttype" class="fancy-checkbox-group form-control mb-2 divjust">
+                          <div>
+                            <input type="radio" id="ttype" name="ttype" value="tenant" checked/>
+                            <label for="ttype">Tenant</label>
+                          </div>
 
+                          <div>
+                            <input type="radio" id="ttype2" name="ttype" value="owner"/>
+                            <label for="ttype2">Owner</label>
+                          </div>
+                             
+                      </div>
+                      
                       <div class="form-group no-paddin input-icons">
-                        <span>Select house to allocate <span class="text-primary small">(recommended)</span></span>
+                        <span>Select house<span class="text-danger small">(mandatory)</span></span>
                         <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
                           <option disabled selected value> loading... </option>
                         </select>
@@ -132,19 +139,25 @@
                       </div>
 
                       <div class="form-group input-icons">
-                        <span>Tenant mobile number <span class="text-primary small">(recommended)</span></span>
+                        <span>Name<span class="text-danger small">(mandatory)</span></span>
+                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Mobile number <span class="text-primary small">(recommended)</span></span>
                           <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>
 
                       <div class="form-group input-icons">
-                        <span>Tenant Email<span class="text-primary small">(optional)</span></span>
+                        <span>Email<span class="text-primary small">(optional)</span></span>
                           <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>
 
                       <div class="form-group input-icons">
-                        <span>National id number <span class="text-primary small">(optional)</span></span>
+                        <span>Id number <span class="text-primary small">(optional)</span></span>
                           <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>
@@ -152,7 +165,7 @@
                       <div class="fancy-checkbox-group form-control mb-4 divjust">
                         <div>
                           <input type="checkbox" id="migrate2"/>
-                          <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                          <label for="migrate2">Bill deposit?</label>
                         </div>       
                       </div>
 
@@ -380,7 +393,7 @@
 <script>
     $(document).ready(function(){
       $("#addTenantModal").on('shown.bs.modal', function(){
-        $(this).find('#new_name').focus();
+        $(this).find('#select_house2').focus();
       });
     });
   </script>
@@ -401,6 +414,24 @@
       });
     });
   </script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#tenanttype").on('change', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#edit_prop_identifier").text(),
+            ttype:document.querySelector('input[name="ttype"]:checked').value,
+            target:"house options2"
+          },
+      success: function(response) {
+        $("#select_house2").html(response);
+      }
+    });
+  });
+</script>
 
 <script>
   $("#downloadtenants").click(function(){ 
@@ -434,6 +465,7 @@
                   national_id: $("#new_natid").val(),
                   tel: $("#new_tel").val(),
                   email: $("#new_email").val(),
+                  ttype:document.querySelector('input[name="ttype"]:checked').value,
                   migrate: migrate2,
                   arr: $("#new_arr").val()
               },

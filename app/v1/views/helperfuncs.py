@@ -2821,6 +2821,14 @@ def return_bool(accessright):
     else:
         return False
 
+def return_bool_alt(param):
+    if param == "null":
+        return False
+    elif param == "False":
+        return False
+    else:
+        return True
+
 def get_billing_period(prop):
     period = prop.billing_period
     return period

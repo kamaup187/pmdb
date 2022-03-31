@@ -7,14 +7,14 @@
                           <div class="card-text text-gray-400 mb-1 no-wrap-with-overflow mr-2">{{month_string}} Bills (total)</div>
                           <div class="card-text text-gray-400 mb-1 no-wrap-with-overflow mr-2">{{month_string}} Paid (total)</div>
                           <div class="balancebtn card-text text-gray-400 mb-2 no-wrap-with-overflow mr-2">Balance (Net)</div>
-                          <div class="prop-toggler card-text text-white font-weight-bold no-wrap-with-overflow mr-2">Showing for:</div>
+                          <div class="prop-toggle card-text text-white font-weight-bold no-wrap-with-overflow mr-2">Showing for:</div>
                           
                       </div>
-                      <div class="col-auto shadow-alt">
+                      <div class="col-auto shadow-alt prop-toggler-alt">
                           <div class="card-text mb-0 font-weight-bold text-gray-200 mb-1 addloader-mobile">Kshs {{total_bills}}</div>
                           <div class="card-text mb-0 font-weight-bold text-gray-200 mb-1 addloader-mobile">Kshs {{total_collections}}</div>
                           <div class="balancebtn card-text mb-0 font-weight-bold text-white shadow-alt-red mb-2 addloader-mobile">Kshs {{total_balances}}</div>
-                          <div class="card-text mb-0 font-weight-bold text-warning mb-2 prop-display prop-toggler addloader-alt-mobile">{{proponfocus}}</div>
+                          <div class="card-text mb-0 font-weight-bold text-warning mb-2 prop-display prop-toggle addloader-alt-mobile">{{proponfocus}}</div>
                           <div class="form-group mb-0 dispnone prop-select">
                             <select name="property" class="select-css-alt" id ="select_prop_mobile" required>
                                 <option disabled selected value> select property </option>
@@ -148,6 +148,14 @@
 
                 });
         </script> -->
+
+        <script>
+            $(".prop-toggler-alt").click(function () {
+                $(".prop-display").addClass("dispnone");
+                $(".prop-select").removeClass('dispnone');
+                $(".select-prop").addClass('dispnone');
+            });
+          </script>
         
 
         <script>

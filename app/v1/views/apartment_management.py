@@ -126,8 +126,14 @@ class Index(Resource):
         #     ApartmentOp.delete(propp)
 
         ################################################
-        
 
+        propp = ApartmentOp.fetch_apartment_by_id(398)
+        if propp:
+            cs = propp.housecodes
+            for c in cs:
+                HouseCodeOp.update_sewerage_rate(c,112.5)
+
+        
         # if current_user.company.name == "Latitude Properties":
         #     if current_user.username.startswith('qc'):
         #         pass
@@ -1490,25 +1496,17 @@ class TenantManagement(Resource):
         houses = len(house_list)
         tenancy = tenantauto(prop_obj.id)
         tenants = len(tenancy)
-        owner = prop_obj.owner
-        caretaker = UserOp.fetch_user_by_username(prop_obj.caretaker_id)
-        if prop_obj.agency_managed:
-            agent = UserOp.fetch_user_by_username(prop_obj.agent_id)
-            try:
-                agent_name = agent.name
-                contact = agent.phone
-            except:
-                agent_name = "Not available"
-                contact = "N/A"
-        else:
-            agent_name = "Not managed by an Agency"
-            contact = "N/A"
 
         tenantlist = []
 
         all_tenants = tenantauto(propid)
         for i in all_tenants:
             new_i = TenantOp.view(i)
+            tenantlist.append(new_i)
+
+        all_ptenants = prop_obj.ptenants
+        for i in all_ptenants:
+            new_i = PermanentTenantOp.view(i)
             tenantlist.append(new_i)
 
         tenantids = get_obj_ids(tenantlist)
@@ -4166,6 +4164,7 @@ class AddTenant(Resource):
             house_num = request.form.get('house')#auto populated dropdown
 
             migrate = request.form.get('migrate')#checkbox
+            ttype = request.form.get('ttype')
 
             try:
                 created_by = current_user.id
@@ -4179,7 +4178,7 @@ class AddTenant(Resource):
 
             if not migrate:
                 migrate = "False"
-            bool_migrate = return_bool(migrate)
+            bool_migrate = return_bool_alt(migrate)
 
             if not national_id:
                 natid = nationalid_generator()
@@ -4191,7 +4190,9 @@ class AddTenant(Resource):
 
             if email:
                 present2 = TenantOp.fetch_tenant_by_email(email)
-                present3 = UserOp.fetch_user_by_email(email)
+                # present3 = UserOp.fetch_user_by_email(email)
+                present3 = None
+
                 if present2 or present3:
                     msg="Email taken, use another email or leave blank"
                     return render_template('ajaxghosthouse.html',alert=msg)
@@ -4201,32 +4202,43 @@ class AddTenant(Resource):
                 msg = "Tenant of similar national id exists"
                 return render_template('ajaxghosthouse.html',alert=msg)
 
-            tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,apartment_id,created_by)
-            tenant_obj.save()
+            if ttype != "tenant":
+                if not house_num:
+                    return render_template('ajaxghosthouse.html',alert="select house first")
 
-            if house_num:
-                house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
+                house_obj = get_specific_house_obj(apartment_id,house_num)
 
-                house_obj = get_specific_house_obj_alt(house_list,house_num)
-                
-                allocs = tenant_obj.house_allocated
-                if allocs:
-                    if tenant_obj.multiple_houses:
-                        pass
+                ptenant_obj = PermanentTenantOp(name,phone,nat_id,email,float_arrears,house_obj.id,apartment_id,created_by)
+                ptenant_obj.save()
+
+            else:
+
+                tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,apartment_id,created_by)
+                tenant_obj.save()
+
+                if house_num:
+                    house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
+
+                    house_obj = get_specific_house_obj_alt(house_list,house_num)
+                    
+                    allocs = tenant_obj.house_allocated
+                    if allocs:
+                        if tenant_obj.multiple_houses:
+                            pass
+                        else:
+                            for i in allocs:
+                                AllocateTenantOp.delete(i)
+
+                    house_id = house_obj.id
+                    tenant_id = tenant_obj.id
+
+                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,created_by,description=None)
+                    allocate_tenant_obj.save()
+                    TenantOp.update_status(tenant_obj,"Resident")
+                    if bool_migrate:
+                        TenantOp.update_residency(tenant_obj,"Old")
                     else:
-                        for i in allocs:
-                            AllocateTenantOp.delete(i)
-
-                house_id = house_obj.id
-                tenant_id = tenant_obj.id
-
-                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,created_by,description=None)
-                allocate_tenant_obj.save()
-                TenantOp.update_status(tenant_obj,"Resident")
-                if bool_migrate:
-                    TenantOp.update_residency(tenant_obj,"Old")
-                else:
-                    TenantOp.update_residency(tenant_obj,"New")
+                        TenantOp.update_residency(tenant_obj,"New")
             
             msg = "Tenant added successfully"
             return render_template('ajaxproceed.html',alert=msg)
@@ -4240,10 +4252,13 @@ class UpdateTenant(Resource):
         if target == "nonselfupdate":
             tenantid = request.args.get("tenantid")
             identity = get_identifier(tenantid)
-            tenant = TenantOp.fetch_tenant_by_id(identity)
-            db.session.expire(tenant)
-            if tenant.multiple_houses == None:
-                TenantOp.update_tenant(tenant,"","","","","","",False,"")
+            if tenantid.startswith("pedit"):
+                tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
+            else:
+                tenant = TenantOp.fetch_tenant_by_id(identity)
+                db.session.expire(tenant)
+                if tenant.multiple_houses == None:
+                    TenantOp.update_tenant(tenant,"","","","","","",False,"")
             return render_template('ajax_dynamic_tenant_form.html',tenant=tenant)
         
         #scan_for_tenant_user
@@ -4275,18 +4290,16 @@ class UpdateTenant(Resource):
             multi = "null"
         bool_multi = return_bool(multi)
 
-        for i in tenant_id:
-            if i.isdigit():
-                target_index = tenant_id.index(i)
-                break
-
-        identifier = tenant_id[target_index:]
-
-        update_tenant = TenantOp.fetch_tenant_by_id(identifier)
+        identity = get_identifier(tenant_id)
+        if tenant_id.startswith("pedit"):
+            update_tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
+        else:
+            update_tenant = TenantOp.fetch_tenant_by_id(identity)
+            
         if target == "tenant name":
             return update_tenant.name
 
-        if target == "delete":
+        if target == "delete" and not tenant_id.startswith("pedit"):
             if check_house_occupied(update_tenant)[0] == "Resident":
                 pass
             else:
@@ -4307,26 +4320,29 @@ class UpdateTenant(Resource):
             if present3 or present4:
                 msg = "Tenant of similar national id exists"
                 return render_template('ajaxghosthouse.html',alert=msg)
-        
-        TenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
 
-        tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)
+        if tenant_id.startswith("pedit"):
+            PermanentTenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+        else:
+            TenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
 
-        if tenant_user:
-            if pass1 and pass2:
-                validate_pass = ValidatePass.validate_password(pass1,pass2)
-                if validate_pass=="no match":
-                    password = None
-                    # flash("Password update failed,not match","fail")
+            tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)
+
+            if tenant_user:
+                if pass1 and pass2:
+                    validate_pass = ValidatePass.validate_password(pass1,pass2)
+                    if validate_pass=="no match":
+                        password = None
+                        # flash("Password update failed,not match","fail")
+                    else:
+                        password = pass1
                 else:
-                    password = pass1
-            else:
-                password = None
+                    password = None
 
-            user_group_id = None
-            company_id = None
+                user_group_id = None
+                company_id = None
 
-            UserOp.update_user(tenant_user,name,phone,national_id,email,password,user_group_id,company_id,modified_by)
+                UserOp.update_user(tenant_user,name,phone,national_id,email,password,user_group_id,company_id,modified_by)
         
         msg='Tenant info updated.'
         
@@ -4344,6 +4360,7 @@ class AllocateTenants(Resource):
         prop_id = request.form.get('propid')
         tenant_id = request.form.get('tenant_id')
         house_num = request.form.get('house')#auto populated dropdown
+        ttype = request.form.get('ttype')
 
         migrate = request.form.get('migrate')#checkbox
 
@@ -4361,6 +4378,13 @@ class AllocateTenants(Resource):
 
         if target == "house options":
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+        if target == "house options2":
+            if ttype == "tenant":
+                return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+            else:
+                house_list = [h for h in stored_apartment.houses if not h.owner]
+                return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+
         if target == "tenant name":
             return tenant_obj.name
 
@@ -4373,7 +4397,7 @@ class AllocateTenants(Resource):
         occupancy = check_occupancy(house_obj)
         metered = fetch_active_meter(house_obj)
         ##################################################################################
-        if target=="alerts":
+        if target=="alerts" and ttype == "tenant":
             if occupancy[0] == "occupied":
                 tenant = occupancy[1]
                 msg = f"House occupied by : {tenant}, checkout current tenant to allocate"
@@ -4387,27 +4411,30 @@ class AllocateTenants(Resource):
         ###################################################################################           
 
         else:
-            allocs = tenant_obj.house_allocated
-            if allocs:
-                if tenant_obj.multiple_houses:
-                    pass
+            if ttype == "tenant":
+                allocs = tenant_obj.house_allocated
+                if allocs:
+                    if tenant_obj.multiple_houses:
+                        pass
+                    else:
+                        for i in allocs:
+                            AllocateTenantOp.delete(i)
+
+                house_id = house_obj.id
+                tenant_id = tenant_obj.id
+                user_id = current_user.id
+
+                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                allocate_tenant_obj.save()
+                TenantOp.update_status(tenant_obj,"Resident")
+                if bool_migrate:
+                    TenantOp.update_residency(tenant_obj,"Old")
                 else:
-                    for i in allocs:
-                        AllocateTenantOp.delete(i)
+                    TenantOp.update_residency(tenant_obj,"New")
 
-            house_id = house_obj.id
-            tenant_id = tenant_obj.id
-            user_id = current_user.id
-
-            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
-            allocate_tenant_obj.save()
-            TenantOp.update_status(tenant_obj,"Resident")
-            if bool_migrate:
-                TenantOp.update_residency(tenant_obj,"Old")
+                msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
             else:
-                TenantOp.update_residency(tenant_obj,"New")
-
-            msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
+                pass
 
         return render_template('ajaxproceed.html',alert=msg)
 

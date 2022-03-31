@@ -1203,6 +1203,7 @@
       data: {
             propid: $("#prop_identifier").text(),
             house: $("#select_house").val(),
+            ttype:"tenant",
             target:"alerts"
           },
       success: function(response) {
@@ -1214,7 +1215,7 @@
 
 
 
-<script>
+<!-- <script>
   // This script shows alerts before allocation is done
   $("#select_house").on('change',function(){
 
@@ -1235,7 +1236,7 @@
       }
     });
   });
-</script>
+</script> -->
 
 
 
@@ -1256,6 +1257,7 @@
                 propid: $("#prop_identifier").text(),
                 tenant_id: $("#tenant_identifier").text(),
                 house: $("#select_house").val(),
+                ttype:"tenant",
                 migrate: migrate,
                 target: "new"
             },

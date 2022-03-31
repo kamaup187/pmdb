@@ -1196,6 +1196,8 @@ class MeterReadingOp(MeterReading,Base):
     def get_rates(self):
         if self.meter.metertype == "water":
             rate = self.house.housecode.waterrate
+            if self.house.housecode.seweragerate:
+                rate = f'{self.house.housecode.waterrate} & {self.house.housecode.seweragerate}'
         else:
             rate = self.house.housecode.electricityrate
             

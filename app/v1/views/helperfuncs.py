@@ -4578,8 +4578,13 @@ def water_bill(apartment_id,chargetype,user_id,month,year):
             else:
                 bill_amount = house_obj.housecode.waterrate3 * units
         else:
-            unitcost = house_obj.housecode.waterrate
-            bill_amount = units*unitcost
+    
+            if house_obj.housecode.seweragerate:
+                bill_amount = (house_obj.housecode.waterrate * units) + (house_obj.housecode.seweragerate * units)
+                print("MMMMMMMMMMMMMMMMMMMMMMMMMMMM",bill_amount)
+            else:
+                bill_amount = house_obj.housecode.waterrate * units
+                
             print("using normal scale")
 
 

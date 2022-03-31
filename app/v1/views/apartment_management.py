@@ -127,11 +127,11 @@ class Index(Resource):
 
         ################################################
 
-        propp = ApartmentOp.fetch_apartment_by_id(398)
-        if propp:
-            cs = propp.housecodes
-            for c in cs:
-                HouseCodeOp.update_sewerage_rate(c,112.5)
+        # propp = ApartmentOp.fetch_apartment_by_id(37)
+        # if propp:
+        #     cs = propp.housecodes
+        #     for c in cs:
+        #         HouseCodeOp.update_sewerage_rate(c,112.5)
 
         
         # if current_user.company.name == "Latitude Properties":
@@ -4434,7 +4434,7 @@ class AllocateTenants(Resource):
 
                 msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
             else:
-                pass
+                msg = f"{tenant_obj.name} has been allocated house {house_num} successfully"
 
         return render_template('ajaxproceed.html',alert=msg)
 

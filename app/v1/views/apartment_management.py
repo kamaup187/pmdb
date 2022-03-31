@@ -1123,7 +1123,8 @@ class Dashboard(Resource):
             return len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
 
         if target == "vacantstats":
-            occupancy = [filter_out_occupied_houses(prop.name) for prop in props]
+            occupancy = len(flatten([prop.houses for prop in props])) - len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
+            # occupancy = [filter_out_occupied_houses(prop.name) for prop in props]
             
             # houses_list = [prop.houses for prop in props]
 

@@ -1013,9 +1013,7 @@ class GraphStats(Resource):
         bill_string = ','.join(map(str, billdatalist))
         water_string = ','.join(map(str, unitdatalist))
         commission_string = ','.join(map(str,commissiondatalist))
-
-        print(commission_string,"<<<<<<<<<<<<<<<<<<<<<")
-       
+      
             
         return Response(render_template(
             'ajax_load_graph_data.html',
@@ -1032,6 +1030,114 @@ class GraphStats(Resource):
         ))
 
 
+class Dashboard(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get('prop')
+        target = request.args.get('target')
+
+        if target == "proponfocus":
+            return prop
+
+        props = run_props(prop,current_user)
+        period = current_user.company.billing_period
+
+        if target == "expectedstats":
+
+
+            total_bills = 0
+            invs = 0
+
+            for apartment in props:
+
+                monthly_bills = apartment.monthlybills
+                for item in monthly_bills:
+                    if item.month == period.month and item.year == period.year:
+                        invs += 1
+                        total_bills += item.total_bill if item.total_bill > 0 else 0
+
+            month_str=f'{get_str_mnth(period.month)} invoices'
+
+            return [f'Kes {total_bills:,.1f}',invs,month_str]
+
+        if target == "collectionstats":
+
+            period = current_user.company.billing_period
+
+            total_bills = 0
+            total_collections = 0
+
+
+            props = run_props(prop,current_user)
+
+            for apartment in props:
+
+                monthly_bills = apartment.monthlybills
+                for item in monthly_bills:
+                    if item.month == period.month and item.year == period.year:
+                        total_bills += item.total_bill if item.total_bill > 0 else 0
+                        total_collections += item.paid_amount if item.paid_amount > 0 else 0
+
+            try:
+                ratio = total_collections / total_bills * 100
+            except:
+                ratio = 0
+
+            return [f'Kes {total_collections:,.1f}',f'{ratio:,.0f} %']
+
+        if target == "balancestats":
+
+            period = current_user.company.billing_period
+
+            total_balances = 0
+            defaulters = 0
+
+            props = run_props(prop,current_user)
+
+            for apartment in props:
+
+                monthly_bills = apartment.monthlybills
+                for item in monthly_bills:
+                    if item.month == period.month and item.year == period.year:
+                        total_balances += item.balance if item.balance > 0 else 0
+
+                        if not item.paid_amount:
+                            defaulters += 1 if item.balance > 1 else 0
+
+            if period.day < 6:
+                defaulters = "--"
+            else:
+                pass
+
+            return [f'Kes {total_balances:,.1f}',f'{defaulters}']
+
+
+        if target == "propstats":
+            return len(props)
+
+        if target == "housestats":
+            return len(flatten([prop.houses for prop in props]))
+
+        if target == "tenantstats":
+            return len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
+
+        if target == "vacantstats":
+            occupancy = [filter_out_occupied_houses(prop.name) for prop in props]
+            
+            # houses_list = [prop.houses for prop in props]
+
+            # houses_num = len(flatten(houses_list))
+            # occupancy_num = len(flatten(occupancy))
+            
+            # try:
+            #     occfrac = occupancy_num/houses_num 
+            # except:
+            #     occfrac = 0.0
+
+            # occupancy_rate = f'{(occfrac * 100):,.0f} %'
+
+            return  len(occupancy)
 
 class PropOverview(Resource):
     @login_required

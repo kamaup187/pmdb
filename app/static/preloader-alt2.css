@@ -316,11 +316,23 @@
 		-moz-border-radius:19px;
 }
 
-.fountainG-small{
-	position:relative;
-	width:70px;
-	height:12px;
-	margin:auto;
+
+@media only screen and (min-width: 800px) {
+	.fountainG-small{
+		/* position:relative;
+		width:70px;
+		height:12px; */
+		margin:auto;
+	}
+}
+
+@media only screen and (max-width: 779px) {
+	.fountainG-small{
+		position:relative;
+		width:70px;
+		height:12px;
+		margin:auto;
+	}
 }
 
 .fountainG-s{

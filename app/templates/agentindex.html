@@ -34,7 +34,7 @@
 
 
   <!-- <link rel="stylesheet" href="../static/style.css"> -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='mainb.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
@@ -1162,7 +1162,7 @@
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
                     <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
                         <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -1190,7 +1190,7 @@
                     </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
                     <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
                         <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -1214,7 +1214,7 @@
                 </div>
 
                 <!-- Pending Requests Card Example -->
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
                     <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
                         <div class="card-body">
                         <div class="row no-gutters align-items-center">
@@ -1264,7 +1264,7 @@
                     </div>
                 </div> -->
 
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
                   <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
                       <div class="card-body">
                           <div class="row no-gutters align-items-center">
@@ -1293,6 +1293,110 @@
                   </div>
                 </div>
             </div>
+
+            <div class="row">
+
+            <div id="prop-card" class="col-xl-3 col-md-6 mb-1 mobile-malaysian prop-toggler">
+              <div class="card border-left-info shadow-alt h-100 py-2 {{card_theme}}">
+                  <div class="card-body">
+                      <div class="no-gutters center-btn">
+                          <div class="mr-2">
+                              <div style="width: 50%;" class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i class="fas fa-caret-down mr-2"></i>Select property<i class="fas fa-caret-down ml-2"></i></div>
+      
+                              <div class="">
+                                  <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentprop">
+                                    <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                                    <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
+                                  </div>
+      
+                                  <div class="form-group mb-0 dispnone prop-select">
+                                      <select name="property" class="select-css" id ="select_prop" required>
+                                          <option disabled selected value> -- Select property -- </option>
+                                          {% for o in props%}
+                                          <option value="{{ o }}">{{ o }}</option>
+                                          {% endfor %}
+                                      </select>
+                                  </div>
+                              </div>
+      
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+      
+            <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
+                    <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2 border-right-warning">
+                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span class="text-white dispnone">{{month_string}} | </span>Expected collection</div>
+                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
+                          
+                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                          <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                          <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
+                          <div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div> -->
+                        </div>
+                        </div>
+                        <div class="col-auto billbtn">
+                          <span class="text-gray-300">
+                            <span class="fa-2x text-warning ln-10 addloader-alt" id="expectedstats2">
+                              <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                            </span>
+                          </span>
+                          <div class="text-gray-300" id="expectedstats3">invoices</div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+      
+            <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+                <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
+                    <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2 border-right-warning">
+                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white dispnone">{{month_string}} | </span>Actual collection</div>
+                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="collectionstats">
+                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                        </div>
+                        </div>
+                        <div class="col-auto">
+                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10" id="collectionstats2">
+                            <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                          </span></span>
+                          <div class="text-gray-300">collection ratio</div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+      
+      
+            <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+                <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
+                    <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2 border-right-warning">
+                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Balance</div>
+                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
+                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                        </div>
+                        </div>
+                        <div class="balancebtn col-auto border-left-warnin">
+                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10" id="balancestats2">
+                            <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                          </span></span>
+                          <div class="nonpaybtn text-gray-300">unpaid invoices</div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+            
             <div class="row">
                 <div class="col-xl-6 col-md-6 mb-1 desktop-malaysian no-padding">
                   <div class="card shadow h-0 py-0">
@@ -1500,10 +1604,54 @@
             </div>
 
 
-            <div id="house-area" class="row">
+            <div id="house-are" class="row">
+
+
+
+              <div class="col-12">
+                <div class="card shadow mb-1 bg-white">
+                    <div class="card-header py-0 p-2 d-flex flex-row align-items-center justify-content-between x-smallify">
+
+                            <div class="font-weight-bold">
+                              <i class="fas fa-city text-info ml-1"></i>
+                              <span class="text-black">Properties: </span>
+                              <span class="text-primary fa-2x mr-1 ln-28 fixloader" id="propstats">
+                                <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                              </span>
+                            </div>
+                          
+                            <div class="font-weight-bold">
+                              <i class="fas fa-home text-info ml-1"></i>
+                              <span class="text-black">Houses: </span>
+                                <span class="text-primary fa-2x mr-1 ln-10 fixloader" id="housestats">
+                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                </span>
+                            </div>
+
+                            <div class="font-weight-bold mobile-malaysian">
+                              <i class="fas fa-users text-info ml-1"></i>
+                              <span class="text-black">Tenants: </span>
+                                <span class="text-success fa-2x mr-1 ln-10 fixloader" id="tenantstats">
+                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                </span>
+                            </div>
+
+                            <div class="font-weight-bold">
+                              <i class="fas fa-door-open text-info ml-1"></i>
+                              <span class="text-black">Vacant: </span>
+                                <span class="text-danger fa-2x mr-1 ln-10 fixloader" id="vacantstats">
+                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                </span>
+                            </div>
+
+                    </div>
+                </div>
+
+            </div>
+
 
                             <!-- Pie Chart -->
-              <div class="col-12">
+              <div class="dispnone col-12">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -2164,28 +2312,28 @@
   
             },
             complete:function(data) {
-                setTimeout(getHouseStats, 10);
+                // setTimeout(getHouseStats, 10);
             }
         });
     }
   
-    function getHouseStats() {
-        $.ajax({
-            url: "{{ url_for('api.housestats') }}",
-            type: 'get',
-            data: {
-                    prop: localStorage.getItem('propvar')
-                  },
-            success: function(data) {
-                // $('#dynamic-content').html(data);
-                $('#house-area').html(data);
+    // function getHouseStats() {
+    //     $.ajax({
+    //         url: "{{ url_for('api.housestats') }}",
+    //         type: 'get',
+    //         data: {
+    //                 prop: localStorage.getItem('propvar')
+    //               },
+    //         success: function(data) {
+    //             // $('#dynamic-content').html(data);
+    //             $('#house-area').html(data);
   
-            },
-            complete:function(data) {
-                setTimeout(getGraphStats, 10);
-            }
-        });
-    }
+    //         },
+    //         complete:function(data) {
+    //             setTimeout(getGraphStats, 10);
+    //         }
+    //     });
+    // }
     function getGraphStats() {
         $.ajax({
             url: "{{ url_for('api.graphstats') }}",
@@ -2987,6 +3135,184 @@ function animateHH(element) {
   });
 
   </script>
+
+
+<script>
+  $(".prop-toggler").hover(function () {
+      $(".prop-display").addClass("dispnone");
+      $(".prop-select").removeClass('dispnone');
+      $(".select-prop").addClass('dispnone');
+  });
+</script>
+
+<script>
+  $("#select_prop").on('change',function(){
+      let propvar = $("#select_prop").val();
+
+      localStorage.setItem('propvar',propvar);
+
+      $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
+      $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
+      $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+
+      getCurrentProp()
+      // getHouseStats()
+  });
+</script>
+
+<script>
+  function getCurrentProp(){
+    $.ajax({
+        url: "{{ url_for('api.dashboard') }}",
+        type: 'get',
+        data: {
+                prop: localStorage.getItem('propvar'),
+                target:"proponfocus"
+        },
+        success: function(data) {
+            $('#currentprop').text(data);
+        },
+    });
+
+    setTimeout(getExpectedStats, 10);
+
+  }
+
+  function getExpectedStats() {
+    $.ajax({
+        url: "{{ url_for('api.dashboard') }}",
+        type: 'get',
+        data: {
+                prop: localStorage.getItem('propvar'),
+                target:"expectedstats"
+        },
+        success: function(data) {
+            $('#expectedstats').text(data[0]);
+            $('#expectedstats2').text(data[1]);
+            $('#expectedstats3').text(data[2]);
+        },
+    });
+
+    setTimeout(getCollectionStats, 10);
+
+  }
+
+  function getCollectionStats() {
+    $.ajax({
+        url: "{{ url_for('api.dashboard') }}",
+        type: 'get',
+        data: {
+                prop: localStorage.getItem('propvar'),
+                target:"collectionstats"
+        },
+        success: function(data) {
+            $('#collectionstats').text(data[0]);
+            $('#collectionstats2').text(data[1]);
+        },
+    });
+
+    setTimeout(getBalanceStats, 10);
+
+  }
+
+  function getBalanceStats() {
+    $.ajax({
+        url: "{{ url_for('api.dashboard') }}",
+        type: 'get',
+        data: {
+                prop: localStorage.getItem('propvar'),
+                target:"balancestats"
+        },
+        success: function(data) {
+            $('#balancestats').text(data[0]);
+            $('#balancestats2').text(data[1]);
+        },
+    });
+
+    setTimeout(getPropStats, 10);
+
+  }
+
+  function getPropStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"propstats"
+
+                  },
+            success: function(data) {
+                $('#propstats').text(data);
+  
+            }
+        });
+      setTimeout(getHouseStats, 10);
+
+    }
+
+    function getHouseStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"housestats"
+
+                  },
+            success: function(data) {
+                $('#housestats').text(data);
+  
+            }
+        });
+      setTimeout(getTenantStats, 10);
+
+    }
+
+    function getTenantStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"tenantstats"
+
+                  },
+            success: function(data) {
+                $('#tenantstats').text(data);
+  
+            }
+        });
+      setTimeout(getVacantStats, 10);
+
+    }
+
+    function getVacantStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"vacantstats"
+
+                  },
+            success: function(data) {
+                $('#vacantstats').text(data);
+  
+            }
+        });
+      setTimeout(getGraphStats, 10);
+
+    }
+
+  getCurrentProp()
+
+</script>
+
+
+
+
+
 
 
 

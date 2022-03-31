@@ -1617,7 +1617,8 @@ clear: both;
     margin-top: 0px !important;
     margin-left: 0px !important;
     
-    width: 78.5% !important;
+    /* width: 78.5% !important; */
+    width: 99% !important;
     z-index: 10;
   }
 
@@ -3545,4 +3546,12 @@ select {
   border: 2px solid #f5ac24;
   background: transparent;
   color: #0e2353;
+}
+
+.noHover{
+  pointer-events: none;
+}
+
+.vertical-align-middle{
+  vertical-align: middle !important;
 }

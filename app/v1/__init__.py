@@ -28,6 +28,8 @@ api.add_resource(ViewNewClients,"/new/clients")
 api.add_resource(ViewClients,"/clients")
 api.add_resource(AdminCreateAgent,"/add/admincreateagent")
 api.add_resource(Index,"/index")
+api.add_resource(Dashboard,"/dashboard")
+
 api.add_resource(MonitorActivity,"/monitor/activity")
 api.add_resource(PropData,"/fetch/propdata")
 api.add_resource(PropSearchData,"/fetch/searchdata")

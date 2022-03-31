@@ -3968,6 +3968,13 @@ class FetchTenants(Resource):
         else:
             tenancy = tenantauto(propid)
             tenantlist = tenant_details(tenancy)
+
+            prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+            all_ptenants = prop_obj.ptenants
+            for i in all_ptenants:
+                new_i = PermanentTenantOp.view(i)
+                tenantlist.append(new_i)
+
             tenantids = get_obj_ids(tenantlist)
 
             moreids = inject_tenants_ids(tenantlist) 

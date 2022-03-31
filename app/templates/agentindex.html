@@ -2359,6 +2359,7 @@
   
     setTimeout(getFeed,1);
     setTimeout(getPropData,10);
+
   
     // $(document).ready(function() {
     //     setTimeout(getPropStats,50);
@@ -3229,11 +3230,11 @@ function animateHH(element) {
         },
     });
 
-    setTimeout(getPropStats, 10);
+    setTimeout(getPropStatsAlt, 10);
 
   }
 
-  function getPropStats() {
+  function getPropStatsAlt() {
         $.ajax({
             url: "{{ url_for('api.dashboard') }}",
             type: 'get',

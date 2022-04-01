@@ -4582,133 +4582,135 @@ def read_water_excel(dict_array,apartment_id,user_id):
     app = create_app(configuration)
     app.app_context().push()
 
-    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
-    billing_period = prop.billing_period
+    
 
-    for item in dict_array:
+    # prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    # billing_period = prop.billing_period
 
-        unit = item["house"]
-        readings = item["reading"]
+    # for item in dict_array:
 
-        try:
-            housename = str(int(unit) if unit else "" )
-        except:
-            housename = unit if unit else ""
+    #     unit = item["house"]
+    #     readings = item["reading"]
 
-        try:
-            rawreading = str(int(readings) if readings else "" )
-        except:
-            rawreading = readings if readings else ""
+    #     try:
+    #         housename = str(int(unit) if unit else "" )
+    #     except:
+    #         housename = unit if unit else ""
 
-
-        str_reading = rawreading.replace(".","")
-
+    #     try:
+    #         rawreading = str(int(readings) if readings else "" )
+    #     except:
+    #         rawreading = readings if readings else ""
 
 
-        if housename == "":
-            print("SKIPPING EMPTY HOUSE CELL")
-            continue
-
-        if str_reading == "":
-            print("SKIPPING EMPTY READING CELL")
-            continue
+    #     str_reading = rawreading.replace(".","")
 
 
-        try:
-            house_name = housename.upper()
-        except:
-            house_name = housename
 
-        house_obj = get_specific_house_obj(apartment_id,house_name)
+    #     if housename == "":
+    #         print("SKIPPING EMPTY HOUSE CELL")
+    #         continue
+
+    #     if str_reading == "":
+    #         print("SKIPPING EMPTY READING CELL")
+    #         continue
+
+
+    #     try:
+    #         house_name = housename.upper()
+    #     except:
+    #         house_name = housename
+
+    #     house_obj = get_specific_house_obj(apartment_id,house_name)
         
-        if not house_obj:
-            print("Skipping ",house_name, "not availble in apartment")
-            continue
+    #     if not house_obj:
+    #         print("Skipping ",house_name, "not availble in apartment")
+    #         continue
 
-        house_list = filtered_house_list(apartment_id)
+    #     house_list = filtered_house_list(apartment_id)
 
-        if house_obj not in house_list:
-            print("FAILED! HOUSE ALREADY READ", house_obj)
-            continue
-        else:
-            reading = int(str_reading)
-            meter = fetch_active_meter(house_obj)
+    #     if house_obj not in house_list:
+    #         print("FAILED! HOUSE ALREADY READ", house_obj)
+    #         continue
+    #     else:
+    #         reading = int(str_reading)
+    #         meter = fetch_active_meter(house_obj)
         
-            meter_id = meter.id
-            last_reading = getlast_reading(meter_id)
+    #         meter_id = meter.id
+    #         last_reading = getlast_reading(meter_id)
 
-            meter_num = meter.meter_number
-            str_decitype = get_str_decitype(meter_id)
-            prev_reading = f"Last reading: {last_reading}"
-            meter = f"{meter_num}"
-            mtype = f"Type: {str_decitype}"
+    #         meter_num = meter.meter_number
+    #         str_decitype = get_str_decitype(meter_id)
+    #         prev_reading = f"Last reading: {last_reading}"
+    #         meter = f"{meter_num}"
+    #         mtype = f"Type: {str_decitype}"
 
-            decitype = get_decitype(meter_id)
-            try:
-                float_current_reading = float(reading)*decitype
-                float_last_reading = float(last_reading)*decitype
-            except:
-                float_current_reading = 0.0 * decitype
-                float_last_reading = 0.0 * decitype
+    #         decitype = get_decitype(meter_id)
+    #         try:
+    #             float_current_reading = float(reading)*decitype
+    #             float_last_reading = float(last_reading)*decitype
+    #         except:
+    #             float_current_reading = 0.0 * decitype
+    #             float_last_reading = 0.0 * decitype
 
-            calc_units = float_current_reading - float_last_reading
-            units_consumed = round(calc_units,3)
+    #         calc_units = float_current_reading - float_last_reading
+    #         units_consumed = round(calc_units,3)
 
-            ###################################################################################################
-            if last_reading > int(reading):
-                print("FAILED! Check reaings for", house_obj)
-                continue
-            else:
+    #         ###################################################################################################
+    #         if last_reading > int(reading):
+    #             print("FAILED! Check reaings for", house_obj)
+    #             continue
+    #         else:
 
-                if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
-                    #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
-                    print("Reading left out captured")
+    #             if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
+    #                 #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
+    #                 print("Reading left out captured")
 
-                    month = billing_period.month
-                    year = billing_period.year
+    #                 month = billing_period.month
+    #                 year = billing_period.year
 
-                elif datetime.datetime.now().day >= 20:
-                    #Only enters this block if readings are taken early before the next month of billing
+    #             elif datetime.datetime.now().day >= 20:
+    #                 #Only enters this block if readings are taken early before the next month of billing
 
-                    if datetime.datetime.now().month != 12:
-                        if datetime.datetime.now().month + 1 == billing_period.month:
+    #                 if datetime.datetime.now().month != 12:
+    #                     if datetime.datetime.now().month + 1 == billing_period.month:
 
-                            #Only enters this block for readings taken early and are meant for early next current billing
-                            print("Reading left out captured for next month")
-                            month = billing_period.month
-                            year = billing_period.year
+    #                         #Only enters this block for readings taken early and are meant for early next current billing
+    #                         print("Reading left out captured for next month")
+    #                         month = billing_period.month
+    #                         year = billing_period.year
 
-                        else:
-                            #Only enters this block for early billing COMMON PROCESS
-                            print("Reading captured early and normally for next period")
-                            month = billing_period.month + 1 if billing_period.month != 12 else 1
-                            year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-                    else:
-                        if 1 == billing_period.month:
-                            print("Reading left out captured for Jan ater early billing for Jan")
-                            month = billing_period.month
-                            year = billing_period.year
-                        else:
-                            #Only enters this block for early billing COMMON PROCESS
-                            print("Reading captured early and normally for Jan")
-                            month = 1
-                            year = billing_period.year + 1
-                else:
-                    #Only enters this block if readings are taken early in the next month of billing
-                    print("Reading captured late")
-                    if billing_period.month == 12:
-                        month = 1
-                        year = billing_period.year + 1
+    #                     else:
+    #                         #Only enters this block for early billing COMMON PROCESS
+    #                         print("Reading captured early and normally for next period")
+    #                         month = billing_period.month + 1 if billing_period.month != 12 else 1
+    #                         year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+    #                 else:
+    #                     if 1 == billing_period.month:
+    #                         print("Reading left out captured for Jan ater early billing for Jan")
+    #                         month = billing_period.month
+    #                         year = billing_period.year
+    #                     else:
+    #                         #Only enters this block for early billing COMMON PROCESS
+    #                         print("Reading captured early and normally for Jan")
+    #                         month = 1
+    #                         year = billing_period.year + 1
+    #             else:
+    #                 #Only enters this block if readings are taken early in the next month of billing
+    #                 print("Reading captured late")
+    #                 if billing_period.month == 12:
+    #                     month = 1
+    #                     year = billing_period.year + 1
 
-                    else:
-                        month = billing_period.month + 1 if billing_period.month != 12 else 1
-                        year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+    #                 else:
+    #                     month = billing_period.month + 1 if billing_period.month != 12 else 1
+    #                     year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
                     
 
-                reading_period = generate_date(month,year)
+    #             reading_period = generate_date(month,year)
 
-                reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
-                reading_obj.save()
+    #             reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
+    #             reading_obj.save()
                 
     return '<span class="text-success">Upload successful</span>'
 

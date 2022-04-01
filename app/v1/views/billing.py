@@ -3138,7 +3138,8 @@ class CallBackUrlLatitude(Resource):
         # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
         # response = sms.send(message1, ["+254716674695"],sender)
 
-
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
 
         # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         # ctob_obj.save()

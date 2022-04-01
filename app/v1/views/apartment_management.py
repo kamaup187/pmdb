@@ -5241,10 +5241,10 @@ class CaptureReading(Resource):
         #################################################################################################
         if run == "houselist":
             house_list = filtered_house_list(apartment_id)
-            return render_template('ajax_multivariable.html',items=house_list,placeholder="select house")
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
         elif run == "houselist-alt":
             house_list = filtered_house_list_alt(apartment_id)
-            return render_template('ajax_multivariable.html',items=house_list,placeholder="select house")
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
         ##################################################################################################
         if not house:
             billing_period = get_billing_period(prop)

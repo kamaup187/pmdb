@@ -5109,110 +5109,28 @@ class CaptureReading(Resource):
 
                 for row in rows:
 
-                    try:
-                        raw_billhouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
-                    except:
-                        raw_billhouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                    # try:
+                    #     raw_billhouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+                    # except:
+                    #     raw_billhouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
-                    raw_reading = str(int(sheet.row_values(row)[1]))
-
-                    str_reading = raw_reading.replace(".","")
-
-                    billhouse = raw_billhouse.upper()
-                    
-                    reading = int(str_reading)
-
-                    house_list = filtered_house_list(apartment_id)
-
-                    house_obj = get_specific_house_obj(apartment_id,billhouse)
-
-                    if not house_obj:
-                        print("FAILED! HOUSE NOT AVAILABLE", billhouse)
-                        continue
-
-                    if house_obj not in house_list:
-                        print("FAILED! HOUSE ALREADY READ", house_obj)
-                        continue
-                    else:
-                        meter = fetch_active_meter(house_obj)
-                    
-                        meter_id = meter.id
-                        last_reading = getlast_reading(meter_id)
-
-                        meter_num = meter.meter_number
-                        str_decitype = get_str_decitype(meter_id)
-                        prev_reading = f"Last reading: {last_reading}"
-                        meter = f"{meter_num}"
-                        mtype = f"Type: {str_decitype}"
-
-                        decitype = get_decitype(meter_id)
-                        try:
-                            float_current_reading = float(reading)*decitype
-                            float_last_reading = float(last_reading)*decitype
-                        except:
-                            float_current_reading = 0.0 * decitype
-                            float_last_reading = 0.0 * decitype
-                
-                        calc_units = float_current_reading - float_last_reading
-                        units_consumed = round(calc_units,3)
-
-                        ###################################################################################################
-                        if last_reading > int(reading):
-                            print("FAILED! Check reaings for", house_obj)
-                            continue
-                        else:
-                            user_id = current_user.id
+                    # raw_reading = str(int(sheet.row_values(row)[1]))
 
 
-                            if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
-                                #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
-                                print("Reading left out captured")
+                    dict_array = []
 
-                                month = billing_period.month
-                                year = billing_period.year
+                    for row in rows:
+                        dict_obj = {
+                        "house":sheet.row_values(row)[0],
+                        "reading":sheet.row_values(row)[1]
+                        }
 
-                            elif datetime.datetime.now().day >= 20:
-                                #Only enters this block if readings are taken early before the next month of billing
+                        dict_array.append(dict_obj)
 
-                                if datetime.datetime.now().month != 12:
-                                    if datetime.datetime.now().month + 1 == billing_period.month:
+                    uploadsjob = q.enqueue_call(
+                        func=read_water_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                    )
 
-                                        #Only enters this block for readings taken early and are meant for early next current billing
-                                        print("Reading left out captured for next month")
-                                        month = billing_period.month
-                                        year = billing_period.year
-
-                                    else:
-                                        #Only enters this block for early billing COMMON PROCESS
-                                        print("Reading captured early and normally for next period")
-                                        month = billing_period.month + 1 if billing_period.month != 12 else 1
-                                        year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-                                else:
-                                    if 1 == billing_period.month:
-                                        print("Reading left out captured for Jan ater early billing for Jan")
-                                        month = billing_period.month
-                                        year = billing_period.year
-                                    else:
-                                        #Only enters this block for early billing COMMON PROCESS
-                                        print("Reading captured early and normally for Jan")
-                                        month = 1
-                                        year = billing_period.year + 1
-                            else:
-                                #Only enters this block if readings are taken early in the next month of billing
-                                print("Reading captured late")
-                                if billing_period.month == 12:
-                                    month = 1
-                                    year = billing_period.year + 1
-
-                                else:
-                                    month = billing_period.month + 1 if billing_period.month != 12 else 1
-                                    year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-                                
-
-                            reading_period = generate_date(month,year)
-
-                            reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
-                            reading_obj.save()
                                 
                 return '<span class="text-success">Upload successful</span>'
 

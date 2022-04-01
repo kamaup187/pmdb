@@ -3947,58 +3947,71 @@ class AddTenant(Resource):
                     else:
                         house_id = house_obj.id
 
-                    occupancy = check_occupancy(house_obj)
+                    ttype = True
+
+                    if not ttype:
+
+                        occupancy = check_occupancy(house_obj)
                     
-                    if occupancy[0] == "occupied":
-                        print("Specified house occupied: ",tenant_house)
-                        continue
-
-                    if not tenantnatid:
-                        tenantnatid = nationalid_generator()
-                        check_dup = TenantOp.fetch_tenant_by_nat_id(tenantnatid)
-                        nat_id = nationalid_generator() if check_dup else tenantnatid
-                    else:
-                        nat_id = tenantnatid
-
-                    if tenantname:
-                        if tenantname.lower() == "vacant":
-                            print(tenantname,"name is not allowed")
-                            similar = True
-                    else:
-                        continue
-
-                    tenants = prop.tenants
-                    
-                    for tenant in tenants:
-                        if tenant.name.lower() == tenantname.lower() and tenantphone == "0":
-                            print("SIMILAR TENANT EXISTS: ",tenant.name,tenantname)
-                            similar = True
-
-                    if similar:
-                        continue
-
-                    present = TenantOp.fetch_tenant_by_nat_id(nat_id)
-                    if present:
-                        print("SIMILAR NATIONAL ID EXISTS: ",nat_id)
-                        continue
-
-                    if tenantemail:
-                        present2 = TenantOp.fetch_tenant_by_email(tenantemail)
-                        present3 = UserOp.fetch_user_by_email(tenantemail)
-                        if present2 or present3:
-                            print("SIMILAR EMAIL EXISTS: ",tenantemail)
+                        if occupancy[0] == "occupied":
+                            print("Specified house occupied: ",tenant_house)
                             continue
 
-                    if tenantphone and tenantphone != "0":
-                        present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
-                        if present4:
-                            print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
+                        if not tenantnatid:
+                            tenantnatid = nationalid_generator()
+                            check_dup = TenantOp.fetch_tenant_by_nat_id(tenantnatid)
+                            nat_id = nationalid_generator() if check_dup else tenantnatid
+                        else:
+                            nat_id = tenantnatid
+
+                        if tenantname:
+                            if tenantname.lower() == "vacant":
+                                print(tenantname,"name is not allowed")
+                                similar = True
+                        else:
                             continue
+
+                        tenants = prop.tenants
+                        for tenant in tenants:
+                            if tenant.name.lower() == tenantname.lower() and tenantphone == "0":
+                                print("SIMILAR TENANT EXISTS: ",tenant.name,tenantname)
+                                similar = True
+
+                        if similar:
+                            continue
+
+                        present = TenantOp.fetch_tenant_by_nat_id(nat_id)
+                        if present:
+                            print("SIMILAR NATIONAL ID EXISTS: ",nat_id)
+                            continue
+
+                        if tenantemail:
+                            present2 = TenantOp.fetch_tenant_by_email(tenantemail)
+                            present3 = UserOp.fetch_user_by_email(tenantemail)
+                            if present2 or present3:
+                                print("SIMILAR EMAIL EXISTS: ",tenantemail)
+                                continue
+
+                        if tenantphone and tenantphone != "0":
+                            present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
+                            if present4:
+                                print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
+                                continue
+
+                    else:
+                        nat_id = nationalid_generator() if not tenantnatid else tenantnatid
                         
                     created_by = current_user.id
 
-                    tenant_obj = TenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,apartment_id,created_by)
-                    tenant_obj.save()
+                    if ttype:
+
+                        ptenant_obj = PermanentTenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,created_by)
+                        ptenant_obj.save()
+
+                    else:
+
+                        tenant_obj = TenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,apartment_id,created_by)
+                        tenant_obj.save()
 
                     # tenant_house = tenanthouse.upper()
                     # house_obj = get_specific_house_obj(apartment_id,tenant_house)
@@ -4009,23 +4022,24 @@ class AddTenant(Resource):
                     #     house_id = house_obj.id
 
                     # occupancy = check_occupancy(house_obj)
+                    if not ttype:
 
-                    if occupancy[0] == "occupied":
-                        print("Specified house occupied: ",tenant_house)
-                        continue
+                        if occupancy[0] == "occupied":
+                            print("Specified house occupied: ",tenant_house)
+                            continue
 
-                    else:
-                        house_id = house_obj.id
-                        tenant_id = tenant_obj.id
-                        user_id = current_user.id
-
-                        allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
-                        allocate_tenant_obj.save()
-                        TenantOp.update_status(tenant_obj,"Resident")
-                        if bool_migrate:
-                            TenantOp.update_residency(tenant_obj,"Old")
                         else:
-                            TenantOp.update_residency(tenant_obj,"New")
+                            house_id = house_obj.id
+                            tenant_id = tenant_obj.id
+                            user_id = current_user.id
+
+                            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                            allocate_tenant_obj.save()
+                            TenantOp.update_status(tenant_obj,"Resident")
+                            if bool_migrate:
+                                TenantOp.update_residency(tenant_obj,"Old")
+                            else:
+                                TenantOp.update_residency(tenant_obj,"New")
 
 
                 return '<span class="text-success">Upload successful</span>'
@@ -5434,7 +5448,13 @@ class EditReading(Resource):
                 unitcost1 = house.housecode.waterrate
                 unitcost2 = house.housecode.electricityrate
                 if charge_obj.charge_type_id == 2:
-                    amount = units_consumed*unitcost1
+
+                    if house.housecode.seweragerate:
+                        amount = (unitcost1 * units_consumed) + (house.housecode.seweragerate * units_consumed)
+                    else:
+                        amount = unitcost1 * units_consumed
+
+                    # amount = units_consumed*unitcost1
                 else:
                     amount = units_consumed*unitcost2
 
@@ -5488,11 +5508,12 @@ class EditReading(Resource):
                             msg = "Reading and corresponding bill updated"
 
                         tenant_obj = monthlycharge_obj.tenant
-                        tenant_balance = tenant_obj.balance
-                        tenant_balance -= amount_before
-                        amount -= constant_standing_charge
-                        tenant_balance += amount
-                        TenantOp.update_balance(tenant_obj,tenant_balance)
+                        if tenant_obj:
+                            tenant_balance = tenant_obj.balance
+                            tenant_balance -= amount_before
+                            amount -= constant_standing_charge
+                            tenant_balance += amount
+                            TenantOp.update_balance(tenant_obj,tenant_balance)
 
         ####################################################################################################################################################
 
@@ -5521,7 +5542,13 @@ class EditReading(Resource):
                     unitcost1 = house.housecode.waterrate
                     unitcost2 = house.housecode.electricityrate
                     if charge_obj.charge_type_id == 2:
-                        calculated_amount = float_units*unitcost1
+
+                        if house.housecode.seweragerate:
+                            calculated_amount = (unitcost1 * float_units) + (house.housecode.seweragerate * float_units)
+                        else:
+                            calculated_amount = unitcost1 * float_units
+
+                        # calculated_amount = float_units*unitcost1
                     else:
                         calculated_amount = float_units*unitcost2
 
@@ -5555,11 +5582,12 @@ class EditReading(Resource):
                         msg = "Reading and corresponding bill updated"
 
                     tenant_obj = monthlycharge_obj.tenant
-                    tenant_balance = tenant_obj.balance
-                    tenant_balance -= amount_before
-                    calculated_amount -= constant_standing_charge
-                    tenant_balance += calculated_amount
-                    TenantOp.update_balance(tenant_obj,tenant_balance)
+                    if tenant_obj:
+                        tenant_balance = tenant_obj.balance
+                        tenant_balance -= amount_before
+                        calculated_amount -= constant_standing_charge
+                        tenant_balance += calculated_amount
+                        TenantOp.update_balance(tenant_obj,tenant_balance)
         
         return render_template("ajaxproceed.html",alert=msg)
 
@@ -6234,6 +6262,8 @@ class Results(Resource):
 
             vacants = filter_out_occupied_houses(prop_obj.name)
             for vac in vacants:
+                if vac.owner:
+                    continue
                 all_charges = vac.charges
                 water_charge = 0.0
                 electricity_charge = 0.0

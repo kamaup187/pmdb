@@ -714,7 +714,7 @@ class BillInvoice(Resource):
 
             sms_highlight = "text-success" if smsstatus == "sent" or  smsstatus == "Success" or  smsstatus == "success-alt" else "text-danger"
 
-            tenant = bill.tenant
+            tenant = bill.tenant if bill.tenant else bill.house.owner
             prop_obj= bill.apartment
 
 
@@ -946,11 +946,11 @@ class EditBill(Resource):
                         ChargeOp.delete(charge)
 
                 if bill.apartment.billing_period.month == bill.month:
-                
-                    tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                    running_bal = tenant_obj.balance
-                    running_bal = running_bal - original_amount
-                    TenantOp.update_balance(tenant_obj,running_bal)
+                    if bill.tenant_id:
+                        tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal - original_amount
+                        TenantOp.update_balance(tenant_obj,running_bal)
 
                     MonthlyChargeOp.delete(bill)
                 else:
@@ -1041,10 +1041,12 @@ class EditBill(Resource):
 
                 diff = total_amount - original_amount
 
-                tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                running_bal = tenant_obj.balance
-                running_bal = running_bal + diff
-                TenantOp.update_balance(tenant_obj,running_bal)
+                if bill.tenant_id:
+
+                    tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal = running_bal + diff
+                    TenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff
@@ -1249,10 +1251,12 @@ class EditBill(Resource):
 
                     diff = total_amount - original_amount
 
-                    tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                    running_bal = tenant_obj.balance
-                    running_bal = running_bal + diff
-                    TenantOp.update_balance(tenant_obj,running_bal)
+                    if bill.tenant_id:
+
+                        tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        TenantOp.update_balance(tenant_obj,running_bal)
 
                     # bal = bill.balance
                     # bal = bal + diff

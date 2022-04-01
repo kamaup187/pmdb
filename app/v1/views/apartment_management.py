@@ -105,6 +105,9 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        from rq import cancel_job
+        cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
+        
         # try:
         #     print("ndiooooo hiiiiii",CtoBop.fetch_record_by_id(171).trans_amnt)
         # except Exception as e:
@@ -5104,33 +5107,22 @@ class CaptureReading(Resource):
 
             try:
                 if data_format_error:
-                    
                     nonexistent_item = sheet.row_values(1)[1000000] # INTRODUCE AN ERROR TO BE CAUGHT
 
+                dict_array = []
+
                 for row in rows:
+                                     
+                    dict_obj = {
+                    "house":sheet.row_values(row)[0],
+                    "reading":sheet.row_values(row)[1]
+                    }
 
-                    # try:
-                    #     raw_billhouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
-                    # except:
-                    #     raw_billhouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                    dict_array.append(dict_obj)
 
-                    # raw_reading = str(int(sheet.row_values(row)[1]))
-
-
-                    dict_array = []
-
-                    for row in rows:
-                        dict_obj = {
-                        "house":sheet.row_values(row)[0],
-                        "reading":sheet.row_values(row)[1]
-                        }
-
-                        dict_array.append(dict_obj)
-
-                    uploadsjob = q.enqueue_call(
-                        func=read_water_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
-                    )
-
+                uploadsjob = q.enqueue_call(
+                    func=read_water_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                )
                                 
                 return '<span class="text-success">Upload successful</span>'
 

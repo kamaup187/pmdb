@@ -4046,7 +4046,16 @@ class FetchPayments(Resource):
         target = request.args.get("target")
 
         if target == "unclaimed":
-            return render_template("ajax_payments_refresh.html",payids=[],items=[],data=">>>>>>>>>  unclaimed payments",dataperiod="")
+            raw_unclaimed = CtoBop.fetch_all_records()
+            sifted = []
+            for r in raw_unclaimed:
+                if r.business_shortcode == "4012401" or r.business_shortcode == "4081687":
+                    pass
+                else:
+                    sifted.append(r)
+            unclaimed = ctb_payment_details(sifted)
+
+            return render_template("ajax_unresolved_payments.html",payids=[],items=unclaimed,data=">>>>>>>>>  unclaimed payments",dataperiod="")
 
         if target == "new":
             prop_id = request.args.get("propid")

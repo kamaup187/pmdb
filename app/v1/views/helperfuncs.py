@@ -1972,6 +1972,13 @@ def payment_details(arr):
         detailed_payments.append(pay_item)
     return detailed_payments
 
+def ctb_payment_details(arr):
+    detailed_payments = []
+    for i in arr:
+        pay_item = CtoBop.view(i)
+        detailed_payments.append(pay_item)
+    return detailed_payments
+
 
 def login_details(arr):
     detailed_payments = []

@@ -3194,6 +3194,14 @@ class CtoBop(CtoB,Base):
     def fetch_record_by_id(record_id):
         return CtoBop.query.filter_by(id=record_id).first()
 
+    def fetch_all_records():
+        return CtoB.query.all()
+
+    def get_date(self):
+        paydate = self.date
+        str_date = paydate.strftime("%d/%b/%y")
+        return str_date
+
     def view(self):
         return {
             'transid':self.trans_id,
@@ -3203,7 +3211,7 @@ class CtoBop(CtoB,Base):
             'phone':self.msisdn,
             'fname':self.fname,
             'lname':self.lname,
-            'orgbal':self.org_acc_bal
+            'date':CtoBop.get_date(self.post_date)
         }
 
 class MpesaRequestOp(MpesaRequest,Base):

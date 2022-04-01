@@ -3541,18 +3541,20 @@ class TenantStatementThree(Resource):
                     }
                     main.append(datadict)
 
-                if item.rent_due < 0:
-                    cb += item.rent_due
-                    datadict = {
-                        "month":month,
-                        "date":date,
-                        "desc":"Rent advance payment",
-                        "ref":f'bbf#{item.id}',
-                        "debit":"-",
-                        "credit":item.rent_due,
-                        "balance":cb
-                    }
-                    main.append(datadict)
+                if item.rent_due:
+
+                    if item.rent_due < 0:
+                        cb += item.rent_due
+                        datadict = {
+                            "month":month,
+                            "date":date,
+                            "desc":"Rent advance payment",
+                            "ref":f'bbf#{item.id}',
+                            "debit":"-",
+                            "credit":item.rent_due,
+                            "balance":cb
+                        }
+                        main.append(datadict)
 
                 if item.water:
                     cb += item.water

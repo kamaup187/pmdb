@@ -3700,7 +3700,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             smssev = f"\nService charge:{bill.maintenance}," if bill.maintenance else ""
             smselec = f"\nElectricity:{bill.electricity:,.2f}," if bill.electricity else ""
             smsdep = f"\nDeposit:{bill.deposit}" if bill.deposit else ""
-            smsarrears = f"\nArrears:{arrears}" if arrears else ""
+            smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
             smsfine = f"\nPenalty:{bill.penalty}" if bill.penalty else ""
             smstotal = (f"{bill.total_bill:,.1f}") if not calculated_total else (f"{calculated_total:,.1f}")
             bankdetails = bankdetails
@@ -3867,7 +3867,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
@@ -3879,7 +3879,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                             # if prop_obj.company.name == "KIGAKA ENTERPRISES":
@@ -5641,7 +5641,7 @@ def filtered_house_list(apartment_id):
     for house in house_list:
         active_meter = fetch_active_meter(house)
         prev_reading_obj = fetch_last_reading(active_meter.id)
-        print("Prev reading period",prev_reading_obj.reading_period.month,"")
+        # print("Prev reading period",prev_reading_obj.reading_period.month,"")
 
         if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
             if prev_reading_obj.description == "actual water reading":
@@ -5686,7 +5686,7 @@ def filtered_house_list_alt(apartment_id):
     for house in house_list:
         active_meter = fetch_active_meter_alt(house)
         prev_reading_obj = fetch_last_reading(active_meter.id)
-        print("Prev reading period",prev_reading_obj.reading_period.month)
+        # print("Prev reading period",prev_reading_obj.reading_period.month)
         
         if prev_reading_obj.reading_period.month == period:
             if prev_reading_obj.description == "actual electricity reading":

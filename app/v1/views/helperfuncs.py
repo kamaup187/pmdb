@@ -3716,7 +3716,6 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         tname = fname_extracter(tenant.name)
 
-                        print("why are you running",owner_only)
 
                         if not owner_only:
                             servicecharge = "service charge"
@@ -3847,7 +3846,8 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         if not tenant_only:
                             servicecharge = ""
                             waterbill = "water consumption"
-
+                            smssev = ""
+                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                             rsmstotal = bill.total_bill - bill.maintenance
                             smstotal = (f"{rsmstotal:,.1f}")
                         else:

@@ -898,7 +898,11 @@ class HouseOp(House,Base):
             for tenant_alloc in tenant_alloc_objs:
                 if tenant_alloc.active == True:
                     return tenant_alloc.tenant.name.title()
+            if self.owner:
+                return "not rented"
             return "-vacant-"
+        if self.owner:
+            return "not rented"
         return "-vacant-"
 
     def highlight_vacancy(self):
@@ -968,6 +972,7 @@ class HouseOp(House,Base):
             'group':self.housecode,
             'description':self.description,
             'tenant':HouseOp.get_tenantname(self),
+            'owner':self.owner.name.title() if self.owner else "N/A",
             'meter':HouseOp.get_meterno(self),
             'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
             'rate':HouseOp.format_amount(self.housecode.waterrate if self.housecode else 0),
@@ -2102,7 +2107,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         if fines != "null":
             self.penalty = fines
         if arrears != "null":
-            print("Updating arrears for", self.tenant.name , ">>>>>>>>>",arrears)
+            try:
+                print("Updating arrears for", self.tenant.name , ">>>>>>>>>",arrears)
+            except:
+                print("Updating arrears for", self.house.owner.name , ">>>>>>>>>",arrears)
+
             self.arrears = arrears
 
         self.total_bill = total_bill
@@ -2182,13 +2191,21 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return year_month
 
     def combine_house_tenant(self):
-        tname = self.tenant.name
+        if self.tenant:
+            tname = self.tenant.name.title()
+        else:
+            tname = self.house.owner.name.title()
+
         fname = tname.split()[0]
         house =  self.house.name
         return f'{house}# {fname}' 
 
     def combine_house_tenant_alt(self):
-        tname = self.tenant.name
+        if self.tenant:
+            tname = self.tenant.name.title()
+        else:
+            tname = self.house.owner.name.title()
+
         fname = tname.split()[0]
         house =  self.house.name
         return f'{house} <span class="text-gray-600">({fname})</span>' 
@@ -2431,6 +2448,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             decor_fig = (f"{rounded_fig:,}")
             return decor_fig
 
+    def get_tenant_name(self):
+        if self.tenant:
+            return self.tenant.name.title()
+        else:
+            return self.house.owner.name.title()
+
     def view_detail(self):
         
         return {
@@ -2443,15 +2466,15 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'delid':MonthlyChargeOp.generate_delid(self),
             'highlight':MonthlyChargeOp.highlight(self),
             'payhighlight':MonthlyChargeOp.payhighlight(self),
-            'tenantid':self.tenant_id,
+            'tenantid':self.tenant_id if self.tenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
             'year':self.year,
-            'tenant':self.tenant.name.title(),
-            'tenant-alt':self.tenant.name.title(),
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'prop':self.apartment,
             'hsetenant':MonthlyChargeOp.combine_house_tenant(self),
             'hst':MonthlyChargeOp.combine_house_tenant_alt(self),
-            'idno':self.tenant.national_id,
+            'idno':self.tenant.national_id if self.tenant else "-",
             'house':self.house,
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'water':MonthlyChargeOp.fig_format(self.water),
@@ -2492,11 +2515,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'id':self.id,
             'editid':MonthlyChargeOp.generate_editid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
-            'tenantid':self.tenant_id,
+            'tenantid':self.tenant_id if self.tenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
             'year':self.year,
-            'tenant':self.tenant.name.split()[0],
-            'tenant-alt':self.tenant.name,
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),

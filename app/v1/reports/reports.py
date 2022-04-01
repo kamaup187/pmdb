@@ -4371,6 +4371,8 @@ class FetchBills(Resource):
 
             vacants = filter_out_occupied_houses(prop_obj.name)
             for vac in vacants:
+                if vac.owner:
+                    continue
                 all_charges = vac.charges
                 water_charge = 0.0
                 electricity_charge = 0.0

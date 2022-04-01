@@ -3748,8 +3748,6 @@ class TenantStatementThree(Resource):
 
 
                 
-                  
-
         ########################################################
         timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
         ########################################################

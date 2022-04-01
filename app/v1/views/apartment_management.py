@@ -3949,6 +3949,10 @@ class AddTenant(Resource):
 
                     ttype = True
 
+                    if ttype:
+                        if not tenantname:
+                            continue
+
                     if not ttype:
 
                         occupancy = check_occupancy(house_obj)

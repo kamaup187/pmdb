@@ -105,9 +105,9 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        from rq import cancel_job
-        cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
-        
+        # from rq import cancel_job
+        # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
+
         # try:
         #     print("ndiooooo hiiiiii",CtoBop.fetch_record_by_id(171).trans_amnt)
         # except Exception as e:

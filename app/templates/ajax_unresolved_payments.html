@@ -1,0 +1,88 @@
+<!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">({month} payments <button id="expand" class="btn btn-outline-primary herebtn"> <span id="expandtoggler">expand</span> </button></div> -->
+<!-- <span id="dataperiod" class="dispnone">{{dataperiod}}</span> -->
+<div id="dataperio" class="text-black text-left text-125">{{data}}</div>
+
+<div class="">
+  <div id="reqdata" class="table-responsive">
+    <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+      <thead class="custom-header">
+        <tr>
+          <th class="text-info font-weight-bold">Shortcode</th>
+          <th class="text-info font-weight-bold">FirstName</th>
+          <th class="text-info font-weight-bold">LastName</th>
+          <th class="text-info font-weight-bold">Phone</th> 
+          <th class="text-info font-weight-bold">House</th>                                                                 
+          <th class="text-info">Ref</th>
+          <th class="text-info text-danger">Amount</th>
+          <th class="text-info">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items%}
+        <tr>
+                                                                   
+          <td class="data-cell ">{{ item['paybill'] }}</td>
+          <td class="data-cell ">{{ item['fname'] }}</td>
+          <td class="data-cell ">{{ item['lname'] }}</td>
+          <td class="data-cell ">{{ item['phone'] }}</td>
+          <td class="data-cell ">{{ item['billref'] }}</td>
+          <td class="data-cell ">{{ item['transid'] }}</td>
+          <td class="data-cell ">{{ item['amount'] }}</td>
+          <td class="data-cell ">{{ item['date'] }}</td>
+
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- <script>
+    var rawIds = "{{ payids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_payment_identifier").html(item)
+            $("#target_payment_id").html("void payment")
+          }else{
+            $("#edit_payment_identifier").html(item)
+            $("#target_payment_id").html("edit payment")
+          }
+          
+        }else{
+          $("#payment_identifier").html(item)
+          $("#target_payment_id").html("payment")
+        }
+      });
+    });
+  </script> -->
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+
+<!-- <script>
+
+  var x = document.getElementById("period");
+  var y = document.getElementById("dataperiod");
+
+  x.innerHTML =  y.innerHTML ;
+
+</script> -->

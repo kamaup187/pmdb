@@ -3198,7 +3198,7 @@ class CtoBop(CtoB,Base):
         return CtoB.query.all()
 
     def get_date(self):
-        paydate = self.date
+        paydate = self.post_date
         str_date = paydate.strftime("%d/%b/%y")
         return str_date
 

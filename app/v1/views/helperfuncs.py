@@ -3857,8 +3857,8 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
                         tele = tenant2.phone
                         phonenum = sms_phone_number_formatter(tele)
-                        str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                        str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         tname = fname_extracter(tenant2.name)
 
                         if not tenant_only:

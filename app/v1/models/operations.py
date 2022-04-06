@@ -346,6 +346,9 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_password(self,password):
+        self.password = Bcrypt().generate_password_hash(password).decode()
+
     def update_username_email(self,username,email):
         self.username = username
         self.email = email

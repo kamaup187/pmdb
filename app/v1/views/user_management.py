@@ -1226,8 +1226,9 @@ class Demo(Resource):
             pass
         send_internal_email_notifications("DEMO HIT","Demo account has been accessed")
         user = UserOp.fetch_user_by_national_id("12345678")
-        if not user:
-            user = UserOp.fetch_user_by_usercode("99990000")
+        if user:
+            if not user.active:
+                UserOp.update_status(user,True)
         if not user:
             return redirect(url_for('api.userlogin'))
         remember = False

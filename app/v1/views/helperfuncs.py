@@ -3231,7 +3231,6 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                     target_bills.append(bill[0])
 
             try:
-
                 with mail.connect() as conn:
 
                     non_duplicate_multitenants = remove_dups(multitenants)
@@ -3402,57 +3401,115 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
                         house = bill.house
 
-                        tenant = bill.tenant
+                        tenant2 = None
+                        tenant = None
 
-                        email_addr = tenant.email
-                        if email_addr:
+                        if bill.house.owner:
+                            tenant = bill.house.owner
+                            print("SENDING OWNER INVOICE")
 
-                            sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
-                            sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
-
-                            try:
-                                wbill = sibling_water_bill[0]
-                                w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
-                            except:
-                                wbill = None
-                                w_edited = "dispnone"
-
-                            try:
-                                ebill = sibling_electricity_bill[0]
-                                e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
-                            except:
-                                ebill = None
-                                e_edited = "dispnone"
+                            if bill.tenant:
+                                print("SENDING OWNER AND NORMAL TENANT INVOICE")
+                                tenant2 = bill.tenant
+                        else:
+                            print("SENDING NORMAL TENANT INVOICE")
+                            tenant = None
+                            tenant2 = bill.tenant
 
 
 
-                            if wbill or ebill:
-                                visibility = ""
+
+                        # tenant = bill.tenant
+
+                        if tenant:
+
+                            if not tenant2:
+
+                                email_addr = tenant.email
+                                if email_addr:
+
+                                    sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+                                    sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+
+                                    try:
+                                        wbill = sibling_water_bill[0]
+                                        w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
+                                    except:
+                                        wbill = None
+                                        w_edited = "dispnone"
+
+                                    try:
+                                        ebill = sibling_electricity_bill[0]
+                                        e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
+                                    except:
+                                        ebill = None
+                                        e_edited = "dispnone"
+
+
+
+                                    if wbill or ebill:
+                                        visibility = ""
+                                    else:
+                                        visibility = "hide"
+
+                                    arrears = bill.arrears
+                                    
+                                    if bill.paid_amount:
+                                        billpaid = f"{bill.paid_amount:,.2f}"
+                                        billbal = f"{bill.balance:,.2f}"
+
+                                    else:
+                                        billpaid = 0.0
+                                        billbal = 0.0
+
+                                    if arrears < 0.0:
+                                        arrtitle = "Advance"
+                                        bbfhighlight = "text-success"
+
+                                        arrears = f"{arrears*-1}"
+                                    elif arrears > 0.0:
+                                        arrtitle = "Arrears"
+                                        bbfhighlight = "text-danger"
+                                    else:
+                                        arrtitle = ""
+                                        bbfhighlight = ""
+
                             else:
-                                visibility = "hide"
+                                email_addr = tenant.email
+                                if email_addr:
 
-                            arrears = bill.arrears
-                            
-                            if bill.paid_amount:
-                                billpaid = f"{bill.paid_amount:,.2f}"
-                                billbal = f"{bill.balance:,.2f}"
+                                    wbill = None
+                                    ebill = None
+                                    e_edited = "dispnone"
 
-                            else:
-                                billpaid = 0.0
-                                billbal = 0.0
+                                    if wbill or ebill:
+                                        visibility = ""
+                                    else:
+                                        visibility = "hide"
 
-                            if arrears < 0.0:
-                                arrtitle = "Advance"
-                                bbfhighlight = "text-success"
+                                    arrears = bill.arrears
+                                    
+                                    if bill.paid_amount:
+                                        billpaid = f"{bill.paid_amount:,.2f}"
+                                        billbal = f"{bill.balance:,.2f}"
 
-                                arrears = f"{arrears*-1}"
-                            elif arrears > 0.0:
-                                arrtitle = "Arrears"
-                                bbfhighlight = "text-danger"
-                            else:
-                                arrtitle = ""
-                                bbfhighlight = ""
+                                    else:
+                                        billpaid = 0.0
+                                        billbal = 0.0
 
+                                    if arrears < 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-success"
+
+                                        arrears = f"{arrears*-1}"
+                                    elif arrears > 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-danger"
+                                    else:
+                                        arrtitle = ""
+                                        bbfhighlight = ""
+                                
+                        
 
                             timenow = datetime.datetime.now()
                             # diff = timenow.day - 2

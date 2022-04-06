@@ -8,6 +8,8 @@
       <span id="edit_bill_identifier" class="dispnone"></span>
       <span id="del_bill_identifier" class="dispnone"></span>
       <span id="target_payment_id" class="dispnone"></span>
+      <a id="download_arrears" href="/download/template/arrears" class="dispnone">download</a>
+
 
         <!-- <div class="containe no-padding">
           <div class="col-12 no-padding mb-1">
@@ -42,9 +44,17 @@
 
           <div class="">
             <nav class="nav nav-borders">
+              <a class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#" data-toggle="modal" data-target="#uploadArrearsExcelModal">
+                <span class="btn btn-sm btn-light text-black">
+                  <!-- <i class="me-1" data-feather="user-plus"></i> -->
+                  <i class="fas fa-long-arrow-alt-up"></i>
+                  Bulk arrears upload
+                </span>
+              </a>
               <a id="arrbtn2" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">Arrears comparison statement</a>
               <a id="closebtn" class="nav-link pb-0 pt-1 text-danger underline d-none active ms-0" href="#">Close comparison sheet</a>
             </nav>
+
           </div>
 
         </div>
@@ -401,6 +411,46 @@
           <div class="has-margin-bottom divbg mt-2">
               <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Discard !</button>
               <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="uploadArrearsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload arrears</span>
+              <div>
+                <button id="downloadarrears" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Arrears Excel File: <input class="ph" id="tenantarrearsfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadarrears" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -884,6 +934,84 @@
 
   });
 </script>
+
+
+
+<script>
+  $("#downloadarrears").click(function(){ 
+      $('#downloadarrears').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_arrears")[0].click();
+
+        setTimeout(function(){
+            $('#downloadarrears').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
+
+
+<script>
+  $("#uploadarrears").on('click',function(){
+      $("#uploadarrears").html("Uploading...") 
+
+      url = "{{ url_for('api.editbill') }}"
+
+      var fd = new FormData();
+      var files = $('#tenantarrearsfile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelarrearsupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadarrears").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadarrears").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              // setTimeout(function(){
+              //   $.ajax({
+              //     url: "{{ url_for('api.fetchtenants') }}",
+              //     type: "get",
+              //     data: {
+              //       propid:  $("#prop_identifier").text(),
+              //       target: "somestring"
+              //     },
+              //     success: function(response) {
+                    
+              //       $("#child-result-view").html(response);
+              //     }
+              //   });
+              // },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadarrears").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadarrears").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+
 
 
 <script>

@@ -883,31 +883,132 @@ class EditBill(Resource):
                                     if bill.arrears_updated:
                                         print("Skipping", house_name)
                                         continue
+
+
+                                    #start of arrears upload################################################################################
+
                                     original_amount = bill.total_bill
-                                    total_amount = bill.total_bill
-                                    total_amount += arr
-                                    if arr:
-                                        arrears = arr
-                                    else:
-                                        arrears = "null"
 
-                                    if arrears == "null":
-                                        pass
-                                    else:
-                                        MonthlyChargeOp.update_arrears_status(bill,True)
+                                    # original_amount = bill.total_bill
+                                    # total_amount = bill.total_bill
+                                    # total_amount += arr
+
+
+
+                                    # if arr:
+                                    #     arrears = arr
+                                    # else:
+                                    #     arrears = "null"
+
+                                    # if arrears == "null":
+                                    #     pass
+                                    # else:
+                                    #     MonthlyChargeOp.update_arrears_status(bill,True)
                                         
-                                        MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",arr,total_amount,1)
+                                    #     MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",arr,total_amount,1)
 
-                                        diff = total_amount - original_amount
+                                    #     diff = total_amount - original_amount
+
+                                    #     if bill.tenant:
+
+                                    #         tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                                    #         running_bal = tenant_obj.balance
+                                    #         running_bal = running_bal + diff
+                                    #         TenantOp.update_balance(tenant_obj,running_bal)
+
+                                    #     bal = bill.balance
+                                    #     bal = bal + diff
+                                    #     MonthlyChargeOp.update_balance(bill,bal)
+
+                                    #####################################################################################################################
+                                    update_water = bill.water_balance
+                                    update_rent = arr if arr else bill.rent_balance
+                                    update_garbage = bill.garbage_balance
+                                    update_security = bill.security_balance
+                                    update_fine = bill.penalty_balance
+                                    update_agreement = bill.agreement_balance
+                                    update_deposit = bill.deposit_balance
+                                    update_electricity = bill.electricity_balance
+                                    update_maintenance = bill.maintenance_balance
+                                    
+                                    update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
+
+                                    total_amount = original_amount - bill.arrears + update_arrears
+
+                                    MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,current_user.id)
+
+                                    MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+
+
+                                    # if bill.rent_balance:
+                                    if bill.rent_paid:
+                                        rentbal = bill.rent + update_rent - bill.rent_paid
+                                    else:
+                                        rentbal = bill.rent + update_rent
+
+                                    if bill.water_paid:
+                                        waterbal = bill.water + update_water - bill.water_paid 
+                                    else:
+                                        waterbal = bill.water + update_water
+
+                                    if bill.electricity_paid:
+                                        electricitybal = bill.electricity + update_electricity - bill.electricity_paid
+                                    else:
+                                        electricitybal = bill.electricity + update_electricity
+
+                                    if bill.maintenance_paid:
+                                        servicebal = bill.maintenance + update_maintenance - bill.maintenance_paid
+                                    else:
+                                        servicebal = bill.maintenance + update_maintenance
+
+                                    if bill.penalty_paid:
+                                        penaltybal = bill.penalty + update_fine - bill.penalty_paid
+                                    else:
+                                        penaltybal = bill.penalty + update_fine
+
+                                    if bill.security_paid:
+                                        securitybal = bill.security + update_security - bill.security_paid
+                                    else:
+                                        securitybal = bill.security + update_security
+
+                                    if bill.garbage_paid:
+                                        garbagebal = bill.garbage + update_garbage - bill.garbage_paid
+                                    else:
+                                        garbagebal = bill.garbage + update_garbage
+
+
+                                    if bill.deposit_paid:
+                                        depositbal = bill.deposit + update_deposit - bill.deposit_paid
+                                    else:
+                                        depositbal = bill.deposit + update_deposit
+
+                                    if bill.agreement_paid:
+                                        agreementbal = bill.agreement + update_agreement - bill.agreement_paid
+                                    else:
+                                        agreementbal = bill.agreement + update_agreement
+
+                                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+
+
+                                    diff = total_amount - original_amount
+
+                                    if bill.tenant_id:
 
                                         tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
                                         running_bal = tenant_obj.balance
                                         running_bal = running_bal + diff
                                         TenantOp.update_balance(tenant_obj,running_bal)
 
-                                        bal = bill.balance
-                                        bal = bal + diff
-                                        MonthlyChargeOp.update_balance(bill,bal)
+                                    # bal = bill.balance
+                                    # bal = bal + diff
+                                    if bill.paid_amount:
+                                        bal = total_amount - bill.paid_amount
+                                    else:
+                                        bal = total_amount
+
+                                    MonthlyChargeOp.update_balance(bill,bal)
+                                    MonthlyChargeOp.update_arrears_status(bill,True)
+                                    #####################################################################################################################
 
                                 else:
                                     print("No bill exists for ", house_name)

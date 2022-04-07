@@ -1090,6 +1090,7 @@ class CtoB(db.Model):
     lname = db.Column(db.VARCHAR)
     org_acc_bal = db.Column(db.Float)
 
+    status = db.Column(db.String,default="unclaimed")
     # tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
 
 class MpesaRequest(db.Model):

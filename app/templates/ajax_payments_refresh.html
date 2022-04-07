@@ -9,10 +9,11 @@
         <tr>
 
           <th class="text-info  font-weight-bold">Tenant</th>
+          <th class="text-info  text-success" data-orderable="false">View</th>
           <th class="text-info   text-primary" data-orderable="false">Edit</th>
           <th class="text-info   text-danger" data-orderable="false">Void</th>
-          <th class="text-info  text-success" data-orderable="false">View</th>
           <th class="text-info  font-weight-bold ">#No.</th> 
+          <th class="text-info  font-weight-bold ">#Ref.</th> 
           <th class="text-info  font-weight-bold ">Due</th>                                                                 
           <th class="text-info " data-orderable="false">Paid</th>
           <th class="text-info  text-danger" data-orderable="false">Bal</th>
@@ -32,6 +33,11 @@
         {% for item in items%}
         <tr>
           <td class="data-cell">{{ item['hst']|safe }}</td>
+          <td class="text-s data-cell">
+            <div>
+              <button id="{{item['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  no-wrap" data-toggle="modal" data-target="#receiptModal"><i class="fas fa-receipt mr-1"></i>View</button>
+            </div>
+          </td>
           <td class="text-s data-cell ">
             <div>
               <button id="{{item['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold no-wrap" data-toggle="modal" data-target="#editPaymentModal"><i class="fas fa-edit mr-1"></i>Edit</button>
@@ -42,12 +48,9 @@
               <button id="{{item['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold {{greyout}} no-wrap" {{active}} data-toggle="modal" data-target="#deletePaymentModal"><i class="fas fa-trash-alt mr-1"></i>Void</button>
             </div>
           </td>
-          <td class="text-s data-cell">
-            <div>
-              <button id="{{item['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  no-wrap" data-toggle="modal" data-target="#receiptModal"><i class="fas fa-eye mr-1"></i>View</button>
-            </div>
-          </td>
+
           <td class="data-cell ">{{ item['id'] }} <span class="badge badge-success badge-counter">{{ item['new'] }}</span></td>
+          <td class="data-cell ">{{ item['ref'] }}</td>                                                                    
           <td class="data-cell ">{{ item['chargedamnt'] }}</td>                                                                    
           <td class="data-cell"><span class="text-info font-weight-bold">{{ item['amount'] }}</span></td>
           <td class="data-cell"><span class="{{item['highlight']}}">{{ item['balance'] }}</span></td>

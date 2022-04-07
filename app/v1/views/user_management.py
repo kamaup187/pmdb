@@ -1227,7 +1227,6 @@ class Demo(Resource):
         send_internal_email_notifications("DEMO HIT","Demo account has been accessed")
         user = UserOp.fetch_user_by_national_id("12345678")
         if user:
-            UserOp.update_password(user,"spry1234")
             if not user.active:
                 UserOp.update_status(user,True)
         if not user:

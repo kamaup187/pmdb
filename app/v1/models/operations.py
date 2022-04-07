@@ -3200,6 +3200,10 @@ class CtoBop(CtoB,Base):
     def fetch_all_records():
         return CtoB.query.all()
 
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
     def get_date(self):
         paydate = self.post_date
         str_date = paydate.strftime("%d/%b/%y")

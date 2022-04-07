@@ -1770,10 +1770,21 @@ class ReceivePayment(Resource):
         house_name2 = request.args.get("house2")
         target = request.args.get("target")
 
+        propname = request.args.get("propname")
+
         propid = get_identifier(prop_id)
 
-        prop = ApartmentOp.fetch_apartment_by_id(propid)
+        if propname:
+            prop = ApartmentOp.fetch_apartment_by_name(propname)
+            propid = prop.id
+        else:
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+
         db.session.expire(prop)
+
+        if target == "proplist":
+            props = fetch_all_apartments_by_user(current_user)
+            return render_template('ajax_multivariable.html',items=sort_items(props),placeholder="select property",access="")
 
         if target == "houselist":
             if current_user.company.name == "Grashar Agencies" and current_user.username !="grasharp40":
@@ -1826,6 +1837,8 @@ class ReceivePayment(Resource):
 
         if target == "amount due":
             house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
+            if not house_obj:
+                abort(403)
             tenant_obj = check_occupancy(house_obj)[1]
             if tenant_obj.multiple_houses:
                 houses = get_active_houses(tenant_obj)[1]
@@ -1931,10 +1944,15 @@ class ReceivePayment(Resource):
     def post(self):
         current_period_payment = True
         prop_id = request.form.get('propid')
+        propname = request.form.get('propname')
 
         propid = get_identifier(prop_id)
 
-        prop = ApartmentOp.fetch_apartment_by_id(propid)
+        if propname:
+            prop = ApartmentOp.fetch_apartment_by_name(propname)
+            propid = prop.id
+        else:
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
 
         house_name = request.form.get('house')
         house_name2 = request.form.get('house2')
@@ -1952,7 +1970,7 @@ class ReceivePayment(Resource):
         cbid = request.form.get("cbid")
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
-            CtoBop.update_status(cb,"claimed")
+            # CtoBop.update_status(cb,"claimed")
 
         water = "water" if waterpaid else ""
         rent = "rent" if rentpaid else ""

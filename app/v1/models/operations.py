@@ -3211,6 +3211,9 @@ class CtoBop(CtoB,Base):
 
     def view(self):
         return {
+            'id':self.id,
+            'editid':CtoBop.generate_editid(self),
+            'delid':CtoBop.generate_delid(self),
             'transid':self.trans_id,
             'amount':self.trans_amnt,
             'paybill':self.business_shortcode,

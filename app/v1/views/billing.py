@@ -1765,10 +1765,12 @@ class ReceivePayment(Resource):
         # if accessright != True:
         #     return Response(render_template('noaccess.html',name=current_user.name))
         
-        propid = request.args.get("propid")
+        prop_id = request.args.get("propid")
         house_name = request.args.get("house")
         house_name2 = request.args.get("house2")
         target = request.args.get("target")
+
+        propid = get_identifier(prop_id)
 
         prop = ApartmentOp.fetch_apartment_by_id(propid)
         db.session.expire(prop)
@@ -1792,6 +1794,18 @@ class ReceivePayment(Resource):
             propperiod=get_str_month(period.month)
 
             return f'>> {prop.name} ({propperiod})'
+
+        if target == "fetch c2b item":
+            cbid = request.args.get("cbid")
+            cb = CtoBop.fetch_record_by_id(cbid)
+            
+            cb_obj = {
+                "ref":cb.trans_id,
+                "amount":cb.trans_amnt
+            }
+
+            return render_template("c2bitem.html",c2bitem=cb_obj)
+
 
         if target == "period":
             period = get_billing_period(prop)
@@ -1916,7 +1930,12 @@ class ReceivePayment(Resource):
     @login_required
     def post(self):
         current_period_payment = True
-        propid = request.form.get('propid')
+        prop_id = request.form.get('propid')
+
+        propid = get_identifier(prop_id)
+
+        prop = ApartmentOp.fetch_apartment_by_id(propid)
+
         house_name = request.form.get('house')
         house_name2 = request.form.get('house2')
 

@@ -219,6 +219,10 @@
       $("#current-reloader").html("unclaimed");
 
 
+      var propcode =  $("#prop_identifier").text()
+      $("#prop_identifier_main").html(propcode)
+
+
       $.ajax({
                 url: "{{ url_for('api.fetchpayments') }}",
                 type: "get",

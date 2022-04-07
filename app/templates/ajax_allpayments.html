@@ -5,6 +5,8 @@
       <span id="prop_identifier_main" class="dispnone"></span>
       <span id="prop_identifier" class="dispnone"></span>
       <span id="targeturl" class="dispnone"></span>
+      <span id="c2bitem" class="dispnone"></span>
+
     
       <div class="card mb-2 mt-1">
         <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
@@ -962,7 +964,17 @@
                               target:"amount due"
                             },
                         success: function(response) {
-                          $("#totaldue").html(response);                  
+                          $("#totaldue").html(response);
+                          if ($("#ctb_item_amount").text()){
+                            console.log("yaye")
+                            $("#paidamount").val($("#ctb_item_amount").text())
+                            $('#paidamount').keyup();
+                            $("#bill_ref").val($("#ctb_item_ref").text())
+
+                          }else{
+                            console.log("yoya")
+                          }
+                          
                         }
                       });
 
@@ -1018,7 +1030,11 @@
 
     $('#billref').removeClass('dispnone');
     $('#bill_ref').removeClass('dispnone');
-    $('#bill_ref').val("");
+    if ($("#ctb_item_ref").text()){
+    // do nothing
+    }else{
+      $('#bill_ref').val("");
+    }
 
     // var empty = false;
 
@@ -1217,6 +1233,10 @@
                 $('#billref').addClass('dispnone');
                 $('#banks').addClass('dispnone');
                 // $("#addPaymentModal2").empty();
+
+                $("#ctb_item_amount").empty();
+                $("#ctb_item_ref").empty();
+
                 $("#receipt-payment-bed").html(response);
                 // $('#paybtn-alt').click(rebindfunc());
                 // $.ajax({

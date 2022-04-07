@@ -570,7 +570,6 @@ class AllProperties(Resource):
             return "Updated successfully" + proceed
 
         if target == "update prop billing info":
-            print("hgrsrfcgvhbjnn")
             bank = request.form.get("bank")
             accname = request.form.get("accname")
             accno = request.form.get("accno")

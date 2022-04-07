@@ -122,6 +122,9 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
+        # ctob_obj = CtoBop("MXXKMSCNS",time,500.0,"trans_type","400400","C5","invoice_num","0716674695",786.0,"Peter","Koech")
+        # ctob_obj.save()
+
         #### WORST PRODUCTION DB INCIDENT ##############
 
         # propp = ApartmentOp.fetch_apartment_by_id(35)

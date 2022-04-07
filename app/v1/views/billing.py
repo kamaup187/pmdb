@@ -1949,7 +1949,10 @@ class ReceivePayment(Resource):
         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
-        # import pdb; pdb.set_trace()
+        cbid = request.form.get("cbid")
+        if cbid:
+            cb = CtoBop.fetch_record_by_id(cbid)
+            CtoBop.update_status(cb,"claimed")
 
         water = "water" if waterpaid else ""
         rent = "rent" if rentpaid else ""

@@ -965,14 +965,30 @@
                             },
                         success: function(response) {
                           $("#totaldue").html(response);
+
                           if ($("#ctb_item_amount").text()){
-                            console.log("yaye")
+                            // console.log("yaye")
                             $("#paidamount").val($("#ctb_item_amount").text())
                             $('#paidamount').keyup();
                             $("#bill_ref").val($("#ctb_item_ref").text())
 
                           }else{
-                            console.log("yoya")
+                            // console.log("yoya")
+                          }
+
+
+                          if ($("#ctb_item_ref").text()) {
+                            var paymodeRadio = $('input:radio[name=paymode]');
+                            if (paymodeRadio.is(':checked') === false) {
+                              console.log("working yeeee")
+                              paymodeRadio.prop('checked', true);
+                              paymodeRadio.change();
+                            } else {
+                              console.log("not workin ffffff")
+                              // do nothing
+                            }
+                          } else {
+                            console.log("kubaad")
                           }
                           
                         }
@@ -1017,11 +1033,6 @@
     $('body').addClass('modal-open');
   });
 </script>
-
-
-
-
-
 
 
 
@@ -1188,6 +1199,7 @@
             url: "{{ url_for('api.receivepayment') }}",
             data: {
                 propid: $("#prop_identifier_main").text(),
+                cbid:$("#c2b_identifier").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
                 chargetype1:"rent",

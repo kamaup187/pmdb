@@ -3428,34 +3428,37 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                             tenant = None
                             tenant2 = bill.tenant
 
+                        #start here
 
 
+                        sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+                        sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
 
-                        # tenant = bill.tenant
+                        try:
+                            wbill = sibling_water_bill[0]
+                            w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
+                        except:
+                            wbill = None
+                            w_edited = "dispnone"
+
+                        try:
+                            ebill = sibling_electricity_bill[0]
+                            e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
+                        except:
+                            ebill = None
+                            e_edited = "dispnone"
+
+
+                        kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+                        invdate = bill.date - relativedelta(days = 0)
+                        inv_date = invdate.strftime("%d/%b/%y")
+                        invdue = invdate + relativedelta(days=6)
+                        inv_due = invdue.strftime("%d/%b/%y")
 
                         if tenant:
-
                             if not tenant2:
-
                                 email_addr = tenant.email
                                 if email_addr:
-
-                                    sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
-                                    sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
-
-                                    try:
-                                        wbill = sibling_water_bill[0]
-                                        w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
-                                    except:
-                                        wbill = None
-                                        w_edited = "dispnone"
-
-                                    try:
-                                        ebill = sibling_electricity_bill[0]
-                                        e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
-                                    except:
-                                        ebill = None
-                                        e_edited = "dispnone"
 
 
 
@@ -3475,24 +3478,111 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                         billbal = 0.0
 
                                     if arrears < 0.0:
-                                        arrtitle = "Advance"
+                                        arrtitle = "Previous balance"
                                         bbfhighlight = "text-success"
 
                                         arrears = f"{arrears*-1}"
                                     elif arrears > 0.0:
-                                        arrtitle = "Arrears"
+                                        arrtitle = "Previous balance"
                                         bbfhighlight = "text-danger"
                                     else:
                                         arrtitle = ""
                                         bbfhighlight = ""
 
+                                    template_vars = {
+                                        "bill":bill,
+                                        "servicevisibility":"",
+                                        "readings": wbill,
+                                        "w_edited": w_edited,
+                                        "ereadings": ebill,
+                                        "e_edited": e_edited,
+                                        "visibility":visibility,
+                                        "arrears":arrears,
+                                        "bbfhighlight ": bbfhighlight,
+                                        "arrtitle":arrtitle,
+                                        "billpaid":billpaid,
+                                        "billbal":billbal,
+                                        "house":house,
+                                        "total":f"{bill.total_bill:,.2f}",
+                                        "invdate":inv_date,
+                                        "invdue":inv_due,
+                                        "client":tenant,
+                                        "company":co,
+                                        "invnum":invnum,
+                                        "logo":logo(co)[2],
+                                        "slogo":logo(kiotapay)[1]
+                                    }
+
+                                    mail_sender(tenant,bill,template_vars,email_addr,co)
+                                else:
+                                    print("Email address not found for tenant ",tenant.name,"-",prop)
                             else:
                                 email_addr = tenant.email
                                 if email_addr:
+                                    billtotal = bill.total_bill
+                                    arrears = bill.arrears
 
-                                    wbill = None
-                                    ebill = None
-                                    e_edited = "dispnone"
+                                    billtotal -= bill.water
+
+                                    if bill.water_balance:
+                                        arrears -= bill.water_balance
+                                        billtotal -= bill.water
+
+                                        
+                                        if bill.paid_amount:
+                                            billpaid = f"{bill.paid_amount:,.2f}"
+                                            billbal = f"{bill.balance:,.2f}"
+
+                                        else:
+                                            billpaid = 0.0
+                                            billbal = 0.0
+
+                                        if arrears < 0.0:
+                                            arrtitle = "Previous balance"
+                                            bbfhighlight = "text-success"
+
+                                            arrears = f"{arrears*-1}"
+                                        elif arrears > 0.0:
+                                            arrtitle = "Previous balance"
+                                            bbfhighlight = "text-danger"
+                                        else:
+                                            arrtitle = ""
+                                            bbfhighlight = ""
+
+                                        template_vars = {
+                                            "bill":bill,
+                                            "servicevisibility":"",
+                                            "readings": None,
+                                            "w_edited": "dispnone",
+                                            "ereadings": None,
+                                            "e_edited": "dispnone",
+                                            "visibility":"hide",
+                                            "arrears":arrears,
+                                            "bbfhighlight ": bbfhighlight,
+                                            "arrtitle":arrtitle,
+                                            "billpaid":billpaid,
+                                            "billbal":billbal,
+                                            "house":house,
+                                            "total":f"{billtotal:,.2f}",
+                                            "invdate":inv_date,
+                                            "invdue":inv_due,
+                                            "client":tenant,
+                                            "company":co,
+                                            "invnum":invnum,
+                                            "logo":logo(co)[2],
+                                            "slogo":logo(kiotapay)[1]
+                                        }
+
+                                        mail_sender(tenant,bill,template_vars,email_addr,co)
+                                    else:
+                                        print("Email address not found for tenant ",tenant.name,"-",prop)
+
+
+
+                        if tenant2:
+                            if not tenant:
+                                email_addr = tenant2.email
+                                if email_addr:
 
                                     if wbill or ebill:
                                         visibility = ""
@@ -3520,89 +3610,146 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                     else:
                                         arrtitle = ""
                                         bbfhighlight = ""
-                                
-                        
 
-                            timenow = datetime.datetime.now()
-                            # diff = timenow.day - 2
-                            diff = 0
-                            invdate = bill.date - relativedelta(days = diff)
+                                    template_vars = {
+                                        "bill":bill,
+                                        "servicevisibility":"dispnone",
+                                        "readings": wbill,
+                                        "w_edited": w_edited,
+                                        "ereadings": ebill,
+                                        "e_edited": e_edited,
+                                        "visibility":visibility,
+                                        "arrears":arrears,
+                                        "bbfhighlight ": bbfhighlight,
+                                        "arrtitle":arrtitle,
+                                        "billpaid":billpaid,
+                                        "billbal":billbal,
+                                        "house":house,
+                                        "total":f"{bill.total_bill:,.2f}",
+                                        "invdate":inv_date,
+                                        "invdue":inv_due,
+                                        "client":tenant2,
+                                        "company":co,
+                                        "invnum":invnum,
+                                        "logo":logo(co)[2],
+                                        "slogo":logo(kiotapay)[1]
+                                    }
 
-                            inv_date = invdate.strftime("%d/%b/%y")
-                            invdue = invdate + relativedelta(days=6)
-                            inv_due = invdue.strftime("%d/%b/%y")
+                                    mail_sender(tenant2,bill,template_vars,email_addr,co)
+                                else:
+                                    print("Email address not found for tenant ",tenant2.name,"-",prop)
+                            else:
+                                email_addr = tenant2.email
+                                if email_addr:
+                                    billtotal = bill.total_bill
+                                    arrears = bill.arrears
 
-                            kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+                                    billtotal -= bill.maintenance
+                                    if bill.maintenance_balance:
+                                        arrears -= bill.maintenance_balance
+                                        billtotal -= bill.maintenance_balance
+                                        
+                                        if bill.paid_amount:
+                                            billpaid = f"{bill.paid_amount:,.2f}"
+                                            billbal = f"{bill.balance:,.2f}"
 
-                            ###################################################################################
+                                        else:
+                                            billpaid = 0.0
+                                            billbal = 0.0
 
-                            templateLoader = FileSystemLoader(searchpath="app/templates")
-                            templateEnv = Environment(loader=templateLoader)
-                            TEMPLATE_FILE = "ajax_tenant_invoice_mail.html"
-                            template = templateEnv.get_template(TEMPLATE_FILE)
+                                        if arrears < 0.0:
+                                            arrtitle = "Previous balance"
+                                            bbfhighlight = "text-success"
 
-                            template_vars = {
-                                "bill":bill,
-                                "readings": wbill,
-                                "w_edited": w_edited,
-                                "ereadings": ebill,
-                                "e_edited": e_edited,
-                                "visibility":visibility,
-                                "arrears":arrears,
-                                "bbfhighlight ": bbfhighlight,
-                                "arrtitle":arrtitle,
-                                "billpaid":billpaid,
-                                "billbal":billbal,
-                                "house":house,
-                                "total":f"{bill.total_bill:,.2f}",
-                                "invdate":inv_date,
-                                "invdue":inv_due,
-                                "client":tenant,
-                                "company":co,
-                                "invnum":invnum,
-                                "logo":logo(co)[2],
-                                "slogo":logo(kiotapay)[1]
-                            }
+                                            arrears = f"{arrears*-1}"
+                                        elif arrears > 0.0:
+                                            arrtitle = "Previous balance"
+                                            bbfhighlight = "text-danger"
+                                        else:
+                                            arrtitle = ""
+                                            bbfhighlight = ""
 
-                            html_out = template.render(template_vars)
-                            filename = f"app/temp/inv_{bill.id}.pdf"
-                            HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
+                                        template_vars = {
+                                            "bill":bill,
+                                            "servicevisibility":"dispnone",
+                                            "readings": wbill,
+                                            "w_edited": w_edited,
+                                            "ereadings": ebill,
+                                            "e_edited": e_edited,
+                                            "visibility":visibility,
+                                            "arrears":arrears,
+                                            "bbfhighlight ": bbfhighlight,
+                                            "arrtitle":arrtitle,
+                                            "billpaid":billpaid,
+                                            "billbal":billbal,
+                                            "house":house,
+                                            "total":f"{billtotal:,.2f}",
+                                            "invdate":inv_date,
+                                            "invdue":inv_due,
+                                            "client":tenant2,
+                                            "company":co,
+                                            "invnum":invnum,
+                                            "logo":logo(co)[2],
+                                            "slogo":logo(kiotapay)[1]
+                                        }
 
+                                        mail_sender(tenant2,bill,template_vars,email_addr,co)
+                                    else:
+                                        print("Email address not found for tenant ",tenant2.name,"-",prop)
 
-                            ###################################################################################
-                            # LETS SEND EMAIL
-                            mail_filename = f"inv_{bill.id}"
-                            with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
-                                # print (fh)
-                                try:
-                                    try:
-                                        tname = tenant.name.split('and')[0]
-                                    except:
-                                        tname = tenant.name
-
-                                    period = f"{get_str_month(bill.month)} invoice"
-                                    filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
-
-                                    txt = Message(period, sender = mailsender, recipients = [email_addr])
-                                    txt.body = f"Dear {tname}  \nYour invoice is now available. Kindly find the attached invoice. \n\n{co.name}"
-                                    # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
-                                    txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
-                                    # mail.send(txt)
-                                    conn.send(txt)
-                                    MonthlyChargeOp.update_email_status(bill,"sent")
-
-                                except Exception as e:
-                                    print(str(e))
-                            #########################################################################################
-                            os.remove(filename)
-                            #########################################################################################
-                        else:
-                            print("Email address not found for tenant ",tenant.name,"-",prop)
             except Exception as e:
                 print("Mail failed to connect >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
     except Exception as e:
         print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
+
+
+
+
+
+
             
+
+def mail_sender(recepient,bill,template_vars,email_addr,co):
+
+    templateLoader = FileSystemLoader(searchpath="app/templates")
+    templateEnv = Environment(loader=templateLoader)
+    TEMPLATE_FILE = "ajax_tenant_invoice_mail.html"
+    template = templateEnv.get_template(TEMPLATE_FILE)
+
+    html_out = template.render(template_vars)
+    filename = f"app/temp/inv_{bill.id}.pdf"
+    HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
+
+    ###################################################################################
+    # LETS SEND EMAIL
+    mail_filename = f"inv_{bill.id}"
+    with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
+        # print (fh)
+        try:
+            try:
+                tname = recepient.name.split('and')[0]
+            except:
+                tname = recepient.name
+
+            period = f"{get_str_month(bill.month)} invoice"
+            filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+
+            txt = Message(period, sender = mailsender, recipients = [email_addr])
+            txt.body = f"Dear {tname}  \nYour invoice is now available. Kindly find the attached invoice. \n\n{co.name}"
+            # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
+            txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
+            # mail.send(txt)
+            conn.send(txt)
+            MonthlyChargeOp.update_email_status(bill,"sent")
+
+        except Exception as e:
+            print(str(e))
+    #########################################################################################
+    os.remove(filename)
+    #########################################################################################
+
+
+
 
 def discard_bills(props):
     # props > array of apartment ids

@@ -2437,7 +2437,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return status
 
     def current_badge(self):
-        if self.apartment.billing_period.month == self.month:
+        if self.apartment.billing_period.month == self.month and self.apartment.billing_period.year == self.year:
             return "current"
         else:
             return ""

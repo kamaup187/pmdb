@@ -144,6 +144,7 @@ api.add_resource(CallBackUrlProminance,"/promitech/payment")
 api.add_resource(CallBackUrlKiotapay,"/kiotapay/payment")
 api.add_resource(CallBackUrlLatitude,"/latitude/payment")
 api.add_resource(CallBackUrlPremier,"/premier/payment")
+api.add_resource(CallBackUrlVintage,"/vintage/payment")
 api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
 
 #bank urls

@@ -325,10 +325,22 @@ def sum_positive_values(arr):
 def sum_values(arr):
     total = 0.0
     for i in arr:
+
+        failed = False
+
         try:
             total += i
         except:
-            continue
+            # print("failed to sum",i)
+            failed = True
+
+        if failed:
+            try:
+                # print("trying to sum strfloat",i)
+                total += float(i)
+            except:
+                # print("failed to sum in second trial",i)
+                continue
 
     return total
 
@@ -6323,3 +6335,7 @@ def run_props(prop,user):
     return props
 
 
+def get_sum(arr,mykey):
+    totlist = [i.get(mykey) for i in arr]
+    tot = sum_values(totlist)
+    return tot

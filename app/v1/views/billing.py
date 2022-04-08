@@ -1141,13 +1141,14 @@ class EditBill(Resource):
 
 
                 diff = total_amount - original_amount
+                
+                if bill.apartment.billing_period.month == bill.month:
+                    if bill.tenant_id:
 
-                if bill.tenant_id:
-
-                    tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                    running_bal = tenant_obj.balance
-                    running_bal = running_bal + diff
-                    TenantOp.update_balance(tenant_obj,running_bal)
+                        tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        TenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff
@@ -1266,91 +1267,93 @@ class EditBill(Resource):
 
 
             else:
+                # if bill.apartment.billing_period.month == bill.month:
+                values = validate_float_inputs(rent,water,garbage,security,fine,deposit,arrears,agreement,electricity,maintenance)
+
+                #TODO -remove this block
+                agreement = bill.agreement if bill.agreement else 0.0
+                deposit = bill.deposit if bill.deposit else 0.0
+
+                if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
+                    # update_water = bill.water
+                    update_water = values[1] if values[1] != "null" else bill.water
+                else:
+                    update_water = values[1] if values[1] != "null" else bill.water
+
+                update_rent = values[0] if values[0] != "null" else bill.rent
+                update_garbage = values[2] if values[2] != "null" else bill.garbage
+                update_security = values[3] if values[3] != "null" else bill.security
+                update_fine = values[4] if values[4] != "null" else bill.penalty
+                update_agreement = values[7] if values[7] != "null" else agreement
+                update_deposit = values[5] if values[5] != "null" else deposit
+                update_arrears = values[6] if values[6] != "null" else bill.arrears
+                update_maintenance = values[9] if values[9] != "null" else bill.maintenance
+
+                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
+                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+
+                # if bill.rent_balance:
+
+                # if bill.rent_balance:
+                if bill.rent_paid:
+                    rentbal = bill.rent_balance + update_rent - bill.rent_paid
+                else:
+                    rentbal = bill.rent_balance + update_rent
+
+                # # supplied arrears to effect rent only
+                # rentarr = bill.rent_balance 
+                # if values[6] != "null":
+                #     rentarr = bill.rent_balance + values[6]
+                #     rentbal += values[6]
+
+                if bill.water_paid:
+                    waterbal = bill.water_balance + update_water - bill.water_paid
+                else:
+                    waterbal = bill.water_balance + update_water
+
+                if bill.electricity_paid:
+                    electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
+                else:
+                    electricitybal = bill.electricity_balance + bill.electricity
+
+                if bill.maintenance_paid:
+                    servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
+                else:
+                    servicebal = bill.maintenance_balance + update_maintenance
+
+                if bill.penalty_paid:
+                    penaltybal = bill.penalty_balance + update_fine - bill.penalty_paid
+                else:
+                    penaltybal = bill.penalty_balance + update_fine
+
+                if bill.security_paid:
+                    securitybal = bill.security_balance + update_security - bill.security_paid
+                else:
+                    securitybal = bill.security_balance + update_security
+
+                if bill.garbage_paid:
+                    garbagebal = bill.garbage_balance + update_garbage - bill.garbage_paid
+                else:
+                    garbagebal = bill.garbage_balance + update_garbage
+
+
+                if bill.deposit_paid:
+                    depositbal = bill.deposit_balance + update_deposit - bill.deposit_paid
+                else:
+                    depositbal = bill.deposit_balance + update_deposit
+
+                if bill.agreement_paid:
+                    agreementbal = bill.agreement_balance + update_agreement - bill.agreement_paid
+                else:
+                    agreementbal = bill.agreement_balance + update_agreement
+
+                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                # MonthlyChargeOp.update_rent_balance(bill,rentarr)
+
+
+                diff = total_amount - original_amount
+
                 if bill.apartment.billing_period.month == bill.month:
-                    values = validate_float_inputs(rent,water,garbage,security,fine,deposit,arrears,agreement,electricity,maintenance)
-
-                    #TODO -remove this block
-                    agreement = bill.agreement if bill.agreement else 0.0
-                    deposit = bill.deposit if bill.deposit else 0.0
-
-                    if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
-                        # update_water = bill.water
-                        update_water = values[1] if values[1] != "null" else bill.water
-                    else:
-                        update_water = values[1] if values[1] != "null" else bill.water
-
-                    update_rent = values[0] if values[0] != "null" else bill.rent
-                    update_garbage = values[2] if values[2] != "null" else bill.garbage
-                    update_security = values[3] if values[3] != "null" else bill.security
-                    update_fine = values[4] if values[4] != "null" else bill.penalty
-                    update_agreement = values[7] if values[7] != "null" else agreement
-                    update_deposit = values[5] if values[5] != "null" else deposit
-                    update_arrears = values[6] if values[6] != "null" else bill.arrears
-                    update_maintenance = values[9] if values[9] != "null" else bill.maintenance
-
-                    total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
-                    MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
-
-                    # if bill.rent_balance:
-
-                    # if bill.rent_balance:
-                    if bill.rent_paid:
-                        rentbal = bill.rent_balance + update_rent - bill.rent_paid
-                    else:
-                        rentbal = bill.rent_balance + update_rent
-
-                    # # supplied arrears to effect rent only
-                    # rentarr = bill.rent_balance 
-                    # if values[6] != "null":
-                    #     rentarr = bill.rent_balance + values[6]
-                    #     rentbal += values[6]
-
-                    if bill.water_paid:
-                        waterbal = bill.water_balance + update_water - bill.water_paid
-                    else:
-                        waterbal = bill.water_balance + update_water
-
-                    if bill.electricity_paid:
-                        electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
-                    else:
-                        electricitybal = bill.electricity_balance + bill.electricity
-
-                    if bill.maintenance_paid:
-                        servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
-                    else:
-                        servicebal = bill.maintenance_balance + update_maintenance
-
-                    if bill.penalty_paid:
-                        penaltybal = bill.penalty_balance + update_fine - bill.penalty_paid
-                    else:
-                        penaltybal = bill.penalty_balance + update_fine
-
-                    if bill.security_paid:
-                        securitybal = bill.security_balance + update_security - bill.security_paid
-                    else:
-                        securitybal = bill.security_balance + update_security
-
-                    if bill.garbage_paid:
-                        garbagebal = bill.garbage_balance + update_garbage - bill.garbage_paid
-                    else:
-                        garbagebal = bill.garbage_balance + update_garbage
-
-
-                    if bill.deposit_paid:
-                        depositbal = bill.deposit_balance + update_deposit - bill.deposit_paid
-                    else:
-                        depositbal = bill.deposit_balance + update_deposit
-
-                    if bill.agreement_paid:
-                        agreementbal = bill.agreement_balance + update_agreement - bill.agreement_paid
-                    else:
-                        agreementbal = bill.agreement_balance + update_agreement
-
-                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                    # MonthlyChargeOp.update_rent_balance(bill,rentarr)
-
-
-                    diff = total_amount - original_amount
 
                     if bill.tenant_id:
 
@@ -1359,17 +1362,15 @@ class EditBill(Resource):
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
 
-                    # bal = bill.balance
-                    # bal = bal + diff
-                    if bill.paid_amount:
-                        bal = total_amount - bill.paid_amount
-                    else:
-                        bal = total_amount
-
-                    MonthlyChargeOp.update_balance(bill,bal)
-
+                # bal = bill.balance
+                # bal = bal + diff
+                if bill.paid_amount:
+                    bal = total_amount - bill.paid_amount
                 else:
-                    return "err"
+                    bal = total_amount
+
+                MonthlyChargeOp.update_balance(bill,bal)
+
 
 class EditSummary(Resource):
     """class"""
@@ -3251,6 +3252,10 @@ class CallBackUrlKiotapay(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         ctob_obj.save()
 
+        txtx = f'SMS MPESA PAYMENT DATA JUST IN from {bill_ref_num} of {trans_amnt}'
+
+        response = sms.send(txtx, ["+254716674695"],"KIOTAPAY")
+
         auto_consume_ctob2(ctob_obj)
 
 class CallBackUrlLatitude(Resource):
@@ -3353,22 +3358,26 @@ class CallBackUrlVintage(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        # trans_id = data['TransID']
-        # trans_time = data['TransTime']
-        # trans_amnt = data['TransAmount']
-        # trans_type = data['TransactionType']
-        # business_shortcode = data['BusinessShortCode']
-        # bill_ref_num = data['BillRefNumber']
-        # invoice_num = data['InvoiceNumber']
-        # msisdn = data['MSISDN']
-        # org_acc_bal = data['OrgAccountBalance']
-        # fname = data['FirstName']
-        # lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-        # ctob_obj.save()
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        response = sms.send("VINTAGE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
 
         # auto_consume_ctob2(ctob_obj)
 

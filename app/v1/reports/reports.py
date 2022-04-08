@@ -4292,9 +4292,9 @@ class FetchBills(Resource):
             tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
             db.session.expire(tenant_obj)
 
-            tenant_bills = tenant_obj.monthly_charges
-            
-            recent_bills = fetch_recent_bills(period,tenant_bills)
+            # tenant_bills = tenant_obj.monthly_charges
+            # recent_bills = fetch_recent_bills(period,tenant_bills)
+            recent_bills = tenant_obj.monthly_charges
 
             if recent_bills:
                 detailed_bills = bill_details(recent_bills)
@@ -4303,38 +4303,22 @@ class FetchBills(Resource):
 
                 # billids = get_obj_ids(detailed_bills)
 
-                if len(recent_bills)>1:
-                    return render_template(
-                        "ajax_tenantbill.html",
-                        fieldshow_sec = "dispnone" if not recent_bills[0].security and not recent_bills[1].security else "",
-                        fieldshow_sev = "dispnone" if not recent_bills[0].maintenance and not recent_bills[1].maintenance else "",
-                        fieldshow_elec = "dispnone" if not recent_bills[0].electricity and not recent_bills[1].electricity else "",
-                        fieldshow_garb = "dispnone" if not recent_bills[0].garbage and not recent_bills[1].garbage else "",
-                        fieldshow_water = "dispnone" if not recent_bills[0].water and not recent_bills[1].water else "",
-                        fieldshow_rent = "dispnone" if not recent_bills[0].rent and not recent_bills[1].rent else "",
-                        fieldshow_dep = "dispnone" if not recent_bills[0].deposit and not recent_bills[1].deposit else "",
-                        fieldshow_arg = "dispnone" if not recent_bills[0].agreement  and not recent_bills[1].agreement else "",
-                        fieldshow_fine = "dispnone" if not recent_bills[0].penalty and not recent_bills[1].penalty else "",
-                        fieldshow_arr = "dispnone" if not recent_bills[0].arrears and not recent_bills[1].arrears else "",
-                        items=detailed_bills,
-                        billids=billids
-                        )
-                else:
-                    return render_template(
-                        "ajax_tenantbill.html",
-                        fieldshow_sec = "dispnone" if not recent_bills[0].security else "",
-                        fieldshow_sev = "dispnone" if not recent_bills[0].maintenance else "",
-                        fieldshow_elec = "dispnone" if not recent_bills[0].electricity else "",
-                        fieldshow_garb = "dispnone" if not recent_bills[0].garbage else "",
-                        fieldshow_water = "dispnone" if not recent_bills[0].water else "",
-                        fieldshow_rent = "dispnone" if not recent_bills[0].rent else "",
-                        fieldshow_dep = "dispnone" if not recent_bills[0].deposit else "",
-                        fieldshow_arg = "dispnone" if not recent_bills[0].agreement else "",
-                        fieldshow_fine = "dispnone" if not recent_bills[0].penalty else "",
-                        fieldshow_arr = "dispnone" if not recent_bills[0].arrears else "",
-                        items=detailed_bills,
-                        billids=billids
-                        )
+                return render_template(
+                    "ajax_tenantbill.html",
+                    fieldshow_sec = "dispnone" if not get_sum(detailed_bills,"security") else "",
+                    fieldshow_sev = "dispnone" if not get_sum(detailed_bills,"maintenance") else "",
+                    fieldshow_elec = "dispnone" if not get_sum(detailed_bills,"electricity") else "",
+                    fieldshow_garb = "dispnone" if not get_sum(detailed_bills,"garbage") else "",
+                    fieldshow_water = "dispnone" if not get_sum(detailed_bills,"water") else "",
+                    fieldshow_rent = "dispnone" if not get_sum(detailed_bills,"rent") else "",
+                    fieldshow_dep = "dispnone" if not get_sum(detailed_bills,"deposit") else "",
+                    fieldshow_arg = "dispnone" if not get_sum(detailed_bills,"agreement") else "",
+                    fieldshow_fine = "dispnone" if not get_sum(detailed_bills,"penalty") else "",
+                    fieldshow_arr = "dispnone" if not get_sum(detailed_bills,"arrears") else "",
+                    items=detailed_bills,
+                    billids=billids
+                    )
+ 
             else:
                 return "Unavailable"
         

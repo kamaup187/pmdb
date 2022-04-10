@@ -598,7 +598,7 @@ class Tenant(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     house_allocated = db.relationship('Occupancy',backref='tenant', cascade="all, delete-orphan")#will create allocation obj
-    monthly_charges = db.relationship('MonthlyCharge',backref='tenant',order_by='MonthlyCharge.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    monthly_charges = db.relationship('MonthlyCharge',backref='tenant',order_by='MonthlyCharge.id', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     landlordsummaries = db.relationship('LandlordSummary',backref='tenant',order_by='LandlordSummary.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     payments = db.relationship('Payment',backref='tenant',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     submissions = db.relationship('Submission',backref='tenant',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child

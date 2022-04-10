@@ -61,10 +61,16 @@ def create_app(configuration):
         login_manager.login_view = 'api.userlogin'
         login_manager.init_app(app)
 
+        mailusername = os.getenv('G_ACCOUNT')
+        mailpassw = os.getenv('G_PASS')
+
+        print("username: ",mailusername)
+        print("password: ",mailpassw)
+
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT'] = 465
-        app.config['MAIL_USERNAME'] = os.getenv('G_ACCOUNT') if os.getenv('TARGET') == 'lasshouse' else 'kiotapay@gmail.com'
-        app.config['MAIL_PASSWORD'] = os.getenv('G_PASS') if os.getenv('TARGET') == 'lasshouse' else 'vhoyhtfgxvdhfheh'
+        app.config['MAIL_USERNAME'] = mailusername
+        app.config['MAIL_PASSWORD'] = mailpassw
         app.config['MAIL_USE_TLS'] = False
         app.config['MAIL_USE_SSL'] = True
 
@@ -72,6 +78,13 @@ def create_app(configuration):
         # app.config['MAIL_PORT'] = 465
         # app.config['MAIL_USERNAME'] = 'info@kiotapay.com'
         # app.config['MAIL_PASSWORD'] = 'Still7waters'
+        # app.config['MAIL_USE_TLS'] = False
+        # app.config['MAIL_USE_SSL'] = True
+
+        # app.config['MAIL_SERVER']='smtp.gmail.com'
+        # app.config['MAIL_PORT'] = 465
+        # app.config['MAIL_USERNAME'] = 'kiotapay@gmail.com'
+        # app.config['MAIL_PASSWORD'] = 'mnswpjyxdcvzbjes'
         # app.config['MAIL_USE_TLS'] = False
         # app.config['MAIL_USE_SSL'] = True
 

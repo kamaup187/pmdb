@@ -1,6 +1,7 @@
 {% extends 'reports.html' %}
 
 {% block child %}
+<span id="statement" class="dispnone">tenant statement3</span>
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} tenant statement.pdf</span>
@@ -140,13 +141,13 @@
             <img class="" src="{{letterhead}}" alt="--no image--"/>
           </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">COMBINED TENANT STATEMENT FOR THE PERIOD {{timeline}}</span></span>
           </div>
 
           {%if tenant_obj%}
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
+          <div class="divjust-end text-black font-weight-bold  text-110">
             <div class="">
               <div>Tenant : {{tenant_obj.name}}</div>
               <div>Property : {{prop.name}}</div>
@@ -215,13 +216,13 @@
             <img class="" src="{{letterhead}}" alt="--no image--"/>
           </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">COMBINED TENANT STATEMENT FOR THE PERIOD {{timeline}}</span></span>
           </div>
 
           {%if tenant_obj%}
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
+          <div class="divjust-end text-black font-weight-bold  text-110">
             <div class="">
               <div>Tenant : {{tenant_obj.name}}</div>
               <div>Property : {{prop.name}}</div>
@@ -251,7 +252,7 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
-                  <td class="data-cell text-left">{{ bill['month'] |safe}}</td>
+                  <td class="data-cell text-left no-wrap">{{ bill['month'] |safe}}</td>
                   <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
                   <td class="data-cell text-left">{{ bill['desc']}}</td>
                   <td class="data-cell text-left">{{ bill['ref'] }}</td>
@@ -369,6 +370,31 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    
+    $("#reportbtns").addClass("dispnone")
+
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "order": []
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+    //   columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+    //   "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
 
 
 {% endblock %}

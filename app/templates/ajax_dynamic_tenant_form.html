@@ -34,7 +34,17 @@
   <div class="col-9 input-icons">
     <div class="form-control">
       <input type="checkbox" id="multi" checked/>
-      <label class="x-small" for="migrate">multi-house(<span class="semi-small text-danger">check to allow multiple allocations</span>)</label>
+      <label class="x-small" for="multi">multi-house(<span class="semi-small text-danger">check to allow multiple allocations</span>)</label>
+    </div>       
+  </div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-3 no-padding text-right"><span class="form-control border-0 semi-small">Receive messages?</span></div>
+  <div class="col-9 input-icons">
+    <div class="form-control">
+      <input type="checkbox" id="smsaccess" checked/>
+      <label class="x-small" for="smsaccess">(<span class="semi-small text-danger">check to allow sms</span>)</label>
     </div>       
   </div>
 </div>
@@ -68,4 +78,35 @@
     }
 
     });
+</script>
+
+
+<script type="text/javascript">
+
+  function myFunction2() {
+
+      var nn = document.getElementById("smsaccess")
+      nn.removeAttribute("checked");
+
+  }
+  var smsstate = {{tenant.sms|tojson}};
+  
+  if (smsstate == false){
+      myFunction2();
+  }
+
+</script>
+
+<script>
+
+  $("#smsaccess").on('change',function(){
+    console.log("Ive changed")
+  var cb = document.getElementById("smsaccess");
+  if (cb.checked){
+    $(".accesssms").html("True");
+  }else{
+    $(".accesssms").html("False");
+  }
+
+  });
 </script>

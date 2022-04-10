@@ -4,9 +4,10 @@
 
 <div class="col-lg-12 no-padding">
     <div id="reqdata" class="table-responsive">
-        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+        <table id="tenantInvoiceData" class="table shadow" width="100%" cellspacing="0">
             <thead>
                 <tr>
+                <th class="text-info track-title-cell">Inv#</th>
                 <th class="text-info font-weight-bold">House</th>
                 <th class="text-primary track-title-cell">Invoice</th>
                 <th class="text-info track-title-cell">Period</th>
@@ -34,6 +35,7 @@
             <tbody>
                 {% for i in items%}
                 <tr>
+                  <td class="data-cell">{{ i['id'] }}</td>
                 <td class="first-data-cell text-dark font-weight-bold">{{ i['house'] }}</td>
                 <td class="text-s data-cell">
                   <div>
@@ -116,6 +118,20 @@
     </div>
   </div>
 </div>
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantInvoiceData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "desc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 
 
 <script>

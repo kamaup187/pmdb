@@ -776,10 +776,10 @@ class EditBill(Resource):
 
         bill = MonthlyChargeOp.fetch_specific_bill(identifier)
 
-        if bill.apartment.billing_period.month == bill.month:
+        if bill.apartment.billing_period.month == bill.month and bill.apartment.billing_period.year:
             warning = ""
         else:
-            warning = "This is a previous month invoice!"
+            warning = "CAUTION! This is not the current invoice"
 
         if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
             # update = ['disabled','<i class="fa fa-lock ml-3 text-danger"></i>'] #TODO URGENT
@@ -789,11 +789,11 @@ class EditBill(Resource):
 
         if target == "editarrears":
             if warning:
-                warning = "This is a previous month invoice arrears!</span>"
+                warning = 'CAUTION! This is not the current invoice arrears'
             return render_template("ajax_dynamic_billarrears.html",bill=bill,warning=warning)
         elif target == "editpayments":
             if warning:
-                warning = "This is a previous month invoice payments!"
+                warning = "CAUTION! This is not the current invoice payments"
             if current_user.username.startswith('qc') or current_user.usercode =="3551":
                 return render_template("ajax_dynamic_billpayments.html",bill=bill,warning=warning)
             else:
@@ -1183,6 +1183,9 @@ class EditBill(Resource):
                 update_maintenance = values[9] if values[9] != "null" else bill.maintenance_paid
                 
                 update_payments = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
+
+                if bill.paid_amount < 0.0:
+                    MonthlyChargeOp.update_payment(bill,update_payments)
 
                 if bill.paid_amount != update_payments and bill.paid_amount != 0.0:
                     print("MASTER PAYMENT IS NOT TALLYING WITH NEW PAYMENT>>>>","MASTER:",bill.paid_amount,"CHILD:",update_payments)
@@ -2428,8 +2431,12 @@ class UpdateBalance(Resource):
         targetbills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,bills)
 
         bill_balance = 0.0
+        
 
         print("totototal", len(targetbills))
+        print("totototal", targetbills[0].date.date())
+        print("totototal", targetbills[0].balance)
+
 
         for bill in targetbills:
 
@@ -2679,6 +2686,10 @@ class EditPayment(Resource):
 
                 paid_amount = target_bill.paid_amount
                 cumulative_pay = paid_amount - payment_obj.amount
+
+                if cumulative_pay < 0.0:
+                    cumulative_pay = 0.0
+                    
                 MonthlyChargeOp.update_payment(target_bill,cumulative_pay)
                 MonthlyChargeOp.update_payment_date(target_bill,None)
 

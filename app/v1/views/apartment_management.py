@@ -198,7 +198,6 @@ class Index(Resource):
 
         apartment_list.append("All properties")
 
-            
         usergroup = current_user.user_group
         user_group = str(usergroup)
 
@@ -2208,6 +2207,11 @@ class UpdateCompanyDetails(Resource):
         co_mail = request.form.get("co_mail")
         co_phone = request.form.get("co_tel")
         co_sphone = request.form.get("co_stel")
+
+        if current_user.username.startswith("qc"):
+            pass
+        else:
+            co_name = ""
 
         CompanyOp.update_details(co,co_name,co_street,co_city,co_region,co_mailbox,co_mail,co_phone)
         CompanyOp.update_sphone(co,co_sphone)
@@ -4284,6 +4288,17 @@ class UpdateTenant(Resource):
                 if tenant.multiple_houses == None:
                     TenantOp.update_tenant(tenant,"","","","","","",False,"")
             return render_template('ajax_dynamic_tenant_form.html',tenant=tenant)
+
+        if target == "tenant sms":
+
+            tenantid = request.args.get("tenantid")
+            identity = get_identifier(tenantid)
+            if tenantid.startswith("pedit"):
+                tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
+            else:
+                tenant = TenantOp.fetch_tenant_by_id(identity)
+
+            return "yes" if tenant.sms else "no"
         
         #scan_for_tenant_user
         if str(current_user.user_group) == "Tenant":
@@ -4301,6 +4316,8 @@ class UpdateTenant(Resource):
         arr = request.form.get('arr')
         fine = request.form.get('fine')
         multi = request.form.get('multi')
+        smsaccess = request.form.get('sms')
+
 
         pass1 = request.form.get('pass1')
         pass2 = request.form.get('pass2')
@@ -4313,6 +4330,10 @@ class UpdateTenant(Resource):
         if not multi:
             multi = "null"
         bool_multi = return_bool(multi)
+
+        if not smsaccess:
+            smsaccess = "null"
+        bool_sms = return_bool_alt(smsaccess)
 
         identity = get_identifier(tenant_id)
         if tenant_id.startswith("pedit"):
@@ -4336,7 +4357,7 @@ class UpdateTenant(Resource):
             present2 = UserOp.fetch_user_by_email(email)
             if present1 or present2:
                 msg="Email taken, use another email or leave blank"
-                return render_template('ajaxghosthouse.html',alert=msg)
+                # return render_template('ajaxghosthouse.html',alert=msg)
 
         if national_id:
             present3 = TenantOp.fetch_tenant_by_nat_id(national_id)
@@ -4349,6 +4370,7 @@ class UpdateTenant(Resource):
             PermanentTenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
         else:
             TenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+            TenantOp.update_can_receive_sms(update_tenant,bool_sms)
 
             tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)
 
@@ -6077,7 +6099,14 @@ class Results(Resource):
         elif item.startswith("hse"):
             hse_id = item[3:]
             house_obj = HouseOp.fetch_house_by_id(hse_id)
+
+            update_login_history("search",current_user)
+
+            current_invoice = fetch_current_invoice(house_obj)
+
             prop_obj = house_obj.apartment
+            month = get_str_month(prop_obj.billing_period.month)
+
 
             if check_occupancy(house_obj)[0]=="occupied":
                 tenant_obj = check_occupancy(house_obj)[1]
@@ -6086,6 +6115,27 @@ class Results(Resource):
 
             if tenant_obj:
                 db.session.expire(tenant_obj)
+
+                if current_invoice:
+
+                    if current_invoice.tenant_id == tenant_obj.id:
+                        if current_invoice.paid_amount:
+                            paid_status = "paid"
+                            badge_status = "badge badge-success badge-counter"
+
+                            if current_invoice.balance > 0.0:
+                                paid_status = "partialy paid"
+                                badge_status = "badge badge-warning badge-counter"
+                        else:
+                            paid_status = "unpaid"
+                            badge_status = "badge badge-danger badge-counter"
+                    else:
+                        paid_status = 'not invoiced'
+                        badge_status = "badge badge-danger badge-counter"
+                else:
+                    paid_status = "-"
+                    badge_status = ""
+
 
                 if tenant_obj.sms:
                     smsable = "Yes"
@@ -6103,7 +6153,9 @@ class Results(Resource):
 
                 payids = get_obj_ids(detailed_payments_list)
 
-                return render_template("ajax_tenant_detail.html",prop=prop_obj,house=house_obj,tenant=tenant_obj,smsable=smsable,bills=detailed_payments_list,payids=payids)
+                
+
+                return render_template("ajax_tenant_detail.html",prop=prop_obj,houses=house_obj,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
             else:
                 tenant_obj = f'<span class="text-danger">Vacant</span>'
@@ -6326,11 +6378,40 @@ class Results(Resource):
 
             update_login_history("search",current_user)
 
-
             tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             db.session.expire(tenant_obj)
             prop_obj = tenant_obj.apartment
 
+            month = get_str_month(prop_obj.billing_period.month)
+
+            if tenant_obj.multiple_houses:
+                paid_status = "-"
+                pass
+            else:
+                house_obj = check_house_occupied(tenant_obj)[1]
+                current_invoice = fetch_current_invoice(house_obj)
+
+                if current_invoice:
+
+                    if current_invoice.tenant_id == tenant_obj.id:
+                        if current_invoice.paid_amount:
+                            paid_status = "paid"
+                            badge_status = "badge badge-success badge-counter"
+
+                            if current_invoice.balance > 0.0:
+                                paid_status = "partialy paid"
+                                badge_status = "badge badge-warning badge-counter"
+                        else:
+                            paid_status = "unpaid"
+                            badge_status = "badge badge-danger badge-counter"
+                    else:
+                        paid_status = 'not invoiced'
+                        badge_status = "badge badge-danger badge-counter"
+                else:
+                    paid_status = "-"
+                    badge_status = ""
+
+            
             if get_active_houses(tenant_obj)[0] == "Resident":
                 print(get_active_houses(tenant_obj)[0])
                 houses = get_active_houses(tenant_obj)[1]
@@ -6345,7 +6426,7 @@ class Results(Resource):
             else:
                 smsable = "No"
 
-            tenant_payments = tenant_obj.payments
+            tenant_payments = []
 
             filtered_payments = filter_in_recent_data(tenant_payments)
 
@@ -6355,7 +6436,7 @@ class Results(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_tenant_detail.html",prop=prop_obj,houses=houses,tenant=tenant_obj,smsable=smsable,bills=detailed_payments_list,payids=payids)
+            return render_template("ajax_tenant_detail.html",prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
 class ContactManagement(Resource):

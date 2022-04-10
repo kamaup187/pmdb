@@ -1,6 +1,6 @@
 <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
 <span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
-<span id="edit_tenant_identifier" class="dispnone"></span>
+<span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="del_tenant_identifier" class="dispnone"></span>
 <span id="payment_identifier" class="dispnone"></span>
 <span id="edit_payment_identifier" class="dispnone"></span>
@@ -10,7 +10,10 @@
 <span id="edit_pay_identifier" class="dispnone"></span>
 <span id="del_bill_identifier" class="dispnone"></span>
 <span id="target_payment_id" class="dispnone"></span>
+<a id="download_statement" href="/tenant/statement3?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
 <span class="multisave dispnone"></span>
+<span class="accesssms dispnone"></span>
+
 
     <!--================Contact Area =================-->
     <section class="contact_area section_gap">
@@ -23,7 +26,7 @@
         </div>
       </div> -->
 
-      <div class="card-header pt-3 pb-2 divjust-end bg-white">
+      <div class="card-header pt-3 pb-2 divjust-end bg-skyblue">
         <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
         <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant details</span>
         <div>
@@ -36,21 +39,65 @@
             
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="">
-                        <div class="mb-2 center-btn text-primary font-weight-bold"><i class="fas fa-user mr-2"></i><span class="text-danger underline">{{tenant.name}}</span></div>
-                        <div class="mb-2 center-btn">TNT{{tenant.id}}</div>
-                        <div class="mb-3 center-btn">
-                          
-                          <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal" data-target=""><span class="fixed-width-prop"><img src="" alt="No image"/></span></button>
-                          
-                        </div>
-  
+                    <div class="divjust-start">
+                        <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-user text-info fa-2x mt-2 mr-2"></i></div>
+                        <div class="ln-14 mt-2">
+                          <div class="mb-2 ml-2">Name: <span class="text-black font-weight-bold">{{tenant.name.title()}} </span></div>
+                          <div class="mb-2 ml-2">Unique no#: <span class="text-black font-weight-bold">TNT{{tenant.id}}</span></div>
+                        </div>  
                     </div>
+                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+
                 </div>
+
+
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                    <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-building text-info fa-2x mt-2 mr-2"></i></div>
+                    <div class="ln-14 mt-2">
+                      <div class="mb-2 ml-2">House: <span class="font-weight-bold text-black">{{prop.name}}, {{houses}}</span></div>
+                      <div class="mb-2 ml-2">Moved in#: <span
+                          class="font-weight-bold text-danger">{{tenant.date.strftime("%d/%B/%Y")}}</span></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                    data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-door-open mr-2"></i>Vacate
+                      tenant</span></button>
+                
+                </div>
+                
+                
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                    <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-address-card text-info fa-2x mt-2 mr-2"></i></div>
+                    <div class="ln-14 mt-2">
+                      <div class="mb-2 ml-2">Contact: <span class="font-weight-bold text-black small">{{tenant.phone}} {{tenant.email}}</span></div>
+                      <div class="mb-2 ml-2">Messaging?: <span id="smsaccessview"
+                          class="font-weight-bold text-danger">{{smsable}}</span></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                    data-target="#tenantSmsModal"><span class="fixed-width-prop"><i class="fas fa-sms mr-2"></i>Direct message
+                      </span></button>
+                
+                </div>
+
+
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                      <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-user text-info fa-2x mt-2 mr-2"></i></div>
+                      <div class="ln-14 mt-2">
+                        <div class="mb-2 ml-2"><span class="text-black font-weight-bold">{{month}} </span>invoice: <span class="{{badge_status}}">{{paid_status}}</span></div>
+                        <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
+                      </div>  
+                  </div>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>tenant statement</span></button>
+
+              </div>
                 
 
 
-                <div class="col-lg-3 mobile-malaysian">
+                <div class="col-lg-3 mobile-malaysian dispnone">
 
                   <div class="info_item">
                     <button type="button" class="update-balance borderless btn-info fixed-width-modal-btn divjust-end"><i class="fas fa-sync-alt ml-4"></i><span class="mr-4">Update balance</span></button>
@@ -74,7 +121,7 @@
                   </div>
                 </div>
 
-                <div class="col-lg-3 mobile-malaysian">
+                <div class="col-lg-3 mobile-malaysian dispnone">
                   <div class="info_item">
                     <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-walking ml-4"></i><span class="mr-4">Clear tenant</span></button>
                   </div>
@@ -83,102 +130,42 @@
                   </div>
                 </div>
 
-                <div class="divjust-end desktop-malaysian">
-                  <div class="mr-1">
-                    <div class="info_item">
-                      <button type="button" class="update-balance borderless btn-info fixed-width-modal-btn divjust-end"><i class="fas fa-sync-alt ml-4"></i><span class="mr-4 small">Update balance</span></button>
-                    </div>
-                    <div class="info_item">
-                      <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target=""><i class="fas fa-clipboard-list ml-4"></i><span class="mr-4 small">Notes / pledges</span></button>
-                    </div>
-                  </div>
-  
-                  <div class="">
-                    <div class="info_item">
-                      <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt ml-4"></i><span class="mr-4 small">Clear tenant</span></button>
-                    </div>
-                    <div class="info-item">
-                      <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#tenantSmsModal"><i class="fas fa-envelope ml-4"></i><span class="mr-4 small">Send message</span></button>
-                    </div>
-                  </div>
-                </div>
 
-
-                <div class="col-lg-3 small mobile-malaysian">
-                  <div class="info_item">
-                    <i class="fas fa-building"></i>
-                    <span class="text-info">{{prop.name}}, House: {{houses}}</span><br>
-
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>Balance: Kshs. </span>
-                    <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.2f'| format(tenant.balance|float)}}</span><br>
-
-                    <i class="fas fa-phone-alt"></i>
-                    <span class="">Contact:</span>
-                    <span class="text-info">{{tenant.phone}}</span><br>
-
-                    <i class="fas fa-envelope"></i>
-                    <span>Can receive sms?:</span>
-                    <span class="text-info">{{smsable}}</span>
-                    <button type="button" class="borderless btn-light modalTrigger" data-toggle="modal" data-target="#receiveSmsModal"><i class="fas fa-edit text-danger"></i></button>
-                  </div>
-                </div>
           </div>
 
-          <div class="divjust-end desktop-malaysian">
-            <div class="info_item x-small">
-              <i class="fas fa-building"></i>
-              <span class="text-info">{{prop.name}}, House: {{houses}}</span><br>
 
-              <i class="fas fa-envelope"></i>
-              <span>Can receive sms?:</span>
-              <span class="text-info">{{smsable}}</span>
-              <button type="button" class="borderless btn-light modalTrigger" data-toggle="modal" data-target="#receiveSmsModal"><i class="fas fa-edit text-danger"></i></button>
 
-            </div>
-
-            <div class="info_item x-small">
-              <i class="fas fa-dollar-sign"></i>
-              <span>Balance:</span>
-              <span class="text-danger font-weight-bold">{{tenant.balance}}</span><br>
-
-              <i class="fas fa-phone-alt"></i>
-              <span class="">Contact:</span>
-              <span class="text-info">{{tenant.phone}}</span><br>
-
-            </div>             
-          </div>
-          <div class="toggleswitch divbg text-info underline mt-2">
-            <span>
-              <span class="smallify">Bill</span>
+          <div class="toggleswitch divjust-start text-black underline mt-4">
+            <span class="mr-3">
               <label class="switch">
                 <input id="reporttoggle3" type="checkbox" checked>
                 <span class="slider round"></span>
               </label>
+              <span class="smallify">Invoices</span>
             </span>
-          
-            <span class="">
-              <span class="smallify">Profile</span>
-              <label class="switch">
-                <input id="reporttoggle2" type="checkbox">
-                <span class="slider round"></span>
-              </label>
-            </span>
-  
-            <span class="">
-              <span class="smallify">Payments</span>
+
+            <span class="mr-3">
               <label class="switch">
                 <input id="reporttoggle" type="checkbox">
                 <span class="slider round"></span>
               </label>
+              <span class="smallify">Payments</span>
+            </span>
+          
+            <span class="mr-3 dispnone">
+              <label class="switch">
+                <input id="reporttoggle2" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+              <span class="smallify">Profile</span>
             </span>
 
-            <span class="">
-              <span class="smallify text-secondary">Pledges</span>
+            <span class="mr-3 dispnone">
               <label class="switch">
                 <input id="reporttoggle4" type="checkbox" disabled>
                 <span class="slider round"></span>
               </label>
+              <span class="smallify text-secondary">Pledges</span>
             </span>
   
           </div>
@@ -955,6 +942,7 @@
 <script>
   $("#editTenantModal").on('shown.bs.modal', function(){
     $(".multisave").empty();
+    $(".accesssms").empty();
     $("#edittenant").removeClass("dispnone");
     $("#edittenantbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
     $.ajax({
@@ -990,11 +978,30 @@
                 national_id: $("#edit_natid").val(),
                 tel: $("#edit_tel").val(),
                 email: $("#edit_email").val(),
-                multi:$(".multisave").text()
+                multi:$(".multisave").text(),
+                sms:$(".accesssms").text()
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+
+          if ($(".accesssms")){
+            $.ajax({
+                  url: "{{ url_for('api.updatetenant') }}",
+                  type: "get",
+                  data: {
+                    tenantid:  $("#tenant_identifier").text(),
+                    target:"tenant sms"
+                  },
+                  success: function(response) {
+                    
+                    $("#smsaccessview").html(response);
+                  }
+                });
+          }
+
           $(".multisave").empty();
+          $(".accesssms").empty();
+
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1322,7 +1329,7 @@
 
 <script>
   $(".update-balance").click(function(){   
-    $(".update-balance").html('<i class="fas fa-sync-alt fa-spin ml-4"></i><span class="mr-4 smallify">Updating balance</span>')
+    $(".update-balance").html('<i class="fas fa-sync-alt fa-spin ml-2"></i>')
       $.ajax({
         url: "{{ url_for('api.updatebalance') }}",
         type: "get",
@@ -1330,7 +1337,7 @@
                 tenantid: $("#tenant_identifier").text()
             },
         success: function(response) {
-          $(".update-balance").html('<i class="fas fa-sync-alt ml-4"></i><span class="mr-4 smallify">Update balance</span>')
+          $(".update-balance").html('<i class="fas fa-sync-alt text-success ml-2"></i>')
           $("#tenant-balance").html(response)
           
           $.ajax({
@@ -1416,5 +1423,19 @@
         }
       });
   });
+</script>
+
+
+<script>
+  $("#downloadstatement").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_statement")[0].click();
+
+        // setTimeout(function(){
+        //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
+        // },8000);
+    });
 </script>
 

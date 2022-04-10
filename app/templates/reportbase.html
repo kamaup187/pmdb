@@ -32,7 +32,7 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datatables.min.css') }}">
   <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='modal.css') }}"> -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='mainb.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
 
@@ -826,6 +826,25 @@ $("#export-xls-btn").click(function(){
           // "info" : false,
           "order": [[ 0, "asc" ]],
           "bLengthChange": false
+        });
+        $('.dataTables_length').addClass('bs-select');
+
+      }else if($("#statement").text() == "tenant statement3"){
+
+        $('#data-table').DataTable({
+          "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+          "pageLength": 100,
+          "order": []
+          // "bPaginate": false, //hide pagination control
+          // "bFilter": false, //hide filter control
+          // "searching":false,
+          // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+          // "targets": 'no-sort',
+          // "bSort": false,
+        //   columnDefs: [ { targets: 0, type: 'natural' } ],
+          // "info" : false,
+        //   "order": [[ 0, "asc" ]],
+          // "bLengthChange": false
         });
         $('.dataTables_length').addClass('bs-select');
 

@@ -47,8 +47,7 @@ merit_partner_id = 2627
 
 kiotanum = "+254716674695"
 
-mailsender = "kiotapay@gmail.com" if os.getenv("TARGET") != "lasshouse" else os.getenv("G_ACCOUNT")
-
+mailsender = os.getenv('G_ACCOUNT')
 
 # from ..stkpush.access_token import register_url
 
@@ -326,9 +325,12 @@ def sum_values(arr):
     total = 0.0
     for i in arr:
 
+        # print("starttttttttttttttttttttttttttttt",i)
+
         failed = False
 
         try:
+            # print("trying to do normal summation")
             total += i
         except:
             # print("failed to sum",i)
@@ -337,10 +339,14 @@ def sum_values(arr):
         if failed:
             try:
                 # print("trying to sum strfloat",i)
-                total += float(i)
+                ii = i.replace(",","")
+                total += float(ii)
             except:
                 # print("failed to sum in second trial",i)
                 continue
+
+        # print("enddddddddddddddddddddddddddddddddd",i)
+
 
     return total
 
@@ -571,6 +577,14 @@ def logo(co):
             ##################################################
             logopath = "../static/img/logos/vintage/l-logo.png"
             mobilelogopath = "../static/img/logos/vintage/s-logo.png"
+            fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
+            letterhead = "../static/img/logos/vintage/letterhead.jpg"
+
+
+        elif str_name_company == "LaCasa Apartments":
+            ##################################################
+            logopath = "../static/img/logos/lacasa/l-logo.png"
+            mobilelogopath = "../static/img/logos/lacasa/s-logo.png"
             fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
             letterhead = "../static/img/logos/vintage/letterhead.jpg"
 
@@ -1436,7 +1450,7 @@ def date_formatter(dd):
     return month + "-" + date + "-" + year
 
 def date_formatter_alt(dd):
-    date = "15"
+    date = "1"
     month = dd.split('-')[0]
     year = dd.split('-')[1]
     return month + "-" + date + "-" + year
@@ -2325,6 +2339,20 @@ def sort_items(arr):
     except:
         return []
 
+def sort_items_by_id(arr):
+    try:
+        str_arr = []
+        for i in arr:
+            str_arr.append(str(i.id))
+        if str_arr:
+            sorted_items = natsorted(str_arr, key=lambda y: y.lower())
+        else:
+            sorted_items = []
+
+        return [int(i) for i in sorted_items]
+    except:
+        return []
+
 def generate_house_tenants(arr):
     """combine house and tenant"""
     new_arr = []
@@ -2572,6 +2600,15 @@ def fetch_current_month_bill(tenant_obj):
             continue
         continue
     return 0.0
+
+def fetch_current_invoice(house_obj):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month:
+            return item
+        continue
+    return None
 
 def fetch_current_month_payments(tenant_obj):
     payment_list = []
@@ -3513,7 +3550,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                         "slogo":logo(kiotapay)[1]
                                     }
 
-                                    mail_sender(tenant,bill,template_vars,email_addr,co)
+                                    mail_sender(conn,tenant,bill,template_vars,email_addr,co)
                                 else:
                                     print("Email address not found for tenant ",tenant.name,"-",prop)
                             else:
@@ -3529,53 +3566,59 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                         billtotal -= bill.water
 
                                         
-                                        if bill.paid_amount:
-                                            billpaid = f"{bill.paid_amount:,.2f}"
-                                            billbal = f"{bill.balance:,.2f}"
+                                    if bill.paid_amount:
+                                        billpaid = f"{bill.paid_amount:,.2f}"
+                                        billbal = f"{bill.balance:,.2f}"
 
-                                        else:
-                                            billpaid = 0.0
-                                            billbal = 0.0
-
-                                        if arrears < 0.0:
-                                            arrtitle = "Previous balance"
-                                            bbfhighlight = "text-success"
-
-                                            arrears = f"{arrears*-1}"
-                                        elif arrears > 0.0:
-                                            arrtitle = "Previous balance"
-                                            bbfhighlight = "text-danger"
-                                        else:
-                                            arrtitle = ""
-                                            bbfhighlight = ""
-
-                                        template_vars = {
-                                            "bill":bill,
-                                            "servicevisibility":"",
-                                            "readings": None,
-                                            "w_edited": "dispnone",
-                                            "ereadings": None,
-                                            "e_edited": "dispnone",
-                                            "visibility":"hide",
-                                            "arrears":arrears,
-                                            "bbfhighlight ": bbfhighlight,
-                                            "arrtitle":arrtitle,
-                                            "billpaid":billpaid,
-                                            "billbal":billbal,
-                                            "house":house,
-                                            "total":f"{billtotal:,.2f}",
-                                            "invdate":inv_date,
-                                            "invdue":inv_due,
-                                            "client":tenant,
-                                            "company":co,
-                                            "invnum":invnum,
-                                            "logo":logo(co)[2],
-                                            "slogo":logo(kiotapay)[1]
-                                        }
-
-                                        mail_sender(tenant,bill,template_vars,email_addr,co)
                                     else:
-                                        print("Email address not found for tenant ",tenant.name,"-",prop)
+                                        billpaid = 0.0
+                                        billbal = 0.0
+
+
+                                    if wbill or ebill:
+                                        visibility = ""
+                                    else:
+                                        visibility = "hide"
+
+                                    if arrears < 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-success"
+
+                                        arrears = f"{arrears*-1}"
+                                    elif arrears > 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-danger"
+                                    else:
+                                        arrtitle = ""
+                                        bbfhighlight = ""
+
+                                    template_vars = {
+                                        "bill":bill,
+                                        "servicevisibility":"",
+                                        "readings": None,
+                                        "w_edited": "dispnone",
+                                        "ereadings": None,
+                                        "e_edited": "dispnone",
+                                        "visibility":"hide",
+                                        "arrears":arrears,
+                                        "bbfhighlight ": bbfhighlight,
+                                        "arrtitle":arrtitle,
+                                        "billpaid":billpaid,
+                                        "billbal":billbal,
+                                        "house":house,
+                                        "total":f"{billtotal:,.2f}",
+                                        "invdate":inv_date,
+                                        "invdue":inv_due,
+                                        "client":tenant,
+                                        "company":co,
+                                        "invnum":invnum,
+                                        "logo":logo(co)[2],
+                                        "slogo":logo(kiotapay)[1]
+                                    }
+
+                                    mail_sender(conn,tenant,bill,template_vars,email_addr,co)
+                                else:
+                                    print("Email address not found for tenant ",tenant.name,"-",prop)
 
 
 
@@ -3635,7 +3678,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                         "slogo":logo(kiotapay)[1]
                                     }
 
-                                    mail_sender(tenant2,bill,template_vars,email_addr,co)
+                                    mail_sender(conn,tenant2,bill,template_vars,email_addr,co)
                                 else:
                                     print("Email address not found for tenant ",tenant2.name,"-",prop)
                             else:
@@ -3649,53 +3692,59 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                         arrears -= bill.maintenance_balance
                                         billtotal -= bill.maintenance_balance
                                         
-                                        if bill.paid_amount:
-                                            billpaid = f"{bill.paid_amount:,.2f}"
-                                            billbal = f"{bill.balance:,.2f}"
+                                    if bill.paid_amount:
+                                        billpaid = f"{bill.paid_amount:,.2f}"
+                                        billbal = f"{bill.balance:,.2f}"
 
-                                        else:
-                                            billpaid = 0.0
-                                            billbal = 0.0
-
-                                        if arrears < 0.0:
-                                            arrtitle = "Previous balance"
-                                            bbfhighlight = "text-success"
-
-                                            arrears = f"{arrears*-1}"
-                                        elif arrears > 0.0:
-                                            arrtitle = "Previous balance"
-                                            bbfhighlight = "text-danger"
-                                        else:
-                                            arrtitle = ""
-                                            bbfhighlight = ""
-
-                                        template_vars = {
-                                            "bill":bill,
-                                            "servicevisibility":"dispnone",
-                                            "readings": wbill,
-                                            "w_edited": w_edited,
-                                            "ereadings": ebill,
-                                            "e_edited": e_edited,
-                                            "visibility":visibility,
-                                            "arrears":arrears,
-                                            "bbfhighlight ": bbfhighlight,
-                                            "arrtitle":arrtitle,
-                                            "billpaid":billpaid,
-                                            "billbal":billbal,
-                                            "house":house,
-                                            "total":f"{billtotal:,.2f}",
-                                            "invdate":inv_date,
-                                            "invdue":inv_due,
-                                            "client":tenant2,
-                                            "company":co,
-                                            "invnum":invnum,
-                                            "logo":logo(co)[2],
-                                            "slogo":logo(kiotapay)[1]
-                                        }
-
-                                        mail_sender(tenant2,bill,template_vars,email_addr,co)
                                     else:
-                                        print("Email address not found for tenant ",tenant2.name,"-",prop)
+                                        billpaid = 0.0
+                                        billbal = 0.0
+
+
+                                    if wbill or ebill:
+                                        visibility = ""
+                                    else:
+                                        visibility = "hide"
+
+                                    if arrears < 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-success"
+
+                                        arrears = f"{arrears*-1}"
+                                    elif arrears > 0.0:
+                                        arrtitle = "Previous balance"
+                                        bbfhighlight = "text-danger"
+                                    else:
+                                        arrtitle = ""
+                                        bbfhighlight = ""
+
+                                    template_vars = {
+                                        "bill":bill,
+                                        "servicevisibility":"dispnone",
+                                        "readings": wbill,
+                                        "w_edited": w_edited,
+                                        "ereadings": ebill,
+                                        "e_edited": e_edited,
+                                        "visibility":visibility,
+                                        "arrears":arrears,
+                                        "bbfhighlight ": bbfhighlight,
+                                        "arrtitle":arrtitle,
+                                        "billpaid":billpaid,
+                                        "billbal":billbal,
+                                        "house":house,
+                                        "total":f"{billtotal:,.2f}",
+                                        "invdate":inv_date,
+                                        "invdue":inv_due,
+                                        "client":tenant2,
+                                        "company":co,
+                                        "invnum":invnum,
+                                        "logo":logo(co)[2],
+                                        "slogo":logo(kiotapay)[1]
+                                    }
+
+                                    mail_sender(conn,tenant2,bill,template_vars,email_addr,co)
+                                else:
+                                    print("Email address not found for tenant ",tenant2.name,"-",prop)
 
             except Exception as e:
                 print("Mail failed to connect >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
@@ -3709,7 +3758,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
             
 
-def mail_sender(recepient,bill,template_vars,email_addr,co):
+def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
 
     templateLoader = FileSystemLoader(searchpath="app/templates")
     templateEnv = Environment(loader=templateLoader)

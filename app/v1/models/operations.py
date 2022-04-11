@@ -1813,6 +1813,9 @@ class TenantOp(Tenant,Base):
     def generate_identity(self):
         return "tnt"+str(self.id)
 
+    def generate_alloc_identity(self):
+        return "alloc"+str(self.id)
+
     def generate_name(self):
         if self.name:
             try:
@@ -1831,6 +1834,7 @@ class TenantOp(Tenant,Base):
             'identity':TenantOp.generate_identity(self),
             'editid':TenantOp.generate_editid(self),
             'delid':TenantOp.generate_delid(self),
+            'allocid':TenantOp.generate_alloc_identity(self),
             'name':TenantOp.generate_name(self),
             'fullname':self.name,
             'hst':TenantOp.combine_house_tenant(self),

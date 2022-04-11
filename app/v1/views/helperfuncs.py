@@ -6213,6 +6213,9 @@ def get_obj_ids(arr):
             obj_id_list.append(editid)
             delid = req["delid"]
             obj_id_list.append(delid)
+            allocid=req.get("allocid")
+            if allocid:
+                obj_id_list.append(allocid)
 
     if not obj_id_list:
         obj_id_list.append("empty")

@@ -367,6 +367,18 @@ class Index(Resource):
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
+            ref = "QD29OKDXE5"
+            paymentt = PaymentOp.fetch_payment_by_ref(ref)
+            if paymentt:
+                print("payment found for ref", ref)
+            else:
+                print("payment not found for", ref)
+            cbt = CtoBop.fetch_record_by_ref(ref)
+            if cbt:
+                print("cbt found for ref", ref)
+            else:
+                print("cbt not found for", ref)
+
   
             if company == "Test Agencies":
                 shorts = ["401401","4081687"]

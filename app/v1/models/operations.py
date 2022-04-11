@@ -3209,6 +3209,9 @@ class CtoBop(CtoB,Base):
     def fetch_record_by_id(record_id):
         return CtoBop.query.filter_by(id=record_id).first()
 
+    def fetch_record_by_ref(ref):
+        return CtoBop.query.filter_by(trans_id=ref).first()
+
     def fetch_all_records():
         return CtoB.query.all()
 

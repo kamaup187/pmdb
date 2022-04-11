@@ -1804,11 +1804,7 @@ class ReceivePayment(Resource):
                 return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access=no_cash)
 
         if target == "propname":
-            period = get_billing_period(prop)
-
-            propperiod=get_str_month(period.month)
-
-            return f'>> {prop.name} ({propperiod})'
+            return f'>> {prop.name}'
 
         if target == "fetch c2b item":
             cbid = request.args.get("cbid")
@@ -1816,7 +1812,9 @@ class ReceivePayment(Resource):
             
             cb_obj = {
                 "ref":cb.trans_id,
-                "amount":cb.trans_amnt
+                "amount":cb.trans_amnt,
+                "name":f"{cb.fname} {cb.lname}",
+                "narration":cb.bill_ref_num
             }
 
             return render_template("c2bitem.html",c2bitem=cb_obj)
@@ -1974,7 +1972,7 @@ class ReceivePayment(Resource):
         cbid = request.form.get("cbid")
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
-            # CtoBop.update_status(cb,"claimed")
+            CtoBop.update_status(cb,"claimed")
 
         water = "water" if waterpaid else ""
         rent = "rent" if rentpaid else ""

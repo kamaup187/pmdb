@@ -216,6 +216,18 @@ class CompanyUserGroupOp(CompanyUserGroup,Base):
 
     def view_users(self):
         return self.users
+   
+class ShortcodeOp(Shortcode,Base):
+    """class to house company user groups"""
+    def __init__(self,shortcode,description,company_id):
+        self.shortcode=shortcode
+        self.description=description
+        self.company_id=company_id
+
+    @staticmethod
+    def fetch_shortcode_by_id(shortcode):
+        return Shortcode.query.filter_by(shortcode=shortcode).first()
+
 
 class GroupRoleOp(GroupRole,Base):
     """class"""

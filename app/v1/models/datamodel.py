@@ -52,6 +52,7 @@ class Company(db.Model):
     # comment = db.Column(db.String)
 
     users = db.relationship('User', backref='company',order_by='User.name', cascade="all, delete-orphan")
+    shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
     groups = db.relationship('CompanyUserGroup', backref='company',order_by='CompanyUserGroup.name', cascade="all, delete-orphan")
 
@@ -64,6 +65,22 @@ class Company(db.Model):
 
     def __repr__(self):
         return self.name
+
+
+class Shortcode(db.Model):
+    """db model class"""
+
+    __tablename__ = 'shortcodes'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    shortcode = db.Column(db.VARCHAR)
+    description = db.Column(db.String)
+
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    def __repr__(self):
+        return self.shortcode
+
 
 class CompanyUserGroup(db.Model):
     """db model class"""

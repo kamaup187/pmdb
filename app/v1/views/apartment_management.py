@@ -367,7 +367,7 @@ class Index(Resource):
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
-            ref = "QD29OKDXE5"
+            ref = "QD22PGM7HK"
             paymentt = PaymentOp.fetch_payment_by_ref(ref)
             if paymentt:
                 print("payment found for ref", ref)

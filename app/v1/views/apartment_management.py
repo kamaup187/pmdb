@@ -4458,8 +4458,7 @@ class AllocateTenants(Resource):
     def post(self):
 
         prop_id = request.form.get('propid')
-        tenant_id = request.form.get('tenant_id')
-        print("teeeeeenant",tenant_id)
+        tenantid = request.form.get('tenant_id')
         house_num = request.form.get('house')#auto populated dropdown
         ttype = request.form.get('ttype')
 
@@ -4472,6 +4471,7 @@ class AllocateTenants(Resource):
         bool_migrate = return_bool(migrate)
 
         apartment_id = get_identifier(prop_id)
+        tenant_id = get_identifier(tenantid)
         
         stored_apartment = ApartmentOp.fetch_apartment_by_id(apartment_id) if prop_id else None
         house_list = filter_out_occupied_houses(stored_apartment.name) if stored_apartment else None

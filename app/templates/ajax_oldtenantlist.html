@@ -25,7 +25,7 @@
                 <td class="data-cell {{i['highlight']}}">{{ i['balance'] }}</td>
                 <td class="text-s data-cell expand dispnone-alt">
                   <div>
-                    <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-info font-weight-bold  no-wrap" data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Reallot</button>
+                    <button id="{{i['allocid']}}" type="button" class="btn action-btn btn-outline-info font-weight-bold  no-wrap" data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Reallot</button>
                   </div>
                 </td>
                 <!-- <td class="text-s data-cell expand dispnone-al">
@@ -71,7 +71,11 @@
         if( isNaN(parseInt(item)) ){
           if(item.startsWith("del")){
             $("#del_tenant_identifier").html(item)
-          }else{
+          }
+          else if(item.startsWith("alloc")){
+            $("#tenant_identifier").html(item)
+          }
+          else{
             $("#edit_tenant_identifier").html(item)
           }
           

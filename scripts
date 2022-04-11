@@ -35,7 +35,7 @@ heroku pg:psql HEROKU_POSTGRESQL_AQUA_URL --app kiotapay-prod
 DROP TABLE alembic_version;
 heroku run python manage.py db stamp head --app kiotapay-prod
 
-import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 
 # python -m pip freeze > requirements.txt
 # heroku run python manage.py db upgrade --app kiotapay-prod

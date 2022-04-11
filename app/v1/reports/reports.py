@@ -4099,8 +4099,8 @@ class FetchPayments(Resource):
                     # else:
                     #     if r.business_shortcode in targets:
                     #         CtoBop.update_status(r,"claimed")
-                    # if r.status != "claimed":
-                    sifted.append(r)
+                    if r.status != "claimed":
+                        sifted.append(r)
 
             unclaimed = ctb_payment_details(sifted)
             cbids = get_obj_ids(unclaimed)

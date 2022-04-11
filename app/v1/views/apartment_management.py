@@ -367,11 +367,8 @@ class Index(Resource):
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
-            if company.name == "Premier Realty":
-                shorts = ["964399","532406"]
-            elif company.name == "Latitude Properties":
-                shorts = ["4082629"]
-            elif company == "Test Agencies":
+  
+            if company == "Test Agencies":
                 shorts = ["401401","4081687"]
             else:
                 shorts = []

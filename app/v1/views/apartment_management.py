@@ -360,14 +360,42 @@ class Index(Resource):
 
             companyname2 = company.name.split(" ")[0]
 
-
-
             if company.name == "Lesama Ltd":
                 shortcode = "Paybill: 969610 Acc: LesamaKe"
             else:
                 shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
+
+            if company.name == "Premier Realty":
+                shorts = ["964399","532406"]
+            elif company.name == "Latitude Properties":
+                shorts = ["4082629"]
+            elif company == "Test Agencies":
+                shorts = ["401401","4081687"]
+            else:
+                shorts = []
+                print("NO SHORTS")
+
+            for short in shorts:
+                cbid = ShortcodeOp.fetch_shortcode_by_id(short)
+                if not cbid:
+                    cbid = ShortcodeOp(short,"",company.id)
+                    cbid.save()
+
+            shortcodes = company.shortcodes
+
+            sifted = []
+            for shortcode in shortcodes:
+                raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+
+                for r in raw_unclaimed:
+                    # targets = ["532406","964399","4012401","4081687"]
+                    if r.status != "claimed":
+                        sifted.append(r)
+
+            cbids = ctb_payment_details(sifted)
+            cbids_num = len(cbids)
 
 
             return Response(render_template(
@@ -378,6 +406,8 @@ class Index(Resource):
                 card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg",
                 co=company,
                 companyname = companyname,
+                cbids=cbids,
+                cbids_num=cbids_num,
                 logobg=logobg,
                 numsms=smsfrac,
                 shortcode = shortcode,

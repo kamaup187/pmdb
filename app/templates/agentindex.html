@@ -455,6 +455,17 @@
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
 
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#unclaimedPaymentsModal" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-money-check-alt fa-fw text-black mr-2"></i><span class="text-black font-weight-bold"></span>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{cbids_num}}</span>
+              </a>
+            </li>
+
+
             <!-- Nav Item - Messages -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#approvalModal" aria-haspopup="true" aria-expanded="false">
@@ -2036,6 +2047,62 @@
 
                   <div class="text-center text-success font-weight-bold">
                     There currently no items awaiting approval
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="unclaimedPaymentsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa-sana" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div id="" class="table-responsive">
+                    <table id="unresolvedpayments" class="table shadow mb-1" width="100%" cellspacing="0">
+                      <thead class="">
+                        <tr>
+                          <th class="text-info font-weight-bold">Shortcode</th>
+                          <th class="text-info font-weight-bold">FirstName</th>
+                          <th class="text-info font-weight-bold">LastName</th>
+                          <th class="text-info font-weight-bold">Phone</th> 
+                          <th class="text-info font-weight-bold">House</th>                                                                 
+                          <th class="text-info">Ref</th>
+                          <th class="text-info text-danger">Amount</th>
+                          <th class="text-info">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for cbid in cbids%}
+                        <tr>
+                                                                                   
+                          <td class="data-cell ">{{ cbid['paybill'] }}</td>
+                          <td class="data-cell ">{{ cbid['fname'] }}</td>
+                          <td class="data-cell ">{{ cbid['lname'] }}</td>
+                          <td class="data-cell ">{{ cbid['phone'] }}</td>
+                          <td class="data-cell ">{{ cbid['billref'] }}</td>
+                          <td class="data-cell ">{{ cbid['transid'] }}</td>
+                          <td class="data-cell ">{{ cbid['amount'] }}</td>
+                          <td class="data-cell ">{{ cbid['date'] }}</td>
+
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
                   </div>
       
                 </div>

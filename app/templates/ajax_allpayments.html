@@ -1326,10 +1326,30 @@
                 $('#banks').addClass('dispnone');
                 // $("#addPaymentModal2").empty();
 
+                if($("#ctb_item_amount").text()){
+                  $.ajax({
+                    url: "{{ url_for('api.fetchpayments') }}",
+                    type: "get",
+                    data: {
+                      propid: $("#prop_identifier").text(),
+                      target: "unclaimed"
+                    },
+                    success: function (response) {
+    
+                      $("#child-result-view").html(response);
+                    }
+                  });
+                }
+
+
                 $("#ctb_item_amount").empty();
                 $("#ctb_item_ref").empty();
                 $("#prop_selector").addClass("dispnone")
                 $("#receipt-payment-bed").html(response);
+
+
+
+
                 // $('#paybtn-alt').click(rebindfunc());
                 // $.ajax({
                 //     url: "{{ url_for('api.fetchpayments') }}",

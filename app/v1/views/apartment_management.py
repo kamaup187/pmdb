@@ -386,6 +386,21 @@ class Index(Resource):
                 shorts = []
                 print("NO SHORTS")
 
+            if company.name == "Latitude Properties":
+                shortcodes = company.shortcodes
+
+                for shortcode in shortcodes:
+                    raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+                    for i in raw_unclaimed:
+                        print(">>>cbid",i.trans_id)
+                        payyyy = PaymentOp.fetch_payment_by_ref(i.trans_id)
+                        if payyyy:
+                            print("Resolving ", i.trans_id," and ",payyyy.amount,"payref ",payyyy.ref_number)
+                            CtoBop.update_status(i,"claimed")
+                            continue
+                        else:
+                            print("cbid did not find its sibling payment")
+
             for short in shorts:
                 cbid = ShortcodeOp.fetch_shortcode_by_id(short)
                 if not cbid:

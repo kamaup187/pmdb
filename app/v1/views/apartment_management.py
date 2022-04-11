@@ -4459,6 +4459,7 @@ class AllocateTenants(Resource):
 
         prop_id = request.form.get('propid')
         tenant_id = request.form.get('tenant_id')
+        print("teeeeeenant",tenant_id)
         house_num = request.form.get('house')#auto populated dropdown
         ttype = request.form.get('ttype')
 

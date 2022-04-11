@@ -177,13 +177,15 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0">
-            <div class="smallify text-white bg-gradient-info form-control mb-2" id="paymentDetailModalLabel">Receive payment <div id="propname" class="d-inline text-warning font-weight-bold">
+            <div class="smallify text-white font-weight-bold bg-gradient-info form-control mb-2" id="paymentDetailModalLabel">#{{current_month}} payments <div id="propname" class="d-inline text-warning font-weight-bold">
               <div class="fountainG-small d-inline ml-3">
                 <div class="fountainG_1s fountainG-s"></div>
                 <div class="fountainG_2s fountainG-s"></div>
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
-            </div></div>
+            </div>
+            <span id="thouse"></span><span id="tname"></span>
+          </div>
           </div>
           <div class="modal-body pt-0">
             <div class="media mb-2">
@@ -806,6 +808,14 @@
         $("#prop_selector").removeClass("dispnone")
       }
 
+      if ($("#ctb_item_house").text()) {
+        $("#thouse").text( " >> "+$("#ctb_item_house").text())
+      }
+
+      if ($("#ctb_item_name").text()) {
+        $("#tname").text(" ("+$("#ctb_item_name").text()+")")
+      }
+
       $.ajax({
         url: "{{ url_for('api.receivepayment') }}",
         type: "get",
@@ -951,6 +961,12 @@
 <script>
   // This script displays alerts and tenant name before clearance
   $("#select_house").on('change',function(){
+    if ($("#ctb_item_name").text()) {
+      //do nothing
+    }else{
+        $("#tname").text(" >> "+$("#select_house").val())
+      }
+
     $("#fieldset2").removeClass("dispnone")
     $("#billbreakdown").html(
           '<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>'

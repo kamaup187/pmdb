@@ -374,6 +374,9 @@ class House(db.Model):
     payment_bank = db.Column(db.VARCHAR)
     payment_bankacc = db.Column(db.VARCHAR)
 
+    watertarget = db.Column(db.String,default="tenant")
+    servicetarget = db.Column(db.String,default="owner")
+
     housecode_id = db.Column(db.Integer, db.ForeignKey(HouseCode.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -569,6 +572,7 @@ class PermanentTenant(db.Model):
     initial_arrears = db.Column(db.Float,default=0)
 
     multiple_houses =  db.Column(db.Boolean,default=False)
+    tenant_type = db.Column(db.String,default="owner")
     # cleared = db.Column(db.Boolean,default=False)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
@@ -577,6 +581,7 @@ class PermanentTenant(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     payments = db.relationship('Payment',backref='ptenant',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    monthly_charges = db.relationship('MonthlyCharge',backref='ptenant',order_by='MonthlyCharge.id', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     mpesarecords = db.relationship('MpesaPayment',backref='ptenant',order_by='MpesaPayment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     mpesarequests = db.relationship('MpesaRequest',backref='ptenant',order_by='MpesaRequest.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     tenantrequests = db.relationship('TenantRequest',backref='ptenant',order_by='TenantRequest.date', cascade="all, delete-orphan")
@@ -607,6 +612,8 @@ class Tenant(db.Model):
     status = db.Column(db.String,default="Booked")
     residency = db.Column(db.String,default="N/A")
     initial_arrears = db.Column(db.Float,default=0)
+
+    tenant_type = db.Column(db.String,default="tenant")
 
     multiple_houses =  db.Column(db.Boolean,default=False)
     # cleared = db.Column(db.Boolean,default=False)
@@ -726,6 +733,7 @@ class MonthlyCharge(db.Model):
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     createdby = db.Column(db.Integer, db.ForeignKey(User.id))

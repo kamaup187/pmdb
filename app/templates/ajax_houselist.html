@@ -30,10 +30,10 @@
                     <td class="data-cell">{{ i['owner'] }}</td>
                     <td class="data-cell {{i['highlight']}}">{{ i['tenant'] }}</td>
                     <td class="data-cell">{{ i['rent'] }}</td>
-                    <td class="data-cell">{{ i['rate'] }}</td>
-                    <td class="data-cell">{{ i['srate'] }}</td>
+                    <td class="data-cell">{{ i['rate']|safe }}</td>
+                    <td class="data-cell">{{ i['srate'] |safe}}</td>
                     <td class="data-cell">{{ i['fixed'] }}</td>
-                    <td class="data-cell">{{ i['maintenance'] }}</td>
+                    <td class="data-cell">{{ i['maintenance']|safe }}</td>
                     <td class="data-cell">{{ i['garbage'] }}</td>
                     <td class="data-cell">{{ i['security'] }}</td>
                     <td class="data-cell">{{ i['by'] }}</td>

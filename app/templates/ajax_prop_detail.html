@@ -149,10 +149,10 @@
                       <td class="data-cell">{{ i['owner'] }}</td>
                       <td class="data-cell {{i['highlight']}}">{{ i['tenant'] }}</td>
                       <td class="data-cell">{{ i['rent'] }}</td>
-                      <td class="data-cell">{{ i['rate'] }}</td>
-                      <td class="data-cell">{{ i['srate'] }}</td>
+                      <td class="data-cell">{{ i['rate']|safe }}</td>
+                      <td class="data-cell">{{ i['srate']|safe }}</td>
                       <td class="data-cell">{{ i['fixed'] }}</td>
-                      <td class="data-cell">{{ i['maintenance'] }}</td>
+                      <td class="data-cell">{{ i['maintenance'] |safe}}</td>
                       <td class="data-cell">{{ i['garbage'] }}</td>
                       <td class="data-cell">{{ i['security'] }}</td>
                       <td class="data-cell">{{ i['by'] }}</td>
@@ -469,12 +469,18 @@
     </div>
 
 
+
     <div class="modal fade" id="editHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit house details</h5>
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Edit unit</span>
+              <div>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
             <div class="alert-msgs"></div>
           </div>
           <div class="modal-body pt-0">
@@ -484,17 +490,35 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
 
-          
-                      <div class="form-group input-icons">
-                        <i class="fa fa-hashtag icon text-info"></i> 
-                        <input id="edit_housename" class="form-control input-field text-info" style="text-align: center;" type="text" name="house" placeholder="Edit number/name" autofocus>
+                      
+                      <div class="form-group mt-2 input-icons">
+                        <span class="text-black">edit House/Unit No. <span class="text-danger small">*</span></span>
+                        <input id="edit_housename" class="form-control" type="text" placeholder="H1"/>
                       </div>
-        
-                      <div id="notifications3"></div>
+                      
+                      <div class="form-group mt-2" id="notifications3"></div>  
+                      
+                      <div class="form-group mt-1 mb-3 input-icons">
+                        <span class="text-black">Water billing<span class="text-primary small"></span></span>
+                        <select class="select-css " id ="edit_watertarget" >
+                          <option disabled selected value> -- Select billing type -- </option>
+                          <option value="tenant">Bill tenant</option>
+                          <option value="owner">Bill owner</option>                   
+                        </select>
+                      </div>
 
-                      <div class="form-group input-icons">
-                        <i class="fa fa-caret-down icon text-info"></i>
-                        <select id="edit_desc" class="form-control" name="desc" required>
+                      <div class="form-group mt-1 mb-3 input-icons">
+                        <span class="text-black">Service billing<span class="text-primary small"></span></span>
+                        <select class="select-css " id ="edit_servicetarget" >
+                          <option disabled selected value> -- Select billing type -- </option>
+                          <option value="tenant">Bill tenant</option>
+                          <option value="owner">Bill owner</option>                   
+                        </select>
+                      </div>
+
+                      <div class="form-group mt-1 mb-3 input-icons">
+                        <span class="text-black">Select description <span class="text-primary small">(optional)</span></span>
+                        <select class="select-css " id ="edit_desc" >
                           <option disabled selected value> -- Select description -- </option>
                           <option value="Single Room">Single Room</option>
                           <option value="Double Room">Double Room</option>
@@ -511,13 +535,14 @@
                           <option value="Barber shop">Barber shop</option>
                           <option value="Salon">Salon</option>
                           <option value="Warehouse">Warehouse</option>
-                          <option value="Other">Other</option>
+                          <option value="Other">Other</option>                      
                         </select>
                       </div>
+
+                      
                     
                       <div class="divbg center-btn">
-                        <button id="edithouse" type="button" class="btn-success borderless text-white">Submit</button>
-                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button id="edithouse" type="button" class="btn btn-sm btn-success borderless text-white">Submit</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
@@ -529,6 +554,7 @@
         </div>
       </div>
     </div>
+
 
     <div class="modal fade" id="updateHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -1501,6 +1527,8 @@
                 propid: $("#prop_identifier").text(),
                 houseid: $("#edit_house_identifier").text(),
                 name: $("#edit_housename").val(),
+                watertarget:$("#edit_watertarget").val(),
+                servicetarget:$("#edit_servicetarget").val(),
                 desc: $("#edit_desc").val(),
                 target:"edit house detail"
             },

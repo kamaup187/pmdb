@@ -2893,7 +2893,7 @@ input:checked + .slider:before {
   line-height: 8px !important;
 }
 .text-cell {
-  font-size: 96% !important;
+  font-size: 82% !important;
   /* font-weight: 900; */
   /* color: black; */
   line-height: 12px !important;

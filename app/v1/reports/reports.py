@@ -2508,10 +2508,11 @@ class ExternalDetail(Resource):
 
 
         ###################################################################################################
-        
+        check_vacancies = []
         for bill in current_month_summaries:
             """compute subtotals"""
             bill_item = LandlordSummaryOp.external_view(bill)
+            check_vacancies.append(bill.house_id)
             detailed_bills.append(bill_item)
 
             rent = bill.rent if bill.rent else 0.0
@@ -2541,6 +2542,9 @@ class ExternalDetail(Resource):
         vacants = filter_out_occupied_houses(apartment_obj.name)
 
         for vac in vacants:
+            if vac.id in check_vacancies:
+                continue
+
             all_charges = vac.charges
             water_charge = 0.0
             for charge in all_charges:

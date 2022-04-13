@@ -1,5 +1,6 @@
 """Helper methods for views"""
 import os
+from pickle import TRUE
 # from africastalking import initialize
 import re
 import xlrd
@@ -972,12 +973,21 @@ def fetch_prev_billing_period_bills(billing_period,arr):
             prev_billling_period_data.append(i)
     return prev_billling_period_data
 
-def fetch_prev_billing_period_bills_alt(month,year,arr):
+def fetch_tnt_prev_billing_period_bills_alt(month,year,arr,tnt):
     prev_billling_period_data = []
     prev_month = get_prev_month(month)
     prev_year = get_prev_year(month,year)
     for i in arr:
-        if i.month == prev_month and i.year == prev_year:
+        if i.month == prev_month and i.year == prev_year and i.tenant_id == tnt:
+            prev_billling_period_data.append(i)
+    return prev_billling_period_data
+
+def fetch_pt_prev_billing_period_bills(month,year,arr,ptid):
+    prev_billling_period_data = []
+    prev_month = get_prev_month(month)
+    prev_year = get_prev_year(month,year)
+    for i in arr:
+        if i.month == prev_month and i.year == prev_year and i.ptenant_id == ptid:
             prev_billling_period_data.append(i)
     return prev_billling_period_data
 
@@ -3252,9 +3262,9 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                 house_list = generate_array(houses,prop_obj)
 
                 for house in house_list:
-                    bill = fetch_current_billing_period_bills(billing_period,house.monthlybills)
-                    if bill:
-                        target_bills.append(bill[0])
+                    bills = fetch_current_billing_period_bills(billing_period,house.monthlybills)
+                    for bill in bills:
+                        target_bills.append(bill)
                     
 
             else:
@@ -3263,21 +3273,25 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                     update = True
                     house_list = houseauto(prop_obj.id)
                     for house in house_list:
-                        bill = fetch_current_billing_period_bills(billing_period,house.monthlybills)
-                        if bill:
-                            target_bills.append(bill[0])
+                        bills = fetch_current_billing_period_bills(billing_period,house.monthlybills)
+                        for bill in bills:
+                            target_bills.append(bill)
                 else:
                     """Normal message sending, doesnt allow double sending"""
                     house_list = houseauto(prop_obj.id)
                     for house in house_list:
-                        bill = fetch_current_billing_period_bills(billing_period,house.monthlybills)
-                        if bill:
-                            if bill[0].email_invoice != "sent":
-                                if bill[0].tenant.multiple_houses:
-                                    multitenant_target_bills.append(bill[0])
-                                    multitenants.append(bill[0].tenant)
+                        bills = fetch_current_billing_period_bills(billing_period,house.monthlybills)
+                        for bill in bills:
+                            if bill.email_invoice != "sent":
+                                if bill.tenant.multiple_houses:
+                                    multitenant_target_bills.append(bill)
+                                    multitenants.append(bill.tenant)
                                 else:
-                                    target_bills.append(bill[0])
+                                    target_bills.append(bill)
+                            else:
+                                target_bills.append(bill)
+
+
 
             try:
                 with mail.connect() as conn:
@@ -3300,7 +3314,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                 multitenant_specific_bills.append(bill)
 
                         for bill in multitenant_specific_bills:
-                            print("wa hara", bill.email_invoice)
+                            print("MULTITENANT INVOICE IS BEING PREPARED", bill.email_invoice)
 
                             print("TENANTS BILLS LENGTH>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOR",tenant,"ARE>>>>>>>",len(multitenant_specific_bills))
 
@@ -3442,7 +3456,14 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                             print(str(e))
                             
                     for bill in target_bills:
-                        print("wa hara", bill.email_invoice)
+                        if bill.ptenant:
+                            tenant=bill.ptenant
+                            current_target = "owner"
+                            print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
+                        else:
+                            current_target = "tenant"
+                            tenant=bill.tenant
+                            print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
 
                         co = bill.apartment.company
                 
@@ -3450,24 +3471,9 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
                         house = bill.house
 
-                        tenant2 = None
-                        tenant = None
-
-                        if bill.house.owner:
-                            tenant = bill.house.owner
-                            print("SENDING OWNER INVOICE")
-
-                            if bill.tenant:
-                                print("SENDING OWNER AND NORMAL TENANT INVOICE")
-                                tenant2 = bill.tenant
-                        else:
-                            print("SENDING NORMAL TENANT INVOICE")
-                            tenant = None
-                            tenant2 = bill.tenant
+                        print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",tenant.name)
 
                         #start here
-
-
                         sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
                         sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
 
@@ -3492,259 +3498,77 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                         invdue = invdate + relativedelta(days=6)
                         inv_due = invdue.strftime("%d/%b/%y")
 
-                        if tenant:
-                            if not tenant2:
-                                email_addr = tenant.email
-                                if email_addr:
-
-
-
-                                    if wbill or ebill:
-                                        visibility = ""
-                                    else:
-                                        visibility = "hide"
-
-                                    arrears = bill.arrears
-                                    
-                                    if bill.paid_amount:
-                                        billpaid = f"{bill.paid_amount:,.2f}"
-                                        billbal = f"{bill.balance:,.2f}"
-
-                                    else:
-                                        billpaid = 0.0
-                                        billbal = 0.0
-
-                                    if arrears < 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-success"
-
-                                        arrears = f"{arrears*-1}"
-                                    elif arrears > 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-danger"
-                                    else:
-                                        arrtitle = ""
-                                        bbfhighlight = ""
-
-                                    template_vars = {
-                                        "bill":bill,
-                                        "servicevisibility":"",
-                                        "readings": wbill,
-                                        "w_edited": w_edited,
-                                        "ereadings": ebill,
-                                        "e_edited": e_edited,
-                                        "visibility":visibility,
-                                        "arrears":arrears,
-                                        "bbfhighlight ": bbfhighlight,
-                                        "arrtitle":arrtitle,
-                                        "billpaid":billpaid,
-                                        "billbal":billbal,
-                                        "house":house,
-                                        "total":f"{bill.total_bill:,.2f}",
-                                        "invdate":inv_date,
-                                        "invdue":inv_due,
-                                        "client":tenant,
-                                        "company":co,
-                                        "invnum":invnum,
-                                        "logo":logo(co)[2],
-                                        "slogo":logo(kiotapay)[1]
-                                    }
-
-                                    mail_sender(conn,tenant,bill,template_vars,email_addr,co)
-                                else:
-                                    print("Email address not found for tenant ",tenant.name,"-",prop)
+                    
+                        email_addr = tenant.email
+                        if email_addr:
+                            if wbill or ebill:
+                                visibility = ""
                             else:
-                                email_addr = tenant.email
-                                if email_addr:
-                                    billtotal = bill.total_bill
-                                    arrears = bill.arrears
+                                visibility = "hide"
 
-                                    billtotal -= bill.water
+                            arrears = bill.arrears
+                            
+                            if bill.paid_amount:
+                                billpaid = f"{bill.paid_amount:,.2f}"
+                                billbal = f"{bill.balance:,.2f}"
 
-                                    if bill.water_balance:
-                                        arrears -= bill.water_balance
-                                        billtotal -= bill.water
-
-                                        
-                                    if bill.paid_amount:
-                                        billpaid = f"{bill.paid_amount:,.2f}"
-                                        billbal = f"{bill.balance:,.2f}"
-
-                                    else:
-                                        billpaid = 0.0
-                                        billbal = 0.0
-
-
-                                    if wbill or ebill:
-                                        visibility = ""
-                                    else:
-                                        visibility = "hide"
-
-                                    if arrears < 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-success"
-
-                                        arrears = f"{arrears*-1}"
-                                    elif arrears > 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-danger"
-                                    else:
-                                        arrtitle = ""
-                                        bbfhighlight = ""
-
-                                    template_vars = {
-                                        "bill":bill,
-                                        "servicevisibility":"",
-                                        "readings": None,
-                                        "w_edited": "dispnone",
-                                        "ereadings": None,
-                                        "e_edited": "dispnone",
-                                        "visibility":"hide",
-                                        "arrears":arrears,
-                                        "bbfhighlight ": bbfhighlight,
-                                        "arrtitle":arrtitle,
-                                        "billpaid":billpaid,
-                                        "billbal":billbal,
-                                        "house":house,
-                                        "total":f"{billtotal:,.2f}",
-                                        "invdate":inv_date,
-                                        "invdue":inv_due,
-                                        "client":tenant,
-                                        "company":co,
-                                        "invnum":invnum,
-                                        "logo":logo(co)[2],
-                                        "slogo":logo(kiotapay)[1]
-                                    }
-
-                                    mail_sender(conn,tenant,bill,template_vars,email_addr,co)
-                                else:
-                                    print("Email address not found for tenant ",tenant.name,"-",prop)
-
-
-
-                        if tenant2:
-                            if not tenant:
-                                email_addr = tenant2.email
-                                if email_addr:
-
-                                    if wbill or ebill:
-                                        visibility = ""
-                                    else:
-                                        visibility = "hide"
-
-                                    arrears = bill.arrears
-                                    
-                                    if bill.paid_amount:
-                                        billpaid = f"{bill.paid_amount:,.2f}"
-                                        billbal = f"{bill.balance:,.2f}"
-
-                                    else:
-                                        billpaid = 0.0
-                                        billbal = 0.0
-
-                                    if arrears < 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-success"
-
-                                        arrears = f"{arrears*-1}"
-                                    elif arrears > 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-danger"
-                                    else:
-                                        arrtitle = ""
-                                        bbfhighlight = ""
-
-                                    template_vars = {
-                                        "bill":bill,
-                                        "servicevisibility":"dispnone",
-                                        "readings": wbill,
-                                        "w_edited": w_edited,
-                                        "ereadings": ebill,
-                                        "e_edited": e_edited,
-                                        "visibility":visibility,
-                                        "arrears":arrears,
-                                        "bbfhighlight ": bbfhighlight,
-                                        "arrtitle":arrtitle,
-                                        "billpaid":billpaid,
-                                        "billbal":billbal,
-                                        "house":house,
-                                        "total":f"{bill.total_bill:,.2f}",
-                                        "invdate":inv_date,
-                                        "invdue":inv_due,
-                                        "client":tenant2,
-                                        "company":co,
-                                        "invnum":invnum,
-                                        "logo":logo(co)[2],
-                                        "slogo":logo(kiotapay)[1]
-                                    }
-
-                                    mail_sender(conn,tenant2,bill,template_vars,email_addr,co)
-                                else:
-                                    print("Email address not found for tenant ",tenant2.name,"-",prop)
                             else:
-                                email_addr = tenant2.email
-                                if email_addr:
-                                    billtotal = bill.total_bill
-                                    arrears = bill.arrears
+                                billpaid = 0.0
+                                billbal = 0.0
 
-                                    billtotal -= bill.maintenance
-                                    if bill.maintenance_balance:
-                                        arrears -= bill.maintenance_balance
-                                        billtotal -= bill.maintenance_balance
-                                        
-                                    if bill.paid_amount:
-                                        billpaid = f"{bill.paid_amount:,.2f}"
-                                        billbal = f"{bill.balance:,.2f}"
+                            if arrears < 0.0:
+                                arrtitle = "Previous balance"
+                                bbfhighlight = "text-success"
 
-                                    else:
-                                        billpaid = 0.0
-                                        billbal = 0.0
+                                arrears = f"{arrears*-1}"
+                            elif arrears > 0.0:
+                                arrtitle = "Previous balance"
+                                bbfhighlight = "text-danger"
+                            else:
+                                arrtitle = ""
+                                bbfhighlight = ""
 
-
-                                    if wbill or ebill:
-                                        visibility = ""
-                                    else:
-                                        visibility = "hide"
-
-                                    if arrears < 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-success"
-
-                                        arrears = f"{arrears*-1}"
-                                    elif arrears > 0.0:
-                                        arrtitle = "Previous balance"
-                                        bbfhighlight = "text-danger"
-                                    else:
-                                        arrtitle = ""
-                                        bbfhighlight = ""
-
-                                    template_vars = {
-                                        "bill":bill,
-                                        "servicevisibility":"dispnone",
-                                        "readings": wbill,
-                                        "w_edited": w_edited,
-                                        "ereadings": ebill,
-                                        "e_edited": e_edited,
-                                        "visibility":visibility,
-                                        "arrears":arrears,
-                                        "bbfhighlight ": bbfhighlight,
-                                        "arrtitle":arrtitle,
-                                        "billpaid":billpaid,
-                                        "billbal":billbal,
-                                        "house":house,
-                                        "total":f"{billtotal:,.2f}",
-                                        "invdate":inv_date,
-                                        "invdue":inv_due,
-                                        "client":tenant2,
-                                        "company":co,
-                                        "invnum":invnum,
-                                        "logo":logo(co)[2],
-                                        "slogo":logo(kiotapay)[1]
-                                    }
-
-                                    mail_sender(conn,tenant2,bill,template_vars,email_addr,co)
+                            if current_target == "owner":
+                                if bill.house.watertarget == "owner":
+                                    watertarget = True
                                 else:
-                                    print("Email address not found for tenant ",tenant2.name,"-",prop)
+                                    watertarget = False
+                            else:
+                                if bill.house.watertarget == "tenant":
+                                    watertarget = True
+                                else:
+                                    watertarget = False
+
+                            print("WATERTAGET ############################",watertarget)
+
+                            template_vars = {
+                                "bill":bill,
+                                "servicevisibility":"",
+                                "readings": wbill,
+                                "w_edited": w_edited,
+                                "ereadings": ebill,
+                                "e_edited": e_edited,
+                                "visibility":visibility,
+                                "watertarget":watertarget,
+                                "arrears":arrears,
+                                "bbfhighlight ": bbfhighlight,
+                                "arrtitle":arrtitle,
+                                "billpaid":billpaid,
+                                "billbal":billbal,
+                                "house":house,
+                                "total":f"{bill.total_bill:,.2f}",
+                                "invdate":inv_date,
+                                "invdue":inv_due,
+                                "client":tenant,
+                                "company":co,
+                                "invnum":invnum,
+                                "logo":logo(co)[2],
+                                "slogo":logo(kiotapay)[1]
+                            }
+
+                            mail_sender(conn,tenant,bill,template_vars,email_addr,co)
+                        else:
+                            print("Email address not found for tenant ",tenant.name,"-",prop)                             
 
             except Exception as e:
                 print("Mail failed to connect >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
@@ -3765,6 +3589,8 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
     TEMPLATE_FILE = "ajax_tenant_invoice_mail.html"
     template = templateEnv.get_template(TEMPLATE_FILE)
 
+    print("CURRENTLY SENDING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",recepient.name)
+
     html_out = template.render(template_vars)
     filename = f"app/temp/inv_{bill.id}.pdf"
     HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
@@ -3784,7 +3610,7 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
             txt = Message(period, sender = mailsender, recipients = [email_addr])
-            txt.body = f"Dear {tname}  \nYour invoice is now available. Kindly find the attached invoice. \n\n{co.name}"
+            txt.body = f"Dear {tname}  \nyour invoice is now available. Kindly find the attached invoice below. \n\n{co.name}"
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
             # mail.send(txt)
@@ -5511,6 +5337,7 @@ def total_bill(apartment_id,user_id,month,year):
                     charges.append(charge)
 
             water_total = 0
+            temp_water_total = 0
             water_bal = 0
             water_due = 0
 
@@ -5531,6 +5358,7 @@ def total_bill(apartment_id,user_id,month,year):
             security_due = 0
 
             maintenance = 0
+            temp_maintenance_total = 0
             maintenance_bal = 0
             maintenance_due = 0
 
@@ -5579,20 +5407,26 @@ def total_bill(apartment_id,user_id,month,year):
             house_id = house.id
             result = check_occupancy(house)
             tenant = None
+
+
             if result[0] == "occupied":
                 tenant = result[1]
+
             if tenant or house.owner:
-                tenant_id = tenant.id if tenant else None
-                tenant_obj = tenant if tenant else None
+                pass
+            else:
+                print("BILLING SKIPPED FOR VACANT UNIT")
+                continue
 
+            bills = house.monthlybills
 
-                created_by = user_id
+            if tenant:
 
-                bills = house.monthlybills
-                current_billing_period_bills = fetch_current_billing_period_bills(apartment_obj.billing_period,bills)
+                ptenant_id = None
+                tenant_id = tenant.id
 
+                prev_bill = fetch_tnt_prev_billing_period_bills_alt(month,year,bills,tenant.id)
 
-                prev_bill = fetch_prev_billing_period_bills_alt(month,year,bills)
                 if prev_bill:
                     arrears = prev_bill[0].balance
 
@@ -5602,11 +5436,41 @@ def total_bill(apartment_id,user_id,month,year):
                     else:
                         rent_due = rent
 
-                    if prev_bill[0].water_due:
-                        water_bal = prev_bill[0].water_due
-                        water_due = water_bal + water_total
+                    if house.watertarget:
+                        if house.watertarget == "tenant":
+                            if prev_bill[0].water_due:
+                                water_bal = prev_bill[0].water_due
+                                water_due = water_bal + water_total
+                            else:
+                                water_due = water_total
+                        else:
+                            water_bal = 0.0
+                            water_due = 0.0
                     else:
-                        water_due = water_total
+                        if prev_bill[0].water_due:
+                            water_bal = prev_bill[0].water_due
+                            water_due = water_bal + water_total
+                        else:
+                            water_due = water_total  
+
+
+                    if house.servicetarget:
+                        if house.servicetarget == "tenant":
+                            if prev_bill[0].maintenance_due:
+                                maintenance_bal = prev_bill[0].maintenance_due
+                                maintenance_due = maintenance_bal + maintenance
+                            else:
+                                maintenance_due = maintenance
+                        else:
+                            maintenance_bal = 0.0
+                            maintenance_due = 0.0
+                    else:
+                        if prev_bill[0].maintenance_due:
+                            maintenance_bal = prev_bill[0].maintenance_due
+                            maintenance_due = maintenance_bal + maintenance
+                        else:
+                            maintenance_due = maintenance
+
 
                     if prev_bill[0].garbage_due:
                         garbage_bal = prev_bill[0].garbage_due
@@ -5625,12 +5489,6 @@ def total_bill(apartment_id,user_id,month,year):
                         electricity_due = electricity_bal + electricity
                     else:
                         electricity_due = electricity
-
-                    if prev_bill[0].maintenance_due:
-                        maintenance_bal = prev_bill[0].maintenance_due
-                        maintenance_due = maintenance_bal + maintenance
-                    else:
-                        maintenance_due = maintenance
 
                     if prev_bill[0].penalty_due:
                         penalty_bal = prev_bill[0].penalty_due
@@ -5653,7 +5511,21 @@ def total_bill(apartment_id,user_id,month,year):
                 else:
                     arrears = 0.0
 
-                    water_due = water_total
+                    if house.watertarget:
+                        if house.watertarget == "tenant":
+                            water_due = water_total
+                        else:
+                            water_due = 0.0
+                    else:
+                        water_due = water_total
+
+                    if house.servicetarget:
+                        if house.servicetarget == "tenant":    
+                            maintenance_due = maintenance
+                        else:
+                            maintenance_due = 0.0
+                    else:
+                        maintenance_due = maintenance
 
                     rent_due = rent
 
@@ -5663,174 +5535,140 @@ def total_bill(apartment_id,user_id,month,year):
 
                     security_due = security
 
-                    maintenance_due = maintenance
-
                     fines_due = fines
 
                     deposit_due = deposit
 
                     agreement_due = agreement
 
-                if tenant:
-                    if tenant.initial_arrears:
-                        print("Calculating arrears for ",house,"before",arrears)
-                        arrears += tenant.initial_arrears
-                        print("Calculated arrears for ",house, "being",arrears)
-                        TenantOp.update_initial_arrears(tenant,0.0)
 
-                    if tenant.accumulated_fine:
-                        print("Calculating fines for ",house)
-                        fines = tenant.accumulated_fine
-                        TenantOp.update_fine(tenant,0.0)
+                if tenant.accumulated_fine:
+                    print("Calculating fines for ",house)
+                    fines = tenant.accumulated_fine
+                    TenantOp.update_fine(tenant,0.0)
 
                 new_tenants = new_tenants_injector(apartment_obj.id,month,year)
-                if tenant_obj:
-                    if tenant_obj in new_tenants:
-                        deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep
-                        agreement = apartment_obj.agreement_fee if apartment_obj.agreement_fee else 0.0 #TODO
+
+                if tenant in new_tenants:
+                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep
+                    agreement = apartment_obj.agreement_fee if apartment_obj.agreement_fee else 0.0 #TODO
+
+
+                if house.watertarget:
+                    if house.watertarget == "tenant":
+                        temp_water_total = water_total
+                    else:
+                        temp_water_total = water_total
+                        water_total = 0.0
+                else:
+                    temp_water_total = water_total
+
+
+                if house.servicetarget:
+                    if house.servicetarget == "tenant":
+                        temp_maintenance_total = maintenance
+                    else:
+                        temp_maintenance_total = maintenance
+                        maintenance = 0.0
+                else:
+                    temp_maintenance_total = maintenance
+
 
                 total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance
 
-                current_month_charges = []
-                all_monthlybills = house.monthlybills
+                c_charge = None
                 
-                for bill in all_monthlybills: #TODO 
-                    if bill.month == month and bill.year == year:
-                        print("Appending",bill.month)
-                        current_month_charges.append(bill)
+                for bill in bills:
+                    if bill.month == month and bill.year == year and bill.tenant_id == tenant.id:
+                        print("Retrieving current bill for month of :",bill.month,"/",bill.year)
+                        c_charge = bill
                 
-                if current_month_charges:
-                    current_month_charge = None
-                    
-                    for charge in current_month_charges:
+                if c_charge:
+                    print("specific charge found for HOUSE",house)
 
-                        if charge.house_id == house_id:
-                            current_month_charge = charge #specific current month charge for a particular house/tenant found
-                            print("specific charge found for HOUSE",house)
+                    update_water = c_charge.water
+                    update_water += water_total
+                    update_water_due = c_charge.water_due if c_charge.water_due else 0.0
+                    update_water_due += water_total
 
-                            update_water = charge.water
-                            update_water += water_total
-                            update_water_due = charge.water_due if charge.water_due else 0.0
-                            update_water_due += water_total
+                    update_rent = c_charge.rent
+                    update_rent += rent
+                    update_rent_due = c_charge.rent_due if c_charge.rent_due else 0
+                    update_rent_due += rent
 
-                            update_rent = charge.rent
-                            update_rent += rent
-                            update_rent_due = charge.rent_due if charge.rent_due else 0
-                            update_rent_due += rent
+                    update_garbage = c_charge.garbage
+                    update_garbage += garbage
+                    update_garbage_due = c_charge.garbage_due if c_charge.garbage_due else 0
+                    update_garbage_due += garbage
 
-                            update_garbage = charge.garbage
-                            update_garbage += garbage
-                            update_garbage_due = charge.garbage_due if charge.garbage_due else 0
-                            update_garbage_due += garbage
+                    update_electricity = c_charge.electricity
+                    update_electricity += electricity
+                    update_electricity_due = c_charge.electricity_due if c_charge.electricity_due else 0                          
+                    update_electricity_due += electricity
 
-                            update_electricity = charge.electricity
-                            update_electricity += electricity
-                            update_electricity_due = charge.electricity_due if charge.electricity_due else 0                          
-                            update_electricity_due += electricity
+                    update_security = c_charge.security
+                    update_security += security
+                    update_security_due = c_charge.security_due if c_charge.security_due else 0
+                    update_security_due += security
 
-                            update_security = charge.security
-                            update_security += security
-                            update_security_due = charge.security_due if charge.security_due else 0
-                            update_security_due += security
+                    update_maintenance = c_charge.maintenance
+                    update_maintenance += maintenance
+                    update_maintenance_due = c_charge.maintenance_due if c_charge.maintenance_due else 0
+                    update_maintenance_due += maintenance
 
-                            update_maintenance = charge.maintenance
-                            update_maintenance += maintenance
-                            update_maintenance_due = charge.maintenance_due if charge.maintenance_due else 0
-                            update_maintenance_due += maintenance
+                    update_penalty = c_charge.penalty
+                    update_penalty += fines
+                    update_penalty_due = c_charge.penalty_due if c_charge.penalty_due else 0
+                    update_penalty_due += fines
 
-                            update_penalty = charge.penalty
-                            update_penalty += fines
-                            update_penalty_due = charge.penalty_due if charge.penalty_due else 0
-                            update_penalty_due += fines
+                    const_arrears = c_charge.arrears
 
-                            const_arrears = charge.arrears
+                    const_deposit = c_charge.deposit if c_charge.deposit else 0.0
+                    const_deposit_due = c_charge.deposit_due if c_charge.deposit_due else 0.0
 
-                            const_deposit = charge.deposit if charge.deposit else 0.0
-                            const_deposit_due = charge.deposit_due if charge.deposit_due else 0.0
+                    const_agreement = c_charge.agreement if c_charge.agreement else 0.0
+                    const_agreement_due = c_charge.agreement_due if c_charge.agreement_due else 0.0
 
-                            const_agreement = charge.agreement if charge.agreement else 0.0
-                            const_agreement_due = charge.agreement_due if charge.agreement_due else 0.0
+                    total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
-                            total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
+                    MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
+                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
-                            MonthlyChargeOp.update_monthly_charge(current_month_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,created_by)
-                            MonthlyChargeOp.update_dues(current_month_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    running_bal = tenant.balance
+                    running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
+                    TenantOp.update_balance(tenant,running_bal)
 
-                            if tenant_obj:
-                                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-                                running_bal = tenant_obj.balance
-                                running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
-                                TenantOp.update_balance(tenant_obj,running_bal)
+                    bal = c_charge.balance
+                    bal = bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
+                    MonthlyChargeOp.update_balance(c_charge,bal)
 
-                            bal = current_month_charge.balance
-                            bal = bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
-                            MonthlyChargeOp.update_balance(current_month_charge,bal)
-
-                            if current_month_charge.paid_amount:
-                                if current_month_charge.paid_amount < 0:
-                                    MonthlyChargeOp.update_payment(current_month_charge,0.0)
-                                    bala = total_amount
-                                else:
-                                    bala = total_amount - current_month_charge.paid_amount
-                            else:
-                                bala = total_amount
-
-                            MonthlyChargeOp.update_balance(current_month_charge,bala)
-
-                            db.session.expire(current_month_charge)
-                            
-                            bill_balance = current_month_charge.balance
-                            print(current_month_charge.month,current_month_charge.year,"KES",current_month_charge.balance)
-                            if tenant_obj:
-                                TenantOp.update_balance(tenant_obj,bill_balance)
-                                db.session.expire(tenant_obj)
-                                print("Balance updated! now",tenant_obj.balance)
-
-                            break
+                    if c_charge.paid_amount:
+                        if c_charge.paid_amount < 0:
+                            MonthlyChargeOp.update_payment(c_charge,0.0)
+                            bala = total_amount
                         else:
-                            continue
+                            bala = total_amount - c_charge.paid_amount
+                    else:
+                        bala = total_amount
 
-                    if not current_month_charge: #specific current month charge wasnt found for a particular house/tenant
-                        print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
-                        monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,created_by)
-                        monthly_charge_obj.save()
+                    MonthlyChargeOp.update_balance(c_charge,bala)
 
-                        # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,created_by)
-                        # monthly_charge_obj_alt.save()
+                    db.session.expire(c_charge)
+                    
+                    bill_balance = c_charge.balance
+                    print(c_charge.month,c_charge.year,"KES",c_charge.balance)
 
-                        MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                        MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
-
-                        # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                        # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
-                        if tenant_obj:
-                            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-                            running_bal = tenant_obj.balance
-                            running_bal += total_amount
-
-                        print("ARRAGAIK>>>Month of",month,current_billing_period_bills,"HOUSE =====>",house)
-
-                        if tenant_obj:
-                            if tenant_obj.multiple_houses and current_billing_period_bills:
-                                print("IT GOT HERE COZ ABOVE IS NOT EMPTY",house)
-                                TenantOp.update_balance(tenant_obj,running_bal)
-                            else:
-                                TenantOp.update_balance(tenant_obj,total_amount)
-
-                        bal = monthly_charge_obj.balance
-                        bal += total_amount
-                        MonthlyChargeOp.update_balance(monthly_charge_obj,bal)
-
-                        if not house.billable:
-                            print("House",house,"is not billablle") 
-
+                    TenantOp.update_balance(tenant,bill_balance)
+                    db.session.expire(tenant)
+                    print("Balance updated! now",tenant.balance)
 
                 else:
-                    print("no charges found at all")
-                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,created_by)
+                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
+
+                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,created_by)
+                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
@@ -5838,28 +5676,292 @@ def total_bill(apartment_id,user_id,month,year):
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
-                    if tenant_obj:
-                        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-                        running_bal = tenant_obj.balance
-                        running_bal += total_amount
+                    
+                    running_bal = tenant.balance
+                    running_bal += total_amount
 
-                    print("ARRAGAIK>>>Month of",month,current_billing_period_bills,"HOUSE =====>",house)
-                    if tenant_obj:
-                        if tenant_obj.multiple_houses and current_billing_period_bills:
-                            print("IT GOT HERE COZ ABOVE IS NOT EMPTY",house)
-                            TenantOp.update_balance(tenant_obj,running_bal)
-                        else:
-                            TenantOp.update_balance(tenant_obj,total_amount)
+                    if tenant.multiple_houses:
+                        TenantOp.update_balance(tenant,running_bal)
+                    else:
+                        TenantOp.update_balance(tenant,total_amount)
 
                     bal = monthly_charge_obj.balance
                     bal += total_amount
                     MonthlyChargeOp.update_balance(monthly_charge_obj,bal)
 
-
                     if not house.billable:
                         print("House",house,"is not billablle")
 
+            #reset to default values
+            water_total = temp_water_total
+            maintenance = temp_maintenance_total
+
+            if house.owner:
+                tenant = house.owner
+                ptenant_id = tenant.id
+                tenant_id = None
+
+                prev_bill = fetch_pt_prev_billing_period_bills(month,year,bills,tenant.id)
+
+                if prev_bill:
+                    arrears = prev_bill[0].balance
+
+                    if prev_bill[0].rent_due: #rent due of last period forms the base of arrears
+                        rent_bal = prev_bill[0].rent_due
+                        rent_due = rent_bal + rent
+                    else:
+                        rent_due = rent
+
+
+                    if house.watertarget:
+                        if house.watertarget == "owner":
+                            if prev_bill[0].water_due:
+                                water_bal = prev_bill[0].water_due
+                                water_due = water_bal + water_total
+                            else:
+                                water_due = water_total
+                        else:
+                            water_bal = 0.0
+                            water_due = 0.0
+                    else:
+                        if prev_bill[0].water_due:
+                            water_bal = prev_bill[0].water_due
+                            water_due = water_bal + water_total
+                        else:
+                            water_due = water_total  
+
+
+                    if house.servicetarget:
+                        if house.servicetarget == "owner":
+                            if prev_bill[0].maintenance_due:
+                                maintenance_bal = prev_bill[0].maintenance_due
+                                maintenance_due = maintenance_bal + maintenance
+                            else:
+                                maintenance_due = maintenance
+                        else:
+                            maintenance_bal = 0.0
+                            maintenance_due = 0.0
+                    else:
+                        if prev_bill[0].maintenance_due:
+                            maintenance_bal = prev_bill[0].maintenance_due
+                            maintenance_due = maintenance_bal + maintenance
+                        else:
+                            maintenance_due = maintenance
+
+
+                    if prev_bill[0].garbage_due:
+                        garbage_bal = prev_bill[0].garbage_due
+                        garbage_due = garbage_bal + garbage
+                    else:
+                        garbage_due = garbage
+
+                    if prev_bill[0].security_due:
+                        security_bal = prev_bill[0].security_due
+                        security_due = security_bal + security
+                    else:
+                        security_due = security
+
+                    if prev_bill[0].electricity_due:
+                        electricity_bal = prev_bill[0].electricity_due
+                        electricity_due = electricity_bal + electricity
+                    else:
+                        electricity_due = electricity
+
+                    if prev_bill[0].penalty_due:
+                        penalty_bal = prev_bill[0].penalty_due
+                        fines_due = penalty_bal + fines
+                    else:
+                        fines_due = fines
+
+                    if prev_bill[0].deposit_due:
+                        deposit_bal = prev_bill[0].deposit_due
+                        deposit_due = deposit_bal + deposit
+                    else:
+                        deposit_due = deposit
+
+                    if prev_bill[0].agreement_due:
+                        agreement_bal = prev_bill[0].agreement_due
+                        agreement_due = agreement_bal + agreement
+                    else:
+                        agreement_due = agreement
+
+                else:
+                    arrears = 0.0
+
+                    if house.watertarget:
+                        if house.watertarget == "owner":
+                            water_due = water_total
+                        else:
+                            water_due = 0.0
+                    else:
+                        water_due = water_total
+
+                    if house.servicetarget:
+                        if house.servicetarget == "owner":    
+                            maintenance_due = maintenance
+                        else:
+                            maintenance_due = 0.0
+                    else:
+                        maintenance_due = maintenance
+
+                    rent_due = rent
+
+                    garbage_due = garbage
+
+                    electricity_due = electricity
+
+                    security_due = security
+
+                    fines_due = fines
+
+                    deposit_due = deposit
+
+                    agreement_due = agreement
+
+
+                if house.watertarget:
+                    if house.watertarget == "owner":
+                        pass
+                    else:
+                        water_total = 0.0
+                else:
+                    pass
+
+                if house.servicetarget:
+                    if house.servicetarget == "owner":
+                        pass
+                    else:
+                        maintenance = 0.0
+                else:
+                    pass
+
+                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance
+
+                c_charge = None
+                
+                for bill in bills:
+                    if bill.month == month and bill.year == year and bill.ptenant_id == ptenant_id:
+                        print("Retrieving current bill for month of :",bill.month,"/",bill.year)
+                        c_charge = bill
+                
+                if c_charge:
+                    print("specific charge found for HOUSE",house)
+
+                    update_water = c_charge.water
+                    update_water += water_total
+                    update_water_due = c_charge.water_due if c_charge.water_due else 0.0
+                    update_water_due += water_total
+
+                    update_rent = c_charge.rent
+                    update_rent += rent
+                    update_rent_due = c_charge.rent_due if c_charge.rent_due else 0
+                    update_rent_due += rent
+
+                    update_garbage = c_charge.garbage
+                    update_garbage += garbage
+                    update_garbage_due = c_charge.garbage_due if c_charge.garbage_due else 0
+                    update_garbage_due += garbage
+
+                    update_electricity = c_charge.electricity
+                    update_electricity += electricity
+                    update_electricity_due = c_charge.electricity_due if c_charge.electricity_due else 0                          
+                    update_electricity_due += electricity
+
+                    update_security = c_charge.security
+                    update_security += security
+                    update_security_due = c_charge.security_due if c_charge.security_due else 0
+                    update_security_due += security
+
+                    update_maintenance = c_charge.maintenance
+                    update_maintenance += maintenance
+                    update_maintenance_due = c_charge.maintenance_due if c_charge.maintenance_due else 0
+                    update_maintenance_due += maintenance
+
+                    update_penalty = c_charge.penalty
+                    update_penalty += fines
+                    update_penalty_due = c_charge.penalty_due if c_charge.penalty_due else 0
+                    update_penalty_due += fines
+
+                    const_arrears = c_charge.arrears
+
+                    const_deposit = c_charge.deposit if c_charge.deposit else 0.0
+                    const_deposit_due = c_charge.deposit_due if c_charge.deposit_due else 0.0
+
+                    const_agreement = c_charge.agreement if c_charge.agreement else 0.0
+                    const_agreement_due = c_charge.agreement_due if c_charge.agreement_due else 0.0
+
+                    total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
+
+                    MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
+                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+
+                    running_bal = tenant.balance
+                    running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
+                    PermanentTenantOp.update_balance(tenant,running_bal)
+
+                    bal = c_charge.balance
+                    bal = bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
+                    MonthlyChargeOp.update_balance(c_charge,bal)
+
+                    if c_charge.paid_amount:
+                        if c_charge.paid_amount < 0:
+                            MonthlyChargeOp.update_payment(c_charge,0.0)
+                            bala = total_amount
+                        else:
+                            bala = total_amount - c_charge.paid_amount
+                    else:
+                        bala = total_amount
+
+                    MonthlyChargeOp.update_balance(c_charge,bala)
+
+                    db.session.expire(c_charge)
+                    
+                    bill_balance = c_charge.balance
+                    print(c_charge.month,c_charge.year,"KES",c_charge.balance)
+
+                    PermanentTenantOp.update_balance(tenant,bill_balance)
+                    db.session.expire(tenant)
+                    print("Balance updated! now",tenant.balance)
+
+                else:
+                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
+                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj.save()
+
+                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
+                    # monthly_charge_obj_alt.save()
+
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+
+                    # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    
+                    running_bal = tenant.balance
+                    running_bal += total_amount
+
+
+                    if tenant.multiple_houses:
+                        PermanentTenantOp.update_balance(tenant,running_bal)
+                    else:
+                        PermanentTenantOp.update_balance(tenant,total_amount)
+
+                    bal = monthly_charge_obj.balance
+                    bal += total_amount
+                    MonthlyChargeOp.update_balance(monthly_charge_obj,bal)
+
+                    if not house.billable:
+                        print("House",house,"is not billablle")
+            else:
+                print("BILLING SKIPPED FOR NEITHER OWNED NOR RENTED UNIT (VACANT)")
+
         ApartmentOp.update_billing_progress(apartment_obj,"completed")
+
+
+
+
+
+
 
     except Exception as e:
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")

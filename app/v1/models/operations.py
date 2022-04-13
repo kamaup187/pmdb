@@ -775,7 +775,7 @@ class ApartmentOp(Apartment,Base):
 
 
 class HouseCodeOp(HouseCode,Base):
-    def __init__(self,codename,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,apartment_id,user_id):
+    def __init__(self,codename,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,apartment_id,user_id):
         self.codename = codename
         self.rentrate=rentrate
         self.watercharge=watercharge
@@ -787,6 +787,7 @@ class HouseCodeOp(HouseCode,Base):
         self.finerate=finerate
         self.waterdep = waterdep
         self.elecdep = elecdep
+        self.seweragerate = seweragerate
         self.apartment_id = apartment_id
         self.user_id = user_id
 
@@ -798,7 +799,7 @@ class HouseCodeOp(HouseCode,Base):
     def fetch_all_housecodes_by_apartment_id(prop_id):
         return HouseCode.query.filter_by(apartment_id=prop_id).order_by(HouseCode.codename.asc()).all()
 
-    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,modified_by):
+    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,modified_by):
         if housecode != "null":
             self.codename = housecode
         if rentrate != "null":
@@ -821,6 +822,8 @@ class HouseCodeOp(HouseCode,Base):
             self.elecdep=elecdep
         if service != "null":
             self.servicerate = service
+        if sewerage != "null":
+            self.seweragerate = sewerage
             
         self.user_id = modified_by
         db.session.commit()
@@ -847,12 +850,14 @@ class HouseCodeOp(HouseCode,Base):
             'housecode':self.codename,
             'rent':HouseCodeOp.fig_format(self.rentrate),
             'fixedwater':HouseCodeOp.fig_format(self.watercharge),
+            'sewage':HouseCodeOp.fig_format(self.seweragerate),
             'water':HouseCodeOp.fig_format(self.waterrate),
             'garbage':HouseCodeOp.fig_format(self.garbagerate),
             'security':HouseCodeOp.fig_format(self.securityrate),
             'service':HouseCodeOp.fig_format(self.servicerate),
             'fine':HouseCodeOp.format_percent_amount(self.finerate),
             'waterdep':HouseCodeOp.fig_format(self.waterdep),
+            'elecdep':HouseCodeOp.fig_format(self.elecdep),
             'user':HouseCodeOp.get_name(self)
         }
 
@@ -890,6 +895,14 @@ class HouseOp(House,Base):
             self.description = desc
         if name:
             self.name = name
+            
+        db.session.commit()
+
+    def update_billing_details(self,watertarget,servicetarget):
+        if watertarget:
+            self.watertarget = watertarget
+        if servicetarget:
+            self.servicetarget = servicetarget
             
         db.session.commit()
 
@@ -967,6 +980,40 @@ class HouseOp(House,Base):
         
         return decor_fig
 
+    def format_amount_and_sbilling(self,amount):
+        if amount:
+            rounded_fig = round(amount,2)
+        else:
+            rounded_fig = 0
+
+        decor_fig = (f"{rounded_fig:,}")
+
+        if self.servicetarget:
+            if self.servicetarget == "owner":
+                badge = "badge-danger"
+            else:
+                badge = "badge-primary"
+            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.servicetarget}</span>'
+        else:
+            return decor_fig
+
+    def format_amount_and_wbilling(self,amount):
+        if amount:
+            rounded_fig = round(amount,2)
+        else:
+            rounded_fig = 0
+
+        decor_fig = (f"{rounded_fig:,}")
+
+        if self.watertarget:
+            if self.watertarget == "tenant":
+                badge = "badge-primary"
+            else:
+                badge = "badge-danger"
+            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.watertarget}</span>'
+        else:
+            return decor_fig
+
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"
         return decor_fig 
@@ -990,10 +1037,10 @@ class HouseOp(House,Base):
             'owner':self.owner.name.title() if self.owner else "N/A",
             'meter':HouseOp.get_meterno(self),
             'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
-            'rate':HouseOp.format_amount(self.housecode.waterrate if self.housecode else 0),
-            'srate':HouseOp.format_amount(self.housecode.seweragerate if self.housecode else 0),
+            'rate':HouseOp.format_amount_and_wbilling(self,self.housecode.waterrate if self.housecode else 0),
+            'srate':HouseOp.format_amount_and_wbilling(self,self.housecode.seweragerate if self.housecode else 0),
             'fixed':HouseOp.format_amount(self.housecode.watercharge if self.housecode else 0),
-            'maintenance':HouseOp.format_amount(self.housecode.servicerate if self.housecode else 0),
+            'maintenance':HouseOp.format_amount_and_sbilling(self,self.housecode.servicerate if self.housecode else 0),
             'garbage':HouseOp.format_amount(self.housecode.garbagerate if self.housecode else 0),
             'security':HouseOp.format_amount(self.housecode.securityrate if self.housecode else 0),
             'fine':HouseOp.format_percent_amount(self.housecode.finerate if self.housecode else 0),
@@ -1997,7 +2044,7 @@ class ClientBillOp(ClientBill,Base):
         }
 
 class MonthlyChargeOp(MonthlyCharge,Base):
-    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,created_by):
+    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
         self.month = month
         self.year=year
         self.water=water
@@ -2017,6 +2064,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.apartment_id=apartment_id
         self.house_id=house_id
         self.tenant_id=tenant_id
+        self.ptenant_id=ptenant_id
         self.user_id = created_by
 
     @staticmethod

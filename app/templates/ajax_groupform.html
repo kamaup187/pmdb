@@ -110,6 +110,21 @@
                             </div>
                         </div>
 
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="sewerage">Sewerage rate</label>
+
+                                <input class="form-control" id="seweragerate" type="text" placeholder="sewerage amount"
+                                    value="{{group.seweragerate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="other">Other</label>
+
+                                <input class="form-control" id="other" type="text" placeholder="other"
+                                    value="0.0" disabled/>
+                            </div>
+                        </div>
+
                         <!-- Submit button-->
                         <div class="text-center">
                             <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
@@ -172,6 +187,7 @@
             waterdep: $("#waterdep").val(),
             elecdep: $("#elecdep").val(),
             finerate: $("#finerate").val(),
+            seweragerate:$("#seweragerate").val(),
             target:target
             },
         success: function(response) {

@@ -132,37 +132,51 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {%if readings%}
-                        <tr class="underline-thin-fade">
-                            <td class="pl-0">Water readings</td>
-                            <td>{{readings.last_reading}}</td>
-                            <td>{{readings.reading}}</td>
-                            <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
-                            <td>{{house.housecode.waterrate}}</td>
-                            <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *readings.units|float)}}</span></td>
-                        </tr>
-                        {%endif%}
 
-                        {%if house.housecode.watercharge%}
-                        <tr class="underline-thin-fade">
-                            <td class="pl-0">Water standing charges</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.watercharge}}</span></td>
-                        </tr>
-                        {%endif%}
+                        {%if watertarget%}
+                            {%if readings%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Water readings</td>
+                                <td>{{readings.last_reading}}</td>
+                                <td>{{readings.reading}}</td>
+                                <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
+                                <td>{{house.housecode.waterrate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *readings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
 
-                        {%if ereadings%}
-                        <tr class="underline-thin-fade">
-                            <td class="pl-0">Electricity readings</td>
-                            <td>{{ereadings.last_reading}}</td>
-                            <td>{{ereadings.reading}}</td>
-                            <td>{{ereadings.units}}<span class="text-danger font-weight-bold text-xx {{e_edited}}">*</span></td>
-                            <td>{{house.housecode.electricityrate}}</td>
-                            <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.electricityrate *ereadings.units|float)}}</span></td>
-                        </tr>
+                            {%if house.housecode.seweragerate%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Sewerage readings</td>
+                                <td>{{readings.last_reading}}</td>
+                                <td>{{readings.reading}}</td>
+                                <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
+                                <td>{{house.housecode.seweragerate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.seweragerate *readings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if house.housecode.watercharge%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Water standing charges</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.watercharge}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if ereadings%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Electricity readings</td>
+                                <td>{{ereadings.last_reading}}</td>
+                                <td>{{ereadings.reading}}</td>
+                                <td>{{ereadings.units}}<span class="text-danger font-weight-bold text-xx {{e_edited}}">*</span></td>
+                                <td>{{house.housecode.electricityrate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.electricityrate *ereadings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
                         {%endif%}
 
 

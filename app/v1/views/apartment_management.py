@@ -1,4 +1,5 @@
 # from app.v1.models import datamodel
+from re import S
 import time
 import os
 
@@ -3265,6 +3266,7 @@ class CreateHouseCode(Resource):
             garbagerate = request.form.get('garbagerate')
             securityrate= request.form.get('securityrate')
             servicerate= request.form.get('servicerate')
+            seweragerate= request.form.get('seweragerate')
             finerate = request.form.get('finerate')
 
             waterdep = request.form.get('waterdep')
@@ -3288,10 +3290,10 @@ class CreateHouseCode(Resource):
                 msg = "House code exist already"
                 return render_template('ajaxghosthouse.html',alert=msg)
             else:
-                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate)
+                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
                 user_id = current_user.id     
 
-                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],apartment_id,user_id)
+                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],apartment_id,user_id)
                 new_code_obj.save()
 
                 msg = "House code added"
@@ -3334,7 +3336,7 @@ class EditHouseCode(Resource):
             securityrate= request.form.get('securityrate')
             servicerate= request.form.get('servicerate')
             finerate = request.form.get('finerate')
-
+            seweragerate = request.form.get('seweragerate')
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
 
@@ -3371,9 +3373,9 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],current_user.id)
 
             msg = "Rates updated successfully"
             return render_template('ajaxproceed.html',alert=msg)
@@ -3591,6 +3593,9 @@ class EditHouse(Resource):
         propid = request.form.get('propid')
         houseid = request.form.get('houseid')
         name = request.form.get('name')
+        watertarget = request.form.get('watertarget')
+        servicetarget = request.form.get('servicetarget')
+
         desc = request.form.get('desc')
         group = request.form.get('group')
 
@@ -3624,6 +3629,7 @@ class EditHouse(Resource):
                 house_obj = HouseOp.fetch_house_by_id(house_id)
 
                 HouseOp.update_details(house_obj,name,desc)
+                HouseOp.update_billing_details(house_obj,watertarget,servicetarget)
 
                 msg = f"House {house_obj.name} updated successfully"
 
@@ -4275,9 +4281,9 @@ class AddTenant(Resource):
                 # present3 = UserOp.fetch_user_by_email(email)
                 present3 = None
 
-                if present2 or present3:
-                    msg="Email taken, use another email or leave blank"
-                    return render_template('ajaxghosthouse.html',alert=msg)
+                # if present2 or present3:
+                #     msg="Email taken, use another email or leave blank"
+                #     return render_template('ajaxghosthouse.html',alert=msg)
 
             present = TenantOp.fetch_tenant_by_nat_id(national_id)
             if present:
@@ -4409,9 +4415,9 @@ class UpdateTenant(Resource):
         if email:
             present1 = TenantOp.fetch_tenant_by_email(email)
             present2 = UserOp.fetch_user_by_email(email)
-            if present1 or present2:
-                msg="Email taken, use another email or leave blank"
-                # return render_template('ajaxghosthouse.html',alert=msg)
+            # if present1 or present2:
+            #     msg="Email taken, use another email or leave blank"
+            #     # return render_template('ajaxghosthouse.html',alert=msg)
 
         if national_id:
             present3 = TenantOp.fetch_tenant_by_nat_id(national_id)

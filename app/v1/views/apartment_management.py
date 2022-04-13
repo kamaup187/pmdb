@@ -122,10 +122,10 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        cooo = CompanyOp.fetch_company_by_id(16)
-        if cooo:
-            print("ccccccccccccccoooooo",cooo.name)
-            CompanyOp.delete(cooo)
+        # cooo = CompanyOp.fetch_company_by_id(16)
+        # if cooo:
+        #     print("ccccccccccccccoooooo",cooo.name)
+        #     CompanyOp.delete(cooo)
 
         # ctob_obj = CtoBop("MQCKMSCNS",time,50.0,"trans_type","400400","C5","invoice_num","0716674695",786.0,"Peter","Koech")
         # ctob_obj.save()

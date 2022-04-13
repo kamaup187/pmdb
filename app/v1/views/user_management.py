@@ -413,7 +413,8 @@ class AdminRegisterUser(Resource):
         """admin action"""
         # form = UserRegForm()
 
-        companies = CompanyOp.fetch_all_companies()
+        # companies = CompanyOp.fetch_all_companies()
+        companies = []
         company_usergroups = ["Manager","Accounts"]
 
         # owners = OwnerOp.fetch_all_owners()

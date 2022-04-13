@@ -3680,7 +3680,7 @@ def send_out_single_email_invoice(billid):
 
 
                 if bill.apartment_id == 398:
-                    paymentacc = f"Paybill No. {bill.apartment.payment_bank}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
+                    paymentacc = f"Paybill No. {bill.apartment.payment_bankacc}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
                 else:
                     paymentacc = ""
 

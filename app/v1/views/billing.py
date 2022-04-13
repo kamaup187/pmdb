@@ -1464,6 +1464,7 @@ class SendInvoices(Resource):
         # charge = request.form.get('charge')
         charge = "all"
         houses = request.form.get('houses')
+        bill_id = request.form.get('billid')
         target = request.form.get('target')
         ctype = request.form.get('ctype')
 
@@ -1478,6 +1479,24 @@ class SendInvoices(Resource):
         message_invoice_type = houses if houses else "normal"
 
         override = True
+
+
+        if target == "isolated mail":
+            billid = get_identifier(bill_id)
+
+            bill = MonthlyChargeOp.fetch_specific_bill(billid)
+
+            if bill.tenant:
+                print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC   sending tenant invoice of ",bill.tenant.name)
+            else:
+                print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB   sending owner invoice of ",bill.ptenant.name)
+
+            job563 = q.enqueue_call(
+                func=send_out_single_email_invoice, args=(billid,), result_ttl=5000
+            )
+
+            return None
+
 
         if target == "isolated":
 

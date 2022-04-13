@@ -307,6 +307,12 @@
             </div>
             {%endif%}
 
+            {% if not w_edited or not e_edited%}
+            <div class="text-left mt-3">
+                <span class="text-danger font-weight-bold text-xx">Payment details:<span class="small text-black">{{paymentacc}}</span></span>
+            </div>
+            {%endif%}
+
         </div>
         <div class="myfoote mt-4">
             <div class="card-foote">

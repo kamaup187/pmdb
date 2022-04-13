@@ -114,7 +114,8 @@ def run_scripts(user):
     # for c in codes:
     #     print("CODE",c)
     #     HouseCodeOp.update_rates(c,"null","null",100,"null","null","null","null","null","null","null","null",current_user.id)
-        
+
+    # jendi = ApartmentOp.fetch_apartment_by_name("Vintage Phase I")
 
     # billing_period = jendi.billing_period
 
@@ -123,6 +124,7 @@ def run_scripts(user):
     # for charge in charges:
     #     if str(charge) == "Water" and charge.date.month == billing_period.month and charge.date.year == billing_period.year and charge.reading_id:
     #         ChargeOp.delete(charge)
+
 
     # prop = ApartmentOp.fetch_apartment_by_id(6)
     # bills = prop.houses

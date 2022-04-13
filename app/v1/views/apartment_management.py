@@ -120,6 +120,16 @@ class Index(Resource):
         #     ApartmentOp.update_reminder_status(qqq,"pending")
         #     print("Update complete",qqq, "now",qqq.reminder_status)
 
+        jendi = ApartmentOp.fetch_apartment_by_name("Vintage Phase I")
+
+        billing_period = jendi.billing_period
+
+        charges = jendi.charges
+
+        for charge in charges:
+            if str(charge) == "Water" and charge.date.month == billing_period.month and charge.date.year == billing_period.year and charge.reading_id:
+                ChargeOp.delete(charge)
+
         time = datetime.datetime.now() + relativedelta(hours=3)
 
         # cooo = CompanyOp.fetch_company_by_id(16)

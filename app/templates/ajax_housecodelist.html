@@ -7,12 +7,16 @@
                 <tr>
                 <th class="text-info font-weight-bold">Group</th>
                 <th class="text-info track-title-cell">Rent</th>
-                <th class="text-info track-title-cell">Water(fixed)</th>
+                <th class="text-info track-title-cell">Service</th>
                 <th class="text-info track-title-cell">Water(unit)</th>
+                <th class="text-info track-title-cell">Water(fixed)</th>
+                <th class="text-info track-title-cell">Sewerage(unit)</th>
+
                 <th class="text-info track-title-cell">Garbage</th>
                 <th class="text-info track-title-cell">Security</th>
                 <th class="text-info track-title-cell">Fine%</th>
-                <th class="text-info track-title-cell">WaterDeposit</th>
+                <th class="text-info track-title-cell">Deposit(w)</th>
+                <th class="text-info track-title-cell">Deposit(e)</th>
                 <th class="text-info track-title-cell">Action</th>
                 
                 </tr>
@@ -22,12 +26,16 @@
                 <tr>
                     <td class="first-data-cell text-dark font-weight-bold">{{ i['housecode'] }}</td>
                     <td class="data-cell">{{ i['rent'] }}</td>
-                    <td class="data-cell">{{ i['fixedwater'] }}</td>
+                    <td class="data-cell">{{ i['service'] }}</td>
                     <td class="data-cell">{{ i['water'] }}</td>
+                    <td class="data-cell">{{ i['fixedwater'] }}</td>
+                    <td class="data-cell">{{ i['sewage'] }}</td>
                     <td class="data-cell">{{ i['garbage'] }}</td>
                     <td class="data-cell">{{ i['security'] }}</td>
                     <td class="data-cell">{{ i['fine'] }}</td>
                     <td class="data-cell">{{ i['waterdep'] }}</td>
+                    <td class="data-cell">{{ i['elecdep'] }}</td>
+
                     <td class="data-cell">
                         <div class="dropdown no-arrow">
                           <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

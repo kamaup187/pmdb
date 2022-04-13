@@ -850,12 +850,14 @@ class HouseCodeOp(HouseCode,Base):
             'housecode':self.codename,
             'rent':HouseCodeOp.fig_format(self.rentrate),
             'fixedwater':HouseCodeOp.fig_format(self.watercharge),
+            'sewage':HouseCodeOp.fig_format(self.seweragerate),
             'water':HouseCodeOp.fig_format(self.waterrate),
             'garbage':HouseCodeOp.fig_format(self.garbagerate),
             'security':HouseCodeOp.fig_format(self.securityrate),
             'service':HouseCodeOp.fig_format(self.servicerate),
             'fine':HouseCodeOp.format_percent_amount(self.finerate),
             'waterdep':HouseCodeOp.fig_format(self.waterdep),
+            'elecdep':HouseCodeOp.fig_format(self.elecdep),
             'user':HouseCodeOp.get_name(self)
         }
 
@@ -987,7 +989,11 @@ class HouseOp(House,Base):
         decor_fig = (f"{rounded_fig:,}")
 
         if self.servicetarget:
-            return f'{decor_fig} <span class="badge badge-danger badge-counter">{self.servicetarget}</span>'
+            if self.servicetarget == "owner":
+                badge = "badge-danger"
+            else:
+                badge = "badge-primary"
+            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.servicetarget}</span>'
         else:
             return decor_fig
 
@@ -1000,7 +1006,11 @@ class HouseOp(House,Base):
         decor_fig = (f"{rounded_fig:,}")
 
         if self.watertarget:
-            return f'{decor_fig} <span class="badge badge-primary badge-counter">{self.watertarget}</span>'
+            if self.watertarget == "tenant":
+                badge = "badge-primary"
+            else:
+                badge = "badge-danger"
+            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.watertarget}</span>'
         else:
             return decor_fig
 

@@ -10,10 +10,10 @@
                     <th class="text-black">Owner</th>
                     <th class="text-black">Tenant</th>
                     <th class="text-black">Rent</th>
+                    <th class="text-black">Service</th>
                     <th class="text-black">W.Rate</th>
                     <th class="text-black">S.Rate</th>
                     <th class="text-black">W.Fixed</th>
-                    <th class="text-black">Service</th>
                     <th class="text-black">Garbage</th>
                     <th class="text-black">Security</th>
                     <th class="text-black">By</th>
@@ -30,10 +30,10 @@
                     <td class="data-cell">{{ i['owner'] }}</td>
                     <td class="data-cell {{i['highlight']}}">{{ i['tenant'] }}</td>
                     <td class="data-cell">{{ i['rent'] }}</td>
+                    <td class="data-cell">{{ i['maintenance']|safe }}</td>
                     <td class="data-cell">{{ i['rate']|safe }}</td>
                     <td class="data-cell">{{ i['srate'] |safe}}</td>
                     <td class="data-cell">{{ i['fixed'] }}</td>
-                    <td class="data-cell">{{ i['maintenance']|safe }}</td>
                     <td class="data-cell">{{ i['garbage'] }}</td>
                     <td class="data-cell">{{ i['security'] }}</td>
                     <td class="data-cell">{{ i['by'] }}</td>
@@ -45,14 +45,14 @@
                           <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header underline">House: <span class="text-info font-weight-bold">{{i['house']}}</span></div>
                 
-                            <div>
-                              <i class="fas fa-random ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#updateHouseModal">ChangeGroup</span>
+                            <div class="text-center">
+                              <button id="{{i['id']}}" type="button" class="btn btn-sm btn-outline-primary ellipsis borderless text-left" data-toggle="modal" data-target="#updateHouseModal"><i class="fas fa-random"></i> ChangeGroup</span>
                             </div>
-                            <div>
-                              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{i['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editHouseModal">Edit house</span>
+                            <div class="center-btn">
+                              <button id="{{i['editid']}}" type="button" class="btn btn-sm btn-outline-primary ellipsis borderless text-left" data-toggle="modal" data-target="#editHouseModal"><i class="fas fa-edit"></i> Edit house</span>
                             </div>
-                            <div>
-                              <i class="fas fa-trash-alt ml-3 mr-2 text-info"></i><span id="{{i['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger" data-toggle="modal" data-target="#deleteHouseModal">Remove</span>
+                            <div class="center-btn">
+                              <button id="{{i['delid']}}" type="button" class="btn btn-sm btn-outline-danger ellipsis borderless text-left" data-toggle="modal" data-target="#deleteHouseModal"><i class="fas fa-trash-alt"></i> Remove</span>
                             </div>
                              
                           </div>

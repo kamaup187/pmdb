@@ -3653,12 +3653,13 @@ def discard_bills(props):
             
                 tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
                 print("ORIGINAL AMOUNT:",original_amount)
-                running_bal = tenant_obj.balance
-                print("CURRENT TENANT BALANCE:",running_bal)
-                running_bal = running_bal - original_amount
-                print("FINAL:",running_bal)
+                if tenant_obj:
+                    running_bal = tenant_obj.balance
+                    print("CURRENT TENANT BALANCE:",running_bal)
+                    running_bal = running_bal - original_amount
+                    print("FINAL:",running_bal)
 
-                TenantOp.update_balance(tenant_obj,running_bal)
+                    TenantOp.update_balance(tenant_obj,running_bal)
 
                 MonthlyChargeOp.delete(bill)
 

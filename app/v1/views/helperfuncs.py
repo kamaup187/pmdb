@@ -3543,6 +3543,11 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
                             print("WATERTAGET ############################",watertarget)
 
+                            if bill.apartment_id == 398:
+                                paymentacc = f"Paybill No. {bill.apartment.payment_bank}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
+                            else:
+                                paymentacc = ""
+
                             template_vars = {
                                 "bill":bill,
                                 "servicevisibility":"",
@@ -3562,6 +3567,7 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
                                 "invdate":inv_date,
                                 "invdue":inv_due,
                                 "client":tenant,
+                                "paymentacc":paymentacc,
                                 "company":co,
                                 "invnum":invnum,
                                 "logo":logo(co)[2],
@@ -3579,8 +3585,137 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
 
 
+def send_out_single_email_invoice(billid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    try:
+        bill = MonthlyChargeOp.fetch_specific_bill(billid)
+
+        with mail.connect() as conn:
+
+            if bill.ptenant:
+                tenant=bill.ptenant
+                current_target = "owner"
+                print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
+            else:
+                current_target = "tenant"
+                tenant=bill.tenant
+                print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
+
+            co = bill.apartment.company
+    
+            invnum = bill.id + 13285
+
+            house = bill.house
+
+            print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",tenant.name)
+
+            #start here
+            sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+            sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+
+            try:
+                wbill = sibling_water_bill[0]
+                w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
+            except:
+                wbill = None
+                w_edited = "dispnone"
+
+            try:
+                ebill = sibling_electricity_bill[0]
+                e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
+            except:
+                ebill = None
+                e_edited = "dispnone"
 
 
+            kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+            invdate = bill.date - relativedelta(days = 0)
+            inv_date = invdate.strftime("%d/%b/%y")
+            invdue = invdate + relativedelta(days=6)
+            inv_due = invdue.strftime("%d/%b/%y")
+
+        
+            email_addr = tenant.email
+            if email_addr:
+                if wbill or ebill:
+                    visibility = ""
+                else:
+                    visibility = "hide"
+
+                arrears = bill.arrears
+                
+                if bill.paid_amount:
+                    billpaid = f"{bill.paid_amount:,.2f}"
+                    billbal = f"{bill.balance:,.2f}"
+
+                else:
+                    billpaid = 0.0
+                    billbal = 0.0
+
+                if arrears < 0.0:
+                    arrtitle = "Previous balance"
+                    bbfhighlight = "text-success"
+
+                    arrears = f"{arrears*-1}"
+                elif arrears > 0.0:
+                    arrtitle = "Previous balance"
+                    bbfhighlight = "text-danger"
+                else:
+                    arrtitle = ""
+                    bbfhighlight = ""
+
+                if current_target == "owner":
+                    if bill.house.watertarget == "owner":
+                        watertarget = True
+                    else:
+                        watertarget = False
+                else:
+                    if bill.house.watertarget == "tenant":
+                        watertarget = True
+                    else:
+                        watertarget = False
+
+
+                if bill.apartment_id == 398:
+                    paymentacc = f"Paybill No. {bill.apartment.payment_bank}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
+                else:
+                    paymentacc = ""
+
+                template_vars = {
+                    "bill":bill,
+                    "servicevisibility":"",
+                    "readings": wbill,
+                    "w_edited": w_edited,
+                    "ereadings": ebill,
+                    "e_edited": e_edited,
+                    "visibility":visibility,
+                    "watertarget":watertarget,
+                    "arrears":arrears,
+                    "bbfhighlight ": bbfhighlight,
+                    "arrtitle":arrtitle,
+                    "billpaid":billpaid,
+                    "billbal":billbal,
+                    "house":house,
+                    "total":f"{bill.total_bill:,.2f}",
+                    "invdate":inv_date,
+                    "invdue":inv_due,
+                    "client":tenant,
+                    "paymentacc":paymentacc,
+                    "company":co,
+                    "invnum":invnum,
+                    "logo":logo(co)[2],
+                    "slogo":logo(kiotapay)[1]
+                }
+
+                mail_sender(conn,tenant,bill,template_vars,email_addr,co)
+            else:
+                print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
+
+    except Exception as e:
+        print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
 
             
 

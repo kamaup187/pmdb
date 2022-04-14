@@ -671,6 +671,13 @@
 
 <script>
   $("#editbill").click(function(){   
+
+    var cb22 = document.getElementById("delinv");
+      if (cb22.checked){
+        var delinv = "True";
+      }else{
+        var delinv = "False";
+      }
     $("#editbill").html("updating...")  
       $.ajax({
         url: "{{ url_for('api.editsummary') }}",
@@ -681,7 +688,8 @@
                 water: $("#edit_water").val(),
                 deposit: $("#edit_deposit").val(),
                 arrears: $("#edit_arrears").val(),
-                paid: $("#edit_paid").val()
+                paid: $("#edit_paid").val(),
+                delinv:delinv
             },
         success: function(response) {
           $(".alert-msgs").html(response);

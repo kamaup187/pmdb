@@ -2921,9 +2921,12 @@ def get_affirmative(accessbool):
         return "no"
 
 def get_bool(arg):
-    if arg == "True":
-        return True
-    else:
+    try:
+        if arg == "True":
+            return True
+        else:
+            return False
+    except:
         return False
 
 def get_group_role_assgn_obj(user_group,grouprole):

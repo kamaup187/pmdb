@@ -1404,6 +1404,7 @@ class EditSummary(Resource):
         deposit = request.form.get('deposit')
         arrears = request.form.get('arrears')
         paid = request.form.get('paid')
+        delinv = request.form.get('delinv')
 
         for i in billid:
             if i.isdigit():
@@ -1413,6 +1414,12 @@ class EditSummary(Resource):
         identifier = billid[target_index:]
 
         bill = LandlordSummaryOp.fetch_specific_bill(identifier)
+
+        delinv_bool = get_bool(delinv)
+
+        if delinv_bool:
+            LandlordSummaryOp.delete(bill)
+            return None
 
         # original_amount = bill.total_bill
 

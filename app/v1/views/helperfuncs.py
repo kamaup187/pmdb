@@ -4711,7 +4711,7 @@ def read_excel(dict_array,apartment_id,user_id):
 
             print("house & amount",housecode,valid_inputs[0])
 
-            code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,0.0,0.0,0.0,0.0,valid_inputs[4],apartment_id,user_id)
+            code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[4],apartment_id,user_id)
             code_obj.save()
         else:
             pass

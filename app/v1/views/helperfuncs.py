@@ -591,6 +591,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
             letterhead = "../static/img/logos/vintage/letterhead.jpg"
 
+        elif str_name_company == "Rever Front Limited":
+            ##################################################
+            logopath = "../static/img/logos/rever/l-logo.png"
+            mobilelogopath = "../static/img/logos/lacasa/s-logo.png"
+            fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
+            letterhead = "../static/img/logos/vintage/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################

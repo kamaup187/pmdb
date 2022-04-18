@@ -5243,11 +5243,14 @@ def garbage_bill(apartment_id,chargetype,user_id,month,year):
                 garbage_charge = house.housecode.garbagerate
 
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
-            garbage_charges = []
             for charge in all_charges:
                 if str(charge) == "Garbage" and charge.date.month == month and charge.date.year == year:
-                    checker = "exists"
-                    break
+                    if charge.amount == 0.0:
+                        print("deleting zero charged garbage obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
 
             if checker:
                 print("Skipping",house.name, "of",house.apartment,"garbage charging",garbage_charge,"exists")

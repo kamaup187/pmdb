@@ -50,6 +50,7 @@ kiotanum = "+254716674695"
 
 mailsender = os.getenv('G_ACCOUNT')
 
+
 # from ..stkpush.access_token import register_url
 
 configuration = os.getenv('APP_SETTINGS')

@@ -94,7 +94,7 @@
                         <tbody>
                             {%if readings%}
                             <tr class="underline-thin-fade">
-                                <td class="pl-0">Water readings</td>
+                                <td class="pl-0">March water readings</td>
                                 <td>{{readings.last_reading}}</td>
                                 <td>{{readings.reading}}</td>
                                 <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
@@ -128,7 +128,7 @@
 
                             {%if bill.rent%}
                             <tr class="underline-thin-fade">
-                                <td class="pl-0">Rent</td>
+                                <td class="pl-0">April rent</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -173,7 +173,7 @@
 
                             {%if bill.garbage%}
                             <tr class="underline-thin-fade">
-                                <td class="pl-0">Garbage</td>
+                                <td class="pl-0">March garbage</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -253,28 +253,33 @@
                 </div>
                 {%endif%}
 
+                <div class="dispnon">
 
-                    <span class="text-muted dispnone">
-                        Payment will be done on Cheque, funds transfer or Mobile money to:
+                    <span class="text-muted">
+                        Payment will be done via Mobile money to:
                     </span>
-                    <p class="small text-muted dispnone">
-                        BANK: EQUITY BANK<br>
-                        BRANCH: PARLIAMENT ROAD BRANCH<br>
-                        ACCOUNT NAME: PROMINENCE TECH & BUILD SYSTEMS LTD<br>
-                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 0020275280370</span><br>
-                        Safaricom Paybill: <span class="text-gray-900 font-weight-bold">4012401 </span> Account: <span class="text-gray-900 font-weight-bold">Kiotapay</span><br>
+                    <p class="small text-muted">
+                        BANK: NCBA BANK<br>
+                        BRANCH: NCBA HOUSE<br>
+                        ACCOUNT NAME: REVER PROPERTIES LTD<br>
+                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 462590016</span><br>
+                        MPESA PAYBILL: <span class="text-gray-900 font-weight-bold">880100</span>
                     </p>
 
-                    <div class="divjust-end">
-                        <p class="small text-muted text-center mt-5">
-                            powered by <img class="" src={{slogo}} alt="KiotaPay">
-                        </p>
-    
-                        <p class="small text-muted text-right">
-                            Signed by <img class="" src={{sign}} alt="Signature"><br>
-                            for {{company.name}}
-                        </p>
-                    </div>
+                </div>
+
+
+
+                <div class="divjust-end">
+                    <p class="small text-muted text-center mt-5">
+                        powered by <img class="" src={{slogo}} alt="KiotaPay">
+                    </p>
+
+                    <p class="small text-muted text-right">
+                        Signed by <img class="" src={{sign}} alt="Signature"><br>
+                        for {{company.name}}
+                    </p>
+                </div>
             </div>
 
 </div>
@@ -537,10 +542,10 @@
             {%endif%}
         
 
-                <span class="text-muted dispnone">
+                <span class="text-muted">
                     Payment will be done on Cheque, funds transfer or Mobile money to:
                 </span>
-                <p class="small text-muted dispnone">
+                <p class="small text-muted">
                     BANK: EQUITY BANK<br>
                     BRANCH: PARLIAMENT ROAD BRANCH<br>
                     ACCOUNT NAME: PROMINENCE TECH & BUILD SYSTEMS LTD<br>

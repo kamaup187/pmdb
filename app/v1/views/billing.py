@@ -1826,7 +1826,8 @@ class ReceivePayment(Resource):
                 return render_template('ajax_multivariable.html',items=[],placeholder="Not allowed",access=no_cash)
             else:
                 tenant_list = tenantauto(propid)
-                house_tenant_list = generate_house_tenants(tenant_list)
+                # house_tenant_list = generate_house_tenants(tenant_list)
+                house_tenant_list = generate_house_ownertenants(tenant_list,propid)
                 return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access=no_cash)
 
         if target == "propname":
@@ -1856,23 +1857,37 @@ class ReceivePayment(Resource):
             return render_template('ajax_prop_period.html',propperiod=propperiod,nextpropperiod=nextpropperiod)
 
         if target == "tenant name":
-            house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-            tenant_obj = check_occupancy(house_obj)[1]
+            house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+
+            if house_obj[1]:
+                tenant_obj = house_obj[1]
+            else:
+                tenant_obj = check_occupancy(house_obj[0])[1]
+
             if tenant_obj.multiple_houses:
                 houses = get_active_houses(tenant_obj)[1]
                 return render_template('ajax_target_houses.html',house_list=houses,tenant_obj=tenant_obj)
             return f'<i class="fas fa-user mr-1"></i>: Tenant <span class="text-black mr-2">{tenant_obj.name}</span> balance: Kes <span class="text-danger">{tenant_obj.balance:,.1f}</span>'
 
         if target == "amount due":
-            house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-            if not house_obj:
+            house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+            if not house_obj[0]:
                 abort(403)
-            tenant_obj = check_occupancy(house_obj)[1]
+
+            if house_obj[1]:
+                tenant_obj = house_obj[1]
+            else:
+                tenant_obj = check_occupancy(house_obj[0])[1]
+
             if tenant_obj.multiple_houses:
                 houses = get_active_houses(tenant_obj)[1]
                 return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
-            bills = house_obj.monthlybills
+            if tenant_obj.tenant_type == "owner":
+                bills = tenant_obj.monthly_charges
+            else:
+                bills = house_obj[0].monthlybills
+
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
 
             # print("heeeeeey",latest_bill.month)
@@ -1898,7 +1913,9 @@ class ReceivePayment(Resource):
 
         if target == "amount due alt":
             house_obj = get_specific_house_obj(propid,house_name)
+            
             bills = house_obj.monthlybills
+
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
@@ -1916,11 +1933,22 @@ class ReceivePayment(Resource):
 
             else:
 
-                house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
+                house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
 
-                print("HOOOOOUUUUUUSE",house_name,"OBJ",house_obj)
+                if house_obj[1]:
+                    tenant_obj = house_obj[1]
+                else:
+                    tenant_obj = check_occupancy(house_obj[0])[1]
 
-            bills = house_obj.monthlybills
+                print("HOOOOOUUUUUUSE",house_name,"OBJ",house_obj[0])
+
+            if tenant_obj.tenant_type == "owner":
+                bills = tenant_obj.monthly_charges
+            else:
+                bills = house_obj[0].monthlybills
+
+            # bills = house_obj.monthlybills
+
             try:
                 bill = fetch_current_billing_period_bills(prop.billing_period,bills)[0]
             except:
@@ -2069,6 +2097,7 @@ class ReceivePayment(Resource):
         if house_name:
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             billing_period = get_billing_period(prop)
+            tenant_obj = None
 
             #URGENT TODO
             # if paymonth:
@@ -2098,18 +2127,26 @@ class ReceivePayment(Resource):
                     target_houses.append(hse_obj)
 
             else:
-                hse_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-                target_houses.append(hse_obj)
+                hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[0]
+                target_houses.append(hse_obj[0])
 
             house_obj = target_houses[0]
-            
 
-            tenant_obj = check_occupancy(house_obj)[1]
+            if not house_name2:
+                owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
+                if owner:
+                    tenant_obj = owner
+                else:
+                    tenant_obj = check_occupancy(house_obj)[1]
+
+            if not tenant_obj:
+                print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                abort(404)
 
             tenant_name = tenant_obj.name
 
 
-            house_id = house_obj.id
+            house_id = house_obj[0].id
             tenant_id = tenant_obj.id
             created_by = current_user.id
             chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
@@ -2118,7 +2155,13 @@ class ReceivePayment(Resource):
                 narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
 
-            monthly_charges = house_obj.monthlybills
+            # monthly_charges = house_obj.monthlybills
+
+            if tenant_obj.tenant_type == "owner":
+                monthly_charges = tenant_obj.monthly_charges
+            else:
+                monthly_charges = house_obj[0].monthlybills
+
             specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
 
             # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)

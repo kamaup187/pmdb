@@ -54,9 +54,11 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# phonenuma = sms_phone_number_formatter("0701095028")
+# phonenuma = sms_phone_number_formatter("0722267087")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
+
+# advanta_send_sms("Greetings John, \n your sms sender Id is ready for integration ~ KiotaPay Team",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
 class MonitorActivity(Resource):
     def get(self):

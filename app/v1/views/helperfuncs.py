@@ -1718,6 +1718,32 @@ def get_specific_house_obj_from_house_tenant_alt(apartment_id,raw_hses):
             house_obj = house
     return house_obj
 
+def get_specific_house_obj_from_house_tenant_alt_alt(apartment_id,raw_hses):
+    target_item = raw_hses.split('#')[0]
+    owner = False
+    if raw_hses.endswith(")"):
+        owner = True
+    # target_item = hses[0]
+    improper_houselist = target_item.lstrip("[").rstrip("]")
+    str_houses = improper_houselist.replace(",","")
+    proper_houselist = list(str_houses.split(" "))
+    target_hse = proper_houselist[0]
+    # import pdb
+    # pdb.set_trace()
+
+    # print("okerrrrrrroooooooo",raw_hses,target_item,improper_houselist,str_houses,proper_houselist,target_hse)
+
+    house_list_compare = houseauto(apartment_id)
+    house_obj = None
+    for house in house_list_compare:
+        if str(house) == target_hse:
+            house_obj = house
+
+    if house_obj:
+        if owner:
+            return house_obj,house_obj.owner
+    return house_obj,None
+
 def extract_tenant(expr):
     id_part = expr.split(' ')[1]
     id_num = id_part[1:] 
@@ -2269,6 +2295,15 @@ def get_active_houses(tenant_obj):
 
     return "booked",None,
 
+def get_owners(hse):
+    """check whether tenant is a resident or alien""" 
+    if hse.owner:
+        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",hse.owner.name)
+        return "owned",hse.owner.name
+    else:
+        return "not owned",None
+    
+
 def fetch_active_meter(house_obj):
     """returns active meter""" 
     if house_obj.meter_allocated:
@@ -2380,6 +2415,23 @@ def generate_house_tenants(arr):
         hses = get_active_houses(i)[1]
 
         new_arr.append(f'{hses} #{i.name}')
+    return new_arr
+
+def generate_house_ownertenants(arr,propid):
+    """combine house and tenant"""
+    new_arr = []
+    for i in arr:
+        hses = get_active_houses(i)[1][0]
+
+        new_arr.append(f'{hses}#{i.name}')
+
+    allhses = houseauto(propid)
+    for ii in allhses:
+        owner = get_owners(ii)[1]
+        if owner:
+            print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",owner)
+            new_arr.append(f'{ii}#{owner}(owner)')
+
     return new_arr
 
 def generate_house_tenants_alt(arr,arr2):
@@ -5565,9 +5617,10 @@ def total_bill(apartment_id,user_id,month,year):
                 tenant = result[1]
 
             if tenant or house.owner:
-                pass
+                print("OWNER:",house.owner)
+                print("TENANT:",tenant)
             else:
-                print("BILLING SKIPPED FOR VACANT UNIT")
+                print("BILLING SKIPPED FOR VACANT UNIT TENANT:",tenant,"OWNER",house.owner)
                 continue
 
             bills = house.monthlybills

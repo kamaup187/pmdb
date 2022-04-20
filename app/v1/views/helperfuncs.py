@@ -584,9 +584,9 @@ def logo(co):
             fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
             letterhead = "../static/img/logos/vintage/letterhead.jpg"
 
-
         elif str_name_company == "LaCasa Apartments":
             coc = CompanyOp.fetch_company_by_name("LaCasa Apartments")
+            print("its herereeeee", coc.name, "provider", coc.sms_provider)
             CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lacasa/l-logo.png"

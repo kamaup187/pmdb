@@ -1,5 +1,6 @@
 <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
 <span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
+<span id="ttype" class="dispnone">{{tenant.tenant_type}}</span>
 <span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="del_tenant_identifier" class="dispnone"></span>
 <span id="payment_identifier" class="dispnone"></span>
@@ -824,7 +825,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
-                  // propid: $("#prop_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"isolated"
                 },
                 success: function(response) {
@@ -892,6 +893,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1157,6 +1159,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1167,7 +1170,8 @@
                     url: "{{ url_for('api.updatebalance') }}",
                     type: "get",
                     data: {
-                            tenantid: $("#tenant_identifier").text()
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text(),
                         },
                     success: function(response) {
                       $("#tenant-balance").html(response)
@@ -1225,6 +1229,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1235,7 +1240,8 @@
                     url: "{{ url_for('api.updatebalance') }}",
                     type: "get",
                     data: {
-                            tenantid: $("#tenant_identifier").text()
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text()
                         },
                     success: function(response) {
                       $("#tenant-balance").html(response)
@@ -1334,7 +1340,8 @@
         url: "{{ url_for('api.updatebalance') }}",
         type: "get",
         data: {
-                tenantid: $("#tenant_identifier").text()
+                tenantid: $("#tenant_identifier").text(),
+                ttype: $("#ttype").text()
             },
         success: function(response) {
           $(".update-balance").html('<i class="fas fa-sync-alt text-success ml-2"></i>')
@@ -1345,6 +1352,7 @@
                 type: "get",
                 data: {
                   tenantid: $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {

@@ -134,6 +134,13 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
+        co = current_user.company
+        if co.name == "Vintage Residence Limited":
+            if co.receipt_num:
+                pass
+            else:
+                CompanyOp.increment_receipt_num(co,565)
+
         # cooo = CompanyOp.fetch_company_by_id(16)
         # if cooo:
         #     print("ccccccccccccccoooooo",cooo.name)
@@ -1588,6 +1595,7 @@ class TenantManagement(Resource):
         tenantids = get_obj_ids(tenantlist)
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
+        
         
         return render_template("ajax_tenants_detail.html",prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
 
@@ -6451,11 +6459,15 @@ class Results(Resource):
 
         else:
 
-            tenant_id = item[3:]
+            tenant_id = get_identifier(item)
+
+            if item.startswith("tnt"):
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            else:
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
 
             update_login_history("search",current_user)
 
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             db.session.expire(tenant_obj)
             prop_obj = tenant_obj.apartment
 
@@ -6463,40 +6475,42 @@ class Results(Resource):
 
             if tenant_obj.multiple_houses:
                 paid_status = "-"
-                pass
+                badge_status = ""
             else:
-                house_obj = check_house_occupied(tenant_obj)[1]
-                current_invoice = fetch_current_invoice(house_obj)
+                if tenant_obj.tenant_type == "owner":
+                    house_obj = tenant_obj.house
+                    current_invoice = fetch_current_owner_invoice(house_obj)
+                else:
+                    house_obj = check_house_occupied(tenant_obj)[1]
+                    current_invoice = fetch_current_invoice(house_obj)
 
                 if current_invoice:
+                    if current_invoice.paid_amount:
+                        paid_status = "paid"
+                        badge_status = "badge badge-success badge-counter"
 
-                    if current_invoice.tenant_id == tenant_obj.id:
-                        if current_invoice.paid_amount:
-                            paid_status = "paid"
-                            badge_status = "badge badge-success badge-counter"
-
-                            if current_invoice.balance > 0.0:
-                                paid_status = "partialy paid"
-                                badge_status = "badge badge-warning badge-counter"
-                        else:
-                            paid_status = "unpaid"
-                            badge_status = "badge badge-danger badge-counter"
+                        if current_invoice.balance > 0.0:
+                            paid_status = "partialy paid"
+                            badge_status = "badge badge-warning badge-counter"
                     else:
-                        paid_status = 'not invoiced'
+                        paid_status = "unpaid"
                         badge_status = "badge badge-danger badge-counter"
                 else:
-                    paid_status = "-"
-                    badge_status = ""
+                    paid_status = 'not invoiced'
+                    badge_status = "badge badge-danger badge-counter"
 
-            
-            if get_active_houses(tenant_obj)[0] == "Resident":
-                print(get_active_houses(tenant_obj)[0])
-                houses = get_active_houses(tenant_obj)[1]
-            elif get_active_houses(tenant_obj)[0] == "Vacated":
-                print(get_active_houses(tenant_obj)[0])
-                houses = get_active_houses(tenant_obj)[1].house
+
+            if tenant_obj.tenant_type != "owner":
+                if get_active_houses(tenant_obj)[0] == "Resident":
+                    print(get_active_houses(tenant_obj)[0])
+                    houses = get_active_houses(tenant_obj)[1]
+                elif get_active_houses(tenant_obj)[0] == "Vacated":
+                    print(get_active_houses(tenant_obj)[0])
+                    houses = get_active_houses(tenant_obj)[1].house
+                else:
+                    houses = None
             else:
-                houses = None
+                houses = tenant_obj.house
 
             if tenant_obj.sms:
                 smsable = "Yes"

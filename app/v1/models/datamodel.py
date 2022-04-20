@@ -39,6 +39,8 @@ class Company(db.Model):
     sphone = db.Column(db.VARCHAR)
     description = db.Column(db.String)
 
+    receipt_num = db.Column(db.Integer)
+
     balance = db.Column(db.Float,default=0)
     subscription = db.Column(db.Float,default=0)
     active = db.Column(db.Boolean,default=True)
@@ -920,6 +922,7 @@ class Payment(db.Model):
     paymode = db.Column(db.String)
     # ref_number = db.Column(db.VARCHAR,unique=True)
     ref_number = db.Column(db.VARCHAR)
+    receipt_num = db.Column(db.Integer)
     rand_id = db.Column(db.VARCHAR)
     description = db.Column(db.String)
     payment_name = db.Column(db.String)

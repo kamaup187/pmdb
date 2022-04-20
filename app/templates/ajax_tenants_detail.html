@@ -568,7 +568,7 @@
         else if(item.startsWith("pedit")){
           $("#edit_tenant_identifier").html(item)
         }
-        else if(item.startsWith("tnt")){
+        else if(item.startsWith("tnt")||item.startsWith("ptnt")){
           $("#barloader").removeClass("dispnone")
           $.ajax({
             url: "/results",

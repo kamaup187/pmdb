@@ -193,6 +193,10 @@ class CompanyOp(Company,Base):
         self.sms_provider = provider
         db.session.commit()
 
+    def increment_receipt_num(self,num):
+        self.receipt_num = num
+        db.session.commit()
+
     def update_status(self,status):
         self.active = status
         db.session.commit()
@@ -1854,8 +1858,8 @@ class TenantOp(Tenant,Base):
 
         return date
 
-    # def generate_editid(self):
-    #     return "edit" + str(self.id)
+    def generate_editid(self):
+        return "tedit" + str(self.id)
 
     def generate_identity(self):
         return "tnt"+str(self.id)
@@ -2752,7 +2756,7 @@ class LandlordSummaryOp(LandlordSummary,Base):
         }
 
 class PaymentOp(Payment,Base):
-    def __init__(self,paymode,ref_number,description,chargetype_string,paydate,payperiod,charged_amount,amount,apartment_id,house_id,tenant_id,created_by,chargetype_id=None):
+    def __init__(self,paymode,ref_number,description,chargetype_string,paydate,payperiod,charged_amount,amount,apartment_id,house_id,tenant_id,ptenant_id,created_by,chargetype_id=None):
         self.paymode=paymode
         self.ref_number=ref_number
         self.description = description
@@ -2766,6 +2770,7 @@ class PaymentOp(Payment,Base):
         self.apartment_id=apartment_id
         self.house_id=house_id
         self.tenant_id=tenant_id
+        self.ptenant_id=ptenant_id
         self.user_id = created_by
 
     def fetch_payment_by_ref(ref):
@@ -2815,6 +2820,10 @@ class PaymentOp(Payment,Base):
 
     def update_balance(self,balance):
         self.balance = balance
+        db.session.commit()
+
+    def update_receipt_num(self,num):
+        self.receipt_num = num
         db.session.commit()
 
     def update_charged_amount(self,bill):
@@ -2872,9 +2881,21 @@ class PaymentOp(Payment,Base):
         db.session.commit()
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        if self.tenant:
+            fname = self.tenant.name.title()
+        else:
+            fname = self.house.owner.name.title()
+        # fname = self.tenant.name.split()[0]
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>' 
+
+    def get_names(self):
+        if self.tenant:
+            fname = self.tenant.name.title()
+        else:
+            fname = self.house.owner.name.title()
+
+        return fname
 
     def highlight(self):
         if self.balance > 0.0:
@@ -2937,12 +2958,13 @@ class PaymentOp(Payment,Base):
             'id':self.id,
             'editid':PaymentOp.generate_editid(self),
             'delid':PaymentOp.generate_delid(self),
-            'tenant':self.tenant.name,
-            'tenant-alt':self.tenant.name.title(),
+            'tenant':PaymentOp.get_names(self),
+            'tenant-alt':PaymentOp.get_names(self),
             'house':self.house.name,
             'hst':PaymentOp.combine_house_tenant_alt(self),
             'mode':PaymentOp.fname_extracter(self.paymode),
             'payid':self.id,
+            'receiptno':self.receipt_num if self.receipt_num else self.id,
             'ref':self.ref_number,
             'chargedamnt':PaymentOp.fig_format(self.charged_amount),
             'highlight':PaymentOp.highlight(self),

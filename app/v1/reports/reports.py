@@ -4268,7 +4268,12 @@ class FetchPayments(Resource):
 
         else:
             tenantid = request.args.get('tenantid')
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            ttype = request.args.get('ttype')
+
+            if ttype != "owner":
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            else:
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
             tenant_payments = tenant_obj.payments
 
@@ -4321,17 +4326,23 @@ class FetchBills(Resource):
     def get(self):
         propid = request.args.get('propid')
         target = request.args.get('target')
+        ttarget = request.args.get('ttarget')
+        ttype = request.args.get('ttype')
 
         co = current_user.company
         period = co.billing_period
 
         if target == "tenant bill":
             tenant_id = request.args.get('tenantid')
-            if tenant_id.startswith("tnt"):
-                tenantid = tenant_id[3:]
+
+            tenantid = get_identifier(tenant_id)
+
+            if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype != "owner":
+
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
             else:
-                tenantid = tenant_id
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+                
             db.session.expire(tenant_obj)
 
             # tenant_bills = tenant_obj.monthly_charges

@@ -1858,7 +1858,6 @@ class ReceivePayment(Resource):
 
         if target == "tenant name":
             house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
-
             if house_obj[1]:
                 tenant_obj = house_obj[1]
             else:
@@ -1884,11 +1883,9 @@ class ReceivePayment(Resource):
                 return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
             if tenant_obj.tenant_type == "owner":
-                bills = tenant_obj.monthly_charges
+                latest_bill = fetch_current_owner_invoice(house_obj[0])
             else:
-                bills = house_obj[0].monthlybills
-
-            latest_bill = max(bills, key=lambda x: x.id) if bills else None
+                latest_bill = fetch_current_invoice(house_obj[0])
 
             # print("heeeeeey",latest_bill.month)
             if latest_bill:
@@ -2098,6 +2095,7 @@ class ReceivePayment(Resource):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             billing_period = get_billing_period(prop)
             tenant_obj = None
+            co = prop.company
 
             #URGENT TODO
             # if paymonth:
@@ -2110,7 +2108,7 @@ class ReceivePayment(Resource):
             #     period = billing_period
 
             period = billing_period
-
+            
             target_houses = []       
 
 
@@ -2127,17 +2125,32 @@ class ReceivePayment(Resource):
                     target_houses.append(hse_obj)
 
             else:
-                hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[0]
+                hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
                 target_houses.append(hse_obj[0])
 
             house_obj = target_houses[0]
 
-            if not house_name2:
-                owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
-                if owner:
-                    tenant_obj = owner
+            tenant_id = None
+            ptenant_id = None
+
+            try:
+                if not house_name2:
+                    owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
+                    if owner:
+                        tenant_obj = owner
+                        ptenant_id = tenant_obj.id
+
+                    else:
+                        tenant_obj = check_occupancy(house_obj)[1]
+                        tenant_id = tenant_obj.id
                 else:
                     tenant_obj = check_occupancy(house_obj)[1]
+                    tenant_id = tenant_obj.id
+
+            except:
+                print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                abort(404) 
+
 
             if not tenant_obj:
                 print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
@@ -2145,9 +2158,7 @@ class ReceivePayment(Resource):
 
             tenant_name = tenant_obj.name
 
-
-            house_id = house_obj[0].id
-            tenant_id = tenant_obj.id
+            house_id = house_obj.id
             created_by = current_user.id
             chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
@@ -2158,11 +2169,16 @@ class ReceivePayment(Resource):
             # monthly_charges = house_obj.monthlybills
 
             if tenant_obj.tenant_type == "owner":
-                monthly_charges = tenant_obj.monthly_charges
+                specific_charge_obj = fetch_current_owner_invoice(house_obj)
             else:
-                monthly_charges = house_obj[0].monthlybills
+                specific_charge_obj = fetch_current_invoice(house_obj)
 
-            specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
+            # if tenant_obj.tenant_type == "owner":
+            #     monthly_charges = tenant_obj.monthly_charges
+            # else:
+            #     monthly_charges = house_obj.monthlybills
+
+            # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
 
             # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)
 
@@ -2215,8 +2231,15 @@ class ReceivePayment(Resource):
             # pay_date = alilipa lini?
             
 
-            payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,created_by)
+            payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
             payment_obj.save()
+
+            if co.receipt_num:
+                num = co.receipt_num
+                num += 1
+
+                CompanyOp.increment_receipt_num(co,num)
+                PaymentOp.update_receipt_num(payment_obj,num)
             #################################################################################################
 
             rand_id = random_generator()
@@ -2235,7 +2258,10 @@ class ReceivePayment(Resource):
 
             tenant_bal = tenant_obj.balance
             tenant_bal -= valid_amount
-            TenantOp.update_balance(tenant_obj,tenant_bal)
+            if tenant_obj.tenant_type == "owner":
+                PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
+            else:
+                TenantOp.update_balance(tenant_obj,tenant_bal)
 
             running_balance = bal
             running_balance-= valid_amount
@@ -2246,7 +2272,6 @@ class ReceivePayment(Resource):
             string_house = ""
 
             for h in target_houses:
-
 
 
                 if specific_charge_obj and current_period_payment:
@@ -2291,27 +2316,27 @@ class ReceivePayment(Resource):
                     except:
                         print("PAID TO LEGACY BILL")
 
-                elif not specific_charge_obj and not current_period_payment:
-                    subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
+                # elif not specific_charge_obj and not current_period_payment:
+                #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
 
-                    db.session.expire(specific_charge_obj)
-                    bala = specific_charge_obj.balance
-                    bala-=valid_amount
-                    MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+                #     db.session.expire(specific_charge_obj)
+                #     bala = specific_charge_obj.balance
+                #     bala-=valid_amount
+                #     MonthlyChargeOp.update_balance(specific_charge_obj,bala)
 
-                    paid_amount = specific_charge_obj.paid_amount
-                    cumulative_pay = paid_amount + valid_amount
-                    MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                    MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
+                #     paid_amount = specific_charge_obj.paid_amount
+                #     cumulative_pay = paid_amount + valid_amount
+                #     MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+                #     MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
-                    if subsequent_specific_charge_obj:
-                        update_total = subsequent_specific_charge_obj.total_bill - valid_amount
-                        update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
-                        update_balance = subsequent_specific_charge_obj.balance - valid_amount
+                #     if subsequent_specific_charge_obj:
+                #         update_total = subsequent_specific_charge_obj.total_bill - valid_amount
+                #         update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
+                #         update_balance = subsequent_specific_charge_obj.balance - valid_amount
 
-                        MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
-                        MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
-                        MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
+                #         MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
+                #         MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
+                #         MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
 
 
                 stringname = h.name + " "
@@ -2325,7 +2350,10 @@ class ReceivePayment(Resource):
 
             # house = house_obj.name
 
-            receiptno = payment_obj.id
+            if payment_obj.receipt_num:
+                receiptno = payment_obj.receipt_num
+            else:
+                receiptno = payment_obj.id
             
             paid = f'KES {payment_obj.amount:,.2f}'
 
@@ -2366,7 +2394,7 @@ class ReceivePayment(Resource):
 
             receipt = f"Receipt: {receiptlink}"
 
-            if sms_bool and current_user.company_user_group.name != "User":
+            if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
 
                 job101 = q.enqueue_call(
                     func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
@@ -2484,22 +2512,29 @@ class ReceivePayment(Resource):
 class UpdateBalance(Resource):
     def get(self):
         tenant_id = request.args.get("tenantid")
-        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+        ttype = request.args.get("ttype")
 
-        # if tenant_obj.multiple_houses:
-        #     return "error"
+        if ttype == "owner":
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
+            house_obj = tenant_obj.house
+            current_invoice = fetch_current_owner_invoice(house_obj)
+        else:
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            house_obj = check_house_occupied(tenant_obj)[1]
+            current_invoice = fetch_current_invoice(house_obj)
+
             
         print("Updating balance! currently",tenant_obj.balance)
+        targetbills = []
 
-        # bill = MonthlyChargeOp.fetch_monthlycharge_by_tenant_id(tenant_id)
-
-        bills = tenant_obj.monthly_charges
-
-        targetbills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,bills)
+        if tenant_obj.multiple_houses:
+            bills = tenant_obj.monthly_charges
+            targetbills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,bills)
+        else:
+            targetbills.append(current_invoice)
 
         bill_balance = 0.0
         
-
         print("totototal", len(targetbills))
         print("totototal", targetbills[0].date.date())
         print("totototal", targetbills[0].balance)
@@ -2561,10 +2596,6 @@ class UpdateBalance(Resource):
         db.session.expire(tenant_obj)
         print("Balance updated! now",tenant_obj.balance)
 
-        if current_user.username.startswith("qc") or current_user.usercode == "9672":
-            co = bill.apartment.company
-            # CompanyOp.set_rem_quota(co,500)
-
         return (f"{bill_balance:,.1f} ")
 
 class Receipt(Resource):
@@ -2609,6 +2640,11 @@ class Receipt(Resource):
 
         co = current_user.company
 
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+
         return render_template(
             'ajax_receiptpay.html',
             voided = disp,
@@ -2624,7 +2660,7 @@ class Receipt(Resource):
             outline=outline,
             balance=bal,
             chargetype=payment_obj.payment_name,
-            receiptno=payment_obj.id,
+            receiptno=receiptno,
             refnum=payment_obj.ref_number,
             paymode=payment_obj.paymode,
             logopath=logo(current_user.company)[0],

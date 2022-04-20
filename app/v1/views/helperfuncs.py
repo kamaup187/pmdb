@@ -1004,6 +1004,9 @@ def fetch_pt_prev_billing_period_bills(month,year,arr,ptid):
 def fetch_actual_payments(arr):
     actual_payment_data = []
     for i in arr:
+        print(i.ptenant_id,"bgcfxdzdcv")
+        print(i.tenant_id,"bbbbbbbbbbbbbbbb")
+
         if not i.voided:
             actual_payment_data.append(i)
     return actual_payment_data
@@ -2677,7 +2680,16 @@ def fetch_current_invoice(house_obj):
 
     bills = house_obj.monthlybills
     for item in bills:
-        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.tenant:
+            return item
+        continue
+    return None
+
+def fetch_current_owner_invoice(house_obj):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.ptenant:
             return item
         continue
     return None
@@ -3205,7 +3217,10 @@ def autosend_pending_smsreceipts(payids):
         else:
             reference = f'#{payment_obj.id}'
 
-        tenant_obj = payment_obj.tenant
+        if payment_obj.ptenant:
+            tenant_obj = payment_obj.ptenant
+        else:
+            tenant_obj = payment_obj.tenant
 
         if tenant_obj.balance < 0:
             bal = tenant_obj.balance * -1
@@ -6516,10 +6531,13 @@ def get_obj_ids(arr):
         if req:
             req_id = req["id"]
             obj_id_list.append(req_id)
-            editid = req["editid"]
+            editid = req.get("editid")
             obj_id_list.append(editid)
             delid = req["delid"]
             obj_id_list.append(delid)
+            # tedit = req.get("tedit")
+            # if tedit:
+            #     obj_id_list.append(tedit)
             allocid=req.get("allocid")
             if allocid:
                 obj_id_list.append(allocid)

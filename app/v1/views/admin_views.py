@@ -101,6 +101,11 @@ class ViewReceipt(Resource):
 
         server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+
         return Response(render_template(
             'user_receipt.html',
             voided = disp,
@@ -116,7 +121,7 @@ class ViewReceipt(Resource):
             outline=outline,
             balance=bal,
             chargetype=payment_obj.payment_name,
-            receiptno=payment_obj.id,
+            receiptno=receiptno,
             refnum=payment_obj.ref_number,
             paymode=payment_obj.paymode,
             logopath=logo(co)[0],
@@ -207,6 +212,11 @@ class DownloadReceipt(Resource):
 
             mail_logo = "../" + logo(co)[0]
 
+            if payment_obj.receipt_num:
+                receiptno = payment_obj.receipt_num
+            else:
+                receiptno = payment_obj.id
+
             template_vars = {
                 "tenant":tenant.name,
                 "voided" : disp,
@@ -221,7 +231,7 @@ class DownloadReceipt(Resource):
                 "outline":outline,
                 "balance":bal,
                 "chargetype":payment_obj.payment_name,
-                "receiptno":payment_obj.id,
+                "receiptno":receiptno,
                 "refnum":payment_obj.ref_number,
                 "paymode":payment_obj.paymode,
                 "logopath":mail_logo,

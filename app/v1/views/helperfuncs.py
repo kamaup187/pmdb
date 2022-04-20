@@ -4999,14 +4999,14 @@ def read_water_excel(dict_array,apartment_id,user_id):
                 continue
             else:
 
-                if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
+                if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
                     #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
                     print("Reading left out captured")
 
                     month = billing_period.month
                     year = billing_period.year
 
-                elif datetime.datetime.now().day >= 20:
+                elif datetime.datetime.now().day >= 21:
                     #Only enters this block if readings are taken early before the next month of billing
 
                     if datetime.datetime.now().month != 12:
@@ -6213,14 +6213,14 @@ def filtered_house_list(apartment_id):
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period
 
-    if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
+    if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
         #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
         print("Reading left out captured")
 
         month = billing_period.month
         year = billing_period.year
 
-    elif datetime.datetime.now().day >= 20:
+    elif datetime.datetime.now().day >= 21:
         #Only enters this block if readings are taken early before the next month of billing
 
         if datetime.datetime.now().month != 12:
@@ -6292,12 +6292,12 @@ def filtered_house_list_alt(apartment_id):
     current_month = datetime.datetime.now().month
 
     if period != 12:
-        if datetime.datetime.now().day < 20 and current_month == period:
+        if datetime.datetime.now().day < 21 and current_month == period:
             period = period
         else:
             period += 1
     else:
-        if datetime.datetime.now().day < 20 and current_month == period:
+        if datetime.datetime.now().day < 21 and current_month == period:
             period = 12
         else:
             period = 1

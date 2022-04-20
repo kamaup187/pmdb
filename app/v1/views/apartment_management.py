@@ -4419,7 +4419,7 @@ class UpdateTenant(Resource):
 
         if not smsaccess:
             smsaccess = "null"
-        bool_sms = return_bool_alt(smsaccess)
+        bool_sms = return_bool_alt_alt(smsaccess)
 
         identity = get_identifier(tenant_id)
         if tenant_id.startswith("pedit"):

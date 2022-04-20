@@ -1815,7 +1815,8 @@ class TenantOp(Tenant,Base):
         db.session.commit()
 
     def update_can_receive_sms(self,status):
-        self.sms = status
+        if status != "null":
+            self.sms = status
         db.session.commit()
 
     def update_fine(self,fine):

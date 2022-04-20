@@ -2973,6 +2973,14 @@ def return_bool_alt(param):
     else:
         return True
 
+def return_bool_alt_alt(param):
+    if param == "null":
+        return "null"
+    elif param == "False":
+        return False
+    else:
+        return True
+
 def get_billing_period(prop):
     period = prop.billing_period
     return period

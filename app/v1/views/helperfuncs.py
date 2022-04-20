@@ -4771,7 +4771,7 @@ def read_excel(dict_array,apartment_id,user_id):
         desc = item["desc"]
         group = item["group"]
         tenant = item["tenant"]
-        mobile = item["mobile"]
+        mob = item["mobile"]
         email = item["email"]
         water = item["water"]
         garb = item["garb"]
@@ -4827,18 +4827,65 @@ def read_excel(dict_array,apartment_id,user_id):
         else:
             pass
 
+        # try:
+        #     tel = str(int(mobile))
+        # except:
+        #     tel = ""
+
+        # if tel:
+        #     rawstrtel = tel.replace(" ", "")
+        #     if len(rawstrtel) > 9:
+        #         strtel = ""
+        #     else:
+        #         strtel = rawstrtel
+        # else:
+        #     strtel = ""
+
+        # if strtel.startswith("0"):
+        #     tenantphone = strtel
+        # else:
+        #     tenantphone = "0" + strtel
+
+        if mob:
+
+            if isinstance(mob,str):
+                mobile2 = mob.replace(" ", "")
+
+                if mobile2.startswith("0"):
+                    mobile = mobile2.lstrip("0")
+
+                elif mobile2.startswith("+254"):
+                    mobile = mobile2.lstrip("+254")
+
+                elif mobile2.startswith("254"):
+                    mobile = mobile2.lstrip("254")
+
+                else:
+                    mobile = mobile2
+
+            else:
+                mobile = mob
+        else:
+            mobile = ""
+
         try:
-            tel = str(int(mobile))
+            if isinstance(mobile,str):
+                tel = mobile
+            else:
+                tel = str(int(mobile))
         except:
+            print("Failed to stringify",mobile)
             tel = ""
 
         if tel:
             rawstrtel = tel.replace(" ", "")
             if len(rawstrtel) > 9:
+                print(tel,"is too long")
                 strtel = ""
             else:
                 strtel = rawstrtel
         else:
+            print(mobile,"mobile does not exist")
             strtel = ""
 
         if strtel.startswith("0"):

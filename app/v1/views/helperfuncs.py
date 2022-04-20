@@ -586,6 +586,8 @@ def logo(co):
 
 
         elif str_name_company == "LaCasa Apartments":
+            coc = CompanyOp.fetch_company_by_name("LaCasa Apartments")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lacasa/l-logo.png"
             mobilelogopath = "../static/img/logos/lacasa/s-logo.png"
@@ -691,6 +693,9 @@ def sms_sender(company,sms_text,phonenum):
 
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
+
+    elif company.title() == "LaCasa Apartments":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
     #########################################################################################
     else:

@@ -4191,10 +4191,19 @@ class AddTenant(Resource):
 
                         if isinstance(raw_mobile,str):
                             mobile2 = raw_mobile.replace(" ", "")
+                            
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
+  
+                            elif mobile2.startswith("+254"):
+                                mobile = mobile2.lstrip("+254")
+
+                            elif mobile2.startswith("254"):
+                                mobile = mobile2.lstrip("254")
+
                             else:
                                 mobile = mobile2
+
                         else:
                             mobile = raw_mobile
                     else:

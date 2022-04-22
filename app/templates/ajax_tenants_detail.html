@@ -569,6 +569,11 @@
           $("#edit_tenant_identifier").html(item)
         }
         else if(item.startsWith("tnt")||item.startsWith("ptnt")){
+          if(item.startsWith("tnt")){
+            var ttype = "tenant"
+          }else{
+            var ttype = "owner"
+          }
           $("#barloader").removeClass("dispnone")
           $.ajax({
             url: "/results",
@@ -585,7 +590,8 @@
                 type: "get",
                 data: {
                   tenantid: item,
-                  target:"tenant bill"
+                  target:"tenant bill",
+                  ttype:ttype
                 },
                 success: function(response) {
                   

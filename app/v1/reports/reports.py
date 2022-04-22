@@ -4338,9 +4338,10 @@ class FetchBills(Resource):
             tenantid = get_identifier(tenant_id)
 
             if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype != "owner":
-
+                print("expecting tenant here")
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
             else:
+                print("expecting owner here")
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
                 
             db.session.expire(tenant_obj)
@@ -4348,7 +4349,6 @@ class FetchBills(Resource):
             # tenant_bills = tenant_obj.monthly_charges
             # recent_bills = fetch_recent_bills(period,tenant_bills)
             recent_bills = tenant_obj.monthly_charges
-
 
             if recent_bills:
                 detailed_bills = bill_details(recent_bills)

@@ -142,7 +142,7 @@ class Index(Resource):
                 print("UPDATING OWNER",pt.name)
                 PermanentTenantOp.update_tenant_type(pt,"owner")
             else:
-                print(pt.name,"UPDATED ALREADY")
+                print(pt.name ,"OF",pt.apartment.name,"UPDATED ALREADY")
 
         # co = current_user.company
         # if co.name == "Vintage Residence Limited":

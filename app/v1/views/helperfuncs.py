@@ -1736,6 +1736,7 @@ def get_specific_house_obj_from_house_tenant_alt_alt(apartment_id,raw_hses):
     str_houses2 = str_houses.replace(" ","")
     proper_houselist = list(str_houses2.split(" "))
     target_hse = proper_houselist[0]
+
     # import pdb
     # pdb.set_trace()
 
@@ -1744,7 +1745,8 @@ def get_specific_house_obj_from_house_tenant_alt_alt(apartment_id,raw_hses):
     house_list_compare = houseauto(apartment_id)
     house_obj = None
     for house in house_list_compare:
-        if str(house) == target_hse:
+        str_hse = str(house)
+        if str_hse.replace(" ","") == target_hse:
             house_obj = house
 
     if house_obj:

@@ -1733,7 +1733,8 @@ def get_specific_house_obj_from_house_tenant_alt_alt(apartment_id,raw_hses):
     # target_item = hses[0]
     improper_houselist = target_item.lstrip("[").rstrip("]")
     str_houses = improper_houselist.replace(",","")
-    proper_houselist = list(str_houses.split(" "))
+    str_houses2 = str_houses.replace(" ","")
+    proper_houselist = list(str_houses2.split(" "))
     target_hse = proper_houselist[0]
     # import pdb
     # pdb.set_trace()
@@ -5503,11 +5504,14 @@ def security_bill(apartment_id,chargetype,user_id,month,year):
                 security_charge = house.housecode.securityrate
 
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
-            security_charges = []
             for charge in all_charges:
                 if str(charge) == "Security" and charge.date.month == month and charge.date.year == year:
-                    checker = "exists"
-                    break
+                    if charge.amount == 0.0:
+                        print("deleting zero charged security obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
 
             if checker:
                 print("Skipping",house.name, "of",house.apartment,"security charging",security_charge,"exists")
@@ -5568,8 +5572,12 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
             else:
                 for charge in all_charges:
                     if str(charge) == "Maintenance" and charge.date.month == month and charge.date.year == year:
-                        checker = "exists"
-                        break
+                        if charge.amount == 0.0:
+                            print("deleting zero charged garbage obj")
+                            ChargeOp.delete(charge)
+                        else:
+                            checker = "exists"
+                            break
 
                 if checker:
                     print("Skipping",house.name, "of",house.apartment,"service charging",service_charge,"exists")
@@ -5991,6 +5999,8 @@ def total_bill(apartment_id,user_id,month,year):
                     else:
                         rent_due = rent
 
+                    # rent_bal = 0.0
+                    # rent_due = 0.0
 
                     if house.watertarget:
                         if house.watertarget == "owner":

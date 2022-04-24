@@ -2539,6 +2539,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'highlight':MonthlyChargeOp.highlight(self),
             'payhighlight':MonthlyChargeOp.payhighlight(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
+            'ptenant':self.ptenant_id if self.ptenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
             'year':self.year,
             'tenant':MonthlyChargeOp.get_tenant_name(self),

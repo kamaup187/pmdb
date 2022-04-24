@@ -136,12 +136,20 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        co = current_user.company
-        if co.name == "Vintage Residence Limited":
-            if co.receipt_num:
-                pass
+        pts = PermanentTenantOp.fetch_all_tenants()
+        for pt in pts:
+            if not pt.tenant_type:
+                print("UPDATING OWNER",pt.name)
+                PermanentTenantOp.update_tenant_type(pt,"owner")
             else:
-                CompanyOp.increment_receipt_num(co,565)
+                print(pt.name,"UPDATED ALREADY")
+
+        # co = current_user.company
+        # if co.name == "Vintage Residence Limited":
+        #     if co.receipt_num:
+        #         pass
+        #     else:
+        #         CompanyOp.increment_receipt_num(co,565)
 
         # cooo = CompanyOp.fetch_company_by_id(16)
         # if cooo:

@@ -1628,6 +1628,10 @@ class PermanentTenantOp(PermanentTenant,Base):
         self.status = status
         db.session.commit()
 
+    def update_tenant_type(self,status):
+        self.tenant_type = status
+        db.session.commit()
+
     def update_residency(self,residency):
         self.residency = residency
         db.session.commit()

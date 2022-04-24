@@ -1667,6 +1667,9 @@ class PermanentTenantOp(PermanentTenant,Base):
     def generate_editid(self):
         return "pedit" + str(self.id)
 
+    def generate_delid(self):
+        return "pdel" + str(self.id)
+
     def view(self):
         print("NAME >>>>",self.name)
         return {
@@ -1867,6 +1870,9 @@ class TenantOp(Tenant,Base):
 
     def generate_alloc_identity(self):
         return "alloc"+str(self.id)
+
+    def generate_delid(self):
+        return "tdel" + str(self.id)
 
     def generate_name(self):
         if self.name:

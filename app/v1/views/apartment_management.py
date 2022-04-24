@@ -4591,16 +4591,30 @@ class TenantClearance(Resource):
         tenantid = request.form.get('tenant_id')
         discard_bill = request.form.get('discard_bill')
         pay_off_balance = request.form.get('pay_off_balance')
+        ttype = request.form.get("ttype")
+        runalert = request.form.get('runalert')
+        target = request.form.get('target')
 
         tenant_id = get_identifier(tenantid)
 
-        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+        if ttype == "owner":
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
+
+            if target == "tenant name":
+                return tenant_obj.name
+
+            if not runalert:
+                PermanentTenantOp.delete(tenant_obj)
+                return proceed + "removed successfully"
+                
+            return proceed + "ready to remove"
+
+
+        else:
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
 
         if tenant_obj.multiple_houses:
             return "Cannot clear, tenant occupies multiple units"
-
-        runalert = request.form.get('runalert')
-        target = request.form.get('target')
 
         house_obj = check_house_occupied(tenant_obj)[1]
 

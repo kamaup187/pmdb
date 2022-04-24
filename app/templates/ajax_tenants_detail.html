@@ -2,6 +2,7 @@
     <section class="contact_area section_gap">
       <!-- <span id="prop_identifier" class="dispnone">{{prop.id}}</span> -->
       <span id="tenant_identifier" class="dispnone"></span>
+      <span id="ttype3" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
       <span id="current-reloader" class="dispnone">current</span>
@@ -562,7 +563,11 @@
     $("#"+item).on('click',function(){
       console.log("clicked",item)
       if( isNaN(parseInt(item)) ){
-        if(item.startsWith("del")){
+        if(item.startsWith("tdel")){
+          $("#ttype3").html("tenant")
+          $("#del_tenant_identifier").html(item)
+        }else if(item.startsWith("pdel")){
+          $("#ttype3").html("owner")
           $("#del_tenant_identifier").html(item)
         }
         else if(item.startsWith("pedit")){
@@ -1304,6 +1309,7 @@
       type: "POST",
       data: {
             tenant_id: $("#del_tenant_identifier").text(),
+            ttype:$("#ttype3").text(),
             runalert:"somestring"
           },
       success: function(response) {
@@ -1313,6 +1319,7 @@
                 type: "POST",
                 data: {
                   tenant_id:$("#del_tenant_identifier").text(),
+                  ttype:$("#ttype3").text(),
                   target:"tenant name"
                 },
                 success: function(response) {
@@ -1359,6 +1366,7 @@
         type: "POST",
         data: {
                 tenant_id: $("#del_tenant_identifier").text(),
+                ttype:$("#ttype3").text(),
                 discard_bill: discard,
                 pay_off_balance : pay
             },

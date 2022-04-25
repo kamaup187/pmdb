@@ -423,7 +423,7 @@ class Index(Resource):
             if company.name == "Latitude Properties":
                 props = company.props
                 for prop in props:
-                    payss = prop.payments
+                    payss = prop.payment_data
                     for p in payss:
 
                         trans = p.ref_number

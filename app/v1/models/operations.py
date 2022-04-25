@@ -3305,6 +3305,10 @@ class CtoBop(CtoB,Base):
         self.status = status
         db.session.commit()
 
+    def update_trans(self,trans):
+        self.trans_id = trans
+        db.session.commit()
+
     def get_date(self):
         paydate = self.post_date
         str_date = paydate.strftime("%d/%b/%y")

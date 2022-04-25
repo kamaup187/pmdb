@@ -136,13 +136,13 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        pts = PermanentTenantOp.fetch_all_tenants()
-        for pt in pts:
-            if not pt.tenant_type:
-                print("UPDATING OWNER",pt.name)
-                PermanentTenantOp.update_tenant_type(pt,"owner")
-            else:
-                print(pt.name ,"OF",pt.apartment.name,"UPDATED ALREADY")
+        # pts = PermanentTenantOp.fetch_all_tenants()
+        # for pt in pts:
+        #     if not pt.tenant_type:
+        #         print("UPDATING OWNER",pt.name)
+        #         PermanentTenantOp.update_tenant_type(pt,"owner")
+        #     else:
+        #         print(pt.name ,"OF",pt.apartment.name,"UPDATED ALREADY")
 
         # co = current_user.company
         # if co.name == "Vintage Residence Limited":
@@ -426,7 +426,13 @@ class Index(Resource):
                 for shortcode in shortcodes:
                     raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
                     for i in raw_unclaimed:
-                        print(">>>cbid",i.trans_id)
+                        print(">>>cbid",i.trans_id,"STATUS",i.status)
+                        trans = i.trans_id
+ 
+                        s = re.sub(r'[^a-zA-Z0-9]', '', trans)
+
+                        CtoBop.update_trans(i,s)
+
                         payyyy = PaymentOp.fetch_payment_by_ref(i.trans_id)
                         if payyyy:
                             print("Resolving ", i.trans_id," and ",payyyy.amount,"payref ",payyyy.ref_number)

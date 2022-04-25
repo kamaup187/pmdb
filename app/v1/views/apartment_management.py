@@ -421,17 +421,24 @@ class Index(Resource):
                 print("NO SHORTS")
 
             if company.name == "Latitude Properties":
+                props = company.props
+                for prop in props:
+                    payss = prop.payments
+                    for p in payss:
+
+                        trans = p.ref_number
+                        if trans == "N/A" or trans == "na" or trans == "NA":
+                            print("passing transaction")
+                        else:
+                            s = re.sub(r'[^a-zA-Z0-9]', '', trans)
+                            PaymentOp.update_ref(p,s)
+
                 shortcodes = company.shortcodes
 
                 for shortcode in shortcodes:
                     raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
                     for i in raw_unclaimed:
                         print(">>>cbid",i.trans_id,"STATUS",i.status)
-                        trans = i.trans_id
- 
-                        s = re.sub(r'[^a-zA-Z0-9]', '', trans)
-
-                        CtoBop.update_trans(i,s)
 
                         payyyy = PaymentOp.fetch_payment_by_ref(i.trans_id)
                         if payyyy:

@@ -467,24 +467,25 @@ class Index(Resource):
             cbids_num = len(cbids)
 
             apart1 = ApartmentOp.fetch_apartment_by_name("Bestel Apartments")
-            if not apart1.paymentdetails:
-                p = PaymentDetailOp("mpesa","203027","","","","","",apart1.id)
-                p.save()
+            if apart1:
+                if not apart1.paymentdetails:
+                    p = PaymentDetailOp("mpesa","203027","","","","","",apart1.id)
+                    p.save()
 
-            # apart2 = ApartmentOp.fetch_apartment_by_name("La Casa Apartments")
-            # if not apart2.paymentdetails:
-            #     p = PaymentDetailOp("mpesa","203027","","","","","",apart1.id)
-            #     p.save()
+                # apart2 = ApartmentOp.fetch_apartment_by_name("La Casa Apartments")
+                # if not apart2.paymentdetails:
+                #     p = PaymentDetailOp("mpesa","203027","","","","","",apart1.id)
+                #     p.save()
 
-            apart3 = ApartmentOp.fetch_apartment_by_name("Neema Homes")
-            if not apart3.paymentdetails:
-                p = PaymentDetailOp("mpesa","602666","","","","","",apart1.id)
-                p.save()
+                apart3 = ApartmentOp.fetch_apartment_by_name("Neema Homes")
+                if not apart3.paymentdetails:
+                    p = PaymentDetailOp("mpesa","602666","","","","","",apart1.id)
+                    p.save()
 
-            apart4 = ApartmentOp.fetch_apartment_by_name("The Container")
-            if not apart4.paymentdetails:
-                p = PaymentDetailOp("mpesa","7555555","","","","","",apart1.id)
-                p.save()
+                apart4 = ApartmentOp.fetch_apartment_by_name("The Container")
+                if not apart4.paymentdetails:
+                    p = PaymentDetailOp("mpesa","7555555","","","","","",apart1.id)
+                    p.save()
 
 
             return Response(render_template(

@@ -3844,7 +3844,7 @@ class MpesaStatement(Resource):
         main = []
         for i in cbids:
 
-            if i.post.date.month in month_range and i.post.date.year in year_range:
+            if i.post_date.month in month_range and i.post_date.year in year_range:
                 main.append(i)
 
         cbids_dicts = ctb_payment_details(main)

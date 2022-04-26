@@ -414,11 +414,10 @@ class Index(Resource):
                 print("cbt not found for", ref)
 
   
-            if company == "Test Agencies":
-                shorts = ["401401","4081687"]
+            if company.name== "Test Agencies":
+                shorts = ["4012401","4081687"]
             else:
                 shorts = []
-                print("NO SHORTS")
 
             if company.name == "Latitude Properties":
                 props = company.props
@@ -478,6 +477,7 @@ class Index(Resource):
                 co=company,
                 companyname = companyname,
                 cbids=cbids,
+                shortcodes=company.shortcodes,
                 cbids_num=cbids_num,
                 logobg=logobg,
                 numsms=smsfrac,
@@ -2310,7 +2310,7 @@ class UpdateCompanyDetails(Resource):
         co_phone = request.form.get("co_tel")
         co_sphone = request.form.get("co_stel")
 
-        if current_user.username.startswith("qc"):
+        if current_user.username.startswith("qc") or os.getenv('APP_SETTINGS') == "development":
             pass
         else:
             co_name = ""

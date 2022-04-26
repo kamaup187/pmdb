@@ -2062,9 +2062,33 @@
     <div class="modal-dialog modal-kubwa-sana" role="document">
       <div class="modal-content">
         <div class="indicator"></div>
-        <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
-          <div class="alert-msgs"></div>
+        <div class="modal-header pb-0">
+
+          <div class="divjust-end">
+            <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
+            <a id="download_mpesapayments" href="" target="_blank" class="dispnone"></a>
+
+
+            <div id="mpesapayments" class="dispnone">
+
+              <div class="divjust-end">
+                <div class="form-group input-icons mt-2">
+                  <select name="usergroup" class="form-control" id ="shortcode" >
+                    <option disabled selected value> -- Select Paybill -- </option>
+                    {% for o in shortcodes %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <button id="downloadmpesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
+              </div>
+
+            </div>
+
+
+            <button id="togglempesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View report</span></button>
+          </div>
+
         </div>
         <div class="modal-body pt-0">
           <div class="media mb-2">
@@ -3786,6 +3810,41 @@ $("#closemodule").on('click',function(){
   }
   }
   });
+</script>
+
+<script>
+  $("#downloadmpesapayments").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+      shortcode = $("#shortcode").val()
+
+      url = "/mpesa/statement?shortcode=" + shortcode
+
+
+    $("#download_mpesapayments")[0].href = url
+
+    if (shortcode){
+
+      $("#download_mpesapayments")[0].click();
+
+      setTimeout(function(){
+          $('#togglempesapayments').removeClass("dispnone")
+          $('#mpesapayments').addClass("dispnone")
+      },1000);
+      
+    }
+    else{
+      alert("select paybill first !")
+    }
+
+    });
+</script>
+
+<script>
+  $("#togglempesapayments").click(function(){ 
+    $(this).addClass("dispnone")
+    $("#mpesapayments").removeClass("dispnone")
+    });
 </script>
 
 

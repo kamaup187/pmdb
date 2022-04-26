@@ -3813,6 +3813,62 @@ class TenantStatementThree(Resource):
             company=current_user.company
         ))
 
+
+class MpesaStatement(Resource):
+    @login_required
+    def get(self):
+
+        shortcode_id = request.args.get("shortcode")
+
+        start = request.args.get("from")
+
+        if not start:
+            begin_date_month = datetime.datetime.now().month
+            begin_date_year = datetime.datetime.now().year
+            begin_date = generate_start_date(begin_date_month, begin_date_year)
+        else:
+            begin = date_formatter_alt(start)
+            begin_date = parse(begin)
+
+        end_date = begin_date.date() + datetime.timedelta(days=30)
+
+        month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date.date()).days+1)]
+        year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date.date()).days+1)]
+
+
+        shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
+
+        cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+
+            
+        main = []
+        for i in cbids:
+
+            if i.post.date.month in month_range and i.post.date.year in year_range:
+                main.append(i)
+
+        cbids_dicts = ctb_payment_details(main)
+                
+        ########################################################
+        timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        ########################################################
+
+        return Response(render_template(
+            'report_mpesa_statement.html',
+            bills=cbids_dicts,
+            prop="someprop",
+            shortcode=shortcode,
+            name=current_user.name,
+            tenantlist=[],
+            timeline=timeline,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company
+        ))
+
+
 class ExpenseDetail(Resource):
     """class"""
     @login_required

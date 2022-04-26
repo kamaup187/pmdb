@@ -151,6 +151,9 @@ api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
 api.add_resource(CallBackUrlEquity,"/nest/payment")
 api.add_resource(CallBackUrlEquityProd,"/promitech/4012401")
 
+api.add_resource(CallBackUrlLatitudeEquity,"/latitude/payment")
+api.add_resource(CallBackUrlTestLatitudeEquity,"/test/latitude/payment")
+
 api.add_resource(CallBackUrlLes,"/les/45")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 
@@ -203,6 +206,7 @@ api.add_resource(InternalDetailAlt,"/general/statement")
 api.add_resource(TenantStatement,"/tenant/statement")
 api.add_resource(TenantStatementTwo,"/tenant/statement2")
 api.add_resource(TenantStatementThree,"/tenant/statement3")
+api.add_resource(MpesaStatement,"/mpesa/statement")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")

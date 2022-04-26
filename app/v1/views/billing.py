@@ -3536,6 +3536,88 @@ class CallBackUrlEquity(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
+
+class CallBackUrlLatitudeEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("lATITUDE Equity test has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+            # trans_id = data['TransID']
+            # trans_time = data['TransTime']
+            # trans_amnt = data['TransAmount']
+            # trans_type = data['TransactionType']
+            # business_shortcode = data['BusinessShortCode']
+            # bill_ref_num = data['BillRefNumber']
+            # invoice_num = data['InvoiceNumber']
+            # msisdn = data['MSISDN']
+            # org_acc_bal = data['OrgAccountBalance']
+            # fname = data['FirstName']
+            # lname = data['LastName']
+
+            # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+            # ctob_obj.save()
+
+            # auto_consume_ctob(ctob_obj)
+        except:
+            print ("It failed, Bank integration has an error")
+
+        response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+        resp = jsonify(response)
+        return make_response(resp)
+
+
+class CallBackUrlTestLatitudeEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("TEST LATITUDE Equity test has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+            # trans_id = data['TransID']
+            # trans_time = data['TransTime']
+            # trans_amnt = data['TransAmount']
+            # trans_type = data['TransactionType']
+            # business_shortcode = data['BusinessShortCode']
+            # bill_ref_num = data['BillRefNumber']
+            # invoice_num = data['InvoiceNumber']
+            # msisdn = data['MSISDN']
+            # org_acc_bal = data['OrgAccountBalance']
+            # fname = data['FirstName']
+            # lname = data['LastName']
+
+            # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+            # ctob_obj.save()
+
+            # auto_consume_ctob(ctob_obj)
+        except:
+            print ("It failed, Bank integration has an error")
+
+        response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+        resp = jsonify(response)
+        return make_response(resp)
+
 class CallBackUrlLes(Resource):
     def get(self):
         pass

@@ -3315,7 +3315,7 @@ class CtoBop(CtoB,Base):
         return str_date
 
     def get_status(self):
-        if self.sms_status:
+        if self.status:
             if self.status == "unclaimed":
                 status = '<span class="text-danger font-weight-bold">unclaimed</span>'
             else:

@@ -401,51 +401,50 @@ class Index(Resource):
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
-            ref = "QD22PGM7HK"
-            paymentt = PaymentOp.fetch_payment_by_ref(ref)
-            if paymentt:
-                print("payment found for ref", ref)
-            else:
-                print("payment not found for", ref)
-            cbt = CtoBop.fetch_record_by_ref(ref)
-            if cbt:
-                print("cbt found for ref", ref)
-            else:
-                print("cbt not found for", ref)
+            # ref = "QD22PGM7HK"
+            # paymentt = PaymentOp.fetch_payment_by_ref(ref)
+            # if paymentt:
+            #     print("payment found for ref", ref)
+            # else:
+            #     print("payment not found for", ref)
+            # cbt = CtoBop.fetch_record_by_ref(ref)
+            # if cbt:
+            #     print("cbt found for ref", ref)
+            # else:
+            #     print("cbt not found for", ref)
 
-  
+            # if company.name == "Latitude Propertiess":
+            #     props = company.props
+            #     for prop in props:
+            #         payss = prop.payment_data
+            #         for p in payss:
+
+            #             trans = p.ref_number
+            #             if trans == "N/A" or trans == "na" or trans == "NA":
+            #                 print("passing transaction")
+            #             else:
+            #                 s = re.sub(r'[^a-zA-Z0-9]', '', trans)
+            #                 PaymentOp.update_ref(p,s)
+
+            #     shortcodes = company.shortcodes
+
+            #     for shortcode in shortcodes:
+            #         raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+            #         for i in raw_unclaimed:
+            #             print(">>>cbid",i.trans_id,"STATUS",i.status)
+
+            #             payyyy = PaymentOp.fetch_payment_by_ref(i.trans_id)
+            #             if payyyy:
+            #                 print("Resolving ", i.trans_id," and ",payyyy.amount,"payref ",payyyy.ref_number)
+            #                 CtoBop.update_status(i,"claimed")
+            #                 continue
+            #             else:
+            #                 print("cbid did not find its sibling payment")
+
             if company.name== "Test Agencies":
                 shorts = ["4012401","4081687"]
             else:
                 shorts = []
-
-            if company.name == "Latitude Properties":
-                props = company.props
-                for prop in props:
-                    payss = prop.payment_data
-                    for p in payss:
-
-                        trans = p.ref_number
-                        if trans == "N/A" or trans == "na" or trans == "NA":
-                            print("passing transaction")
-                        else:
-                            s = re.sub(r'[^a-zA-Z0-9]', '', trans)
-                            PaymentOp.update_ref(p,s)
-
-                shortcodes = company.shortcodes
-
-                for shortcode in shortcodes:
-                    raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
-                    for i in raw_unclaimed:
-                        print(">>>cbid",i.trans_id,"STATUS",i.status)
-
-                        payyyy = PaymentOp.fetch_payment_by_ref(i.trans_id)
-                        if payyyy:
-                            print("Resolving ", i.trans_id," and ",payyyy.amount,"payref ",payyyy.ref_number)
-                            CtoBop.update_status(i,"claimed")
-                            continue
-                        else:
-                            print("cbid did not find its sibling payment")
 
             for short in shorts:
                 cbid = ShortcodeOp.fetch_shortcode_by_id(short)

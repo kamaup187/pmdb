@@ -3314,6 +3314,17 @@ class CtoBop(CtoB,Base):
         str_date = paydate.strftime("%d/%b/%y")
         return str_date
 
+    def get_status(self):
+        if self.sms_status:
+            if self.status == "unclaimed":
+                status = '<span class="text-danger font-weight-bold">unclaimed</span>'
+            else:
+                status = '<span class="text-success">resolved</span>'
+        else:
+            status = '<span class="text-danger font-weight-bold"> ? </span>'
+
+        return status
+
     def view(self):
         return {
             'id':self.id,
@@ -3326,7 +3337,7 @@ class CtoBop(CtoB,Base):
             'phone':self.msisdn,
             'fname':self.fname,
             'lname':self.lname,
-            'status':self.status,
+            'status':CtoBop.get_status(self),
             'date':CtoBop.get_date(self)
         }
 

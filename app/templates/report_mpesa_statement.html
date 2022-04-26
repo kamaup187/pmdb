@@ -96,7 +96,7 @@
                       <td class="data-cell ">{{ cbid['billref'] }}</td>
                       <td class="data-cell ">{{ cbid['transid'] }}</td>
                       <td class="data-cell ">{{ cbid['amount'] }}</td>
-                      <td class="data-cell ">{{ cbid['status'] }}</td>
+                      <td class="data-cell ">{{ cbid['status'] |safe }}</td>
                       <td class="data-cell ">{{ cbid['date'] }}</td>
 
                     </tr>
@@ -169,7 +169,7 @@
                   <td class="data-cell ">{{ cbid['billref'] }}</td>
                   <td class="data-cell ">{{ cbid['transid'] }}</td>
                   <td class="data-cell ">{{ cbid['amount'] }}</td>
-                  <td class="data-cell ">{{ cbid['status'] }}</td>
+                  <td class="data-cell ">{{ cbid['status'] | safe }}</td>
                   <td class="data-cell ">{{ cbid['date'] }}</td>
 
                 </tr>

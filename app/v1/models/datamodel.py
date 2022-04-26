@@ -294,11 +294,31 @@ class Apartment(db.Model):
     messages = db.relationship('InternalMessages',backref='apartment',order_by='InternalMessages.date', cascade="all, delete-orphan")
     reminders = db.relationship('Reminder',backref='apartment',order_by='Reminder.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
-
+    paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
 
 
     def __repr__(self):
         return self.name
+
+
+class PaymentDetail(db.Model):
+    """db model class"""
+
+    __tablename__ = 'paymentsdetails'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    paymode = db.Column(db.VARCHAR)
+    shortcode = db.Column(db.VARCHAR)
+    shortcodeacc_type = db.Column(db.VARCHAR)
+    bankname = db.Column(db.VARCHAR)
+    bankbranch = db.Column(db.VARCHAR)
+    bankaccountname = db.Column(db.VARCHAR)
+    bankaccountnumber = db.Column(db.VARCHAR)
+
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+
+    def __repr__(self):
+        return self.paymode
 
 # class Member(db.Model):
 #     """db model class"""

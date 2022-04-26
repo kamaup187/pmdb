@@ -564,6 +564,30 @@ class LocationOp(Location,Base):
     def fetch_all_locations():
         return Location.query.order_by(Location.id.asc()).all()
 
+class PaymentDetailOp(PaymentDetail,Base):
+    """class"""
+    def __init__(self,paymode,shortcode,shortcodeacc_type,bankname,bankbranch,bankaccountname,bankaccountnumber,apartment_id):
+        self.paymode = paymode
+        self.shortcode = shortcode
+        self.shortcodeacc_type = shortcodeacc_type
+        self.bankname = bankname
+        self.bankbranch = bankbranch
+        self.bankaccountname = bankaccountname
+        self.bankaccountnumber = bankaccountnumber
+        self.apartment_id = apartment_id
+
+    def update_details(self,paymode,shortcode,shortcodeacc_type,bankname,bankbranch,bankaccountname,bankaccountnumber):
+        self.paymode = paymode
+        self.shortcode = shortcode
+        self.shortcodeacc_type = shortcodeacc_type
+        self.bankname = bankname
+        self.bankbranch = bankbranch
+        self.bankaccountname = bankaccountname
+        self.bankaccountnumber = bankaccountnumber
+        db.session.commit()
+
+
+
 class ApartmentOp(Apartment,Base):
     """class"""
     def __init__(self,name,image_url,location_id,owner_id,agency_managed,createdby):

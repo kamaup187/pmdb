@@ -669,8 +669,10 @@ class BillInvoice(Resource):
         elif target == 'email':
 
             return render_template(
-                "ajax_tenant_invoice.html",
+                "ajax_tenant_invoice_mail.html",
                 bill=bill,
+                month = get_str_month(bill.month),
+                p = bill.apartment.paymentdetails,
                 readings = wbill,
                 w_edited = w_edited,
                 ereadings = ebill,
@@ -689,7 +691,7 @@ class BillInvoice(Resource):
                 company=current_user.company,
                 invnum=invnum,
                 randid=bill.id,
-                logo=logo(current_user.company)[2],
+                logo=logo(current_user.company)[0],
                 slogo=logo(kiotapay)[1],
                 sign=logo(kiotapay)[4]
                 )

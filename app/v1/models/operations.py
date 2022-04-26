@@ -3326,6 +3326,7 @@ class CtoBop(CtoB,Base):
             'phone':self.msisdn,
             'fname':self.fname,
             'lname':self.lname,
+            'status':self.status,
             'date':CtoBop.get_date(self)
         }
 

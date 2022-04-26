@@ -2072,15 +2072,27 @@
             <div id="mpesapayments" class="dispnone">
 
               <div class="divjust-end">
-                <div class="form-group input-icons mt-2">
+                <div class="form-group input-icons mb-2">
+                  <label class="mb-0">Select paybill:</label>
                   <select name="usergroup" class="form-control" id ="shortcode" >
-                    <option disabled selected value> -- Select Paybill -- </option>
+                    <option disabled selected value> Select Paybill </option>
                     {% for o in shortcodes %}
                     <option value="{{ o }}">{{ o }}</option>
                     {% endfor %}
                   </select>
                 </div>
-                <button id="downloadmpesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
+
+                <div class="form-group mb-2 ml-2">
+                  <label class="mb-0">Select month:</label>
+                  <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
+                    <input id="from" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2 mt-3">
+                  <button id="downloadmpesapayments" type="button" class="btn borderles btn-light ml-3 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
+                </div>
+
               </div>
 
             </div>
@@ -3049,6 +3061,16 @@ function animateHH(element) {
   });
 </script>
 
+<script>
+  $("#from").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
 
 <!-- <script>
   // This script displays alerts and tenant name before clearance
@@ -3817,8 +3839,9 @@ $("#closemodule").on('click',function(){
       // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
       shortcode = $("#shortcode").val()
+      from = $("#from").val()
 
-      url = "/mpesa/statement?shortcode=" + shortcode
+      url = "/mpesa/statement?shortcode=" + shortcode + "&from=" + from
 
 
     $("#download_mpesapayments")[0].href = url
@@ -3831,7 +3854,7 @@ $("#closemodule").on('click',function(){
           $('#togglempesapayments').removeClass("dispnone")
           $('#mpesapayments').addClass("dispnone")
       },1000);
-      
+
     }
     else{
       alert("select paybill first !")

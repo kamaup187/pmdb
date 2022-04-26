@@ -3842,9 +3842,11 @@ class MpesaStatement(Resource):
 
             
         main = []
+        total = 0.0
         for i in cbids:
 
             if i.post_date.month in month_range and i.post_date.year in year_range:
+                total += i.trans_amnt
                 main.append(i)
 
         cbids_dicts = ctb_payment_details(main)
@@ -3856,6 +3858,7 @@ class MpesaStatement(Resource):
         return Response(render_template(
             'report_mpesa_statement.html',
             bills=cbids_dicts,
+            total=f"{total:,.1f}",
             prop="someprop",
             shortcode=shortcode,
             name=current_user.name,

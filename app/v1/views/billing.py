@@ -2027,13 +2027,13 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
             CtoBop.update_status(cb,"claimed")
 
-        water = "water" if waterpaid else ""
-        rent = "rent" if rentpaid else ""
-        garbage = "garbage" if garbagepaid else ""
-        sec = "security" if servicepaid else ""
+        water = "Water" if waterpaid else ""
+        rent = "Rent" if rentpaid else ""
+        garbage = "Garbage" if garbagepaid else ""
+        sec = "Security" if securitypaid else ""
         arr = ""
-        dep = "deposit" if depositpaid else ""
-        serv = "service" if servicepaid else ""
+        dep = "Deposit" if depositpaid else ""
+        serv = "Service" if servicepaid else ""
 
         narration = f"{rent} {water} {garbage} {sec} {serv} {dep}"
 

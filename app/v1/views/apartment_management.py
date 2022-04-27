@@ -401,6 +401,17 @@ class Index(Resource):
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
+            if company.name == "Sentom Investment":
+                userr = UserOp.fetch_user_by_usercode("00001")
+                if not userr:
+                    user_group_id = get_company_usergroup_id("Accounts",company)
+                    new_user = UserOp("name","00001","qcsentom1","00001109","","","qc00",4,user_group_id,company.id,1)
+                    new_user.save()
+
+                    company_properties = company.props
+                    for prop in company_properties:
+                        UserOp.relate(new_user,prop)
+
             # ref = "QD22PGM7HK"
             # paymentt = PaymentOp.fetch_payment_by_ref(ref)
             # if paymentt:

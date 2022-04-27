@@ -458,7 +458,11 @@ class AllProperties(Resource):
 
             return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
 
-        raw_props = fetch_all_apartments_by_user(current_user)
+        if current_user.startswith("qc"):
+            raw_props = ApartmentOp.fetch_all_apartments()
+        else:
+            raw_props = fetch_all_apartments_by_user(current_user)
+            
         if target != "tenants" and target != "tenant list":
             new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
             for i in new_props:

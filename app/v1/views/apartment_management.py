@@ -3761,7 +3761,11 @@ class SmsDelivery(Resource):
         reading_obj = MeterReadingOp.fetch_meterreading_by_smsid(smsid)
 
         if payment_obj:
-            print("Found payment of ",payment_obj.tenant.name,"Message status>>",status)
+            try:
+                print("Found payment of ",payment_obj.tenant.name,"Message status>>",status)
+            except:
+                print("Found payment of ",payment_obj.ptenant.name,"Message status>>",status)
+
             PaymentOp.update_sms_status(payment_obj,status)
             db.session.expire(payment_obj)
             if payment_obj.sms_status == "UserInBlackList" or payment_obj.sms_status == "AbsentSubscriber":
@@ -3772,7 +3776,10 @@ class SmsDelivery(Resource):
                 else:
                     reference = f'#{payment_obj.id}'
 
-                tenant_obj = payment_obj.tenant
+                if payment_obj.ptenant:
+                    tenant_obj = payment_obj.ptenant
+                else:
+                    tenant_obj = payment_obj.tenant
                 prop_obj = payment_obj.apartment
 
                 paid = f'KES {payment_obj.amount:,.0f}'
@@ -3809,14 +3816,22 @@ class SmsDelivery(Resource):
 
 
         elif invoice_obj:
-            print("Found invoice of ",invoice_obj.tenant.name,"Message status>>",status)
+            try:
+                print("Found invoice of ",invoice_obj.tenant.name,"Message status>>",status)
+            except:
+                print("Found invoice of ",invoice_obj.ptenant.name,"Message status>>",status)
+
             MonthlyChargeOp.update_sms_status(invoice_obj,status)
 
             db.session.expire(invoice_obj)
             if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "AbsentSubscriber":
                 MonthlyChargeOp.update_sms_status(invoice_obj,"success-alt")
 
-                tenant = invoice_obj.tenant
+                if invoice_obj.ptenant:
+                    tenant = invoice_obj.ptenant
+                else:
+                    tenant = invoice_obj.tenant
+
                 prop_obj = invoice_obj.apartment
                 billing_period = get_billing_period(prop_obj)
 

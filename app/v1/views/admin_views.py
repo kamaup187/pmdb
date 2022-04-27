@@ -914,7 +914,7 @@ class LinkProperty(Resource):
         target = request.args.get("target")
 
         if target == "link":
-            if current_user.id == 1:
+            if current_user.id == 1 or current_user.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
             else:
                 companies = [current_user.company]

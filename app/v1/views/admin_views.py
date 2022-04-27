@@ -106,10 +106,15 @@ class ViewReceipt(Resource):
         else:
             receiptno = payment_obj.id
 
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+        else:
+            tenant = payment_obj.tenant
+
         return Response(render_template(
             'user_receipt.html',
             voided = disp,
-            tenant = payment_obj.tenant.name,
+            tenant = tenant.name,
             house= payment_obj.house.name,
             amount=paid,
             str_amount=stramount,
@@ -167,7 +172,11 @@ class DownloadReceipt(Resource):
         if payment_obj:
             prop = payment_obj.apartment
 
-            tenant = payment_obj.tenant
+            if payment_obj.ptenant:
+                tenant = payment_obj.ptenant
+            else:
+                tenant = payment_obj.tenant
+
             co = prop.company
 
             p = inflect.engine()

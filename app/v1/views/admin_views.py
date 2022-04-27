@@ -920,6 +920,10 @@ class LinkProperty(Resource):
         if target == "link":
             if current_user.id == 1 or current_user.username.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
+                for company in companies:
+                    if not company.name:
+                        print("Popped something")
+                        companies.pop(company)
             else:
                 companies = [current_user.company]
             return render_template('ajax_multivariable.html',items=companies,placeholder="select company")

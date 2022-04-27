@@ -922,8 +922,10 @@ class LinkProperty(Resource):
                 companies = CompanyOp.fetch_all_companies()
                 for company in companies:
                     if not company.name:
+                        latest_set_index = companies.index(company)
                         print("Popped something")
-                        companies.pop(company)
+                        break
+                companies.pop(latest_set_index)
             else:
                 companies = [current_user.company]
             return render_template('ajax_multivariable.html',items=companies,placeholder="select company")

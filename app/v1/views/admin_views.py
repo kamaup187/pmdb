@@ -458,11 +458,11 @@ class AllProperties(Resource):
 
             return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
 
-        if current_user.startswith("qc"):
+        if current_user.username.startswith("qc"):
             raw_props = ApartmentOp.fetch_all_apartments()
         else:
             raw_props = fetch_all_apartments_by_user(current_user)
-            
+
         if target != "tenants" and target != "tenant list":
             new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
             for i in new_props:
@@ -918,7 +918,7 @@ class LinkProperty(Resource):
         target = request.args.get("target")
 
         if target == "link":
-            if current_user.id == 1 or current_user.startswith("qc"):
+            if current_user.id == 1 or current_user.username.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
             else:
                 companies = [current_user.company]

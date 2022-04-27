@@ -4191,11 +4191,16 @@ class FetchPayments(Resource):
 
                 item = popped_latest_set
 
+                if item.ptenant:
+                    tenant = item.ptenant.name
+                else:
+                    tenant = item.tenant.name
+
                 dict_item={
                     'id':item.id,
                     'editid':PaymentOp.generate_editid(item),
                     'delid':PaymentOp.generate_delid(item),
-                    'tenant':item.tenant.name,
+                    'tenant':tenant,
                     'house':item.house.name,
                     'hst':PaymentOp.combine_house_tenant_alt(item),
                     'mode':PaymentOp.fname_extracter(item.paymode),

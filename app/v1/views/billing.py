@@ -463,7 +463,11 @@ class BillInvoice(Resource):
 
         house = bill.house
 
-        tenant = bill.tenant
+        if bill.tenant:
+            tenant = bill.tenant
+        else:
+            tenant = bill.ptenant
+
 
         sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
         sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)

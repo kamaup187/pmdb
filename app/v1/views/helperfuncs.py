@@ -6431,7 +6431,8 @@ def auto_consume_ctob(ctob_obj):
         house_obj = check_house_occupied(tenant_obj)[1]
         house_id = house_obj.id
         created_by = 1
-        payment_obj = PaymentOp(paymode,ref_number,description,chargetype_string,None,billing_period,charged_amount,amount,apartment_id,house_id,tenant_id,created_by)
+        ptenant_id=None
+        payment_obj = PaymentOp(paymode,ref_number,description,chargetype_string,None,billing_period,charged_amount,amount,apartment_id,house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
 
         rand_id = random_generator()

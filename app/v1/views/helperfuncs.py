@@ -3786,6 +3786,7 @@ def send_out_single_email_invoice(billid):
 
                 template_vars = {
                     "bill":bill,
+                    "p":bill.apartment.paymentdetails,
                     "servicevisibility":"",
                     "readings": wbill,
                     "w_edited": w_edited,
@@ -5697,7 +5698,8 @@ def total_bill(apartment_id,user_id,month,year):
                 
                 print('>>>>>>>',i,i.house,i.amount, 'Consumed? ',i.compiled,)
 
-            print("######################################### END OF HOUSE",prop,house,"BILLING ###############################################")
+            print("MAINTENANCE AT THE START:>>>",maintenance)
+
                 
             house_id = house.id
             result = check_occupancy(house)
@@ -5717,7 +5719,7 @@ def total_bill(apartment_id,user_id,month,year):
             bills = house.monthlybills
 
             if tenant:
-
+                print("starting tenant billing >>>>>",tenant.name)
                 ptenant_id = None
                 tenant_id = tenant.id
 
@@ -5988,11 +5990,18 @@ def total_bill(apartment_id,user_id,month,year):
                     if not house.billable:
                         print("House",house,"is not billablle")
 
+            else:
+                temp_water_total = water_total
+                temp_maintenance_total = maintenance
+
             #reset to default values
             water_total = temp_water_total
             maintenance = temp_maintenance_total
 
+            print("Printing stored data","SERVICE:",maintenance,"WATER:",water_total)
+
             if house.owner:
+                print("Starting OWNER BILLING >>",house.owner.name)
                 tenant = house.owner
                 ptenant_id = tenant.id
                 tenant_id = None
@@ -6001,6 +6010,7 @@ def total_bill(apartment_id,user_id,month,year):
 
                 if prev_bill:
                     arrears = prev_bill[0].balance
+                    print("FOUND PREVIOUS BILL WITH ARREARS OF: ",arrears)
 
                     if prev_bill[0].rent_due: #rent due of last period forms the base of arrears
                         rent_bal = prev_bill[0].rent_due
@@ -6093,6 +6103,8 @@ def total_bill(apartment_id,user_id,month,year):
                             water_due = 0.0
                     else:
                         water_due = water_total
+
+                    print("at this point the service charge is:",maintenance)
 
                     if house.servicetarget:
                         if house.servicetarget == "owner":    
@@ -6226,6 +6238,8 @@ def total_bill(apartment_id,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
+                    print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
+
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
@@ -6250,6 +6264,9 @@ def total_bill(apartment_id,user_id,month,year):
 
                     if not house.billable:
                         print("House",house,"is not billablle")
+
+                    print("######################################### END OF HOUSE",prop,house,"BILLING ###############################################")
+
             else:
                 print("BILLING SKIPPED FOR NEITHER OWNED NOR RENTED UNIT (VACANT)")
 

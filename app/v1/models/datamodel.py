@@ -417,7 +417,7 @@ class House(db.Model):
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='house',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
 
-    owner = db.relationship('PermanentTenant',backref='house', uselist=False, cascade="all, delete-orphan")
+    owner = db.relationship('PermanentTenant',backref='house', cascade="all, delete-orphan")
 
     
     def __repr__(self):

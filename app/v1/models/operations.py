@@ -2302,7 +2302,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             tname = self.house.owner.name.title()
 
-        fname = tname.split()[0]
+        try:
+            fname = tname.split()[0]
+        except:
+            fname = "Tenant"
+
         house =  self.house.name
         return f'{house}# {fname}' 
 
@@ -2312,7 +2316,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             tname = self.house.owner.name.title()
 
-        fname = tname.split()[0]
+        try:
+            fname = tname.split()[0]
+        except:
+            fname = "None"
+
         house =  self.house.name
         return f'{house} <span class="text-gray-600">({fname})</span>' 
 
@@ -3040,7 +3048,7 @@ class SubmissionOp(Submission,Base):
         return obj
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>'
 
@@ -3174,7 +3182,7 @@ class SplitPaymentOp(SplitPayment,Base):
         db.session.commit()
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>' 
 

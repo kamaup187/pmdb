@@ -672,11 +672,20 @@ class BillInvoice(Resource):
 
         elif target == 'email':
 
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = "#"+bill.house.name
+                else:
+                    narration = "#TNT"+str(tenant.id)
+            except:
+                narration == "House No"
+
             return render_template(
                 "ajax_tenant_invoice_mail.html",
                 bill=bill,
                 month = get_str_month(bill.month),
                 p = bill.apartment.paymentdetails,
+                narration=narration,
                 readings = wbill,
                 w_edited = w_edited,
                 ereadings = ebill,
@@ -740,9 +749,21 @@ class BillInvoice(Resource):
             co = current_user.company
             str_co = f'<span class="text-primary">{str(co)}</span>'
 
+
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = "#"+bill.house.name
+                else:
+                    narration = "#TNT"+str(tenant.id)
+            except:
+                narration == "House No"
+
+
             return render_template(
                 "ajax_sms_invoice.html",
                 smsstatus=delivery,
+                p = bill.apartment.paymentdetails,
+                narration=narration,
                 sms_highlight=sms_highlight,
                 action=action,
                 salutation=salutation,

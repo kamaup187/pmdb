@@ -304,21 +304,23 @@ class Apartment(db.Model):
 class PaymentDetail(db.Model):
     """db model class"""
 
-    __tablename__ = 'paymentsdetails'
+    __tablename__ = 'paymentdetails'
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    paymode = db.Column(db.VARCHAR)
-    shortcode = db.Column(db.VARCHAR)
-    shortcodeacc_type = db.Column(db.VARCHAR)
+    paytype = db.Column(db.VARCHAR)
+    nartype = db.Column(db.VARCHAR)
+    mpesapaybill = db.Column(db.VARCHAR)
+    
     bankname = db.Column(db.VARCHAR)
     bankbranch = db.Column(db.VARCHAR)
     bankaccountname = db.Column(db.VARCHAR)
     bankaccountnumber = db.Column(db.VARCHAR)
+    bankpaybill = db.Column(db.VARCHAR)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
     def __repr__(self):
-        return self.paymode
+        return self.paytype
 
 # class Member(db.Model):
 #     """db model class"""

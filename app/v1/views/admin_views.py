@@ -456,7 +456,15 @@ class AllProperties(Resource):
             else:
                 colltype = "not set"
 
-            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
+            try:
+                if prop.paymentdetails.nartype == 'hsenum':
+                    nartype = "#HX"
+                else:
+                    nartype = "#TNTXXX"
+            except:
+                nartype = "unknown"
+
+            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
 
         if current_user.username.startswith("xqc"):
             raw_props = ApartmentOp.fetch_all_apartments()
@@ -593,15 +601,30 @@ class AllProperties(Resource):
             return "Updated successfully" + proceed
 
         if target == "update prop billing info":
-            bank = request.form.get("bank")
-            accname = request.form.get("accname")
-            accno = request.form.get("accno")
+            bankbranch = request.form.get("bankbranch")
+            bankname = request.form.get("bankname")
+            bankaccountname = request.form.get("bankaccountname")
+            bankaccountnumber = request.form.get("bankaccountnumber")
+            bankpaybill = request.form.get("bankpaybill")
 
-            paybill_no = request.form.get("paybill")
+            mpesapaybill = request.form.get("mpesapaybill")
 
+            nartype = request.form.get("nartype")
+            paytype = request.form.get("paytype")
 
-            ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
-            ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
+            print("heeeeeey",nartype,paytype)
+
+            payment_details_obj = prop.paymentdetails
+            if not payment_details_obj:
+                print("noooooonnnoonooo",prop.paymentdetails)
+                p = PaymentDetailOp(paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,prop.id)
+                p.save()
+            else:
+                PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
+                print("herereeeeeeeeeeeeee",prop.paymentdetails,nartype)
+
+            # ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
+            # ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
 
             return "Updated successfully" + proceed
 

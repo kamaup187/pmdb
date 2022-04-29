@@ -566,24 +566,29 @@ class LocationOp(Location,Base):
 
 class PaymentDetailOp(PaymentDetail,Base):
     """class"""
-    def __init__(self,paymode,shortcode,shortcodeacc_type,bankname,bankbranch,bankaccountname,bankaccountnumber,apartment_id):
-        self.paymode = paymode
-        self.shortcode = shortcode
-        self.shortcodeacc_type = shortcodeacc_type
+    def __init__(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,apartment_id):
+        self.paytype = paytype
+        self.nartype = nartype
+        self.mpesapaybill = paybill
+
         self.bankname = bankname
         self.bankbranch = bankbranch
         self.bankaccountname = bankaccountname
         self.bankaccountnumber = bankaccountnumber
+        self.bankpaybill = bankpaybill
+
         self.apartment_id = apartment_id
 
-    def update_details(self,paymode,shortcode,shortcodeacc_type,bankname,bankbranch,bankaccountname,bankaccountnumber):
-        self.paymode = paymode
-        self.shortcode = shortcode
-        self.shortcodeacc_type = shortcodeacc_type
+    def update_details(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
+        self.paytype = paytype
+        self.nartype = nartype
+        self.mpesapaybill = paybill
+
         self.bankname = bankname
         self.bankbranch = bankbranch
         self.bankaccountname = bankaccountname
         self.bankaccountnumber = bankaccountnumber
+        self.bankpaybill = bankpaybill
         db.session.commit()
 
 

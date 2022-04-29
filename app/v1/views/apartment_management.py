@@ -487,10 +487,13 @@ class Index(Resource):
             cbids = ctb_payment_details(sifted)
             cbids_num = len(cbids)
 
-            # apart1 = ApartmentOp.fetch_apartment_by_name("Bestel Apartments")
+            # apart1 = ApartmentOp.fetch_apartment_by_name("Aviv")
             # if not apart1.paymentdetails:
-            #     p = PaymentDetailOp("mpesa","203027","","","","","",apart1.id)
+            #     print("noooooonnnoonooo",apart1.paymentdetails)
+            #     p = PaymentDetailOp("mpesapay","tntnum","345345","","","","","",apart1.id)
             #     p.save()
+            # else:
+            #     print("herereeeeeeeeeeeeee",apart1.paymentdetails)
 
             # apart2 = ApartmentOp.fetch_apartment_by_name("La Casa Apartments")
             # if not apart2.paymentdetails:

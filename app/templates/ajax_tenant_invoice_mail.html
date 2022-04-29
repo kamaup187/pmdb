@@ -311,31 +311,33 @@
             </div>
             {%endif%}
 
+            {%if p%}
 
-            <div>
-                {%if p.paymode%}
-                <span class="text-muted">
-                    Payment will be done via Bank deposit or Mobile money to:
-                </span>
-                {% endif %}
 
-                <p class="small text-muted">
-                    {%if p.paymode == "bank"%}
-                    <span>
-                        BANK: {{p.bankname}} BANK<br>
-                        BRANCH: {{p.bankbranch}}<br>
-                        ACCOUNT NAME: {{p.bankaccountname}}<br>
-                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
-                    </span>
-                    {% endif %}
-
-                    {%if p.paymode == "mpesa"%}
-                    <span>
-                        MPESA PAYBILL: <span class="text-gray-900 font-weight-bold">{{p.shortcode}}</span> ACC:<span class="text-gray-900 font-weight-bold">{{shortcodeaccount}}</span>
-                    </span>
-                    {%endif%}
-                </p>
+            {%if p.paytype == "mpesapay" %}
+      
+            <div class="text-left mt-2">Payment will be done via Mobile money to:</div>
+            <p class="text-left">
+              <span class="linebrea">Mpesa Paybill: {{p.mpesapaybill}} </span> ACC: <span class="linebrea">{{narration}}</span><br>
+            </p>
+      
+            {% else %}
+      
+            <div class="text-left mt-2">
+              Payment will be done via Bank deposit or Mobile money to:
             </div>
+            <p class="small text-muted text-left">
+              <span>
+                  BANK: {{p.bankname}} BANK<br>
+                  BRANCH: {{p.bankbranch}}<br>
+                  ACCOUNT NAME: {{p.bankaccountname}}<br>
+                  ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
+              </span>
+          </p>
+      
+            {% endif %}
+      
+          {% endif %}
 
         </div>
         <!-- <div class="myfoote mt-4">

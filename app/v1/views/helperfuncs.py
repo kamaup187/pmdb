@@ -4945,7 +4945,7 @@ def read_excel(dict_array,apartment_id,user_id):
                 present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
                 if present4:
                     print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
-                    similar = True
+                    similar = False
 
             if similar:
                 pass

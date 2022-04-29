@@ -5420,14 +5420,14 @@ class CaptureReading(Resource):
 
             billing_period = get_billing_period(prop)
 
-            if datetime.datetime.now().day < 30 and datetime.datetime.now().month == billing_period.month:
+            if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
                 #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
                 print("Reading left out captured")
 
                 month = billing_period.month
                 year = billing_period.year
 
-            elif datetime.datetime.now().day >= 30:
+            elif datetime.datetime.now().day >= 21:
                 #Only enters this block if readings are taken early before the next month of billing
 
                 if datetime.datetime.now().month != 12:

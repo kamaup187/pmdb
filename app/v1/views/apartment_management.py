@@ -110,6 +110,13 @@ class Index(Resource):
     @login_required
     def get(self):
 
+
+        qws = ApartmentOp.fetch_apartment_by_id(413)
+    
+        all_ptenants = qws.ptenants
+        for i in all_ptenants:
+            PermanentTenantOp.delete(i)
+
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
 

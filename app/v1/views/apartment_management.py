@@ -4666,6 +4666,8 @@ class TenantClearance(Resource):
 
         tenant_id = get_identifier(tenantid)
 
+        print("TTTTTTYYYYYYYYPPPPPPPEEEEEEEEEEEEEEEEEEEEEEEEE",ttype)
+
         if ttype == "owner":
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
 

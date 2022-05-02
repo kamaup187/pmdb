@@ -678,7 +678,7 @@ class BillInvoice(Resource):
                 else:
                     narration = "#TNT"+str(tenant.id)
             except:
-                narration == "House No"
+                narration = "#"+bill.house.name
 
             return render_template(
                 "ajax_tenant_invoice_mail.html",
@@ -735,6 +735,9 @@ class BillInvoice(Resource):
 
             str_month = get_str_month(prop_obj.billing_period.month)
 
+            salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
+            intro = f'your bill for <span class="text-info">{str_month} </span>is as follows;'
+
             if bill.house.payment_bankacc:
                 bankdetails = f'Bank: <span class="text-info">{bill.house.payment_bank} Acc: {bill.house.payment_bankacc}</span>'
             elif prop_obj.payment_bank:
@@ -742,27 +745,30 @@ class BillInvoice(Resource):
             else:
                 bankdetails = ""
 
-            salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
-            intro = f'your bill for <span class="text-info">{str_month} </span>is as follows;'
-            bankdetails = bankdetails
-
-            co = current_user.company
-            str_co = f'<span class="text-primary">{str(co)}</span>'
-
-
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = "#"+bill.house.name
                 else:
                     narration = "#TNT"+str(tenant.id)
             except:
-                narration == "House No"
+                narration = "#"+bill.house.name
 
+            p = bill.apartment.paymentdetails
+            if p:
+                if p.paytype == "mpesapay":
+                    bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
+                elif p.bankpaybill:
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                else:
+                    bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
+
+            co = current_user.company
+            str_co = f'<span class="text-primary">{str(co)}</span>'
 
             return render_template(
                 "ajax_sms_invoice.html",
+                p=None,
                 smsstatus=delivery,
-                p = bill.apartment.paymentdetails,
                 narration=narration,
                 sms_highlight=sms_highlight,
                 action=action,

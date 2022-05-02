@@ -3710,8 +3710,6 @@ def send_out_single_email_invoice(billid):
 
             house = bill.house
 
-            print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",tenant.name)
-
             #start here
             sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
             sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
@@ -3778,15 +3776,18 @@ def send_out_single_email_invoice(billid):
                     else:
                         watertarget = False
 
-
-                if bill.apartment_id == 398:
-                    paymentacc = f"Paybill No. {bill.apartment.payment_bankacc}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
-                else:
-                    paymentacc = ""
+                try:
+                    if bill.apartment.paymentdetails.nartype == 'hsenum':
+                        narration = "#"+bill.house.name
+                    else:
+                        narration = "#TNT"+str(tenant.id)
+                except:
+                    narration = "#"+bill.house.name
 
                 template_vars = {
                     "bill":bill,
                     "p":bill.apartment.paymentdetails,
+                    "narration":narration,
                     "servicevisibility":"",
                     "readings": wbill,
                     "w_edited": w_edited,
@@ -3804,7 +3805,6 @@ def send_out_single_email_invoice(billid):
                     "invdate":inv_date,
                     "invdue":inv_due,
                     "client":tenant,
-                    "paymentacc":paymentacc,
                     "company":co,
                     "invnum":invnum,
                     "logo":logo(co)[2],
@@ -4015,15 +4015,34 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             else:
                 smswater = f"\nCurrent bill:{bill.water}," if bill.water else ""
 
+
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = "#"+bill.house.name
+                else:
+                    narration = "#TNT"+str(tenant.id)
+            except:
+                narration = ""
+
+            p = bill.apartment.paymentdetails
+
+
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'
-            elif prop_obj.payment_bank == "PayBill":
-                prop_name = prop_obj.name.split(" ")[0]
-                bankdetails = f'\n\n {prop_obj.payment_bank}: {prop_obj.payment_bankacc} \nAcc: {prop_name.upper()[:3]} {bill.house.name}'
+
             elif prop_obj.payment_bank:
                 bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
+
+            elif p:
+                if p.paytype == "mpesapay":
+                    bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
+                elif p.bankpaybill:
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                else:
+                    bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:
                 bankdetails = ""
+
 
             smsgarb = f"\nGarbage:{bill.garbage}," if bill.garbage else ""
             smssec = f"\nSecurity:{bill.security}," if bill.security else ""

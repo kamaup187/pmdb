@@ -67,7 +67,7 @@
     {% endif %}
     
     {%if bank%}
-    <span class="linebrea">{{bank|safe}}</span>
+    <div class="text-left">{{bank|safe}}</div>
     {% endif %}
 
 
@@ -90,7 +90,7 @@
       </div>
       <p class="small text-muted text-left">
         <span>
-            BANK: {{p.bankname}} BANK<br>
+            BANK: {{p.bankname}}<br>
             BRANCH: {{p.bankbranch}}<br>
             ACCOUNT NAME: {{p.bankaccountname}}<br>
             ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
@@ -101,7 +101,7 @@
 
     {% endif %}
 
-    <span> ~ {{bill.apartment.name|safe}}</span>
+    <br><span> ~ {{bill.apartment.name|safe}}</span>
 
     {% if not w_edited or not e_edited%}
     <div class="text-left">

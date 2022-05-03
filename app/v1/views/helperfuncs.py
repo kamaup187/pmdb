@@ -4035,6 +4035,8 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
             p = bill.apartment.paymentdetails
 
+            print("gfzdxfghjkjzdgklfxklfydgcbjkxf",p.bankaccountname)
+
 
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'
@@ -4046,7 +4048,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 if p.paytype == "mpesapay":
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \npeter{narration}'
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:

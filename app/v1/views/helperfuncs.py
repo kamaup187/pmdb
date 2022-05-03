@@ -709,7 +709,7 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
 
-    elif company.title() == "Lacasa Apartments":
+    elif company.title() == "Lacasa":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
     #########################################################################################
@@ -4070,7 +4070,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0735267087)"
             else:
                 str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
-                
+
             raw_rem_sms =co.remainingsms
 
             if tenant:

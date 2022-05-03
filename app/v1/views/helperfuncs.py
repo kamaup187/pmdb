@@ -4059,7 +4059,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             current_user = UserOp.fetch_user_by_id(user_id)
 
             co = current_user.company
-            str_co = f"\n\n ~ {str(co)}"
+            str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
             raw_rem_sms =co.remainingsms
 
             if tenant:

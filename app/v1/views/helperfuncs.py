@@ -407,6 +407,8 @@ def logo(co):
     sign = ""
     try:
         if str_name_company == "Chaise River Properties":
+            coc = CompanyOp.fetch_company_by_name("Chaise River Properties")
+            CompanyOp.update_sms_provider(coc,"KIOTAPAY")
             ##################################################
             logopath = "../static/img/logos/chase/l-logo.png"
             mobilelogopath = "../static/img/logos/chase/s-logo.png"

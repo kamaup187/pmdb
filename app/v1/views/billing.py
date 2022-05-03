@@ -785,7 +785,7 @@ class BillInvoice(Resource):
                 w_edited = w_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
-                total=f"{bill.total_bill:,.2f}",
+                total=f"{bill.total_bill:,.1f}",
                 bank=bankdetails,
                 co=str_co
                 )

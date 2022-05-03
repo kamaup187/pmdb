@@ -323,6 +323,8 @@ class Index(Resource):
                 unread_num = unread_length
 
             company = current_user.company
+
+            print("SMS PROVIDERRRRRRRRRRRRRRRRRRRRR",company.sms_provider)
       
             if time.month == company.quotamonth:
                 # CompanyOp.set_smsquota(company,300)

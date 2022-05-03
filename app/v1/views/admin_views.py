@@ -603,7 +603,7 @@ class AllProperties(Resource):
         if target == "update prop billing info":
             props = []
             if prop.company.name == "Latitude Properties":
-                props = prop.company.properties
+                props = prop.company.props
 
             if not props:
                 props.append(prop)

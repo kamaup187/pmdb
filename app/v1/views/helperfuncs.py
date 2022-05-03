@@ -3944,7 +3944,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 for house in house_list:
                     bill = fetch_current_billing_period_bills(billing_period,house.monthlybills)
                     if bill:
-                        if bill[0].sms_invoice != "sent" and bill[0].sms_invoice != "Success" and bill[0].sms_invoice != "success-alt" and not bill[0].paid_amount:
+                        if bill[0].sms_invoice == "sent" and bill[0].sms_invoice != "Success" and bill[0].sms_invoice != "success-alt" and not bill[0].paid_amount:
                             target_bills.append(bill[0])                                                                                                                                        
 
         for bill in target_bills:
@@ -4055,8 +4055,6 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             smsfine = f"\nPenalty:{bill.penalty}" if bill.penalty else ""
             smstotal = (f"{bill.total_bill:,.1f}") if not calculated_total else (f"{calculated_total:,.1f}")
             bankdetails = bankdetails
-
-            # telll = 0723269855
 
             current_user = UserOp.fetch_user_by_id(user_id)
 

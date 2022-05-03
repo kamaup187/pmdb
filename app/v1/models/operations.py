@@ -2506,6 +2506,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     #     return status
 
     def get_sms_status(self):
+        rr = ApartmentOp.fetch_apartment_by_id(76)
+        print("ApartmentTTTTTTTTTTTTTTTTTTTT",rr.name)
+        print(self.sms_invoice)
         if self.apartment_id == 76:
             return '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
         if self.sms_invoice:

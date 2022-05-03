@@ -2622,7 +2622,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'date':self.date.date(),
             'smsstatus':MonthlyChargeOp.get_sms_status(self),
             'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
-            'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
+            'smsactive': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
             'mailstatus':MonthlyChargeOp.get_mail_status(self),
             'mailoutline': "" if self.email_invoice == "sent" or self.email_invoice == "Success" else "btn-outline-primary",
             'mailactive': "disabled" if self.email_invoice == "sent" or self.email_invoice == "Success" else "",

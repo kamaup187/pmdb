@@ -2512,7 +2512,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             if self.sms_invoice == "Success":
                 status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
             elif self.sms_invoice == "success-alt":
-                status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>blocked</span>'
+                status = '<span class="text-danger"><i class="fas fa-times mr-1"></i></span>'
             elif self.sms_invoice == "waiting":
                 status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>queued</span>'
             elif self.sms_invoice == "sent":
@@ -2520,9 +2520,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             elif self.sms_invoice == "pending":
                 status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
             elif self.sms_invoice == "fail":
-                status = '<span class="text-danger"><i class="fas fa-hourglass-end mr-1">Resend</i></span>'
+                status = '<span class="text-danger"><i class="fas fa-reply mr-1">Resend</i></span>'
             elif self.sms_invoice == "off":
-                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>sms off</span>'
             else:
                 status = '<span class="text-danger"><i class="fas fa-reply mr-1"></i>Resend</span>'
         else:

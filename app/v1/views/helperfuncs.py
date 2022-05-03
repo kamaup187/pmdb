@@ -466,7 +466,7 @@ def logo(co):
 
         elif str_name_company == "Nairuti & Associates":
             ##################################################
-            logopath = "../static/img/logos/nairuti/l-logoo.png"
+            logopath = "../static/img/logos/nairuti/l-logo.png"
             mobilelogopath = "../static/img/logos/nairuti/s-logo.png"
             fulllogopath = "../static/img/logos/nairuti/full-logo.png"
             letterhead = "../static/img/logos/nairuti/letterhead.jpg"
@@ -520,6 +520,13 @@ def logo(co):
             mobilelogopath = "../static/img/logos/courtland/s-logo.png"
             fulllogopath = "../static/img/logos/courtland/full-logo.png"
             letterhead = "../static/img/logos/courtland/letterhead.jpg"
+
+        elif str_name_company == "Sentom Investment":
+            ##################################################
+            logopath = "../static/img/logos/sentom/l-logo.png"
+            mobilelogopath = "../static/img/logos/sentom/s-logo.png"
+            fulllogopath = "../static/img/logos/sentom/full-logo.png"
+            letterhead = "../static/img/logos/sentom/letterhead.jpg"
 
         elif str_name_company == "Rowam Properties Limited":
             ##################################################
@@ -593,8 +600,8 @@ def logo(co):
             fulllogopath = "../static/img/logos/cherah/full-logo.jpg"
             letterhead = "../static/img/logos/cherah/letterhead.jpg"
 
-        elif str_name_company == "LaCasa Apartments":
-            coc = CompanyOp.fetch_company_by_name("LaCasa Apartments")
+        elif str_name_company == "LaCasa":
+            coc = CompanyOp.fetch_company_by_name("LaCasa")
             CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lacasa/l-logo.png"
@@ -4059,7 +4066,11 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             current_user = UserOp.fetch_user_by_id(user_id)
 
             co = current_user.company
-            str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
+            if co.name == "LaCasa":
+                str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0735267087)"
+            else:
+                str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
+                
             raw_rem_sms =co.remainingsms
 
             if tenant:

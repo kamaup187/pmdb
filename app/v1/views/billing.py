@@ -763,7 +763,11 @@ class BillInvoice(Resource):
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
 
             co = current_user.company
-            str_co = f'<span class="text-primary">{str(co)}</span>'
+
+            if co.name == 'LaCasa':
+                str_co = f'<span class="text-primary">Tel: 0735267087</span>'
+            else:
+                str_co = f'<span class="text-primary">{str(co)}</span>'
 
             return render_template(
                 "ajax_sms_invoice.html",

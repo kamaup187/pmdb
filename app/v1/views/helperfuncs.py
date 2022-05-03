@@ -4046,7 +4046,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 if p.paytype == "mpesapay":
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \npeter{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:

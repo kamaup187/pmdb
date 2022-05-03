@@ -601,27 +601,36 @@ class AllProperties(Resource):
             return "Updated successfully" + proceed
 
         if target == "update prop billing info":
-            bankbranch = request.form.get("bankbranch")
-            bankname = request.form.get("bankname")
-            bankaccountname = request.form.get("bankaccountname")
-            bankaccountnumber = request.form.get("bankaccountnumber")
-            bankpaybill = request.form.get("bankpaybill")
+            props = []
+            if prop.company.name == "Latitude Properties":
+                props = prop.company.properties
 
-            mpesapaybill = request.form.get("mpesapaybill")
+            if not props:
+                props.append(prop)
+            
+            for p in props:
 
-            nartype = request.form.get("nartype")
-            paytype = request.form.get("paytype")
+                bankbranch = request.form.get("bankbranch")
+                bankname = request.form.get("bankname")
+                bankaccountname = request.form.get("bankaccountname")
+                bankaccountnumber = request.form.get("bankaccountnumber")
+                bankpaybill = request.form.get("bankpaybill")
 
-            print("heeeeeey",nartype,paytype)
+                mpesapaybill = request.form.get("mpesapaybill")
 
-            payment_details_obj = prop.paymentdetails
-            if not payment_details_obj:
-                print("noooooonnnoonooo",prop.paymentdetails)
-                p = PaymentDetailOp(paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,prop.id)
-                p.save()
-            else:
-                PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
-                print("herereeeeeeeeeeeeee",prop.paymentdetails,nartype)
+                nartype = request.form.get("nartype")
+                paytype = request.form.get("paytype")
+
+                print("heeeeeey",nartype,paytype)
+
+                payment_details_obj = p.paymentdetails
+                if not payment_details_obj:
+                    print("noooooonnnoonooo",p.paymentdetails)
+                    p = PaymentDetailOp(paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,p.id)
+                    p.save()
+                else:
+                    PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
+                    print("herereeeeeeeeeeeeee",p.paymentdetails,nartype)
 
             # ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
             # ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)

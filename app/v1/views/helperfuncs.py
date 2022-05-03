@@ -4250,9 +4250,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 # else:
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
@@ -4262,9 +4262,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                             # if prop_obj.company.name == "KIGAKA ENTERPRISES":
                             #     continue
 

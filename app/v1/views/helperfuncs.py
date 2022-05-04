@@ -4064,7 +4064,6 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
             p = bill.apartment.paymentdetails
 
-            print("gfzdxfghjkjzdgklfxklfydgcbjkxf",p.bankaccountnumber)
 
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'

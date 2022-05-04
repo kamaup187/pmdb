@@ -4004,14 +4004,14 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                     charge_obj = ChargeOp.fetch_charge_by_reading_id(wbill.id)
                     amount = charge_obj.amount
 
-                    standing_charge = house.housecode.watercharge
+                    standing_charge = bill.house.housecode.watercharge
                     if standing_charge:
                         amount += standing_charge
 
                 smslastreading = (f"{wbill.last_reading} ")
                 smscurrentreading = (f"{wbill.reading} ")
                 smsunits = (f"{wbill.units} ")
-                smsstd = f"Standing charge: Kes {standing_charge}" if house.housecode.watercharge else ""
+                smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
                 smsbill = (f"Kes {amount:,.2f} ")
 
                 wmessage = f"\n\nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"

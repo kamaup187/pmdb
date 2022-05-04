@@ -674,14 +674,14 @@ class BillInvoice(Resource):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = "#"+bill.house.name
+                    narration = bill.house.name
                 else:
                     if bill.ptenant:
-                        narration = "#WN"+str(tenant.id)
+                        narration = "WN"+str(tenant.id)
                     else:
-                        narration = "#TNT"+str(tenant.id)
+                        narration = "TNT"+str(tenant.id)
             except:
-                narration = "#"+bill.house.name
+                narration = bill.house.name
 
             return render_template(
                 "ajax_tenant_invoice_mail.html",

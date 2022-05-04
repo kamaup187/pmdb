@@ -3951,7 +3951,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
         target_bills = []
 
         if billid:
-            targetbill = MonthlyChargeOp.fetch_specific_bill(billid)
+            identifier = get_identifier(billid)
+            targetbill = MonthlyChargeOp.fetch_specific_bill(identifier)
             target_bills.append(targetbill)
 
         elif houses and houses != "ALL":

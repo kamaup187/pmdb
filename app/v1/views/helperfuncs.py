@@ -3951,7 +3951,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 for house in house_list:
                     bill = fetch_current_billing_period_bills(billing_period,house.monthlybills)
                     if bill:
-                        if bill[0].sms_invoice == "sent" and bill[0].sms_invoice != "Success" and bill[0].sms_invoice != "success-alt" and not bill[0].paid_amount:
+                        if bill[0].sms_invoice != "sent" and bill[0].sms_invoice != "Success" and bill[0].sms_invoice != "success-alt" and not bill[0].paid_amount:
                             target_bills.append(bill[0])                                                                                                                                        
 
         for bill in target_bills:

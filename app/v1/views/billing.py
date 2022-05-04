@@ -310,6 +310,7 @@ class ClientInvoice(Resource):
         bill = ClientBillOp.fetch_specific_bill(clientbillid)
         client = bill.company
         invnum = bill.id + 13285
+        # invnum = 
 
         timenow = datetime.datetime.now()
         
@@ -463,10 +464,30 @@ class BillInvoice(Resource):
 
         house = bill.house
 
-        if bill.tenant:
-            tenant = bill.tenant
+
+        if bill.ptenant:
+            tenant=bill.ptenant
+            current_target = "owner"
+            print("OWNER INVOICE IS BEING ACCESSED FOR" ,bill.ptenant.name)
         else:
-            tenant = bill.ptenant
+            current_target = "tenant"
+            tenant=bill.tenant
+            print("TENANT INVOICE IS BEING ACCESSED FOR" ,bill.tenant.name)
+
+
+        try:
+            if current_target == "owner":
+                if bill.house.watertarget == "owner":
+                    watertarget = True
+                else:
+                    watertarget = False
+            else:
+                if bill.house.watertarget == "tenant":
+                    watertarget = True
+                else:
+                    watertarget = False
+        except:
+            watertarget = True
 
 
         sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
@@ -672,6 +693,7 @@ class BillInvoice(Resource):
 
         elif target == 'email':
 
+
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = bill.house.name
@@ -690,6 +712,7 @@ class BillInvoice(Resource):
                 p = bill.apartment.paymentdetails,
                 narration=narration,
                 readings = wbill,
+                watertarget = watertarget,
                 w_edited = w_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
@@ -801,6 +824,7 @@ class BillInvoice(Resource):
                 w_edited = w_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
+                watertarget=watertarget,
                 total=f"{bill.total_bill:,.1f}",
                 bank=bankdetails,
                 co=str_co

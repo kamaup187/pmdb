@@ -3797,16 +3797,19 @@ def send_out_single_email_invoice(billid):
                     arrtitle = ""
                     bbfhighlight = ""
 
-                if current_target == "owner":
-                    if bill.house.watertarget == "owner":
-                        watertarget = True
+                try:
+                    if current_target == "owner":
+                        if bill.house.watertarget == "owner":
+                            watertarget = True
+                        else:
+                            watertarget = False
                     else:
-                        watertarget = False
-                else:
-                    if bill.house.watertarget == "tenant":
-                        watertarget = True
-                    else:
-                        watertarget = False
+                        if bill.house.watertarget == "tenant":
+                            watertarget = True
+                        else:
+                            watertarget = False
+                except:
+                    watertarget = True
 
                 try:
                     if bill.apartment.paymentdetails.nartype == 'hsenum':
@@ -4121,25 +4124,44 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                         tname = fname_extracter(tenant.name)
 
 
-                        if not owner_only:
-                            servicecharge = "service charge"
+                        # if not owner_only:
+                        #     servicecharge = "service charge"
+                        #     waterbill = ""
+                        #     smswater = ""
+                        #     smssev = f"\nCurrent bill:{bill.maintenance}," if bill.maintenance else ""
+
+                        #     rsmstotal = bill.total_bill - bill.water
+                        #     smstotal = (f"{rsmstotal:,.1f}")
+
+                        #     if bill.water_balance:
+                        #         rsmstotal -= bill.water_balance
+                        #         smstotal = (f"{rsmstotal:,.1f}")
+                        #         arrears -= bill.water_balance
+
+                        #     smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
+
+                        # else:
+                        #     servicecharge = ""
+                        #     waterbill = ""
+
+
+                        if bill.house.watertarget:
+                            if bill.house.watertarget == "owner":
+                                waterbill = "water consumption"
+                            else:
+                                smswater = ""
+                                waterbill = ""
+                        else:
                             waterbill = ""
-                            smswater = ""
-                            smssev = f"\nCurrent bill:{bill.maintenance}," if bill.maintenance else ""
 
-                            rsmstotal = bill.total_bill - bill.water
-                            smstotal = (f"{rsmstotal:,.1f}")
-
-                            if bill.water_balance:
-                                rsmstotal -= bill.water_balance
-                                smstotal = (f"{rsmstotal:,.1f}")
-                                arrears -= bill.water_balance
-
-                            smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
-
+                        if bill.house.servicetarget:
+                            if bill.house.servicetarget == "owner":
+                                servicecharge = "service charge"
+                            else:
+                                servicecharge = ""
                         else:
                             servicecharge = ""
-                            waterbill = ""
+                            
 
                         try:
                             recipient = [phonenum]
@@ -4258,24 +4280,42 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                         str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         tname = fname_extracter(tenant2.name)
 
-                        if not tenant_only:
-                            servicecharge = ""
-                            waterbill = "water consumption"
-                            smssev = ""
-                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                            rsmstotal = bill.total_bill - bill.maintenance
-                            smstotal = (f"{rsmstotal:,.1f}")
+                        # if not tenant_only:
+                        #     servicecharge = ""
+                        #     waterbill = "water consumption"
+                        #     smssev = ""
+                        #     str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                        #     rsmstotal = bill.total_bill - bill.maintenance
+                        #     smstotal = (f"{rsmstotal:,.1f}")
 
-                            if bill.maintenance_balance:
-                                rsmstotal -= bill.maintenance_balance
-                                smstotal = (f"{rsmstotal:,.1f}")
-                                arrears -= bill.maintenance_balance
+                        #     if bill.maintenance_balance:
+                        #         rsmstotal -= bill.maintenance_balance
+                        #         smstotal = (f"{rsmstotal:,.1f}")
+                        #         arrears -= bill.maintenance_balance
 
-                            smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
+                        #     smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
 
+                        # else:
+                        #     servicecharge = ""
+                        #     waterbill = ""
+
+                        if bill.house.watertarget:
+                            if bill.house.watertarget == "tenant":
+                                waterbill = "water consumption"
+                            else:
+                                smswater = ""
+                                waterbill = ""
+                        else:
+                            waterbill = ""
+
+                        if bill.house.servicetarget:
+                            if bill.house.servicetarget == "tenant":
+                                servicecharge = "service charge"
+                            else:
+                                servicecharge = ""
                         else:
                             servicecharge = ""
-                            waterbill = ""
+                            
 
                         try:
                             recipient = [phonenum]

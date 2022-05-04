@@ -3812,7 +3812,10 @@ def send_out_single_email_invoice(billid):
                     if bill.apartment.paymentdetails.nartype == 'hsenum':
                         narration = "#"+bill.house.name
                     else:
-                        narration = "#TNT"+str(tenant.id)
+                        if bill.ptenant:
+                            narration = "#WN"+str(tenant.id)
+                        else:
+                            narration = "#TNT"+str(tenant.id)
                 except:
                     narration = "#"+bill.house.name
 
@@ -4052,7 +4055,10 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = "#"+bill.house.name
                 else:
-                    narration = "#TNT"+str(tenant.id)
+                    if tenant:
+                        narration = "#WN"+str(tenant.id)
+                    else:
+                        narration = "#TNT"+str(tenant2.id)
             except:
                 narration = ""
 

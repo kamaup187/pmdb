@@ -667,7 +667,11 @@ class RegisterUser(Resource):
 class SignUpCategory(Resource):
     """class"""
     def get(self):
-        return Response(render_template("signupcategory.html"))
+        if os.getenv("TARGET") != "lasshouse":
+            return Response(render_template("signupcategory.html"))
+        else:
+            return Response(render_template("signup2.html"))
+
     def post(self):
         category=request.form.get('category')
         if not category:
@@ -771,6 +775,13 @@ class RequestDemo(Resource):
         lname=request.args.get('lname')
         phone=request.args.get('tel1')
         email=request.args.get('email')
+        target=request.args.get('target')
+
+        if not target:
+            if os.getenv("TARGET") != "lasshouse":
+                return None
+            else:
+                return Response(render_template("demo2.html"))
 
         name = fname + " " + lname
 
@@ -1067,8 +1078,8 @@ class LandingPage(Resource):
             # return Response(render_template("landingtwo.html"))
             return redirect("https://kiotapay.co.ke")
         else:
-            return Response(render_template("home.html"))
-            # return redirect(url_for('api.userlogin'))
+            # return Response(render_template("home.html"))
+            return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass

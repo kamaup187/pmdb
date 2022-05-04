@@ -732,7 +732,7 @@ class BillInvoice(Resource):
 
             sms_highlight = "text-success" if smsstatus == "sent" or  smsstatus == "Success" or  smsstatus == "success-alt" else "text-danger"
 
-            tenant = bill.tenant if bill.tenant else bill.house.owner
+            tenant = bill.tenant if bill.tenant else bill.ptenant
             prop_obj= bill.apartment
 
 

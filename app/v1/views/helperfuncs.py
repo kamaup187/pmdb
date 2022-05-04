@@ -4018,9 +4018,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             owner_only = True
             tenant_only = True
 
-            if bill.house.owner:
+            if bill.ptenant:
                 tenant_only = False
-                tenant = bill.house.owner
+                tenant = bill.ptenant
                 print("SENDING OWNER INVOICE")
 
                 if bill.tenant:
@@ -4165,7 +4165,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.house.owner:
+                            if bill.ptenant:
                                 pass
                             else:
                                 sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
@@ -4304,7 +4304,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.house.owner:
+                            if bill.ptenant:
                                 pass
                             else:
                                 sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,prop_obj.id,co.id)

@@ -720,6 +720,13 @@ def sms_sender(company,sms_text,phonenum):
         param1 = report["apikey"]
         param2 = report["partnerID"]
         param3 = report["msgid"]
+
+        co = CompanyOp.fetch_company_by_name(company)
+        raw_rem_sms =co.remainingsms
+        rem_sms = calculate_sms_cost_alt(raw_rem_sms,sms_text)
+
+        CompanyOp.set_rem_quota(co,rem_sms)
+
         jb = q.enqueue_in(timedelta(seconds=60), advanta_sms_delivery, args=(param1,param2,param3,))
         return param3
     else:
@@ -3086,6 +3093,22 @@ def calculate_sms_cost(sms,cost):
             sms -= 4
         else:
             sms -= 5
+        
+    except Exception as e:
+        print("There was an error",e,"in remaining sms calculation")
+
+    return sms
+
+def calculate_sms_cost_alt(sms,smstext):
+    try:
+        sms_len = len(smstext)
+
+        if sms_len < 140:
+            sms -= 1
+        elif sms_len < 280:
+            sms -= 2
+        else:
+            sms -= 3
         
     except Exception as e:
         print("There was an error",e,"in remaining sms calculation")

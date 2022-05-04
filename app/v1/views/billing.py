@@ -775,6 +775,12 @@ class BillInvoice(Resource):
             else:
                 str_co = f'<span class="text-primary">{str(co)}</span>'
 
+            print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
+            print("OWNER:",bill.ptenant)
+            print("TENANT",bill.tenant)
+            print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
+
+
             return render_template(
                 "ajax_sms_invoice.html",
                 p=None,

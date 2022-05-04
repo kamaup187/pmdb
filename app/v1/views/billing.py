@@ -750,21 +750,21 @@ class BillInvoice(Resource):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = "#"+bill.house.name
+                    narration = bill.house.name
                 else:
                     if bill.ptenant:
-                        narration = "#WN"+str(tenant.id)
+                        narration = "WN"+str(tenant.id)
                     else:
-                        narration = "#TNT"+str(tenant.id)
+                        narration = "TNT"+str(tenant.id)
             except:
-                narration = "#"+bill.house.name
+                narration = bill.house.name
 
             p = bill.apartment.paymentdetails
             if p:
                 if p.paytype == "mpesapay":
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
 

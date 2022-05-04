@@ -3810,14 +3810,14 @@ def send_out_single_email_invoice(billid):
 
                 try:
                     if bill.apartment.paymentdetails.nartype == 'hsenum':
-                        narration = "#"+bill.house.name
+                        narration = bill.house.name
                     else:
                         if bill.ptenant:
-                            narration = "#WN"+str(tenant.id)
+                            narration = "WN"+str(tenant.id)
                         else:
-                            narration = "#TNT"+str(tenant.id)
+                            narration = "TNT"+str(tenant.id)
                 except:
-                    narration = "#"+bill.house.name
+                    narration = bill.house.name
 
                 template_vars = {
                     "bill":bill,
@@ -4053,12 +4053,12 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = "#"+bill.house.name
+                    narration = bill.house.name
                 else:
                     if tenant:
-                        narration = "#WN"+str(tenant.id)
+                        narration = "WN"+str(tenant.id)
                     else:
-                        narration = "#TNT"+str(tenant2.id)
+                        narration = "TNT"+str(tenant2.id)
             except:
                 narration = ""
 
@@ -4074,7 +4074,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 if p.paytype == "mpesapay":
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:

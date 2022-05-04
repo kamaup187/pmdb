@@ -3936,7 +3936,7 @@ def discard_bills(props):
 
                 MonthlyChargeOp.delete(bill)
 
-def send_out_sms_invoices(prop,houses,override,charge,user_id):
+def send_out_sms_invoices(prop,houses,billid,charge,user_id):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -3950,7 +3950,11 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
         target_bills = []
 
-        if houses and houses != "ALL":
+        if billid:
+            targetbill = MonthlyChargeOp.fetch_specific_bill(billid)
+            target_bills.append(targetbill)
+
+        elif houses and houses != "ALL":
             # if  override:
             """Specified houses for all charges invoices"""
             update = True

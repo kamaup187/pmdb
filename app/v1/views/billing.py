@@ -1620,7 +1620,7 @@ class SendInvoices(Resource):
             return None
 
         else:
-            override = False
+            billid = ""
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
             send_internal_email_notifications(current_user.company.name,txt)
 
@@ -1632,7 +1632,7 @@ class SendInvoices(Resource):
         # THIS IS INTENTIONAL, JOB IS NOT WITHIN THE IF BLOCK
 
         job982 = q.enqueue_call(
-            func=send_out_sms_invoices, args=(prop,houses,override,charge,user_id,), result_ttl=5000
+            func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000
         )
         return None
 

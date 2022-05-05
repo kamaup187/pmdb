@@ -4199,7 +4199,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 sms_obj.save()
 
                             if co.sms_provider == "Advanta":
-                                sms_sender(co.name,message,phonenum)
+                                smsid = sms_sender(co.name,message,phonenum)
+                                if smsid:
+                                    MonthlyChargeOp.update_smsid(bill,smsid)
                                 MonthlyChargeOp.update_sms_status(bill,"sent")
 
 
@@ -4356,7 +4358,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 sms_obj.save()
 
                             if co.sms_provider == "Advanta":
-                                sms_sender(co.name,message,phonenum)
+                                smsid = sms_sender(co.name,message,phonenum)
+                                if smsid:
+                                    MonthlyChargeOp.update_smsid(bill,smsid)
                                 MonthlyChargeOp.update_sms_status(bill,"sent")
 
 

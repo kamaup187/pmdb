@@ -192,8 +192,13 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
         if payment_obj:
             print("DELIVERY STATUS! PAYMENT FOUND")
             PaymentOp.update_sms_status(payment_obj,resp1)
+
+        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
+        if bill_obj:
+            MonthlyChargeOp.update_sms_status(bill_obj,resp1)
+            print("DELIVERY STATUS! INVOICE FOUND")
         else:
-            print("DELIVERY STATUS! PAYMENT OF THAT ID NOT FOUND")
+            print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 
 
 

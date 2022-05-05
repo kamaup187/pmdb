@@ -1952,6 +1952,16 @@ class TenantOp(Tenant,Base):
             'regby':TenantOp.get_name(self)
         }
 
+
+class TenantDepositOp(TenantDeposit,Base):
+    def __init__(self,rentdep,waterdep,elecdep,total,tenant_id,apartment_id):
+        self.rentdep = rentdep
+        self.waterdep = waterdep
+        self.elecdep = elecdep
+        self.total = total
+        self.tenant_id = tenant_id
+        self.apartment_id = apartment_id
+
 class AllocateTenantOp(Occupancy,Base):
     def __init__(self,apartment_id,house_id,tenant_id,user_id,description=None):
         self.apartment_id=apartment_id

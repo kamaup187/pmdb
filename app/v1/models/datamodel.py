@@ -663,6 +663,31 @@ class Tenant(db.Model):
     def __repr__(self):
         return self.name
 
+
+class TenantDeposit(db.Model):
+    """db model class"""
+
+    __tablename__ = 'tenantdeposits'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+
+    rentdep = db.Column(db.Float,default=0)
+    waterdep = db.Column(db.Float,default=0)
+    elecdep = db.Column(db.Float,default=0)
+    description = db.Column(db.String,default="unrefunded")
+
+    total = db.Column(db.Float,default=0)
+
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    def __repr__(self):
+        strhouse = str(self.id)
+
+        return strhouse
+
 class Occupancy(db.Model):
     """
     Relate house and tenant

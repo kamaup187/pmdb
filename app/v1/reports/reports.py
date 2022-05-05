@@ -4858,7 +4858,7 @@ class OfficeExpenses(Resource):
                 name=current_user.name))
 
 
-class TenantDeposit(Resource):
+class TenantDeposits(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("prop")

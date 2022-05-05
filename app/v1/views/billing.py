@@ -905,6 +905,7 @@ class EditBill(Resource):
         else:
             if target == "excelarrearsupload":
                 apartment_id = request.form.get('propid')
+                option = request.form.get('option')
                 prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
                 file = request.files.get('file')
 
@@ -953,8 +954,8 @@ class EditBill(Resource):
                             if target_items:
                                 bill = target_items[0]
                                 if bill:
-                                    if bill.arrears_updated:
-                                        print("Skipping", house_name)
+                                    if bill.arrears_updated and option != "replace":
+                                        print("Skipping", house_name,"arrears uploaded already ARR:",bill.arrears)
                                         continue
 
 
@@ -994,16 +995,27 @@ class EditBill(Resource):
                                     #     MonthlyChargeOp.update_balance(bill,bal)
 
                                     #####################################################################################################################
-                                    update_water = bill.water_balance
-                                    update_rent = arr if arr else bill.rent_balance
-                                    update_garbage = bill.garbage_balance
-                                    update_security = bill.security_balance
-                                    update_fine = bill.penalty_balance
-                                    update_agreement = bill.agreement_balance
-                                    update_deposit = bill.deposit_balance
-                                    update_electricity = bill.electricity_balance
-                                    update_maintenance = bill.maintenance_balance
-                                    
+                                    if option == "add":
+                                        update_water = bill.water_balance
+                                        update_rent = arr if arr else bill.rent_balance
+                                        update_garbage = bill.garbage_balance
+                                        update_security = bill.security_balance
+                                        update_fine = bill.penalty_balance
+                                        update_agreement = bill.agreement_balance
+                                        update_deposit = bill.deposit_balance
+                                        update_electricity = bill.electricity_balance
+                                        update_maintenance = bill.maintenance_balance
+                                    else:
+                                        update_water = 0.0
+                                        update_rent = arr
+                                        update_garbage = 0.0
+                                        update_security = 0.0
+                                        update_fine = 0.0
+                                        update_agreement = 0.0
+                                        update_deposit = 0.0
+                                        update_electricity = 0.0
+                                        update_maintenance = 0.0
+
                                     update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
                                     total_amount = original_amount - bill.arrears + update_arrears

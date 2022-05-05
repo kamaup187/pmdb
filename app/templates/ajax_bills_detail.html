@@ -437,6 +437,14 @@
                 <div class="position-relative">
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+
+                      <div class="form-group input-icons mt-3">
+                        <select class="select-css" id ="select_option" >
+                          <option disabled selected value> --select option-- </option>
+                          <option value="add">add to existing</option>
+                          <option value="replace">replace existing</option>
+                        </select>
+                      </div>
      
                       <div class="mt-2 form-group center-btn">
                         <p class="text-black">Arrears Excel File: <input class="ph" id="tenantarrearsfile" type = "file" name = "filename" /></p>
@@ -962,6 +970,7 @@
       var files = $('#tenantarrearsfile')[0].files;
       fd.append('file',files[0]);
       fd.append('target',"excelarrearsupload");
+      fd.append('option',$("#select_option").val());
       fd.append('propid',$("#prop_identifier").text());
 
       $.ajax({

@@ -210,7 +210,7 @@ api.add_resource(MpesaStatement,"/mpesa/statement")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")
-api.add_resource(TenantDeposit,"/deposit/report")
+api.add_resource(TenantDeposits,"/deposit/report")
 api.add_resource(OfficePnL,"/profitnloss/report")
 api.add_resource(OfficeExpenses,"/office/expenses")
 

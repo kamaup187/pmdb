@@ -801,6 +801,7 @@ class BillInvoice(Resource):
             print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
             print("OWNER:",bill.ptenant)
             print("TENANT",bill.tenant)
+            print("delivery REPORT",bill.sms_invoice)
             print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
 
 

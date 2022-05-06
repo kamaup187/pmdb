@@ -116,8 +116,7 @@ class Index(Resource):
         all_ptenants = qws.meters
         decitype = "1"
         for i in all_ptenants:
-            MeterOp.delete(i)
-            # MeterOp.update_decitype(i,decitype)
+            MeterOp.update_decitype(i,decitype)
 
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')

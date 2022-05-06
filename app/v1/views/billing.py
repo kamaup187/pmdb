@@ -2628,9 +2628,9 @@ class UpdateBalance(Resource):
 
         bill_balance = 0.0
         
-        print("totototal", len(targetbills))
-        print("totototal", targetbills[0].date.date())
-        print("totototal", targetbills[0].balance)
+        # print("totototal", len(targetbills))
+        # print("totototal", targetbills[0].date.date())
+        # print("totototal", targetbills[0].balance)
 
 
         for bill in targetbills:

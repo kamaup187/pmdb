@@ -2632,58 +2632,60 @@ class UpdateBalance(Resource):
         # print("totototal", targetbills[0].date.date())
         # print("totototal", targetbills[0].balance)
 
+        try:
+            for bill in targetbills:
 
-        for bill in targetbills:
+                original_amount = bill.total_bill
 
-            original_amount = bill.total_bill
+                values = validate_float_inputs("","","","","","","","","","")
 
-            values = validate_float_inputs("","","","","","","","","","")
+                #TODO -remove this block
+                agreement = bill.agreement if bill.agreement else 0.0
+                deposit = bill.deposit if bill.deposit else 0.0
 
-            #TODO -remove this block
-            agreement = bill.agreement if bill.agreement else 0.0
-            deposit = bill.deposit if bill.deposit else 0.0
-
-            if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
-                # update_water = bill.water
-                update_water = values[1] if values[1] != "null" else bill.water
-            else:
-                update_water = values[1] if values[1] != "null" else bill.water
-
-            update_rent = values[0] if values[0] != "null" else bill.rent
-            update_garbage = values[2] if values[2] != "null" else bill.garbage
-            update_security = values[3] if values[3] != "null" else bill.security
-            update_fine = values[4] if values[4] != "null" else bill.penalty
-            update_agreement = values[7] if values[7] != "null" else agreement
-            update_deposit = values[5] if values[5] != "null" else deposit
-            update_arrears = values[6] if values[6] != "null" else bill.arrears
-            update_maintenance = values[9] if values[9] != "null" else bill.maintenance
-
-            total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
-            MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
-
-            print("NEW TOTAL :",total_amount,"OLD TOTAL :",original_amount)
-
-            diff = total_amount - original_amount
-
-            running_bal = tenant_obj.balance
-            running_bal = running_bal + diff
-            TenantOp.update_balance(tenant_obj,running_bal)
-
-            if bill.paid_amount:
-                if bill.paid_amount < 0:
-                    MonthlyChargeOp.update_payment(bill,0.0)
-                    bal = total_amount
+                if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
+                    # update_water = bill.water
+                    update_water = values[1] if values[1] != "null" else bill.water
                 else:
-                    bal = total_amount - bill.paid_amount
-            else:
-                bal = total_amount
+                    update_water = values[1] if values[1] != "null" else bill.water
 
-            MonthlyChargeOp.update_balance(bill,bal)
+                update_rent = values[0] if values[0] != "null" else bill.rent
+                update_garbage = values[2] if values[2] != "null" else bill.garbage
+                update_security = values[3] if values[3] != "null" else bill.security
+                update_fine = values[4] if values[4] != "null" else bill.penalty
+                update_agreement = values[7] if values[7] != "null" else agreement
+                update_deposit = values[5] if values[5] != "null" else deposit
+                update_arrears = values[6] if values[6] != "null" else bill.arrears
+                update_maintenance = values[9] if values[9] != "null" else bill.maintenance
 
-            db.session.expire(bill)
-            
-            bill_balance += bill.balance
-            print(bill.month,bill.year,"KES",bill.balance)
+                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
+                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+
+                print("NEW TOTAL :",total_amount,"OLD TOTAL :",original_amount)
+
+                diff = total_amount - original_amount
+
+                running_bal = tenant_obj.balance
+                running_bal = running_bal + diff
+                TenantOp.update_balance(tenant_obj,running_bal)
+
+                if bill.paid_amount:
+                    if bill.paid_amount < 0:
+                        MonthlyChargeOp.update_payment(bill,0.0)
+                        bal = total_amount
+                    else:
+                        bal = total_amount - bill.paid_amount
+                else:
+                    bal = total_amount
+
+                MonthlyChargeOp.update_balance(bill,bal)
+
+                db.session.expire(bill)
+                
+                bill_balance += bill.balance
+                print(bill.month,bill.year,"KES",bill.balance)
+        except:
+            pass
 
         TenantOp.update_balance(tenant_obj,bill_balance)
         db.session.expire(tenant_obj)

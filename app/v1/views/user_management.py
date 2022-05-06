@@ -796,7 +796,7 @@ class RequestDemo(Resource):
         send_internal_email_notifications("DEMO REQUEST",message1)
 
 
-        targeturl = "https://www.kodimann.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        targeturl = "https://www.kodimannproperties.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
         
         if os.getenv("TARGET") == "lasshouse":
             print("sending....")

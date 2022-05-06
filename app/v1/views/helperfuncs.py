@@ -4639,8 +4639,6 @@ def send_demo_mail(email,name,url):
     app = create_app(configuration)
     app.app_context().push()
 
-    print("goooiiing")
-
     txt = Message('Welcome to Kodimann! Demo account.', sender = mailsender, recipients = [email])
     txt.html = render_template('demo.html',name=name,target_url=url)
     mail.send(txt)

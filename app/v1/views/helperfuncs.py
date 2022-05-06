@@ -4303,7 +4303,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                         if bill.house.watertarget:
                             if bill.house.watertarget == "tenant":
-                                waterbill = "water consumption"
+                                waterbill = ""
                             else:
                                 smswater = ""
                                 waterbill = ""

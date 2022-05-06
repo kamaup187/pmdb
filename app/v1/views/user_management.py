@@ -898,7 +898,7 @@ class SelfUserRegisterAgent(Resource):
 
         UserOp.update_link(user,userlink)
        
-        targeturl = f"https://www.kodimann.com/user/{userlink}"
+        targeturl = f"https://kodimannproperties.com/user/{userlink}"
         # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
 
         print(targeturl)

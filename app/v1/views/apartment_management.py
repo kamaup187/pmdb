@@ -111,11 +111,13 @@ class Index(Resource):
     def get(self):
 
 
-        # qws = ApartmentOp.fetch_apartment_by_id(421)
+        qws = ApartmentOp.fetch_apartment_by_id(421)
     
-        # all_ptenants = qws.meter_readings
-        # for i in all_ptenants:
-        #     MeterReadingOp.delete(i)
+        all_ptenants = qws.meters
+        decitype = "1"
+        for i in all_ptenants:
+            MeterOp.delete(i)
+            # MeterOp.update_decitype(i,decitype)
 
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')

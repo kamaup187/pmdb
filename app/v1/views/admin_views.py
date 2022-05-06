@@ -459,10 +459,12 @@ class AllProperties(Resource):
             try:
                 if prop.paymentdetails.nartype == 'hsenum':
                     nartype = "#HX"
-                else:
+                elif prop.paymentdetails.nartype == "tntnum":
                     nartype = "#TNTXXX"
+                else:
+                    nartype = ""
             except:
-                nartype = "unknown"
+                nartype = ""
 
             return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
 

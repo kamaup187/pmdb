@@ -72,37 +72,6 @@
     <div class="text-left">{{bank|safe}}</div>
     {% endif %}
 
-
-
-
-    {%if p%}
-
-
-      {%if p.paytype == "mpesapay" %}
-
-      <div class="text-left mt-2">Payment will be done via Mobile money to:</div>
-      <p class="text-left">
-        <span class="linebrea">Mpesa Paybill: {{p.mpesapaybill}} </span> ACC: <span class="linebrea">{{narration}}</span><br>
-      </p>
-
-      {% else %}
-
-      <div class="text-left mt-2">
-        Payment will be done via Bank deposit or Mobile money to:
-      </div>
-      <p class="small text-muted text-left">
-        <span>
-            BANK: {{p.bankname}}<br>
-            BRANCH: {{p.bankbranch}}<br>
-            ACCOUNT NAME: {{p.bankaccountname}}<br>
-            ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
-        </span>
-    </p>
-
-      {% endif %}
-
-    {% endif %}
-
     <br><span> ~ {{bill.apartment.name|safe}}</span>
 
     {% if not w_edited or not e_edited%}

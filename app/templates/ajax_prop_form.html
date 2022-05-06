@@ -91,34 +91,44 @@
                 <div class="card-body">
                     <form>
 
-                        <div class="row gx-3 mb-3">
+                        <div class="row form-group">
                             <span class="dispnone" id="check_paytype">{{prop.paymentdetails.paytype}}</span>
                             <span class="dispnone" id="check_nartype">{{prop.paymentdetails.nartype}}</span>
+                            <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankaccountnumber}}</span>
 
 
-                            <!-- Form Group (location)-->
-                                <div class="col-md-3">
-                                <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
-                                <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
+                            <div class="kiota-borde col-md-6 pt-1">
+                                <div class="">
+                                    <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
+                                    <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
+                                </div>
+                            
+                                <div class="">
+                                    <input class="" id="paytype2" name="paytype" type="radio" value="bankpay" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank payment</label>
+                                </div>
+
+                                <div class="">
+                                    <input class="" id="paytype3" name="paytype" type="radio" value="" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype3">None</label>
+                                </div>
+                            </div>
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
+                                <div class="">
+                                    <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
+                                    <label class="mb-1 small font-weight-bold" for="nartype">TNT(#TNT123)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype2" name="nartype" type="radio" value="hsenum" />
+                                    <label class="small font-weight-bold mb-1" for="nartype2">House No.(#H1)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype3" name="nartype" type="radio" value="" />
+                                    <label class="small font-weight-bold mb-1" for="nartype3">None</label>
+                                </div>
                             </div>
 
-                            <!-- Form Group (organization name)-->
-                            <div class="col-md-3">
-                                <input class="" id="paytype2" name="paytype" type="radio" value="bankpay" />
-                                <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank payment(mpesa/deposit)</label>
-                            </div>
-  
-
-                            <!-- Form Group (organization name)-->
-                            <div class="col-md-3">
-                                <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
-                                <label class="mb-1 small font-weight-bold" for="nartype">TNT format (#TNT123)</label>
-                            </div>
-                            <!-- Form Group (location)-->
-                            <div class="col-md-3">
-                                <input class="" id="nartype2" name="nartype" type="radio" value="hsenum" />
-                                <label class="small font-weight-bold mb-1" for="nartype2">House Number format (#H1)</label>
-                            </div>
                         </div>
 
                         <div id="mpesacorner" class="">
@@ -173,7 +183,7 @@
                                 <div class="col-sm-4">
                                     <label class="small mb-1" for="accno">Bank mpesa accno no</label>
                         
-                                    <input class="form-control" type="text" id="" value="{{prop.paymentdetails.bankaccountnumber}}{{nartype}}">
+                                    <input class="form-control" type="text" id="bankacc" value="{{prop.paymentdetails.bankaccountnumber}}{{nartype}}">
                                 </div>
                             </div>
                         
@@ -234,10 +244,12 @@
             if (this.value == 'mpesapay') {
                 $("#mpesacorner").removeClass("dispnone")
                 $("#bankcorner").addClass("dispnone")
-            }
-            else if (this.value == 'bankpay') {
+            }else if (this.value == 'bankpay') {
                 $("#mpesacorner").addClass("dispnone")
                 $("#bankcorner").removeClass("dispnone")
+            }else{
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
             }
         });
 
@@ -245,9 +257,13 @@
         $('input[type=radio][name=nartype]').change(function () {
             if (this.value == 'hsenum') {
                 $("#mpesaacc").val("#H1 format")
-            }
-            else if (this.value == 'tntnum') {
+                $("#bankacc").val($("#check_accno").text()+"#H1 format")
+            }else if (this.value == 'tntnum') {
                 $("#mpesaacc").val("#TNT format")
+                $("#bankacc").val($("#check_accno").text()+"#TNT format")
+            }else{
+                $("#mpesaacc").val("")
+                $("#bankacc").val($("#check_accno").text()+"")
             }
         });
 </script>
@@ -291,7 +307,11 @@
                 $("input[id=paytype2]").attr("checked", "checked");
                 $("#mpesacorner").addClass("dispnone")
                 $("#bankcorner").removeClass("dispnone")
-            } else { }
+            } else { 
+                $("input[id=paytype3]").attr("checked", "checked");
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }
 
             let checkNartype = $("#check_nartype").text()
             if (checkNartype == "tntnum") {
@@ -301,7 +321,10 @@
             } else if (checkNartype == "hsenum") {
                 $("#mpesaacc").val("#H1 format")
                 $("input[id=nartype2]").attr("checked", "checked");
-            } else { }
+            } else {
+                $("#mpesaacc").val("")
+                $("input[id=nartype3]").attr("checked", "checked");
+             }
 
         })
 

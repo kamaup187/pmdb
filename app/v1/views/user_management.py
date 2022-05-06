@@ -874,7 +874,7 @@ class SelfUserRegisterAgent(Resource):
         message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
         try:
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
-            response = sms.send(message1, ["+254716674695"],sender)
+            response = sms.send(message1, ["+254716674695","+25410349851"],sender)
         except:
             pass
 
@@ -974,7 +974,7 @@ class SelfUserRegisterOwner(Resource):
 
         try:
             message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an owner({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
-            response = sms.send(message1, ["+254716674695"],sender)
+            response = sms.send(message1, ["+254716674695","+25410349851"],sender)
 
             recipient = [sms_phone_number_formatter(phone)]
             message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay Customer relations manager."

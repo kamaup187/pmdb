@@ -697,13 +697,15 @@ class BillInvoice(Resource):
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = bill.house.name
-                else:
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if bill.ptenant:
                         narration = "WN"+str(tenant.id)
                     else:
                         narration = "TNT"+str(tenant.id)
+                else:
+                    narration = ""
             except:
-                narration = bill.house.name
+                narration = ""
 
             return render_template(
                 "ajax_tenant_invoice_mail.html",
@@ -774,13 +776,15 @@ class BillInvoice(Resource):
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = bill.house.name
-                else:
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if bill.ptenant:
                         narration = "WN"+str(tenant.id)
                     else:
                         narration = "TNT"+str(tenant.id)
+                else:
+                    narration = ""
             except:
-                narration = bill.house.name
+                narration = ""
 
             p = bill.apartment.paymentdetails
             if p:
@@ -788,9 +792,13 @@ class BillInvoice(Resource):
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
                     bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
+                    if p.paytype != "bankpay":
+                        bankdetails = ""
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
-
+                    if p.paytype != "bankpay":
+                        bankdetails = ""
+                        
             co = current_user.company
 
             if co.name == 'LaCasa':
@@ -807,7 +815,6 @@ class BillInvoice(Resource):
 
             return render_template(
                 "ajax_sms_invoice.html",
-                p=None,
                 smsstatus=delivery,
                 narration=narration,
                 sms_highlight=sms_highlight,

@@ -614,7 +614,6 @@
     })
   </script>
 
-
 <script>
   $("#getdemo").on('click', function () {
     $('.next2').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>sending...');
@@ -627,6 +626,7 @@
 
       tel1: $("#d_tel1").val(),
       email: $("#d_email").val(),
+      target:"params"
     },
     success: function (response) {
       if (response === "success") {

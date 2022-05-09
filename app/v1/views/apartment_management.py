@@ -112,11 +112,12 @@ class Index(Resource):
 
 
         qws = ApartmentOp.fetch_apartment_by_id(421)
-    
-        all_ptenants = qws.meters
-        decitype = "1"
-        for i in all_ptenants:
-            MeterOp.update_decitype(i,decitype)
+
+        if qws:
+            all_ptenants = qws.meters
+            decitype = "1"
+            for i in all_ptenants:
+                MeterOp.update_decitype(i,decitype)
 
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
@@ -480,6 +481,8 @@ class Index(Resource):
 
             sifted = []
             for shortcode in shortcodes:
+                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687":
+                    continue
                 raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
 
                 for r in raw_unclaimed:

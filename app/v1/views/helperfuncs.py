@@ -4062,11 +4062,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     narration = bill.house.name
-                else:
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if tenant:
                         narration = "WN"+str(tenant.id)
                     else:
                         narration = "TNT"+str(tenant2.id)
+
+                else: narration = ""
             except:
                 narration = ""
 
@@ -4082,7 +4084,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                 if p.paytype == "mpesapay":
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
+                    if narration:
+                        narration = "#"+narration
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:

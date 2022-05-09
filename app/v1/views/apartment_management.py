@@ -5296,8 +5296,16 @@ class CaptureReading(Resource):
         prop_id = request.args.get("propid")
         prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
         db.session.expire(prop_obj)
+        billing_period = get_billing_period(ApartmentOp.fetch_apartment_by_id(prop_id))
 
-        unread_units = len(filtered_house_list(prop_id))
+
+        readperiod = request.args.get('readperiod')
+        if readperiod == "current":
+            readdate = billing_period
+        else:
+            readdate = generate_date(billing_period.month + 1,billing_period.year) #URGENT TODO , CHECK DATE AND TAKE CARE OF DECEMBER
+
+        unread_units = len(filtered_house_list(prop_id,readdate))
         metered_units = len(filter_in_metered_houses(prop_obj.name))
         read_units = metered_units - unread_units
 
@@ -5308,11 +5316,13 @@ class CaptureReading(Resource):
 
         apartment_id = request.form.get('propid')
         target = request.form.get('target')
+
+        billing_period = get_billing_period(ApartmentOp.fetch_apartment_by_id(apartment_id))
+        
         if target == "excelupload":
 
             file = request.files.get('file')
 
-            billing_period = get_billing_period(ApartmentOp.fetch_apartment_by_id(apartment_id))
 
             if file:
                 processed_data = upload_handler(file,current_user)
@@ -5369,17 +5379,21 @@ class CaptureReading(Resource):
         run = request.form.get('run')
 
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+        readperiod = request.form.get('readperiod')
+        if readperiod == "current":
+            readdate = billing_period
+        else:
+            readdate = generate_date(billing_period.month + 1,billing_period.year) #URGENT TODO , CHECK DATE AND TAKE CARE OF DECEMBER
 
         #################################################################################################
         if run == "houselist":
-            house_list = filtered_house_list(apartment_id)
+            house_list = filtered_house_list(apartment_id,readdate)
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
         elif run == "houselist-alt":
-            house_list = filtered_house_list_alt(apartment_id)
+            house_list = filtered_house_list_alt(apartment_id,readdate)
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
         ##################################################################################################
         if not house:
-            billing_period = get_billing_period(prop)
             return '<div class="text-success center-btn"><i class="fas fa-info-circle mr-1 text-warning"></i>"Reading complete</div>'
 
         house_obj = get_specific_house_obj(apartment_id,house)
@@ -5436,51 +5450,57 @@ class CaptureReading(Resource):
         else:
             user_id = current_user.id
 
-            billing_period = get_billing_period(prop)
-
-            if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
-                #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
-                print("Reading left out captured")
-
-                month = billing_period.month
-                year = billing_period.year
-
-            elif datetime.datetime.now().day >= 21:
-                #Only enters this block if readings are taken early before the next month of billing
-
-                if datetime.datetime.now().month != 12:
-                    if datetime.datetime.now().month + 1 == billing_period.month:
-
-                        #Only enters this block for readings taken early and are meant for early next current billing
-                        print("Reading left out captured for next month")
-                        month = billing_period.month
-                        year = billing_period.year
-
-                    else:
-                        #Only enters this block for early billing COMMON PROCESS
-                        print("Reading captured early and normally for next period")
-                        month = billing_period.month + 1 if billing_period.month != 12 else 1
-                        year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-                else:
-                    if 1 == billing_period.month:
-                        print("Reading left out captured for Jan ater early billing for Jan")
-                        month = billing_period.month
-                        year = billing_period.year
-                    else:
-                        #Only enters this block for early billing COMMON PROCESS
-                        print("Reading captured early and normally for Jan")
-                        month = 1
-                        year = billing_period.year + 1
-            else:
-                #Only enters this block if readings are taken early in the next month of billing
-                print("Reading captured late")
-                if billing_period.month == 12:
-                    month = 1
-                    year = billing_period.year + 1
-
+            if readdate:
+                if readdate.month == billing_period.month and readdate.year == billing_period.year:
+                    month = billing_period.month
+                    year = billing_period.year
                 else:
                     month = billing_period.month + 1 if billing_period.month != 12 else 1
                     year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+            else: 
+                if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
+                    #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
+                    print("Reading left out captured")
+
+                    month = billing_period.month
+                    year = billing_period.year
+
+                elif datetime.datetime.now().day >= 21:
+                    #Only enters this block if readings are taken early before the next month of billing
+
+                    if datetime.datetime.now().month != 12:
+                        if datetime.datetime.now().month + 1 == billing_period.month:
+
+                            #Only enters this block for readings taken early and are meant for early next current billing
+                            print("Reading left out captured for next month")
+                            month = billing_period.month
+                            year = billing_period.year
+
+                        else:
+                            #Only enters this block for early billing COMMON PROCESS
+                            print("Reading captured early and normally for next period")
+                            month = billing_period.month + 1 if billing_period.month != 12 else 1
+                            year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+                    else:
+                        if 1 == billing_period.month:
+                            print("Reading left out captured for Jan ater early billing for Jan")
+                            month = billing_period.month
+                            year = billing_period.year
+                        else:
+                            #Only enters this block for early billing COMMON PROCESS
+                            print("Reading captured early and normally for Jan")
+                            month = 1
+                            year = billing_period.year + 1
+                else:
+                    #Only enters this block if readings are taken early in the next month of billing
+                    print("Reading captured late")
+                    if billing_period.month == 12:
+                        month = 1
+                        year = billing_period.year + 1
+
+                    else:
+                        month = billing_period.month + 1 if billing_period.month != 12 else 1
+                        year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
 
             reading_period = generate_date(month,year)
 

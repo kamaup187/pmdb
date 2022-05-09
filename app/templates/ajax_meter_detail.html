@@ -25,7 +25,7 @@
             </div>
             
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-2">
                     <div class="">
                         <div class="text-xx mb-2 center-btn text-info font-weight-bold">{{prop.name}}</div>
 
@@ -74,7 +74,7 @@
                   </div>
 
                 </div>
-                <div id="meter_overview" class="col-lg-4">
+                <div id="meter_overview" class="col-lg-3 kiota-border">
 
                   <div class="info_item pt-2">
                     <i class="fas fa-house-user"></i>
@@ -91,6 +91,19 @@
                   </div>
 
               </div>
+
+              <div class="kiota-border col-lg-2 ml-3 pt-1">
+                Reading Period:
+                <div class="">
+                    <input class="" id="period1" name="readperiod" type="radio" value="current" checked/>
+                    <label class="small font-weight-bold mb-1 text-danger" for="period1">Current Period <span class="text-black">({{current_month}})</span></label>
+                </div>
+            
+                <div class="">
+                    <input class="" id="period2" name="readperiod" type="radio" value="next"/>
+                    <label class="mb-1 small font-weight-bold text-danger" for="period2">Next period <span class="text-black">({{period}})</span></label>
+                </div>
+            </div>
             </div>
         
 
@@ -1292,6 +1305,32 @@
 
 
 
+<!-- 
+<script>
+
+  $('input[type=radio][name=readperiod]').change(function () {
+    if (this.value == 'current') {
+      $("#current-reloader").html("old");
+    }else{
+      $("#current-reloader").html("default");
+    }
+      $.ajax({
+            url: "{{ url_for('api.capturereading') }}",
+            type: "POST",
+            data: {
+                propid: $("#prop_identifier").text(),
+                readperiod: $("input[name=readperiod]:checked").val(),
+                target: "set period"
+            },
+            success: function (response) {
+              alert("changed the period successfully")            
+            }
+        });
+
+
+  });
+
+</script> -->
 
 
 <script>
@@ -1303,6 +1342,7 @@
       type: "POST",
       data: {
             propid: $("#prop_identifier").text(),
+            readperiod: $("input[name=readperiod]:checked").val(),
             run:"houselist"
           },
       success: function(response) {
@@ -1320,6 +1360,7 @@
       type: "POST",
       data: {
             propid: $("#prop_identifier").text(),
+            readperiod: $("input[name=readperiod]:checked").val(),
             run:"houselist-alt"
           },
       success: function(response) {
@@ -1460,6 +1501,7 @@ $("#select_house_alt").on('change',function(){
                 propid: $("#prop_identifier").text(),
                 house: $("#select_house").val(),
                 reading: $("#reading").val(),
+                readperiod: $("input[name=readperiod]:checked").val(),
                 readtype:"water"
             },
         success: function(response) {
@@ -1482,6 +1524,7 @@ $("#select_house_alt").on('change',function(){
             type: "POST",
             data: {
                   propid: $("#prop_identifier").text(),
+                  readperiod: $("input[name=readperiod]:checked").val(),
                   run:"houselist"
                 },
             success: function(response) {
@@ -1832,6 +1875,7 @@ $("#select_house_alt").on('change',function(){
                 type: "get",
                 data: {
                       propid: $("#prop_identifier").text(),
+                      readperiod: $("input[name=readperiod]:checked").val(),
                       target:"meter overview"
                     },
                 success: function(response) {

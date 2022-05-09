@@ -6400,7 +6400,7 @@ def total_bill(apartment_id,user_id,month,year):
 
 
         
-def filtered_house_list(apartment_id):
+def filtered_house_list(apartment_id,readdate=None):
     """Filtering out read houses"""
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -6408,50 +6408,58 @@ def filtered_house_list(apartment_id):
     
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period
-
-    if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
-        #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
-        print("Reading left out captured")
-
-        month = billing_period.month
-        year = billing_period.year
-
-    elif datetime.datetime.now().day >= 21:
-        #Only enters this block if readings are taken early before the next month of billing
-
-        if datetime.datetime.now().month != 12:
-            if datetime.datetime.now().month + 1 == billing_period.month:
-
-                #Only enters this block for readings taken early and are meant for early next current billing
-                print("Reading left out captured for next month")
-                month = billing_period.month
-                year = billing_period.year
-
-            else:
-                #Only enters this block for early billing COMMON PROCESS
-                print("Reading captured early and normally for next period")
-                month = billing_period.month + 1 if billing_period.month != 12 else 1
-                year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-        else:
-            if 1 == billing_period.month:
-                print("Reading left out captured for Jan ater early billing for Jan")
-                month = billing_period.month
-                year = billing_period.year
-            else:
-                #Only enters this block for early billing COMMON PROCESS
-                print("Reading captured early and normally for Jan")
-                month = 1
-                year = billing_period.year + 1
-    else:
-        #Only enters this block if readings are taken early in the next month of billing
-        print("Reading captured late")
-        if billing_period.month == 12:
-            month = 1
-            year = billing_period.year + 1
-
+    
+    if readdate:
+        if readdate.month == billing_period.month and readdate.year == billing_period.year:
+            month = billing_period.month
+            year = billing_period.year
         else:
             month = billing_period.month + 1 if billing_period.month != 12 else 1
             year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+    else: 
+        if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
+            #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
+            print("Reading left out captured")
+
+            month = billing_period.month
+            year = billing_period.year
+
+        elif datetime.datetime.now().day >= 21:
+            #Only enters this block if readings are taken early before the next month of billing
+
+            if datetime.datetime.now().month != 12:
+                if datetime.datetime.now().month + 1 == billing_period.month:
+
+                    #Only enters this block for readings taken early and are meant for early next current billing
+                    print("Reading left out captured for next month")
+                    month = billing_period.month
+                    year = billing_period.year
+
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for next period")
+                    month = billing_period.month + 1 if billing_period.month != 12 else 1
+                    year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+            else:
+                if 1 == billing_period.month:
+                    print("Reading left out captured for Jan ater early billing for Jan")
+                    month = billing_period.month
+                    year = billing_period.year
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for Jan")
+                    month = 1
+                    year = billing_period.year + 1
+        else:
+            #Only enters this block if readings are taken early in the next month of billing
+            print("Reading captured late")
+            if billing_period.month == 12:
+                month = 1
+                year = billing_period.year + 1
+
+            else:
+                month = billing_period.month + 1 if billing_period.month != 12 else 1
+                year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
 
     for house in house_list:
         active_meter = fetch_active_meter(house)
@@ -6478,7 +6486,7 @@ def filtered_house_list(apartment_id):
 
     return unread_houses
 
-def filtered_house_list_alt(apartment_id):
+def filtered_house_list_alt(apartment_id,readdate=None):
     """Filtering out read houses"""
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)

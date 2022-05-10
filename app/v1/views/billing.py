@@ -2776,6 +2776,39 @@ class Receipt(Resource):
         else:
             receiptno = payment_obj.id
 
+        if payment_obj.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
         return render_template(
             'ajax_receiptpay.html',
             voided = disp,
@@ -2796,6 +2829,7 @@ class Receipt(Resource):
             paymode=payment_obj.paymode,
             logopath=logo(current_user.company)[0],
             company=current_user.company,
+            address=address,
             user=current_user.company if current_user.company == "MojaMbili Homes" else server,
             prop= ApartmentOp.fetch_apartment_by_id(payment_obj.apartment_id),
             randid=payment_obj.rand_id if payment_obj.rand_id else "a"

@@ -2776,6 +2776,8 @@ class Receipt(Resource):
         else:
             receiptno = payment_obj.id
 
+        prop = payment_obj.apartment
+
         if payment_obj.company.name == "LaCasa":
             if prop.id == 419:
                 address = {
@@ -2831,7 +2833,7 @@ class Receipt(Resource):
             company=current_user.company,
             address=address,
             user=current_user.company if current_user.company == "MojaMbili Homes" else server,
-            prop= ApartmentOp.fetch_apartment_by_id(payment_obj.apartment_id),
+            prop=prop,
             randid=payment_obj.rand_id if payment_obj.rand_id else "a"
         )
 

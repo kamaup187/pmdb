@@ -111,9 +111,9 @@ class Index(Resource):
     def get(self):
 
 
-        qws = ApartmentOp.fetch_apartment_by_id(33)
-        if qws:
-            ApartmentOp.update_loan_bank_details(qws,0.0)
+        # qws = ApartmentOp.fetch_apartment_by_id(33)
+        # if qws:
+        #     ApartmentOp.update_loan_bank_details(qws,0.0)
 
         # if qws:
         #     all_ptenants = qws.meters

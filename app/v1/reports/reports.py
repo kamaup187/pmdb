@@ -1755,7 +1755,7 @@ class LandlordProfitAndLoss(Resource):
                 expenses_amount += exp.amount
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -1958,7 +1958,7 @@ class RentStatement(Resource):
         commission = netrent * apartment_obj.commission * 0.01
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -2689,7 +2689,7 @@ class ExternalDetail(Resource):
         commission = netrent * apartment_obj.commission * 0.01
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -2716,7 +2716,7 @@ class ExternalDetail(Resource):
         fieldshow_water = "dispnone" if not totalwater else ""
         fieldshow_dep = "dispnone" if not totaldeposit else ""
 
-        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+        fieldshow_loan =  "dispnone" if apartment_obj.id == 33 else "dispnone"
 
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 

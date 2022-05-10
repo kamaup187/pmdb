@@ -113,7 +113,7 @@ class ViewReceipt(Resource):
 
             address = None
 
-        if payment_obj.company.name == "LaCasa":
+        if payment_obj.aprtment.company.name == "LaCasa":
             if prop.id == 419:
                 address = {
                     "address": "Nairobi",

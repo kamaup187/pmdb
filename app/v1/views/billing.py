@@ -2778,7 +2778,7 @@ class Receipt(Resource):
 
         prop = payment_obj.apartment
 
-        if payment_obj.company.name == "LaCasa":
+        if payment_obj.apartment.company.name == "LaCasa":
             if prop.id == 419:
                 address = {
                     "address": "Nairobi",

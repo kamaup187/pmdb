@@ -18,12 +18,22 @@
 
             <div class="center-btn"><strong class="text-black">~ {{prop.name.title()}} ~</strong></div>
 
+            {%if not address%}
             <div class="center-btn mb-3 ln-14 text-black"> 
               <div class="small mt-2">Address : {{company.street_address}}</div>
               <div class="small">PO BOX : {{company.mail_box}}</div>
               <div class="small">Tel : {{company.phone}}</div>
               <div class="small">Email: {{company.email}}</div>
             </div>
+            {% endif %}
+
+            {%if address%}
+            <div class="center-btn mb-3 ln-14 text-black"> 
+              <div class="small mt-2">Address : {{address.address}}</div>
+              <div class="small">Tel : {{address.tel}}</div>
+              <div class="small">Email: {{address.email}}</div>
+            </div>
+            {% endif%}
             
           </div>
         </div>

@@ -111,11 +111,46 @@ class ViewReceipt(Resource):
         else:
             tenant = payment_obj.tenant
 
-        return Response(render_template(
-            'user_receipt.html',
-            voided = disp,
+            address = None
+
+        if payment_obj.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+        return render_template(
+            'ajax_receiptpay.html',
+            voided = "dispnone",
             tenant = tenant.name,
-            house= payment_obj.house.name,
+            house= payment_obj.house,
             amount=paid,
             str_amount=stramount,
             str_month=get_str_month(payperiod.month),
@@ -131,10 +166,36 @@ class ViewReceipt(Resource):
             paymode=payment_obj.paymode,
             logopath=logo(co)[0],
             company=co,
+            address=address,
             user=server,
-            prop= prop,
+            prop=prop,
             randid=ri
-        ))
+        )
+
+        # return Response(render_template(
+        #     'user_receipt.html',
+        #     voided = disp,
+        #     tenant = tenant.name,
+        #     house= payment_obj.house.name,
+        #     amount=paid,
+        #     str_amount=stramount,
+        #     str_month=get_str_month(payperiod.month),
+        #     paydate=paydate.strftime("%d/%b/%y"),
+        #     paytime=paydate.strftime("%X"),
+        #     bill=bill,
+        #     baltitle=baltitle,
+        #     outline=outline,
+        #     balance=bal,
+        #     chargetype=payment_obj.payment_name,
+        #     receiptno=receiptno,
+        #     refnum=payment_obj.ref_number,
+        #     paymode=payment_obj.paymode,
+        #     logopath=logo(co)[0],
+        #     company=co,
+        #     user=server,
+        #     prop= prop,
+        #     randid=ri
+        # ))
 
 class UserActivation(Resource):
     def get (self,ri):

@@ -1344,6 +1344,7 @@ class OccupancyOverview(Resource):
         prop = request.args.get('prop')
         props = run_props(prop,current_user)
         occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+        numptnts =len(flatten([prop.ptenants for prop in props]))
         houses_list = [prop.houses for prop in props]
 
         houses_num = len(flatten(houses_list))
@@ -1354,9 +1355,18 @@ class OccupancyOverview(Resource):
         except:
             occfrac = 0.0
 
-        occupancy_rate = f'{(occfrac * 100):,.0f} %'
+        try:
+            pfrac = numptnts/houses_num 
+        except:
+            pfrac = 0.0
 
-        return  occupancy_rate
+        occupancy_rate = f'{(occfrac * 100):,.0f} %'
+        p_rate = f'{(pfrac * 100):,.0f} %'
+
+
+        # return  occupancy_rate
+        return f'<span class="me-5">{occupancy_rate}</span> <span class="ms-4">{p_rate}</span>'
+
 
 class InvoiceOverview(Resource):
     @login_required

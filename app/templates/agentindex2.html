@@ -511,10 +511,10 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">Occupancy</div>
+                                            <div class="text-white-75 small"><span class="me-3">Tenancy</span><span class="ms-5">Owned</span></div>
                                             <div class="text-lg fw-bold fixloader" id="occupancystats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status"
-                                                    aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm me-5 text-white" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm ms-5 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <i class="feather-xl text-white-50" data-feather="activity"></i>
@@ -1361,7 +1361,7 @@
                     prop: localStorage.getItem('propvar')
                   },
             success: function(data) {
-                $('#occupancystats').text(data);
+                $('#occupancystats').html(data);
   
             },
             complete:function(data) {

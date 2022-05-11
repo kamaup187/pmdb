@@ -22,6 +22,8 @@
 
 
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+
   
   <link rel="stylesheet" href="../static/css3/bootstrap.min.css">
 
@@ -75,10 +77,8 @@
             <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu">
 
               
-              <li class="activ"><a href="https://kodimann.com">WEBSITE</a></li>
-
-
               <li class="cta-button"><a class="signin" href="{{ url_for('api.userlogin') }}" target="_blank">Log In</a></li>
+              <li class="cta-button"><a href="#" data-toggle="modal" data-target="#signUpModal">Sign Up now</a></li>
               <li class="cta-button"><a href="#" data-toggle="modal" data-target="#demoModal">Request Demo</a></li>
 
             </ul>
@@ -91,103 +91,17 @@
 
         </div>  
       </nav> <!-- END nav -->
+      <div class="mt-5 text-center">
+        <a class="underline text-kodi h4" href="https://kodimann.com"><i class="fa fa-arrow-left mr-3"></i>Back to Website</a>
+      </div>
 
     </div> <!-- END container -->
 
 
     
-
-    <div class="site-hero debug">
-
-      <div class="container">
-        <div class="row align-items-center justify-content-between">
-          <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2"  data-aos="fade-up" data-aos="400">
-
-
-
-            <div class="owl-single dots-absolute owl-carousel">
-              <img src="../static/images/pic11.png" alt="Image" class="img-fluid">
-              <img src="../static/images/pic2.png" alt="Image" class="img-fluid">
-              <!-- <img src="../static/images/img_h_8.jpg" alt="Image" class="img-fluid"> -->
-              
-            </div>
-
-          </div>
-          <div class="col-lg-4 order-lg-1">
-            <!-- <span class="section-subtitle" data-aos="fade-up" data-aos="">Welcome</span> -->
-            <h1 class="text-black mb-4" data-aos="fade-up" data-aos="100">Simple but powerful property management software</h1>
-            <p class="text-black" data-aos="fade-up" data-aos="200">Focus on growing your business while we handle your accounting, reporting, and other time consuming tasks.</p>
-            <p class="mt-5" data-aos="fade-up" data-aos="300"><a href="#" class="btn btn-primary btn-primary-hover-outline" data-toggle="modal" data-target="#demoModal">Request Demo</a></p>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-    
-
     <div class="footer">
       <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-lg-3">
-            <div class="widget">
-              <h3 class="widget-heading">About Us</h3>
-              <p>We are a cloud based property management software company.</p>
-              <p class="mb-0"><a href="#" class="btn btn-primary btn-primary-hover-outline">Learn more</a></p>
-            </div>
-          </div>
 
-          <div class="col-md-6 col-lg-3 pl-lg-5">
-            <div class="widget">
-              <h3 class="widget-heading">Recent Posts</h3>
-              <ul class="list-unstyled footer-blog-entry">
-                <li>
-                  <span class="d-block date">March 13, 2022</span>
-                  <a href="#">Ensuring great tenant satisfaction</a>
-                </li>
-                <li>
-                  <span class="d-block date">March 17, 2022</span>
-                  <a href="#">Conservation of the environment</a>
-                </li>
-
-              </ul>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3 pl-lg-5">
-            <div class="widget">
-              <h3 class="widget-heading">Connect</h3>
-              <ul class="list-unstyled social-icons light mb-0">
-                <li><a href="#"><span class="icon-facebook"></span></a></li>
-                <li><a href="#"><span class="icon-twitter"></span></a></li>
-                <li><a href="#"><span class="icon-linkedin"></span></a></li>
-                <li><a href="#"><span class="icon-google"></span></a></li>
-                <li><a href="#"><span class="icon-play"></span></a></li>
-              </ul>
-            </div>
-
-            <div class="widget">
-              <div class="footer-subscribe">
-                <h3 class="widget-heading">Subscribe</h3>
-                <form action="#">
-                  <input type="text" class="form-control" placeholder="Enter your email">
-                  <button type="submit" class="btn btn-link">
-                    <span class="icon-keyboard_backspace"></span>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-        </div>
 
         <div class="row copyright">
           <div class="col-lg-9 ">

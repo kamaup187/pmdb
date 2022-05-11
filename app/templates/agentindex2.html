@@ -142,9 +142,9 @@
             <!-- Messages Dropdown-->
             <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
                 <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownMessages"
-                    href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true"
+                    href="javascript:void(0);" role="button" data-toggle="modal" data-target="#messageModal" aria-haspopup="true"
                     aria-expanded="false"><i data-feather="mail"></i></a>
-                <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up"
+                <!-- <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up"
                     aria-labelledby="navbarDropdownMessages">
                     <h6 class="dropdown-header dropdown-notifications-header">
                         <i class="me-2" data-feather="mail"></i>
@@ -152,7 +152,7 @@
                     </h6>
 
                     <a class="dropdown-item dropdown-notifications-footer" href="#!">Read All Messages</a>
-                </div>
+                </div> -->
             </li>
             <!-- User Dropdown-->
             <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
@@ -313,10 +313,10 @@
             <div id="barloader" class="load-bar mb-lg-2 ml-lg-2 no-padding">
                 <div class="b-loading"></div>
             </div>
-
+        
             <div id="searchresults" class="dispnone m-4"></div>
             <div id="propdisp" class="dispnone m-4"></div>
-
+        
             <div id="proplist" class="dispnone m-4">
                 <div class="divjust-end underline-thin">
                     <span class="hide mobile-malaysian">Hidden</span>
@@ -331,18 +331,17 @@
                         <div class="card shadow h-0 py-0">
                             <div class="card-body bg-white titanic-iceberg-top">
                                 <div class="row no-gutters align-items-cente divbg">
-
-
-
+        
+        
+        
                                     {% if props %}
-
+        
                                     {% for prop in props%}
-
+        
                                     <div class="image-wrap">
                                         <button id="{{prop.id}}"
                                             class="btn btn-outline-success  borderles mb-2 fixed-width-prop no-margin divcol">
-                                            <img class="img-prop text-xs" src="{{ prop.image_url }}"
-                                                alt="--no image--" />
+                                            <img class="img-prop text-xs" src="{{ prop.image_url }}" alt="--no image--" />
                                             <!-- <span class="small mobile-malaysia text-ss">{{prop.name}}</span> -->
                                             <span class="small desktop-malaysia">
                                                 <h6 class="text-black ln-14 font-weight-bold titanic-iceberg sss">
@@ -351,13 +350,13 @@
                                             <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
                                         </button>
                                     </div>
-
+        
                                     {% endfor %}
-
+        
                                     {% endif %}
-
+        
                                 </div>
-
+        
                             </div>
                         </div>
                     </div>
@@ -365,7 +364,7 @@
             </div>
             <main id="body-block" class="">
                 <span id="module" class="dispnone"></span>
-
+        
                 <!-- Main page content-->
                 <div class="container-xl px-4 mt-5">
                     <!-- Custom page header alternative example-->
@@ -379,48 +378,48 @@
                                         const d = new Date();
                                         let day = days[d.getDay()];
                                         document.write(day)
-                                    </script> 
+                                    </script>
                                 </span>
-                                &middot; 
+                                &middot;
                                 <script>
                                     let date = d.getDate()
-                                    const months = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+                                    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                                     let month = months[d.getMonth() + 1]
                                     let year = d.getFullYear();
                                     document.write(month + " " + date + "," + year)
-                                </script> 
-
+                                </script>
+        
                                 <span class="text-primary small" id="proponfocus">
-                                 >>
-                                <script>
-                                    document.write(localStorage.getItem('propvar'))
-                                </script> 
+                                    >>
+                                    <script>
+                                        document.write(localStorage.getItem('propvar'))
+                                    </script>
                                 </span>
                             </div>
                         </div>
                         <!-- <div class="input-group input-group-joined border-0 shadow" style="width: 16.5rem">
-                            <span class="input-group-text"><i data-feather="calendar"></i></span>
-                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
-                                placeholder="Select date range..." />
-                        </div> -->
-
-
+                                    <span class="input-group-text"><i data-feather="calendar"></i></span>
+                                    <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
+                                        placeholder="Select date range..." />
+                                </div> -->
+        
+        
                         <div class="divjust-end-lg">
-                            
+        
                             <span class="input-group input-group-joined border-0 shadow dashboard-input-alt mb-3 mb-lg-0">
                                 <span class="input-group-text"><i data-feather="home"></i></span>
-
+        
                                 <!-- <input class="form-control ps-0 pointer" id="targetprop"
-                                    placeholder="Select apartment..." /> -->
-
-                                <select name="property" class="form-control ps-0" id ="select_prop">
+                                            placeholder="Select apartment..." /> -->
+        
+                                <select name="property" class="form-control ps-0" id="select_prop">
                                     <option disabled selected value> -- Select property -- </option>
                                     {% for o in props%}
                                     <option value="{{ o }}">{{ o }}</option>
                                     {% endfor %}
                                 </select>
                             </span>
-                            
+        
                             <span class="ms-lg-4 input-group input-group-joined border-0 shadow dashboard-input">
                                 <span class="input-group-text"><i data-feather="calendar"></i></span>
                                 <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
@@ -430,21 +429,21 @@
                     </div>
                     <!-- Illustration dashboard card example-->
                     <!-- <div class="card card-waves mb-4 mt-5">
-                            <div class="card-body p-5">
-                                <div class="row align-items-center justify-content-between">
-                                    <div class="col">
-                                        <h2 class="text-primary">Welcome back, your dashboard is ready!</h2>
-                                        <p class="text-gray-700">Great job, your affiliate dashboard is ready to go! You can view sales, generate links, prepare coupons, and download affiliate reports using this dashboard.</p>
-                                        <a class="btn btn-primary p-3" href="#!">
-                                            Get Started
-                                            <i class="ms-1" data-feather="arrow-right"></i>
-                                        </a>
+                                    <div class="card-body p-5">
+                                        <div class="row align-items-center justify-content-between">
+                                            <div class="col">
+                                                <h2 class="text-primary">Welcome back, your dashboard is ready!</h2>
+                                                <p class="text-gray-700">Great job, your affiliate dashboard is ready to go! You can view sales, generate links, prepare coupons, and download affiliate reports using this dashboard.</p>
+                                                <a class="btn btn-primary p-3" href="#!">
+                                                    Get Started
+                                                    <i class="ms-1" data-feather="arrow-right"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col d-none d-lg-block mt-xxl-n4"><img class="img-fluid px-xl-4 mt-xxl-n5" src="/static/assets/img/illustrations/statistics.svg" /></div>
+                                        </div>
                                     </div>
-                                    <div class="col d-none d-lg-block mt-xxl-n4"><img class="img-fluid px-xl-4 mt-xxl-n5" src="/static/assets/img/illustrations/statistics.svg" /></div>
-                                </div>
-                            </div>
-                        </div> -->
-
+                                </div> -->
+        
                     <!-- Example Colored Cards for Dashboard Demo-->
                     <div class="row">
                         <div class="col-lg-6 col-xl-3 mb-4">
@@ -454,7 +453,8 @@
                                         <div class="me-3">
                                             <div class="text-white-75 small">Properties</div>
                                             <div class="text-lg fw-bold fixloader" id="propstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <i class="feather-xl text-white-50" data-feather="grid"></i>
@@ -473,7 +473,8 @@
                                         <div class="me-3">
                                             <div class="text-white-75 small">Units</div>
                                             <div class="text-lg fw-bold fixloader" id="housestats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <i class="feather-xl text-white-50" data-feather="home"></i>
@@ -492,7 +493,8 @@
                                         <div class="me-3">
                                             <div class="text-white-75 small">Tenants</div>
                                             <div class="text-lg fw-bold fixloader" id="tenantstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <i class="feather-xl text-white-50" data-feather="users"></i>
@@ -511,7 +513,8 @@
                                         <div class="me-3">
                                             <div class="text-white-75 small">Occupancy</div>
                                             <div class="text-lg fw-bold fixloader" id="occupancystats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-white" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                         </div>
                                         <i class="feather-xl text-white-50" data-feather="message-circle"></i>
@@ -524,7 +527,7 @@
                             </div>
                         </div>
                     </div>
-
+        
                     <div class="row">
                         <div class="col-xl-3 col-md-6 mb-4">
                             <!-- Dashboard info widget 1-->
@@ -534,7 +537,8 @@
                                         <div class="flex-grow-1">
                                             <div class="small fw-bold text-primary mb-1">Expected collections</div>
                                             <div class="h5 fixloader2" id="expectedstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                             <div class="text-xs fw-bold text-success d-inline-flex align-items-center">
                                                 <i class="me-1" data-feather="trending-up"></i>
@@ -554,7 +558,8 @@
                                         <div class="flex-grow-1">
                                             <div class="small fw-bold text-success mb-1">Actual collections</div>
                                             <div class="h5 fixloader2" id="paidstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                             <div class="text-xs fw-bold text-success d-inline-flex align-items-center">
                                                 <i class="me-1" data-feather="trending-down"></i>
@@ -574,7 +579,8 @@
                                         <div class="flex-grow-1">
                                             <div class="small fw-bold text-danger mb-1">Balance</div>
                                             <div class="h5 fixloader2" id="balancestats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                             <div class="text-xs fw-bold text-danger d-inline-flex align-items-center">
                                                 <i class="me-1" data-feather="trending-up"></i>
@@ -594,7 +600,8 @@
                                         <div class="flex-grow-1">
                                             <div class="small fw-bold text-info mb-1">Collection ratio</div>
                                             <div class="h5 fixloader2" id="collectionstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
+                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                                    aria-hidden="true"></span>
                                             </div>
                                             <div class="text-xs fw-bold text-danger d-inline-flex align-items-center">
                                                 <i class="me-1" data-feather="trending-down"></i>
@@ -607,7 +614,7 @@
                             </div>
                         </div>
                     </div>
-
+        
                     <!-- Example Charts for Dashboard Demo-->
                     <div id="graph-area" class="row">
                         <div class="col-xl-6 mb-4">
@@ -631,13 +638,14 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-
+                                    <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                        aria-hidden="true"></span>
+        
                                     <!-- <div class="chart-area"><canvas id="myAreaChart" width="100%" height="30"></canvas> -->
-                                    </div>
                                 </div>
                             </div>
                         </div>
+        
                         <div class="col-xl-6 mb-4">
                             <div class="card card-header-actions h-100">
                                 <div class="card-header">
@@ -659,14 +667,16 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-
+                                    <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status"
+                                        aria-hidden="true"></span>
+        
                                     <!-- <div class="chart-bar"><canvas id="myBarChart" width="100%" height="30"></canvas> -->
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+        </div>
 
                     <div class="row dispnone">
                         <div class="col-xxl-8">
@@ -997,6 +1007,156 @@
           </div>
         </div>
       </div>
+
+
+  <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa-sana" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify font-weight-bold">SMS CENTER</span>
+            <div>
+              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div class="text-center text-success font-weight-bold mb-2 underline">
+                    <div class="divbg mb-1">
+                      <button id="general_texts" type="button" class="btn btn-outline-success borderless text-dark">General</button>
+                      <button id="reminder_texts" type="button" class="btn btn-outline-success borderless text-dark">Reminders</button>
+                      <button id="topup_texts" type="button" class="btn btn-outline-info borderless text-dark">Sms top up</button>
+                      <button id="sent_texts" type="button" class="btn btn-outline-info borderless text-dark">Sent messages</button>
+                    </div>
+                  </div>
+
+
+                  <div id="generaltexts" class="dispnone">
+                    <form class="">
+    
+                      <div class="form-group">
+                        <select name="property" class="select-css" id ="selected_prop" required>
+                            <option disabled selected value> -- Select property -- </option>
+                            {% for o in props%}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+    
+                      <div class="form-group">
+                        <textarea id="text_sms" name="desc" class="form-control" placeholder="Notification message to be conveyed"></textarea>
+                      </div>
+                      <div class="divbg center-btn">
+                        <button type="sendgeneral" class="btn-success borderless text-white">Send now</button>
+                      </div>
+                    </form>
+    
+                  </div>
+
+
+                  <div id="remindertexts" class="dispnone">
+                    <form autocomplete="off">
+  
+                        <div class="form-group">
+                            <select class="select-css" id ="remtype" required>
+                                <option disabled selected value> -- Select type -- </option>
+                                <option value="sms">Via sms</option>
+                                <option value="email">Via email</option>
+                            </select>
+                          </div>
+
+                      <div class="form-group mt-3">                        
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="switchperiod2" class="form-control ph" type="text" placeholder="Select date to schedule" readonly />
+                            <!-- <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span> -->
+                          </div>
+                      </div>
+  
+                      <div class="form-group mt-3">
+                        <select class="select-css" id ="reminderprop" required>
+                            <option disabled selected value> -- Select property -- </option>
+                            {% for o in props%}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+  
+                      <div class="form-group mt-3">
+                        <select class="select-css" id ="reminderbalance" required>
+                            <option disabled selected value> -- Balance category -- </option>
+                            
+                            <option value="0">With any balance</option>
+                            <option value="499">Above 499</option>
+                            <option value="999">Above 999</option>
+                            <option value="9999">Above 9999</option>
+  
+                            
+                        </select>
+                      </div>
+  
+                      <div class="row mt-3">
+                        <!-- <div class="col-10 form-group dispnone mt-2">                        
+                          <textarea id="remindertext" class="form-control ph" rows="1" placeholder="{{setreminder}}"></textarea>
+                        </div> -->
+
+                        <div class="col-11 row form-group mt-2 dispnon">
+                          <div class="col-sm-2 form-group">
+                            <span class="text-info">[name(auto)]</span>
+                            <input id="" class="form-control ph" type="text" value="Dear [name]," readonly>
+                          </div>
+                          <div class="col-sm-8 form-group">
+                            <span class="text-info">[custom message]</span>
+                            <input colspan="2" id="remindertext" class="form-control ph text-center" type="text" value="{{setreminder}}" placeholder="reminder not set!">
+                          </div>
+                          <div class="col-sm-2 form-group">
+                            <span class="text-info">[balance(auto)]</span>
+                            <input id="" class="form-control ph text-right" type="text" value="[tenant balance]." readonly>
+                          </div>
+                        </div>
+
+                        <!-- <div class="col-2 form-group mt-3">
+                          <button id="setreminder-show" type="button" class="btn-success borderless text-white">Set seminder</button>
+                        </div> -->
+
+                        <div class="col-1 form-group mt-2 pt-1 ml-4">
+                          <span class="hide">hey</span>
+                          <button id="setreminder" type="button" class="btn-success borderless text-white">Save</button>
+                        </div>
+                      </div>
+
+
+                    
+                      <div class="divbg center-btn mt-2">
+                        <button id="sendreminder" type="button" class="btn-success borderless text-white">Schedule</button>
+                      </div>
+                    </form>
+                  </div>
+
+
+
+                  <div id="topuptexts" class="text-center dispnone">
+                    <span class="text-black">To load sms: {{shortcode}}</span>
+                  </div>
+
+                  <div id="senttexts" class="table-responsive dispnone">
+
+                </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
       <div class="text-center">
         <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
@@ -1555,6 +1715,16 @@
     });
   </script>
 
+<script>
+    $("#switchperiod2").datepicker({ 
+      autoclose: true, 
+      todayHighlight: true,
+      format: "dd-mm-yyyy",
+    //   startView: "months", 
+    //   minViewMode: "months"
+    });
+  </script>
+
 
 <script>
     
@@ -1577,6 +1747,128 @@
     
     </script>
 
+
+<script>
+    
+    $("#general_texts").on('click',function(){   
+      $("#generaltexts").removeClass("dispnone")
+  
+      $("#remindertexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+    });
+    
+    $("#reminder_texts").on('click',function(){   
+      $("#remindertexts").removeClass("dispnone")
+  
+      $("#generaltexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+  
+    });
+  
+    $("#topup_texts").on('click',function(){   
+      $("#topuptexts").removeClass("dispnone")
+  
+      $("#remindertexts").addClass("dispnone")
+      $("#generaltexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+  
+    });
+  
+    $("#sent_texts").on('click',function(){   
+      $("#senttexts").removeClass("dispnone")
+  
+      $("#remindertexts").addClass("dispnone")
+      $("#generaltexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+  
+      $.ajax({
+        url: "{{ url_for('api.fetchsentsms') }}",
+        type: "get",
+        data: {
+              target:"",
+            },
+        success: function(response) {
+          $("#senttexts").html(response)
+        },
+      });    
+  
+  
+    });
+  
+    </script>
+
+<script>
+    $("#setreminder").on('click',function(){
+      // $("#closemodal").click();
+  
+        url2 = "{{ url_for('api.bulksms') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                text:$("#remindertext").val(),
+                target:"set template"
+              },
+              success: function(response) {             
+                $(".alert-msgs").html("success");
+            }
+        });
+  
+  });
+  </script>
+
+
+<script>
+    $("#sendreminder").on('click',function(){
+      // $("#closemodal").click();
+      setTimeout(function(){
+        url2 = "{{ url_for('api.bulksms') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                prop:$("#reminderprop").val(),
+                date:$("#reminder-date").val(),
+                category:$("#reminderbalance").val(),
+                text:$("#remindertext").val(),
+                target:"send reminders"
+              },
+              success: function(response) {
+                $(".alert-msgs").html("success");
+            }
+        });
+      },300);
+  });
+  </script>
+
+<script>
+    $("#sendgeneral").on('click',function(){
+      // $("#closemodal").click();
+      setTimeout(function(){
+        url2 = "{{ url_for('api.bulksms') }}";
+        $.ajax({
+              type: "get",
+              url: url2,
+              data: {
+                prop:$("#selected_prop").val(),
+                text:$("#text_sms").val(),
+                target:"general"
+              },
+              success: function(response) {
+                // $("#detailed-payments").toggleClass('invoice dispnone');
+                // $("#payments-report").toggleClass('row dispnone');
+                
+                // $("#propdisp").html(response);
+            }
+        });
+      },300);
+  });
+  </script>
 
 </body>
 

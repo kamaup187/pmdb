@@ -4882,7 +4882,7 @@ def upload_handler(file,current_user):
     return [rows,sheet]
 
 
-def read_excel(dict_array,apartment_id,user_id):
+def read_excel(dict_array,apartment_id,ttype,user_id):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -4898,14 +4898,11 @@ def read_excel(dict_array,apartment_id,user_id):
         mob = item["mobile"]
         email = item["email"]
         water = item["water"]
-        garb = item["garb"]
-        serv = item["serv"]
-        sec = item["sec"]
 
         natid = None
 
         if isinstance(group,float):
-            housecode = str(int(group))
+            housecode = "SERVICE" + str(int(group))
         else:
             housecode = group
 
@@ -4918,12 +4915,18 @@ def read_excel(dict_array,apartment_id,user_id):
             print("Skipping ",housecode)
             
         elif group:
-            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water,garb,sec,serv)
+            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
 
             print("house & amount",housecode,valid_inputs[0])
 
-            code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[4],apartment_id,user_id)
-            code_obj.save()
+            if ttype == "ptenant":
+                print("creating service")
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,apartment_id,user_id)
+                code_obj.save()
+            else:
+                print("creating rent")
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj.save()
         else:
             pass
 
@@ -5063,24 +5066,28 @@ def read_excel(dict_array,apartment_id,user_id):
             if similar:
                 pass
             else:
-                tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,apartment_id,user_id)
-                tenant_obj.save()
-
-                occupancy = check_occupancy(house_obj)
-
-                if occupancy[0] == "occupied":
-                    print("Specified house occupied: ",house_obj)
-                    pass
-
+                if ttype == "ptenant":
+                    ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
+                    ptenant_obj.save()
                 else:
-                    house_id = house_obj.id
-                    tenant_id = tenant_obj.id
+                    tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,apartment_id,user_id)
+                    tenant_obj.save()
 
-                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
-                    allocate_tenant_obj.save()
+                    occupancy = check_occupancy(house_obj)
 
-                    TenantOp.update_status(tenant_obj,"Resident")
-                    TenantOp.update_residency(tenant_obj,"Old")
+                    if occupancy[0] == "occupied":
+                        print("Specified house occupied: ",house_obj)
+                        pass
+
+                    else:
+                        house_id = house_obj.id
+                        tenant_id = tenant_obj.id
+
+                        allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                        allocate_tenant_obj.save()
+
+                        TenantOp.update_status(tenant_obj,"Resident")
+                        TenantOp.update_residency(tenant_obj,"Old")
 
 
     return "completed"

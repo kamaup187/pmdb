@@ -1032,9 +1032,9 @@ class HouseOp(House,Base):
 
         if self.servicetarget:
             if self.servicetarget == "owner":
-                badge = "badge-danger"
+                badge = "badge-danger bg-danger"
             else:
-                badge = "badge-primary"
+                badge = "badge-primary bg-primary"
             return f'{decor_fig} <span class="badge {badge} badge-counter">{self.servicetarget}</span>'
         else:
             return decor_fig
@@ -1049,9 +1049,9 @@ class HouseOp(House,Base):
 
         if self.watertarget:
             if self.watertarget == "tenant":
-                badge = "badge-primary"
+                badge = "badge-primary bg-primary"
             else:
-                badge = "badge-danger"
+                badge = "badge-danger bg-danger"
             return f'{decor_fig} <span class="badge {badge} badge-counter">{self.watertarget}</span>'
         else:
             return decor_fig
@@ -1728,7 +1728,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'email':PermanentTenantOp.get_email(self),
             'sms':PermanentTenantOp.billable(self),
             'housenum':PermanentTenantOp.get_houseno(self),
-            'badge':'<span class="badge badge-warning badge-counter">owner</span>',
+            'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),
             'balance':PermanentTenantOp.format_balance(self),
             'highlight':PermanentTenantOp.highlight(self),
@@ -1946,7 +1946,7 @@ class TenantOp(Tenant,Base):
             'deposit':self.deposit,
             'housenum':TenantOp.get_houseno(self),
             'status':self.status,
-            'badge':'<span class="badge badge-success badge-counter">tenant</span>',
+            'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
             'checkin':TenantOp.checkin_date(self),
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),
@@ -2578,7 +2578,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def show_paid_status(amount):
         if not amount:
-            badge = f'<span class="badge badge-danger badge-counter">not paid</span>'
+            badge = f'<span class="badge bg-danger badge-danger badge-counter">not paid</span>'
             return badge
         else:
             rounded_fig = round(amount,2)

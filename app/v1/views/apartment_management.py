@@ -3199,6 +3199,8 @@ class DataUpload(Resource):
     def post(self):
 
         prop_name = request.form.get('prop')
+        ttype = request.form.get('ttype')
+
 
         if prop_name and prop_name != "null":
 
@@ -3216,7 +3218,7 @@ class DataUpload(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 10:
+                if len(sheet.row_values(1)) != 7:
                     data_format_error = True
             try:
                 if data_format_error:
@@ -3233,15 +3235,12 @@ class DataUpload(Resource):
                     "mobile":sheet.row_values(row)[4],
                     "email":sheet.row_values(row)[5],
                     "water":sheet.row_values(row)[6],
-                    "garb":sheet.row_values(row)[7],
-                    "serv":sheet.row_values(row)[8],
-                    "sec":sheet.row_values(row)[9]
                     }
 
                     dict_array.append(dict_obj)
 
                 uploadsjob = q.enqueue_call(
-                    func=read_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                    func=read_excel, args=(dict_array,apartment_id,ttype,current_user.id,), result_ttl=5000
                 )
 
                 return '<span class="text-success">Upload successful</span>'

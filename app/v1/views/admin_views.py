@@ -544,11 +544,16 @@ class AllProperties(Resource):
         items = []
         prop_ids = []
         prop_names = []
+        tnt_disp = "dispnone"
 
         template = "ajax_allprops_detail.html"
         
         for prop in props:
             tenants = len(tenantauto(prop.id))
+            ptnts =len(prop.ptenants)
+
+            if tenants:
+                tnt_disp = ""
             houses = len(prop.houses)
             try:
                 occupancy = tenants/houses * 100
@@ -569,6 +574,7 @@ class AllProperties(Resource):
                     'name':prop.name,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,
@@ -585,6 +591,7 @@ class AllProperties(Resource):
                     'name':prop.name,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
                     'occupancy':occ,
@@ -603,6 +610,7 @@ class AllProperties(Resource):
                     'agent':agent,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
                     'occupancy':occ,
                     'status':"active",
@@ -632,7 +640,7 @@ class AllProperties(Resource):
         }
 
 
-        return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)
+        return render_template(template,propids=propids,props=props,prop=None,items=items,tnt_disp=tnt_disp,access=access,company=current_user.company)
     
     def post(self):
         target = request.form.get("target")

@@ -4,9 +4,10 @@
             <tr>
                 <th class="text-info font-weight-bold pl-0">Property</th>
                 <th class="text-info font-weight-bold">Houses</th>
-                <th class="text-info font-weight-bold">Tenants</th>
-                <th class="text-info font-weight-bold">Vacant</th>
-                <th class="text-info font-weight-bold">Occupancy</th>
+                <th class="text-info font-weight-bold">Residents</th>
+                <th class="text-info font-weight-bold {{tnt_disp}}">Tenants</th>
+                <th class="text-info font-weight-bold {{tnt_disp}}">Vacant</th>
+                <th class="text-info font-weight-bold {{tnt_disp}}">Occupancy</th>
                 <th class="text-info font-weight-bold">Reminders</th>
     
                 <th class="text-info track-title-cell">Add tenant</th>
@@ -20,15 +21,17 @@
 
                 <td class="data-cell">
                     <div>
-                        <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                        <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis2 text-left no-wrap">{{item['name']}}</span>
                     </div>
                 </td>
     
                 <td class="data-cell">{{ item['houses'] }}</td>
-                <td class="data-cell">{{ item['tenants'] }}</td>
-                <td class="data-cell">{{ item['vacant'] }}</td>
-                <td class="data-cell">{{ item['occupancy'] }} %</td>
-                <td class="data-cell">{{ item['reminders']|safe }}</td>
+                <td class="data-cell">{{ item['ptenants'] }}</td>
+                <td class="data-cell {{tnt_disp}}">{{ item['tenants'] }}</td>
+                <td class="data-cell {{tnt_disp}}">{{ item['vacant'] }}</td>
+                <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td>
+                <!-- <td class="data-cell">{{ item['reminders']|safe }}</td> -->
+                <td class="data-cell">yes</td>
     
     
                 <td class="data-cell">

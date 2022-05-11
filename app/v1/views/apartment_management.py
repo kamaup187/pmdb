@@ -1361,6 +1361,7 @@ class OccupancyOverview(Resource):
             pfrac = 0.0
 
         occupancy_rate = f'{(occfrac * 100):,.0f} %'
+        print(numptnts,houses_num)
         p_rate = f'{(pfrac * 100):,.0f} %'
 
 

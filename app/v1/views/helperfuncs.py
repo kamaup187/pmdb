@@ -4928,7 +4928,8 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                 code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
         else:
-            pass
+            print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
+            continue
 
         try:
             housename = str(int(unit) if unit else "" )
@@ -5020,7 +5021,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         else:
             tenantphone = "0" + strtel
 
-        tenantemail = email
+        tenantemail = email.lower() if email else ""
         tenantnatid = str(int(natid) if natid else "" )
 
         if not tenantnatid:

@@ -1994,6 +1994,7 @@ class Bills(Resource):
             sms = f'{numerator}/{len(smsstatus)}'
 
             num_units = len(tenantauto(prop.id))
+            ptnts = len(prop.ptenants)
             # num_vacs = len(houseauto(prop.id)) - num_units
 
 
@@ -2036,6 +2037,7 @@ class Bills(Resource):
                 'smsid':"sms"+str(prop.id),
                 'name':fname_extracter(prop.name),
                 'tenants':num_units,
+                'ptenants':ptnts,
                 'invs':invs,
                 'progress':progress,
                 'water':(f"{watertotal:,.1f} "),

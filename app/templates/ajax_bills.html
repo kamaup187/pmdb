@@ -82,6 +82,7 @@
                   <thead class="custom-header">
                     <tr>
                       <th class="text-info font-weight-bold" data-orderable="true">Property</th>
+                      <th class="text-info font-weight-bold" data-orderable="false">Residents</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Tenants</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Create</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Invoices</th>
@@ -125,7 +126,9 @@
                         </div>
                       </td>
     
+                      <td class="data-cell text-center text-black">{{item['ptenants'] }}</td>
                       <td class="data-cell text-center text-black">{{item['tenants'] }}</td>
+
     
     
                       <!-- <td class="font-weight-bold text-s text-center data-cell">

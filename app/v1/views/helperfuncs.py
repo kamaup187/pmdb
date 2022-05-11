@@ -3271,7 +3271,9 @@ def autosend_pending_smsreceipts(payids):
         else:
             reference = f'#{payment_obj.id}'
 
+        serv = False
         if payment_obj.ptenant:
+            serv = True
             tenant_obj = payment_obj.ptenant
         else:
             tenant_obj = payment_obj.tenant
@@ -3296,8 +3298,9 @@ def autosend_pending_smsreceipts(payids):
         # if not fname:
         #     fname = name
         phonenum = sms_phone_number_formatter(tele)
+        salutation = "Service Charge & Utility" if serv else "Rental"
 
-        message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
+        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
         if tenant_obj.sms:
 

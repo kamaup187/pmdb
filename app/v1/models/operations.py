@@ -880,6 +880,10 @@ class HouseCodeOp(HouseCode,Base):
         self.seweragerate = rate
         db.session.commit()
 
+    def update_agreement_rate(self,rate):
+        self.agreementrate = rate
+        db.session.commit()
+
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"
         return decor_fig 

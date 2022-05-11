@@ -363,6 +363,7 @@ class HouseCode(db.Model):
     waterrate3 = db.Column(db.Float,default=0)
 
     seweragerate = db.Column(db.Float,default=0)
+    agreementrate = db.Column(db.Float,default=0)
 
     electricityrate = db.Column(db.Float,default=0)
     securityrate = db.Column(db.Float,default=0)

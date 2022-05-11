@@ -881,8 +881,9 @@ class HouseCodeOp(HouseCode,Base):
         db.session.commit()
 
     def update_agreement_rate(self,rate):
-        self.agreementrate = rate
-        db.session.commit()
+        if rate:
+            self.agreementrate = rate
+            db.session.commit()
 
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"

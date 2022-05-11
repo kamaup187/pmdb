@@ -3364,6 +3364,7 @@ class CreateHouseCode(Resource):
             securityrate= request.form.get('securityrate')
             servicerate= request.form.get('servicerate')
             seweragerate= request.form.get('seweragerate')
+            agreementrate= request.form.get('agreementrate')
             finerate = request.form.get('finerate')
 
             waterdep = request.form.get('waterdep')
@@ -3392,6 +3393,9 @@ class CreateHouseCode(Resource):
 
                 new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],apartment_id,user_id)
                 new_code_obj.save()
+
+                valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
+                HouseCodeOp.update_agreement_rate(new_code_obj,valid_inputs2[0])
 
                 msg = "House code added"
                 return render_template('ajaxproceed.html',alert=msg)

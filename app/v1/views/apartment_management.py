@@ -3438,6 +3438,7 @@ class EditHouseCode(Resource):
             servicerate= request.form.get('servicerate')
             finerate = request.form.get('finerate')
             seweragerate = request.form.get('seweragerate')
+            agreementrate= request.form.get('agreementrate')
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
 
@@ -3477,6 +3478,9 @@ class EditHouseCode(Resource):
             result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
 
             HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],current_user.id)
+
+            valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
+            HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
 
             msg = "Rates updated successfully"
             return render_template('ajaxproceed.html',alert=msg)

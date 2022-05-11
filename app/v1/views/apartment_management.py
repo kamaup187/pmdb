@@ -408,12 +408,12 @@ class Index(Resource):
             companyname2 = company.name.split(" ")[0]
 
             if company.name == "Lesama Ltd":
-                shortcode = "Paybill: 969610 Acc: LesamaKe"
+                shortcode2 = "Paybill: 969610 Acc: LesamaKe"
             else:
                 if os.getenv("TARGET") == "lasshouse":
-                    shortcode = f"Paybill: 000XXX Acc: {companyname2}#{company.id}"
+                    shortcode2 = f"Paybill: 000XXX Acc: {companyname2}#{company.id}"
                 else:
-                    shortcode = f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
+                    shortcode2= f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
             indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
 
@@ -535,7 +535,7 @@ class Index(Resource):
                 cbids_num=cbids_num,
                 logobg=logobg,
                 numsms=smsfrac,
-                shortcode = shortcode,
+                shortcode = shortcode2,
                 smshighlight=color,
                 username = fname_extracter(current_user.name),
                 unread_num = unread_num,

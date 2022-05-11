@@ -1040,7 +1040,7 @@ class HouseOp(House,Base):
                 badge = "badge-danger bg-danger"
             else:
                 badge = "badge-primary bg-primary"
-            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.servicetarget}</span>'
+            return f'<span class="badge {badge} badge-counter">{self.servicetarget}</span> {decor_fig} '
         else:
             return decor_fig
 
@@ -1057,7 +1057,7 @@ class HouseOp(House,Base):
                 badge = "badge-primary bg-primary"
             else:
                 badge = "badge-danger bg-danger"
-            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.watertarget}</span>'
+            return f'<span class="badge {badge} badge-counter">{self.watertarget}</span> {decor_fig}'
         else:
             return decor_fig
 

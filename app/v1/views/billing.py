@@ -1762,7 +1762,10 @@ class SendSms(Resource):
 
             amount = f'Kes {payment_obj.amount:,.0f}'
 
-            receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+            if os.getenv("TARGET") == "lasshouse":
+                receipt = f"Receipt: https://kodimannapp.com/r/{payment_obj.rand_id}"
+            else:
+                receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
 
 
             tele = tenant_obj.phone
@@ -2483,7 +2486,10 @@ class ReceivePayment(Resource):
                 outline = "text-success"
                 bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-            receiptlink = f"https://kiotapay.com/r/{rand_id}"
+            if os.getenv("TARGET") == "lasshouse":
+                receiptlink = f"https://kodimannapp.com/r/{rand_id}"
+            else:
+                receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
             receipt = f"Receipt: {receiptlink}"
 

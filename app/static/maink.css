@@ -1672,6 +1672,14 @@ clear: both;
     padding: 3px;
     margin: 0px;
   }
+  .ellipsis2 {
+    display: inline-block;
+    width: 90%;
+    height: 10%;
+    padding: 3px;
+    margin: 0px;
+    text-align:left !important;
+  }
   .dashboard-input{
     width: 25rem !important;
   }

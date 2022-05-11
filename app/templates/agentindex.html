@@ -1641,6 +1641,14 @@
 
                             <div class="font-weight-bold mobile-malaysian">
                               <i class="fas fa-users text-info ml-1"></i>
+                              <span class="text-black">Residents: </span>
+                                <span class="text-success fa-2x mr-1 ln-10 fixloader" id="ptenantstats">
+                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                </span>
+                            </div>
+
+                            <div class="font-weight-bold mobile-malaysian">
+                              <i class="fas fa-users text-info ml-1"></i>
                               <span class="text-black">Tenants: </span>
                                 <span class="text-success fa-2x mr-1 ln-10 fixloader" id="tenantstats">
                                   <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
@@ -1649,7 +1657,7 @@
 
                             <div class="font-weight-bold">
                               <i class="fas fa-door-open text-info ml-1"></i>
-                              <span class="text-black">Vacant: </span>
+                              <span class="text-black">Vacant(rented units): </span>
                                 <span class="text-danger fa-2x mr-1 ln-10 fixloader" id="vacantstats">
                                   <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
                                 </span>
@@ -3376,6 +3384,24 @@ function animateHH(element) {
                   },
             success: function(data) {
                 $('#housestats').text(data);
+  
+            }
+        });
+      setTimeout(getPTenantStats, 10);
+
+    }
+
+    function getPTenantStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"ptenantstats"
+
+                  },
+            success: function(data) {
+                $('#ptenantstats').text(data);
   
             }
         });

@@ -194,7 +194,7 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
                       <fieldset class="mb-2">
-                        <legend class="legend">Select tenant:</legend>
+                        <legend class="legend">Select tenant/resident:</legend>
 
                         <div id="prop_selector" class="form-group input-icons mt-0 dispnone">
                           <select class="select-css" id ="select_prop" >
@@ -365,6 +365,11 @@
                           <span class="spanwidth">
                             <input type="radio" id="bank6" class="check-btn ml-md-3" name="bank" value="Unaitas">
                             <label for="bank6">Unaitas</label>
+                          </span>
+
+                          <span class="spanwidth">
+                            <input type="radio" id="bank7" class="check-btn ml-md-3" name="bank" value="Familiy">
+                            <label for="bank7">Familiy</label>
                           </span>
                         </div>
                       </div>
@@ -1399,7 +1404,7 @@
             },
             error: function(xhr) {
               $('#paybtn_alt').html('Submit');
-              alert("Please select tenant before proceeding");
+              alert("Please select tenant/resident before proceeding");
         }
         });
   });
@@ -1488,7 +1493,7 @@
             },
             error: function(xhr) {
               $('#paybtn_alt').html('Submit');
-              alert("Please select tenant before proceeding");
+              alert("Please select tenant/resident before proceeding");
         }
         });
   }

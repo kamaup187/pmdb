@@ -1285,15 +1285,11 @@ class Dashboard(Resource):
         if target == "housestats":
             return len(flatten([prop.houses for prop in props]))
 
+        if target == "ptenantstats":
+            return len(flatten([prop.ptenants for prop in props]))
+
         if target == "tenantstats":
-            # numtnts = len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
-            # numptnts =len(flatten([prop.ptenants for prop in props]))
-
-            # return f'<span class="me-5">{numtnts}</span> <span class="ms-2">{numptnts}</span>'
-
             return len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
-
-
 
         if target == "vacantstats":
             return len(flatten([prop.houses for prop in props])) - len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))

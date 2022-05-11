@@ -1924,7 +1924,7 @@ class ReceivePayment(Resource):
                 tenant_list = tenantauto(propid)
                 # house_tenant_list = generate_house_tenants(tenant_list)
                 house_tenant_list = generate_house_ownertenants(tenant_list,propid)
-                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access=no_cash)
+                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant/resident",access=no_cash)
 
         if target == "propname":
             return f'>> {prop.name}'

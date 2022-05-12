@@ -94,19 +94,29 @@ class Billing(Resource):
     def post(self):
         msg = None
         user_id = current_user.id
-        configuration = os.getenv('APP_SETTINGS')
 
-        # if user_id not in [2,6,14,19,23,25] and configuration != "development":
-        #     flash("Billing completed","success")
-        #     return redirect(url_for('api.billing'))
 
         apartment_name = request.form.get("apartment")
+        houses = request.form.get("houses")
+        date = request.form.get("date")
+
+        try:
+            billdate = date_formatter(date)
+            bill_date = parse(billdate)
+        except:
+            bill_date = None
+
+        try:
+            houseids = [int(s) for s in houses.split(',')]
+            print("HOUSEIDS",houseids)
+        except:
+            houseids = []
+
         if not apartment_name:
             propid = request.form.get("propid")
             apartment_id = propid[4:]
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
             apartment_name = prop.name
-
         else:
             apartment_id = get_apartment_id(apartment_name)
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -114,8 +124,13 @@ class Billing(Resource):
         ApartmentOp.update_billing_progress(prop,"billing")
             
         chargetype = request.form.get("chargetype")
-        yr = request.form.get("year")
-        mnth = request.form.get("month")
+
+        try:
+            yr = bill_date.year
+            mnth = bill_date.month
+        except:
+            yr = None
+            mnth = None
 
         if not yr:
             year = current_user.company.billing_period.year
@@ -125,113 +140,86 @@ class Billing(Resource):
         if not mnth:
             month = current_user.company.billing_period.month
         else:
-            month = get_numeric_month(mnth)
+            month = int(mnth)
 
         if chargetype == "Water":
             job = q.enqueue_call(
                 func=water_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # water_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "All unbilled readings billed successfully"
 
         elif chargetype == "Rent":
             job = q.enqueue_call(
                 func=rent_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # rent_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Rent billed to all houses successfully"
 
         elif chargetype == "Garbage":
             job = q.enqueue_call(
                 func=garbage_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # garbage_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Garbage fee billed to all houses succesfully"
 
         elif chargetype == "Electricity":
             job = q.enqueue_call(
                 func=electricity_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # electricity_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Electricity fee billed to all houses succesfully"
 
         elif chargetype == "Security":
             job = q.enqueue_call(
                 func=security_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # security_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Security fee billed to all houses succesfully"
 
         else:
-            # water_bill(apartment_id,"Water",user_id)
-            # rent_bill(apartment_id,"Rent",user_id)
-            # garbage_bill(apartment_id,"Garbage",user_id)
-            # electricity_bill(apartment_id,"Electricity",user_id)
-            # security_bill(apartment_id,"Security",user_id)
-            # maintenance_bill(apartment_id,"Maintenance",user_id)
-            # total_bill(apartment_id,user_id)
+
             job = q.enqueue_call(
-                func=water_bill, args=(apartment_id,"Water",user_id,month,year,), result_ttl=5000
+                func=water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
             )
             jobfixedwater = q.enqueue_call(
-                func=fixed_water_bill, args=(apartment_id,"Water",user_id,month,year,), result_ttl=5000
+                func=fixed_water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
             )
             job2 = q.enqueue_call(
-                func=rent_bill, args=(apartment_id,"Rent",user_id,month,year,), result_ttl=5000
+                func=rent_bill, args=(apartment_id,houseids,"Rent",user_id,month,year,), result_ttl=5000
             )
             job3 = q.enqueue_call(
-                func=garbage_bill, args=(apartment_id,"Garbage",user_id,month,year,), result_ttl=5000
+                func=garbage_bill, args=(apartment_id,houseids,"Garbage",user_id,month,year,), result_ttl=5000
             )
             job4 = q.enqueue_call(
-                func=electricity_bill, args=(apartment_id,"Electricity",user_id,month,year,), result_ttl=5000
+                func=electricity_bill, args=(apartment_id,houseids,"Electricity",user_id,month,year,), result_ttl=5000
             )
             job5 = q.enqueue_call(
-                func=security_bill, args=(apartment_id,"Security",user_id,month,year,), result_ttl=5000
+                func=security_bill, args=(apartment_id,houseids,"Security",user_id,month,year,), result_ttl=5000
             )
             job6 = q.enqueue_call(
-                func=maintenance_bill, args=(apartment_id,"Maintenance",user_id,month,year,), result_ttl=5000
+                func=maintenance_bill, args=(apartment_id,houseids,"Maintenance",user_id,month,year,), result_ttl=5000
             )
             job7 = q.enqueue_call(
-                func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
+                func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
             )
             
             str_month = get_str_month(month)
 
             txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
             send_internal_email_notifications(current_user.company.name,txt)
-            # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
-            # try:
-            #     response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-            # except Exception as e:
-            #     print("billing notification failed >>>>>>>>>>>>>>>>>>>>>>>> ",e)
 
-            msg = "Billing has started, please wait..."
-
-        if msg:
-            flash(msg,"success")
-
-        return redirect(url_for('api.billing'))
 
     @login_required
     def get(self):

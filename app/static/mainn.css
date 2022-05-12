@@ -3044,6 +3044,10 @@ input:checked + .slider:before {
 .hoverr:hover {
   color: rgb(246, 250, 244) !important;
 }
+.hover-text:hover {
+  color: rgb(0, 102, 255) !important;
+  font-size: large;
+}
 
 /* .select-css {
 	display: block;

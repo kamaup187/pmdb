@@ -1910,6 +1910,25 @@ class Bills(Resource):
     @login_required
     def get(self):
 
+        target = request.args.get('target')
+        if target == "houses":
+            propid = request.args.get('propid')
+            prop_id = get_identifier(propid)
+            prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
+            # return prop_obj.houses
+
+            tenant_list = tenantauto(prop_id)
+            house_tenant_list = generate_house_ownertenants(tenant_list,prop_id)
+            houses = []
+            for item in house_tenant_list:
+                hs = get_specific_house_obj_from_house_tenant_alt_alt(prop_id,item)[0]
+                dict_obj = {
+                    "name": item,
+                    "id":hs.id
+                }
+                houses.append(dict_obj)
+            return render_template("ajax_bill_houses.html",houses=houses)
+
         update_login_history("invoice",current_user)
 
 

@@ -2462,7 +2462,6 @@ def generate_house_ownertenants(arr,propid):
     for ii in allhses:
         owner = get_owners(ii)[1]
         if owner:
-            print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",owner)
             new_arr.append(f'{ii}#{owner}(owner)')
 
     return new_arr
@@ -5372,20 +5371,32 @@ def penalty_calculator(param):
         else:
             pass
 
-def water_bill(apartment_id,chargetype,user_id,month,year):
+def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
-    meter_readings = apartment_obj.meter_readings
+    # meter_readings = apartment_obj.meter_readings
     target_readings = []
 
-    for item in meter_readings:
-        if item.reading_period:
-            if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual water reading":
-                target_readings.append(item)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for h in house_list:
+        meter_readings = h.meter_readings
+
+        for item in meter_readings:
+            if item.reading_period:
+                if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual water reading":
+                    target_readings.append(item)
 
     for i in target_readings:
         units = i.units
@@ -5439,14 +5450,21 @@ def water_bill(apartment_id,chargetype,user_id,month,year):
 
                     MeterReadingOp.update_charge_status(i,charge_status)
 
-def rent_bill(apartment_id,chargetype,user_id,month,year):
+def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
-    
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
     for house in house_list:
         house_id = house.id
         checker = None
@@ -5481,13 +5499,20 @@ def rent_bill(apartment_id,chargetype,user_id,month,year):
                 rent_charge_obj = ChargeOp(charge_type_id,rent_charge,apartment_id,house_id,user_id,date)
                 rent_charge_obj.save()
 
-def garbage_bill(apartment_id,chargetype,user_id,month,year):
+def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5523,13 +5548,20 @@ def garbage_bill(apartment_id,chargetype,user_id,month,year):
                 garbage_charge_obj = ChargeOp(charge_type_id,garbage_charge,apartment_id,house_id,user_id,date)
                 garbage_charge_obj.save()
 
-def fixed_water_bill(apartment_id,chargetype,user_id,month,year):
+def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5563,20 +5595,32 @@ def fixed_water_bill(apartment_id,chargetype,user_id,month,year):
                 water_charge_obj = ChargeOp(charge_type_id,fixed_water_charge,apartment_id,house_id,user_id,date)
                 water_charge_obj.save()
 
-def electricity_bill(apartment_id,chargetype,user_id,month,year):
+def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
-    meter_readings = apartment_obj.meter_readings
+    # meter_readings = apartment_obj.meter_readings
     target_readings = []
 
-    for item in meter_readings:
-        if item.reading_period:
-            if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual electricity reading":
-                target_readings.append(item)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for h in house_list:
+        meter_readings = h.meter_readings
+
+        for item in meter_readings:
+            if item.reading_period:
+                if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual electricity reading":
+                    target_readings.append(item)
 
     for i in target_readings:
         units = i.units
@@ -5612,13 +5656,20 @@ def electricity_bill(apartment_id,chargetype,user_id,month,year):
 
                     MeterReadingOp.update_charge_status(i,charge_status)
 
-def security_bill(apartment_id,chargetype,user_id,month,year):
+def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5657,7 +5708,7 @@ def security_bill(apartment_id,chargetype,user_id,month,year):
                 security_charge_obj = ChargeOp(charge_type_id,security_charge,apartment_id,house_id,user_id,date)
                 security_charge_obj.save()
 
-def maintenance_bill(apartment_id,chargetype,user_id,month,year):
+def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -5679,7 +5730,15 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
                     state = False
                     TenantRequestOp.update_state(req,state)
 
-    house_list = houseauto(apartment_id)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
 
     for house in house_list:
         house_id = house.id
@@ -5722,7 +5781,7 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
                     service_charge_obj = ChargeOp(charge_type_id,service_charge,apartment_id,house_id,user_id,date)
                     service_charge_obj.save()
 
-def total_bill(apartment_id,user_id,month,year):
+def total_bill(apartment_id,houseids,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -5743,7 +5802,14 @@ def total_bill(apartment_id,user_id,month,year):
         print("AFTER billing period is",apartment_obj.billing_period.date())
 
     prop = apartment_obj.name
-    houses = apartment_obj.houses
+    houses = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            houses.append(hse)
+    else:
+        houses = apartment_obj.houses
 
     try:
         # with mail.connect() as conn:

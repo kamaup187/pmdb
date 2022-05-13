@@ -4109,7 +4109,7 @@ class AddTenant(Resource):
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
                     try:
-                        if isinstance(mobile,str):
+                        if isinstance(raw_mobile,str):
                             tel = raw_mobile
                         else:
                             tel = str(int(raw_mobile))
@@ -4118,7 +4118,6 @@ class AddTenant(Resource):
                         tel = ""
 
                     if tel:
-
                         if isinstance(tel,str):
                             mobile2 = tel.replace(" ", "")
 
@@ -4135,7 +4134,8 @@ class AddTenant(Resource):
                                 mobile = mobile2
 
                         else:
-                            mobile = raw_mobile
+                            print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                            mobile = ""
                     else:
                         mobile = ""
 
@@ -4333,7 +4333,7 @@ class AddTenant(Resource):
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
                     try:
-                        if isinstance(mobile,str):
+                        if isinstance(raw_mobile,str):
                             tel = raw_mobile
                         else:
                             tel = str(int(raw_mobile))
@@ -4359,7 +4359,8 @@ class AddTenant(Resource):
                                 mobile = mobile2
 
                         else:
-                            mobile = raw_mobile
+                            print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                            mobile = ""
                     else:
                         mobile = ""
 

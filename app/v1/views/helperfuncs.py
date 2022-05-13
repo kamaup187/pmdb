@@ -4964,7 +4964,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
         try:
-            if isinstance(mobile,str):
+            if isinstance(raw_mobile,str):
                 tel = raw_mobile
             else:
                 tel = str(int(raw_mobile))
@@ -4990,7 +4990,8 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                     mobile = mobile2
 
             else:
-                mobile = raw_mobile
+                print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                mobile = ""
         else:
             mobile = ""
 

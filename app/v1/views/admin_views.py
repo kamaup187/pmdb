@@ -147,7 +147,7 @@ class ViewReceipt(Resource):
                 }
 
         return Response(render_template(
-            'ajax_receiptpay.html',
+            'user_receipt.html',
             voided = "dispnone",
             tenant = tenant.name,
             house= payment_obj.house,

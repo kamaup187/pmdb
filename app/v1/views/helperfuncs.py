@@ -4897,14 +4897,17 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         desc = item["desc"]
         group = item["group"]
         tenant = item["tenant"]
-        mob = item["mobile"]
+        raw_mobile = item["mobile"]
         email = item["email"]
         water = item["water"]
 
         natid = None
 
         if isinstance(group,float):
-            housecode = "SERVICE" + str(int(group))
+            if ttype == "ptenant":
+                housecode = "SERVICE" + str(int(group))
+            else:
+                housecode = "GROUP" + str(int(group))
         else:
             housecode = group
 
@@ -4957,29 +4960,22 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         else:
             pass
 
-        # try:
-        #     tel = str(int(mobile))
-        # except:
-        #     tel = ""
 
-        # if tel:
-        #     rawstrtel = tel.replace(" ", "")
-        #     if len(rawstrtel) > 9:
-        #         strtel = ""
-        #     else:
-        #         strtel = rawstrtel
-        # else:
-        #     strtel = ""
+        print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
-        # if strtel.startswith("0"):
-        #     tenantphone = strtel
-        # else:
-        #     tenantphone = "0" + strtel
+        try:
+            if isinstance(mobile,str):
+                tel = raw_mobile
+            else:
+                tel = str(int(raw_mobile))
+        except:
+            print("Failed to stringify",raw_mobile)
+            tel = ""
 
-        if mob:
+        if tel:
 
-            if isinstance(mob,str):
-                mobile2 = mob.replace(" ", "")
+            if isinstance(tel,str):
+                mobile2 = tel.replace(" ", "")
 
                 if mobile2.startswith("0"):
                     mobile = mobile2.lstrip("0")
@@ -4994,23 +4990,15 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                     mobile = mobile2
 
             else:
-                mobile = mob
+                mobile = raw_mobile
         else:
             mobile = ""
 
-        try:
-            if isinstance(mobile,str):
-                tel = mobile
-            else:
-                tel = str(int(mobile))
-        except:
-            print("Failed to stringify",mobile)
-            tel = ""
 
-        if tel:
-            rawstrtel = tel.replace(" ", "")
+        if mobile:
+            rawstrtel = mobile.replace(" ", "")
             if len(rawstrtel) > 9:
-                print(tel,"is too long")
+                print(mobile,"is too long")
                 strtel = ""
             else:
                 strtel = rawstrtel

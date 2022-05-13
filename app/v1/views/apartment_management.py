@@ -3145,18 +3145,15 @@ class BulkSms(Resource):
             userid = current_user.id
 
             if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
-                if prop_obj.reminder_status == "sent":
-                    pass
-                else:
-                    ApartmentOp.update_reminder_status(prop_obj,"sent")
-                    job8 = q.enqueue_call(
-                        func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
-                    )
+                ApartmentOp.update_reminder_status(prop_obj,"sent")
+                job8 = q.enqueue_call(
+                    func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                )
             else:
                 if prop_obj.reminder_status == "sent":
                     text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
                     send_internal_email_notifications(prop_obj.company.name,text)
-                    # response = sms.send(text, ["+254716674695"],sender)
+                    response = sms.send(text, ["+254716674695"],sender)
                 else:
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
@@ -4111,31 +4108,42 @@ class AddTenant(Resource):
 
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
-                    if raw_mobile:
-                        if isinstance(raw_mobile,str):
-                            mobile2 = raw_mobile.replace(" ", "")
+                    try:
+                        if isinstance(mobile,str):
+                            tel = raw_mobile
+                        else:
+                            tel = str(int(raw_mobile))
+                    except:
+                        print("Failed to stringify",raw_mobile)
+                        tel = ""
+
+                    if tel:
+
+                        if isinstance(tel,str):
+                            mobile2 = tel.replace(" ", "")
+
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
+  
+                            elif mobile2.startswith("+254"):
+                                mobile = mobile2.lstrip("+254")
+
+                            elif mobile2.startswith("254"):
+                                mobile = mobile2.lstrip("254")
+
                             else:
                                 mobile = mobile2
+
                         else:
                             mobile = raw_mobile
                     else:
                         mobile = ""
 
-                    try:
-                        if isinstance(mobile,str):
-                            tel = mobile
-                        else:
-                            tel = str(int(mobile))
-                    except:
-                        print("Failed to stringify",mobile)
-                        tel = ""
 
-                    if tel:
-                        rawstrtel = tel.replace(" ", "")
+                    if mobile:
+                        rawstrtel = mobile.replace(" ", "")
                         if len(rawstrtel) > 9:
-                            print(tel,"is too long")
+                            print(mobile,"is too long")
                             strtel = ""
                         else:
                             strtel = rawstrtel
@@ -4324,10 +4332,19 @@ class AddTenant(Resource):
 
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
-                    if raw_mobile:
+                    try:
+                        if isinstance(mobile,str):
+                            tel = raw_mobile
+                        else:
+                            tel = str(int(raw_mobile))
+                    except:
+                        print("Failed to stringify",raw_mobile)
+                        tel = ""
 
-                        if isinstance(raw_mobile,str):
-                            mobile2 = raw_mobile.replace(" ", "")
+                    if tel:
+
+                        if isinstance(tel,str):
+                            mobile2 = tel.replace(" ", "")
 
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
@@ -4346,19 +4363,11 @@ class AddTenant(Resource):
                     else:
                         mobile = ""
 
-                    try:
-                        if isinstance(mobile,str):
-                            tel = mobile
-                        else:
-                            tel = str(int(mobile))
-                    except:
-                        print("Failed to stringify",mobile)
-                        tel = ""
 
-                    if tel:
-                        rawstrtel = tel.replace(" ", "")
+                    if mobile:
+                        rawstrtel = mobile.replace(" ", "")
                         if len(rawstrtel) > 9:
-                            print(tel,"is too long")
+                            print(mobile,"is too long")
                             strtel = ""
                         else:
                             strtel = rawstrtel

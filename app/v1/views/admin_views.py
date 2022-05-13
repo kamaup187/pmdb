@@ -146,7 +146,7 @@ class ViewReceipt(Resource):
                     "email":"bizlineinvestment@gmail.com"
                 }
 
-        return render_template(
+        return Response(render_template(
             'ajax_receiptpay.html',
             voided = "dispnone",
             tenant = tenant.name,
@@ -170,7 +170,7 @@ class ViewReceipt(Resource):
             user=server,
             prop=prop,
             randid=ri
-        )
+        ))
 
         # return Response(render_template(
         #     'user_receipt.html',

@@ -616,6 +616,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/rever/full-logo.jpg"
             letterhead = "../static/img/logos/rever/letterhead.jpg"
 
+        elif str_name_company == "AMC REALTORS":
+            ##################################################
+            logopath = "../static/img/logos/amc/l-logo.png"
+            mobilelogopath = "../static/img/logos/amc/s-logo.png"
+            fulllogopath = "../static/img/logos/amc/full-logo.jpg"
+            letterhead = "../static/img/logos/amc/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################

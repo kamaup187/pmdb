@@ -4412,6 +4412,7 @@ class AddTenant(Resource):
                         created_by = current_user.id
 
                         if tenant:
+                            print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
                             if len(tenant.phone)<2:
                                 print("Updating...",tenant)
                                 TenantOp.update_phone(tenant,tenantphone)

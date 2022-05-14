@@ -4119,8 +4119,10 @@ class AddTenant(Resource):
 
                     if tel:
                         if isinstance(tel,str):
-                            mobile2 = tel.replace(" ", "")
-
+                            mobile0 = tel.replace(" ", "")
+                            mobile1 = mobile0.replace("`", "")
+                            mobile2 = mobile1.replace("'", "")
+                            
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
   
@@ -4344,7 +4346,9 @@ class AddTenant(Resource):
                     if tel:
 
                         if isinstance(tel,str):
-                            mobile2 = tel.replace(" ", "")
+                            mobile0 = tel.replace(" ", "")
+                            mobile1 = mobile0.replace("`", "")
+                            mobile2 = mobile1.replace("'", "")
 
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
@@ -4407,9 +4411,10 @@ class AddTenant(Resource):
                         
                         created_by = current_user.id
 
-                        if tenant and len(tenant.phone)<2:
-                            print("Updating...",tenant)
-                            TenantOp.update_phone(tenant,tenantphone)
+                        if tenant:
+                            if len(tenant.phone)<2:
+                                print("Updating...",tenant)
+                                TenantOp.update_phone(tenant,tenantphone)
  
                 return '<span class="text-success">Upload successful</span>'
 

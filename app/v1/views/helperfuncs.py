@@ -4982,7 +4982,9 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         if tel:
 
             if isinstance(tel,str):
-                mobile2 = tel.replace(" ", "")
+                mobile0 = tel.replace(" ", "")
+                mobile1 = mobile0.replace("`", "")
+                mobile2 = mobile1.replace("'", "")
 
                 if mobile2.startswith("0"):
                     mobile = mobile2.lstrip("0")

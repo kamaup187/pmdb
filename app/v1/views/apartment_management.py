@@ -4122,7 +4122,7 @@ class AddTenant(Resource):
                             mobile0 = tel.replace(" ", "")
                             mobile1 = mobile0.replace("`", "")
                             mobile2 = mobile1.replace("'", "")
-                            
+
                             if mobile2.startswith("0"):
                                 mobile = mobile2.lstrip("0")
   
@@ -4395,7 +4395,7 @@ class AddTenant(Resource):
 
                     occupancy = check_occupancy(house_obj)
 
-                    if occupancy[1] != "foo":#refactor what is foo?
+                    if occupancy[1] != "empty":
                         tenant = occupancy[1]
                     else:
                         tenant = None

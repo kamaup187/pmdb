@@ -4395,7 +4395,7 @@ class AddTenant(Resource):
 
                     occupancy = check_occupancy(house_obj)
 
-                    if occupancy[1] != "empty":
+                    if occupancy[0] == "occupied":
                         tenant = occupancy[1]
                     else:
                         tenant = None

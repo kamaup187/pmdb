@@ -61,6 +61,10 @@ err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 
+def aviv(user):
+    rever = os.getenv('AVIV')
+    print(rever,"<<<<<<<REVER HEAD")
+    return "aviv" if user.company.name == rever else ""
 
 def mbogi():
     print("Hi there")
@@ -1959,6 +1963,21 @@ def tenantauto(apartment_id):
     new_tenant_list = remove_dups(tenant_list)
     return new_tenant_list
 
+def tenantauto_alt(apartment_id,status):
+    """returns active tenants in a particular apartment"""
+    apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    db.session.expire(apartment_obj)
+    ptenants = apartment_obj.ptenants
+    client_list = []
+    
+    for alloc in ptenants:
+        ptnt = alloc if alloc.status == status else None
+        if ptnt:
+            client_list.append(ptnt)
+
+    new_client_list = remove_dups(client_list)
+    return new_client_list
+
 def xtenantauto(apartment_id):
     x_tenants = []
 
@@ -2077,6 +2096,14 @@ def tenant_details(arr):
 
     return tenantdetails
 
+def ptenant_details(arr):
+    tenantdetails = []
+    for i in arr:
+        new_i = PermanentTenantOp.view(i)
+        tenantdetails.append(new_i)
+
+    return tenantdetails
+
 def payment_details(arr):
     detailed_payments = []
     for i in arr:
@@ -2131,6 +2158,14 @@ def reading_details(arr):
         readinglist.append(new_i)
 
     return readinglist
+
+def att_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = SalesRepOp.view(i)
+        houselist.append(new_i)
+
+    return houselist
 
 def house_details(arr):
     houselist = []
@@ -2252,6 +2287,16 @@ def filter_out_occupied_houses(selected_apartment):
                     break
             if not found:
                 new_list.append(house)
+
+    return new_list
+
+def filter_out_owned_houses(selected_apartment):
+    apartment_id = get_apartment_id(selected_apartment)
+    house_list = houseauto(apartment_id)
+    new_list = []
+    for house in house_list:
+        if not house.owner:
+            new_list.append(house)
 
     return new_list
 

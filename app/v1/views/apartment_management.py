@@ -35,6 +35,7 @@ Cloud.config.update = ({
     'api_secret': os.environ.get('CLOUDINARY_API_SECRET')
 })
 
+
 # urll = "https://api.whatso.net/api/v2/SendMessage"
 
 # request = {
@@ -184,7 +185,16 @@ class Index(Resource):
         #     for c in cs:
         #         HouseCodeOp.update_sewerage_rate(c,112.5)
 
-        
+        allhses = HouseOp.fetch_houses()
+        for cs in allhses:
+            if not cs.housecode:
+                prop = cs.apartment
+                codded = get_specific_code_obj(prop.id,"DEFAULT")
+                if not codded:
+                    codded = HouseCodeOp("DEFAULT",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,prop.id,1)
+                    codded.save()
+                HouseOp.update_housecode_id(cs,codded.id)
+
         # if current_user.company.name == "Latitude Properties":
         #     if current_user.username.startswith('qc'):
         #         pass
@@ -415,7 +425,11 @@ class Index(Resource):
                 else:
                     shortcode2= f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
-            indexpage = "agentindex2.html" if os.getenv("TARGET") == "lasshouse" else "agentindex.html"
+            if aviv(current_user):
+                indexpage = "agentindex3.html"
+            else:
+                indexpage = os.getenv("INDEX")
+
 
             ############################################################################################################
             coco = CompanyOp.fetch_company_by_name("Sentom Investment")
@@ -1649,8 +1663,10 @@ class PropertyManagement(Resource):
         houselist = house_details(house_list)
         houseids = get_obj_ids(houselist)
 
+        template = "ajax_prop_detail2.html" if aviv(current_user) else "ajax_prop_detail.html"
+
         return render_template(
-            "ajax_prop_detail.html",
+            template,
             prop=prop_obj,
             owner=owner,
             caretaker=caretaker,
@@ -1662,6 +1678,102 @@ class PropertyManagement(Resource):
             period=str_period,
             houseids=houseids
             )
+
+class SalesRepsManagement(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        com_obj = current_user.company
+        props = com_obj.props
+        reps = com_obj.reps
+        attlist = att_details(reps)
+        subids = get_obj_ids(attlist)
+        
+        return render_template("ajax_reps_detail.html",stations=props,subids=subids,bills=attlist)
+
+class AddSalesAgent(Resource):
+    @login_required
+    def get(self):
+        pass
+        # return Response(render_template('regions.html',name=current_user.name))
+    def post(self):
+        company_obj = current_user.company
+
+        prop = request.form.get('prop')
+        name = request.form.get('name')
+        email = request.form.get('mail')
+        phone = request.form.get('tel')
+        natid = request.form.get('natid')
+
+        target = request.form.get('target')
+
+        if target:
+            att_id = request.form.get("attid")
+            att_obj = SalesRepOp.fetch_attendant_by_id(get_identifier(att_id))
+
+            if att_obj:
+                SalesRepOp.delete(att_obj)
+                return proceed
+            else:
+                return err
+
+        # if email and phone and name and natid:
+        #     pass
+        # else:
+        #     return err
+
+        user_obj = UserOp.fetch_user_by_email(email)
+        if not user_obj:
+            user_obj = UserOp.fetch_user_by_phone(phone)
+            if not user_obj:
+                user_obj = UserOp.fetch_user_by_national_id(natid)
+
+        if not user_obj:
+
+            usercode = usercode_generator()
+            is_present  = UserOp.fetch_user_by_usercode(usercode)
+            if is_present:
+                usercode = usercode_generator()#generate code again
+
+            if not email:
+                username = username_extracter(name)
+                is_present2  = UserOp.fetch_user_by_username(username)
+                if is_present2:
+                    username = username_extracternum(name)#append random numbers to name
+                    is_present3 = UserOp.fetch_user_by_username(username)
+                    if is_present3:
+                        username = username_extracternum(name) #generate username again
+            else:
+                username = username_exctractermail(email)
+
+            found = False
+
+            for obj in company_obj.groups:
+                    if str(obj) == "Sales":
+                        found = True
+                        company_usergroup_obj = obj
+
+            if not found: #REFACTOR TO REMOVE THIS BLOCK
+                group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
+                group2.save()
+                company_usergroup_obj = group2
+
+            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",3,company_usergroup_obj.id,company_obj.id)
+            user_obj.save()
+
+        
+            rep_obj = SalesRepOp(name,user_obj.username,phone,user_obj.id,company_obj.id)
+            rep_obj.save()
+
+            if prop:
+                prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                UserOp.relate(user_obj,prop_obj)
+
+            # att_obj = SalesRepOp(name,phone,prop_obj.id)
+            # att_obj.save()
+
+            msg = "Sales agent added"
+            return proceed + msg
 
 class TenantManagement(Resource):
     """class"""
@@ -1692,8 +1804,9 @@ class TenantManagement(Resource):
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
         
-        
-        return render_template("ajax_tenants_detail.html",prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
+        template = "ajax_tenants_detail2.html" if aviv(current_user) else "ajax_tenants_detail.html"
+
+        return render_template(template,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
 
 class SubmissionsManagement(Resource):
     """class"""
@@ -3417,16 +3530,16 @@ class CreateHouseCode(Resource):
             
             if runalert:
                 if code_obj:
-                    msg = "House code name unavailable"
-                    return render_template('ajaxghosthouse.html',alert=msg)
+                    msg = "unavailable"
+                    return msg + err
                 if housecode:
                     msg = "Name accepted"
-                    return render_template('ajaxproceed.html',alert=msg)
+                    return msg + proceed
                 return None
 
             if code_obj:
-                msg = "House code exist already"
-                return render_template('ajaxghosthouse.html',alert=msg)
+                msg = "exist already"
+                return err + msg
             else:
                 valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
                 user_id = current_user.id     
@@ -3436,6 +3549,10 @@ class CreateHouseCode(Resource):
 
                 valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
                 HouseCodeOp.update_agreement_rate(new_code_obj,valid_inputs2[0])
+
+                if aviv(current_user):
+                    HouseCodeOp.update_listprice(new_code_obj,valid_inputs[0])
+                    HouseCodeOp.update_rentrate(new_code_obj,0.0)
 
                 msg = "House code added"
                 return render_template('ajaxproceed.html',alert=msg)
@@ -3660,7 +3777,7 @@ class CreateHouse(Resource):
 
             if not housecode:
                 msg = "You must select the group first"
-                return render_template('ajaxghosthouse.html',alert=msg)
+                return msg + err
 
             code_obj = get_specific_code_obj(apartment_id,housecode)
             code_id = code_obj.id
@@ -3677,23 +3794,20 @@ class CreateHouse(Resource):
             if runalert:
                 if house_obj:
                     msg = "Similar name exists"
-                    return render_template('ajaxghosthouse.html',alert=msg)
+                    return err + msg
                 if house_name:
-                    msg = "Name accepted"
-                    return render_template('ajaxproceed.html',alert=msg)
+                    return proceed
                 return None
 
             if house_obj:
-                msg = "House exist already"
-                return render_template('ajaxghosthouse.html',alert=msg)
+                return err
 
             created_by = current_user.id
             house_obj = HouseOp(house_name,apartment_id,code_id,created_by,desc)
             house_obj.save()
 
             msg = f"House {house_obj.name} added successfully"
-            return render_template('ajaxproceed.html',alert=msg)
-
+            return proceed + msg
 class EditHouse(Resource):
     """class"""
     def get(self):
@@ -4064,7 +4178,47 @@ class AddTenant(Resource):
     """class"""
     @login_required
     def get(self):
-        pass
+        target = request.args.get("target")
+        propid = request.args.get("propid")
+        prop_id = get_identifier(propid)
+
+        prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+        
+        if target == "reps":
+            co_users = prop.company.reps
+            return render_template('ajax_multivariable.html',items=sort_items(co_users),placeholder="select agent")
+
+
+        if target == "plots":
+            house_list = filter_out_owned_houses(prop.name)
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select unit")
+
+        ptenant_id = request.args.get('tenant_id')
+        ptenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(ptenant_id))
+        house_obj = ptenant_obj.house
+
+        if target == "client details":
+
+            print(ptenant_obj.classtype,"<<<<<<<<<<<<<<<<<<<<<<")
+
+            if ptenant_obj.classtype == "shareholder":
+                ng = house_obj.housecode.listprice * 0.95
+            else:
+                ng = house_obj.housecode.listprice
+
+            return render_template('ajax_client_details.html',client=ptenant_obj.name,plot=house_obj,mp=f'{ng:,.1f}')
+
+        if target == "client discount":
+            discount = request.args.get("discount")
+            if discount == "true":
+                ng = house_obj.housecode.listprice * 0.95
+            else:
+                ng = house_obj.housecode.listprice
+
+            return render_template('ajax_discount.html',mp=f'{ng:,.1f}')
+
+        elif target == "negotiated details":
+            return render_template('ajax_client_details_two.html',client=ptenant_obj.name,plot=house_obj,mp=f"{ptenant_obj.negotiated_price:,.1f}")  
 
     def post(self):
         target = request.form.get('target')
@@ -4433,6 +4587,16 @@ class AddTenant(Resource):
         else:
 
             name = request.form.get('name')
+            if not name:
+                fname = request.form.get('fname')
+                oname = request.form.get('oname')
+                sname = request.form.get('sname')
+
+                try:
+                    name = fname + oname + sname
+                except:
+                    name = fname
+
             phone = request.form.get('tel')
             national_id = request.form.get('national_id')
             email = request.form.get('email')
@@ -4441,6 +4605,15 @@ class AddTenant(Resource):
 
             migrate = request.form.get('migrate')#checkbox
             ttype = request.form.get('ttype')
+            target = request.form.get('target')
+            classtype=request.form.get('classtype')
+            rep = request.form.get("rep")
+
+            if rep:
+                rep_id = SalesRepOp.fetch_rep_by_username(rep).id
+            else:
+                rep_id = None
+
 
             try:
                 created_by = current_user.id
@@ -4487,6 +4660,22 @@ class AddTenant(Resource):
                 ptenant_obj = PermanentTenantOp(name,phone,nat_id,email,float_arrears,house_obj.id,apartment_id,created_by)
                 ptenant_obj.save()
 
+                if target == "purchasing":
+
+
+                    PermanentTenantOp.update_classtype(ptenant_obj,classtype)
+
+                    if classtype == "shareholder":
+                        pass
+                    else:
+                        PermanentTenantOp.update_rep_id(ptenant_obj,rep_id)
+
+                    PermanentTenantOp.update_status(ptenant_obj,"proposal")
+
+                    HouseOp.update_status(house_obj,"booked")
+                
+                msg = "Resident registered successfully"
+
             else:
 
                 tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,apartment_id,created_by)
@@ -4516,8 +4705,79 @@ class AddTenant(Resource):
                     else:
                         TenantOp.update_residency(tenant_obj,"New")
             
-            msg = "Tenant added successfully"
-            return render_template('ajaxproceed.html',alert=msg)
+                msg = "Tenant added successfully"
+            return msg + proceed
+
+class Deal(Resource):
+    def get(self):
+        pass
+    def post(self):
+        ptenant_id = request.form.get('tenant_id')
+        plan = request.form.get('plan')
+
+
+        datenow = datetime.datetime.now()
+
+        target = request.form.get('target')
+
+        alloc = PermanentTenantOp.fetch_tenant_by_id(get_identifier(ptenant_id))
+
+        print("getting here")
+
+
+        if target=="negotiations":
+            negprice = validate_input(request.form.get('negprice'))
+            deposit = validate_input(request.form.get('deposit'))
+            mi = validate_input(request.form.get('mi'))
+            num_mi = validate_input(request.form.get('num_mi'))
+
+            PermanentTenantOp.update_status(alloc,"contracts")
+
+            PermanentTenantOp.update_payment_plan(alloc,negprice,plan,deposit,mi,num_mi,datenow,current_user.id)
+
+            msg = "Client details updated"
+            return msg + proceed
+        else:
+            # path = f"app/temp/litala.pdf"
+
+            path = request.files.get('file')
+
+            if path:
+                filename = f"app/temp/contracts.pdf"
+
+                path.save(filename,buffer_size=16384)
+            
+                res = Cloud.uploader.upload(filename)
+                print(res['secure_url'])
+
+                pdf2img = res['secure_url'][:-4]
+                img = pdf2img + ".png"
+
+                os.remove(filename)
+            else:
+                img = ""
+
+            plot = alloc.house
+            PermanentTenantOp.upload_contracts(alloc,img,datenow,current_user.id)
+            HouseOp.update_status(plot,"sold")
+            PermanentTenantOp.update_status(alloc,"closed")
+
+            if alloc.plan == "partial":
+                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+                # balance = alloc[2].deposit + alloc[2].instalment
+                # TenantOp.update_balance(tenant_obj,balance)
+            else:
+                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+
+            bill = alloc.instalment + alloc.deposit
+
+            billplan = MonthlyChargeTwoOp(alloc.negotiated_price,alloc.deposit,30,30,alloc.num_instalment,alloc.num_instalment,1,alloc.instalment,0,bill,0,0,alloc.apartment.id,plot.id,alloc.id,current_user.id)
+            billplan.save()
+
+            MonthlyChargeTwoOp.update_cumulative_balance(billplan,alloc.negotiated_price)
+            MonthlyChargeTwoOp.update_balance(billplan,bill)
+
+            return render_template('ajaxproceed.html',alert="success")
 
 class UpdateTenant(Resource):
     """class"""
@@ -4752,7 +5012,7 @@ class TenantClearance(Resource):
 
         print("TTTTTTYYYYYYYYPPPPPPPEEEEEEEEEEEEEEEEEEEEEEEEE",ttype)
 
-        if ttype == "owner":
+        if ttype == "owner" or ttype == "resident":
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
 
             if target == "tenant name":
@@ -6677,7 +6937,7 @@ class Results(Resource):
                 paid_status = "-"
                 badge_status = ""
             else:
-                if tenant_obj.tenant_type == "owner":
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                     house_obj = tenant_obj.house
                     current_invoice = fetch_current_owner_invoice(house_obj)
                 else:
@@ -6700,7 +6960,9 @@ class Results(Resource):
                     badge_status = "badge badge-danger badge-counter"
 
 
-            if tenant_obj.tenant_type != "owner":
+            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                houses = tenant_obj.house
+            else:
                 if get_active_houses(tenant_obj)[0] == "Resident":
                     print(get_active_houses(tenant_obj)[0])
                     houses = get_active_houses(tenant_obj)[1]
@@ -6709,8 +6971,6 @@ class Results(Resource):
                     houses = get_active_houses(tenant_obj)[1].house
                 else:
                     houses = None
-            else:
-                houses = tenant_obj.house
 
             if tenant_obj.sms:
                 smsable = "Yes"

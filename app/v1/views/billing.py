@@ -1966,7 +1966,7 @@ class ReceivePayment(Resource):
                 houses = get_active_houses(tenant_obj)[1]
                 return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
-            if tenant_obj.tenant_type == "owner":
+            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 latest_bill = fetch_current_owner_invoice(house_obj[0])
             else:
                 latest_bill = fetch_current_invoice(house_obj[0])
@@ -2023,7 +2023,7 @@ class ReceivePayment(Resource):
 
                 print("HOOOOOUUUUUUSE",house_name,"OBJ",house_obj[0])
 
-            if tenant_obj.tenant_type == "owner":
+            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 bills = tenant_obj.monthly_charges
             else:
                 bills = house_obj[0].monthlybills
@@ -2252,7 +2252,7 @@ class ReceivePayment(Resource):
 
             # monthly_charges = house_obj.monthlybills
 
-            if tenant_obj.tenant_type == "owner":
+            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 specific_charge_obj = fetch_current_owner_invoice(house_obj)
             else:
                 specific_charge_obj = fetch_current_invoice(house_obj)
@@ -2342,7 +2342,7 @@ class ReceivePayment(Resource):
 
             tenant_bal = tenant_obj.balance
             tenant_bal -= valid_amount
-            if tenant_obj.tenant_type == "owner":
+            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
             else:
                 TenantOp.update_balance(tenant_obj,tenant_bal)
@@ -2637,7 +2637,7 @@ class UpdateBalance(Resource):
         tenant_id = request.args.get("tenantid")
         ttype = request.args.get("ttype")
 
-        if ttype == "owner":
+        if ttype == "owner" or ttype == "resident":
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
             house_obj = tenant_obj.house
             current_invoice = fetch_current_owner_invoice(house_obj)

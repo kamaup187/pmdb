@@ -1,0 +1,81 @@
+
+<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Groups and rates:</div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow " width="100%" cellspacing="0">
+            <thead class="custom-header">
+                <tr>
+                <th class="text-black">Group</th>
+                <th class="text-black">Price</th>
+                <th class="text-black">Service</th>
+                <th class="text-black">Action</th>
+                
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items%}
+                <tr>
+                    <td class="first-data-cell text-dark font-weight-bold">{{ i['housecode'] }}</td>
+                    <td class="data-cell text-right">{{ i['price'] }}</td>
+                    <td class="data-cell text-right">{{ i['service'] }}</td>
+
+
+                    <td class="data-cell">
+                        <div class="dropdown no-arrow">
+                          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger font-weight-bold ellipsis-btn"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header underline">Group: <span class="text-info font-weight-bold">{{i['housecode']}}</span></div>
+                
+                            <div>
+                              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#groupModal">Edit</span>
+                            </div>
+                            <div>
+                              <i class="fas fa-trash-alt ml-3 mr-2 text-danger"></i><span id="{{i['delid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteGroupModal">Delete</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+                      </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+    var rawIds = "{{ groupids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_group_identifier").html(item)
+          }else{
+            $("#edit_group_identifier").html(item)
+          }
+          
+        }else{
+          $("#group_identifier").html(item)
+        }
+      });
+    });
+  </script>

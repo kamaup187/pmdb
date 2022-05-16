@@ -71,6 +71,66 @@ class Reports(Resource):
             parent=logo(current_user.company)[5],
             name=current_user.name))
 
+class ReportsThree(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+
+        delay = "no" if os.getenv("CURRENT_APP") == "app2" else "no"
+        time = datetime.datetime.now()
+        present_month = time.month
+        present_year = time.year
+        # apartment_list = fetch_all_apartments_by_user(current_user)
+        apartment_list = []
+
+        monthly_collection=[] #list of amounts from all payment objs
+        tenant_balances=[]
+        monthly_bill_members=[] #list of monthlybill amounts from monthly charge objs
+
+        update_login_history("reports",current_user)
+
+        for apartment in apartment_list:
+            db.session.expire(apartment)
+            ######################################
+            tenants = tenantauto(apartment.id)
+            for i in tenants:
+                db.session.expire(i)
+                bal_item = i.balance
+                tenant_balances.append(bal_item)
+            #######################################
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == present_month and item.year == present_year:
+                    sum_member = item.total_bill
+                    monthly_bill_members.append(sum_member) #TODO vacated tenant whose bills have been discarded will have no record of water charges here, rectify this.
+
+            payment_collection = apartment.payment_data
+            for item in payment_collection:
+                if item.pay_period.month == present_month and item.pay_period.year == present_year and not item.voided:
+                    sum_member = item.amount
+                    monthly_collection.append(sum_member)
+
+        monthly_bill_total = sum_positive_values(monthly_bill_members)
+        monthly_total = sum_positive_values(monthly_collection)
+        monthlybal_total = sum_positive_values(tenant_balances)
+        ############################################################    
+        formatted_monthly_bill_total = (f"{monthly_bill_total:,}")    
+        formatted_monthly_total = (f"{monthly_total:,}")
+        formatted_monthlybal_total = (f"{monthlybal_total:,}")
+        return Response(render_template(
+            "reportsthree.html",
+            delay=delay,
+            tenantlist=[],
+            month_string=get_str_month(present_month),
+            monthly_bills = formatted_monthly_bill_total,
+            monthly_rent_collection=formatted_monthly_total,
+            monthly_bal=formatted_monthlybal_total,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            parent=logo(current_user.company)[5],
+            name=current_user.name))
+
 class RentReport(Resource):
     """report class"""
     @login_required
@@ -3872,6 +3932,67 @@ class MpesaStatement(Resource):
         ))
 
 
+class BookingSchedule(Resource):
+    @login_required
+    def get(self):
+        tenant_id = None
+        target = request.args.get("target")
+        prop = request.args.get("selected_apartment")
+
+        if target == "tenants":
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        if not prop and target != "direct":
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_booking_schedule.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop_obj=None,
+                prop = "",
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+
+class StatementOfAccounts(Resource):
+    @login_required
+    def get(self):
+        tenant_id = None
+        target = request.args.get("target")
+        prop = request.args.get("selected_apartment")
+
+        if target == "tenants":
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        if not prop and target != "direct":
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_account_statement.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop = "",
+                prop_obj = None,
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
 class ExpenseDetail(Resource):
     """class"""
     @login_required
@@ -4056,6 +4177,31 @@ class FetchTenants(Resource):
             tenantids = get_obj_ids(tenant_data)
             return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
         
+        elif target == "closed":
+            tenancy = tenantauto_alt(propid,"closed")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_oldtenantlist2.html",items=tenantlist,tenantids=full_ids)
+
+        elif target == "proposals":
+            tenancy = tenantauto_alt(propid,"proposal")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_newtenantlist2.html",items=tenantlist,tenantids=full_ids)
+
+        elif target == "contracts":
+            tenancy = tenantauto_alt(propid,"contracts")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_clientcontractslist.html",items=tenantlist,tenantids=full_ids)
+
         elif target == "old":
             tenancy = xtenantauto(propid)
             tenantlist = tenant_details(tenancy)
@@ -4109,6 +4255,7 @@ class FetchReadings(Resource):
 
 
 class FetchHouses(Resource):
+    @login_required
     def get(self):
         propid = request.args.get('propid')
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
@@ -4117,7 +4264,9 @@ class FetchHouses(Resource):
         houselist = house_details(houses)
         houseids = get_obj_ids(houselist)
 
-        return render_template("ajax_houselist.html",items=houselist,houseids=houseids)
+        template = "ajax_houselist2.html" if aviv(current_user) else "ajax_houselist.html"
+
+        return render_template(template,items=houselist,houseids=houseids)
 
 class FetchRates(Resource):
     def get(self):
@@ -4128,7 +4277,10 @@ class FetchRates(Resource):
         housecodelist = group_details(housecodes)
         groupids = get_obj_ids(housecodelist)
 
-        return render_template("ajax_housecodelist.html",items=housecodelist,groupids=groupids)
+        template = "ajax_housecodelist2.html" if aviv(current_user) else "ajax_housecodelist.html"
+
+
+        return render_template(template,items=housecodelist,groupids=groupids)
 
 class FetchMeters(Resource):
     def get(self):
@@ -4140,6 +4292,15 @@ class FetchMeters(Resource):
         meterids = get_obj_ids(meterlist)
 
         return render_template("ajax_meterlist.html",items=meterlist,meterids=meterids)
+
+class FetchAgents(Resource):
+    def get(self):
+        com_obj = current_user.company
+        reps = com_obj.reps
+        attlist = att_details(reps)
+        subids = get_obj_ids(attlist)
+
+        return render_template("ajax_agentlist.html",items=attlist,groupids=subids)
 
 class FetchPayments(Resource):
     @login_required
@@ -4339,10 +4500,10 @@ class FetchPayments(Resource):
             tenantid = request.args.get('tenantid')
             ttype = request.args.get('ttype')
 
-            if ttype != "owner":
-                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
-            else:
+            if ttype == "owner" or ttype == "resident":
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
 
             tenant_payments = tenant_obj.payments
 
@@ -4405,6 +4566,10 @@ class FetchBills(Resource):
             tenant_id = request.args.get('tenantid')
 
             tenantid = get_identifier(tenant_id)
+
+            print(tenant_id.startswith("tnt"))
+            print(ttarget=="ttarget")
+            print(ttype!="owner",ttype)
 
             if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype != "owner":
                 print("expecting tenant here")

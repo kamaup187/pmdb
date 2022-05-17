@@ -4571,7 +4571,7 @@ class FetchBills(Resource):
             print(ttarget=="ttarget")
             print(ttype!="owner",ttype)
 
-            if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype != "owner":
+            if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype == "tenant":
                 print("expecting tenant here")
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
             else:

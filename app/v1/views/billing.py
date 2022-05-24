@@ -1382,7 +1382,10 @@ class EditBill(Resource):
                 if bill.rent_paid:
                     rentbal = bill.rent_balance + update_rent - bill.rent_paid
                 else:
-                    rentbal = bill.rent_balance + update_rent
+                    try:
+                        rentbal = bill.rent_balance + update_rent
+                    except:
+                        rentbal = update_rent
 
                 # # supplied arrears to effect rent only
                 # rentarr = bill.rent_balance 

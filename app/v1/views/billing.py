@@ -479,7 +479,9 @@ class BillInvoice(Resource):
 
 
         sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+        print("WATER BILLS ARE HERE",sibling_water_bill,sibling_water_bill[0].reading_period)
         sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+        print("ELECTRICITY BILLS ARE HERE",sibling_electricity_bill,sibling_electricity_bill[0].reading_period)
 
 
         try:

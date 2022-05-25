@@ -182,7 +182,7 @@
     <div id="landlord_statements" class="">
 
         <fieldset class="bg-white pl-4 pr-4 mb-2 mt-1">
-            <legend class="legend"><span class="text-black">Post-Collections:</span></legend>
+            <legend class="legend"><span class="text-black">Rent $ Utilities</span></legend>
             <div class="row">
                 <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
                     <div class="car h-0 py-0">
@@ -202,7 +202,7 @@
                                     <a class="" href="{{ url_for('api.waterstatement') }}">
                                         <button class="btn btn-outline-info  report-card mb-1">
                                             <div class="loader6"><i class="fas fa-file-contract  fa-2x "></i></div>
-                                            <span class="sss text-black">Water statement </span>
+                                            <span class="sss text-black">Water/Electricity statement </span>
                                         </button>
                                     </a>
                                 </div>
@@ -215,6 +215,39 @@
                                         </button>
                                     </a>
                                 </div>
+
+                                <div class="report-btn">
+                                    <a class="" href="">
+                                        <button class="btn btn-outline-info  report-card mb-1">
+                                            <div class="loader3"><i class="fas fa-file-contract fa-2x "></i></div>
+                                            <span class="sss text-black">S. charge statement</span>
+                                        </button>
+                                    </a>
+                                </div>
+
+                                <div class="report-btn">
+                                    <a class="btn4" href="">
+                                        <button class="btn btn-outline-info  report-card mb-1">
+                                            <div class=""><i class="fas fa-file-contract fa-2x "></i></div>
+                                            <span class="sss text-black">LPF Statement</span>
+                                        </button>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="bg-white pl-4 pr-4 mb-2 mt-1">
+            <legend class="legend"><span class="text-black">Post-Collections:</span></legend>
+            <div class="row">
+                <div class="col-xl-12 col-md-12 mb-0 mobile-malaysian no-padding">
+                    <div class="car h-0 py-0">
+                        <div class="report-card-padding">
+                            <div class="divjust-end center-btn">
 
                                 <div class="report-btn">
                                     <a class="" href="{{ url_for('api.landlordprofitandlosssummary') }}">
@@ -237,7 +270,7 @@
                                     </a>
                                 </div>
 
-                                <div class="report-btn dispnone">
+                                <div class="report-btn hide">
                                     <a class="dev" href="#">
                                         <button class="btn btn-outline-info borderles report-card mb-1">
                                             <div class=""><i class="fas fa-layer-group fa-2x"></i></div>
@@ -247,6 +280,26 @@
                                         </button>
                                     </a>
                                 </div>
+
+                                <div class="report-btn hide">
+                                    <a class="" href="{{ url_for('api.waterstatement') }}">
+                                        <button class="btn btn-outline-info  report-card mb-1">
+                                            <div class="loader6"><i class="fas fa-file-contract  fa-2x "></i></div>
+                                            <span class="sss text-black">Water statement </span>
+                                        </button>
+                                    </a>
+                                </div>
+
+                                <div class="report-btn hide">
+                                    <a class="" href="{{ url_for('api.garbagestatement') }}">
+                                        <button class="btn btn-outline-info  report-card mb-1">
+                                            <div class="loader6"><i class="fas fa-file-contract fa-2x "></i></div>
+                                            <span class="sss text-black">Garbage statement </span>
+                                        </button>
+                                    </a>
+                                </div>
+
+
 
                             </div>
                         </div>
@@ -268,7 +321,7 @@
                                     <a class="btn3" href="{{ url_for('api.monthlystatement') }}">
                                         <button class="btn btn-outline-info  report-card mb-1">
                                             <div class=""><i class="fas fa-file-contract fa-2x "></i></div>
-                                            <span class="sss text-black">General statement</span>
+                                            <span class="sss text-black">Landlord statement</span>
                                             <span class="badge badge-dark badge-counter">summary</span>
 
                                         </button>
@@ -280,13 +333,13 @@
                                     <a class="btn4" href="{{ url_for('api.externaldetail') }}">
                                         <button class="btn btn-outline-info  report-card mb-1">
                                             <div class=""><i class="fas fa-file-contract fa-2x "></i></div>
-                                            <span class="sss text-black">General statement</span>
+                                            <span class="sss text-black">Landlord statement</span>
                                             <span class="badge badge-dark badge-counter">detailed</span>
                                         </button>
                                     </a>
                                 </div>
 
-                                <div class="report-btn">
+                                <div class="report-btn hide">
                                     <a class="btn3" href="{{ url_for('api.internaldetail') }}">
                                         <button class="btn btn-outline-info  report-card mb-1">
                                             <div class=""><i class="fas fa-file-contract fa-2x "></i></div>
@@ -297,7 +350,7 @@
                                     </a>
                                 </div>
 
-                                <div class="report-btn">
+                                <div class="report-btn hide">
                                     <a class="" href="{{ url_for('api.internaldetailalt') }}">
                                         <button class="btn btn-outline-info report-card mb-1">
                                             <div class=""><i class="fas fa-file-contract fa-2x"></i></div>

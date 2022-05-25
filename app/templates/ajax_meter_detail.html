@@ -1575,6 +1575,7 @@ $("#select_house_alt").on('change',function(){
                 propid: $("#prop_identifier").text(),
                 house: $("#select_house_alt").val(),
                 reading: $("#reading-alt").val(),
+                readperiod: $("input[name=readperiod]:checked").val(),
                 readtype:"electricity"
             },
         success: function(response) {

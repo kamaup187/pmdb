@@ -809,7 +809,7 @@ class BillInvoice(Resource):
             print("TENANT",bill.tenant)
             print("delivery REPORT",bill.sms_invoice)
             print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
-
+            print("READINGS: ",wbill)
 
             return render_template(
                 "ajax_sms_invoice.html",

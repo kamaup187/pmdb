@@ -474,6 +474,9 @@ class BillInvoice(Resource):
                     watertarget = True
                 else:
                     watertarget = False
+
+            if not bill.house.watertarget:
+                watertarget = True
         except:
             watertarget = True
 
@@ -810,6 +813,7 @@ class BillInvoice(Resource):
             print("delivery REPORT",bill.sms_invoice)
             print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
             print("READINGS: ",wbill)
+            print("WATERTARGET: ",watertarget)
 
             return render_template(
                 "ajax_sms_invoice.html",

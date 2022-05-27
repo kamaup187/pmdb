@@ -627,6 +627,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/amc/full-logo.jpg"
             letterhead = "../static/img/logos/amc/letterhead.jpg"
 
+        elif str_name_company == "ASTROL":
+            ##################################################
+            logopath = "../static/img/logos/astrol/l-logo.png"
+            mobilelogopath = "../static/img/logos/strol/s-logo.png"
+            fulllogopath = "../static/img/logos/astrol/full-logo.jpg"
+            letterhead = "../static/img/logos/astrol/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################

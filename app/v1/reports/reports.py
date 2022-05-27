@@ -4494,7 +4494,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="disabled")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
 
         else:
             tenantid = request.args.get('tenantid')

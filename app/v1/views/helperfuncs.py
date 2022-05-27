@@ -2766,11 +2766,29 @@ def fetch_current_invoice(house_obj):
         continue
     return None
 
+def fetch_target_period_invoice(house_obj,period):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == period.year and item.month == period.month and item.tenant:
+            return item
+        continue
+    return None
+
 def fetch_current_owner_invoice(house_obj):
 
     bills = house_obj.monthlybills
     for item in bills:
         if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.ptenant:
+            return item
+        continue
+    return None
+
+def fetch_target_period_owner_invoice(house_obj,period):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == period.year and item.month == period.month and item.ptenant:
             return item
         continue
     return None

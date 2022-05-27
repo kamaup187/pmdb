@@ -1897,11 +1897,12 @@ class ReceivePayment(Resource):
         #     return Response(render_template('noaccess.html',name=current_user.name))
         
         prop_id = request.args.get("propid")
+        propname = request.args.get("propname")
         house_name = request.args.get("house")
         house_name2 = request.args.get("house2")
+        payperiod = request.args.get("payperiod")
         target = request.args.get("target")
 
-        propname = request.args.get("propname")
 
         propid = get_identifier(prop_id)
 
@@ -1912,6 +1913,14 @@ class ReceivePayment(Resource):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
 
         db.session.expire(prop)
+
+        if payperiod:
+            pay_period = date_formatter_alt(payperiod)
+            pay_period_date = parse(pay_period)
+        else:
+            pay_period_date = get_billing_period(prop)
+
+        print("PAYPERIOOOOOOOD",pay_period_date)
 
         if target == "proplist":
             props = fetch_all_apartments_by_user(current_user)
@@ -1984,19 +1993,16 @@ class ReceivePayment(Resource):
                 return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
             if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                latest_bill = fetch_current_owner_invoice(house_obj[0])
+                bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
             else:
-                latest_bill = fetch_current_invoice(house_obj[0])
+                bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
 
-            # print("heeeeeey",latest_bill.month)
-            if latest_bill:
-                latest_bill_balance = latest_bill.balance
+            if bill:
+                bill_balance = bill.balance
             else:
-                latest_bill_balance = 0.0
+                bill_balance = 0.0
 
-            # return render_template('ajax_tenant_balance.html',totaldue=f'{tenant_obj.balance:,.1f}')
-            return render_template('ajax_tenant_balance.html',totaldue=f'{latest_bill_balance:,.1f}')
-
+            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}')
 
         if target == "tenant name2":
             house_obj = get_specific_house_obj(propid,house_name)
@@ -2024,65 +2030,27 @@ class ReceivePayment(Resource):
 
         if target == "breakdown":
             if house_name2:
-                print("HOUSENAME TWO AVAIALBLE",house_name2)
                 if house_name2 == "none selected":
                     return "<span class='text-danger text-xx'>Please specify house</span>"
                 house_obj = get_specific_house_obj(propid,house_name2)
-
+                tenant_obj = check_occupancy(house_obj)[1] # tenant
             else:
-
                 house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
 
                 if house_obj[1]:
-                    tenant_obj = house_obj[1]
+                    tenant_obj = house_obj[1] # owner
                 else:
-                    tenant_obj = check_occupancy(house_obj[0])[1]
+                    tenant_obj = check_occupancy(house_obj[0])[1] # tenant
 
-                print("HOOOOOUUUUUUSE",house_name,"OBJ",house_obj[0])
-
+            house_item = house_obj if house_name2 else house_obj[0]
+            
             if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                bills = tenant_obj.monthly_charges
+                bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
             else:
-                bills = house_obj[0].monthlybills
+                bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-            # bills = house_obj.monthlybills
-
-            try:
-                bill = fetch_current_billing_period_bills(prop.billing_period,bills)[0]
-            except:
-                bill = None
-            # bill = max(bills, key=lambda x: x.id) if bills else None
 
             if bill:
-                # amount = request.args.get('paidamount')
-                # valid_amount = validate_input(amount)
-                # remaining = valid_amount
-                # try:
-                #     if bill.rent_balance <= remaining:
-                #         rentpaid = bill.rent_balance
-                #         remaining -= rentpaid
-
-                #     elif bill.rent_balance == remaining:
-                #         remaining = 0
-                #         rentpaid = valid_amount
-                #     else:
-                #         rentpaid = remaining
-                #         remaining = 0
-
-                #     if remaining and bill.garbage_balance == remaining:
-                #         garbagepaid = remaining
-                #         remaining = 0
-                #     elif remaining and bill.garbage_balance < remaining:
-                #         garbagepaid = remaining
-                #         remaining = 0
-                #     elif remaining and bill.garbage_balance > remaining:
-                #         garbagepaid = bill.garbage_balance
-                #         remaining -= bill.garbage_balance
-                #     else:
-                #         garbagepaid = 0
-                # except:
-                #     pass
-                # return render_template('ajax_bill_breakdown.html',bill=bill,rentpaid=rentpaid,garbagepaid=garbagepaid)
                 print("BILL DATE",bill.month,"/",bill.year)
                 print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
                 print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
@@ -2092,8 +2060,6 @@ class ReceivePayment(Resource):
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
 
 
-
-        
     @login_required
     def post(self):
         current_period_payment = True
@@ -2140,7 +2106,7 @@ class ReceivePayment(Resource):
 
         bank = request.form.get("bank")
 
-        paymonth = request.form.get("month")
+        payperiod = request.form.get("payperiod")
         paydate = request.form.get("date")
         paytime = request.form.get("time")
 
@@ -2149,6 +2115,16 @@ class ReceivePayment(Resource):
 
         sms_bool = get_bool(textsms)
         email_bool = get_bool(email)
+
+        if payperiod:
+            pay_period = date_formatter_alt(payperiod)
+            pay_period_date = parse(pay_period)
+            current_period_payment = False
+        else:
+            current_period_payment = True
+            pay_period_date = get_billing_period(prop)
+
+        print("PAYPERIOOOOOOOD",pay_period_date)
 
         if paydate:
 
@@ -2193,22 +2169,10 @@ class ReceivePayment(Resource):
         ########################################################################################
 
         if house_name:
-            prop = ApartmentOp.fetch_apartment_by_id(propid)
-            billing_period = get_billing_period(prop)
             tenant_obj = None
             co = prop.company
 
-            #URGENT TODO
-            # if paymonth:
-            #     derived_year = pay_date.year
-            #     derived_month = get_numeric_month(paymonth)
-            #     period = generate_date(derived_month,derived_year)
-            #     if derived_month != billing_period.month:
-            #         current_period_payment = False
-            # else:
-            #     period = billing_period
-
-            period = billing_period
+            period = pay_period_date
             
             target_houses = []       
 
@@ -2270,9 +2234,9 @@ class ReceivePayment(Resource):
             # monthly_charges = house_obj.monthlybills
 
             if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                specific_charge_obj = fetch_current_owner_invoice(house_obj)
+                specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
             else:
-                specific_charge_obj = fetch_current_invoice(house_obj)
+                specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
 
             # if tenant_obj.tenant_type == "owner":
             #     monthly_charges = tenant_obj.monthly_charges
@@ -2375,7 +2339,7 @@ class ReceivePayment(Resource):
             for h in target_houses:
 
 
-                if specific_charge_obj and current_period_payment:
+                if specific_charge_obj:
 
                     db.session.expire(specific_charge_obj)
                     bala = specific_charge_obj.balance

@@ -7174,14 +7174,25 @@ def build_search_tenant(tenant_item):
     house = get_active_houses(tenant_item)[1]
 
     dict_item = {
-        "name" : remove_special_characters(tenant_item.name),
+        "name" : remove_special_characters(tenant_item.name) + "(T)",
         "id" : "tnt"+str(tenant_item.id),
         "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
         "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'
     }
     return dict_item
 
-def generate_suggestions_alt(props,houses,tenants):
+def build_search_ptenant(ptenant_item):
+    house = ptenant_item.house
+
+    dict_item = {
+        "name" : remove_special_characters(ptenant_item.name) + "(R)",
+        "id" : "ptnt"+str(ptenant_item.id),
+        "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
+        "prop" : f'-{ smart_truncate(ptenant_item.apartment.name)}'
+    }
+    return dict_item
+
+def generate_suggestions_alt(props,houses,tenants,ptenants):
 
     # for prop_item in props:
     #     dict_item = {
@@ -7197,6 +7208,7 @@ def generate_suggestions_alt(props,houses,tenants):
 
     suggestions_list1 = [build_search_unit(house) for house in houses]
     suggestions_list2 = [build_search_tenant(tenant) for tenant in tenants]
+    suggestions_list3 = [build_search_tenant(ptenant) for ptenant in ptenants]
 
 
 
@@ -7211,7 +7223,7 @@ def generate_suggestions_alt(props,houses,tenants):
     # return listToStr
     
 
-    return suggestions_list1 + suggestions_list2
+    return suggestions_list1 + suggestions_list2 + suggestions_list3
     
 
 def access(current_user):

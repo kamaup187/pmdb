@@ -653,13 +653,15 @@ class PropSearchData(Resource):
 
         raw_tenancy = [tenantauto(prop.id) for prop in props]
         raw_units = [prop.houses for prop in props]
+        raw_residents = [prop.ptenants for prop in props]
    
         ############################################################
         tenancy = flatten(raw_tenancy)
+        residents = flatten(raw_residents)
         houses = flatten(raw_units)
 
 
-        suggestions = generate_suggestions_alt(props,houses,tenancy)  
+        suggestions = generate_suggestions_alt(props,houses,tenancy,residents)  
         return Response(render_template(
             'ajax_load_searchdata.html',
             suggestions=suggestions

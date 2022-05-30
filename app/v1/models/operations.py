@@ -1,3 +1,4 @@
+from pydoc import ttypager
 import string
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
@@ -2544,8 +2545,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def combine_house_tenant(self):
         if self.tenant:
             tname = self.tenant.name.title()
+            ttype = "T"
         else:
             tname = self.house.owner.name.title()
+            ttype = "R"
 
         try:
             fname = tname.split()[0]
@@ -2558,8 +2561,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def combine_house_tenant_alt(self):
         if self.tenant:
             tname = self.tenant.name.title()
+            ttype = "T"
         else:
             tname = self.house.owner.name.title()
+            ttype = "R"
 
         try:
             fname = tname.split()[0]
@@ -2567,7 +2572,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             fname = "None"
 
         house =  self.house.name
-        return f'{house} <span class="text-gray-600">({fname})</span>' 
+        return f'{house}({ttype}) <span class="text-gray-600">{fname}</span>' 
 
     def combine_garbsec(self):
         garb = self.garbage if self.garbage else 0.0 #TODO - remove condition

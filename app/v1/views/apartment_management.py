@@ -5875,8 +5875,8 @@ class EditReading(Resource):
         reading_obj = MeterReadingOp.fetch_specific_reading(identifier)
 
         if target == "delete":
-            if reading_obj.charged:
-                return render_template("ajaxghosthouse.html",alert="Reading billed, edit instead")
+            # if reading_obj.charged:
+            #     return render_template("ajaxghosthouse.html",alert="Reading billed, edit instead")
 
             MeterReadingOp.delete(reading_obj)
             return render_template("ajaxproceed.html",alert="Deleted successfully")

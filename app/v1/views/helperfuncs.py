@@ -5009,9 +5009,9 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
         if isinstance(group,float):
             if ttype == "ptenant":
-                housecode = "SERVICE" + str(int(group))
+                housecode = "S-" + str(int(group))
             else:
-                housecode = "GROUP" + str(int(group))
+                housecode = "G-" + str(int(group))
         else:
             housecode = group
 

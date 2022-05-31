@@ -3677,6 +3677,27 @@ class MpesaPaymentOp(MpesaPayment,Base):
     def update_status(self,status):
         self.claimed = status
         db.session.commit()
+
+class BankDataOp(BankData,Base):
+    """class for c2b model operations"""
+    def __init__(self,username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type):
+        self.username = username
+        self.password = password
+        self.billNumber = billNumber
+        self.billAmount = billAmount
+        self.customerRefNumber = customerRefNumber
+        self.bankReference = bankReference
+        self.transParticular = transParticular
+        self.paymentMode = paymentMode
+        self.transDate = transDate
+        self.phoneNumber = phoneNumber
+        self.debitAccount = debitAccount
+        self.debitCustName = debitCustName
+        self.dataType = data_type
+
+    def fetch_record_by_ref(ref):
+        return BankDataOp.query.filter_by(bankReference=ref).first()
+
 class CtoBop(CtoB,Base):
     """class for c2b model operations"""
     def __init__(self,trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname):

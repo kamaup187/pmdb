@@ -1256,6 +1256,31 @@ class CtoB(db.Model):
     status = db.Column(db.String,default="unclaimed")
     # tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
 
+
+class BankData(db.Model):
+    """class"""
+
+    __tablename__ = 'banksdata'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    username = db.Column(db.VARCHAR)
+    password = db.Column(db.VARCHAR)
+    billNumber = db.Column(db.VARCHAR)
+    billAmount = db.Column(db.Float)
+    customerRefNumber = db.Column(db.VARCHAR)
+    bankReference = db.Column(db.VARCHAR)
+    transParticular = db.Column(db.VARCHAR)
+    paymentMode = db.Column(db.VARCHAR)
+    post_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    transDate = db.Column(db.VARCHAR)
+    phoneNumber = db.Column(db.VARCHAR)
+    debitAccount = db.Column(db.VARCHAR)
+    debitCustName = db.Column(db.VARCHAR)
+    dataType = db.Column(db.VARCHAR)
+
+
+    status = db.Column(db.String,default="unclaimed")
+
 class MpesaRequest(db.Model):
     """db model class"""
 

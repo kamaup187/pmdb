@@ -2796,13 +2796,13 @@ class ExpenseManagement(Resource):
 
         else:
             for item in all_expenses:
-                if item.status == "pending":     
+                if item.status == "completed":     
                     obj = InternalExpenseOp.view(item)
-                    pending_expenses.append(obj)
+                    completed_expenses.append(obj)
             
-            reqids = get_obj_ids(pending_expenses)
+            reqids = get_obj_ids(completed_expenses)
 
-            return render_template("ajax_expenses.html",items=pending_expenses,approved_exps=raw_approved_expenses,expids=reqids,prop=prop_obj,propname=fname_extracter(str(prop_obj)))
+            return render_template("ajax_expenses.html",items=completed_expenses,approved_exps=raw_approved_expenses,expids=reqids,prop=prop_obj,propname=fname_extracter(str(prop_obj)))
 
     def post(self):
         # prop_id = request.form.get("propid")
@@ -2978,17 +2978,19 @@ class Expenses(Resource):
             expense_obj = InternalExpenseOp(name,expense_period,qty,house,deposit,cost,labour,amount,desc,expense_type,prop_obj.id,current_user.id)
             expense_obj.save()
 
+            InternalExpenseOp.update_status(expense_obj,"completed")
+
             # all_expenses = filter_in_recent_data(prop_obj.expenses)
             all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
 
             for i in all_expenses:
-                if i.status == "pending":
+                if i.status == "completed":
                     item = InternalExpenseOp.view(i)
-                    pending_expenses.append(item)
+                    completed_expenses.append(item)
 
-            reqids = get_obj_ids(pending_expenses)
+            reqids = get_obj_ids(completed_expenses)
 
-            return render_template('ajax_search_expense.html',bills=pending_expenses,expids=reqids,datahighlight="text-danger",data_group="Pending expenses")
+            return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,datahighlight="text-success",data_group="Completed requests")
 
         elif run == "expenseedit":
             editid = request.form.get('editid')

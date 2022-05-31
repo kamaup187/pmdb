@@ -1,3 +1,4 @@
+from asyncio import exceptions
 from dateutil.parser import parse
 
 from flask_login import login_required, current_user
@@ -358,7 +359,7 @@ class LandlordProfitAndLossSummary(Resource):
         expenses = prop_obj.expenses
         current_month_expenses = []
         for exp in expenses:
-            if exp.date.month == target_period.month and exp.status == "completed":
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type != "remittance":
                 current_month_expenses.append(exp)
 
         tokenamount = 0.0
@@ -2005,10 +2006,16 @@ class RentStatement(Resource):
 
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
+        remittances = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
 
         for exp in expenses:
-            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
                 expenses_amount += exp.amount
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
 
             
         netrent = totalpaid
@@ -2037,7 +2044,7 @@ class RentStatement(Resource):
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
             
-        raw_netpay = netrent - commission - expenses_amount - loan
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)
@@ -2063,6 +2070,7 @@ class RentStatement(Resource):
             paidtotal=paidtotal,
             bcftotal=bcftotal,
             expenses = f"{expenses_amount:,.1f}",
+            remits = f"{remittances:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             commission=formatted_commision,

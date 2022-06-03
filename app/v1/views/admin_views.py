@@ -1148,7 +1148,7 @@ class EditProp(Resource):
             raw_propid = request.form.get("editid")
             propid = get_identifier(raw_propid)
 
-        if current_user.username.startswith("qc") or current_user.name == "Test Agent":
+        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality"):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             ApartmentOp.delete(prop)
             return "Property removed successfully"

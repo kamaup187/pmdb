@@ -2257,10 +2257,16 @@ class ReceivePayment(Resource):
                     house_obj = check_house_occupied(tenant_obj)[1]
                     tenant_id = tenant_obj.id
 
+                    print(">>>>> STARTING PAYMENT & TENANT TYPE")
+
+
                 elif cb.bill_ref_num.startswith("WN"):
                     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                     house_obj = tenant_obj.house
                     ptenant_id = tenant_obj.id
+                    
+                    print(">>>>> STARTING PAYMENT & OWNER TYPE")
+
 
                 else:
                     skip = True
@@ -2269,7 +2275,7 @@ class ReceivePayment(Resource):
 
 
         if skip:
-            
+            print(">>>>> STARTING PAYMENT & SKIPPING")
             if house_name:
                 tenant_obj = None
                 co = prop.company
@@ -2324,394 +2330,394 @@ class ReceivePayment(Resource):
                 print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
                 abort(404)
 
-            tenant_name = tenant_obj.name
+        tenant_name = tenant_obj.name
 
-            house_id = house_obj.id
-            created_by = current_user.id
-            chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
+        house_id = house_obj.id
+        created_by = current_user.id
+        chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-            if not narration:
-                narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
+        if not narration:
+            narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
 
+        # monthly_charges = house_obj.monthlybills
+
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
+        else:
+            specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
+
+        # if tenant_obj.tenant_type == "owner":
+        #     monthly_charges = tenant_obj.monthly_charges
+        # else:
+        #     monthly_charges = house_obj.monthlybills
+
+        # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
+
+        # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)
+
+        bal = specific_charge_obj.balance
+
+        if tenant_obj.multiple_houses:
+            pass
+        else:
             # monthly_charges = house_obj.monthlybills
+            # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month)
 
-            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
-            else:
-                specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
-
-            # if tenant_obj.tenant_type == "owner":
-            #     monthly_charges = tenant_obj.monthly_charges
-            # else:
-            #     monthly_charges = house_obj.monthlybills
-
-            # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
-
-            # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)
-
-            bal = specific_charge_obj.balance
-
-            if tenant_obj.multiple_houses:
+            if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES":
+                if specific_charge_obj.penalty:
+                    standard_pen = house_obj.housecode.rentrate*0.1
+                    accepted_balance = bal - 1000 - standard_pen
+                    if valid_amount > accepted_balance:
+                        if propid == 22:
+                            dday = 5
+                        else:
+                            dday = 11
+                        if pay_date.day < dday:
+                            print("Fine status for", house_obj, "before payment >>>>> ",specific_charge_obj.fine_status)
+                            bal -= specific_charge_obj.penalty
+                            TenantOp.update_balance(tenant_obj,bal)
+                            MonthlyChargeOp.update_balance(specific_charge_obj,bal)
+                            update_total = specific_charge_obj.total_bill - specific_charge_obj.penalty
+                            MonthlyChargeOp.update_monthly_charge(specific_charge_obj,"null","null","null","null","null","null","null","null",0.0,"null",update_total,None)
+                            MonthlyChargeOp.update_fine_status(specific_charge_obj,"nil")
+                            print("Fine status for", house_obj, "after payment >>>>> ",specific_charge_obj.fine_status)
+                        else:
+                            print("Paid late>>>>>>>>>>>")
+                    else:
+                        print("Paid little>>>>>>>>>>>")
+                else:
+                    print("No fines found>>>>>>>>>>>")
+            elif specific_charge_obj and not current_period_payment:
                 pass
             else:
-                # monthly_charges = house_obj.monthlybills
-                # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month)
+                print("Not billed yet for ",get_str_month(period.month), ">>>>>>>>>>>")
+                
+        if paymode == "mpesa":
+            description = "Manual Mpesa payment"
+        elif paymode == "bank":
+            description = bank if bank else None
+        else:
+            description = "Cash"
+            bill_ref = "N/A"
+        #######################################################################################
+        # pay_period = paid to which bills
+        # pay_date = alilipa lini?
+        
 
-                if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES":
-                    if specific_charge_obj.penalty:
-                        standard_pen = house_obj.housecode.rentrate*0.1
-                        accepted_balance = bal - 1000 - standard_pen
-                        if valid_amount > accepted_balance:
-                            if propid == 22:
-                                dday = 5
-                            else:
-                                dday = 11
-                            if pay_date.day < dday:
-                                print("Fine status for", house_obj, "before payment >>>>> ",specific_charge_obj.fine_status)
-                                bal -= specific_charge_obj.penalty
-                                TenantOp.update_balance(tenant_obj,bal)
-                                MonthlyChargeOp.update_balance(specific_charge_obj,bal)
-                                update_total = specific_charge_obj.total_bill - specific_charge_obj.penalty
-                                MonthlyChargeOp.update_monthly_charge(specific_charge_obj,"null","null","null","null","null","null","null","null",0.0,"null",update_total,None)
-                                MonthlyChargeOp.update_fine_status(specific_charge_obj,"nil")
-                                print("Fine status for", house_obj, "after payment >>>>> ",specific_charge_obj.fine_status)
-                            else:
-                                print("Paid late>>>>>>>>>>>")
-                        else:
-                            print("Paid little>>>>>>>>>>>")
-                    else:
-                        print("No fines found>>>>>>>>>>>")
-                elif specific_charge_obj and not current_period_payment:
-                    pass
-                else:
-                    print("Not billed yet for ",get_str_month(period.month), ">>>>>>>>>>>")
-                    
-            if paymode == "mpesa":
-                description = "Manual Mpesa payment"
-            elif paymode == "bank":
-                description = bank if bank else None
-            else:
-                description = "Cash"
-                bill_ref = "N/A"
-            #######################################################################################
-            # pay_period = paid to which bills
-            # pay_date = alilipa lini?
-            
+        payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
+        payment_obj.save()
 
-            payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
-            payment_obj.save()
+        if co.receipt_num:
+            num = co.receipt_num
+            num += 1
 
-            if co.receipt_num:
-                num = co.receipt_num
-                num += 1
+            CompanyOp.increment_receipt_num(co,num)
+            PaymentOp.update_receipt_num(payment_obj,num)
+        #################################################################################################
 
-                CompanyOp.increment_receipt_num(co,num)
-                PaymentOp.update_receipt_num(payment_obj,num)
-            #################################################################################################
-
-            rand_id = random_generator()
+        rand_id = random_generator()
+        if PaymentOp.fetch_payment_by_rand_id(rand_id):
+            rand_id = random_generator(size=11)
+            awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
             if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                rand_id = random_generator(size=11)
-                awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
+                rand_id = random_generator(size=12)
+                awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
                 if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                    rand_id = random_generator(size=12)
-                    awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
+                    rand_id = random_generator(size=13)
+                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
                     if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                        rand_id = random_generator(size=13)
-                        awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
-                        if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                            awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
-                            return "Payment could not be processed at this time! Try again later"
+                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
+                        return "Payment could not be processed at this time! Try again later"
 
-            tenant_bal = tenant_obj.balance
-            tenant_bal -= valid_amount
-            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
+        tenant_bal = tenant_obj.balance
+        tenant_bal -= valid_amount
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
+        else:
+            TenantOp.update_balance(tenant_obj,tenant_bal)
+
+        running_balance = bal
+        running_balance-= valid_amount
+
+        PaymentOp.update_balance(payment_obj,running_balance)
+        PaymentOp.update_rand_id(payment_obj,rand_id)
+
+        string_house = ""
+
+        for h in target_houses:
+
+
+            if specific_charge_obj:
+
+                db.session.expire(specific_charge_obj)
+                bala = specific_charge_obj.balance
+                bala-=valid_amount
+                MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+
+                paid_amount = specific_charge_obj.paid_amount
+                cumulative_pay = paid_amount + valid_amount
+                MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+                MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
+
+                rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
+                rent_paid += overpayment
+                water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
+                penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
+                electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
+                garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
+                security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
+                service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
+                deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+                agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
+
+                MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+
+                try:
+                    rentbal = specific_charge_obj.rent_due - rentpaid
+                    rentbal -= overpayment
+                    waterbal = specific_charge_obj.water_due - waterpaid
+                    electricitybal = specific_charge_obj.electricity_due - electricitypaid
+                    servicebal = specific_charge_obj.maintenance_due - servicepaid
+                    penaltybal = specific_charge_obj.penalty_due - penaltypaid
+                    securitybal = specific_charge_obj.security_due - securitypaid
+                    garbagebal = specific_charge_obj.garbage_due - garbagepaid
+                    depositbal = specific_charge_obj.deposit_due - depositpaid
+                    agreementbal = specific_charge_obj.agreement_due - agreementpaid
+
+                    MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                except:
+                    print("PAID TO LEGACY BILL")
+
+            # elif not specific_charge_obj and not current_period_payment:
+            #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
+
+            #     db.session.expire(specific_charge_obj)
+            #     bala = specific_charge_obj.balance
+            #     bala-=valid_amount
+            #     MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+
+            #     paid_amount = specific_charge_obj.paid_amount
+            #     cumulative_pay = paid_amount + valid_amount
+            #     MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+            #     MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
+
+            #     if subsequent_specific_charge_obj:
+            #         update_total = subsequent_specific_charge_obj.total_bill - valid_amount
+            #         update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
+            #         update_balance = subsequent_specific_charge_obj.balance - valid_amount
+
+            #         MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
+            #         MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
+            #         MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
+
+
+            stringname = h.name + " "
+
+            string_house += stringname
+
+        #################################################################################
+
+        str_houses = string_house.rstrip(" ")
+        house = list(str_houses.split(" "))
+
+        # house = house_obj.name
+
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+        
+        paid = f'KES {payment_obj.amount:,.2f}'
+
+        if bal < 1:
+            bill = 0.0
+        else:
+            bill = (f"{bal:,.2f}")
+
+        payment_id = payment_obj.id
+
+        if email_bool and current_user.company_user_group.name != "User":
+            if tenant_obj.email:
+                try:
+                    job9 = q.enqueue_call(
+                        func=auto_send_mail_receipt, args=(payment_id,created_by,), result_ttl=5000
+                    )
+                except:
+                    print("Redis server is off")
             else:
-                TenantOp.update_balance(tenant_obj,tenant_bal)
+                print("Email address not found for tenant ",tenant_obj.name,"-",prop.name)
+        else:
+            print("Email has been disabled for this payment")
 
-            running_balance = bal
-            running_balance-= valid_amount
+        # job11 = q.enqueue_call(
+        #     func=auto_send_sms_receipt, args=(payment_id,created_by,), result_ttl=5000
+        # )
 
-            PaymentOp.update_balance(payment_obj,running_balance)
-            PaymentOp.update_rand_id(payment_obj,rand_id)
+        if payment_obj.balance > -1:
+            baltitle = "Balance"
+            outline = "text-danger"
+            bal = f"KES {payment_obj.balance:,.0f}"
+        else:
+            baltitle = "Advance"
+            outline = "text-success"
+            bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-            string_house = ""
+        if os.getenv("TARGET") == "lasshouse":
+            receiptlink = f"https://kodimannapp.com/r/{rand_id}"
+        else:
+            receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
-            for h in target_houses:
+        receipt = f"Receipt: {receiptlink}"
 
+        if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
 
-                if specific_charge_obj:
-
-                    db.session.expire(specific_charge_obj)
-                    bala = specific_charge_obj.balance
-                    bala-=valid_amount
-                    MonthlyChargeOp.update_balance(specific_charge_obj,bala)
-
-                    paid_amount = specific_charge_obj.paid_amount
-                    cumulative_pay = paid_amount + valid_amount
-                    MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                    MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
-
-                    rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
-                    rent_paid += overpayment
-                    water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
-                    penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
-                    electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
-                    garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
-                    security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
-                    service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
-                    deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
-                    agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
-
-                    MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                    PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
-
-                    try:
-                        rentbal = specific_charge_obj.rent_due - rentpaid
-                        rentbal -= overpayment
-                        waterbal = specific_charge_obj.water_due - waterpaid
-                        electricitybal = specific_charge_obj.electricity_due - electricitypaid
-                        servicebal = specific_charge_obj.maintenance_due - servicepaid
-                        penaltybal = specific_charge_obj.penalty_due - penaltypaid
-                        securitybal = specific_charge_obj.security_due - securitypaid
-                        garbagebal = specific_charge_obj.garbage_due - garbagepaid
-                        depositbal = specific_charge_obj.deposit_due - depositpaid
-                        agreementbal = specific_charge_obj.agreement_due - agreementpaid
-
-                        MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                    except:
-                        print("PAID TO LEGACY BILL")
-
-                # elif not specific_charge_obj and not current_period_payment:
-                #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
-
-                #     db.session.expire(specific_charge_obj)
-                #     bala = specific_charge_obj.balance
-                #     bala-=valid_amount
-                #     MonthlyChargeOp.update_balance(specific_charge_obj,bala)
-
-                #     paid_amount = specific_charge_obj.paid_amount
-                #     cumulative_pay = paid_amount + valid_amount
-                #     MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                #     MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
-
-                #     if subsequent_specific_charge_obj:
-                #         update_total = subsequent_specific_charge_obj.total_bill - valid_amount
-                #         update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
-                #         update_balance = subsequent_specific_charge_obj.balance - valid_amount
-
-                #         MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
-                #         MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
-                #         MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
-
-
-                stringname = h.name + " "
-
-                string_house += stringname
-
-            #################################################################################
-
-            str_houses = string_house.rstrip(" ")
-            house = list(str_houses.split(" "))
-
-            # house = house_obj.name
-
-            if payment_obj.receipt_num:
-                receiptno = payment_obj.receipt_num
-            else:
-                receiptno = payment_obj.id
-            
-            paid = f'KES {payment_obj.amount:,.2f}'
-
-            if bal < 1:
-                bill = 0.0
-            else:
-                bill = (f"{bal:,.2f}")
-
-            payment_id = payment_obj.id
-
-            if email_bool and current_user.company_user_group.name != "User":
-                if tenant_obj.email:
-                    try:
-                        job9 = q.enqueue_call(
-                            func=auto_send_mail_receipt, args=(payment_id,created_by,), result_ttl=5000
-                        )
-                    except:
-                        print("Redis server is off")
-                else:
-                    print("Email address not found for tenant ",tenant_obj.name,"-",prop.name)
-            else:
-                print("Email has been disabled for this payment")
-
-            # job11 = q.enqueue_call(
-            #     func=auto_send_sms_receipt, args=(payment_id,created_by,), result_ttl=5000
-            # )
-
-            if payment_obj.balance > -1:
-                baltitle = "Balance"
-                outline = "text-danger"
-                bal = f"KES {payment_obj.balance:,.0f}"
-            else:
-                baltitle = "Advance"
-                outline = "text-success"
-                bal = f"KES {payment_obj.balance*-1:,.0f}"
-
-            if os.getenv("TARGET") == "lasshouse":
-                receiptlink = f"https://kodimannapp.com/r/{rand_id}"
-            else:
-                receiptlink = f"https://kiotapay.com/r/{rand_id}"
-
-            receipt = f"Receipt: {receiptlink}"
-
-            if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
-
-                job101 = q.enqueue_call(
-                    func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
-                )
-
-
-                # if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
-                #     reference = f'#{payment_obj.ref_number}'
-                # else:
-                #     reference = f'#{payment_obj.id}'
-
-                # co = prop.company
-                # str_co = co.name
-                # raw_rem_sms =co.remainingsms
-                # if tenant_obj.sms:
-                #     if raw_rem_sms > 0:
-                #         #Send the SMS
-                #         tele = tenant_obj.phone
-                #         name = tenant_obj.name
-                #         fname = fname_extracter(name)
-                #         if not fname:
-                #             fname = name
-                #         phonenum = sms_phone_number_formatter(tele)
-                #         try:
-                #             recipient = [phonenum]
-                #             message = f"Rental payment Ref {reference}, sum of {paid} confirmed. \n{baltitle} {bal} \n\n{receipt} \n\n~{str_co}."
-                #             sender = "KIOTAPAY"
-                #             #Once this is done, that's it! We'll handle the rest
-                #             response = sms.send(message, recipient, sender)
-                #             print(response)
-                #             resp = response["SMSMessageData"]["Recipients"][0]
-
-                #             code = resp["statusCode"]
-                #             smsid = resp["messageId"]
-                #             PaymentOp.update_smsid(payment_obj,smsid)
-
-                #             if code == 101: # SMS WAS SENT
-                #                 PaymentOp.update_sms_status(payment_obj,"sent")
-                #                 raw_cost = resp["cost"]
-                #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                #                 CompanyOp.set_rem_quota(co,rem_sms)
-                #                 print("EVERYTHING IS SMOOTH")
-                                
-                #             elif code == 403:
-                #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                #                 PaymentOp.update_sms_status(payment_obj,"fail")
-                                
-                #             elif code == 405:
-                #                 response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
-                #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                                
-                #             elif code == 406:
-                #                 PaymentOp.update_sms_status(payment_obj,"blocked")
-                #                 raw_cost = resp["cost"]
-                #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                #                 CompanyOp.set_rem_quota(co,rem_sms)
-                #                 print("SMS BLOCKED BY ",tenant_obj,house_name,prop)
-                #             else:
-                #                 print("ALAAAAAAAA")
-
-                #         except Exception as e:
-                #             print(f"Houston, we have a problem {e}")
-                #             PaymentOp.update_sms_status(payment_obj,"fail")
-                #     else:
-                #         txt = f"{co} has depleted sms"
-                #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                # else:
-                #     PaymentOp.update_sms_status(payment_obj,"off")
-                #     print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,house_name,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
-
-            else:
-                PaymentOp.update_sms_status(payment_obj,"off")
-                print("SMS has been disabled for this payment")
-            ########################################################################################
-            p = inflect.engine()
-            int_amount = int(valid_amount)
-            str_amount = p.number_to_words(int_amount)
-            stramount = str_amount.capitalize()
-            str_month = get_str_month(period.month)
-            fname = fname_extracter(current_user.name)
-
-            paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
-
-            address = None
-
-            if current_user.company.name == "LaCasa":
-                if prop.id == 419:
-                    address = {
-                        "address": "Nairobi",
-                        "tel": "0735267087",
-                        "email": "goldlabelservices@gmail.com"
-                    }
-                elif prop.id == 420:
-                    address = {
-                        "address":"Ongata Rongai",
-                        "tel":"0735267087",
-                        "email":"bizlineinvestment@gmail.com"
-                    }
-                elif prop.id == 421:
-                    address = {
-                        "address":"Mwiki, Kasarani",
-                        "tel":"0735267087",
-                        "email":"bizlineinvestment@gmail.com"
-                    }
-                elif prop.name == "Baraka House":
-                    address = {
-                        "address":"Mwiki, Kasarani",
-                        "tel":"0735267087",
-                        "email":"bizlineinvestment@gmail.com"
-                    }
-
-                else:
-                    address = {
-                        "address":"Mwiki, Kasarani",
-                        "tel":"0735267087",
-                        "email":"bizlineinvestment@gmail.com"
-                    }
-
-
-            return render_template(
-                'ajax_receiptpay.html',
-                voided = "dispnone",
-                tenant = tenant_name,
-                house= house,
-                amount=paid,
-                str_amount=stramount,
-                str_month=str_month,
-                paydate=paydate.strftime("%d/%b/%y"),
-                paytime=paydate.strftime("%X"),
-                bill=bill,
-                baltitle=baltitle,
-                outline=outline,
-                balance=bal,
-                chargetype=narration,
-                receiptno=receiptno,
-                refnum=bill_ref,
-                paymode=paymode,
-                logopath=logo(current_user.company)[0],
-                company=current_user.company,
-                address=address,
-                user=current_user.company if current_user.company == "MojaMbili Homes" else fname_extracter(current_user.name),
-                prop=prop,
-                randid=rand_id
+            job101 = q.enqueue_call(
+                func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
             )
+
+
+            # if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
+            #     reference = f'#{payment_obj.ref_number}'
+            # else:
+            #     reference = f'#{payment_obj.id}'
+
+            # co = prop.company
+            # str_co = co.name
+            # raw_rem_sms =co.remainingsms
+            # if tenant_obj.sms:
+            #     if raw_rem_sms > 0:
+            #         #Send the SMS
+            #         tele = tenant_obj.phone
+            #         name = tenant_obj.name
+            #         fname = fname_extracter(name)
+            #         if not fname:
+            #             fname = name
+            #         phonenum = sms_phone_number_formatter(tele)
+            #         try:
+            #             recipient = [phonenum]
+            #             message = f"Rental payment Ref {reference}, sum of {paid} confirmed. \n{baltitle} {bal} \n\n{receipt} \n\n~{str_co}."
+            #             sender = "KIOTAPAY"
+            #             #Once this is done, that's it! We'll handle the rest
+            #             response = sms.send(message, recipient, sender)
+            #             print(response)
+            #             resp = response["SMSMessageData"]["Recipients"][0]
+
+            #             code = resp["statusCode"]
+            #             smsid = resp["messageId"]
+            #             PaymentOp.update_smsid(payment_obj,smsid)
+
+            #             if code == 101: # SMS WAS SENT
+            #                 PaymentOp.update_sms_status(payment_obj,"sent")
+            #                 raw_cost = resp["cost"]
+            #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+            #                 CompanyOp.set_rem_quota(co,rem_sms)
+            #                 print("EVERYTHING IS SMOOTH")
+                            
+            #             elif code == 403:
+            #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            #                 PaymentOp.update_sms_status(payment_obj,"fail")
+                            
+            #             elif code == 405:
+            #                 response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+            #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            
+            #             elif code == 406:
+            #                 PaymentOp.update_sms_status(payment_obj,"blocked")
+            #                 raw_cost = resp["cost"]
+            #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+            #                 CompanyOp.set_rem_quota(co,rem_sms)
+            #                 print("SMS BLOCKED BY ",tenant_obj,house_name,prop)
+            #             else:
+            #                 print("ALAAAAAAAA")
+
+            #         except Exception as e:
+            #             print(f"Houston, we have a problem {e}")
+            #             PaymentOp.update_sms_status(payment_obj,"fail")
+            #     else:
+            #         txt = f"{co} has depleted sms"
+            #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+            #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            # else:
+            #     PaymentOp.update_sms_status(payment_obj,"off")
+            #     print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,house_name,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+
+        else:
+            PaymentOp.update_sms_status(payment_obj,"off")
+            print("SMS has been disabled for this payment")
+        ########################################################################################
+        p = inflect.engine()
+        int_amount = int(valid_amount)
+        str_amount = p.number_to_words(int_amount)
+        stramount = str_amount.capitalize()
+        str_month = get_str_month(period.month)
+        fname = fname_extracter(current_user.name)
+
+        paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+
+        address = None
+
+        if current_user.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+
+        return render_template(
+            'ajax_receiptpay.html',
+            voided = "dispnone",
+            tenant = tenant_name,
+            house= house,
+            amount=paid,
+            str_amount=stramount,
+            str_month=str_month,
+            paydate=paydate.strftime("%d/%b/%y"),
+            paytime=paydate.strftime("%X"),
+            bill=bill,
+            baltitle=baltitle,
+            outline=outline,
+            balance=bal,
+            chargetype=narration,
+            receiptno=receiptno,
+            refnum=bill_ref,
+            paymode=paymode,
+            logopath=logo(current_user.company)[0],
+            company=current_user.company,
+            address=address,
+            user=current_user.company if current_user.company == "MojaMbili Homes" else fname_extracter(current_user.name),
+            prop=prop,
+            randid=rand_id
+        )
 
 
 class UpdateBalance(Resource):

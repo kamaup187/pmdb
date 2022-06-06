@@ -2163,9 +2163,6 @@ class ReceivePayment(Resource):
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
         cbid = request.form.get("cbid")
-        if cbid:
-            cb = CtoBop.fetch_record_by_id(cbid)
-            CtoBop.update_status(cb,"claimed")
 
         water = "Water" if waterpaid else ""
         rent = "Rent" if rentpaid else ""
@@ -2407,6 +2404,10 @@ class ReceivePayment(Resource):
 
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
+
+        if cbid:
+            cb = CtoBop.fetch_record_by_id(cbid)
+            CtoBop.update_status(cb,"claimed")
 
         if co.receipt_num:
             num = co.receipt_num

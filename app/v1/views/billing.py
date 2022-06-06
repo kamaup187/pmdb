@@ -2258,6 +2258,7 @@ class ReceivePayment(Resource):
                 if cb.bill_ref_num.startswith("TNT"):
                     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                     house_obj = check_house_occupied(tenant_obj)[1]
+                    target_houses.append(house_obj)
                     tenant_id = tenant_obj.id
 
                     print(">>>>> STARTING PAYMENT & TENANT TYPE")
@@ -2266,6 +2267,7 @@ class ReceivePayment(Resource):
                 elif cb.bill_ref_num.startswith("WN"):
                     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                     house_obj = tenant_obj.house
+                    target_houses.append(house_obj)
                     ptenant_id = tenant_obj.id
 
                     print(">>>>> STARTING PAYMENT & OWNER TYPE")

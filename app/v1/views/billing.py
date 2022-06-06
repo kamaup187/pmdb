@@ -2248,6 +2248,12 @@ class ReceivePayment(Resource):
         tenant_id = None
         ptenant_id = None
 
+        period = pay_period_date
+
+        tenant_obj = None
+        co = prop.company
+        target_houses = []   
+
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
 
@@ -2264,7 +2270,7 @@ class ReceivePayment(Resource):
                     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                     house_obj = tenant_obj.house
                     ptenant_id = tenant_obj.id
-                    
+
                     print(">>>>> STARTING PAYMENT & OWNER TYPE")
 
 
@@ -2274,17 +2280,11 @@ class ReceivePayment(Resource):
             skip = True
 
 
+
         if skip:
             print(">>>>> STARTING PAYMENT & SKIPPING")
             if house_name:
-                tenant_obj = None
-                co = prop.company
-
-                period = pay_period_date
-                
-                target_houses = []       
-
-
+  
                 if house_name2:
 
                     if house_name2 == "none selected":

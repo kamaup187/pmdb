@@ -90,6 +90,9 @@
                 success: function (response) {
                   $('#confirm_details').html(response);
 
+                  $("#fieldset2").removeClass("dispnone")
+
+
                   $.ajax({
                     url: "{{ url_for('api.receivepayment') }}",
                     type: "get",

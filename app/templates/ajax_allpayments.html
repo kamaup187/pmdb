@@ -6,6 +6,8 @@
       <span id="prop_identifier" class="dispnone"></span>
       <span id="targeturl" class="dispnone"></span>
       <span id="c2bitem" class="dispnone"></span>
+      <span id="c2bitem_id" class="dispnone"></span>
+
 
     
       <div class="card mb-2 mt-1">
@@ -205,7 +207,7 @@
                           </select>
                         </div>
 
-                        <div class="form-group input-icons mt-0">
+                        <div id="house_selector" class="form-group input-icons mt-0">
                           <select class="select-css" id ="select_house" >
                             <option disabled selected value> -- loading -- </option>
                             {% for o in houselist %}
@@ -214,12 +216,16 @@
                           </select>
                         </div>
 
-                        <div id="tenantbed" class="center-btn smallify mb-2 text-info"></div>
+                        <div id="confirm_details" class="text-black ms-3 ml-3 form-group mb-0 dispnone">
+                          loading...
+                        </div>
 
-                        <div class="ms-3 ml-3 form-group x-smallify mb-0">
+                        <div id="tenantbed" class="center-btn mb-2 text-info"></div>
+
+                        <div class="ms-3 ml-3 form-group mb-0">
 
 
-                          <div class="mb-1 smallify">
+                          <div class="mb-1">
                             <input type="checkbox" name="" id="diffperiod" checked>
                             <label class="mr-3 me-3 text-danger" for="diffperiod">{{current_month}} payment</label>
                             <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose month..." readonly />
@@ -242,7 +248,7 @@
                           </span> -->
                         </div>
 
-                        <div class="ms-3 ml-3 form-group x-smallify">
+                        <div class="ms-3 ml-3 form-group">
                           <span class="text-danger">
                             Notify tenant by:
                           </span>
@@ -1014,6 +1020,9 @@
   
   </script>
 
+
+
+
 <script>
   // This script displays alerts and tenant name before clearance
   $("#select_house").on('change',function(){
@@ -1034,6 +1043,7 @@
             propid: $("#prop_identifier_main").text(),
             propname:$("#select_prop").val(),
             house: $("#select_house").val(),
+            cbid:$("#c2bitem_id").text(),
             payperiod:$("#billdatepicker").val(),
             target:"amount due"
           },
@@ -1049,12 +1059,13 @@
               propid: $("#prop_identifier_main").text(),
               propname: $("#select_prop").val(),
               house: $("#select_house").val(),
-              payperiod: $("#billdatepicker").val(),
+              cbid:$("#c2bitem_id").text(),
+              payperiod:$("#billdatepicker").val(),
+              paidamount: $("#paidamount").val(),
               target: "breakdown"
             },
             success: function (response) {
               $("#billbreakdown").html(response);
-
 
               $.ajax({
                 url: "{{ url_for('api.receivepayment') }}",
@@ -1063,53 +1074,42 @@
                   propid: $("#prop_identifier_main").text(),
                   propname: $("#select_prop").val(),
                   house: $("#select_house").val(),
-                  paidamount: $("#paidamount").val(),
-                  target: "breakdown"
+                  house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
+                  payperiod:$("#billdatepicker").val(),
+                  target: "amount due"
                 },
                 success: function (response) {
-                  $("#billbreakdown").html(response);
+                  $("#totaldue").html(response);
 
-                  $.ajax({
-                    url: "{{ url_for('api.receivepayment') }}",
-                    type: "get",
-                    data: {
-                      propid: $("#prop_identifier_main").text(),
-                      propname: $("#select_prop").val(),
-                      house: $("#select_house").val(),
-                      house2: $("#house-holder").text(),
-                      target: "amount due"
-                    },
-                    success: function (response) {
-                      $("#totaldue").html(response);
-
-                      if ($("#ctb_item_amount").text()) {
-                        $("#paidamount").val($("#ctb_item_amount").text())
-                        $('#paidamount').keyup();
-                        $("#bill_ref").val($("#ctb_item_ref").text())
-                      }
+                  if ($("#ctb_item_amount").text()) {
+                    $("#paidamount").val($("#ctb_item_amount").text())
+                    $('#paidamount').keyup();
+                    $("#bill_ref").val($("#ctb_item_ref").text())
+                  }
 
 
-                      if ($("#ctb_item_ref").text()) {
-                        var paymodeRadio = $('input:radio[name=paymode]');
-                        if (paymodeRadio.is(':checked') === false) {
-                          console.log("working yeeee")
-                          paymodeRadio.prop('checked', true);
-                          paymodeRadio.change();
-                        } else {
-                          console.log("not workin ffffff")
-                          // do nothing
-                        }
-                      } else {
-                        console.log("kubaad")
-                      }
-
+                  if ($("#ctb_item_ref").text()) {
+                    var paymodeRadio = $('input:radio[name=paymode]');
+                    if (paymodeRadio.is(':checked') === false) {
+                      console.log("working yeeee")
+                      paymodeRadio.prop('checked', true);
+                      paymodeRadio.change();
+                    } else {
+                      console.log("not workin ffffff")
+                      // do nothing
                     }
-                  });
+                  } else {
+                    console.log("kubaad")
+                  }
 
                 }
               });
+
             }
           });
+            
+          
 
         }else{
           $("#tenantbed").html(response);
@@ -1144,6 +1144,7 @@
           propid: $("#prop_identifier_main").text(),
           propname: $("#select_prop").val(),
           house: $("#select_house").val(),
+          cbid:$("#c2bitem_id").text(),
           payperiod: $("#billdatepicker").val(),
           target: "amount due"
         },
@@ -1159,6 +1160,7 @@
                 propid: $("#prop_identifier_main").text(),
                 propname: $("#select_prop").val(),
                 house: $("#select_house").val(),
+                cbid:$("#c2bitem_id").text(),
                 payperiod: $("#billdatepicker").val(),
                 paidamount: $("#paidamount").val(),
                 target: "breakdown"
@@ -1197,6 +1199,9 @@
     $("#c2bitem").empty();
     $("#thouse").addClass("dispnone");
     $("#thouse").text("loading...")
+
+    $("#house_selector").removeClass("dispnone")
+    $("#confirm_details").addClass("dispnone")
 
   });
 </script>
@@ -1373,7 +1378,7 @@
             data: {
                 propid: $("#prop_identifier_main").text(),
                 propname:$("#select_prop").val(),
-                cbid:$("#c2b_identifier").text(),
+                cbid:$("#c2bitem_id").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
                 chargetype1:"rent",
@@ -1526,6 +1531,7 @@
                 propid: $("#prop_identifier_main").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
+                cbid: $("#cb2item_id").text(),
                 chargetype1:"rent",
                 bank:$("input[name=bank]:checked").val(),
                 sms:notifysms,
@@ -1717,6 +1723,7 @@
                   propid: $("#prop_identifier_main").text(),
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount:$("#paidamount").val(),
                   target:"breakdown"
                 },
@@ -1731,6 +1738,7 @@
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
                       house2: $("#house-holder").text(),
+                      cbid:$("#c2bitem_id").text(),
                       target:"amount due"
                     },
                 success: function(response) {
@@ -1793,6 +1801,7 @@
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
                   house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount: $("#paidamount").val(),
                   target: "breakdown"
                 },
@@ -1806,6 +1815,7 @@
                       propid: $("#prop_identifier_main").text(),
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
+                      cbid:$("#c2bitem_id").text(),
                       target: "amount due"
                     },
                     success: function (response) {
@@ -1869,6 +1879,7 @@
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
                   house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount:$("#paidamount").val(),
                   target:"breakdown"
                 },
@@ -1882,6 +1893,7 @@
                       propid: $("#prop_identifier_main").text(),
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
+                      cbid:$("#c2bitem_id").text(),
                       target:"amount due"
                     },
                 success: function(response) {

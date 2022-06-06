@@ -1900,6 +1900,7 @@ class ReceivePayment(Resource):
         propname = request.args.get("propname")
         house_name = request.args.get("house")
         house_name2 = request.args.get("house2")
+        cbid = request.args.get("cbid")
         payperiod = request.args.get("payperiod")
         target = request.args.get("target")
 
@@ -1956,6 +1957,36 @@ class ReceivePayment(Resource):
 
             return render_template("c2bitem.html",c2bitem=cb_obj)
 
+        if target == "fetch target tenant":
+            cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb.bill_ref_num:
+                if cb.bill_ref_num.startswith("TNT"):
+                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                elif cb.bill_ref_num.startswith("WN"):
+                    tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                else:
+                    tenant = "unidentified"
+            else:
+                tenant = "unidentified"
+
+            if isinstance(tenant, str):
+                house = "unknown"
+            else:
+                if tenant.tenant_type == "resident" or tenant.tenant_type == "owner":
+                    house = tenant.house
+                else:
+                    house = check_house_occupied(tenant)[1]
+
+            if isinstance(tenant,str):
+                tname = tenant
+                thouse = house
+            else:
+                tname = tenant.house
+                thouse = house.name
+
+
+            return render_template("ajax_tenant_confirmation.html",tname=tname,thouse=thouse)
 
         if target == "period":
             period = get_billing_period(prop)
@@ -1979,23 +2010,45 @@ class ReceivePayment(Resource):
             return f'<i class="fas fa-user mr-1"></i>: Tenant <span class="text-black mr-2">{tenant_obj.name}</span> balance: Kes <span class="text-danger">{tenant_obj.balance:,.1f}</span>'
 
         if target == "amount due":
-            house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
-            if not house_obj[0]:
-                abort(403)
+            skip = False
+            if cbid:
+                cb = CtoBop.fetch_record_by_id(cbid)
 
-            if house_obj[1]:
-                tenant_obj = house_obj[1]
+                if cb.bill_ref_num:
+                    if cb.bill_ref_num.startswith("TNT"):
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = check_house_occupied(tenant_obj)[1]
+                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    elif cb.bill_ref_num.startswith("WN"):
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = tenant_obj.house
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+
+                    else:
+                        skip = True
             else:
-                tenant_obj = check_occupancy(house_obj[0])[1]
+                skip = True
 
-            if tenant_obj.multiple_houses:
-                houses = get_active_houses(tenant_obj)[1]
-                return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
+            if skip:
+                print("running skip for amount due")
+                house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                if not house_obj[0]:
+                    abort(403)
 
-            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
-            else:
-                bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
+                if house_obj[1]:
+                    tenant_obj = house_obj[1]
+                else:
+                    tenant_obj = check_occupancy(house_obj[0])[1]
+
+                if tenant_obj.multiple_houses:
+                    houses = get_active_houses(tenant_obj)[1]
+                    return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
+
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                    bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
+                else:
+                    bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
 
             if bill:
                 bill_balance = bill.balance
@@ -2029,32 +2082,54 @@ class ReceivePayment(Resource):
             return render_template('ajax_tenant_balance.html',totaldue=f'{latest_bill_balance:,.1f}')
 
         if target == "breakdown":
-            if house_name2:
-                if house_name2 == "none selected":
-                    return "<span class='text-danger text-xx'>Please specify house</span>"
-                house_obj = get_specific_house_obj(propid,house_name2)
-                tenant_obj = check_occupancy(house_obj)[1] # tenant
-            else:
-                house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
 
-                if house_obj[1]:
-                    tenant_obj = house_obj[1] # owner
+            skip = False
+            if cbid:
+                cb = CtoBop.fetch_record_by_id(cbid)
+
+                if cb.bill_ref_num:
+                    if cb.bill_ref_num.startswith("TNT"):
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = check_house_occupied(tenant_obj)[1]
+                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    elif cb.bill_ref_num.startswith("WN"):
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = tenant_obj.house
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                    else:
+                        skip = True
+            else:
+                skip = True
+
+            if skip:
+                print("running skip for breakdown")
+                if house_name2:
+                    if house_name2 == "none selected":
+                        return "<span class='text-danger text-xx'>Please specify house</span>"
+                    house_obj = get_specific_house_obj(propid,house_name2)
+                    tenant_obj = check_occupancy(house_obj)[1] # tenant
                 else:
-                    tenant_obj = check_occupancy(house_obj[0])[1] # tenant
+                    house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
 
-            house_item = house_obj if house_name2 else house_obj[0]
+                    if house_obj[1]:
+                        tenant_obj = house_obj[1] # owner
+                    else:
+                        tenant_obj = check_occupancy(house_obj[0])[1] # tenant
+
+                house_item = house_obj if house_name2 else house_obj[0]
             
-            if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
-            else:
-                bill = fetch_target_period_invoice(house_item,pay_period_date)
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                    bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                else:
+                    bill = fetch_target_period_invoice(house_item,pay_period_date)
 
 
             if bill:
-                print("BILL DATE",bill.month,"/",bill.year)
-                print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
-                print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
-                print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
+                # print("BILL DATE",bill.month,"/",bill.year)
+                # print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
+                # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
+                # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
                 return render_template('ajax_bill_breakdown.html',bill=bill)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
@@ -2168,56 +2243,84 @@ class ReceivePayment(Resource):
 
         ########################################################################################
 
-        if house_name:
-            tenant_obj = None
-            co = prop.company
+        skip = False
 
-            period = pay_period_date
+        tenant_id = None
+        ptenant_id = None
+
+        if cbid:
+            cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb.bill_ref_num:
+                if cb.bill_ref_num.startswith("TNT"):
+                    tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    house_obj = check_house_occupied(tenant_obj)[1]
+                    tenant_id = tenant_obj.id
+
+                elif cb.bill_ref_num.startswith("WN"):
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    house_obj = tenant_obj.house
+                    ptenant_id = tenant_obj.id
+
+                else:
+                    skip = True
+        else:
+            skip = True
+
+
+        if skip:
             
-            target_houses = []       
+            if house_name:
+                tenant_obj = None
+                co = prop.company
+
+                period = pay_period_date
+                
+                target_houses = []       
 
 
-            if house_name2:
+                if house_name2:
 
-                if house_name2 == "none selected":
-                    return "<span class='text-danger text-xx'>Payment failed, please specify house!</span>"
+                    if house_name2 == "none selected":
+                        return "<span class='text-danger text-xx'>Payment failed, please specify house!</span>"
 
-                str_houses = house_name2.replace(","," ")
-                houselist = list(str_houses.split(" "))
+                    str_houses = house_name2.replace(","," ")
+                    houselist = list(str_houses.split(" "))
 
-                for hse in houselist:
-                    hse_obj = get_specific_house_obj(propid,hse)
-                    target_houses.append(hse_obj)
+                    for hse in houselist:
+                        hse_obj = get_specific_house_obj(propid,hse)
+                        target_houses.append(hse_obj)
 
-            else:
-                hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
-                target_houses.append(hse_obj[0])
+                else:
+                    hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                    target_houses.append(hse_obj[0])
 
-            house_obj = target_houses[0]
+                house_obj = target_houses[0]
 
-            tenant_id = None
-            ptenant_id = None
+                try:
+                    if not house_name2:
+                        owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
+                        if owner:
+                            tenant_obj = owner
+                            ptenant_id = tenant_obj.id
 
-            try:
-                if not house_name2:
-                    owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
-                    if owner:
-                        tenant_obj = owner
-                        ptenant_id = tenant_obj.id
-
+                        else:
+                            tenant_obj = check_occupancy(house_obj)[1]
+                            tenant_id = tenant_obj.id
                     else:
                         tenant_obj = check_occupancy(house_obj)[1]
                         tenant_id = tenant_obj.id
-                else:
-                    tenant_obj = check_occupancy(house_obj)[1]
-                    tenant_id = tenant_obj.id
 
-            except:
-                print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
-                abort(404) 
+                except:
+                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    abort(404) 
 
 
-            if not tenant_obj:
+                if not tenant_obj:
+                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    abort(404)
+
+            else:
                 print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
                 abort(404)
 
@@ -2609,9 +2712,7 @@ class ReceivePayment(Resource):
                 prop=prop,
                 randid=rand_id
             )
-        else:
-            print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
-            abort(404)
+
 
 class UpdateBalance(Resource):
     def get(self):

@@ -445,17 +445,18 @@ class Index(Resource):
                         UserOp.relate(new_user,prop)
             #############################################################################################################
 
-            # ref = "QD22PGM7HK"
+            ref = "QDR61YG8J8"
             # paymentt = PaymentOp.fetch_payment_by_ref(ref)
             # if paymentt:
             #     print("payment found for ref", ref)
             # else:
             #     print("payment not found for", ref)
-            # cbt = CtoBop.fetch_record_by_ref(ref)
-            # if cbt:
-            #     print("cbt found for ref", ref)
-            # else:
-            #     print("cbt not found for", ref)
+            cbt = CtoBop.fetch_record_by_ref(ref)
+            if cbt:
+                print("cbt found for ref", ref)
+                CtoBop.delete(cbt)
+            else:
+                print("cbt not found for", ref)
 
             # if company.name == "Latitude Propertiess":
             #     props = company.props

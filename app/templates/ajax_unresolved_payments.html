@@ -62,7 +62,7 @@
           
         }else{
           $("#c2b_identifier").html(item)
-
+          console.log("running c2b item",item)
           $.ajax({
             url: "{{ url_for('api.receivepayment') }}",
             type: "get",

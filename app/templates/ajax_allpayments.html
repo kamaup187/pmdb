@@ -1026,7 +1026,7 @@
             target:"amount due"
           },
       success: function(response) {
-        if (response.split(" ")[0] == "<input"){
+        if (response.split(" ")[0] == "<input") {
           $("#totaldue").html(response);
           $("#tenantbed").empty();
 
@@ -1034,96 +1034,70 @@
             url: "{{ url_for('api.receivepayment') }}",
             type: "get",
             data: {
-                  propid: $("#prop_identifier_main").text(),
-                  propname:$("#select_prop").val(),
-                  house: $("#select_house").val(),
-                  payperiod:$("#billdatepicker").val(),
-                  target:"breakdown"
-                },
-            success: function(response) {
+              propid: $("#prop_identifier_main").text(),
+              propname: $("#select_prop").val(),
+              house: $("#select_house").val(),
+              payperiod: $("#billdatepicker").val(),
+              target: "breakdown"
+            },
+            success: function (response) {
               $("#billbreakdown").html(response);
 
 
-              //Disable this in futute, say May 2022
-              // $.ajax({
-              //   url: "{{ url_for('api.editbill') }}",
-              //   type: "POST",
-              //   data: {
-              //           billid: $("#edit_bill_identifier").text(),
-              //           rent:"",
-              //           water:"",
-              //           garbage:"",
-              //           security:"",
-              //           electricity:"",
-              //           agreement:"",
-              //           fine:"",
-              //           deposit:"",
-              //           maintenance:"",
-              //           arrears:""
-              //       },
-              //   success: function(response) {
-              //     $(".alert-msgs").html(response);
-              //     // location.reload();
-              //     $.ajax({
-              //       url: "{{ url_for('api.receivepayment') }}",
-              //       type: "get",
-              //       data: {
-              //             propid: $("#prop_identifier_main").text(),
-              //             propname:$("#select_prop").val(),
-              //             house: $("#select_house").val(),
-              //             paidamount:$("#paidamount").val(),
-              //             target:"breakdown"
-              //           },
-              //       success: function(response) {
-              //         $("#billbreakdown").html(response);
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                  propid: $("#prop_identifier_main").text(),
+                  propname: $("#select_prop").val(),
+                  house: $("#select_house").val(),
+                  paidamount: $("#paidamount").val(),
+                  target: "breakdown"
+                },
+                success: function (response) {
+                  $("#billbreakdown").html(response);
 
-              //         $.ajax({
-              //           url: "{{ url_for('api.receivepayment') }}",
-              //           type: "get",
-              //           data: {
-              //                 propid: $("#prop_identifier_main").text(),
-              //                 propname:$("#select_prop").val(),
-              //                 house: $("#select_house").val(),
-              //                 house2: $("#house-holder").text(),
-              //                 target:"amount due"
-              //               },
-              //           success: function(response) {
-              //             $("#totaldue").html(response);
+                  $.ajax({
+                    url: "{{ url_for('api.receivepayment') }}",
+                    type: "get",
+                    data: {
+                      propid: $("#prop_identifier_main").text(),
+                      propname: $("#select_prop").val(),
+                      house: $("#select_house").val(),
+                      house2: $("#house-holder").text(),
+                      target: "amount due"
+                    },
+                    success: function (response) {
+                      $("#totaldue").html(response);
 
-              //             if ($("#ctb_item_amount").text()){
-              //               $("#paidamount").val($("#ctb_item_amount").text())
-              //               $('#paidamount').keyup();
-              //               $("#bill_ref").val($("#ctb_item_ref").text())
-              //             }
+                      if ($("#ctb_item_amount").text()) {
+                        $("#paidamount").val($("#ctb_item_amount").text())
+                        $('#paidamount').keyup();
+                        $("#bill_ref").val($("#ctb_item_ref").text())
+                      }
 
 
-              //             if ($("#ctb_item_ref").text()) {
-              //               var paymodeRadio = $('input:radio[name=paymode]');
-              //               if (paymodeRadio.is(':checked') === false) {
-              //                 console.log("working yeeee")
-              //                 paymodeRadio.prop('checked', true);
-              //                 paymodeRadio.change();
-              //               } else {
-              //                 console.log("not workin ffffff")
-              //                 // do nothing
-              //               }
-              //             } else {
-              //               console.log("kubaad")
-              //             }
-                          
-              //           }
-              //         });
+                      if ($("#ctb_item_ref").text()) {
+                        var paymodeRadio = $('input:radio[name=paymode]');
+                        if (paymodeRadio.is(':checked') === false) {
+                          console.log("working yeeee")
+                          paymodeRadio.prop('checked', true);
+                          paymodeRadio.change();
+                        } else {
+                          console.log("not workin ffffff")
+                          // do nothing
+                        }
+                      } else {
+                        console.log("kubaad")
+                      }
 
-              //         }
-              //       });
+                    }
+                  });
 
-
-              //   }
-              // });
-              //end of temporary function
-
-              }
-            });
+                }
+              });
+            }
+          });
 
         }else{
           $("#tenantbed").html(response);

@@ -184,7 +184,7 @@
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
             </div>
-            <span id="thouse">loading...</span><span id="tname"></span>
+            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span>
           </div>
           </div>
           <div class="modal-body pt-0">
@@ -848,17 +848,17 @@
         });
       });
 
-      if ($("#ctb_item_amount").text()) {
-        $("#prop_selector").removeClass("dispnone")
-      }
+      // if ($("#ctb_item_amount").text()) {
+      //   $("#prop_selector").removeClass("dispnone")
+      // }
 
-      if ($("#ctb_item_house").text()) {
-        $("#thouse").text( " >> "+$("#ctb_item_house").text())
-      }
+      // if ($("#ctb_item_house").text()) {
+      //   $("#thouse").text( " >> "+$("#ctb_item_house").text())
+      // }
 
-      if ($("#ctb_item_name").text()) {
-        $("#tname").text(" ("+$("#ctb_item_name").text()+")")
-      }
+      // if ($("#ctb_item_name").text()) {
+      //   $("#tname").text(" ("+$("#ctb_item_name").text()+")")
+      // }
 
       $.ajax({
         url: "{{ url_for('api.receivepayment') }}",
@@ -881,6 +881,10 @@
             success: function (response) {
               $("#propname").html(response);
 
+              if ($("#ctb_item_amount").text()) {
+                    $("#prop_selector").removeClass("dispnone")
+                  }
+
               $.ajax({
                 url: "{{ url_for('api.receivepayment') }}",
                 type: "get",
@@ -892,10 +896,14 @@
                 success: function (response) {
                   $("#select_house").html(response);
 
+
                   if ($("#ctb_item_house").text()) {
                     $("#thouse").text(" >> " + $("#ctb_item_house").text())
                   }
 
+                  if ($("#ctb_item_name").text()) {
+                    $("#tname").text(" (" + $("#ctb_item_name").text() + ")")
+                  }
                   // $.ajax({
                   //   url: "{{ url_for('api.receivepayment') }}",
                   //   type: "get",
@@ -1187,7 +1195,9 @@
     $("#fieldset2").addClass("dispnone")
     $("#totaldue").empty();
     $("#c2bitem").empty();
-    $("#thouse").empty();
+    $("#thouse").addClass("dispnone");
+    $("#thouse").text("loading...")
+
   });
 </script>
 

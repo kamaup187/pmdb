@@ -1982,7 +1982,7 @@ class ReceivePayment(Resource):
                 tname = tenant
                 thouse = house
             else:
-                tname = tenant.house
+                tname = tenant.name
                 thouse = house.name
 
 

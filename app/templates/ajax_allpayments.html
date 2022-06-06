@@ -184,7 +184,7 @@
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
             </div>
-            <span id="thouse"></span><span id="tname"></span>
+            <span id="thouse">loading...</span><span id="tname"></span>
           </div>
           </div>
           <div class="modal-body pt-0">
@@ -892,19 +892,23 @@
                 success: function (response) {
                   $("#select_house").html(response);
 
-                  $.ajax({
-                    url: "{{ url_for('api.receivepayment') }}",
-                    type: "get",
-                    data: {
-                      propid: $("#prop_identifier_main").text(),
-                      propname:$("#select_prop").val(),
-                      target: "period-disable"
-                    },
-                    success: function (response) {
-                      $("#select_period").html(response);
+                  if ($("#ctb_item_house").text()) {
+                    $("#thouse").text(" >> " + $("#ctb_item_house").text())
+                  }
 
-                    }
-                  });
+                  // $.ajax({
+                  //   url: "{{ url_for('api.receivepayment') }}",
+                  //   type: "get",
+                  //   data: {
+                  //     propid: $("#prop_identifier_main").text(),
+                  //     propname:$("#select_prop").val(),
+                  //     target: "period-disable"
+                  //   },
+                  //   success: function (response) {
+                  //     $("#select_period").html(response);
+
+                  //   }
+                  // });
 
                 }
               });

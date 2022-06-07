@@ -3239,10 +3239,15 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
         co = prop.company
         str_co = co.name
 
+        own_shortcode = False
+
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
+            own_shortcode = True
+
         raw_rem_sms =co.remainingsms
         if tenant_obj.sms:
 
-            if raw_rem_sms > 0:
+            if raw_rem_sms > 0 or own_shortcode:
 
                 try:
                     target_bal = float(rem_bal)
@@ -4221,11 +4226,16 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
             raw_rem_sms =co.remainingsms
 
+            own_shortcode = False
+
+            if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
+                own_shortcode = True
+
             if tenant:
                 print("OWNER SENDING STARTED......")
 
                 if tenant.sms:
-                    if raw_rem_sms > 0:
+                    if raw_rem_sms > 0 or own_shortcode:
 
                         tele = tenant.phone
                         phonenum = sms_phone_number_formatter(tele)
@@ -4384,7 +4394,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                 print("TENANT SENDING STARTED......")
                 if tenant2.sms:
 
-                    if raw_rem_sms > 0:
+                    if raw_rem_sms > 0 or own_shortcode:
 
                         tele = tenant2.phone
                         phonenum = sms_phone_number_formatter(tele)

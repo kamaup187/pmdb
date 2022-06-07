@@ -4914,10 +4914,14 @@ class ManagementFeeReport(Resource):
             date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
 
             timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+            period = begin_date
         
         else:
             date_range = []
             timeline = None
+            period = current_user.company.billing_period
+
+        print(">>>>",period)
 
         ##################################################################################################
         items = []
@@ -4932,8 +4936,11 @@ class ManagementFeeReport(Resource):
             total_collections = 0.0
             
             for item in prop.monthlybills:
-                period_of_billing = generate_date(item.month,item.year)
-                if period_of_billing.date() in date_range:
+                # period_of_billing = generate_date(item.month,item.year)
+                # if period_of_billing.date() in date_range:
+
+                if item.month == period.month and item.year == period.year:
+                    print(item.month,item.year)
 
                     total_collections += item.rent_paid if item.rent_paid > 0 else 0
                     grand_total_collections += item.rent_paid if item.rent_paid > 0 else 0

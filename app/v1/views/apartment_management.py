@@ -185,6 +185,13 @@ class Index(Resource):
         #     for c in cs:
         #         HouseCodeOp.update_sewerage_rate(c,112.5)
 
+        propp = ApartmentOp.fetch_apartment_by_id(132)
+        if propp:
+            cs = propp.meter_readings
+            pp = generate_date(6,2022)
+            for c in cs:
+                MeterReadingOp.update_reading_period(c,pp)
+
         allhses = HouseOp.fetch_houses()
         for cs in allhses:
             if not cs.housecode:
@@ -5493,7 +5500,7 @@ class AllocateMeters(Resource):
         allocate_meter_obj.save()
 
         meter_init_reading = meter_obj.initial_reading
-        reading_period = None
+        reading_period = None #TODO
 
         reading_obj = MeterReadingOp("initial reading",meter_init_reading,meter_init_reading,0,reading_period,propid,house_id,meter_id,user_id)
         reading_obj.save()

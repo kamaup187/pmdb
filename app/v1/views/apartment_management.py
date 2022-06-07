@@ -185,22 +185,22 @@ class Index(Resource):
         #     for c in cs:
         #         HouseCodeOp.update_sewerage_rate(c,112.5)
 
-        propp = ApartmentOp.fetch_apartment_by_id(132)
-        if propp:
-            cs = propp.meter_readings
-            pp = generate_date(6,2022)
-            for c in cs:
-                MeterReadingOp.update_reading_period(c,pp)
+        # propp = ApartmentOp.fetch_apartment_by_id(132)
+        # if propp:
+        #     cs = propp.meter_readings
+        #     pp = generate_date(6,2022)
+        #     for c in cs:
+        #         MeterReadingOp.update_reading_period(c,pp)
 
-        allhses = HouseOp.fetch_houses()
-        for cs in allhses:
-            if not cs.housecode:
-                prop = cs.apartment
-                codded = get_specific_code_obj(prop.id,"DEFAULT")
-                if not codded:
-                    codded = HouseCodeOp("DEFAULT",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,prop.id,1)
-                    codded.save()
-                HouseOp.update_housecode_id(cs,codded.id)
+        # allhses = HouseOp.fetch_houses()
+        # for cs in allhses:
+        #     if not cs.housecode:
+        #         prop = cs.apartment
+        #         codded = get_specific_code_obj(prop.id,"DEFAULT")
+        #         if not codded:
+        #             codded = HouseCodeOp("DEFAULT",0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,prop.id,1)
+        #             codded.save()
+        #         HouseOp.update_housecode_id(cs,codded.id)
 
         # if current_user.company.name == "Latitude Properties":
         #     if current_user.username.startswith('qc'):

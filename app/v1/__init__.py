@@ -126,6 +126,8 @@ api.add_resource(Billing, "/billing")
 api.add_resource(BillProgress, "/bill/progress")
 api.add_resource(SwitchPeriod,"/switch")
 api.add_resource(Replenish,"/replenish")
+api.add_resource(ReplenishAll,"/replenish/forceall")
+
 api.add_resource(ClientBilling,"/client/billing")
 api.add_resource(SetReminder,"/set/reminder")
 api.add_resource(AmendCharge,"/amend/charge")

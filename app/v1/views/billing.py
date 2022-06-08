@@ -90,11 +90,12 @@ class Replenish(Resource):
             CompanyOp.set_smsquota(co,500)
 
 class ReplenishAll(Resource):
-    def post(self):
+    def get(self):
         cos = CompanyOp.fetch_all_companies()
         for co in cos:
             CompanyOp.set_rem_quota(co,500)
             CompanyOp.set_smsquota(co,500)
+        return "ok"
 
 class Billing(Resource):
     """class"""

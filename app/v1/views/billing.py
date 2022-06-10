@@ -2907,10 +2907,10 @@ class Receipt(Resource):
                     "email":"bizlineinvestment@gmail.com"
                 }
 
-            if payment_obj.ptenant:
-                tenant = payment_obj.ptenant
-            else:
-                tenant = payment_obj.tenant
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+        else:
+            tenant = payment_obj.tenant
 
         return render_template(
             'ajax_receiptpay.html',

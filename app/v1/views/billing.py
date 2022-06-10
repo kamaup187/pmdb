@@ -2907,10 +2907,15 @@ class Receipt(Resource):
                     "email":"bizlineinvestment@gmail.com"
                 }
 
+            if payment_obj.ptenant:
+                tenant = payment_obj.ptenant
+            else:
+                tenant = payment_obj.tenant
+
         return render_template(
             'ajax_receiptpay.html',
             voided = disp,
-            tenant = payment_obj.tenant.name,
+            tenant = tenant.name,
             house= payment_obj.house.name,
             amount=paid,
             str_amount=stramount,
@@ -3804,7 +3809,7 @@ class CallBackUrlLatitudeEquity(Resource):
     def get(self):
         pass
     def post(self):
-        response = sms.send("TEST LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+        response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
 
         #parse for json
         my_data=request.data

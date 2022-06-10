@@ -20,7 +20,10 @@ class Base():
             db.session.rollback()
 
     def delete(self):
-        print("Deleting item",self)
+        try:
+            print("Deleting item",self)
+        except:
+            pass
         db.session.delete(self)
         db.session.commit()
 

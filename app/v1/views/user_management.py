@@ -743,21 +743,21 @@ class AdminCreateAgent(Resource):
         else:
             co = CompanyOp.fetch_company_by_name(company_name)
             if not co:
+                dir_group = None
                 company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)
                 company_obj.save()
 
-                group1 = CompanyUserGroupOp("Manager","administrator",company_obj.id)
-                group1.save()
-                group2 = CompanyUserGroupOp("Accounts","accounting officer",company_obj.id)
-                group2.save()
-                group3 = CompanyUserGroupOp("Caretaker","property caretaker",company_obj.id)
-                group3.save()
-                group4 = CompanyUserGroupOp("Tenant","property client",company_obj.id)
-                group4.save()
+                groups = ["Director","Manager","Property Agent","Accounts","Owner","Caretaker","Tenant"]
+                for group in groups:
+                    group_obj = CompanyUserGroupOp(group,"",company_obj.id)
+                    group_obj.save()
+
+                    if group == "Director":
+                        dir_group = group_obj
 
                 auto_assign_company_group_roles(company_name)
 
-                user = UserOp(name,usercode,username,nat_id,phone,email,pass1,usergroup_id,group1.id,company_obj.id,created_by)
+                user = UserOp(name,usercode,username,nat_id,phone,email,pass1,usergroup_id,dir_group.id,company_obj.id,created_by)
                 user.save()
 
                 msg='Account created successfully.'

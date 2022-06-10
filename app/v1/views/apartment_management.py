@@ -111,6 +111,19 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        coss = CompanyOp.fetch_all_companies()
+        for cos in coss:
+            if not cos.name:
+                CompanyOp.delete(cos)
+            else:
+                groups = ["Director","Manager","Property Agent","Accounts","Owner","Caretaker","Tenant"]
+                for group in groups:
+                    cos_group = CompanyOp.fetch_company_by_name(group)
+                    if str(cos_group) in groups:
+                        continue
+                    group_obj = CompanyUserGroupOp(group,"",cos.id)
+                    group_obj.save()
+
 
         # qws = ApartmentOp.fetch_apartment_by_id(33)
         # if qws:

@@ -181,7 +181,7 @@
                       <td class="data-cell text-right deposit">{{ bill['deposit'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
                       <td class="data-cell text-right">{{bill['total']}}</td>
-                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['balance'] }}</td>
                     </tr>
                   {% endfor %}

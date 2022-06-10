@@ -2814,6 +2814,21 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             decor_fig = (f"{rounded_fig:,}")
             return decor_fig
 
+    def show_ll_status(self):
+        if self.paid_amount:
+            rounded_fig = round(self.paid_amount,2)
+            decor_fig = (f"{rounded_fig:,}")
+        else:
+            decor_fig = 0.0
+
+        tids = [8466,1258,1261,1268]
+
+        if self.tenant.id in tids:
+            badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
+            return badge
+        else:
+            return decor_fig
+
     def get_tenant_name(self):
         if self.tenant:
             return self.tenant.name.title()
@@ -2860,6 +2875,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'total':MonthlyChargeOp.fig_format(self.total_bill),
             'paid':MonthlyChargeOp.fig_format(self.paid_amount),
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
+            'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance':MonthlyChargeOp.fig_format(self.balance),
             'date':self.date.date(),

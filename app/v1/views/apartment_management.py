@@ -4371,7 +4371,7 @@ class AddTenant(Resource):
                         tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )
                     except:
                         tenantnatid = ""
-                        
+
                     classtype = sheet.row_values(row)[5]
                     rep = sheet.row_values(row)[6]
 
@@ -4459,7 +4459,8 @@ class AddTenant(Resource):
 
                         if ttype == "clients":
                             if rep:
-                                rep_id = SalesRepOp.fetch_rep_by_username(rep).id
+                                username = username_extracter(rep)
+                                rep_id = SalesRepOp.fetch_rep_by_username(username).id
                             else:
                                 rep_id = None
 
@@ -4467,7 +4468,7 @@ class AddTenant(Resource):
                             if classtype:
 
                                 PermanentTenantOp.update_classtype(ptenant_obj,classtype)
-                                if classtype.lower() == "investor":
+                                if classtype.lower() == "shareholder":
                                     pass
                                 else:
                                     PermanentTenantOp.update_rep_id(ptenant_obj,rep_id)

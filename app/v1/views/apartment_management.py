@@ -4280,11 +4280,9 @@ class AddTenant(Resource):
 
             if sheet:
                 if ttype == 'clients':
-                    print("oauchhh",len(sheet.row_values(1)))
                     if len(sheet.row_values(1)) != 7:
                         data_format_error = True
                 else:
-                    print("oauchhhaaaa")
                     if len(sheet.row_values(1)) != 5:
                         data_format_error = True
 
@@ -4465,7 +4463,7 @@ class AddTenant(Resource):
                             if classtype:
 
                                 PermanentTenantOp.update_classtype(ptenant_obj,classtype)
-                                if classtype.lower() == "shareholder":
+                                if classtype.lower() == "investor":
                                     pass
                                 else:
                                     PermanentTenantOp.update_rep_id(ptenant_obj,rep_id)

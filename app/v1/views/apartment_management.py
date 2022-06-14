@@ -4367,7 +4367,11 @@ class AddTenant(Resource):
                     # tenantphone = "0" + strtelle
                     
                     tenantemail = sheet.row_values(row)[3]
-                    tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )
+                    try:
+                        tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )
+                    except:
+                        tenantnatid = ""
+                        
                     classtype = sheet.row_values(row)[5]
                     rep = sheet.row_values(row)[6]
 

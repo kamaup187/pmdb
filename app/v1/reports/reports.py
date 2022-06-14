@@ -1840,8 +1840,10 @@ class LandlordProfitAndLoss(Resource):
 
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
-            
-        raw_netpay = netrent - commission - expenses_amount - loan
+
+        ll=0.0
+
+        raw_netpay = netrent - commission - expenses_amount - loan - ll
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)

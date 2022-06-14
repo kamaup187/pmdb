@@ -6,6 +6,8 @@
       <span id="del_tenant_identifier" class="dispnone"></span>
       <span id="current-reloader" class="dispnone">proposals</span>
       <span class="multisave dispnone"></span>
+      <a id="download_tenants" href="/download/template/clientdata" class="dispnone">download</a>
+
 
         <div id="parent-section">
           <div class="col-12 no-padding mb-1">
@@ -126,6 +128,8 @@
           <div class="modal-header pb-0 text-center">
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
               <span class="mr-3 smallify">Add new client</span>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
+
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
             </h5>
             <div class="alert-msgs"></div>
@@ -227,8 +231,15 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-black mb-2">Upload excel tenants list</h5>
-            <div class="alert-msgs"></div>
+
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload clients data</span>
+              <div>
+                <button id="downloadtenants" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+             <div class="alert-msgs"></div>
           </div>
           <div class="modal-body pt-0">
             <div class="media mb-2">
@@ -238,7 +249,7 @@
                     <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
      
                       <div class="mt-2 form-group center-btn">
-                        <p class="text-black">Tenants Excel File: <input class="ph" id="tenantfile" type = "file" name = "filename" /></p>
+                        <p class="text-black">Excel File: <input class="ph" id="tenantfile" type = "file" name = "filename" /></p>
                       </div>
                     
                       <div class="divbg center-btn">
@@ -920,6 +931,21 @@
 </script>
 
 
+<script>
+  $("#downloadtenants").click(function(){ 
+      $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_tenants")[0].click();
+
+        setTimeout(function(){
+            $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
+
+
+
 
 <script>
   // This script autopulate house options and displays tenant name
@@ -995,6 +1021,7 @@
         var files = $('#tenantfile')[0].files;
         fd.append('file',files[0]);
         fd.append('target',"excelupload");
+        fd.append('ttype',"clients");
         fd.append('propid',$("#prop_identifier").text());
   
         $.ajax({

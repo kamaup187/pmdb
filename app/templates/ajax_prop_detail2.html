@@ -10,6 +10,9 @@
       <span id="edit_group_identifier" class="dispnone"></span>
       <span id="del_group_identifier" class="dispnone"></span>
 
+      <a id="download_units" href="/download/template/units" class="dispnone">download</a>
+
+
         <div class="container no-padding">
             <div class="divjust-end mb-2">
               
@@ -397,9 +400,12 @@
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
             <!-- <h5 class="modal-title text-info" id="paymentDetailModalLabel"></h5> -->
-            <h5 class="modal-title text-info divjust-end">
-              <span class="mr-3 smallify">Add units</span>
-              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Add new unit <span id="code" class="var-heading text-warning"></span></span>
+              <div>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadHouseExcelModal"><i class="fa fa-upload"></i></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
             </h5>
             <div class="alert-msgs"></div>
           </div>
@@ -435,7 +441,6 @@
                     
                       <div class="divbg center-btn">
                         <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
-                        <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#uploadHouseExcelModal"><i class="fas fa-upload mr-1 text-success"></i><span class="smallify text-success">Upload</span></button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
@@ -453,7 +458,13 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-black mb-2" id="paymentDetailModalLabel">Upload excel units list</h5>
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload units</span>
+              <div>
+                <button id="downloadunits" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
             <div class="alert-msgs"></div>
           </div>
           <div class="modal-body pt-0">
@@ -802,6 +813,20 @@
 
   });
 
+</script>
+
+
+<script>
+  $("#downloadunits").click(function(){ 
+      $('#downloadunits').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_units")[0].click();
+
+        setTimeout(function(){
+            $('#downloadunits').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
 </script>
 
 
@@ -1164,6 +1189,7 @@
       var files = $('#housefile')[0].files;
       fd.append('file',files[0]);
       fd.append('target',"excelupload");
+      fd.append('type',"crm");
       fd.append('propid',$("#prop_identifier").text());
 
       $.ajax({

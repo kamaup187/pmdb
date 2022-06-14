@@ -1730,6 +1730,8 @@ class AddSalesAgent(Resource):
 
         target = request.form.get('target')
 
+
+
         if target:
             att_id = request.form.get("attid")
             att_obj = SalesRepOp.fetch_attendant_by_id(get_identifier(att_id))
@@ -1745,12 +1747,12 @@ class AddSalesAgent(Resource):
         # else:
         #     return err
 
-        user_obj = UserOp.fetch_user_by_email(email)
+        user_obj = UserOp.fetch_user_by_email(email) if email else None
         if not user_obj:
-            user_obj = UserOp.fetch_user_by_phone(phone)
+            user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
             if not user_obj:
-                user_obj = UserOp.fetch_user_by_national_id(natid)
-
+                user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
+                       
         if not user_obj:
 
             usercode = usercode_generator()
@@ -1770,6 +1772,7 @@ class AddSalesAgent(Resource):
                 username = username_exctractermail(email)
 
             found = False
+
 
             for obj in company_obj.groups:
                     if str(obj) == "Sales":
@@ -3681,6 +3684,7 @@ class CreateHouse(Resource):
 
         if target == "excelupload":
             file = request.files.get('file')
+            codetype = request.form.get('type')
 
             if file:
                 processed_data = upload_handler(file,current_user)
@@ -3730,11 +3734,18 @@ class CreateHouse(Resource):
                         found = False
                         prop_codes = ApartmentOp.fetch_apartment_by_id(apartment_id).housecodes
                         for code in prop_codes:
-                            if code.rentrate == rent_value:
-                                house_code = code.codename
-                                found = True
-                                print("RENT CODE FOUND",house_code)
-                                break
+                            if codetype == "crm":
+                                if code.listprice == rent_value:
+                                    house_code = code.codename
+                                    found = True
+                                    print("RENT CODE FOUND",house_code)
+                                    break
+                            else:
+                                if code.rentrate == rent_value:
+                                    house_code = code.codename
+                                    found = True
+                                    print("RENT CODE FOUND",house_code)
+                                    break
                         if not found:
                             print("RENT CODE NOOOOOOOOOOOT FOUND",housecode)
                             house_code = ""
@@ -4226,7 +4237,7 @@ class AddTenant(Resource):
 
             print(ptenant_obj.classtype,"<<<<<<<<<<<<<<<<<<<<<<")
 
-            if ptenant_obj.classtype == "shareholder":
+            if ptenant_obj.classtype.lower() == "shareholder":
                 ng = house_obj.housecode.listprice * 0.95
             else:
                 ng = house_obj.housecode.listprice
@@ -4256,6 +4267,7 @@ class AddTenant(Resource):
 
         if target == "excelupload":
             file = request.files.get('file')
+            ttype = request.form.get('ttype')
 
             if file:
                 processed_data = upload_handler(file,current_user)
@@ -4267,8 +4279,14 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 5:
-                    data_format_error = True
+                if ttype == 'clients':
+                    print("oauchhh",len(sheet.row_values(1)))
+                    if len(sheet.row_values(1)) != 7:
+                        data_format_error = True
+                else:
+                    print("oauchhhaaaa")
+                    if len(sheet.row_values(1)) != 5:
+                        data_format_error = True
 
             try:
                 if data_format_error:
@@ -4352,6 +4370,9 @@ class AddTenant(Resource):
                     
                     tenantemail = sheet.row_values(row)[3]
                     tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )
+                    classtype = sheet.row_values(row)[5]
+                    rep = sheet.row_values(row)[6]
+
                         
                     migrate = "True"
 
@@ -4368,8 +4389,6 @@ class AddTenant(Resource):
                         continue
                     else:
                         house_id = house_obj.id
-
-                    ttype = False
 
                     if ttype:
                         if not tenantname:
@@ -4433,6 +4452,28 @@ class AddTenant(Resource):
 
                         ptenant_obj = PermanentTenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,created_by)
                         ptenant_obj.save()
+
+                        rep_id = None
+
+                        if ttype == "clients":
+                            if rep:
+                                rep_id = SalesRepOp.fetch_rep_by_username(rep).id
+                            else:
+                                rep_id = None
+
+
+                            if classtype:
+
+                                PermanentTenantOp.update_classtype(ptenant_obj,classtype)
+                                if classtype.lower() == "shareholder":
+                                    pass
+                                else:
+                                    PermanentTenantOp.update_rep_id(ptenant_obj,rep_id)
+
+
+                            PermanentTenantOp.update_status(ptenant_obj,"proposal")
+
+                            HouseOp.update_status(house_obj,"booked")
 
                     else:
 

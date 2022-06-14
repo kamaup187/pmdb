@@ -1101,7 +1101,6 @@ class HouseOp(House,Base):
         try:
             return self.owner.rep
         except Exception as e:
-            print("EXCEPTION",e)
             return '<span class="text-danger">-n/a-</span>'
 
 
@@ -1953,6 +1952,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'stage':PermanentTenantOp.get_stage_percentage(self),
             'booking':PermanentTenantOp.booking_date(self),
             'rep':self.rep,
+            'ctype':self.classtype.lower(),
             'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),
             'balance':PermanentTenantOp.format_balance(self),

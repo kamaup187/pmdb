@@ -2006,6 +2006,8 @@ class RentStatement(Resource):
         totalbcf = sum_positive_values(bcftotal_sum_members)
         bcftotal = (f"{totalbcf:,}")
 
+        expense_list = []
+
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
         remittances = 0.0
@@ -2016,8 +2018,22 @@ class RentStatement(Resource):
             if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
                 expenses_amount += exp.amount
 
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
             if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
                 remittances += exp.amount
+
+
 
             
         netrent = totalpaid
@@ -2080,6 +2096,7 @@ class RentStatement(Resource):
             commission_percentage=commission_percentage,
             netpay=netpay,
             bills=detailed_bills,
+            expenselist=expense_list,
             paging=page(detailed_bills),
             props=props,
             apartment_name=selected_apartment,

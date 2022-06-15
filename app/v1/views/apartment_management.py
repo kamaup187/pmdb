@@ -4917,6 +4917,8 @@ class UpdateTenant(Resource):
             update_tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
         else:
             update_tenant = TenantOp.fetch_tenant_by_id(identity)
+
+        print(update_tenant,"hererer it issssssssssss")
             
         if target == "tenant name":
             return update_tenant.name

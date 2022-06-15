@@ -2097,6 +2097,7 @@ class WaterStatement(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
+        targettype = request.args.get("targettype")
 
 
         if not selected_apartment:
@@ -2143,6 +2144,177 @@ class WaterStatement(Resource):
                 current_month_bills.append(bill)
 
         ###################################################################################################
+
+        if targettype == 'water':
+            template = "report_water_statement.html"
+            for bill in current_month_bills:
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                bbf = bill.water_balance if bill.water_balance else 0.0
+                water = bill.water if bill.water else 0.0
+                total = water + bbf
+                paid = bill.water_paid if bill.water_paid else 0.0
+                bcf = bill.water_due if bill.water_due else 0.0
+                # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+                bbftotal_sum_members.append(bbf)
+                renttotal_sum_members.append(water)
+                billtotal_sum_members.append(total)
+
+                paidtotal_sum_members.append(paid)
+                bcftotal_sum_members.append(bcf)
+        else:
+            template = "report_electricity_statement.html"
+            for bill in current_month_bills:
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                bbf = bill.electricity_balance if bill.electricity_balance else 0.0
+                elec = bill.electricity if bill.electricity else 0.0
+                total = elec + bbf
+                paid = bill.electricity_paid if bill.electricity_paid else 0.0
+                bcf = bill.electricity_due if bill.electricity_due else 0.0
+                # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+                bbftotal_sum_members.append(bbf)
+                renttotal_sum_members.append(elec)
+                billtotal_sum_members.append(total)
+
+                paidtotal_sum_members.append(paid)
+                bcftotal_sum_members.append(bcf)
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            template,
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            formatted_netrent=formatted_netrent,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+class LPFStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_lpf_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
         
         for bill in current_month_bills:
             """compute subtotals"""
@@ -2150,15 +2322,15 @@ class WaterStatement(Resource):
             bill_item = MonthlyChargeOp.external_view(bill)
             detailed_bills.append(bill_item)
 
-            bbf = bill.water_balance if bill.water_balance else 0.0
-            water = bill.water if bill.water else 0.0
-            total = water + bbf
-            paid = bill.water_paid if bill.water_paid else 0.0
-            bcf = bill.water_due if bill.water_due else 0.0
+            bbf = bill.penalty_balance if bill.penalty_balance else 0.0
+            garbage = bill.penalty if bill.penalty else 0.0
+            total = garbage + bbf
+            paid = bill.penalty_paid if bill.penalty_paid else 0.0
+            bcf = bill.penalty_due if bill.penalty_due else 0.0
             # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
 
             bbftotal_sum_members.append(bbf)
-            renttotal_sum_members.append(water)
+            renttotal_sum_members.append(garbage)
             billtotal_sum_members.append(total)
 
             paidtotal_sum_members.append(paid)
@@ -2213,7 +2385,7 @@ class WaterStatement(Resource):
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 
         return Response(render_template(
-            'report_water_statement.html',
+            'report_lpf_statement.html',
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,

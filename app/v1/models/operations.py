@@ -2925,6 +2925,18 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'garbage-paid':MonthlyChargeOp.fig_format(self.garbage_paid),
             'garbage-bal':MonthlyChargeOp.fig_format(self.garbage_due),
 
+            'electricity-arr':MonthlyChargeOp.fig_format(self.electricity_balance),
+            'electricity':MonthlyChargeOp.fig_format(self.electricity),
+            'electricity-total':MonthlyChargeOp.calculate_total_due(self.electricity,self.electricity_balance),
+            'electricity-paid':MonthlyChargeOp.fig_format(self.electricity_paid),
+            'electricity-bal':MonthlyChargeOp.fig_format(self.electricity_due),
+
+            'lpf-arr':MonthlyChargeOp.fig_format(self.penalty_balance),
+            'lpf':MonthlyChargeOp.fig_format(self.penalty),
+            'lpf-total':MonthlyChargeOp.calculate_total_due(self.penalty,self.penalty_balance),
+            'lpf-paid':MonthlyChargeOp.fig_format(self.penalty_paid),
+            'lpf-bal':MonthlyChargeOp.fig_format(self.penalty_due),
+
             'electricity':self.electricity,
             'security':self.security,
             'dep':MonthlyChargeOp.fig_format(self.deposit),

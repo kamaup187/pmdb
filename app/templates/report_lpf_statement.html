@@ -3,7 +3,7 @@
 {% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
-<span id="filename" class="dispnone">{{prop}} {{timeline}} water statement.pdf</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} lpf statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
 <div class="row">
@@ -31,24 +31,9 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
-                  <form class="row bg-light" method="GET" action="/water/statement">
-                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
-                      <label class="mb-0">Select type:</label>
-                      <select name="reporttype" class="select-css" id="reporttype" required>
-                        <option selected value="collected">Based on collected amount only</option>
-                        <option value="uncollected">Based on amount due</option>
-                      </select>
-                    </div>
-
-                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
-                      <label class="mb-0">Water/Electricity:</label>
-                      <select name="targettype" class="select-css" id="targettype">
-                        <option selected value="water">Water</option>
-                        <option value="electricity">Electricity</option>
-                      </select>
-                    </div>
+                  <form class="row bg-light" method="GET" action="/lpf/statement">
                   
-                    <div class="col-lg-2 form-group mb-2">
+                    <div class="col-lg-3 form-group mb-2">
                       <label class="mb-0">Select property:</label>
                       <select name="prop" class="select-css" id="prop" required>
                         <option disabled selected value> select property </option>
@@ -58,7 +43,7 @@
                       </select>
                     </div>
                   
-                    <div class="col-lg-2 form-group mb-2 mr-lg-5">
+                    <div class="col-lg-3 form-group mb-2 mr-lg-5">
                       <label class="mb-0">Select month:</label>
                       <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                         <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
@@ -66,7 +51,7 @@
                       </div>
                     </div>
                   
-                    <div class="col-lg-2 form-group mb-2">
+                    <div class="col-lg-3 form-group mb-2">
                       <button type="submit" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
                     </div>
                   </form>
@@ -91,7 +76,7 @@
 
           <div class="center-btn mt-0 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR WATER FOR {{timeline}}</span></span>
+            <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR LATE PAYMENT FEE FOR {{timeline}}</span></span>
           </div>
 
           <div class="divjust-end underline text-black font-weight-bold  text-110">
@@ -116,7 +101,7 @@
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
                       <th class="">BB/F</th>
-                      <th class="">WATER BILL</th>
+                      <th class="">LATE PAYMENT FEE</th>
                       <th class="">TOTAL DUE</th>
                       <th class="">TOTAL PAID</th>
                       <th class="">BC/F</th>
@@ -132,11 +117,11 @@
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['water-arr'] }}</td>
-                      <td class="data-cell text-right">{{ bill['water'] }}</td>
-                      <td class="data-cell text-right">{{bill['water-total']}}</td>
-                      <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                      <td class="data-cell text-right">{{ bill['lpf-arr'] }}</td>
+                      <td class="data-cell text-right">{{ bill['lpf'] }}</td>
+                      <td class="data-cell text-right">{{bill['lpf-total']}}</td>
+                      <td class="data-cell text-right">{{ bill['lpf-paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['lpf-bal'] }}</td>
                       <td class="data-cell text-right">{{bill['item']}}</td>
                       <td class="data-cell text-right">{{ bill['item'] }}</td>
                       <td class="data-cell text-right">{{ bill['item'] }}</td>
@@ -166,7 +151,7 @@
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                <div class="mb-1 text-gray-900">WATER TOTAl COLLECTION</div>
+                <div class="mb-1 text-gray-900">TOTAL</div>
                 <div class="text-gray-900 mb-1">PREV UNREMMITED</div>
                 <div class="text-gray-900 mb-1">TOTALS</div>
                 <div class="hide mb-2">space</div>
@@ -243,7 +228,7 @@
 
           <div class="center-btn mt-2 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR WATER FOR {{timeline}}</span></h5>
+            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR LATE PAYMENT FEE FOR {{timeline}}</span></h5>
           </div>
 
           <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
@@ -266,7 +251,7 @@
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
                   <th class="">BB/F</th>
-                  <th class="">WATER BILL</th>
+                  <th class="">LATE PAYMENT FEE</th>
                   <th class="">TOTAL DUE</th>
                   <th class="">TOTAL PAID</th>
                   <th class="">BC/F</th>
@@ -281,11 +266,11 @@
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['water-arr'] }}</td>
-                  <td class="data-cell text-right">{{ bill['water'] }}</td>
-                  <td class="data-cell text-right">{{bill['water-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                  <td class="data-cell text-right">{{ bill['lpf-arr'] }}</td>
+                  <td class="data-cell text-right">{{ bill['lpf'] }}</td>
+                  <td class="data-cell text-right">{{bill['lpf-total']}}</td>
+                  <td class="data-cell text-right">{{ bill['lpf-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['lpf-bal'] }}</td>
                   <td class="data-cell text-right">{{bill['item']}}</td>
                   <td class="data-cell text-right">{{ bill['item'] }}</td>
                   <td class="data-cell text-right">{{ bill['item'] }}</td>
@@ -336,7 +321,7 @@
   
               <div class="divjust-end mr-5">
                 <div class="mr-4">
-                  <div class="mb-1 text-gray-900">WATER TOTAl COLLECTION</div>
+                  <div class="mb-1 text-gray-900">TOTAL</div>
                   <div class="text-gray-900 mb-1">PREV UNREMMITED</div>
                   <div class="text-gray-900 mb-1">TOTALS</div>
                   <div class="hide mb-2">space</div>

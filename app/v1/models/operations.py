@@ -2823,10 +2823,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         tids = [8466,1258,1261,1268]
 
-        if self.tenant.id in tids:
-            badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
-            return badge
-        else:
+        try:
+            if self.tenant.id in tids:
+                badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
+                return badge
+            else:
+                return decor_fig
+        except:
             return decor_fig
 
     def get_tenant_name(self):

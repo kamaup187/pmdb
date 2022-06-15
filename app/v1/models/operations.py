@@ -1952,7 +1952,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'stage':PermanentTenantOp.get_stage_percentage(self),
             'booking':PermanentTenantOp.booking_date(self),
             'rep':self.rep,
-            'ctype':self.classtype.lower(),
+            'ctype':self.classtype.lower() if self.classtype else "-",
             'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),
             'balance':PermanentTenantOp.format_balance(self),

@@ -113,16 +113,23 @@ class Index(Resource):
 
         # coss = CompanyOp.fetch_all_companies()
         # for cos in coss:
-        #     if not cos.name:
-        #         CompanyOp.delete(cos)
-        #     else:
-        #         groups = ["Director","Manager","Property Agent","Accounts","Owner","Caretaker","Tenant"]
-        #         for group in groups:
-        #             cos_group = CompanyOp.fetch_company_by_name(group)
-        #             if str(cos_group) in groups:
-        #                 continue
-        #             group_obj = CompanyUserGroupOp(group,"",cos.id)
-        #             group_obj.save()
+        #     print(cos.name)
+        #     if cos.name.lower() == "Kiotapay":
+        #         continue
+        #     for x in cos.groups:
+        #         rights = AssignGroupRoleOp.fetch_assigned_roles_by_usergroup_id(x.id)
+        #         for right in rights:
+        #             AssignGroupRoleOp.delete(right)
+        #         if x.users:
+        #             pass
+        #         else:
+        #             CompanyUserGroupOp.delete(x)
+        #     # groups = ["Director","Manager","Accounts","Agent","Sales","Field","Owner"]
+        #     # for group in groups:
+        #     #     if group in [str(x) for x in cos.groups]:
+        #     #         continue
+        #     #     group_obj = CompanyUserGroupOp(group,"",cos.id)
+        #     #     group_obj.save()
 
 
         # qws = ApartmentOp.fetch_apartment_by_id(33)

@@ -60,7 +60,7 @@
       });
   </script>
 
-<script>
+<!-- <script>
     var rawIds = "{{ tenantids|safe }}";
     var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
     console.log(ids)
@@ -71,6 +71,70 @@
         if( isNaN(parseInt(item)) ){
           if(item.startsWith("del")){
             $("#del_tenant_identifier").html(item)
+          }else{
+            $("#edit_tenant_identifier").html(item)
+          }
+          
+        }else{
+          $("#tenant_identifier").html(item)
+        }
+      });
+    });
+  </script> -->
+
+  <script>
+    var rawIds = "{{ tenantids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("tdel")){
+            $("#ttype3").html("tenant")
+            console.log("CLICKED ON TENANT")
+            $("#del_tenant_identifier").html(item)
+          }else if(item.startsWith("pdel")){
+            console.log("CLICKED ON PTENANT")
+            $("#ttype3").html("owner")
+            $("#del_tenant_identifier").html(item)
+          }
+          else if(item.startsWith("pedit")){
+            $("#edit_tenant_identifier").html(item)
+          }
+          else if(item.startsWith("tnt")||item.startsWith("ptnt")){
+            if(item.startsWith("tnt")){
+              var ttype = "tenant"
+            }else{
+              var ttype = "owner"
+            }
+            $("#barloader").removeClass("dispnone")
+            $.ajax({
+              url: "/results",
+              type: "get",
+              data: {id: item},
+              success: function(response) {
+                $("#barloader").addClass("dispnone")
+                $("#propdisp").addClass("dispnone")
+                $("#searchresults").removeClass("dispnone")
+                $("#searchresults").html(response);
+  
+                $.ajax({
+                  url: "{{ url_for('api.fetchbills') }}",
+                  type: "get",
+                  data: {
+                    tenantid: item,
+                    ttype:ttype,
+                    target:"tenant bill"
+                  },
+                  success: function(response) {
+                    
+                    $("#search-result-view").html(response);
+                  }
+                });
+              }
+            });
           }else{
             $("#edit_tenant_identifier").html(item)
           }

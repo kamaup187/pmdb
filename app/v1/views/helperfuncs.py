@@ -63,7 +63,6 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 
 def aviv(user):
     rever = os.getenv('AVIV')
-    print(rever,"<<<<<<<REVER HEAD")
     return "aviv" if user.company.name == rever else ""
 
 def mbogi():

@@ -112,23 +112,24 @@ class Index(Resource):
     def get(self):
 
         coss = CompanyOp.fetch_all_companies()
-        for cos in coss:
-            print(cos.name)
-            # for x in cos.groups:
-            #     rights = AssignGroupRoleOp.fetch_assigned_roles_by_usergroup_id(x.id)
-            #     for right in rights:
-            #         AssignGroupRoleOp.delete(right)
-            #     if x.users:
-            #         pass
-            #     else:
-            #         CompanyUserGroupOp.delete(x)
-            
-            groups = ["Director","Manager","Accounts","Agent","Sales","Field","Owner"]
-            for group in groups:
-                if group in [str(x) for x in cos.groups]:
-                    continue
-                group_obj = CompanyUserGroupOp(group,"",cos.id)
-                group_obj.save()
+        print(len(coss)," companies found")
+        # for cos in coss:
+        #     print(cos.name)
+        #     # for x in cos.groups:
+        #     #     rights = AssignGroupRoleOp.fetch_assigned_roles_by_usergroup_id(x.id)
+        #     #     for right in rights:
+        #     #         AssignGroupRoleOp.delete(right)
+        #     #     if x.users:
+        #     #         pass
+        #     #     else:
+        #     #         CompanyUserGroupOp.delete(x)
+
+        #     groups = ["Director","Manager","Accounts","Agent","Sales","Field","Owner"]
+        #     for group in groups:
+        #         if group in [str(x) for x in cos.groups]:
+        #             continue
+        #         group_obj = CompanyUserGroupOp(group,"",cos.id)
+        #         group_obj.save()
 
 
         # qws = ApartmentOp.fetch_apartment_by_id(33)

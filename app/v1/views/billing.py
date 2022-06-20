@@ -3584,6 +3584,61 @@ class StkCallBackUrlKiotapay(Resource):
 
         return None
 
+
+class StkCallBackUrlAstrol(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        body = data["Body"]
+
+        stkcallback = body["stkCallback"]
+        if stkcallback["ResultCode"] == 0:
+            callbackmeta = stkcallback["CallbackMetadata"]
+            item = callbackmeta["Item"] #list of json objs
+            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ASTROL MPESAMPESAMPESA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print(item)
+            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ASTROL MPESAMPESAMPESA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+            if len(item) == 4:
+                amount_obj = item[0]
+                amount_val = amount_obj["Value"]
+                receipt_obj = item[1]
+                receipt_val = receipt_obj["Value"]
+                date_obj = item[2]
+                date_val = date_obj["Value"]
+                tel_obj = item[3]
+                tel_val = tel_obj["Value"]
+
+            else:
+
+                amount_obj = item[0]
+                amount_val = amount_obj["Value"]
+                receipt_obj = item[1]
+                receipt_val = receipt_obj["Value"]
+                date_obj = item[3]
+                date_val = date_obj["Value"]
+                tel_obj = item[4]
+                tel_val = tel_obj["Value"]
+
+            tel = phone_number_formatter_r(tel_val)
+
+            tenant_obj = TenantOp.fetch_tenant_by_tel(tel)
+            tenant_id = tenant_obj.id
+
+            print(amount_val,receipt_val,date_val,tel)
+
+            mpesa_obj = MpesaPaymentOp(receipt_val,amount_val,tel,date_val,tenant_id)
+            mpesa_obj.save()
+        else:
+            print(">>>>>>>>>>>>>>>>There was an error, printing ASTROL datareceive callback error body>>>>>",body)
+
+        return None
+
 class CallBackUrlProminance(Resource):
     def get(self):
         pass

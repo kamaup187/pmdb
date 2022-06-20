@@ -148,11 +148,11 @@ api.add_resource(ResetAllMpesaData,"/restricted/datareset")
 api.add_resource(CallBackUrlProminance,"/promitech/payment")
 api.add_resource(CallBackUrlKiotapay,"/kiotapay/payment")
 api.add_resource(CallBackUrlLatitude,"/latitude/payment") # to be deprecated
-api.add_resource(CallBackUrlMLatitude,"/m/latitude/payment")
+api.add_resource(CallBackUrlMLatitude,"/m/latitude/ins/payment")
 api.add_resource(CallBackUrlPremier,"/premier/payment")
 api.add_resource(CallBackUrlVintage,"/vintage/payment")
 api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
-api.add_resource(CallBackUrlAstrol,"/astrol/payment")
+api.add_resource(CallBackUrlAstrol,"/m/astrol/ins/payment")
 
 #bank urls
 api.add_resource(CallBackUrlEquity,"/nest/payment")

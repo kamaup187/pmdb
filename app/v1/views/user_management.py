@@ -229,7 +229,6 @@ class Users(Resource):
         update_login_history("users",current_user)
         target = request.args.get('target')
 
-
         if target == "add user":
             user = current_user
 
@@ -249,8 +248,21 @@ class Users(Resource):
                 user_status="Active",
                 user=None)
 
+        elif target == "props":
+            if current_user.username.startswith("admin") or current_user.username.startswith("qc"):
+                props = current_user.company.props
+            else:
+                props = fetch_all_apartments_by_user(current_user)
+ 
+            propids = [prop.id for prop in props]
+            str_propids = ','.join(map(str, propids))
+            return render_template("ajax_properties_checkbox.html",propboxes=props,checkpropids=str_propids)
+
+
         elif target == "check email":
             email = request.args.get('email')
+            if not email:
+                return typing
             if "@" not in email or ".com" not in email:
                 return err + "invalid"
             user = fetch_user(email)
@@ -261,6 +273,8 @@ class Users(Resource):
 
         elif target == "check tel":
             tel = request.args.get('tel')
+            if not tel:
+                return typing
             if "+" in tel:
                 return err + "invalid"
             user = fetch_user(tel)
@@ -271,6 +285,8 @@ class Users(Resource):
 
         elif target == "check id":
             natid = request.args.get('natid')
+            if not natid:
+                return typing
             if len(natid) < 6:
                 return err + "invalid"
             user = fetch_user(natid)
@@ -310,14 +326,31 @@ class Users(Resource):
 
         target = request.form.get('target')
 
-        print("EMMMMMMAIL",email)
+        houselist = request.form.get('houses')
+        proplist = request.form.get('props')
+
+        try:
+            houseids = [int(s) for s in houselist.split(',')]
+            print("HOUSEIDS",houseids)
+        except:
+            houseids = []
+
+        try:
+            propids = [int(s) for s in proplist.split(',')]
+            print("PROPIDS",propids)
+        except:
+            propids = []
+
+        properties = [ApartmentOp.fetch_apartment_by_id(propid) for propid in propids]
+        houses = [HouseOp.fetch_house_by_id(houseid) for houseid in houseids]
+
 
         if name and name != 'None':
             if len(name) < 4:
                 return err + "name too short"
 
         if email and email != 'None':
-            if "@" not in email or ".com" not in email:
+            if "@" not in email or "." not in email:
                 return err + "invalid email"
             user = fetch_user(email)
             if user and user.email != email:
@@ -398,9 +431,11 @@ class Users(Resource):
             new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,user_group_id,company.id,current_user.id)
             new_user.save()
 
-            company_properties = company.props
-            for prop in company_properties:
+            for prop in properties:
                 UserOp.relate(new_user,prop)
+
+            for hse in houses:
+                UserOp.relate_house(new_user,hse)
 
             return "User created successfully" + proceed
 

@@ -222,6 +222,7 @@ api.add_resource(ManagementFeeReport,"/commission/report")
 api.add_resource(TenantDeposits,"/deposit/report")
 api.add_resource(OfficePnL,"/profitnloss/report")
 api.add_resource(OfficeExpenses,"/office/expenses")
+api.add_resource(CustomReport,"/custom/report")
 
 
 

@@ -346,6 +346,11 @@ class UserOp(User,Base):
     def relate(user,apartment):
         user.apartments.append(apartment)
         db.session.commit()
+
+    @staticmethod
+    def relate_house(user,house):
+        user.houses.append(house)
+        db.session.commit()
     
     def update_user(self,name=None,phone=None,national_id=None,email=None,password=None,user_group_id=None,company_id=None,modified_by=None):
         if name and name != "None":
@@ -947,8 +952,22 @@ class HouseOp(House,Base):
         return House.query.filter(House.apartment_id==apartment_id).order_by(House.name.asc()).all()
 
     @staticmethod
+    def fetch_all_houses_by_user(user_id):
+        return House.query.join(User.houses).filter(User.id == user_id).order_by(House.name.asc()).all()#many to many relationship
+
+    @staticmethod
     def fetch_houses():
         return House.query.order_by(House.id.desc()).all()
+
+    @staticmethod
+    def relate_house(house,user):
+        house.users.append(user)
+        db.session.commit()
+
+    @staticmethod
+    def terminate_house(house,user):
+        house.users.remove(user)
+        db.session.commit()
 
     def update_details(self,name,desc):
         if desc:

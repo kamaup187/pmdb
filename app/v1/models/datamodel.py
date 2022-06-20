@@ -8,6 +8,11 @@ apartment_table = db.Table('apartment',
     db.Column('apartment_id', db.Integer, db.ForeignKey('apartments.id'))
 )
 
+house_table = db.Table('house',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('house_id', db.Integer, db.ForeignKey('houses.id'))
+)
+
 class UserGroup(db.Model):
     """db model class"""
 
@@ -141,6 +146,8 @@ class User(db.Model,UserMixin):
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
 
     apartments = db.relationship("Apartment",secondary=apartment_table,backref=db.backref('users'))
+    houses = db.relationship("House",secondary=house_table,backref=db.backref('users'))
+
     expenses = db.relationship('InternalExpense', backref='user', cascade="all, delete-orphan")
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
     rep = db.relationship('SalesRep',backref='user',uselist=False, cascade="all, delete-orphan")

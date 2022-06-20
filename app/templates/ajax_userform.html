@@ -96,6 +96,17 @@
                                     {% endfor %}
                                 </select>
                             </div>
+
+                            <div class="mb-2 smallify">
+                                Properties: <input type="checkbox" name="" id="propall" checked>
+                                <label class="mr-3 me-3 text-danger" for="propall">Allocate all</label>
+                              </div>
+
+                            <fieldset id="propfield" class="mt-2 mb-3 dispnone">
+                                <legend class="legend">Select properties:</legend>
+                                <div id="propbed" class="mt-"></div>
+                            </fieldset>
+
                             <!-- Submit button-->
                             <div class="text-center">
                                 <button id="saveprofile" class="btn btn-primary" type="button">{{savecontext}}</button>
@@ -106,7 +117,6 @@
             </div>
         </div>
     </div>
-
 
 
 
@@ -135,6 +145,34 @@
     }
     someFun()
   </script>
+
+
+    <script>
+
+        $('#propall').change(function () {
+            if (this.checked) {
+                $("#propfield").addClass("dispnone")
+            }
+            else {
+                $("#propfield").removeClass("dispnone")
+            }
+        });
+
+        $.ajax({
+            url: "{{ url_for('api.users') }}",
+            type: "get",
+            data: {
+                target: "props"
+            },
+            success: function (response) {
+                $("#propbed").html(response);
+            },
+            error: function (xhr) {
+                alert("Error")
+            }
+        });
+    </script>
+
 
   <script>
 
@@ -223,6 +261,18 @@
 
 <script>
     $("#saveprofile").click(function(){
+
+        var proplist = [];
+        $.each($("input[name='propcheckbox']:checked"), function () {
+            proplist.push($(this).val());
+        });
+
+        var houselist = [];
+        $.each($("input[name='housecheckbox']:checked"), function () {
+            houselist.push($(this).val());
+        });
+
+
         let target_func = $("#func").text()
         let baseurl = "{{ url_for('api.users') }}"
         let target
@@ -254,6 +304,8 @@
             usergroup:$("#inputUsergroup").val(),
             pass1: $("#pass1").val(),
             pass2: $("#pass2").val(),
+            props:proplist.join(", "),
+            houses:houselist.join(", "),
             target:target
             },
         success: function(response) {

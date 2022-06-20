@@ -55,6 +55,7 @@ mailsender = os.getenv('G_ACCOUNT')
 
 configuration = os.getenv('APP_SETTINGS')
 
+typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 
@@ -1907,6 +1908,14 @@ def fetch_all_apartments_by_user(current_user):
         apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
         
     return apartment_list
+
+def fetch_all_houses_by_user(current_user):
+    if current_user.username == "admin":
+        house_list = HouseOp.fetch_houses()
+    else:
+        house_list = HouseOp.fetch_all_houses_by_user(current_user.id)
+        
+    return house_list
 
 # def fetch_all_apartments():
 #     apartment_list = ApartmentOp.fetch_all_apartments()

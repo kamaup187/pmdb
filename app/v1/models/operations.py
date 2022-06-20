@@ -3823,8 +3823,9 @@ class CtoBop(CtoB,Base):
 
 class LandlordRemittanceOp(LandlordRemittance,Base):
     """class"""
-    def __init__(self,code,landlord,ll_balbf,t_balbf,rent,utilities,expected,actual,rent_paid,utilities_paid,commission,remitted,ratio,ll_balcf,agent):
+    def __init__(self,code,name,landlord,ll_balbf,t_balbf,rent,utilities,expected,actual,rent_paid,utilities_paid,commission,remitted,ratio,ll_balcf,agent):
         self.code = code
+        self.name = name
         self.landlord = landlord
         self.ll_balbf = ll_balbf
         self.t_balbf = t_balbf
@@ -3855,20 +3856,25 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
     def view(self):
         return {
             'id':self.id,
-            'editid':CtoBop.generate_editid(self),
-            'delid':CtoBop.generate_delid(self),
-            'transid':self.trans_id,
-            'amount':self.trans_amnt,
-            'paybill':self.business_shortcode,
-            'billref':self.bill_ref_num,
-            'phone':self.msisdn,
-            'fname':self.fname,
-            'lname':self.lname,
-            'status':CtoBop.get_status(self),
-            'date':CtoBop.get_date(self)
+            'code':self.code,
+            'name':self.name,
+            'landlord':self.landlord,
+            'll_balbf':self.ll_balbf,
+            't_balbf':self.t_balbf,
+            'rent':self.rent,
+            'utilities':self.utilities,
+            'expected':self.expected,
+            'actual':self.actual,
+            'rent_paid':self.rent_paid,
+            'utilities_paid':self.utilities_paid,
+            'commission':self.commission,
+            'remitted':self.remitted,
+            'ratio':self.ratio,
+            'll_balcf':self.ll_balcf,
+            'agent':self.agent,
+            'status':self.status,
+            'date':LandlordRemittance.get_date(self)
         }
-
-
 
 
 class MpesaRequestOp(MpesaRequest,Base):

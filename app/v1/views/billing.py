@@ -3699,30 +3699,79 @@ class CallBackUrlLatitude(Resource):
     def get(self):
         pass
     def post(self):
-        #parse for json
-        my_data=request.data
-        my_json = my_data.decode('utf8').replace("'", '"')
-        data = json.loads(my_json)
+        try:
+            #parse for json
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+            trans_id = data['TransID']
+            trans_time = data['TransTime']
+            trans_amnt = data['TransAmount']
+            trans_type = data['TransactionType']
+            business_shortcode = data['BusinessShortCode']
+            bill_ref_num = data['BillRefNumber']
+            invoice_num = data['InvoiceNumber']
+            msisdn = data['MSISDN']
+            org_acc_bal = data['OrgAccountBalance']
+            fname = data['FirstName']
+            lname = data['LastName']
 
-        print("MPESA DATA RECEIEVED: ",data)
+            print("MPESA DATA RECEIEVED: ",data)
 
-        # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
-        # response = sms.send(message1, ["+254716674695"],sender)
+            # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
+            # response = sms.send(message1, ["+254716674695"],sender)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-        ctob_obj.save()
+            ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+            ctob_obj.save()
+        except:
+
+            response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+            #parse for json
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+            try:
+                data = json.loads(my_json)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+                print(data)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+        
+                print("Data will be proccessed here")
+                
+                username = data['username']
+                password = data['password']
+                billNumber = data['billNumber']
+                billAmount = data['billAmount']
+                customerRefNumber = data['CustomerRefNumber']
+                bankReference = data['bankreference']
+                transParticular = data['tranParticular']
+                paymentMode = data['paymentMode']
+                transDate = data['transactionDate']
+                phoneNumber = data['phonenumber']
+                debitAccount = data['debitaccount']
+                debitCustName = data['debitcustname']
+
+                data_type = "prod"
+
+                data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+                if data_obj:
+                    response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                else:
+                    data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                    data_obj.save()
+                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+            except Exception as e:
+                sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
+                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                print ("It failed, Bank integration has an error")
+
+            resp = jsonify(response)
+            return make_response(resp)
+
 
         # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         # ctob_obj.save()

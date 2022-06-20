@@ -306,6 +306,8 @@ class Apartment(db.Model):
     reminders = db.relationship('Reminder',backref='apartment',order_by='Reminder.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
     paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
+    remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
+
 
 
     def __repr__(self):
@@ -1173,15 +1175,20 @@ class LandlordRemittance(db.Model):
     expected = db.Column(db.Float,default=0.0)
     actual = db.Column(db.Float,default=0.0)
     rent_paid = db.Column(db.Float,default=0.0)
-    commision = db.Column(db.Float,default=0.0)
+    utilities_paid = db.Column(db.Float,default=0.0)
+    commission = db.Column(db.Float,default=0.0)
     remitted = db.Column(db.Float,default=0.0)
     ratio = db.Column(db.Float,default=0.0)
+    t_balcf = db.Column(db.Float,default=0.0)
     ll_balcf = db.Column(db.Float,default=0.0)
     agent = db.Column(db.Float,default=0.0)
+
+    status = db.Column(db.String, default="unremitted")
 
     date_remitted = db.Column(db.DateTime, default=db.func.current_timestamp())
     period = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    apartment_id = db.Column(db.Integer,db.ForeignKey(Apartment.id))
     company_id = db.Column(db.Integer,db.ForeignKey(Company.id))
 
     def __repr__(self):

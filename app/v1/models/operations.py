@@ -1,3 +1,4 @@
+from cmath import e
 from pydoc import ttypager
 import string
 from  .datamodel import *
@@ -3817,6 +3818,58 @@ class CtoBop(CtoB,Base):
             'status':CtoBop.get_status(self),
             'date':CtoBop.get_date(self)
         }
+
+
+
+class LandlordRemittanceOp(LandlordRemittance,Base):
+    """class"""
+    def __init__(self,code,landlord,ll_balbf,t_balbf,rent,utilities,expected,actual,rent_paid,utilities_paid,commission,remitted,ratio,ll_balcf,agent):
+        self.code = code
+        self.landlord = landlord
+        self.ll_balbf = ll_balbf
+        self.t_balbf = t_balbf
+        self.rent = rent
+        self.utilities = utilities
+        self.expected = expected
+        self.actual = actual
+        self.expected = expected
+        self.actual = actual
+        self.rent_paid = rent_paid
+        self.utilities_paid = utilities_paid
+        self.commission = commission
+        self.remitted = remitted
+        self.ratio = ratio
+        self.ll_balcf = ll_balcf
+        self.agent = agent
+        
+
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
+    def get_date(self):
+        str_date = self.date_remitted.strftime("%d/%b/%y")
+        return str_date
+
+
+    def view(self):
+        return {
+            'id':self.id,
+            'editid':CtoBop.generate_editid(self),
+            'delid':CtoBop.generate_delid(self),
+            'transid':self.trans_id,
+            'amount':self.trans_amnt,
+            'paybill':self.business_shortcode,
+            'billref':self.bill_ref_num,
+            'phone':self.msisdn,
+            'fname':self.fname,
+            'lname':self.lname,
+            'status':CtoBop.get_status(self),
+            'date':CtoBop.get_date(self)
+        }
+
+
+
 
 class MpesaRequestOp(MpesaRequest,Base):
     def __init__(self,checkoutrequestid,amount,phone,chargetype_string,tenant_id):

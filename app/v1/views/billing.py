@@ -3674,6 +3674,42 @@ class CallBackUrlLatitude(Resource):
 
         # auto_consume_ctob2(ctob_obj)
 
+class CallBackUrlMLatitude(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        lname = data['LastName']
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
+        # response = sms.send(message1, ["+254716674695"],sender)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        # ctob_obj.save()
+
+        # auto_consume_ctob2(ctob_obj)
+        response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
+
 class CallBackUrlPremier(Resource):
     def get(self):
         pass
@@ -3727,6 +3763,37 @@ class CallBackUrlPremierRealty(Resource):
 
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         ctob_obj.save()
+
+        # auto_consume_ctob2(ctob_obj)
+
+class CallBackUrlAstrol(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        lname = data['LastName']
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        response = sms.send("ASTROL MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
 
         # auto_consume_ctob2(ctob_obj)
 

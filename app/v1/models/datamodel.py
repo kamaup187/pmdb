@@ -69,7 +69,7 @@ class Company(db.Model):
     payments = db.relationship('ClientPayment', backref='company',order_by='ClientPayment.id', cascade="all, delete-orphan")
     template = db.relationship('TextTemplate',backref='company', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='company',order_by='SentMessages.date', cascade="all, delete-orphan")
-
+    remits = db.relationship('LandlordRemittance',backref='company',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -1156,6 +1156,37 @@ class SplitPayment(db.Model):
         rep = self.id
         data = str(rep)
         return data
+
+
+class LandlordRemittance(db.Model):
+    """db model class"""
+
+    __tablename__ = 'landlordremittances'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    code = db.Column(db.VARCHAR)
+    landlord = db.Column(db.VARCHAR)
+    ll_balbf = db.Column(db.Float,default=0.0)
+    t_balbf = db.Column(db.Float,default=0.0)
+    rent = db.Column(db.Float,default=0.0)
+    utilities = db.Column(db.Float,default=0.0)
+    expected = db.Column(db.Float,default=0.0)
+    actual = db.Column(db.Float,default=0.0)
+    rent_paid = db.Column(db.Float,default=0.0)
+    commision = db.Column(db.Float,default=0.0)
+    remitted = db.Column(db.Float,default=0.0)
+    ratio = db.Column(db.Float,default=0.0)
+    ll_balcf = db.Column(db.Float,default=0.0)
+    agent = db.Column(db.Float,default=0.0)
+
+    date_remitted = db.Column(db.DateTime, default=db.func.current_timestamp())
+    period = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    company_id = db.Column(db.Integer,db.ForeignKey(Company.id))
+
+    def __repr__(self):
+        return str(self.id)
+
 
 class ClientPayment(db.Model):
     """db model class"""

@@ -162,6 +162,9 @@ api.add_resource(CallBackUrlEquityProd,"/promitech/4012401")
 api.add_resource(CallBackUrlLatitudeEquity,"/latitude/payment")
 api.add_resource(CallBackUrlTestLatitudeEquity,"/test/latitude/payment")
 
+api.add_resource(CallBackUrlSentomEquity,"/b/sentom/ins/payment")
+api.add_resource(CallBackUrlTestSentomEquity,"/b/sentom/ins/testpayment")
+
 api.add_resource(CallBackUrlLes,"/les/45")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 

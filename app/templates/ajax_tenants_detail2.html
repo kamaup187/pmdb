@@ -453,20 +453,26 @@
                         <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Payment plan <span class="text-danger">*</span></span></div>
                         <div class="form-group col-7 no-paddin input-icons">
                           <select class="select-css" id ="select_plan" required>
-                            <option disabled selected value> Choose plan </option>
 
+                            <option selected value="partial">Partial</option>
                             <option value="full">Full</option>
-                            <option value="partial">Partial</option>
 
                           </select>
                         </div>
                       </div>
 
-                      <div id="payment_agreement" class="dispnone">
+                      <div id="payment_agreement" class="">
                         <div class="">
-                          <div class="no-padding text-right"><span class="form-control smallify border-0">Initial deposit/Booking balance (10%)<span class="text-danger">*</span></span></div>
+                          <div class="no-padding text-right"><span class="form-control smallify border-0">Booking balance (10%)<span class="text-danger">*</span></span></div>
                           <div class="form-group no-paddin input-icons">
                             <input id="deposit" class="form-control ph pl-5 text-end" type="text">
+                          </div>
+                        </div>
+
+                        <div class="">
+                          <div class="no-padding text-right"><span class="form-control smallify border-0">Deposit balance (20%)<span class="text-danger">*</span></span></div>
+                          <div class="form-group no-paddin input-icons">
+                            <input id="deposit2" class="form-control ph pl-5 text-end" type="text">
                           </div>
                         </div>
   
@@ -1408,6 +1414,7 @@
                 negprice: $("#neg_price").val(),
                 plan: $("#select_plan").val(),
                 deposit: $("#deposit").val(),
+                deposit2: $("#deposit2").val(),
                 mi: $("#mi").val(),
                 num_mi:$("#num_mi").val(),
                 target: "negotiations"
@@ -1684,11 +1691,14 @@ $("#neg_price").on('keyup',function(){
   if ($("#select_plan").val() != 'partial' && $("#neg_price").val() > 1){
     let negprice = $("#neg_price").val().replace(/,/g, '');
     $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
+    $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
     $("#negotiatebtn").removeClass("dispnone")
   }else{
     let negprice = $("#neg_price").val().replace(/,/g, '');
     $("#negotiatebtn").addClass("dispnone")
     $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
+    $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
+
     $('#num_mi').keyup();
 
   }
@@ -1705,7 +1715,8 @@ $("#neg_price").on('keyup',function(){
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
     let deposit = $("#deposit").val().replace(/,/g, '');
-    let diff = negprice - deposit;
+    let deposit2 = $("#deposit2").val().replace(/,/g, '');
+    let diff = negprice - deposit - deposit2;
     let mi = $("#mi").val().replace(/,/g, '');
     let num_mi = diff / mi;
     if (num_mi > 101 ){
@@ -1742,7 +1753,8 @@ $("#neg_price").on('keyup',function(){
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
     let deposit = $("#deposit").val().replace(/,/g, '');
-    let diff = negprice - deposit;
+    let deposit2 = $("#deposit2").val().replace(/,/g, '');
+    let diff = negprice - deposit - deposit2;
     let num_mi = $("#num_mi").val().replace(/,/g, '');
     let mi = diff / num_mi;
     if (num_mi > 101 ){

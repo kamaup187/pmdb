@@ -1169,17 +1169,21 @@ class LandlordRemittance(db.Model):
     code = db.Column(db.VARCHAR)
     landlord = db.Column(db.VARCHAR)
     ll_balbf = db.Column(db.Float,default=0.0)
+
     t_balbf = db.Column(db.Float,default=0.0)
     rent = db.Column(db.Float,default=0.0)
-    utilities = db.Column(db.Float,default=0.0)
     expected = db.Column(db.Float,default=0.0)
     actual = db.Column(db.Float,default=0.0)
-    rent_paid = db.Column(db.Float,default=0.0)
-    utilities_paid = db.Column(db.Float,default=0.0)
+    t_balcf = db.Column(db.Float,default=0.0)
+
     commission = db.Column(db.Float,default=0.0)
+
+    utilities = db.Column(db.Float,default=0.0)
+    deposit = db.Column(db.Float,default=0.0)
+
     remitted = db.Column(db.Float,default=0.0)
     ratio = db.Column(db.Float,default=0.0)
-    t_balcf = db.Column(db.Float,default=0.0)
+    
     ll_balcf = db.Column(db.Float,default=0.0)
     agent = db.Column(db.Float,default=0.0)
 

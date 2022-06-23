@@ -2634,6 +2634,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         total = rent + bal
         return (f"{total:,}")
+
+    def calculate_total(*args):
+        tot=0.0
+        for i in args:
+            tot += i
+        return (f"{tot:,}")
     
     #######################TODO TODO############################
     def calculate_bbf(self):
@@ -2882,6 +2888,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'idno':self.tenant.national_id if self.tenant else "-",
             'house':self.house,
             'rent':MonthlyChargeOp.fig_format(self.rent),
+            'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
+            'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),
+            'rent-due':MonthlyChargeOp.fig_format(self.rent_due),
+            'utilities':MonthlyChargeOp.calculate_total(self.water,self.electricity,self.maintenance,self.garbage,self.security),
             'water':MonthlyChargeOp.fig_format(self.water),
             'garbsec':MonthlyChargeOp.combine_garbsec(self),
             'garbage':self.garbage,
@@ -3823,23 +3833,27 @@ class CtoBop(CtoB,Base):
 
 class LandlordRemittanceOp(LandlordRemittance,Base):
     """class"""
-    def __init__(self,code,name,landlord,ll_balbf,t_balbf,rent,utilities,expected,actual,rent_paid,utilities_paid,commission,remitted,ratio,ll_balcf,agent):
+    def __init__(self,code,name,landlord,ll_balbf,t_balbf,rent,expected,actual,t_balcf,utilities,deposit,commission,remitted,ratio,ll_balcf,agent):
         self.code = code
         self.name = name
         self.landlord = landlord
+
         self.ll_balbf = ll_balbf
+
         self.t_balbf = t_balbf
         self.rent = rent
-        self.utilities = utilities
         self.expected = expected
         self.actual = actual
-        self.expected = expected
-        self.actual = actual
-        self.rent_paid = rent_paid
-        self.utilities_paid = utilities_paid
+        self.t_balcf = t_balcf
+
         self.commission = commission
+
+        self.utilities = utilities
+        self.deposit = deposit
+
         self.remitted = remitted
         self.ratio = ratio
+
         self.ll_balcf = ll_balcf
         self.agent = agent
         
@@ -3859,18 +3873,25 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
             'code':self.code,
             'name':self.name,
             'landlord':self.landlord,
+
             'll_balbf':self.ll_balbf,
+
             't_balbf':self.t_balbf,
             'rent':self.rent,
-            'utilities':self.utilities,
             'expected':self.expected,
             'actual':self.actual,
-            'rent_paid':self.rent_paid,
-            'utilities_paid':self.utilities_paid,
+            't_balcf':self.t_balcf,
+
+            'utilities':self.utilities,
+            'deposit':self.deposit,
+
             'commission':self.commission,
+
             'remitted':self.remitted,
             'ratio':self.ratio,
+            
             'll_balcf':self.ll_balcf,
+
             'agent':self.agent,
             'status':self.status,
             'date':LandlordRemittance.get_date(self)

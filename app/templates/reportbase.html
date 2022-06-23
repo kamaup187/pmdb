@@ -510,6 +510,29 @@
   </div>
 </div>
 
+<div class="modal fade center-btn" id="remitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rent remmittance</h5>
+      </div>
+      <div class="modal-body">
+        <div class="media mb-2">
+          <div id="remitbed" class="media-body">
+            <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foote divbg">
+        <button id="remit" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">save</button>
+        <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade center-btn" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -1422,6 +1445,27 @@ $("#export-xls-btn").click(function(){
       $(".loader12").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
     },20000);
 });
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#remitModal").on('shown.bs.modal', function(){
+    // $('#tenantbed').addClass("dispnone");
+
+    $.ajax({
+      url: "{{ url_for('api.combinedreport') }}",
+      type: "get",
+      data: {
+            prop: $("#propname").text(),
+            month:$("#remitperiod").text(),
+            target: "remit_data"
+          },
+      success: function(response) {
+        $("#remitbed").html(response); 
+      }
+    });
+  });
+
 </script>
 
 <!-- <script>

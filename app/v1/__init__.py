@@ -205,6 +205,7 @@ api.add_resource(SummarisedCombinedBill,"/summarised/combinedbill")
 api.add_resource(ExternalDetail,"/external/detailed")
 api.add_resource(LandlordProfitAndLossSummary,"/landlord/summary")
 api.add_resource(LandlordProfitAndLoss,"/landlord/pl")
+api.add_resource(CombinedReport,"/landlord/combined")
 api.add_resource(RentStatement,"/rent/statement")
 api.add_resource(WaterStatement,"/water/statement")
 api.add_resource(ListedProperties,"/listed/properties")
@@ -226,7 +227,7 @@ api.add_resource(TenantDeposits,"/deposit/report")
 api.add_resource(OfficePnL,"/profitnloss/report")
 api.add_resource(OfficeExpenses,"/office/expenses")
 api.add_resource(CustomReport,"/custom/report")
-
+api.add_resource(RentRemit,"/rent/remit")
 
 
 api.add_resource(ExpenseDetail,"/expenses/detailed")

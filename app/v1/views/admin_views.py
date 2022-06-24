@@ -786,7 +786,6 @@ class AddProp(Resource):
         #             owners.append(owner)
             
         #     filtered_owners = remove_dups(owners)
-
         #     return render_template('ajax_multivariable.html',items=filtered_owners,placeholder="select owner")
 
         if target == "regions":

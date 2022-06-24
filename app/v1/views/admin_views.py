@@ -1056,7 +1056,7 @@ class LinkProperty(Resource):
 
             if agent_obj:
                 ApartmentOp.relate(prop,agent_obj)
-                print(agent_obj," given access to ",prop)
+                print(agent_obj,"agent given access to ",prop)
                 UserOp.update_status(agent_obj,True)
                 ApartmentOp.update_agent(prop,agent_obj.username)
                 if prop.agency_managed:
@@ -1066,7 +1066,7 @@ class LinkProperty(Resource):
                     for i in company_users:
                         if i.user_group_id == 4:
                             ApartmentOp.relate(prop,i)
-                            print("user added to ",str(prop))
+                            print(i,"user added to ",str(prop))
 
             else:
                 print(prop.agency_managed)
@@ -1076,7 +1076,7 @@ class LinkProperty(Resource):
                     for i in company_users:
                         if i.user_group_id == 4:
                             ApartmentOp.relate(prop,i)
-                            print("user added to ",str(prop))
+                            print(i,"user added to ",str(prop))
 
         else:
             access = True

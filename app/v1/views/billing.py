@@ -107,7 +107,10 @@ class Billing(Resource):
 
         apartment_name = request.form.get("apartment")
         houses = request.form.get("houses")
+        tenantid = request.form.get("tenantid")
         date = request.form.get("date")
+
+        target = request.form.get("target")
 
         try:
             billdate = date_formatter(date)
@@ -121,10 +124,25 @@ class Billing(Resource):
         except:
             houseids = []
 
+        if target == "single":
+            try:
+                billdate = date_formatter_weekday(date)
+                bill_date = parse(billdate)
+            except:
+                bill_date = None
+
+            residents = []
+            resident = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenantid))
+            residents.append(resident)
+            houseids = [resident.house.id for resident in residents]
+
+
         if not apartment_name:
             propid = request.form.get("propid")
-            apartment_id = propid[4:]
-            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            print("APARTMENT ID TO BILL IS>>>>",propid)
+            # apartment_id = propid[4:]
+            apartment_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
             apartment_name = prop.name
         else:
             apartment_id = get_apartment_id(apartment_name)
@@ -717,6 +735,8 @@ class BillInvoice(Resource):
             except:
                 narration = ""
 
+            template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
+
             return render_template(
                 "ajax_tenant_invoice_mail.html",
                 bill=bill,
@@ -774,7 +794,7 @@ class BillInvoice(Resource):
             str_month = get_str_month(prop_obj.billing_period.month)
 
             salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
-            intro = f'your bill for <span class="text-info">{str_month} </span>is as follows;'
+            intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'
 
             if bill.house.payment_bankacc:
                 bankdetails = f'Bank: <span class="text-info">{bill.house.payment_bank} Acc: {bill.house.payment_bankacc}</span>'
@@ -824,8 +844,10 @@ class BillInvoice(Resource):
             print("READINGS: ",wbill)
             print("WATERTARGET: ",watertarget)
 
+            template = "ajax_sms_invoice2.html" if aviv(current_user) else "ajax_sms_invoice.html"
+
             return render_template(
-                "ajax_sms_invoice.html",
+                template,
                 smsstatus=delivery,
                 narration=narration,
                 sms_highlight=sms_highlight,
@@ -2070,6 +2092,7 @@ class ReceivePayment(Resource):
             house_obj = get_specific_house_obj(propid,house_name)
             bills = house_obj.monthlybills
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+            
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
             else:
@@ -2083,6 +2106,7 @@ class ReceivePayment(Resource):
             bills = house_obj.monthlybills
 
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
             else:
@@ -2346,6 +2370,9 @@ class ReceivePayment(Resource):
 
         if not narration:
             narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
+
+        if aviv(current_user):
+            narration = get_str_month(period.month)
 
 
         # monthly_charges = house_obj.monthlybills

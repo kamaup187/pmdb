@@ -88,10 +88,10 @@
 
             <div class="mb-4 mt-4 text-black font-weight-bold">
               <div class="ln-14">Date : {{prop_obj.name}}</div>
-              <div class="ln-14">Apartment No. : {{prop_obj.name}}</div>
-              <div class="ln-14">Unit Type : {{prop_obj.location}}</div>
-              <div class="ln-14">Client Name : {{prop_obj.name}}</div>
-              <div class="ln-14">Purchase Price : {{prop_obj.name}}</div>
+              <div class="ln-14">Apartment No. : {{tenant_obj.house.name}}</div>
+              <div class="ln-14">Unit Type : </div>
+              <div class="ln-14">Client Name : {{tenant_obj.name}}</div>
+              <div class="ln-14">Purchase Price : {{tenant_obj.house.housecode.listprice}}</div>
 
             </div>
 
@@ -132,7 +132,9 @@
                   <thead class="custom-header-alt small">
                     <tr>
                       <th class="">Date Received</th>
+                      <th class="">Payment Ref</th>
                       <th class="">Payment Type</th>
+
                       <th class="">Amount Received</th>
                       <th class="">Amount Payable</th>
                       <th class="">Date Payable</th>
@@ -143,11 +145,16 @@
                   </thead>
                   <tbody>
                     {% for bill in bills%}
-                    <tr>
-                      <td class="data-cell text-center">{{ bill['house'] }}</td>
-                      <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                    <tr class="text-black">
+                      <td class="data-cell text-center">{{ bill['payment_date'] }}</td>
+                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
+                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
+
+                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{ bill['date2'] }}</td>
+                      <td class="data-cell text-right">{{ bill['comments'] }}</td>
+
 
                     </tr>
                   {% endfor %}
@@ -155,7 +162,7 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>

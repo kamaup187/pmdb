@@ -413,6 +413,8 @@ class UserOp(User,Base):
             "natid":self.national_id,
             "usercode":self.usercode,
             "email":self.email,
+            "level":self.user_group,
+            "int_level":self.user_group_id,
             "group":self.company_user_group,
             "company":self.company,
             "status":self.active,
@@ -1177,6 +1179,10 @@ class SalesRepOp(SalesRep,Base):
         return SalesRep.query.filter_by(id=group_id).first()
 
     @staticmethod
+    def fetch_rep_by_name(name):
+        return SalesRep.query.filter_by(name=name).first()
+
+    @staticmethod
     def fetch_rep_by_username(name):
         return SalesRep.query.filter_by(username=name).first()
 
@@ -1789,28 +1795,29 @@ class PermanentTenantOp(PermanentTenant,Base):
         else:
             return "text-dark"
 
-    def update_payment_plan(self,negprice,plan,deposit,mi,num_mi,updatedon,updatedby):
+    def update_payment_plan(self,negprice,plan,deposit,deposit2,mi,num_mi,updatedon,updatedby):
         if negprice:
             self.negotiated_price = negprice
         if plan:
             self.plan = plan
         if deposit:
             self.deposit = deposit
+        if deposit2:
+            self.deposit2 = deposit2
         if mi:
             self.instalment = mi
         if num_mi:
             self.num_instalment = num_mi
 
-        self.modifiedon = updatedon
-        self.modifiedby = updatedby
+        db.session.commit()
+
+    def update_checkin_date(self, checkin_date):
+        self.checkin = checkin_date
         db.session.commit()
 
     def upload_contracts(self,contracts_url,uploadedon,updatedby):
         if contracts_url:
             self.contracts_url = contracts_url
-
-        self.modifiedon = uploadedon
-        self.modifiedby = updatedby
         db.session.commit()
 
     def update_balance(self,balance):
@@ -1847,6 +1854,10 @@ class PermanentTenantOp(PermanentTenant,Base):
 
     def update_tenant_type(self,status):
         self.tenant_type = status
+        db.session.commit()
+
+    def update_resident_type(self,status):
+        self.resident_type = status
         db.session.commit()
 
     def update_residency(self,residency):
@@ -2864,6 +2875,23 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             return self.house.owner.name.title()
 
+    def get_date2(month,year):
+        switcher = {
+            1:"Jan",
+            2:"Feb",
+            3:"Mar",
+            4:"Apr",
+            5:"May",
+            6:"Jun",
+            7:"Jul",
+            8:"Aug",
+            9:"Sept",
+            10:"Oct",
+            11:"Nov",
+            12:"Dec"
+            }
+        return f'{switcher.get(month)},{year}'
+
     def view_detail(self):
         
         return {
@@ -2912,6 +2940,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance':MonthlyChargeOp.fig_format(self.balance),
             'date':self.date.date(),
+            'date2':MonthlyChargeOp.get_date2(self.month,self.year),
             'smsstatus':MonthlyChargeOp.get_sms_status(self),
             'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
             'smsactive': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",

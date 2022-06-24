@@ -196,11 +196,11 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
                       <fieldset class="mb-2">
-                        <legend class="legend">Select tenant/resident:</legend>
+                        <legend class="legend">Select resident:</legend>
 
                         <div id="prop_selector" class="form-group input-icons mt-0 dispnone">
                           <select class="select-css" id ="select_prop" >
-                            <option disabled selected value> -- apartment? -- </option>
+                            <option disabled selected value> -- property? -- </option>
                             {% for o in proplist %}
                             <option value="{{ o }}">{{ o }}</option>
                             {% endfor %}

@@ -2,6 +2,7 @@
 from re import S
 import time
 import os
+from dateutil.parser import parse
 
 import cloudinary as Cloud
 from sqlalchemy.sql.expression import except_
@@ -1780,7 +1781,6 @@ class AddSalesAgent(Resource):
 
             found = False
 
-
             for obj in company_obj.groups:
                     if str(obj) == "Sales":
                         found = True
@@ -1791,22 +1791,24 @@ class AddSalesAgent(Resource):
                 group2.save()
                 company_usergroup_obj = group2
 
-            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",3,company_usergroup_obj.id,company_obj.id)
+            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
             user_obj.save()
 
-        
-            rep_obj = SalesRepOp(name,user_obj.username,phone,user_obj.id,company_obj.id)
-            rep_obj.save()
+            repp = SalesRepOp.fetch_rep_by_name(name.lower())
+            if not repp:
+            
+                rep_obj = SalesRepOp(name,name,phone,user_obj.id,company_obj.id)
+                rep_obj.save()
 
-            if prop:
-                prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-                UserOp.relate(user_obj,prop_obj)
+                if prop:
+                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                    UserOp.relate(user_obj,prop_obj)
 
-            # att_obj = SalesRepOp(name,phone,prop_obj.id)
-            # att_obj.save()
+                # att_obj = SalesRepOp(name,phone,prop_obj.id)
+                # att_obj.save()
 
-            msg = "Sales agent added"
-            return proceed + msg
+                msg = "Sales agent added"
+                return proceed + msg
 
 class TenantManagement(Resource):
     """class"""
@@ -4459,15 +4461,31 @@ class AddTenant(Resource):
 
                     if ttype:
 
+                        if house_obj.owner:
+                            continue
+                        
+
                         ptenant_obj = PermanentTenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,created_by)
                         ptenant_obj.save()
+
+                        print("BEFORE UPDATING",ptenant_obj.resident_type)
+                        print("BEFORE UPDATING T",ptenant_obj.tenant_type)
 
                         rep_id = None
 
                         if ttype == "clients":
+                            PermanentTenantOp.update_resident_type(ptenant_obj,"investor")
+                            print("AFTER UPDATING",ptenant_obj.resident_type)
+                            print("AFTER UPDATING T",ptenant_obj.tenant_type)
+
+
                             if rep:
-                                username = username_extracter(rep)
-                                rep_id = SalesRepOp.fetch_rep_by_username(username).id
+                                # username = username_extracter(rep)
+                                try:
+                                    rep_id = SalesRepOp.fetch_rep_by_name(rep).id
+                                except:
+                                    print("REP NOT FOUND FOR", rep)
+                                    rep_id = None
                             else:
                                 rep_id = None
 
@@ -4804,17 +4822,27 @@ class Deal(Resource):
         if target=="negotiations":
             negprice = validate_input(request.form.get('negprice'))
             deposit = validate_input(request.form.get('deposit'))
+            deposit2 = validate_input(request.form.get('deposit2'))
             mi = validate_input(request.form.get('mi'))
             num_mi = validate_input(request.form.get('num_mi'))
 
             PermanentTenantOp.update_status(alloc,"contracts")
 
-            PermanentTenantOp.update_payment_plan(alloc,negprice,plan,deposit,mi,num_mi,datenow,current_user.id)
+            PermanentTenantOp.update_payment_plan(alloc,negprice,plan,deposit,deposit2,mi,num_mi,datenow,current_user.id)
 
             msg = "Client details updated"
             return msg + proceed
         else:
             # path = f"app/temp/litala.pdf"
+            raw_checkin = request.form.get('date')
+
+            if not raw_checkin:
+                # return "date not specified"
+                abort(403)
+            else:
+                str_checkin = date_formatter_weekday(raw_checkin)
+                datenow = parse(str_checkin)
+
 
             path = request.files.get('file')
 
@@ -4845,13 +4873,13 @@ class Deal(Resource):
             else:
                 PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
 
-            bill = alloc.instalment + alloc.deposit
+            # bill = alloc.instalment + alloc.deposit
 
-            billplan = MonthlyChargeTwoOp(alloc.negotiated_price,alloc.deposit,30,30,alloc.num_instalment,alloc.num_instalment,1,alloc.instalment,0,bill,0,0,alloc.apartment.id,plot.id,alloc.id,current_user.id)
-            billplan.save()
+            # billplan = MonthlyChargeTwoOp(alloc.negotiated_price,alloc.deposit,30,30,alloc.num_instalment,alloc.num_instalment,1,alloc.instalment,0,bill,0,0,alloc.apartment.id,plot.id,alloc.id,current_user.id)
+            # billplan.save()
 
-            MonthlyChargeTwoOp.update_cumulative_balance(billplan,alloc.negotiated_price)
-            MonthlyChargeTwoOp.update_balance(billplan,bill)
+            # MonthlyChargeTwoOp.update_cumulative_balance(billplan,alloc.negotiated_price)
+            # MonthlyChargeTwoOp.update_balance(billplan,bill)
 
             return render_template('ajaxproceed.html',alert="success")
 
@@ -7021,6 +7049,11 @@ class Results(Resource):
                 paid_status = "-"
                 badge_status = ""
             else:
+                print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
+                print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
+
+                # PermanentTenantOp.update_resident_type(tenant_obj,"investor")
+
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                     house_obj = tenant_obj.house
                     current_invoice = fetch_current_owner_invoice(house_obj)
@@ -7071,7 +7104,9 @@ class Results(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_tenant_detail.html",prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+            template = "ajax_tenant_detail2.html" if aviv(current_user) else "ajax_tenant_detail.html"
+
+            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
 class ContactManagement(Resource):

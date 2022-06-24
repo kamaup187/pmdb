@@ -531,13 +531,21 @@
 
                       <div id="client_details_two" class="mt-2">
 
+                        <div class="form-group mb-3 input-icons">
+                          <span class="text-danger font-weight-bold">Date</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          </div>
+                        </div>
+
                       </div>
 
 
 
                       <div class="row mb-3 underline-thin-fade">
-                        <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts<span class="text-danger">*</span></span></div>
-                        <div class="form-group col-9 no-paddin input-icons">
+                        <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
+                        <div class="form-group no-paddin input-icons"> Contracts <span class="text-danger">*</span>
                           <input class="ph" id="contractsfile" type = "file" name = "filename" />
                           <span class="fa field-icon text-info iconotifications">--</span>
                         </div>
@@ -790,6 +798,16 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script> -->
+
+<script>
+  $("#checkindate").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy",
+  //   startView: "months", 
+  //   minViewMode: "months"
+  });
+</script>
 
 
 
@@ -1341,20 +1359,20 @@
 
 <script>
   // This script autopulate house options and displays tenant name
-  $("#contractsModal").on('shown.bs.modal', function(){
-    $.ajax({
-      url: "{{ url_for('api.deal') }}",
-      type: "get",
-      data: {
-            tenant_id:$("#tenant_identifier").text(),
-            target:"negotiated details"
-          },
-      success: function(response) {
-        $("#client_details_two").html(response);
+  // $("#contractsModal").on('shown.bs.modal', function(){
+  //   $.ajax({
+  //     url: "{{ url_for('api.deal') }}",
+  //     type: "get",
+  //     data: {
+  //           tenant_id:$("#tenant_identifier").text(),
+  //           target:"negotiated details"
+  //         },
+  //     success: function(response) {
+  //       $("#client_details_two").html(response);
 
-      }
-    });
-  });
+  //     }
+  //   });
+  // });
 
 </script>
 
@@ -1458,6 +1476,7 @@
       var files = $('#contractsfile')[0].files;
       fd.append('file',files[0]);
       fd.append('target',"contracts");
+      fd.append('date',$("#checkindate").val());
       fd.append('tenant_id',$("#tenant_identifier").text());
 
       $.ajax({
@@ -1488,6 +1507,18 @@
                   success: function(response) {
                     
                     $("#result-view").html(response);
+
+                    $.ajax({
+                      url: "/billing",
+                      type: "POST",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        tenant_id:$("#tenant_identifier").text(),
+                        date:$("#checkindate").val()
+
+                      },
+                      success: function (response) { }
+                    });
                   }
                 });
               },10);

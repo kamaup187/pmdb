@@ -4842,20 +4842,51 @@ class StatementOfAccounts(Resource):
             house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
             return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
 
-        if not prop and target != "direct":
-            apartment_list = fetch_all_apartments_by_user(current_user)
+        # if not prop and target != "direct":
+        #     apartment_list = fetch_all_apartments_by_user(current_user)
+        #     return Response(render_template(
+        #         'report_account_statement.html',
+        #         props=apartment_list,
+        #         name=current_user.name,
+        #         tenant_obj = None,
+        #         prop = "",
+        #         prop_obj = None,
+        #         co=current_user.company,
+        #         tenantlist=[],
+        #         logopath=logo(current_user.company)[0],
+        #         mobilelogopath=logo(current_user.company)[1]
+        #     ))
+
+
+        # target = request.args.get("target")
+
+        if target == "direct":
+            tenantid = request.args.get("tenantid")
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+
+            bills = tenant_obj.monthly_charges
+
+            formatted_bills = []
+
+            for bill in bills:
+                formatted_bills.append(MonthlyChargeOp.view_detail(bill))
+
             return Response(render_template(
-                'report_account_statement.html',
-                props=apartment_list,
+               'report_account_statement.html',
+                bills=formatted_bills,
+                prop_obj=tenant_obj.apartment,
+                prop = tenant_obj.apartment.name,
+                tenant_obj=tenant_obj,
+                tenant_name=tenant_obj.name,
                 name=current_user.name,
-                tenant_obj = None,
-                prop = "",
-                prop_obj = None,
-                co=current_user.company,
                 tenantlist=[],
                 logopath=logo(current_user.company)[0],
-                mobilelogopath=logo(current_user.company)[1]
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
             ))
+
 
 class ExpenseDetail(Resource):
     """class"""
@@ -5455,8 +5486,10 @@ class FetchBills(Resource):
 
                 # billids = get_obj_ids(detailed_bills)
 
+                template = "ajax_tenantbill2.html" if aviv(current_user) else "ajax_tenantbill.html"
+
                 return render_template(
-                    "ajax_tenantbill.html",
+                    template,
                     fieldshow_sec = "dispnone" if not get_sum(detailed_bills,"security") else "",
                     fieldshow_sev = "dispnone" if not get_sum(detailed_bills,"maintenance") else "",
                     fieldshow_elec = "dispnone" if not get_sum(detailed_bills,"electricity") else "",

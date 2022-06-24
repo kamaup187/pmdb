@@ -641,13 +641,18 @@ class PermanentTenant(db.Model):
     negotiated_price = db.Column(db.Float,default=0)
     plan = db.Column(db.String)
     deposit = db.Column(db.Float,default=0)
+    deposit2 = db.Column(db.Float,default=0)
     instalment = db.Column(db.Float,default=0)
     num_instalment = db.Column(db.Float,default=0)
     contracts_url = db.Column(db.VARCHAR)
 
+    checkin = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+
     multiple_houses =  db.Column(db.Boolean,default=False)
     tenant_type = db.Column(db.String,default="resident")
     status = db.Column(db.String,default="Booked")
+    resident_type = db.Column(db.String,default="normal")
     classtype = db.Column(db.String,default="investor")
 
     # cleared = db.Column(db.Boolean,default=False)

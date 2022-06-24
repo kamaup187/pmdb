@@ -229,7 +229,6 @@ class Users(Resource):
         update_login_history("users",current_user)
         target = request.args.get('target')
 
-
         if target == "add user":
             user = current_user
 
@@ -249,8 +248,21 @@ class Users(Resource):
                 user_status="Active",
                 user=None)
 
+        elif target == "props":
+            if current_user.username.startswith("admin") or current_user.username.startswith("qc"):
+                props = current_user.company.props
+            else:
+                props = fetch_all_apartments_by_user(current_user)
+ 
+            propids = [prop.id for prop in props]
+            str_propids = ','.join(map(str, propids))
+            return render_template("ajax_properties_checkbox.html",propboxes=props,checkpropids=str_propids)
+
+
         elif target == "check email":
             email = request.args.get('email')
+            if not email:
+                return typing
             if "@" not in email or ".com" not in email:
                 return err + "invalid"
             user = fetch_user(email)
@@ -261,6 +273,8 @@ class Users(Resource):
 
         elif target == "check tel":
             tel = request.args.get('tel')
+            if not tel:
+                return typing
             if "+" in tel:
                 return err + "invalid"
             user = fetch_user(tel)
@@ -271,6 +285,8 @@ class Users(Resource):
 
         elif target == "check id":
             natid = request.args.get('natid')
+            if not natid:
+                return typing
             if len(natid) < 6:
                 return err + "invalid"
             user = fetch_user(natid)
@@ -310,14 +326,31 @@ class Users(Resource):
 
         target = request.form.get('target')
 
-        print("EMMMMMMAIL",email)
+        houselist = request.form.get('houses')
+        proplist = request.form.get('props')
+
+        try:
+            houseids = [int(s) for s in houselist.split(',')]
+            print("HOUSEIDS",houseids)
+        except:
+            houseids = []
+
+        try:
+            propids = [int(s) for s in proplist.split(',')]
+            print("PROPIDS",propids)
+        except:
+            propids = []
+
+        properties = [ApartmentOp.fetch_apartment_by_id(propid) for propid in propids]
+        houses = [HouseOp.fetch_house_by_id(houseid) for houseid in houseids]
+
 
         if name and name != 'None':
             if len(name) < 4:
                 return err + "name too short"
 
         if email and email != 'None':
-            if "@" not in email or ".com" not in email:
+            if "@" not in email or "." not in email:
                 return err + "invalid email"
             user = fetch_user(email)
             if user and user.email != email:
@@ -398,9 +431,11 @@ class Users(Resource):
             new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,user_group_id,company.id,current_user.id)
             new_user.save()
 
-            company_properties = company.props
-            for prop in company_properties:
+            for prop in properties:
                 UserOp.relate(new_user,prop)
+
+            for hse in houses:
+                UserOp.relate_house(new_user,hse)
 
             return "User created successfully" + proceed
 
@@ -667,7 +702,11 @@ class RegisterUser(Resource):
 class SignUpCategory(Resource):
     """class"""
     def get(self):
-        return Response(render_template("signupcategory.html"))
+        if os.getenv("TARGET") != "lasshouse":
+            return Response(render_template("signupcategory.html"))
+        else:
+            return Response(render_template("signup2.html"))
+
     def post(self):
         category=request.form.get('category')
         if not category:
@@ -739,21 +778,21 @@ class AdminCreateAgent(Resource):
         else:
             co = CompanyOp.fetch_company_by_name(company_name)
             if not co:
+                dir_group = None
                 company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)
                 company_obj.save()
 
-                group1 = CompanyUserGroupOp("Manager","administrator",company_obj.id)
-                group1.save()
-                group2 = CompanyUserGroupOp("Accounts","accounting officer",company_obj.id)
-                group2.save()
-                group3 = CompanyUserGroupOp("Caretaker","property caretaker",company_obj.id)
-                group3.save()
-                group4 = CompanyUserGroupOp("Tenant","property client",company_obj.id)
-                group4.save()
+                groups = ["Director","Manager","Property Agent","Accounts","Owner","Caretaker","Tenant"]
+                for group in groups:
+                    group_obj = CompanyUserGroupOp(group,"",company_obj.id)
+                    group_obj.save()
+
+                    if group == "Director":
+                        dir_group = group_obj
 
                 auto_assign_company_group_roles(company_name)
 
-                user = UserOp(name,usercode,username,nat_id,phone,email,pass1,usergroup_id,group1.id,company_obj.id,created_by)
+                user = UserOp(name,usercode,username,nat_id,phone,email,pass1,usergroup_id,dir_group.id,company_obj.id,created_by)
                 user.save()
 
                 msg='Account created successfully.'
@@ -771,6 +810,13 @@ class RequestDemo(Resource):
         lname=request.args.get('lname')
         phone=request.args.get('tel1')
         email=request.args.get('email')
+        target=request.args.get('target')
+
+        if not target:
+            if os.getenv("TARGET") != "lasshouse":
+                return None
+            else:
+                return Response(render_template("demo2.html"))
 
         name = fname + " " + lname
 
@@ -785,7 +831,7 @@ class RequestDemo(Resource):
         send_internal_email_notifications("DEMO REQUEST",message1)
 
 
-        targeturl = "https://www.kodimann.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        targeturl = "https://kodimannapp.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
         
         if os.getenv("TARGET") == "lasshouse":
             print("sending....")
@@ -863,7 +909,7 @@ class SelfUserRegisterAgent(Resource):
         message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
         try:
             # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
-            response = sms.send(message1, ["+254716674695"],sender)
+            response = sms.send(message1, ["+254716674695","+25410349851"],sender)
         except:
             pass
 
@@ -887,7 +933,7 @@ class SelfUserRegisterAgent(Resource):
 
         UserOp.update_link(user,userlink)
        
-        targeturl = f"https://www.kodimann.com/user/{userlink}"
+        targeturl = f"https://kodimannapp.com/user/{userlink}"
         # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
 
         print(targeturl)
@@ -963,7 +1009,7 @@ class SelfUserRegisterOwner(Resource):
 
         try:
             message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an owner({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
-            response = sms.send(message1, ["+254716674695"],sender)
+            response = sms.send(message1, ["+254716674695","+25410349851"],sender)
 
             recipient = [sms_phone_number_formatter(phone)]
             message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay Customer relations manager."
@@ -1067,8 +1113,8 @@ class LandingPage(Resource):
             # return Response(render_template("landingtwo.html"))
             return redirect("https://kiotapay.co.ke")
         else:
-            return Response(render_template("home.html"))
-            # return redirect(url_for('api.userlogin'))
+            # return Response(render_template("home.html"))
+            return redirect(url_for('api.userlogin'))
  
     def post(self):
         pass

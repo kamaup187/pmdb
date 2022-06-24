@@ -16,13 +16,15 @@
     <div class="divjust-end mr-5 "><span>Deposit: </span><span class="text-gray-900">{{bill.deposit}}</span></div>
     {% endif %}
 
-    {%if readings%}
-      <div class="divjust-end mr-5 overline-thin-fade"><span>Water Previous: </span><span class="text-gray-900">{{readings.last_reading}}</span></div>
-      <div class="divjust-end mr-5 "><span>Water Current: </span><span class="text-gray-900">{{readings.reading}}</span></div>
-      <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{readings.units}}<span class="text-danger font-weight-bold {{w_edited}}"> *</span></span></div>
-      <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.waterrate}}</span></div>
-      <div class="divjust-end mr-5 underline-thin-fade "><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.waterrate * readings.units|float)}}</span></div>
+    {%if watertarget%}
+      {%if readings%}
+        <div class="divjust-end mr-5 overline-thin-fade"><span>Water Previous: </span><span class="text-gray-900">{{readings.last_reading}}</span></div>
+        <div class="divjust-end mr-5 "><span>Water Current: </span><span class="text-gray-900">{{readings.reading}}</span></div>
+        <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{readings.units}}<span class="text-danger font-weight-bold {{w_edited}}"> *</span></span></div>
+        <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.waterrate}}</span></div>
+        <div class="divjust-end mr-5 underline-thin-fade "><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.waterrate * readings.units|float)}}</span></div>
 
+      {% endif %}
     {% endif %}
     
     {%if house.housecode.watercharge%}
@@ -67,10 +69,10 @@
     {% endif %}
     
     {%if bank%}
-    <span class="linebrea">{{bank|safe}}</span>
+    <div class="text-left">{{bank|safe}}</div>
     {% endif %}
 
-    <span>{{co|safe}}</span>
+    <br><span> ~ {{bill.apartment.name|safe}}</span>
 
     {% if not w_edited or not e_edited%}
     <div class="text-left">

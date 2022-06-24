@@ -81,6 +81,7 @@ class SwitchPeriod(Resource):
         #     CompanyOp.set_rem_quota(company,200)
         # else:
         #     pass
+
 class Replenish(Resource):
     def post(self):
         if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.username.startswith("quality"):
@@ -88,25 +89,61 @@ class Replenish(Resource):
             CompanyOp.set_rem_quota(co,500)
             CompanyOp.set_smsquota(co,500)
 
+class ReplenishAll(Resource):
+    def get(self):
+        cos = CompanyOp.fetch_all_companies()
+        for co in cos:
+            CompanyOp.set_rem_quota(co,500)
+            CompanyOp.set_smsquota(co,500)
+        return "ok"
+
 class Billing(Resource):
     """class"""
     @login_required
     def post(self):
         msg = None
         user_id = current_user.id
-        configuration = os.getenv('APP_SETTINGS')
 
-        # if user_id not in [2,6,14,19,23,25] and configuration != "development":
-        #     flash("Billing completed","success")
-        #     return redirect(url_for('api.billing'))
 
         apartment_name = request.form.get("apartment")
+        houses = request.form.get("houses")
+        tenantid = request.form.get("tenantid")
+        date = request.form.get("date")
+
+        target = request.form.get("target")
+
+        try:
+            billdate = date_formatter(date)
+            bill_date = parse(billdate)
+        except:
+            bill_date = None
+
+        try:
+            houseids = [int(s) for s in houses.split(',')]
+            print("HOUSEIDS",houseids)
+        except:
+            houseids = []
+
+        if target == "single":
+            try:
+                billdate = date_formatter_weekday(date)
+                bill_date = parse(billdate)
+            except:
+                bill_date = None
+
+            residents = []
+            resident = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenantid))
+            residents.append(resident)
+            houseids = [resident.house.id for resident in residents]
+
+
         if not apartment_name:
             propid = request.form.get("propid")
-            apartment_id = propid[4:]
-            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            print("APARTMENT ID TO BILL IS>>>>",propid)
+            # apartment_id = propid[4:]
+            apartment_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
             apartment_name = prop.name
-
         else:
             apartment_id = get_apartment_id(apartment_name)
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -114,8 +151,13 @@ class Billing(Resource):
         ApartmentOp.update_billing_progress(prop,"billing")
             
         chargetype = request.form.get("chargetype")
-        yr = request.form.get("year")
-        mnth = request.form.get("month")
+
+        try:
+            yr = bill_date.year
+            mnth = bill_date.month
+        except:
+            yr = None
+            mnth = None
 
         if not yr:
             year = current_user.company.billing_period.year
@@ -125,113 +167,86 @@ class Billing(Resource):
         if not mnth:
             month = current_user.company.billing_period.month
         else:
-            month = get_numeric_month(mnth)
+            month = int(mnth)
 
         if chargetype == "Water":
             job = q.enqueue_call(
                 func=water_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # water_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "All unbilled readings billed successfully"
 
         elif chargetype == "Rent":
             job = q.enqueue_call(
                 func=rent_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # rent_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Rent billed to all houses successfully"
 
         elif chargetype == "Garbage":
             job = q.enqueue_call(
                 func=garbage_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # garbage_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Garbage fee billed to all houses succesfully"
 
         elif chargetype == "Electricity":
             job = q.enqueue_call(
                 func=electricity_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # electricity_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Electricity fee billed to all houses succesfully"
 
         elif chargetype == "Security":
             job = q.enqueue_call(
                 func=security_bill, args=(apartment_id,chargetype,user_id,month,year,), result_ttl=5000
             )
-            # security_bill(apartment_id,chargetype,user_id)
             job2 = q.enqueue_call(
                 func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
             )
-            # total_bill(apartment_id,user_id)
             msg = "Security fee billed to all houses succesfully"
 
         else:
-            # water_bill(apartment_id,"Water",user_id)
-            # rent_bill(apartment_id,"Rent",user_id)
-            # garbage_bill(apartment_id,"Garbage",user_id)
-            # electricity_bill(apartment_id,"Electricity",user_id)
-            # security_bill(apartment_id,"Security",user_id)
-            # maintenance_bill(apartment_id,"Maintenance",user_id)
-            # total_bill(apartment_id,user_id)
+
             job = q.enqueue_call(
-                func=water_bill, args=(apartment_id,"Water",user_id,month,year,), result_ttl=5000
+                func=water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
             )
             jobfixedwater = q.enqueue_call(
-                func=fixed_water_bill, args=(apartment_id,"Water",user_id,month,year,), result_ttl=5000
+                func=fixed_water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
             )
             job2 = q.enqueue_call(
-                func=rent_bill, args=(apartment_id,"Rent",user_id,month,year,), result_ttl=5000
+                func=rent_bill, args=(apartment_id,houseids,"Rent",user_id,month,year,), result_ttl=5000
             )
             job3 = q.enqueue_call(
-                func=garbage_bill, args=(apartment_id,"Garbage",user_id,month,year,), result_ttl=5000
+                func=garbage_bill, args=(apartment_id,houseids,"Garbage",user_id,month,year,), result_ttl=5000
             )
             job4 = q.enqueue_call(
-                func=electricity_bill, args=(apartment_id,"Electricity",user_id,month,year,), result_ttl=5000
+                func=electricity_bill, args=(apartment_id,houseids,"Electricity",user_id,month,year,), result_ttl=5000
             )
             job5 = q.enqueue_call(
-                func=security_bill, args=(apartment_id,"Security",user_id,month,year,), result_ttl=5000
+                func=security_bill, args=(apartment_id,houseids,"Security",user_id,month,year,), result_ttl=5000
             )
             job6 = q.enqueue_call(
-                func=maintenance_bill, args=(apartment_id,"Maintenance",user_id,month,year,), result_ttl=5000
+                func=maintenance_bill, args=(apartment_id,houseids,"Maintenance",user_id,month,year,), result_ttl=5000
             )
             job7 = q.enqueue_call(
-                func=total_bill, args=(apartment_id,user_id,month,year,), result_ttl=5000
+                func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
             )
             
             str_month = get_str_month(month)
 
             txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
             send_internal_email_notifications(current_user.company.name,txt)
-            # advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
-            # try:
-            #     response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-            # except Exception as e:
-            #     print("billing notification failed >>>>>>>>>>>>>>>>>>>>>>>> ",e)
 
-            msg = "Billing has started, please wait..."
-
-        if msg:
-            flash(msg,"success")
-
-        return redirect(url_for('api.billing'))
 
     @login_required
     def get(self):
@@ -310,6 +325,7 @@ class ClientInvoice(Resource):
         bill = ClientBillOp.fetch_specific_bill(clientbillid)
         client = bill.company
         invnum = bill.id + 13285
+        # invnum = 
 
         timenow = datetime.datetime.now()
         
@@ -463,10 +479,47 @@ class BillInvoice(Resource):
 
         house = bill.house
 
-        tenant = bill.tenant
+
+        if bill.ptenant:
+            tenant=bill.ptenant
+            current_target = "owner"
+            print("OWNER INVOICE IS BEING ACCESSED FOR" ,bill.ptenant.name)
+        else:
+            current_target = "tenant"
+            tenant=bill.tenant
+            print("TENANT INVOICE IS BEING ACCESSED FOR" ,bill.tenant.name)
+
+
+        try:
+            if current_target == "owner":
+                if bill.house.watertarget == "owner":
+                    watertarget = True
+                else:
+                    watertarget = False
+            else:
+                if bill.house.watertarget == "tenant":
+                    watertarget = True
+                else:
+                    watertarget = False
+
+            if not bill.house.watertarget:
+                watertarget = True
+        except:
+            watertarget = True
+
 
         sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+        print("WATER BILLS ARE HERE",sibling_water_bill)
+        try:
+            print(sibling_water_bill[0].reading_period)
+        except:
+            pass
         sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+        print("ELECTRICITY BILLS ARE HERE",sibling_electricity_bill)
+        try:
+            print(sibling_electricity_bill[0].reading_period)
+        except:
+            pass
 
 
         try:
@@ -668,10 +721,30 @@ class BillInvoice(Resource):
 
         elif target == 'email':
 
+
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = bill.house.name
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
+                    if bill.ptenant:
+                        narration = "WN"+str(tenant.id)
+                    else:
+                        narration = "TNT"+str(tenant.id)
+                else:
+                    narration = ""
+            except:
+                narration = ""
+
+            template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
+
             return render_template(
-                "ajax_tenant_invoice.html",
+                "ajax_tenant_invoice_mail.html",
                 bill=bill,
+                month = get_str_month(bill.month),
+                p = bill.apartment.paymentdetails,
+                narration=narration,
                 readings = wbill,
+                watertarget = watertarget,
                 w_edited = w_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
@@ -689,7 +762,7 @@ class BillInvoice(Resource):
                 company=current_user.company,
                 invnum=invnum,
                 randid=bill.id,
-                logo=logo(current_user.company)[2],
+                logo=logo(current_user.company)[0],
                 slogo=logo(kiotapay)[1],
                 sign=logo(kiotapay)[4]
                 )
@@ -714,11 +787,14 @@ class BillInvoice(Resource):
 
             sms_highlight = "text-success" if smsstatus == "sent" or  smsstatus == "Success" or  smsstatus == "success-alt" else "text-danger"
 
-            tenant = bill.tenant if bill.tenant else bill.house.owner
+            tenant = bill.tenant if bill.tenant else bill.ptenant
             prop_obj= bill.apartment
 
 
             str_month = get_str_month(prop_obj.billing_period.month)
+
+            salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
+            intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'
 
             if bill.house.payment_bankacc:
                 bankdetails = f'Bank: <span class="text-info">{bill.house.payment_bank} Acc: {bill.house.payment_bankacc}</span>'
@@ -727,16 +803,53 @@ class BillInvoice(Resource):
             else:
                 bankdetails = ""
 
-            salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
-            intro = f'your bill for <span class="text-info">{str_month} </span>is as follows;'
-            bankdetails = bankdetails
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = bill.house.name
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
+                    if bill.ptenant:
+                        narration = "WN"+str(tenant.id)
+                    else:
+                        narration = "TNT"+str(tenant.id)
+                else:
+                    narration = ""
+            except:
+                narration = ""
 
+            p = bill.apartment.paymentdetails
+            if p:
+                if p.paytype == "mpesapay":
+                    bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
+                elif p.bankpaybill:
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
+                    if p.paytype != "bankpay":
+                        bankdetails = ""
+                else:
+                    bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
+                    if p.paytype != "bankpay":
+                        bankdetails = ""
+                        
             co = current_user.company
-            str_co = f'<span class="text-primary">{str(co)}</span>'
+
+            if co.name == 'LaCasa':
+                str_co = f'<span class="text-primary">Tel: 0735267087</span>'
+            else:
+                str_co = f'<span class="text-primary">{str(co)}</span>'
+
+            print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
+            print("OWNER:",bill.ptenant)
+            print("TENANT",bill.tenant)
+            print("delivery REPORT",bill.sms_invoice)
+            print("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEY")
+            print("READINGS: ",wbill)
+            print("WATERTARGET: ",watertarget)
+
+            template = "ajax_sms_invoice2.html" if aviv(current_user) else "ajax_sms_invoice.html"
 
             return render_template(
-                "ajax_sms_invoice.html",
+                template,
                 smsstatus=delivery,
+                narration=narration,
                 sms_highlight=sms_highlight,
                 action=action,
                 salutation=salutation,
@@ -752,7 +865,8 @@ class BillInvoice(Resource):
                 w_edited = w_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
-                total=f"{bill.total_bill:,.2f}",
+                watertarget=watertarget,
+                total=f"{bill.total_bill:,.1f}",
                 bank=bankdetails,
                 co=str_co
                 )
@@ -832,6 +946,7 @@ class EditBill(Resource):
         else:
             if target == "excelarrearsupload":
                 apartment_id = request.form.get('propid')
+                option = request.form.get('option')
                 prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
                 file = request.files.get('file')
 
@@ -880,8 +995,8 @@ class EditBill(Resource):
                             if target_items:
                                 bill = target_items[0]
                                 if bill:
-                                    if bill.arrears_updated:
-                                        print("Skipping", house_name)
+                                    if bill.arrears_updated and option != "replace":
+                                        print("Skipping", house_name,"arrears uploaded already ARR:",bill.arrears)
                                         continue
 
 
@@ -921,16 +1036,27 @@ class EditBill(Resource):
                                     #     MonthlyChargeOp.update_balance(bill,bal)
 
                                     #####################################################################################################################
-                                    update_water = bill.water_balance
-                                    update_rent = arr if arr else bill.rent_balance
-                                    update_garbage = bill.garbage_balance
-                                    update_security = bill.security_balance
-                                    update_fine = bill.penalty_balance
-                                    update_agreement = bill.agreement_balance
-                                    update_deposit = bill.deposit_balance
-                                    update_electricity = bill.electricity_balance
-                                    update_maintenance = bill.maintenance_balance
-                                    
+                                    if option == "add":
+                                        update_water = bill.water_balance
+                                        update_rent = arr if arr else bill.rent_balance
+                                        update_garbage = bill.garbage_balance
+                                        update_security = bill.security_balance
+                                        update_fine = bill.penalty_balance
+                                        update_agreement = bill.agreement_balance
+                                        update_deposit = bill.deposit_balance
+                                        update_electricity = bill.electricity_balance
+                                        update_maintenance = bill.maintenance_balance
+                                    else:
+                                        update_water = 0.0
+                                        update_rent = arr
+                                        update_garbage = 0.0
+                                        update_security = 0.0
+                                        update_fine = 0.0
+                                        update_agreement = 0.0
+                                        update_deposit = 0.0
+                                        update_electricity = 0.0
+                                        update_maintenance = 0.0
+
                                     update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
                                     total_amount = original_amount - bill.arrears + update_arrears
@@ -1043,7 +1169,7 @@ class EditBill(Resource):
                 all_charges = bill.house.charges
 
                 for charge in all_charges:
-                    if charge.date.month == bill.apartment.billing_period.month and charge.date.year == bill.apartment.billing_period.year and not charge.reading_id:
+                    if charge.date.month == bill.apartment.billing_period.month and charge.date.year == bill.apartment.billing_period.year:
                         ChargeOp.delete(charge)
 
                 if bill.apartment.billing_period.month == bill.month:
@@ -1301,7 +1427,10 @@ class EditBill(Resource):
                 if bill.rent_paid:
                     rentbal = bill.rent_balance + update_rent - bill.rent_paid
                 else:
-                    rentbal = bill.rent_balance + update_rent
+                    try:
+                        rentbal = bill.rent_balance + update_rent
+                    except:
+                        rentbal = update_rent
 
                 # # supplied arrears to effect rent only
                 # rentarr = bill.rent_balance 
@@ -1571,7 +1700,7 @@ class SendInvoices(Resource):
             return None
 
         else:
-            override = False
+            billid = ""
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
             send_internal_email_notifications(current_user.company.name,txt)
 
@@ -1583,7 +1712,7 @@ class SendInvoices(Resource):
         # THIS IS INTENTIONAL, JOB IS NOT WITHIN THE IF BLOCK
 
         job982 = q.enqueue_call(
-            func=send_out_sms_invoices, args=(prop,houses,override,charge,user_id,), result_ttl=5000
+            func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000
         )
         return None
 
@@ -1669,7 +1798,10 @@ class SendSms(Resource):
 
             amount = f'Kes {payment_obj.amount:,.0f}'
 
-            receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+            if os.getenv("TARGET") == "lasshouse":
+                receipt = f"Receipt: https://kodimannapp.com/r/{payment_obj.rand_id}"
+            else:
+                receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
 
 
             tele = tenant_obj.phone
@@ -1796,11 +1928,13 @@ class ReceivePayment(Resource):
         #     return Response(render_template('noaccess.html',name=current_user.name))
         
         prop_id = request.args.get("propid")
+        propname = request.args.get("propname")
         house_name = request.args.get("house")
         house_name2 = request.args.get("house2")
+        cbid = request.args.get("cbid")
+        payperiod = request.args.get("payperiod")
         target = request.args.get("target")
 
-        propname = request.args.get("propname")
 
         propid = get_identifier(prop_id)
 
@@ -1811,6 +1945,14 @@ class ReceivePayment(Resource):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
 
         db.session.expire(prop)
+
+        if payperiod:
+            pay_period = date_formatter_alt(payperiod)
+            pay_period_date = parse(pay_period)
+        else:
+            pay_period_date = get_billing_period(prop)
+
+        print("PAYPERIOOOOOOOD",pay_period_date)
 
         if target == "proplist":
             props = fetch_all_apartments_by_user(current_user)
@@ -1826,8 +1968,9 @@ class ReceivePayment(Resource):
                 return render_template('ajax_multivariable.html',items=[],placeholder="Not allowed",access=no_cash)
             else:
                 tenant_list = tenantauto(propid)
-                house_tenant_list = generate_house_tenants(tenant_list)
-                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access=no_cash)
+                # house_tenant_list = generate_house_tenants(tenant_list)
+                house_tenant_list = generate_house_ownertenants(tenant_list,propid)
+                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant/resident",access=no_cash)
 
         if target == "propname":
             return f'>> {prop.name}'
@@ -1845,6 +1988,36 @@ class ReceivePayment(Resource):
 
             return render_template("c2bitem.html",c2bitem=cb_obj)
 
+        if target == "fetch target tenant":
+            cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb.bill_ref_num:
+                if cb.bill_ref_num.startswith("TNT"):
+                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                elif cb.bill_ref_num.startswith("WN"):
+                    tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                else:
+                    tenant = "unidentified"
+            else:
+                tenant = "unidentified"
+
+            if isinstance(tenant, str):
+                house = "unknown"
+            else:
+                if tenant.tenant_type == "resident" or tenant.tenant_type == "owner":
+                    house = tenant.house
+                else:
+                    house = check_house_occupied(tenant)[1]
+
+            if isinstance(tenant,str):
+                tname = tenant
+                thouse = house
+            else:
+                tname = tenant.name
+                thouse = house.name
+
+
+            return render_template("ajax_tenant_confirmation.html",tname=tname,thouse=thouse)
 
         if target == "period":
             period = get_billing_period(prop)
@@ -1856,39 +2029,70 @@ class ReceivePayment(Resource):
             return render_template('ajax_prop_period.html',propperiod=propperiod,nextpropperiod=nextpropperiod)
 
         if target == "tenant name":
-            house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-            tenant_obj = check_occupancy(house_obj)[1]
+            house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+            if house_obj[1]:
+                tenant_obj = house_obj[1]
+            else:
+                tenant_obj = check_occupancy(house_obj[0])[1]
+
             if tenant_obj.multiple_houses:
                 houses = get_active_houses(tenant_obj)[1]
                 return render_template('ajax_target_houses.html',house_list=houses,tenant_obj=tenant_obj)
             return f'<i class="fas fa-user mr-1"></i>: Tenant <span class="text-black mr-2">{tenant_obj.name}</span> balance: Kes <span class="text-danger">{tenant_obj.balance:,.1f}</span>'
 
         if target == "amount due":
-            house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-            if not house_obj:
-                abort(403)
-            tenant_obj = check_occupancy(house_obj)[1]
-            if tenant_obj.multiple_houses:
-                houses = get_active_houses(tenant_obj)[1]
-                return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
+            skip = False
+            if cbid:
+                cb = CtoBop.fetch_record_by_id(cbid)
 
-            bills = house_obj.monthlybills
-            latest_bill = max(bills, key=lambda x: x.id) if bills else None
+                if cb.bill_ref_num:
+                    if cb.bill_ref_num.startswith("TNT"):
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = check_house_occupied(tenant_obj)[1]
+                        bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-            # print("heeeeeey",latest_bill.month)
-            if latest_bill:
-                latest_bill_balance = latest_bill.balance
+                    elif cb.bill_ref_num.startswith("WN"):
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = tenant_obj.house
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+
+                    else:
+                        skip = True
             else:
-                latest_bill_balance = 0.0
+                skip = True
 
-            # return render_template('ajax_tenant_balance.html',totaldue=f'{tenant_obj.balance:,.1f}')
-            return render_template('ajax_tenant_balance.html',totaldue=f'{latest_bill_balance:,.1f}')
+            if skip:
+                print("running skip for amount due")
+                house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                if not house_obj[0]:
+                    abort(403)
 
+                if house_obj[1]:
+                    tenant_obj = house_obj[1]
+                else:
+                    tenant_obj = check_occupancy(house_obj[0])[1]
+
+                if tenant_obj.multiple_houses:
+                    houses = get_active_houses(tenant_obj)[1]
+                    return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
+
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                    bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
+                else:
+                    bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
+
+            if bill:
+                bill_balance = bill.balance
+            else:
+                bill_balance = 0.0
+
+            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}')
 
         if target == "tenant name2":
             house_obj = get_specific_house_obj(propid,house_name)
             bills = house_obj.monthlybills
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+            
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
             else:
@@ -1898,8 +2102,11 @@ class ReceivePayment(Resource):
 
         if target == "amount due alt":
             house_obj = get_specific_house_obj(propid,house_name)
+            
             bills = house_obj.monthlybills
+
             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+
             if latest_bill:
                 latest_bill_balance = latest_bill.balance
             else:
@@ -1908,66 +2115,59 @@ class ReceivePayment(Resource):
             return render_template('ajax_tenant_balance.html',totaldue=f'{latest_bill_balance:,.1f}')
 
         if target == "breakdown":
-            if house_name2:
-                print("HOUSENAME TWO AVAIALBLE",house_name2)
-                if house_name2 == "none selected":
-                    return "<span class='text-danger text-xx'>Please specify house</span>"
-                house_obj = get_specific_house_obj(propid,house_name2)
 
+            skip = False
+            if cbid:
+                cb = CtoBop.fetch_record_by_id(cbid)
+
+                if cb.bill_ref_num:
+                    if cb.bill_ref_num.startswith("TNT"):
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = check_house_occupied(tenant_obj)[1]
+                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    elif cb.bill_ref_num.startswith("WN"):
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        house_item = tenant_obj.house
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                    else:
+                        skip = True
             else:
+                skip = True
 
-                house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
+            if skip:
+                print("running skip for breakdown")
+                if house_name2:
+                    if house_name2 == "none selected":
+                        return "<span class='text-danger text-xx'>Please specify house</span>"
+                    house_obj = get_specific_house_obj(propid,house_name2)
+                    tenant_obj = check_occupancy(house_obj)[1] # tenant
+                else:
+                    house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
 
-                print("HOOOOOUUUUUUSE",house_name,"OBJ",house_obj)
+                    if house_obj[1]:
+                        tenant_obj = house_obj[1] # owner
+                    else:
+                        tenant_obj = check_occupancy(house_obj[0])[1] # tenant
 
-            bills = house_obj.monthlybills
-            try:
-                bill = fetch_current_billing_period_bills(prop.billing_period,bills)[0]
-            except:
-                bill = None
-            # bill = max(bills, key=lambda x: x.id) if bills else None
+                house_item = house_obj if house_name2 else house_obj[0]
+            
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                    bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                else:
+                    bill = fetch_target_period_invoice(house_item,pay_period_date)
+
 
             if bill:
-                # amount = request.args.get('paidamount')
-                # valid_amount = validate_input(amount)
-                # remaining = valid_amount
-                # try:
-                #     if bill.rent_balance <= remaining:
-                #         rentpaid = bill.rent_balance
-                #         remaining -= rentpaid
-
-                #     elif bill.rent_balance == remaining:
-                #         remaining = 0
-                #         rentpaid = valid_amount
-                #     else:
-                #         rentpaid = remaining
-                #         remaining = 0
-
-                #     if remaining and bill.garbage_balance == remaining:
-                #         garbagepaid = remaining
-                #         remaining = 0
-                #     elif remaining and bill.garbage_balance < remaining:
-                #         garbagepaid = remaining
-                #         remaining = 0
-                #     elif remaining and bill.garbage_balance > remaining:
-                #         garbagepaid = bill.garbage_balance
-                #         remaining -= bill.garbage_balance
-                #     else:
-                #         garbagepaid = 0
-                # except:
-                #     pass
-                # return render_template('ajax_bill_breakdown.html',bill=bill,rentpaid=rentpaid,garbagepaid=garbagepaid)
-                print("BILL DATE",bill.month,"/",bill.year)
-                print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
-                print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
-                print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
+                # print("BILL DATE",bill.month,"/",bill.year)
+                # print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
+                # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
+                # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
                 return render_template('ajax_bill_breakdown.html',bill=bill)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
 
 
-
-        
     @login_required
     def post(self):
         current_period_payment = True
@@ -1996,17 +2196,14 @@ class ReceivePayment(Resource):
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
         cbid = request.form.get("cbid")
-        if cbid:
-            cb = CtoBop.fetch_record_by_id(cbid)
-            CtoBop.update_status(cb,"claimed")
 
-        water = "water" if waterpaid else ""
-        rent = "rent" if rentpaid else ""
-        garbage = "garbage" if garbagepaid else ""
-        sec = "security" if servicepaid else ""
+        water = "Water" if waterpaid else ""
+        rent = "Rent" if rentpaid else ""
+        garbage = "Garbage" if garbagepaid else ""
+        sec = "Security" if securitypaid else ""
         arr = ""
-        dep = "deposit" if depositpaid else ""
-        serv = "service" if servicepaid else ""
+        dep = "Deposit" if depositpaid else ""
+        serv = "Service" if servicepaid else ""
 
         narration = f"{rent} {water} {garbage} {sec} {serv} {dep}"
 
@@ -2014,7 +2211,7 @@ class ReceivePayment(Resource):
 
         bank = request.form.get("bank")
 
-        paymonth = request.form.get("month")
+        payperiod = request.form.get("payperiod")
         paydate = request.form.get("date")
         paytime = request.form.get("time")
 
@@ -2023,6 +2220,16 @@ class ReceivePayment(Resource):
 
         sms_bool = get_bool(textsms)
         email_bool = get_bool(email)
+
+        if payperiod:
+            pay_period = date_formatter_alt(payperiod)
+            pay_period_date = parse(pay_period)
+            current_period_payment = False
+        else:
+            current_period_payment = True
+            pay_period_date = get_billing_period(prop)
+
+        print("PAYPERIOOOOOOOD",pay_period_date)
 
         if paydate:
 
@@ -2066,461 +2273,580 @@ class ReceivePayment(Resource):
 
         ########################################################################################
 
-        if house_name:
-            prop = ApartmentOp.fetch_apartment_by_id(propid)
-            billing_period = get_billing_period(prop)
+        skip = False
 
-            #URGENT TODO
-            # if paymonth:
-            #     derived_year = pay_date.year
-            #     derived_month = get_numeric_month(paymonth)
-            #     period = generate_date(derived_month,derived_year)
-            #     if derived_month != billing_period.month:
-            #         current_period_payment = False
-            # else:
-            #     period = billing_period
+        tenant_id = None
+        ptenant_id = None
 
-            period = billing_period
+        period = pay_period_date
 
-            target_houses = []       
+        tenant_obj = None
+        co = prop.company
+        target_houses = []   
+
+        if cbid:
+            cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb.bill_ref_num:
+                if cb.bill_ref_num.startswith("TNT"):
+                    tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    house_obj = check_house_occupied(tenant_obj)[1]
+                    target_houses.append(house_obj)
+                    tenant_id = tenant_obj.id
+
+                    print(">>>>> STARTING PAYMENT & TENANT TYPE")
 
 
-            if house_name2:
+                elif cb.bill_ref_num.startswith("WN"):
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    house_obj = tenant_obj.house
+                    target_houses.append(house_obj)
+                    ptenant_id = tenant_obj.id
 
-                if house_name2 == "none selected":
-                    return "<span class='text-danger text-xx'>Payment failed, please specify house!</span>"
+                    print(">>>>> STARTING PAYMENT & OWNER TYPE")
 
-                str_houses = house_name2.replace(","," ")
-                houselist = list(str_houses.split(" "))
 
-                for hse in houselist:
-                    hse_obj = get_specific_house_obj(propid,hse)
-                    target_houses.append(hse_obj)
+                else:
+                    skip = True
+        else:
+            skip = True
+
+
+
+        if skip:
+            print(">>>>> STARTING PAYMENT & SKIPPING")
+            if house_name:
+  
+                if house_name2:
+
+                    if house_name2 == "none selected":
+                        return "<span class='text-danger text-xx'>Payment failed, please specify house!</span>"
+
+                    str_houses = house_name2.replace(","," ")
+                    houselist = list(str_houses.split(" "))
+
+                    for hse in houselist:
+                        hse_obj = get_specific_house_obj(propid,hse)
+                        target_houses.append(hse_obj)
+
+                else:
+                    hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                    target_houses.append(hse_obj[0])
+
+                house_obj = target_houses[0]
+
+                try:
+                    if not house_name2:
+                        owner = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[1]
+                        if owner:
+                            tenant_obj = owner
+                            ptenant_id = tenant_obj.id
+
+                        else:
+                            tenant_obj = check_occupancy(house_obj)[1]
+                            tenant_id = tenant_obj.id
+                    else:
+                        tenant_obj = check_occupancy(house_obj)[1]
+                        tenant_id = tenant_obj.id
+
+                except:
+                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    abort(404) 
+
+
+                if not tenant_obj:
+                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    abort(404)
 
             else:
-                hse_obj = get_specific_house_obj_from_house_tenant_alt(propid,house_name)
-                target_houses.append(hse_obj)
+                print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                abort(404)
 
-            house_obj = target_houses[0]
-            
+        tenant_name = tenant_obj.name
 
-            tenant_obj = check_occupancy(house_obj)[1]
+        house_id = house_obj.id
+        created_by = current_user.id
+        chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-            tenant_name = tenant_obj.name
+        if not narration:
+            narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-
-            house_id = house_obj.id
-            tenant_id = tenant_obj.id
-            created_by = current_user.id
-            chargetype_string = generate_string(water,rent,garbage,sec,arr,dep,serv)
-
-            if not narration:
-                narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
+        if aviv(current_user):
+            narration = get_str_month(period.month)
 
 
-            monthly_charges = house_obj.monthlybills
-            specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
+        # monthly_charges = house_obj.monthlybills
 
-            # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
+        else:
+            specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
 
-            bal = specific_charge_obj.balance
+        # if tenant_obj.tenant_type == "owner":
+        #     monthly_charges = tenant_obj.monthly_charges
+        # else:
+        #     monthly_charges = house_obj.monthlybills
 
-            if tenant_obj.multiple_houses:
+        # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month,period.year)
+
+        # print("FOUND INV OF: ",specific_charge_obj.month,"/",specific_charge_obj.year,"amount due and bal:", specific_charge_obj.total_bill,"&",specific_charge_obj.balance)
+
+        bal = specific_charge_obj.balance
+
+        if tenant_obj.multiple_houses:
+            pass
+        else:
+            # monthly_charges = house_obj.monthlybills
+            # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month)
+
+            if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES":
+                if specific_charge_obj.penalty:
+                    standard_pen = house_obj.housecode.rentrate*0.1
+                    accepted_balance = bal - 1000 - standard_pen
+                    if valid_amount > accepted_balance:
+                        if propid == 22:
+                            dday = 5
+                        else:
+                            dday = 11
+                        if pay_date.day < dday:
+                            print("Fine status for", house_obj, "before payment >>>>> ",specific_charge_obj.fine_status)
+                            bal -= specific_charge_obj.penalty
+                            TenantOp.update_balance(tenant_obj,bal)
+                            MonthlyChargeOp.update_balance(specific_charge_obj,bal)
+                            update_total = specific_charge_obj.total_bill - specific_charge_obj.penalty
+                            MonthlyChargeOp.update_monthly_charge(specific_charge_obj,"null","null","null","null","null","null","null","null",0.0,"null",update_total,None)
+                            MonthlyChargeOp.update_fine_status(specific_charge_obj,"nil")
+                            print("Fine status for", house_obj, "after payment >>>>> ",specific_charge_obj.fine_status)
+                        else:
+                            print("Paid late>>>>>>>>>>>")
+                    else:
+                        print("Paid little>>>>>>>>>>>")
+                else:
+                    print("No fines found>>>>>>>>>>>")
+            elif specific_charge_obj and not current_period_payment:
                 pass
             else:
-                # monthly_charges = house_obj.monthlybills
-                # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month)
+                print("Not billed yet for ",get_str_month(period.month), ">>>>>>>>>>>")
+                
+        if paymode == "mpesa":
+            description = "Manual Mpesa payment"
+        elif paymode == "bank":
+            description = bank if bank else None
+        else:
+            description = "Cash"
+            bill_ref = "N/A"
+        #######################################################################################
+        # pay_period = paid to which bills
+        # pay_date = alilipa lini?
+        
 
-                if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES":
-                    if specific_charge_obj.penalty:
-                        standard_pen = house_obj.housecode.rentrate*0.1
-                        accepted_balance = bal - 1000 - standard_pen
-                        if valid_amount > accepted_balance:
-                            if propid == 22:
-                                dday = 5
-                            else:
-                                dday = 11
-                            if pay_date.day < dday:
-                                print("Fine status for", house_obj, "before payment >>>>> ",specific_charge_obj.fine_status)
-                                bal -= specific_charge_obj.penalty
-                                TenantOp.update_balance(tenant_obj,bal)
-                                MonthlyChargeOp.update_balance(specific_charge_obj,bal)
-                                update_total = specific_charge_obj.total_bill - specific_charge_obj.penalty
-                                MonthlyChargeOp.update_monthly_charge(specific_charge_obj,"null","null","null","null","null","null","null","null",0.0,"null",update_total,None)
-                                MonthlyChargeOp.update_fine_status(specific_charge_obj,"nil")
-                                print("Fine status for", house_obj, "after payment >>>>> ",specific_charge_obj.fine_status)
-                            else:
-                                print("Paid late>>>>>>>>>>>")
-                        else:
-                            print("Paid little>>>>>>>>>>>")
-                    else:
-                        print("No fines found>>>>>>>>>>>")
-                elif specific_charge_obj and not current_period_payment:
-                    pass
-                else:
-                    print("Not billed yet for ",get_str_month(period.month), ">>>>>>>>>>>")
-                    
-            if paymode == "mpesa":
-                description = "Manual Mpesa payment"
-            elif paymode == "bank":
-                description = bank if bank else None
-            else:
-                description = "Cash"
-                bill_ref = "N/A"
-            #######################################################################################
-            # pay_period = paid to which bills
-            # pay_date = alilipa lini?
-            
+        payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
+        payment_obj.save()
 
-            payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,created_by)
-            payment_obj.save()
-            #################################################################################################
+        if cbid:
+            cb = CtoBop.fetch_record_by_id(cbid)
+            CtoBop.update_status(cb,"claimed")
 
-            rand_id = random_generator()
+        if co.receipt_num:
+            num = co.receipt_num
+            num += 1
+
+            CompanyOp.increment_receipt_num(co,num)
+            PaymentOp.update_receipt_num(payment_obj,num)
+        #################################################################################################
+
+        rand_id = random_generator()
+        if PaymentOp.fetch_payment_by_rand_id(rand_id):
+            rand_id = random_generator(size=11)
+            awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
             if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                rand_id = random_generator(size=11)
-                awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
+                rand_id = random_generator(size=12)
+                awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
                 if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                    rand_id = random_generator(size=12)
-                    awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
+                    rand_id = random_generator(size=13)
+                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
                     if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                        rand_id = random_generator(size=13)
-                        awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
-                        if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                            awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
-                            return "Payment could not be processed at this time! Try again later"
+                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
+                        return "Payment could not be processed at this time! Try again later"
 
-            tenant_bal = tenant_obj.balance
-            tenant_bal -= valid_amount
+        tenant_bal = tenant_obj.balance
+        tenant_bal -= valid_amount
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
+        else:
             TenantOp.update_balance(tenant_obj,tenant_bal)
 
-            running_balance = bal
-            running_balance-= valid_amount
+        running_balance = bal
+        running_balance-= valid_amount
 
-            PaymentOp.update_balance(payment_obj,running_balance)
-            PaymentOp.update_rand_id(payment_obj,rand_id)
+        PaymentOp.update_balance(payment_obj,running_balance)
+        PaymentOp.update_rand_id(payment_obj,rand_id)
 
-            string_house = ""
+        string_house = ""
 
-            for h in target_houses:
-
-
-
-                if specific_charge_obj and current_period_payment:
-
-                    db.session.expire(specific_charge_obj)
-                    bala = specific_charge_obj.balance
-                    bala-=valid_amount
-                    MonthlyChargeOp.update_balance(specific_charge_obj,bala)
-
-                    paid_amount = specific_charge_obj.paid_amount
-                    cumulative_pay = paid_amount + valid_amount
-                    MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                    MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
-
-                    rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
-                    rent_paid += overpayment
-                    water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
-                    penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
-                    electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
-                    garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
-                    security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
-                    service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
-                    deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
-                    agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
-
-                    MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                    PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
-
-                    try:
-                        rentbal = specific_charge_obj.rent_due - rentpaid
-                        rentbal -= overpayment
-                        waterbal = specific_charge_obj.water_due - waterpaid
-                        electricitybal = specific_charge_obj.electricity_due - electricitypaid
-                        servicebal = specific_charge_obj.maintenance_due - servicepaid
-                        penaltybal = specific_charge_obj.penalty_due - penaltypaid
-                        securitybal = specific_charge_obj.security_due - securitypaid
-                        garbagebal = specific_charge_obj.garbage_due - garbagepaid
-                        depositbal = specific_charge_obj.deposit_due - depositpaid
-                        agreementbal = specific_charge_obj.agreement_due - agreementpaid
-
-                        MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                    except:
-                        print("PAID TO LEGACY BILL")
-
-                elif not specific_charge_obj and not current_period_payment:
-                    subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
-
-                    db.session.expire(specific_charge_obj)
-                    bala = specific_charge_obj.balance
-                    bala-=valid_amount
-                    MonthlyChargeOp.update_balance(specific_charge_obj,bala)
-
-                    paid_amount = specific_charge_obj.paid_amount
-                    cumulative_pay = paid_amount + valid_amount
-                    MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                    MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
-
-                    if subsequent_specific_charge_obj:
-                        update_total = subsequent_specific_charge_obj.total_bill - valid_amount
-                        update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
-                        update_balance = subsequent_specific_charge_obj.balance - valid_amount
-
-                        MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
-                        MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
-                        MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
+        for h in target_houses:
 
 
-                stringname = h.name + " "
+            if specific_charge_obj:
 
-                string_house += stringname
+                db.session.expire(specific_charge_obj)
+                bala = specific_charge_obj.balance
+                bala-=valid_amount
+                MonthlyChargeOp.update_balance(specific_charge_obj,bala)
 
-            #################################################################################
+                paid_amount = specific_charge_obj.paid_amount
+                cumulative_pay = paid_amount + valid_amount
+                MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+                MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
-            str_houses = string_house.rstrip(" ")
-            house = list(str_houses.split(" "))
+                rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
+                rent_paid += overpayment
+                water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
+                penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
+                electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
+                garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
+                security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
+                service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
+                deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+                agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
-            # house = house_obj.name
+                MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
+                try:
+                    rentbal = specific_charge_obj.rent_due - rentpaid
+                    rentbal -= overpayment
+                    waterbal = specific_charge_obj.water_due - waterpaid
+                    electricitybal = specific_charge_obj.electricity_due - electricitypaid
+                    servicebal = specific_charge_obj.maintenance_due - servicepaid
+                    penaltybal = specific_charge_obj.penalty_due - penaltypaid
+                    securitybal = specific_charge_obj.security_due - securitypaid
+                    garbagebal = specific_charge_obj.garbage_due - garbagepaid
+                    depositbal = specific_charge_obj.deposit_due - depositpaid
+                    agreementbal = specific_charge_obj.agreement_due - agreementpaid
+
+                    MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                except:
+                    print("PAID TO LEGACY BILL")
+
+            # elif not specific_charge_obj and not current_period_payment:
+            #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
+
+            #     db.session.expire(specific_charge_obj)
+            #     bala = specific_charge_obj.balance
+            #     bala-=valid_amount
+            #     MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+
+            #     paid_amount = specific_charge_obj.paid_amount
+            #     cumulative_pay = paid_amount + valid_amount
+            #     MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+            #     MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
+
+            #     if subsequent_specific_charge_obj:
+            #         update_total = subsequent_specific_charge_obj.total_bill - valid_amount
+            #         update_arrears = subsequent_specific_charge_obj.arrears - valid_amount
+            #         update_balance = subsequent_specific_charge_obj.balance - valid_amount
+
+            #         MonthlyChargeOp.update_arrears(subsequent_specific_charge_obj,update_arrears)
+            #         MonthlyChargeOp.update_balance(subsequent_specific_charge_obj,update_balance)
+            #         MonthlyChargeOp.update_monthly_charge(subsequent_specific_charge_obj,"null","null","null","null","null","null","null","null","null","null",update_total,None)
+
+
+            stringname = h.name + " "
+
+            string_house += stringname
+
+        #################################################################################
+
+        str_houses = string_house.rstrip(" ")
+        house = list(str_houses.split(" "))
+
+        # house = house_obj.name
+
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
             receiptno = payment_obj.id
-            
-            paid = f'KES {payment_obj.amount:,.2f}'
+        
+        paid = f'KES {payment_obj.amount:,.2f}'
 
-            if bal < 1:
-                bill = 0.0
+        if bal < 1:
+            bill = 0.0
+        else:
+            bill = (f"{bal:,.2f}")
+
+        payment_id = payment_obj.id
+
+        if email_bool and current_user.company_user_group.name != "User":
+            if tenant_obj.email:
+                try:
+                    job9 = q.enqueue_call(
+                        func=auto_send_mail_receipt, args=(payment_id,created_by,), result_ttl=5000
+                    )
+                except:
+                    print("Redis server is off")
             else:
-                bill = (f"{bal:,.2f}")
+                print("Email address not found for tenant ",tenant_obj.name,"-",prop.name)
+        else:
+            print("Email has been disabled for this payment")
 
-            payment_id = payment_obj.id
+        # job11 = q.enqueue_call(
+        #     func=auto_send_sms_receipt, args=(payment_id,created_by,), result_ttl=5000
+        # )
 
-            if email_bool and current_user.company_user_group.name != "User":
-                if tenant_obj.email:
-                    try:
-                        job9 = q.enqueue_call(
-                            func=auto_send_mail_receipt, args=(payment_id,created_by,), result_ttl=5000
-                        )
-                    except:
-                        print("Redis server is off")
-                else:
-                    print("Email address not found for tenant ",tenant_obj.name,"-",prop.name)
-            else:
-                print("Email has been disabled for this payment")
+        if payment_obj.balance > -1:
+            baltitle = "Balance"
+            outline = "text-danger"
+            bal = f"KES {payment_obj.balance:,.0f}"
+        else:
+            baltitle = "Advance"
+            outline = "text-success"
+            bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-            # job11 = q.enqueue_call(
-            #     func=auto_send_sms_receipt, args=(payment_id,created_by,), result_ttl=5000
-            # )
-
-            if payment_obj.balance > -1:
-                baltitle = "Balance"
-                outline = "text-danger"
-                bal = f"KES {payment_obj.balance:,.0f}"
-            else:
-                baltitle = "Advance"
-                outline = "text-success"
-                bal = f"KES {payment_obj.balance*-1:,.0f}"
-
+        if os.getenv("TARGET") == "lasshouse":
+            receiptlink = f"https://kodimannapp.com/r/{rand_id}"
+        else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
-            receipt = f"Receipt: {receiptlink}"
+        receipt = f"Receipt: {receiptlink}"
 
-            if sms_bool and current_user.company_user_group.name != "User":
+        if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
 
-                job101 = q.enqueue_call(
-                    func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
-                )
+            job101 = q.enqueue_call(
+                func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
+            )
 
 
-                # if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
-                #     reference = f'#{payment_obj.ref_number}'
-                # else:
-                #     reference = f'#{payment_obj.id}'
+            # if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
+            #     reference = f'#{payment_obj.ref_number}'
+            # else:
+            #     reference = f'#{payment_obj.id}'
 
-                # co = prop.company
-                # str_co = co.name
-                # raw_rem_sms =co.remainingsms
-                # if tenant_obj.sms:
-                #     if raw_rem_sms > 0:
-                #         #Send the SMS
-                #         tele = tenant_obj.phone
-                #         name = tenant_obj.name
-                #         fname = fname_extracter(name)
-                #         if not fname:
-                #             fname = name
-                #         phonenum = sms_phone_number_formatter(tele)
-                #         try:
-                #             recipient = [phonenum]
-                #             message = f"Rental payment Ref {reference}, sum of {paid} confirmed. \n{baltitle} {bal} \n\n{receipt} \n\n~{str_co}."
-                #             sender = "KIOTAPAY"
-                #             #Once this is done, that's it! We'll handle the rest
-                #             response = sms.send(message, recipient, sender)
-                #             print(response)
-                #             resp = response["SMSMessageData"]["Recipients"][0]
+            # co = prop.company
+            # str_co = co.name
+            # raw_rem_sms =co.remainingsms
+            # if tenant_obj.sms:
+            #     if raw_rem_sms > 0:
+            #         #Send the SMS
+            #         tele = tenant_obj.phone
+            #         name = tenant_obj.name
+            #         fname = fname_extracter(name)
+            #         if not fname:
+            #             fname = name
+            #         phonenum = sms_phone_number_formatter(tele)
+            #         try:
+            #             recipient = [phonenum]
+            #             message = f"Rental payment Ref {reference}, sum of {paid} confirmed. \n{baltitle} {bal} \n\n{receipt} \n\n~{str_co}."
+            #             sender = "KIOTAPAY"
+            #             #Once this is done, that's it! We'll handle the rest
+            #             response = sms.send(message, recipient, sender)
+            #             print(response)
+            #             resp = response["SMSMessageData"]["Recipients"][0]
 
-                #             code = resp["statusCode"]
-                #             smsid = resp["messageId"]
-                #             PaymentOp.update_smsid(payment_obj,smsid)
+            #             code = resp["statusCode"]
+            #             smsid = resp["messageId"]
+            #             PaymentOp.update_smsid(payment_obj,smsid)
 
-                #             if code == 101: # SMS WAS SENT
-                #                 PaymentOp.update_sms_status(payment_obj,"sent")
-                #                 raw_cost = resp["cost"]
-                #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                #                 CompanyOp.set_rem_quota(co,rem_sms)
-                #                 print("EVERYTHING IS SMOOTH")
-                                
-                #             elif code == 403:
-                #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                #                 PaymentOp.update_sms_status(payment_obj,"fail")
-                                
-                #             elif code == 405:
-                #                 response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
-                #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                                
-                #             elif code == 406:
-                #                 PaymentOp.update_sms_status(payment_obj,"blocked")
-                #                 raw_cost = resp["cost"]
-                #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                #                 CompanyOp.set_rem_quota(co,rem_sms)
-                #                 print("SMS BLOCKED BY ",tenant_obj,house_name,prop)
-                #             else:
-                #                 print("ALAAAAAAAA")
+            #             if code == 101: # SMS WAS SENT
+            #                 PaymentOp.update_sms_status(payment_obj,"sent")
+            #                 raw_cost = resp["cost"]
+            #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+            #                 CompanyOp.set_rem_quota(co,rem_sms)
+            #                 print("EVERYTHING IS SMOOTH")
+                            
+            #             elif code == 403:
+            #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            #                 PaymentOp.update_sms_status(payment_obj,"fail")
+                            
+            #             elif code == 405:
+            #                 response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+            #                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            
+            #             elif code == 406:
+            #                 PaymentOp.update_sms_status(payment_obj,"blocked")
+            #                 raw_cost = resp["cost"]
+            #                 rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+            #                 CompanyOp.set_rem_quota(co,rem_sms)
+            #                 print("SMS BLOCKED BY ",tenant_obj,house_name,prop)
+            #             else:
+            #                 print("ALAAAAAAAA")
 
-                #         except Exception as e:
-                #             print(f"Houston, we have a problem {e}")
-                #             PaymentOp.update_sms_status(payment_obj,"fail")
-                #     else:
-                #         txt = f"{co} has depleted sms"
-                #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                # else:
-                #     PaymentOp.update_sms_status(payment_obj,"off")
-                #     print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,house_name,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            #         except Exception as e:
+            #             print(f"Houston, we have a problem {e}")
+            #             PaymentOp.update_sms_status(payment_obj,"fail")
+            #     else:
+            #         txt = f"{co} has depleted sms"
+            #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+            #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+            # else:
+            #     PaymentOp.update_sms_status(payment_obj,"off")
+            #     print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,house_name,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
+
+        else:
+            PaymentOp.update_sms_status(payment_obj,"off")
+            print("SMS has been disabled for this payment")
+        ########################################################################################
+        p = inflect.engine()
+        int_amount = int(valid_amount)
+        str_amount = p.number_to_words(int_amount)
+        stramount = str_amount.capitalize()
+        str_month = get_str_month(period.month)
+        fname = fname_extracter(current_user.name)
+
+        paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+
+        address = None
+
+        if current_user.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
 
             else:
-                PaymentOp.update_sms_status(payment_obj,"off")
-                print("SMS has been disabled for this payment")
-            ########################################################################################
-            p = inflect.engine()
-            int_amount = int(valid_amount)
-            str_amount = p.number_to_words(int_amount)
-            stramount = str_amount.capitalize()
-            str_month = get_str_month(period.month)
-            fname = fname_extracter(current_user.name)
-
-            paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
 
 
-            return render_template(
-                'ajax_receiptpay.html',
-                voided = "dispnone",
-                tenant = tenant_name,
-                house= house,
-                amount=paid,
-                str_amount=stramount,
-                str_month=str_month,
-                paydate=paydate.strftime("%d/%b/%y"),
-                paytime=paydate.strftime("%X"),
-                bill=bill,
-                baltitle=baltitle,
-                outline=outline,
-                balance=bal,
-                chargetype=narration,
-                receiptno=receiptno,
-                refnum=bill_ref,
-                paymode=paymode,
-                logopath=logo(current_user.company)[0],
-                company=current_user.company,
-                user=current_user.company if current_user.company == "MojaMbili Homes" else fname_extracter(current_user.name),
-                prop= ApartmentOp.fetch_apartment_by_id(payment_obj.apartment_id),
-                randid=rand_id
-            )
-        else:
-            print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
-            abort(404)
+        return render_template(
+            'ajax_receiptpay.html',
+            voided = "dispnone",
+            tenant = tenant_name,
+            house= house,
+            amount=paid,
+            str_amount=stramount,
+            str_month=str_month,
+            paydate=paydate.strftime("%d/%b/%y"),
+            paytime=paydate.strftime("%X"),
+            bill=bill,
+            baltitle=baltitle,
+            outline=outline,
+            balance=bal,
+            chargetype=narration,
+            receiptno=receiptno,
+            refnum=bill_ref,
+            paymode=paymode,
+            logopath=logo(current_user.company)[0],
+            company=current_user.company,
+            address=address,
+            user=current_user.company if current_user.company == "MojaMbili Homes" else fname_extracter(current_user.name),
+            prop=prop,
+            randid=rand_id
+        )
+
 
 class UpdateBalance(Resource):
     def get(self):
         tenant_id = request.args.get("tenantid")
-        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+        ttype = request.args.get("ttype")
 
-        # if tenant_obj.multiple_houses:
-        #     return "error"
+        if ttype == "owner" or ttype == "resident":
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
+            house_obj = tenant_obj.house
+            current_invoice = fetch_current_owner_invoice(house_obj)
+        else:
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            house_obj = check_house_occupied(tenant_obj)[1]
+            current_invoice = fetch_current_invoice(house_obj)
+
             
         print("Updating balance! currently",tenant_obj.balance)
+        targetbills = []
 
-        # bill = MonthlyChargeOp.fetch_monthlycharge_by_tenant_id(tenant_id)
-
-        bills = tenant_obj.monthly_charges
-
-        targetbills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,bills)
+        if tenant_obj.multiple_houses:
+            bills = tenant_obj.monthly_charges
+            targetbills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,bills)
+        else:
+            targetbills.append(current_invoice)
 
         bill_balance = 0.0
         
+        # print("totototal", len(targetbills))
+        # print("totototal", targetbills[0].date.date())
+        # print("totototal", targetbills[0].balance)
 
-        print("totototal", len(targetbills))
-        print("totototal", targetbills[0].date.date())
-        print("totototal", targetbills[0].balance)
+        try:
+            for bill in targetbills:
 
+                original_amount = bill.total_bill
 
-        for bill in targetbills:
+                values = validate_float_inputs("","","","","","","","","","")
 
-            original_amount = bill.total_bill
+                #TODO -remove this block
+                agreement = bill.agreement if bill.agreement else 0.0
+                deposit = bill.deposit if bill.deposit else 0.0
 
-            values = validate_float_inputs("","","","","","","","","","")
-
-            #TODO -remove this block
-            agreement = bill.agreement if bill.agreement else 0.0
-            deposit = bill.deposit if bill.deposit else 0.0
-
-            if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
-                # update_water = bill.water
-                update_water = values[1] if values[1] != "null" else bill.water
-            else:
-                update_water = values[1] if values[1] != "null" else bill.water
-
-            update_rent = values[0] if values[0] != "null" else bill.rent
-            update_garbage = values[2] if values[2] != "null" else bill.garbage
-            update_security = values[3] if values[3] != "null" else bill.security
-            update_fine = values[4] if values[4] != "null" else bill.penalty
-            update_agreement = values[7] if values[7] != "null" else agreement
-            update_deposit = values[5] if values[5] != "null" else deposit
-            update_arrears = values[6] if values[6] != "null" else bill.arrears
-            update_maintenance = values[9] if values[9] != "null" else bill.maintenance
-
-            total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
-            MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
-
-            print("NEW TOTAL :",total_amount,"OLD TOTAL :",original_amount)
-
-            diff = total_amount - original_amount
-
-            running_bal = tenant_obj.balance
-            running_bal = running_bal + diff
-            TenantOp.update_balance(tenant_obj,running_bal)
-
-            if bill.paid_amount:
-                if bill.paid_amount < 0:
-                    MonthlyChargeOp.update_payment(bill,0.0)
-                    bal = total_amount
+                if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
+                    # update_water = bill.water
+                    update_water = values[1] if values[1] != "null" else bill.water
                 else:
-                    bal = total_amount - bill.paid_amount
-            else:
-                bal = total_amount
+                    update_water = values[1] if values[1] != "null" else bill.water
 
-            MonthlyChargeOp.update_balance(bill,bal)
+                update_rent = values[0] if values[0] != "null" else bill.rent
+                update_garbage = values[2] if values[2] != "null" else bill.garbage
+                update_security = values[3] if values[3] != "null" else bill.security
+                update_fine = values[4] if values[4] != "null" else bill.penalty
+                update_agreement = values[7] if values[7] != "null" else agreement
+                update_deposit = values[5] if values[5] != "null" else deposit
+                update_arrears = values[6] if values[6] != "null" else bill.arrears
+                update_maintenance = values[9] if values[9] != "null" else bill.maintenance
 
-            db.session.expire(bill)
-            
-            bill_balance += bill.balance
-            print(bill.month,bill.year,"KES",bill.balance)
+                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
+                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+
+                print("NEW TOTAL :",total_amount,"OLD TOTAL :",original_amount)
+
+                diff = total_amount - original_amount
+
+                running_bal = tenant_obj.balance
+                running_bal = running_bal + diff
+                TenantOp.update_balance(tenant_obj,running_bal)
+
+                if bill.paid_amount:
+                    if bill.paid_amount < 0:
+                        MonthlyChargeOp.update_payment(bill,0.0)
+                        bal = total_amount
+                    else:
+                        bal = total_amount - bill.paid_amount
+                else:
+                    bal = total_amount
+
+                MonthlyChargeOp.update_balance(bill,bal)
+
+                db.session.expire(bill)
+                
+                bill_balance += bill.balance
+                print(bill.month,bill.year,"KES",bill.balance)
+        except:
+            pass
 
         TenantOp.update_balance(tenant_obj,bill_balance)
         db.session.expire(tenant_obj)
         print("Balance updated! now",tenant_obj.balance)
-
-        if current_user.username.startswith("qc") or current_user.usercode == "9672":
-            co = bill.apartment.company
-            # CompanyOp.set_rem_quota(co,500)
 
         return (f"{bill_balance:,.1f} ")
 
@@ -2566,10 +2892,57 @@ class Receipt(Resource):
 
         co = current_user.company
 
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+
+        prop = payment_obj.apartment
+
+        address = None
+
+        if payment_obj.apartment.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+        else:
+            tenant = payment_obj.tenant
+
         return render_template(
             'ajax_receiptpay.html',
             voided = disp,
-            tenant = payment_obj.tenant.name,
+            tenant = tenant.name,
             house= payment_obj.house.name,
             amount=paid,
             str_amount=stramount,
@@ -2581,13 +2954,14 @@ class Receipt(Resource):
             outline=outline,
             balance=bal,
             chargetype=payment_obj.payment_name,
-            receiptno=payment_obj.id,
+            receiptno=receiptno,
             refnum=payment_obj.ref_number,
             paymode=payment_obj.paymode,
             logopath=logo(current_user.company)[0],
             company=current_user.company,
+            address=address,
             user=current_user.company if current_user.company == "MojaMbili Homes" else server,
-            prop= ApartmentOp.fetch_apartment_by_id(payment_obj.apartment_id),
+            prop=prop,
             randid=payment_obj.rand_id if payment_obj.rand_id else "a"
         )
 
@@ -3237,6 +3611,61 @@ class StkCallBackUrlKiotapay(Resource):
 
         return None
 
+
+class StkCallBackUrlAstrol(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        body = data["Body"]
+
+        stkcallback = body["stkCallback"]
+        if stkcallback["ResultCode"] == 0:
+            callbackmeta = stkcallback["CallbackMetadata"]
+            item = callbackmeta["Item"] #list of json objs
+            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ASTROL MPESAMPESAMPESA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print(item)
+            print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ASTROL MPESAMPESAMPESA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+            if len(item) == 4:
+                amount_obj = item[0]
+                amount_val = amount_obj["Value"]
+                receipt_obj = item[1]
+                receipt_val = receipt_obj["Value"]
+                date_obj = item[2]
+                date_val = date_obj["Value"]
+                tel_obj = item[3]
+                tel_val = tel_obj["Value"]
+
+            else:
+
+                amount_obj = item[0]
+                amount_val = amount_obj["Value"]
+                receipt_obj = item[1]
+                receipt_val = receipt_obj["Value"]
+                date_obj = item[3]
+                date_val = date_obj["Value"]
+                tel_obj = item[4]
+                tel_val = tel_obj["Value"]
+
+            tel = phone_number_formatter_r(tel_val)
+
+            tenant_obj = TenantOp.fetch_tenant_by_tel(tel)
+            tenant_id = tenant_obj.id
+
+            print(amount_val,receipt_val,date_val,tel)
+
+            mpesa_obj = MpesaPaymentOp(receipt_val,amount_val,tel,date_val,tenant_id)
+            mpesa_obj.save()
+        else:
+            print(">>>>>>>>>>>>>>>>There was an error, printing ASTROL datareceive callback error body>>>>>",body)
+
+        return None
+
 class CallBackUrlProminance(Resource):
     def get(self):
         pass
@@ -3297,6 +3726,89 @@ class CallBackUrlLatitude(Resource):
     def get(self):
         pass
     def post(self):
+        try:
+            #parse for json
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            data = json.loads(my_json)
+
+            trans_id = data['TransID']
+            trans_time = data['TransTime']
+            trans_amnt = data['TransAmount']
+            trans_type = data['TransactionType']
+            business_shortcode = data['BusinessShortCode']
+            bill_ref_num = data['BillRefNumber']
+            invoice_num = data['InvoiceNumber']
+            msisdn = data['MSISDN']
+            org_acc_bal = data['OrgAccountBalance']
+            fname = data['FirstName']
+            lname = data['LastName']
+
+            print("MPESA DATA RECEIEVED: ",data)
+
+            # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
+            # response = sms.send(message1, ["+254716674695"],sender)
+
+            ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+            ctob_obj.save()
+        except:
+
+            response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+            #parse for json
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+            try:
+                data = json.loads(my_json)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+                print(data)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+        
+                print("Data will be proccessed here")
+                
+                username = data['username']
+                password = data['password']
+                billNumber = data['billNumber']
+                billAmount = data['billAmount']
+                customerRefNumber = data['CustomerRefNumber']
+                bankReference = data['bankreference']
+                transParticular = data['tranParticular']
+                paymentMode = data['paymentMode']
+                transDate = data['transactionDate']
+                phoneNumber = data['phonenumber']
+                debitAccount = data['debitaccount']
+                debitCustName = data['debitcustname']
+
+                data_type = "prod"
+
+                data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+                if data_obj:
+                    response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                else:
+                    data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                    data_obj.save()
+                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+            except Exception as e:
+                sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
+                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                print ("It failed, Bank integration has an error")
+
+            resp = jsonify(response)
+            return make_response(resp)
+
+
+        # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        # ctob_obj.save()
+
+        # auto_consume_ctob2(ctob_obj)
+
+class CallBackUrlMLatitude(Resource):
+    def get(self):
+        pass
+    def post(self):
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
@@ -3326,6 +3838,8 @@ class CallBackUrlLatitude(Resource):
         # ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
+        response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
 
 class CallBackUrlPremier(Resource):
     def get(self):
@@ -3380,6 +3894,37 @@ class CallBackUrlPremierRealty(Resource):
 
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         ctob_obj.save()
+
+        # auto_consume_ctob2(ctob_obj)
+
+class CallBackUrlAstrol(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        lname = data['LastName']
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        response = sms.send("ASTROL MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
 
         # auto_consume_ctob2(ctob_obj)
 
@@ -3454,6 +3999,209 @@ class CallBackUrlEquity(Resource):
             print ("It failed, Bank integration has an error")
 
         response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+        resp = jsonify(response)
+        return make_response(resp)
+
+
+class CallBackUrlLatitudeEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+            
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "prod"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("PROD LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+
+class CallBackUrlTestLatitudeEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("TEST LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "test"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class CallBackUrlSentomEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("PROD SENTOM Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+            
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "prod"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("PROD sentom Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+
+class CallBackUrlTestSentomEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("TEST SENTOM Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "test"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("TEST SENTOM Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
         resp = jsonify(response)
         return make_response(resp)
 

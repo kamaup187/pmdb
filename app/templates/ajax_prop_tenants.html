@@ -9,7 +9,7 @@
     <div class="card mb-2 mt-1">
   
       <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-        <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant listings <span id="activeprop" class="text-primary ml-3"></span></span>
+        <span class="smallify text-black font-weight-bold text-uppercase text-110">Resident/Tenant listings <span id="activeprop" class="text-primary ml-3"></span></span>
         <div>
           <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
             type="button">X</button>
@@ -39,12 +39,13 @@
                     <tr>
                         <th class="text-info font-weight-bold pl-0">Property</th>
                         <th class="text-info font-weight-bold">Houses</th>
-                        <th class="text-info font-weight-bold">Tenants</th>
-                        <th class="text-info font-weight-bold">Vacant</th>
-                        <th class="text-info font-weight-bold">Occupancy</th>
+                        <th class="text-info font-weight-bold">Residents</th>
+                        <th class="text-info font-weight-bold {{tnt_disp}}">Tenants</th>
+                        <th class="text-info font-weight-bold {{tnt_disp}}">Vacant</th>
+                        <th class="text-info font-weight-bold {{tnt_disp}}">Occupancy</th>
                         <th class="text-info font-weight-bold">Reminders</th>
             
-                        <th class="text-info track-title-cell">Add tenant</th>
+                        <th class="text-info track-title-cell">Add new</th>
                         <th class="text-info track-title-cell">Upload data</th>
                     </tr>
                 </thead>
@@ -55,15 +56,18 @@
 
                         <td class="data-cell">
                             <div>
-                                <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                                <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis2 text-left no-wrap">{{item['name']}}</span>
                             </div>
                         </td>
             
                         <td class="data-cell">{{ item['houses'] }}</td>
-                        <td class="data-cell">{{ item['tenants'] }}</td>
-                        <td class="data-cell">{{ item['vacant'] }}</td>
-                        <td class="data-cell">{{ item['occupancy'] }} %</td>
-                        <td class="data-cell">{{ item['reminders']|safe }}</td>
+                        <td class="data-cell">{{ item['ptenants'] }}</td>
+                        <td class="data-cell {{tnt_disp}}">{{ item['tenants'] }}</td>
+                        <td class="data-cell {{tnt_disp}}">{{ item['vacant'] }}</td>
+                        <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td>
+                        <!-- <td class="data-cell">{{ item['reminders']|safe }}</td> -->
+                        <td class="data-cell">yes</td>
+
             
             
                         <td class="data-cell">
@@ -100,7 +104,7 @@
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify">Add new tenant</span>
+            <span class="mr-3 smallify">Add new tenant/resident</span>
             <div>
               <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
@@ -125,7 +129,7 @@
 
                           <div>
                             <input type="radio" id="ttype2" name="ttype" value="owner"/>
-                            <label for="ttype2">Owner</label>
+                            <label for="ttype2">Resident</label>
                           </div>
                              
                       </div>
@@ -157,7 +161,7 @@
                       </div>
 
                       <div class="form-group input-icons">
-                        <span>Id number <span class="text-primary small">(optional)</span></span>
+                        <span>ID number <span class="text-primary small">(optional)</span></span>
                           <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>

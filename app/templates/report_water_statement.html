@@ -32,16 +32,23 @@
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
                   <form class="row bg-light" method="GET" action="/water/statement">
-                    <div class="col-lg-3 form-group mb-2 ml-lg-5">
+                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
                       <label class="mb-0">Select type:</label>
                       <select name="reporttype" class="select-css" id="reporttype" required>
-                        <option disabled selected value> type </option>
+                        <option selected value="collected">Based on collected amount only</option>
                         <option value="uncollected">Based on amount due</option>
-                        <option value="collected">Based on collected amount only</option>
+                      </select>
+                    </div>
+
+                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                      <label class="mb-0">Water/Electricity:</label>
+                      <select name="targettype" class="select-css" id="targettype">
+                        <option selected value="water">Water</option>
+                        <option value="electricity">Electricity</option>
                       </select>
                     </div>
                   
-                    <div class="col-lg-3 form-group mb-2">
+                    <div class="col-lg-2 form-group mb-2">
                       <label class="mb-0">Select property:</label>
                       <select name="prop" class="select-css" id="prop" required>
                         <option disabled selected value> select property </option>
@@ -51,7 +58,7 @@
                       </select>
                     </div>
                   
-                    <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                    <div class="col-lg-2 form-group mb-2 mr-lg-5">
                       <label class="mb-0">Select month:</label>
                       <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                         <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
@@ -77,15 +84,19 @@
         <div class="card-body pt-0">
 
           {% if prop%}
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-0 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR WATER FOR {{timeline}}</span></span>
           </div>
 
           <div class="divjust-end underline text-black font-weight-bold  text-110">
             <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Landlord : {{prop_obj.owner}}</div>
               <div>Property : {{prop_obj.name}}</div>
               <div>Estate : {{prop_obj.location}}</div>
             </div>
@@ -109,6 +120,10 @@
                       <th class="">TOTAL DUE</th>
                       <th class="">TOTAL PAID</th>
                       <th class="">BC/F</th>
+                      <th class="">RECEIPT NO</th>
+                      <th class="">PAYMODE</th>
+                      <th class="">BANK</th>
+
 
                     </tr>
                   </thead>
@@ -122,18 +137,24 @@
                       <td class="data-cell text-right">{{bill['water-total']}}</td>
                       <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                      <td class="data-cell text-right">{{bill['item']}}</td>
+                      <td class="data-cell text-right">{{ bill['item'] }}</td>
+                      <td class="data-cell text-right">{{ bill['item'] }}</td>
                     </tr>
                   {% endfor %}
 
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                      <td colspan="2" class="font-weight-bold">GRAND TOTAL</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">-</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -141,9 +162,7 @@
           </div>
 
           <div class="divjust-end ln-16 mobile-malaysian">
-            {%if not expenselist%}
-            <div class="hide">space</div>
-            {%endif%}
+            <div class="">Remarks:</div>
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
@@ -153,10 +172,10 @@
                 <div class="hide mb-2">space</div>
 
 
-                <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
-                <div class="mb-1">TOTAL DEDUCTIONS</div>
-                <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+                <!-- <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
+                <div class="mb-1">TOTAL DEDUCTIONS</div> -->
+                <!-- <div class="hide mb-2">space</div>
+                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div> -->
               </div>
 
               <div class="text-black">
@@ -165,14 +184,45 @@
                 <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                 <div class="hide mb-2">space</div>
 
-                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                <!-- <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div> -->
 
-                <div class="hide mb-2">space</div>
+                <!-- <div class="hide mb-2">space</div>
 
-                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div>
+                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div> -->
               </div>
             </div>
+          </div>
+          <div class="divjust-end">
+
+            <div>
+              <div>
+                Prepared By:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Checked By:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Approved By:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -198,14 +248,13 @@
 
           <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
             <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
+              <div>Landlord : {{prop_obj.owner}}</div>
               <div>Property : {{prop_obj.name}}</div>
               <div>Estate : {{prop_obj.location}}</div>
             </div>
             <div class="pr-3">
               <div>Date remitted : {{reportdate}}</div>
               <div>Pin No : </div>
-              <div>Vat No : </div>
             </div>
 
           </div>
@@ -221,6 +270,9 @@
                   <th class="">TOTAL DUE</th>
                   <th class="">TOTAL PAID</th>
                   <th class="">BC/F</th>
+                  <th class="">RECEIPT NO</th>
+                  <th class="">PAYMODE</th>
+                  <th class="">BANK</th>
 
                 </tr>
               </thead>
@@ -234,23 +286,32 @@
                   <td class="data-cell text-right">{{bill['water-total']}}</td>
                   <td class="data-cell text-right">{{ bill['water-paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['water-bal'] }}</td>
+                  <td class="data-cell text-right">{{bill['item']}}</td>
+                  <td class="data-cell text-right">{{ bill['item'] }}</td>
+                  <td class="data-cell text-right">{{ bill['item'] }}</td>
                 </tr>
               {% endfor %}
 
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                  <td colspan="2" class="font-weight-bold">GRAND TOTAL</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
                   <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">-</td>
                 </tr>
               </tfoot>
             </table>
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
-              <div>
+              <div class="">
+                Remarks:
+              </div>
+              <!-- <div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
                   <div class="col-6">........................</div>
@@ -271,7 +332,7 @@
                   <div class="col-6 text-right text-black no-wrap">Date:</div>
                   <div class="col-6">........................</div>
                 </div>
-              </div>
+              </div> -->
   
               <div class="divjust-end mr-5">
                 <div class="mr-4">
@@ -281,10 +342,10 @@
                   <div class="hide mb-2">space</div>
   
   
-                  <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
+                  <!-- <div class="mb-1 pt-2">OTHER DEDUCTIONS</div>
                   <div class="mb-1">TOTAL DEDUCTIONS</div>
                   <div class="hide mb-2">space</div>
-                  <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+                  <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div> -->
                 </div>
   
                 <div class="text-black">
@@ -293,14 +354,46 @@
                   <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   
-                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                  <!-- <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
                   <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
   
                   <div class="hide mb-2">space</div>
   
-                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div>
+                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{formatted_netrent}}</div> -->
                 </div>
               </div>
+
+            </div>
+            <div class="divjust-end">
+
+              <div>
+                <div>
+                  Prepared By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Checked By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Approved By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+  
             </div>
           {% endif %}
         </div>

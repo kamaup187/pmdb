@@ -1,5 +1,6 @@
 <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
 <span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
+<span id="ttype" class="dispnone">{{tenant.tenant_type}}</span>
 <span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="del_tenant_identifier" class="dispnone"></span>
 <span id="payment_identifier" class="dispnone"></span>
@@ -28,7 +29,7 @@
 
       <div class="card-header pt-3 pb-2 divjust-end bg-skyblue">
         <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-        <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant details</span>
+        <span class="smallify text-black font-weight-bold text-uppercase text-110">Resident details</span>
         <div>
           <button id="close-searchresults" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
             type="button">X</button>
@@ -62,7 +63,7 @@
                   </div>
                   <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
                     data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-door-open mr-2"></i>Vacate
-                      tenant</span></button>
+                      resident</span></button>
                 
                 </div>
                 
@@ -91,7 +92,7 @@
                         <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                       </div>  
                   </div>
-                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>tenant statement</span></button>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Invoice statement</span></button>
 
               </div>
                 
@@ -824,7 +825,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
-                  // propid: $("#prop_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"isolated"
                 },
                 success: function(response) {
@@ -892,6 +893,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1157,6 +1159,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1167,7 +1170,8 @@
                     url: "{{ url_for('api.updatebalance') }}",
                     type: "get",
                     data: {
-                            tenantid: $("#tenant_identifier").text()
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text(),
                         },
                     success: function(response) {
                       $("#tenant-balance").html(response)
@@ -1225,6 +1229,7 @@
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {
@@ -1235,7 +1240,8 @@
                     url: "{{ url_for('api.updatebalance') }}",
                     type: "get",
                     data: {
-                            tenantid: $("#tenant_identifier").text()
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text()
                         },
                     success: function(response) {
                       $("#tenant-balance").html(response)
@@ -1334,7 +1340,8 @@
         url: "{{ url_for('api.updatebalance') }}",
         type: "get",
         data: {
-                tenantid: $("#tenant_identifier").text()
+                tenantid: $("#tenant_identifier").text(),
+                ttype: $("#ttype").text()
             },
         success: function(response) {
           $(".update-balance").html('<i class="fas fa-sync-alt text-success ml-2"></i>')
@@ -1345,6 +1352,7 @@
                 type: "get",
                 data: {
                   tenantid: $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
                   target:"tenant bill"
                 },
                 success: function(response) {

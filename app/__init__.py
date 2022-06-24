@@ -64,8 +64,8 @@ def create_app(configuration):
         mailusername = os.getenv('G_ACCOUNT')
         mailpassw = os.getenv('G_PASS')
 
-        # print("username: ",mailusername)
-        # print("password: ",mailpassw)
+        print("username: ",mailusername)
+        print("password: ",mailpassw)
 
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT'] = 465

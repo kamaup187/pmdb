@@ -1,0 +1,580 @@
+<!-- /*
+* Template Name: Active
+* Template Author: Untree.co
+* Tempalte URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Untree.co">
+  <!-- <link rel="shortcut icon" href="favicon.png"> -->
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/images/favico/site.webmanifest">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+
+  
+  <link rel="stylesheet" href="../static/css3/bootstrap.min.css">
+
+  <link rel="stylesheet" href="../static/css3/owl.carousel.min.css">
+  <link rel="stylesheet" href="../static/css3/owl.theme.default.min.css">
+  <link rel="stylesheet" href="../static/fonts/icomoon/style.css">
+  <link rel="stylesheet" href="../static/fonts/flaticon/font/flaticon.css">
+  <link rel="stylesheet" href="../static/css3/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="../static/css3/aos.css">
+  <link rel="stylesheet" href="../static/css3/style.css">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css3/home.css') }}">
+
+
+  <title>Kodimann</title>
+</head>
+<body>
+
+  <div id="overlayer"></div>
+  <div class="loader">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+  <div class="container">
+
+
+    <nav class="site-nav">
+      <div class="row align-items-center">
+
+        <div class="col-6 col-sm-6 col-lg-3">
+          <span>
+            <a class="d-none d-lg-inline" href="https://kodimann.com"><img src="../static/img/logos/spry/s-logo.png" alt=""></a>
+            <a class="" href="https://kodimann.com"><img src="../static/img/logos/spry/l-logo.png" alt=""></a>
+          </span>
+
+          <!-- <h1><a href="index.html">Active<span class="text-primary">.</span> </h1> -->
+          </div>
+
+          <div class="col-6 col-sm-6 col-lg-9 site-navigation text-right">
+            <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu">
+
+              
+              <li class="cta-button"><a class="signin" href="{{ url_for('api.userlogin') }}" target="_blank">Log In</a></li>
+              <li class="cta-button"><a href="#" data-toggle="modal" data-target="#signUpModal">Sign Up now</a></li>
+              <li class="cta-button"><a href="#" data-toggle="modal" data-target="#demoModal">Request Demo</a></li>
+
+            </ul>
+
+            <a href="#" class="burger ml-auto site-menu-toggle js-menu-toggle d-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
+              <span></span>
+            </a>
+
+          </div>
+
+        </div>  
+      </nav> <!-- END nav -->
+      <div class="mt-5 text-center">
+        <a class="underline text-kodi h4" href="https://kodimann.com"><i class="fa fa-arrow-left mr-3"></i>Back to Website</a>
+      </div>
+
+    </div> <!-- END container -->
+
+
+    
+    <div class="footer">
+      <div class="container">
+
+
+        <div class="row copyright">
+          <div class="col-lg-9 ">
+            <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; &bullet;
+            </p>
+          </div>
+          
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="modal fade" data-backdrop="static" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
+        <div class="modal-content">
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h5 class="modal-title divjust-end">
+              <span class="mr-3 mb-1 smallify text-kodi-alt">Register for free</span>
+              <div>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white" type="button"
+                  data-dismiss="modal">X</button>
+              </div>
+            </h5>
+          </div>
+    
+          <div class="modal-body pt-0 text-gray-900">
+            <div id="feedback" class="center-btn dispnone p-3"></div>
+            <div id="regbed" class="">
+              <form id="msform">
+    
+                <nav class="nav nav-borders mb-1 mt-2">
+                  <button id="personal" type="button" class="btn borderless pl-0 pb-0 text-kodi underline active ms-0"
+                    disabled>Profile</button>
+                  <button id="company" type="button" class="btn borderless pb-0 text-kodi" disabled>Company</button>
+                  <button id="finish" type="button" class="btn borderless pb-0 text-kodi" disabled>Finish</button>
+                </nav>
+    
+                <div class="" id="personal-area">
+                  <div class="row">
+                    <div class="col-xl-12">
+                      <!-- Account details card-->
+                      <div class="card mb-4 mt-1">
+                        <div class="card-header text-kodi">Personal Details</div>
+                        <div class="card-body">
+    
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="fname">First name</label>
+    
+                              <input class="form-control kodi-input" type="text" id="fname" name="fname" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="lname">Last name</label>
+    
+                              <input class="form-control kodi-input" type="text" id="lname" name="lname" value="">
+                            </div>
+    
+                          </div>
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="tel1">Mobile number</label>
+    
+                              <input class="form-control kodi-input" type="tel" id="tel1" name="tel1" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="email">Email</label>
+    
+                              <input class="form-control kodi-input" type="email" id="email" name="email" value="">
+                            </div>
+    
+                          </div>
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="natid">National Id</label>
+    
+                              <input class="form-control kodi-input" type="text" id="natid" name="natid" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="addr1">City of residence</label>
+    
+                              <input class="form-control kodi-input" type="text" id="addr1" name="addr1" value="">
+                            </div>
+    
+                          </div>
+    
+    
+                          <!-- Save changes button-->
+                          <div class="text-right">
+                            <button class="gotocompany btn btn-primary dispnone" type="button">Next</button>
+                            <button class="next btn btn-primary" type="button">Next</button>
+    
+                          </div>
+    
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="dispnone" id="company-area">
+                  <div class="row">
+                    <div class="col-xl-12">
+                      <!-- Account details card-->
+                      <div class="card mb-2 mt-1">
+                        <div class="card-header text-kodi">Company details</div>
+                        <div class="card-body">
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="company">Company name</label>
+    
+                              <input class="form-control kodi-input" type="text" id="co" name="company" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="addr2">Address (optional)</label>
+    
+                              <input class="form-control kodi-input" type="text" id="addr2" name="addr2" value="">
+                            </div>
+    
+                          </div>
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="tel2">Work phone number (optional)</label>
+    
+                              <input class="form-control kodi-input" type="tel" id="tel2" name="tel2" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="email2">Work Email (optional)</label>
+    
+                              <input class="form-control kodi-input" type="email" id="email2" name="email2" value="">
+                            </div>
+    
+                          </div>
+    
+                          <!-- Save changes button-->
+                          <div class="text-right">
+                            <button id="gotopersonal" class="btn btn-primary back-btn dispnone" type="button">Back</button>
+                            <button class="previous btn btn-primary back-btn" type="button">Back</button>
+    
+                            <button id="gotofinish" class="btn btn-primary dispnone" type="button">Next</button>
+                            <button class="next btn btn-primary" type="button">Next</button>
+    
+                          </div>
+    
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="dispnone" id="finish-area">
+                  <div class="row">
+                    <div class="col-xl-12">
+                      <!-- Account details card-->
+                      <div class="card mb-2 mt-1">
+                        <div class="card-header text-kodi">Complete registration</div>
+                        <div class="card-body">
+    
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="pass1">Password</label>
+    
+                              <input class="form-control kodi-input" type="password" id="pass1" name="pass1" value="">
+                            </div>
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="pass2">Confirm password</label>
+    
+                              <input class="form-control kodi-input" type="password" id="pass2" name="pass2" value="">
+                            </div>
+    
+                          </div>
+    
+                          <div class="form-group">
+                            <input type="checkbox" class="m-2" id="terms" name="terms">
+                            <label for="terms">I agree with <a class="text-info" href="#" target="_blank">terms and
+                                conditions.</a></label>
+                          </div>
+    
+                          <!-- Save changes button-->
+                          <div class="text-right">
+                            <button class="previous btn btn-primary back-btn" type="button">Back</button>
+                            <button class="gotocompany btn btn-primary back-btn dispnone" type="button">Back</button>
+    
+                            <button type="reset" class="btn btn-outline-danger" type="button">Reset</button>
+    
+                            <button id="register" class="btn btn-primary dispnone" type="button">Finish and submit</button>
+                            <button class="next register btn btn-primary" type="button">Finish and submit</button>
+    
+                          </div>
+    
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    
+    
+              </form>
+            </div>
+    
+    
+    
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" data-backdrop="static" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-kubwa" role="document">
+      <div class="modal-content">
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title divjust-end">
+            <span class="mr-3 mb-1 smallify text-kodi-alt">Request a demo</span>
+            <div>
+              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white" type="button"
+                data-dismiss="modal">X</button>
+            </div>
+          </h5>
+        </div>
+  
+        <div class="modal-body pt-0 text-gray-900">
+          <div id="feedback2" class="center-btn dispnone p-3"></div>
+          <div id="regbed2" class="">
+            <form id="msform2">
+  
+                <div class="row">
+                  <div class="col-xl-12">
+                    <!-- Account details card-->
+                    <div class="card mb-4 mt-1">
+                      <div class="card-header text-kodi">Please fill this form</div>
+                      <div class="card-body">
+  
+  
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label class="small mb-1" for="d_fname">First name</label>
+  
+                            <input class="form-control kodi-input" type="text" id="d_fname" name="fname" value="">
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="small mb-1" for="d_lname">Last name</label>
+  
+                            <input class="form-control kodi-input" type="text" id="d_lname" name="lname" value="">
+                          </div>
+  
+                        </div>
+  
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label class="small mb-1" for="d_tel1">Mobile number</label>
+  
+                            <input class="form-control kodi-input" type="tel" id="d_tel1" name="tel1" value="">
+                          </div>
+                          <div class="col-sm-6">
+                            <label class="small mb-1" for="d_email">Email</label>
+  
+                            <input class="form-control kodi-input" type="email" id="d_email" name="email" value="">
+                          </div>
+  
+                        </div>
+    
+  
+                        <!-- Save changes button-->
+                        <div class="text-right">
+                          <button id="getdemo" class="btn btn-primary dispnone" type="button">Get demo</button>
+                          <button class="next2 btn btn-primary" type="button">Get demo</button>
+  
+                        </div>
+  
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              
+    
+  
+            </form>
+          </div>
+  
+  
+  
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="signuploader" class="d-none" data-toggle="modal" data-target="#signUpModal"></button>
+
+
+
+    <script src="../static/jsx/jquery-3.4.1.min.js"></script>
+    <script src="../static/jsx/popper.min.js"></script>
+    <script src="../static/jsx/bootstrap.min.js"></script>
+    <script src="../static/jsx/owl.carousel.min.js"></script>
+    <script src="../static/jsx/aos.js"></script>
+    <script src="../static/jsx/imagesloaded.pkgd.js"></script>
+    <script src="../static/jsx/isotope.pkgd.min.js"></script>
+    <script src="../static/jsx/jquery.animateNumber.min.js"></script>
+    <script src="../static/jsx/jquery.waypoints.min.js"></script>
+    <script src="../static/jsx/jquery.fancybox.min.js"></script>
+    <script src="../static/jsx/custom.js"></script>
+    <script src="{{ url_for('static', filename='landingtwo/js/jquery.validate.min.js') }}"></script>
+    <script src="../static/jsx/val.js"></script>
+
+<script>
+  $("#signuploader").click();
+</script>
+
+    <script>
+      $("#gotopersonal").click(function(){
+          $("#personal").addClass("underline")
+          $("#finish").removeClass("underline")
+          $("#company").removeClass("underline")
+  
+          $("#personal-area").removeClass("dispnone")
+          $("#company-area").addClass("dispnone")
+          $("#finish-area").addClass("dispnone")
+      })
+  
+      $(".gotocompany").click(function(){
+          $("#company").addClass("underline")
+          $("#personal").removeClass("underline")
+          $("#finish").removeClass("underline")
+  
+          $("#company-area").removeClass("dispnone")
+          $("#personal-area").addClass("dispnone")
+          $("#finish-area").addClass("dispnone")
+      })
+  
+      $("#gotofinish").click(function(){
+          $("#finish").addClass("underline")
+          $("#personal").removeClass("underline")
+          $("#company").removeClass("underline")
+  
+          $("#finish-area").removeClass("dispnone")
+          $("#company-area").addClass("dispnone")
+          $("#personal-area").addClass("dispnone")
+      })
+  </script>
+
+  <script>
+    $("#register").on('click', function () {
+      $('.register').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+    $.ajax({
+      url: "{{ url_for('api.selfuserregisteragent') }}",
+      type: "POST",
+      data: {
+        fname: $("#fname").val(),
+        lname: $("#lname").val(),
+
+        tel1: $("#tel1").val(),
+        email: $("#email").val(),
+
+        natid:$('#natid').val(),
+        addr1 : $('#addr1').val(),
+
+        co : $('#co').val(),
+        addr2 : $('#addr2').val(),
+
+        email2:$('#email2').val(),
+        tel2 : $('#tel2').val(),
+
+        pass1 : $('#pass1').val()
+      },
+      success: function (response) {
+        if (response === "success") {
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-success'><i class='success mr-4'></i><span class='pl-3 pt-3'>Registration successful</span></h6><br><span class='text-info'>Check your email for email address verification</span>");
+          $("#regbed").addClass("dispnone")
+          $('.register').html('Finish and submit');
+
+        }else if(response === "id taken"){
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-danger'>Registration failed: National Id already in use</h6>");
+          setTimeout(function () {
+            $("#feedback").addClass("dispnone")
+          }, 5000);
+          $('.register').html('Finish and submit');
+
+        }else if(response === "tel taken"){
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-danger'>Registration failed: Mobile number already in use</h6>");
+          setTimeout(function () {
+            $("#feedback").addClass("dispnone")
+          }, 5000);
+          $('.register').html('Finish and submit');
+
+        }else if(response === "co taken"){
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-danger'>Registration failed: Company name is not available</h6>");
+          setTimeout(function () {
+            $("#feedback").addClass("dispnone")
+          }, 5000);
+          $('.register').html('Finish and submit');
+
+        }else{
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-danger'>Registration failed: Email already in use</h6>");
+          setTimeout(function () {
+            $("#feedback").addClass("dispnone")
+          }, 5000);
+          $('.register').html('Finish and submit');
+        }
+
+
+      }, 
+      error: function(xhr) {
+        $("#feedback").html("<h3 class='text-danger mb-1 pb-0'>Registration failed</h3><h5 class='text-info mt-1 pt-0'>Please retry below</h5>");
+        $('.register').html('Finish and submit');
+        $("#feedback").removeClass("dispnone")
+
+        setTimeout(function () {
+          $("#feedback").addClass("dispnone")
+        }, 5000);
+
+      }
+    });
+    })
+  </script>
+
+
+<script>
+  $("#getdemo").on('click', function () {
+    $('.next2').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>sending...');
+  $.ajax({
+    url: "{{ url_for('api.requestdemo') }}",
+    type: "get",
+    data: {
+      fname: $("#d_fname").val(),
+      lname: $("#d_lname").val(),
+
+      tel1: $("#d_tel1").val(),
+      email: $("#d_email").val(),
+      target:"params"
+    },
+    success: function (response) {
+      if (response === "success") {
+        $("#feedback2").removeClass("dispnone")
+        $("#feedback2").html("<h6 class='text-success'><i class='success mr-4'></i><span class='pl-3 pt-3'>Demo link sent successfully</span></h6><br><span class='text-info'>Kindly check your email</span>");
+        $("#regbed2").addClass("dispnone")
+        $('.next2').html('Get demo');
+
+      }else{
+        $("#feedback2").removeClass("dispnone")
+        $("#feedback2").html("<h6 class='text-danger'>Error occured, try again later</h6>");
+        setTimeout(function () {
+          $("#feedback2").addClass("dispnone")
+        }, 5000);
+        $('.next2').html('Get demo');
+      }
+
+
+    }, 
+    error: function(xhr) {
+      $("#feedback2").removeClass("dispnone")
+      $("#feedback2").html("<h3 class='text-danger mb-1 pb-0'>Error occured</h3><h5 class='text-info mt-1 pt-0'>Please retry below</h5>");
+      $('.next2').html('Get demo');
+
+      setTimeout(function () {
+        $("#feedback2").addClass("dispnone")
+      }, 5000);
+
+    }
+  });
+  })
+</script>
+
+  </body>
+  </html>

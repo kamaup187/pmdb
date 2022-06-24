@@ -376,7 +376,7 @@
 
 
                         <span class="mr-2">
-                          <button id="landlord-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Landlord statements</button>
+                          <button id="landlord-statements" class="btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Invoice reports</button>
                         </span>
                         <div class="mr-2">
                           |
@@ -403,8 +403,10 @@
                           <button id="expenses-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Expenses reports</button>
                         </div>
                         <div class="mr-2">
-                          |
                           <button id="deposit-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Deposit reports</button>
+                        </div>
+                        <div class="mr-2">
+                          <button id="custom-statements" class="expensebtn btn btn-outline-info borderless p-0 m-0 font-weight-bold btn-sm">Custom reports</button>
                         </div>
 
 
@@ -502,6 +504,29 @@
 
       <div class="modal-foote divbg">
         <!-- <button id="submitmodal" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">Submit</button> -->
+        <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade center-btn" id="remitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Rent remmittance</h5>
+      </div>
+      <div class="modal-body">
+        <div class="media mb-2">
+          <div id="remitbed" class="media-body">
+            <span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-foote divbg">
+        <button id="remit" type="button" class="btn bg-gradient-success borderless text-white btn-sm has-margin-bottom">save</button>
         <button type="button" id="closemodal" class="btn btn-danger btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -1053,6 +1078,7 @@ $("#export-xls-btn").click(function(){
     $("#readings-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
 
 
     $("#landlord-statements").addClass("btn-info text-white")
@@ -1064,6 +1090,7 @@ $("#export-xls-btn").click(function(){
     $("#readings_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
   })
 
 
@@ -1084,6 +1111,8 @@ $("#export-xls-btn").click(function(){
     $("#readings-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#office-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1094,6 +1123,8 @@ $("#export-xls-btn").click(function(){
     $("#readings_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   })
 
 
@@ -1113,6 +1144,8 @@ $("#export-xls-btn").click(function(){
     $("#readings-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#tenant-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1123,6 +1156,8 @@ $("#export-xls-btn").click(function(){
     $("#readings_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   })
 
 
@@ -1140,6 +1175,8 @@ $("#export-xls-btn").click(function(){
     $("#readings-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#payments-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1149,6 +1186,8 @@ $("#export-xls-btn").click(function(){
     $("#readings_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   })
 
 
@@ -1164,6 +1203,8 @@ $("#export-xls-btn").click(function(){
     $("#readings-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#property-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1173,6 +1214,8 @@ $("#export-xls-btn").click(function(){
     $("#readings_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   }) 
   
   
@@ -1189,6 +1232,8 @@ $("#export-xls-btn").click(function(){
     $("#payments-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom_statements").addClass("dispnone")
+
 
     $("#readings-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1198,6 +1243,8 @@ $("#export-xls-btn").click(function(){
     $("#payments_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   })
 
 
@@ -1213,6 +1260,8 @@ $("#export-xls-btn").click(function(){
     $("#payments-statements").removeClass("btn-info text-white")
     $("#readings-statements").removeClass("btn-info text-white")
     $("#deposit-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#expenses-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1222,6 +1271,8 @@ $("#export-xls-btn").click(function(){
     $("#payments_statements").addClass("dispnone")
     $("#readings_statements").addClass("dispnone")
     $("#deposit_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
   })
 
 
@@ -1237,6 +1288,8 @@ $("#export-xls-btn").click(function(){
     $("#payments-statements").removeClass("btn-info text-white")
     $("#expenses-statements").removeClass("btn-info text-white")
     $("#readings-statements").removeClass("btn-info text-white")
+    $("#custom-statements").removeClass("btn-info text-white")
+
 
     $("#deposit-statements").addClass("btn-info text-white")
     $("#landlord_statements").addClass("dispnone")
@@ -1246,8 +1299,43 @@ $("#export-xls-btn").click(function(){
     $("#payments_statements").addClass("dispnone")
     $("#expenses_statements").addClass("dispnone")
     $("#readings_statements").addClass("dispnone")
+    $("#custom_statements").addClass("dispnone")
+
+  })
+
+
+
+  $("#custom-statements").click(function(){
+    $("#reportbed").addClass("dispnone")
+    $("#reportbtns").removeClass("dispnone")
+
+    $("#custom_statements").removeClass("dispnone")
+    $("#office-statements").removeClass("btn-info text-white")
+    $("#landlord-statements").removeClass("btn-info text-white")
+    $("#tenant-statements").removeClass("btn-info text-white")
+    $("#property-statements").removeClass("btn-info text-white")
+    $("#payments-statements").removeClass("btn-info text-white")
+    $("#expenses-statements").removeClass("btn-info text-white")
+    $("#readings-statements").removeClass("btn-info text-white")
+    $("#deposit-statements").removeClass("btn-info text-white")
+
+
+    $("#custom-statements").addClass("btn-info text-white")
+    $("#landlord_statements").addClass("dispnone")
+    $("#office_statements").addClass("dispnone")
+    $("#tenant_statements").addClass("dispnone")
+    $("#property_statements").addClass("dispnone")
+    $("#payments_statements").addClass("dispnone")
+    $("#expenses_statements").addClass("dispnone")
+    $("#readings_statements").addClass("dispnone")
+    $("#deposit_statements").addClass("dispnone")
+
   })
 </script>
+</script>
+
+
+
 
 
 
@@ -1357,6 +1445,27 @@ $("#export-xls-btn").click(function(){
       $(".loader12").html('<i class="fas fa-redo-alt fa-2x text-danger"></i>');
     },20000);
 });
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#remitModal").on('shown.bs.modal', function(){
+    // $('#tenantbed').addClass("dispnone");
+
+    $.ajax({
+      url: "{{ url_for('api.combinedreport') }}",
+      type: "get",
+      data: {
+            prop: $("#propname").text(),
+            month:$("#remitperiod").text(),
+            target: "remit_data"
+          },
+      success: function(response) {
+        $("#remitbed").html(response); 
+      }
+    });
+  });
+
 </script>
 
 <!-- <script>

@@ -41,10 +41,9 @@
                     <form class="row bg-light" method="GET" action="/rent/statement">
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
-                        <select name="reporttype" class="select-css" id="reporttype" required>
-                          <option disabled selected value> type </option>
+                        <select name="reporttype" class="select-css" id="reporttype">
+                          <option slected value="collected">Based on collected amount only</option>
                           <option value="uncollected">Based on amount due</option>
-                          <option value="collected">Based on collected amount only</option>
                         </select>
                       </div>
                     
@@ -85,8 +84,12 @@
       <div class="collapse show" id="collapseCardExample2">
         
         <div class="card-body pt-0">
-
+          <div class="center-btn mb-4 mt-4">
+            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div>
           {%if prop%}
+
           <div class="center-btn mt-2 overline">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></span>
@@ -154,16 +157,46 @@
 
           </div>
 
-          <div class="divjust-end ln-16 mobile-malaysian">
-            {%if not expenselist%}
-            <div class="hide">space</div>
+          <div>
+            {%if expenselist%}
+            <div class="fs-65pc">
+              <div class="">Expenses</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">House</th>
+                        <th class="p-0">Expense</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['house'] }}</td>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="2" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
             {%endif%}
+          </div>
+
+          <div class="divjust-end ln-16 mobile-malaysian">
+            <div class="">Remarks:</div>
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
                 <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
                 <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
-                <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div>
+                <!-- <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div> -->
                 <div class="text-gray-900 mb-1">TOTALS</div>
                 <div class="hide mb-2">space</div>
 
@@ -173,10 +206,12 @@
                 <div class="mb-1 pt-2 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
                 <div class="mb-1 text-gray-900">MGT FEES VAT</div>
                 <div class="mb-1 text-gray-900">LETTING FEE</div>
-                <div class="mb-1 text-gray-900">LETTING FEE VAT</div>
+                <!-- <div class="mb-1 text-gray-900">LETTING FEE VAT</div> -->
 
                 <div class="mb-1 text-gray-900">OTHER DEDUCTIONS</div>
                 <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
+                <div class="mb-1 text-gray-900">LANDLORD BALANCE</div>
+
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3">NET PAYABLE</div>
               </div>
@@ -184,23 +219,77 @@
               <div class="text-black">
                 <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
                 <div class="mb-1 text-gray-900">0.0</div>
-                <div class="mb-1 text-gray-900">0.0</div>
+                <!-- <div class="mb-1 text-gray-900">Kshs {{remits}}</div> -->
                 <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                 <div class="hide mb-2">space</div>
 
                 <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
                 <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
                 <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
 
                 <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
                 <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">Kshs {{remits}} (<span class="text-success">credit</span>)</div>
+
 
                 <div class="hide mb-2">space</div>
 
                 <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
               </div>
             </div>
+          </div>
+
+          <div class="divjust-end">
+
+            <div>
+              <div>
+                Prepared By:
+              </div>
+              <div>
+                <div class="ln-10 font-weight-bold">{{name}}</div>
+                <div class="ln-10">__________</div>
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Checked By:
+              </div>
+              <div>
+                <div class="ln-10 font-weight-bold">{{name}}</div>
+                <div class="ln-10">__________</div>
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Approved By:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Cheque No:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div>
+                Date:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+
           </div>
         </div>
         
@@ -277,35 +366,45 @@
                 </tr>
               </tfoot>
             </table>
+            {%if expenselist%}
+            <div class="fs-65pc">
+              <div class="">Expenses</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">House</th>
+                        <th class="p-0">Expense</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['house'] }}</td>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="2" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
+            {%endif%}
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
-              <div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Approved By:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Date:</div>
-                  <div class="col-6">........................</div>
-                </div>
+              <div class="hide">
+                hide
               </div>
   
               <div class="divjust-end mr-5">
                 <div class="mr-4">
                   <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
                   <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
-                  <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div>
+                  <!-- <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div> -->
                   <div class="text-gray-900 mb-1">TOTALS</div>
                   <div class="hide mb-2">space</div>
   
@@ -315,10 +414,12 @@
                   <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}}</div>
                   <div class="mb-1">MGT FEES VAT</div>
                   <div class="mb-1">LETTING FEE</div>
-                  <div class="mb-1">LETTING FEE VAT</div>
+                  <!-- <div class="mb-1">LETTING FEE VAT</div> -->
   
                   <div class="mb-1">OTHER DEDUCTIONS</div>
                   <div class="mb-1">TOTAL DEDUCTIONS</div>
+                  <div class="mb-1">LANDLORD BALANCE</div>
+
                   <div class="hide mb-2">space</div>
                   <div class="text-gray-900 mb-3 text-110">NET PAYABLE</div>
                 </div>
@@ -326,23 +427,75 @@
                 <div class="text-black">
                   <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
                   <div class="mb-1 text-gray-900">0.0</div>
-                  <div class="mb-1 text-gray-900">0.0</div>
+                  <!-- <div class="mb-1 text-gray-900">Kshs. {{remits}}</div> -->
                   <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   
                   <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
                   <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
                   <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                  <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
   
                   <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
                   <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{remits}} (<span class="text-primary">credit</span>)</div>
   
                   <div class="hide mb-2">space</div>
   
                   <div class="text-gray-900 mb-3 text-110 overline underline">Kshs {{netpay}}</div>
                 </div>
               </div>
+            </div>
+            <div class="divjust-end">
+
+              <div>
+                <div>
+                  Prepared By:
+                </div>
+                <div>
+                  <div class="ln-10 font-weight-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Checked By:
+                </div>
+                <div>
+                  <div class="ln-10 font-weight-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Approved By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Cheque No:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div>
+                <div>
+                  Date:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+  
             </div>
           {% endif %}
         </div>

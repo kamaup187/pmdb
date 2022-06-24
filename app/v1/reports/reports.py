@@ -1,3 +1,4 @@
+from asyncio import exceptions
 from dateutil.parser import parse
 
 from flask_login import login_required, current_user
@@ -59,6 +60,66 @@ class Reports(Resource):
         formatted_monthlybal_total = (f"{monthlybal_total:,}")
         return Response(render_template(
             "reports.html",
+            delay=delay,
+            tenantlist=[],
+            month_string=get_str_month(present_month),
+            monthly_bills = formatted_monthly_bill_total,
+            monthly_rent_collection=formatted_monthly_total,
+            monthly_bal=formatted_monthlybal_total,
+            suggestions=generate_suggestions(apartment_list),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            parent=logo(current_user.company)[5],
+            name=current_user.name))
+
+class ReportsThree(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+
+        delay = "no" if os.getenv("CURRENT_APP") == "app2" else "no"
+        time = datetime.datetime.now()
+        present_month = time.month
+        present_year = time.year
+        # apartment_list = fetch_all_apartments_by_user(current_user)
+        apartment_list = []
+
+        monthly_collection=[] #list of amounts from all payment objs
+        tenant_balances=[]
+        monthly_bill_members=[] #list of monthlybill amounts from monthly charge objs
+
+        update_login_history("reports",current_user)
+
+        for apartment in apartment_list:
+            db.session.expire(apartment)
+            ######################################
+            tenants = tenantauto(apartment.id)
+            for i in tenants:
+                db.session.expire(i)
+                bal_item = i.balance
+                tenant_balances.append(bal_item)
+            #######################################
+            monthly_bills = apartment.monthlybills
+            for item in monthly_bills:
+                if item.month == present_month and item.year == present_year:
+                    sum_member = item.total_bill
+                    monthly_bill_members.append(sum_member) #TODO vacated tenant whose bills have been discarded will have no record of water charges here, rectify this.
+
+            payment_collection = apartment.payment_data
+            for item in payment_collection:
+                if item.pay_period.month == present_month and item.pay_period.year == present_year and not item.voided:
+                    sum_member = item.amount
+                    monthly_collection.append(sum_member)
+
+        monthly_bill_total = sum_positive_values(monthly_bill_members)
+        monthly_total = sum_positive_values(monthly_collection)
+        monthlybal_total = sum_positive_values(tenant_balances)
+        ############################################################    
+        formatted_monthly_bill_total = (f"{monthly_bill_total:,}")    
+        formatted_monthly_total = (f"{monthly_total:,}")
+        formatted_monthlybal_total = (f"{monthlybal_total:,}")
+        return Response(render_template(
+            "reportsthree.html",
             delay=delay,
             tenantlist=[],
             month_string=get_str_month(present_month),
@@ -298,7 +359,7 @@ class LandlordProfitAndLossSummary(Resource):
         expenses = prop_obj.expenses
         current_month_expenses = []
         for exp in expenses:
-            if exp.date.month == target_period.month and exp.status == "completed":
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type != "remittance":
                 current_month_expenses.append(exp)
 
         tokenamount = 0.0
@@ -1755,7 +1816,7 @@ class LandlordProfitAndLoss(Resource):
                 expenses_amount += exp.amount
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -1779,8 +1840,10 @@ class LandlordProfitAndLoss(Resource):
 
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
-            
-        raw_netpay = netrent - commission - expenses_amount - loan
+
+        ll=0.0
+
+        raw_netpay = netrent - commission - expenses_amount - loan - ll
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)
@@ -1818,6 +1881,217 @@ class LandlordProfitAndLoss(Resource):
             formatted_netrent=formatted_netrent,
             commission=formatted_commision,
             commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class CombinedReport(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+        target = request.args.get("target")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_combined.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        house_ids = []
+        detailed_bills = []
+
+        totalrentarrears = 0.0
+        totalrent = 0.0
+        totalrentdue = 0.0
+        totalrentpaid = 0.0
+        totalrentbalance = 0.0
+
+        utility = 0.0
+        deposits = 0.0
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.view_detail(bill)
+                detailed_bills.append(bill_item)
+
+                totalrentarrears += bill.rent_balance
+                totalrent += bill.rent
+                totalrentdue += (bill.rent + bill.rent_balance)
+                totalrentpaid += bill.rent_paid
+                totalrentbalance += bill.rent_due
+
+                utility += bill.water + bill.garbage + bill.security + bill.maintenance
+                deposits += bill.deposit   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0.0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+
+        renttotalbalance = (f"{totalrentbalance:,}")
+        renttotal = (f"{totalrent:,}")
+        renttotaldue = (f"{totalrentdue:,}")
+        renttotalpaid = (f"{totalrentpaid:,}")
+        renttotalbalance = (f"{totalrentbalance:,}")
+
+        try:
+            ratio = (f"{(totalrentpaid/totalrentdue)/100:,.1f}")
+        except:
+            ratio = 0.0
+
+        utilities = (f"{utility:,}")
+        deposittotal = (f"{deposits:,}")
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+                expenses_amount += exp.amount
+
+        if apartment_obj.id == 33:
+            loan = 0
+        else:
+            loan = 0
+
+            
+        netrent = totalrentpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+
+        if apartment_obj.commission:
+        
+            commission = netrent * apartment_obj.commission * 0.01
+
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+
+
+
+        formatted_commision = (f"{commission:,.2f}")
+        grosspay = f"{(totalrentpaid - commission):,.2f}"
+
+        formatted_loan = (f"{loan:,.1f}")
+
+        ll=0.0
+
+        raw_netpay = netrent - commission - expenses_amount - loan - ll + deposits + utility
+
+        remitted = raw_netpay
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        template_vars = {
+            "code":"N/A",
+            "name":selected_apartment,
+            "landlord":"Landlord",
+            "ll_bbf":0.0,
+
+            "tnt_bbf":totalrentarrears,
+            "rent":totalrent,
+            "expected":totalrentdue,
+            "actual":totalrentpaid,
+            "tnt_bcf":totalrentbalance,
+
+            "utilities":utility,
+            "deposit":deposits,
+
+            "commission":commission,
+
+            "remitted":remitted,
+            "ratio":ratio,
+
+            "ll_bcf":0.0,
+            "agent":"User",
+        }
+
+        if target == "remit_data":
+            return render_template('ajax_remit_template.html',vars=template_vars)
+
+        return Response(render_template(
+            'report_combined.html',
+            selected_month=selected_month,
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+
+            renttotal=renttotal,
+
+            deposittotal=deposittotal,
+
+            expenses = f"{expenses_amount:,.1f}",
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            commission_percentage=commission_percentage,
+            gross=grosspay,
             netpay=netpay,
             bills=detailed_bills,
             paging=page(detailed_bills),
@@ -1943,12 +2217,34 @@ class RentStatement(Resource):
         totalbcf = sum_positive_values(bcftotal_sum_members)
         bcftotal = (f"{totalbcf:,}")
 
+        expense_list = []
+
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
+        remittances = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
 
         for exp in expenses:
-            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
                 expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+
+
 
             
         netrent = totalpaid
@@ -1958,7 +2254,7 @@ class RentStatement(Resource):
         commission = netrent * apartment_obj.commission * 0.01
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -1977,7 +2273,7 @@ class RentStatement(Resource):
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
             
-        raw_netpay = netrent - commission - expenses_amount - loan
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)
@@ -2003,10 +2299,466 @@ class RentStatement(Resource):
             paidtotal=paidtotal,
             bcftotal=bcftotal,
             expenses = f"{expenses_amount:,.1f}",
+            remits = f"{remittances:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             commission=formatted_commision,
             debits=formatted_debits,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            expenselist=expense_list,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+class RentRemit(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_rent_remit.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.external_view(bill)
+            detailed_bills.append(bill_item)
+
+            bbf = bill.rent_balance if bill.rent_balance else 0.0
+            rent = bill.rent if bill.rent else 0.0
+            total = rent + bbf
+            paid = bill.rent_paid if bill.rent_paid else 0.0
+            bcf = bill.rent_due if bill.rent_due else 0.0
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bbf)
+            renttotal_sum_members.append(rent)
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        print("totalbiiiil",totalbill)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+        expense_list = []
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+        remittances = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+
+
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        commission = netrent * apartment_obj.commission * 0.01
+
+        if apartment_obj.id == 33:
+            loan = 0
+        else:
+            loan = 0
+
+        if apartment_obj.commission:
+            commission = netrent * apartment_obj.commission * 0.01
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+        debits = commission + expenses_amount
+
+        formatted_debits = f"{debits:,.1f}"
+
+        formatted_commision = (f"{commission:,.1f}")
+        formatted_loan = (f"{loan:,.1f}")
+            
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_rent_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            expenses = f"{expenses_amount:,.1f}",
+            remits = f"{remittances:,.1f}",
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            debits=formatted_debits,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            expenselist=expense_list,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+class CustomReport(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_custom_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+
+        renttotal_sum_members = []
+        watertotal_sum_members = []
+        garbagetotal_sum_members = []
+        securitytotal_sum_members = []
+        servicetotal_sum_members = []
+        penaltytotal_sum_members = []
+        deposittotal_sum_members = []
+
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        paid_rent = 0
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
+        
+        for bill in current_month_bills:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.view_detail(bill)
+            detailed_bills.append(bill_item)
+
+            bff = bill.arrears
+            rent = bill.rent
+            water = bill.water
+            garbage = bill.garbage
+            security = bill.security
+            service = bill.maintenance
+            deposit = bill.deposit
+            penalty = bill.penalty
+
+            total = bff + rent + water + garbage + security + service + deposit + penalty
+
+            paid = bill.paid_amount
+            paid_rent += bill.rent_paid if bill.rent_paid else 0
+            paid_rent += bill.maintenance_paid if bill.maintenance_paid else 0
+            bcf = bill.balance
+            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+            bbftotal_sum_members.append(bff)
+
+            renttotal_sum_members.append(rent)
+            watertotal_sum_members.append(water)
+            garbagetotal_sum_members.append(garbage)
+            securitytotal_sum_members.append(security)
+            servicetotal_sum_members.append(service)
+            deposittotal_sum_members.append(deposit)
+            penaltytotal_sum_members.append(penalty)
+
+            billtotal_sum_members.append(total)
+
+            paidtotal_sum_members.append(paid)
+            bcftotal_sum_members.append(bcf)
+
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalwater = sum_values(watertotal_sum_members)
+        watertotal = (f"{totalwater:,}")
+
+        totalgarbage = sum_values(garbagetotal_sum_members)
+        garbagetotal = (f"{totalgarbage:,}")
+
+        totalsecurity = sum_values(securitytotal_sum_members)
+        securitytotal = (f"{totalsecurity:,}")
+
+        totalservice = sum_values(servicetotal_sum_members)
+        servicetotal = (f"{totalservice:,}")
+
+        totaldeposit = sum_values(deposittotal_sum_members)
+        deposittotal = (f"{totaldeposit:,}")
+
+        totalpenalty = sum_values(penaltytotal_sum_members)
+        penaltytotal = (f"{totalpenalty:,}")
+
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+                expenses_amount += exp.amount
+
+ 
+        loan = 0
+
+            
+        netrent = paid_rent
+
+        formatted_netrent = (f"{netrent:,.1f}")
+
+        if apartment_obj.commission:
+        
+            commission = netrent * apartment_obj.commission * 0.01
+
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+
+
+
+        formatted_commision = (f"{commission:,.1f}")
+
+        ll=0.0
+
+        # raw_netpay = netrent - commission - expenses_amount - ll
+        raw_netpay = netrent - commission - expenses_amount - ll
+
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            'report_custom_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+
+            renttotal=renttotal,
+            watertotal=watertotal,
+            garbagetotal=garbagetotal,
+            securitytotal=securitytotal,
+            servicetotal=servicetotal,
+            deposittotal=deposittotal,
+            penaltytotal=penaltytotal,
+
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            expenses = f"{expenses_amount:,.1f}",
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
             commission_percentage=commission_percentage,
             netpay=netpay,
             bills=detailed_bills,
@@ -2027,6 +2779,7 @@ class WaterStatement(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
+        targettype = request.args.get("targettype")
 
 
         if not selected_apartment:
@@ -2073,6 +2826,177 @@ class WaterStatement(Resource):
                 current_month_bills.append(bill)
 
         ###################################################################################################
+
+        if targettype == 'water':
+            template = "report_water_statement.html"
+            for bill in current_month_bills:
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                bbf = bill.water_balance if bill.water_balance else 0.0
+                water = bill.water if bill.water else 0.0
+                total = water + bbf
+                paid = bill.water_paid if bill.water_paid else 0.0
+                bcf = bill.water_due if bill.water_due else 0.0
+                # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+                bbftotal_sum_members.append(bbf)
+                renttotal_sum_members.append(water)
+                billtotal_sum_members.append(total)
+
+                paidtotal_sum_members.append(paid)
+                bcftotal_sum_members.append(bcf)
+        else:
+            template = "report_electricity_statement.html"
+            for bill in current_month_bills:
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                bbf = bill.electricity_balance if bill.electricity_balance else 0.0
+                elec = bill.electricity if bill.electricity else 0.0
+                total = elec + bbf
+                paid = bill.electricity_paid if bill.electricity_paid else 0.0
+                bcf = bill.electricity_due if bill.electricity_due else 0.0
+                # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
+
+                bbftotal_sum_members.append(bbf)
+                renttotal_sum_members.append(elec)
+                billtotal_sum_members.append(total)
+
+                paidtotal_sum_members.append(paid)
+                bcftotal_sum_members.append(bcf)
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+        print("rents",billtotal_sum_members)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        totalbbf = sum_values(bbftotal_sum_members)
+        bbftotal = (f"{totalbbf:,}")
+
+        totalrent = sum_values(renttotal_sum_members)
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = sum_values(billtotal_sum_members)
+        billtotal = (f"{totalbill:,}")
+
+        totalpaid = sum_values(paidtotal_sum_members)
+        paidtotal = (f"{totalpaid:,}")
+
+        totalbcf = sum_positive_values(bcftotal_sum_members)
+        bcftotal = (f"{totalbcf:,}")
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
+
+        return Response(render_template(
+            template,
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            agent=agent.name,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            formatted_netrent=formatted_netrent,
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+class LPFStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_lpf_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        ##################################################################################################
+        current_month_bills = []
+        house_ids = []
+        detailed_bills = []
+
+        bbftotal_sum_members = []
+        renttotal_sum_members = []
+        billtotal_sum_members = []
+
+        paidtotal_sum_members = []
+        bcftotal_sum_members = []
+
+        ###################################################################################################
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                current_month_bills.append(bill)
+
+        ###################################################################################################
         
         for bill in current_month_bills:
             """compute subtotals"""
@@ -2080,15 +3004,15 @@ class WaterStatement(Resource):
             bill_item = MonthlyChargeOp.external_view(bill)
             detailed_bills.append(bill_item)
 
-            bbf = bill.water_balance if bill.water_balance else 0.0
-            water = bill.water if bill.water else 0.0
-            total = water + bbf
-            paid = bill.water_paid if bill.water_paid else 0.0
-            bcf = bill.water_due if bill.water_due else 0.0
+            bbf = bill.penalty_balance if bill.penalty_balance else 0.0
+            garbage = bill.penalty if bill.penalty else 0.0
+            total = garbage + bbf
+            paid = bill.penalty_paid if bill.penalty_paid else 0.0
+            bcf = bill.penalty_due if bill.penalty_due else 0.0
             # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
 
             bbftotal_sum_members.append(bbf)
-            renttotal_sum_members.append(water)
+            renttotal_sum_members.append(garbage)
             billtotal_sum_members.append(total)
 
             paidtotal_sum_members.append(paid)
@@ -2143,7 +3067,7 @@ class WaterStatement(Resource):
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 
         return Response(render_template(
-            'report_water_statement.html',
+            'report_lpf_statement.html',
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,
@@ -2689,7 +3613,7 @@ class ExternalDetail(Resource):
         commission = netrent * apartment_obj.commission * 0.01
 
         if apartment_obj.id == 33:
-            loan = 60000
+            loan = 0
         else:
             loan = 0
 
@@ -2716,7 +3640,7 @@ class ExternalDetail(Resource):
         fieldshow_water = "dispnone" if not totalwater else ""
         fieldshow_dep = "dispnone" if not totaldeposit else ""
 
-        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+        fieldshow_loan =  "dispnone" if apartment_obj.id == 33 else "dispnone"
 
         agent = UserOp.fetch_user_by_username(apartment_obj.agent_id)
 
@@ -3813,6 +4737,157 @@ class TenantStatementThree(Resource):
             company=current_user.company
         ))
 
+
+class MpesaStatement(Resource):
+    @login_required
+    def get(self):
+
+        shortcode_id = request.args.get("shortcode")
+
+        start = request.args.get("from")
+
+        if not start:
+            begin_date_month = datetime.datetime.now().month
+            begin_date_year = datetime.datetime.now().year
+            begin_date = generate_start_date(begin_date_month, begin_date_year)
+        else:
+            begin = date_formatter_alt(start)
+            begin_date = parse(begin)
+
+        end_date = begin_date.date() + datetime.timedelta(days=30)
+
+        month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date.date()).days+1)]
+        year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date.date()).days+1)]
+
+
+        shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
+
+        cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+
+            
+        main = []
+        total = 0.0
+        for i in cbids:
+
+            if i.post_date.month in month_range and i.post_date.year in year_range:
+                total += i.trans_amnt
+                main.append(i)
+
+        cbids_dicts = ctb_payment_details(main)
+                
+        ########################################################
+        timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        ########################################################
+
+        return Response(render_template(
+            'report_mpesa_statement.html',
+            bills=cbids_dicts,
+            total=f"{total:,.1f}",
+            prop="someprop",
+            shortcode=shortcode,
+            name=current_user.name,
+            tenantlist=[],
+            timeline=timeline,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company
+        ))
+
+
+class BookingSchedule(Resource):
+    @login_required
+    def get(self):
+        tenant_id = None
+        target = request.args.get("target")
+        prop = request.args.get("selected_apartment")
+
+        if target == "tenants":
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        if not prop and target != "direct":
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_booking_schedule.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop_obj=None,
+                prop = "",
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+
+class StatementOfAccounts(Resource):
+    @login_required
+    def get(self):
+        tenant_id = None
+        target = request.args.get("target")
+        prop = request.args.get("selected_apartment")
+
+        if target == "tenants":
+            prop = request.args.get("apartment")
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            tenants = tenantauto(prop_obj.id)
+            vacated_tenants = tenantauto_reverse(prop_obj.id)
+            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        # if not prop and target != "direct":
+        #     apartment_list = fetch_all_apartments_by_user(current_user)
+        #     return Response(render_template(
+        #         'report_account_statement.html',
+        #         props=apartment_list,
+        #         name=current_user.name,
+        #         tenant_obj = None,
+        #         prop = "",
+        #         prop_obj = None,
+        #         co=current_user.company,
+        #         tenantlist=[],
+        #         logopath=logo(current_user.company)[0],
+        #         mobilelogopath=logo(current_user.company)[1]
+        #     ))
+
+
+        # target = request.args.get("target")
+
+        if target == "direct":
+            tenantid = request.args.get("tenantid")
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+
+            bills = tenant_obj.monthly_charges
+
+            formatted_bills = []
+
+            for bill in bills:
+                formatted_bills.append(MonthlyChargeOp.view_detail(bill))
+
+            return Response(render_template(
+               'report_account_statement.html',
+                bills=formatted_bills,
+                prop_obj=tenant_obj.apartment,
+                prop = tenant_obj.apartment.name,
+                tenant_obj=tenant_obj,
+                tenant_name=tenant_obj.name,
+                name=current_user.name,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+            ))
+
+
 class ExpenseDetail(Resource):
     """class"""
     @login_required
@@ -3997,6 +5072,31 @@ class FetchTenants(Resource):
             tenantids = get_obj_ids(tenant_data)
             return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
         
+        elif target == "closed":
+            tenancy = tenantauto_alt(propid,"closed")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_oldtenantlist2.html",items=tenantlist,tenantids=full_ids)
+
+        elif target == "proposals":
+            tenancy = tenantauto_alt(propid,"proposal")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_newtenantlist2.html",items=tenantlist,tenantids=full_ids)
+
+        elif target == "contracts":
+            tenancy = tenantauto_alt(propid,"contracts")
+            tenantlist = ptenant_details(tenancy)
+            tenantids = get_obj_ids(tenantlist)
+            moreids = inject_tenants_ids(tenantlist) 
+            full_ids = tenantids + "," + moreids
+            return render_template("ajax_clientcontractslist.html",items=tenantlist,tenantids=full_ids)
+
         elif target == "old":
             tenancy = xtenantauto(propid)
             tenantlist = tenant_details(tenancy)
@@ -4050,6 +5150,7 @@ class FetchReadings(Resource):
 
 
 class FetchHouses(Resource):
+    @login_required
     def get(self):
         propid = request.args.get('propid')
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
@@ -4058,7 +5159,9 @@ class FetchHouses(Resource):
         houselist = house_details(houses)
         houseids = get_obj_ids(houselist)
 
-        return render_template("ajax_houselist.html",items=houselist,houseids=houseids)
+        template = "ajax_houselist2.html" if aviv(current_user) else "ajax_houselist.html"
+
+        return render_template(template,items=houselist,houseids=houseids)
 
 class FetchRates(Resource):
     def get(self):
@@ -4069,7 +5172,10 @@ class FetchRates(Resource):
         housecodelist = group_details(housecodes)
         groupids = get_obj_ids(housecodelist)
 
-        return render_template("ajax_housecodelist.html",items=housecodelist,groupids=groupids)
+        template = "ajax_housecodelist2.html" if aviv(current_user) else "ajax_housecodelist.html"
+
+
+        return render_template(template,items=housecodelist,groupids=groupids)
 
 class FetchMeters(Resource):
     def get(self):
@@ -4081,6 +5187,15 @@ class FetchMeters(Resource):
         meterids = get_obj_ids(meterlist)
 
         return render_template("ajax_meterlist.html",items=meterlist,meterids=meterids)
+
+class FetchAgents(Resource):
+    def get(self):
+        com_obj = current_user.company
+        reps = com_obj.reps
+        attlist = att_details(reps)
+        subids = get_obj_ids(attlist)
+
+        return render_template("ajax_agentlist.html",items=attlist,groupids=subids)
 
 class FetchPayments(Resource):
     @login_required
@@ -4132,11 +5247,16 @@ class FetchPayments(Resource):
 
                 item = popped_latest_set
 
+                if item.ptenant:
+                    tenant = item.ptenant.name
+                else:
+                    tenant = item.tenant.name
+
                 dict_item={
                     'id':item.id,
                     'editid':PaymentOp.generate_editid(item),
                     'delid':PaymentOp.generate_delid(item),
-                    'tenant':item.tenant.name,
+                    'tenant':tenant,
                     'house':item.house.name,
                     'hst':PaymentOp.combine_house_tenant_alt(item),
                     'mode':PaymentOp.fname_extracter(item.paymode),
@@ -4189,11 +5309,16 @@ class FetchPayments(Resource):
 
                 item = popped_latest_set
 
+                if item.ptenant:
+                    tenant = item.ptenant.name
+                else:
+                    tenant = item.tenant.name
+
                 dict_item={
                     'id':item.id,
                     'editid':PaymentOp.generate_editid(item),
                     'delid':PaymentOp.generate_delid(item),
-                    'tenant':item.tenant.name,
+                    'tenant':tenant,
                     'house':item.house.name,
                     'hst':PaymentOp.combine_house_tenant_alt(item),
                     'mode':PaymentOp.fname_extracter(item.paymode),
@@ -4264,11 +5389,16 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="disabled")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
 
         else:
             tenantid = request.args.get('tenantid')
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            ttype = request.args.get('ttype')
+
+            if ttype == "owner" or ttype == "resident":
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
 
             tenant_payments = tenant_obj.payments
 
@@ -4321,23 +5451,33 @@ class FetchBills(Resource):
     def get(self):
         propid = request.args.get('propid')
         target = request.args.get('target')
+        ttarget = request.args.get('ttarget')
+        ttype = request.args.get('ttype')
 
         co = current_user.company
         period = co.billing_period
 
         if target == "tenant bill":
             tenant_id = request.args.get('tenantid')
-            if tenant_id.startswith("tnt"):
-                tenantid = tenant_id[3:]
+
+            tenantid = get_identifier(tenant_id)
+
+            print(tenant_id.startswith("tnt"))
+            print(ttarget=="ttarget")
+            print(ttype!="owner",ttype)
+
+            if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype == "tenant":
+                print("expecting tenant here")
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
             else:
-                tenantid = tenant_id
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+                print("expecting owner here")
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+                
             db.session.expire(tenant_obj)
 
             # tenant_bills = tenant_obj.monthly_charges
             # recent_bills = fetch_recent_bills(period,tenant_bills)
             recent_bills = tenant_obj.monthly_charges
-
 
             if recent_bills:
                 detailed_bills = bill_details(recent_bills)
@@ -4346,8 +5486,10 @@ class FetchBills(Resource):
 
                 # billids = get_obj_ids(detailed_bills)
 
+                template = "ajax_tenantbill2.html" if aviv(current_user) else "ajax_tenantbill.html"
+
                 return render_template(
-                    "ajax_tenantbill.html",
+                    template,
                     fieldshow_sec = "dispnone" if not get_sum(detailed_bills,"security") else "",
                     fieldshow_sev = "dispnone" if not get_sum(detailed_bills,"maintenance") else "",
                     fieldshow_elec = "dispnone" if not get_sum(detailed_bills,"electricity") else "",
@@ -4661,10 +5803,14 @@ class ManagementFeeReport(Resource):
             date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
 
             timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+            period = begin_date
         
         else:
             date_range = []
             timeline = None
+            period = current_user.company.billing_period
+
+        print(">>>>",period)
 
         ##################################################################################################
         items = []
@@ -4679,8 +5825,11 @@ class ManagementFeeReport(Resource):
             total_collections = 0.0
             
             for item in prop.monthlybills:
-                period_of_billing = generate_date(item.month,item.year)
-                if period_of_billing.date() in date_range:
+                # period_of_billing = generate_date(item.month,item.year)
+                # if period_of_billing.date() in date_range:
+
+                if item.month == period.month and item.year == period.year:
+                    print(item.month,item.year)
 
                     total_collections += item.rent_paid if item.rent_paid > 0 else 0
                     grand_total_collections += item.rent_paid if item.rent_paid > 0 else 0
@@ -4778,7 +5927,7 @@ class OfficeExpenses(Resource):
                 name=current_user.name))
 
 
-class TenantDeposit(Resource):
+class TenantDeposits(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("prop")

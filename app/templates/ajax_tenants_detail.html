@@ -2,11 +2,14 @@
     <section class="contact_area section_gap">
       <!-- <span id="prop_identifier" class="dispnone">{{prop.id}}</span> -->
       <span id="tenant_identifier" class="dispnone"></span>
+      <span id="ttype3" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
       <span id="current-reloader" class="dispnone">current</span>
 
       <a id="download_contacts" href="/download/template/contacts" class="dispnone">download</a>
+      <a id="download_deposits" href="/download/template/deposits" class="dispnone">download</a>
+
 
       <span class="multisave dispnone"></span>
 
@@ -84,9 +87,9 @@
               Upload contacts
             </span>
 
-            <span class="btn btn-sm btn-light text-black dispnone" data-toggle="modal" data-target="#uploadArrearsExcelModal">
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadDepositsModal">
               <i class="me-1" data-feather="user-plus"></i>
-              Upload arrears
+              Upload deposits
             </span>
           </div>
 
@@ -126,7 +129,7 @@
                       <tbody>
                         {% for bill in bills%}
                         <tr>
-                          <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                          <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton ellipsis2 no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
                           <td class="data-cell">{{ bill['badge']|safe }}</td>
                           <td class="data-cell">{{ bill['tel'] }}</td>
                           <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
@@ -309,6 +312,47 @@
                     
                       <div class="divbg center-btn">
                         <button id="uploadmobile" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="uploadDepositsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload tenant deposits</span>
+              <div>
+                <button id="downloaddeposits" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Select File: <input class="ph" id="tenantdepositfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploaddeposit" type="button" class="btn-success borderless text-white">Upload</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                       
@@ -562,13 +606,24 @@
     $("#"+item).on('click',function(){
       console.log("clicked",item)
       if( isNaN(parseInt(item)) ){
-        if(item.startsWith("del")){
+        if(item.startsWith("tdel")){
+          $("#ttype3").html("tenant")
+          console.log("CLICKED ON TENANT")
+          $("#del_tenant_identifier").html(item)
+        }else if(item.startsWith("pdel")){
+          console.log("CLICKED ON PTENANT")
+          $("#ttype3").html("owner")
           $("#del_tenant_identifier").html(item)
         }
         else if(item.startsWith("pedit")){
           $("#edit_tenant_identifier").html(item)
         }
-        else if(item.startsWith("tnt")){
+        else if(item.startsWith("tnt")||item.startsWith("ptnt")){
+          if(item.startsWith("tnt")){
+            var ttype = "tenant"
+          }else{
+            var ttype = "owner"
+          }
           $("#barloader").removeClass("dispnone")
           $.ajax({
             url: "/results",
@@ -585,7 +640,8 @@
                 type: "get",
                 data: {
                   tenantid: item,
-                  target:"tenant bill"
+                  target:"tenant bill",
+                  ttype:ttype
                 },
                 success: function(response) {
                   
@@ -892,6 +948,19 @@
           },8000);
       });
   </script>
+
+<script>
+  $("#downloaddeposits").click(function(){ 
+      $('#downloaddeposits').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_deposits")[0].click();
+
+        setTimeout(function(){
+            $('#downloaddeposits').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },8000);
+    });
+</script>
 
 
 <script>
@@ -1298,6 +1367,7 @@
       type: "POST",
       data: {
             tenant_id: $("#del_tenant_identifier").text(),
+            ttype:$("#ttype3").text(),
             runalert:"somestring"
           },
       success: function(response) {
@@ -1307,6 +1377,7 @@
                 type: "POST",
                 data: {
                   tenant_id:$("#del_tenant_identifier").text(),
+                  ttype:$("#ttype3").text(),
                   target:"tenant name"
                 },
                 success: function(response) {
@@ -1353,6 +1424,7 @@
         type: "POST",
         data: {
                 tenant_id: $("#del_tenant_identifier").text(),
+                ttype:$("#ttype3").text(),
                 discard_bill: discard,
                 pay_off_balance : pay
             },

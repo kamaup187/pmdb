@@ -1,0 +1,15 @@
+<div>
+    Tenant Name: <strong id="target_tenant">{{tname}}</strong>
+  </div>
+  <div>
+    House/Unit: <strong>{{thouse}}</strong>
+  </div>
+
+  <script>
+
+    if($("#target_tenant").text() == "unidentified") {
+      console.log("Unidentified tenant")
+      $("#house_selector").removeClass("dispnone")
+      $("#confirm_details").addClass("dispnone")
+  }
+</script>

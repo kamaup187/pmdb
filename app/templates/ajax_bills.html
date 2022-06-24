@@ -3,13 +3,15 @@
     <!--================Contact Area =================-->
     <section class="contact_area section_ga">
       <span id="prop_identifier_main" class="dispnone"></span>
+      <span id="bill_prop_identifier" class="dispnone"></span>
+
       <span id="targeturl" class="dispnone"></span>
     
       <div class="card mb-2 mt-1">
     
         <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
           <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant Invoices <span id="activeprop"
+          <span class="smallify text-black font-weight-bold text-uppercase text-110">Resident/Tenant Invoices <span id="activeprop"
               class="text-primary ml-3"></span></span>
           <div>
             <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
@@ -82,6 +84,7 @@
                   <thead class="custom-header">
                     <tr>
                       <th class="text-info font-weight-bold" data-orderable="true">Property</th>
+                      <th class="text-info font-weight-bold" data-orderable="false">Residents</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Tenants</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Create</th>
                       <th class="text-info font-weight-bold" data-orderable="false">Invoices</th>
@@ -125,7 +128,9 @@
                         </div>
                       </td>
     
+                      <td class="data-cell text-center text-black">{{item['ptenants'] }}</td>
                       <td class="data-cell text-center text-black">{{item['tenants'] }}</td>
+
     
     
                       <!-- <td class="font-weight-bold text-s text-center data-cell">
@@ -137,7 +142,7 @@
 
                       <td class="data-cell text-center">
                         <div>
-                            <span id="{{item['billid']}}" type="button" class="btn {{item['bill_outline']}} font-weight-bold btn-sm ellipsis no-wrap">{{item['progress']|safe}}</span>
+                            <span id="{{item['billid']}}" type="button" class="btn {{item['bill_outline']}} font-weight-bold btn-sm ellipsis no-wrap" data-toggle="modal" data-target="#generateInvoiceModal">{{item['progress']|safe}}</span>
                         </div>
                     </td>
     
@@ -181,7 +186,7 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="5" class="center-btn font-weight-bold data-cell text-black">Total</td>
+                      <td colspan="6" class="center-btn font-weight-bold data-cell text-black">Total</td>
                       <td class="font-weight-bold data-cell text-info text-right {{fieldshow_arr}}">{{arrearstotal}}</td>
                       <td class="font-weight-bold data-cell text-info text-right {{fieldshow_dep}}">{{deptotal}}</td>
                       <td class="font-weight-bold data-cell text-info text-right {{fieldshow_rent}}">{{renttotal}}</td>
@@ -211,6 +216,64 @@
       </div>
     </section>
 
+    <div class="modal fade" id="generateInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info h4 text-uppercase" id="paymentDetailModalLabel">Generate invoices</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <div class="mb-3 mt-3 h5">
+                      <span class="text-black">Current period: <span class="text-info underline">{{current_month}} </span></span>
+                    </div>
+
+
+                  <div class="mb-1 smallify">
+                    <input type="checkbox" name="" id="diffperiod">
+                    <label class="mr-3 me-3 text-danger" for="diffperiod">Bill different period?</label>
+                    <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose date..." readonly />
+                    
+                  </div>
+  
+
+                    
+
+                    <div class="mb-2 smallify">
+                      <input type="checkbox" name="" id="billall" checked>
+                      <label class="mr-3 me-3 text-danger" for="billall">Bill all houses</label>
+                    </div>
+
+                    <fieldset id="housefield" class="mt-2 dispnone">
+                      <legend class="legend">Select houses:</legend>
+                      <div id="housebed" class="mt-"></div>
+                    </fieldset>
+
+    
+                    <div class="mt-2 divbg">
+                      <div>
+                        <span id="generatebtn" type="button" class="btn btn-sm btn-danger text-gray-danger">Generate</span>
+                      </div>
+  
+                      <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+  
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
 
     
     <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editTenantModal"></button> -->
@@ -291,60 +354,59 @@
           });
                 
         }else if(item.startsWith("bill")){
+          $("#bill_prop_identifier").html(item)
+
           console.log("Clicked billing")
-          $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
-          $.ajax({
-            url: "/billing",
-            type: "POST",
-            data: {propid: item},
-            success: function(response) {
+          // $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
 
-              var billingpoll = setInterval(function(){
+          // $.ajax({
+          //   url: "/billing",
+          //   type: "POST",
+          //   data: {propid: item},
+          //   success: function(response) {
+
+          //     var billingpoll = setInterval(function(){
                 
-                $.ajax({
-                  url: "/bill/progress",
-                  type: "get",
-                  data: {propid: item},
-                  success: function(response) {
-                    if (response == "completed"){
-                      clearInterval(billingpoll);
+          //       // $.ajax({
+          //       //   url: "/bill/progress",
+          //       //   type: "get",
+          //       //   data: {propid: item},
+          //       //   success: function(response) {
+          //       //     if (response == "completed"){
+          //       //       clearInterval(billingpoll);
 
-                      $("#"+item).html('Complete');
+          //       //       $("#"+item).html('Complete');
 
 
-                      $("#barloader").removeClass("dispnone")
+          //       //       $("#barloader").removeClass("dispnone")
 
-                      url = "{{ url_for('api.bills') }}"
+          //       //       url = "{{ url_for('api.bills') }}"
 
-                      $.ajax({
-                            type: "get",
-                            url: url,
-                            success: function(response) {
-                              // $("#postloader-btn").click();
-                              if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                                    $('#sidebarToggle').click();
-                                    $('#smaccordionSidebar').removeClass("toggled");
-                                  }
-                                $('#content-area').addClass("isopen text-danger");
-                              $("#barloader").addClass("dispnone")
-                              // $("#body-block").addClass("dispnone")
-                              // $("#propdisp").removeClass("dispnone")
-                              // $("#searchresults").html("empty")
-                              // $("#searchresults").addClass("dispnone")
-                              $("#propdisp").html(response);
-                            }
-                        });
+          //       //       $.ajax({
+          //       //             type: "get",
+          //       //             url: url,
+          //       //             success: function(response) {
+          //       //               // $("#postloader-btn").click();
+          //       //               if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+          //       //                     $('#sidebarToggle').click();
+          //       //                     $('#smaccordionSidebar').removeClass("toggled");
+          //       //                   }
+          //       //                 $('#content-area').addClass("isopen text-danger");
+          //       //               $("#barloader").addClass("dispnone")
+          //       //               $("#propdisp").html(response);
+          //       //             }
+          //       //         });
 
-                    }
-                    else{
-                      console.log(response)
-                    }
-                  }
-                });
+          //       //     }
+          //       //     else{
+          //       //       console.log(response)
+          //       //     }
+          //       //   }
+          //       // });
 
-              },5000)
-            }
-          });
+          //     },5000)
+          //   }
+          // });
         }
         else{
           $("#edit_prop_identifier").html(item)
@@ -383,6 +445,136 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script>
+
+<script>
+  $("#billdatepicker").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "dd-mm-yyyy"
+  });
+</script>
+
+<script>
+
+  $("#generateInvoiceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.bills') }}",
+      type: "get",
+      data: {
+            propid: $("#bill_prop_identifier").text(),
+            target:"houses"
+          },
+      success: function(response) {
+        $("#housebed").html(response);
+      },
+      error: function(xhr) {
+        alert("Error")
+        }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+
+  $('#diffperiod').change(function () {
+    if (this.checked) {
+      $("#billdatepicker").removeClass("dispnone")
+    }
+    else {
+      $("#billdatepicker").addClass("dispnone")
+    }
+  });
+
+  $('#billall').change(function () {
+    if (this.checked) {
+      $("#housefield").addClass("dispnone")
+    }
+    else {
+      $("#housefield").removeClass("dispnone")
+    }
+  });
+
+  $("#showbutton").click(function () {
+    var favorite = [];
+    $.each($("input[name='billhouse']:checked"), function () {
+      console.log(this.value);
+      favorite.push($(this).val());
+    });
+    console.log("My favourite sports are: " + favorite.join(", "));
+  });
+</script>
+
+
+
+<script>
+  $("#generatebtn").click(function () {
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+    $("#"+$("#bill_prop_identifier").text()).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+
+    var houselist = [];
+    var propitem = $("#bill_prop_identifier").text()
+
+    $.each($("input[name='billhouse']:checked"), function () {
+      houselist.push($(this).val());
+    });
+
+    $.ajax({
+      url: "/billing",
+      type: "POST",
+      data: {
+        propid: propitem,
+        houses:houselist.join(", "),
+        date:$("#billdatepicker").val()
+      },
+      success: function (response) {
+
+        var billingpoll = setInterval(function () {
+
+        $.ajax({
+          url: "/bill/progress",
+          type: "get",
+          data: {propid: propitem},
+          success: function(response) {
+            if (response == "completed"){
+              clearInterval(billingpoll);
+
+              $("#barloader").removeClass("dispnone")
+
+              url = "{{ url_for('api.bills') }}"
+
+              $.ajax({
+                    type: "get",
+                    url: url,
+                    success: function(response) {
+                      // $("#postloader-btn").click();
+                      if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                            $('#sidebarToggle').click();
+                            $('#smaccordionSidebar').removeClass("toggled");
+                          }
+                        $('#content-area').addClass("isopen text-danger");
+                      $("#barloader").addClass("dispnone")
+
+                      $('.modal-backdrop').removeClass('modal-backdrop');
+                      $('body').removeClass('modal-open');
+
+                      $("#propdisp").html(response);
+                    }
+                });
+
+            }
+            else{
+              console.log(response)
+            }
+          }
+        });
+
+        }, 5000)
+      }
+    });
+  })
+
+</script>
+
 
 
 

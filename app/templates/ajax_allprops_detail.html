@@ -51,9 +51,12 @@
               <tr>
                 <th class="text-info font-weight-bold pl-0">Property</th>
                 <th class="text-info font-weight-bold">Houses</th>
-                <th class="text-info font-weight-bold">Tenants</th>
-                <!-- <th class="text-info font-weight-bold">Reminders</th> -->
-                <th class="text-info font-weight-bold">Occupancy</th>
+
+
+                <th class="text-info font-weight-bold">Residents</th>
+                <th class="text-info font-weight-bold {{tnt_disp}}">Tenants</th>
+                <th class="text-info font-weight-bold {{tnt_disp}}">Occupancy</th>
+
                 <th class="text-info font-weight-bold">Owner</th>
                 <th class="text-info font-weight-bold {{access['client-disp']}}">Client</th>
                 <th class="text-info track-title-cell">Status</th>
@@ -69,9 +72,11 @@
                 <td class="first-data-cell text-primary font-weight-bold"><span class="text-info">{{item['id']}}</span>
                   - {{ item['name'] }}</td>
                 <td class="data-cell">{{ item['houses'] }}</td>
-                <td class="data-cell">{{ item['tenants'] }}</td>
-                <!-- <td class="data-cell">{{ item['reminders']|safe }}</td> -->
-                <td class="data-cell">{{ item['occupancy'] }} %</td>
+
+                <td class="data-cell">{{ item['ptenants'] }}</td>
+                <td class="data-cell {{tnt_disp}}">{{ item['tenants'] }}</td>
+                <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td>
+
                 <td class="data-cell text-gray-700 small">{{ item['owner'] }}</td>
                 <td class="data-cell text-gray-900 small {{item['client-disp']}}">{{ item['agent'] }}</td>
 
@@ -514,7 +519,6 @@
         <h5 class="modal-title text-info divjust-end">
           <span class="mr-3 smallify">Upload data</span>
           <div>
-            <button id="downloadtemplate" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
             <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
           </div>
         </h5>
@@ -535,8 +539,25 @@
                       {% endfor %}
                     </select>
                   </div>
- 
-                  <div class="mt-2 form-group center-btn">
+
+                  <div id="ttypeselector" class="dispnone form-group input-icons">
+                    <select class="select-css" id ="select_ttype" >
+                      <option disabled selected value> -- Select type -- </option>
+                      <option value="ptenant">Residents</option>
+                      <option value="tenant">Tenants</option>
+
+                    </select>
+                  </div>
+
+                  <div id="templatecheck" class="dispnone fancy-checkbox-group form-control mb-2 smallify">
+                    <input type="checkbox" name="agency_management" id="cb1">
+                    <label class="mr-3 me-3" for="cb1">I have the template</label>
+
+                    <button id="downloadtemplate" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+
+                </div>
+
+                  <div id="fileselector" class="dispnone mt-2 form-group center-btn">
                     <p class="text-black">Select File: <input class="ph" id="datafile" type = "file" name = "filename" /></p>
                   </div>
                 
@@ -1092,6 +1113,38 @@
 </script>
 
 <script>
+  $("#select_prop").on('change', function () {
+    $("#ttypeselector").removeClass('dispnone')
+  });
+
+
+  $('#cb1').change(function() {
+        if (this.checked) {
+          $("#downloadtemplate").addClass("dispnone")
+          $("#fileselector").removeClass("dispnone")
+        }
+        else {
+          $("#downloadtemplate").removeClass("dispnone")
+          $("#fileselector").addClass("dispnone")
+
+        }
+    });
+</script>
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#select_ttype").on('change', function () {
+    $("#templatecheck").removeClass('dispnone')
+    // $("#tenantbed").removeClass("dispnone")
+    if ( $(this).val() == "ptenant"){
+      $("#download_template").attr("href", "/download/template/residents_datafile")
+    }else{
+      $("#download_template").attr("href", "/download/template/tenants_datafile")
+    }
+  });
+</script>
+
+<script>
 
   $("#select_paymode").on('change', function () {
     $('#bill_ref').removeClass('dispnone');
@@ -1188,6 +1241,9 @@
 
         setTimeout(function(){
             $('#downloadtemplate').html("<i class='fas fa-file-download mr-2'></i>Template")
+            $("#downloadtemplate").addClass("dispnone")
+            $("#templatecheck").addClass("dispnone")
+            $("#fileselector").removeClass("dispnone")
         },8000);
     });
 </script>
@@ -1204,6 +1260,7 @@
       fd.append('file',files[0]);
       fd.append('target',"excelupload");
       fd.append('prop',$("#select_prop").val());
+      fd.append('ttype',$("#select_ttype").val());
 
       $.ajax({
           type: "POST",

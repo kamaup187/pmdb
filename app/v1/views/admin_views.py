@@ -101,11 +101,56 @@ class ViewReceipt(Resource):
 
         server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+        else:
+            tenant = payment_obj.tenant
+
+            address = None
+
+        if payment_obj.apartment.company.name == "LaCasa":
+            if prop.id == 419:
+                address = {
+                    "address": "Nairobi",
+                    "tel": "0735267087",
+                    "email": "goldlabelservices@gmail.com"
+                }
+            elif prop.id == 420:
+                address = {
+                    "address":"Ongata Rongai",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.id == 421:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+            elif prop.name == "Baraka House":
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
         return Response(render_template(
             'user_receipt.html',
-            voided = disp,
-            tenant = payment_obj.tenant.name,
-            house= payment_obj.house.name,
+            voided = "dispnone",
+            tenant = tenant.name,
+            house= payment_obj.house,
             amount=paid,
             str_amount=stramount,
             str_month=get_str_month(payperiod.month),
@@ -116,15 +161,41 @@ class ViewReceipt(Resource):
             outline=outline,
             balance=bal,
             chargetype=payment_obj.payment_name,
-            receiptno=payment_obj.id,
+            receiptno=receiptno,
             refnum=payment_obj.ref_number,
             paymode=payment_obj.paymode,
             logopath=logo(co)[0],
             company=co,
+            address=address,
             user=server,
-            prop= prop,
+            prop=prop,
             randid=ri
         ))
+
+        # return Response(render_template(
+        #     'user_receipt.html',
+        #     voided = disp,
+        #     tenant = tenant.name,
+        #     house= payment_obj.house.name,
+        #     amount=paid,
+        #     str_amount=stramount,
+        #     str_month=get_str_month(payperiod.month),
+        #     paydate=paydate.strftime("%d/%b/%y"),
+        #     paytime=paydate.strftime("%X"),
+        #     bill=bill,
+        #     baltitle=baltitle,
+        #     outline=outline,
+        #     balance=bal,
+        #     chargetype=payment_obj.payment_name,
+        #     receiptno=receiptno,
+        #     refnum=payment_obj.ref_number,
+        #     paymode=payment_obj.paymode,
+        #     logopath=logo(co)[0],
+        #     company=co,
+        #     user=server,
+        #     prop= prop,
+        #     randid=ri
+        # ))
 
 class UserActivation(Resource):
     def get (self,ri):
@@ -162,7 +233,11 @@ class DownloadReceipt(Resource):
         if payment_obj:
             prop = payment_obj.apartment
 
-            tenant = payment_obj.tenant
+            if payment_obj.ptenant:
+                tenant = payment_obj.ptenant
+            else:
+                tenant = payment_obj.tenant
+
             co = prop.company
 
             p = inflect.engine()
@@ -207,6 +282,11 @@ class DownloadReceipt(Resource):
 
             mail_logo = "../" + logo(co)[0]
 
+            if payment_obj.receipt_num:
+                receiptno = payment_obj.receipt_num
+            else:
+                receiptno = payment_obj.id
+
             template_vars = {
                 "tenant":tenant.name,
                 "voided" : disp,
@@ -221,7 +301,7 @@ class DownloadReceipt(Resource):
                 "outline":outline,
                 "balance":bal,
                 "chargetype":payment_obj.payment_name,
-                "receiptno":payment_obj.id,
+                "receiptno":receiptno,
                 "refnum":payment_obj.ref_number,
                 "paymode":payment_obj.paymode,
                 "logopath":mail_logo,
@@ -437,9 +517,23 @@ class AllProperties(Resource):
             else:
                 colltype = "not set"
 
-            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype)
+            try:
+                if prop.paymentdetails.nartype == 'hsenum':
+                    nartype = "#HX"
+                elif prop.paymentdetails.nartype == "tntnum":
+                    nartype = "#TNTXXX"
+                else:
+                    nartype = ""
+            except:
+                nartype = ""
 
-        raw_props = fetch_all_apartments_by_user(current_user)
+            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
+
+        if current_user.username.startswith("xqc"):
+            raw_props = ApartmentOp.fetch_all_apartments()
+        else:
+            raw_props = fetch_all_apartments_by_user(current_user)
+
         if target != "tenants" and target != "tenant list":
             new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
             for i in new_props:
@@ -450,11 +544,16 @@ class AllProperties(Resource):
         items = []
         prop_ids = []
         prop_names = []
+        tnt_disp = "dispnone"
 
         template = "ajax_allprops_detail.html"
         
         for prop in props:
             tenants = len(tenantauto(prop.id))
+            ptnts =len(prop.ptenants)
+
+            if tenants:
+                tnt_disp = ""
             houses = len(prop.houses)
             try:
                 occupancy = tenants/houses * 100
@@ -475,6 +574,7 @@ class AllProperties(Resource):
                     'name':prop.name,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,
@@ -491,6 +591,7 @@ class AllProperties(Resource):
                     'name':prop.name,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
                     'occupancy':occ,
@@ -509,6 +610,7 @@ class AllProperties(Resource):
                     'agent':agent,
                     'houses':houses,
                     'tenants':tenants,
+                    'ptenants':ptnts,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
                     'occupancy':occ,
                     'status':"active",
@@ -538,7 +640,7 @@ class AllProperties(Resource):
         }
 
 
-        return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)
+        return render_template(template,propids=propids,props=props,prop=None,items=items,tnt_disp=tnt_disp,access=access,company=current_user.company)
     
     def post(self):
         target = request.form.get("target")
@@ -570,15 +672,39 @@ class AllProperties(Resource):
             return "Updated successfully" + proceed
 
         if target == "update prop billing info":
-            bank = request.form.get("bank")
-            accname = request.form.get("accname")
-            accno = request.form.get("accno")
+            props = []
+            if prop.company.name == "Latitude Properties":
+                props = prop.company.props
 
-            paybill_no = request.form.get("paybill")
+            if not props:
+                props.append(prop)
+            
+            for p in props:
 
+                bankbranch = request.form.get("bankbranch")
+                bankname = request.form.get("bankname")
+                bankaccountname = request.form.get("bankaccountname")
+                bankaccountnumber = request.form.get("bankaccountnumber")
+                bankpaybill = request.form.get("bankpaybill")
 
-            ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
-            ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
+                mpesapaybill = request.form.get("mpesapaybill")
+
+                nartype = request.form.get("nartype")
+                paytype = request.form.get("paytype")
+
+                print("heeeeeey",nartype,paytype)
+
+                payment_details_obj = p.paymentdetails
+                if not payment_details_obj:
+                    print("noooooonnnoonooo",p.paymentdetails)
+                    p = PaymentDetailOp(paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,p.id)
+                    p.save()
+                else:
+                    PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
+                    print("herereeeeeeeeeeeeee",p.paymentdetails,nartype)
+
+            # ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)
+            # ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
 
             return "Updated successfully" + proceed
 
@@ -895,8 +1021,14 @@ class LinkProperty(Resource):
         target = request.args.get("target")
 
         if target == "link":
-            if current_user.id == 1:
+            if current_user.id == 1 or current_user.username.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
+                for company in companies:
+                    if not company.name:
+                        latest_set_index = companies.index(company)
+                        print("Popped something")
+                        break
+                companies.pop(latest_set_index)
             else:
                 companies = [current_user.company]
             return render_template('ajax_multivariable.html',items=companies,placeholder="select company")
@@ -924,7 +1056,7 @@ class LinkProperty(Resource):
 
             if agent_obj:
                 ApartmentOp.relate(prop,agent_obj)
-                print(agent_obj," given access to ",prop)
+                print(agent_obj,"agent given access to ",prop)
                 UserOp.update_status(agent_obj,True)
                 ApartmentOp.update_agent(prop,agent_obj.username)
                 if prop.agency_managed:
@@ -934,7 +1066,7 @@ class LinkProperty(Resource):
                     for i in company_users:
                         if i.user_group_id == 4:
                             ApartmentOp.relate(prop,i)
-                            print("user added to ",str(prop))
+                            print(i,"user added to ",str(prop))
 
             else:
                 print(prop.agency_managed)
@@ -944,7 +1076,7 @@ class LinkProperty(Resource):
                     for i in company_users:
                         if i.user_group_id == 4:
                             ApartmentOp.relate(prop,i)
-                            print("user added to ",str(prop))
+                            print(i,"user added to ",str(prop))
 
         else:
             access = True
@@ -1016,7 +1148,7 @@ class EditProp(Resource):
             raw_propid = request.form.get("editid")
             propid = get_identifier(raw_propid)
 
-        if current_user.username.startswith("qc") or current_user.name == "Test Agent":
+        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality"):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             ApartmentOp.delete(prop)
             return "Property removed successfully"

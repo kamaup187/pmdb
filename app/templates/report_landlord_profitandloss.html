@@ -36,10 +36,9 @@
                       <div class="row">
                         <div class="col-lg-3 form-group mb-2 ml-lg-5">
                           <label class="mb-0">Select type:</label>
-                          <select name="reporttype" class="select-css" id="reporttype" required>
-                            <option disabled selected value> type </option>
+                          <select name="reporttype" class="select-css" id="reporttype">
+                            <option selected value="collected">Based on collected amount only</option>
                             <option value="uncollected">Based on amount due</option>
-                            <option value="collected">Based on collected amount only</option>
                           </select>
                         </div>
                       
@@ -181,7 +180,7 @@
                       <td class="data-cell text-right deposit">{{ bill['deposit'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
                       <td class="data-cell text-right">{{bill['total']}}</td>
-                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['balance'] }}</td>
                     </tr>
                   {% endfor %}

@@ -50,16 +50,21 @@ kiotanum = "+254716674695"
 
 mailsender = os.getenv('G_ACCOUNT')
 
+
 # from ..stkpush.access_token import register_url
 
 configuration = os.getenv('APP_SETTINGS')
 
+typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 
+def aviv(user):
+    rever = os.getenv('AVIV')
+    return "aviv" if user.company.name == rever else ""
 
 def mbogi():
     print("Hi there")
@@ -406,6 +411,8 @@ def logo(co):
     sign = ""
     try:
         if str_name_company == "Chaise River Properties":
+            coc = CompanyOp.fetch_company_by_name("Chaise River Properties")
+            CompanyOp.update_sms_provider(coc,"KIOTAPAY")
             ##################################################
             logopath = "../static/img/logos/chase/l-logo.png"
             mobilelogopath = "../static/img/logos/chase/s-logo.png"
@@ -463,7 +470,7 @@ def logo(co):
 
         elif str_name_company == "Nairuti & Associates":
             ##################################################
-            logopath = "../static/img/logos/nairuti/l-logoo.png"
+            logopath = "../static/img/logos/nairuti/l-logo.png"
             mobilelogopath = "../static/img/logos/nairuti/s-logo.png"
             fulllogopath = "../static/img/logos/nairuti/full-logo.png"
             letterhead = "../static/img/logos/nairuti/letterhead.jpg"
@@ -517,6 +524,13 @@ def logo(co):
             mobilelogopath = "../static/img/logos/courtland/s-logo.png"
             fulllogopath = "../static/img/logos/courtland/full-logo.png"
             letterhead = "../static/img/logos/courtland/letterhead.jpg"
+
+        elif str_name_company == "Sentom Investment":
+            ##################################################
+            logopath = "../static/img/logos/sentom/l-logo.png"
+            mobilelogopath = "../static/img/logos/sentom/s-logo.png"
+            fulllogopath = "../static/img/logos/sentom/full-logo.png"
+            letterhead = "../static/img/logos/sentom/letterhead.jpg"
 
         elif str_name_company == "Rowam Properties Limited":
             ##################################################
@@ -583,8 +597,16 @@ def logo(co):
             fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
             letterhead = "../static/img/logos/vintage/letterhead.jpg"
 
+        elif str_name_company == "Cherah Properties":
+            ##################################################
+            logopath = "../static/img/logos/cherah/l-logo.png"
+            mobilelogopath = "../static/img/logos/cherah/s-logo.png"
+            fulllogopath = "../static/img/logos/cherah/full-logo.jpg"
+            letterhead = "../static/img/logos/cherah/letterhead.jpg"
 
-        elif str_name_company == "LaCasa Apartments":
+        elif str_name_company == "LaCasa":
+            coc = CompanyOp.fetch_company_by_name("LaCasa")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lacasa/l-logo.png"
             mobilelogopath = "../static/img/logos/lacasa/s-logo.png"
@@ -594,9 +616,30 @@ def logo(co):
         elif str_name_company == "Rever Front Limited":
             ##################################################
             logopath = "../static/img/logos/rever/l-logo.png"
-            mobilelogopath = "../static/img/logos/lacasa/s-logo.png"
-            fulllogopath = "../static/img/logos/vintage/full-logo.jpg"
-            letterhead = "../static/img/logos/vintage/letterhead.jpg"
+            mobilelogopath = "../static/img/logos/rever/s-logo.png"
+            fulllogopath = "../static/img/logos/rever/full-logo.jpg"
+            letterhead = "../static/img/logos/rever/letterhead.jpg"
+
+        elif str_name_company == "AMC REALTORS":
+            ##################################################
+            logopath = "../static/img/logos/amc/l-logo.png"
+            mobilelogopath = "../static/img/logos/amc/s-logo.png"
+            fulllogopath = "../static/img/logos/amc/full-logo.jpg"
+            letterhead = "../static/img/logos/amc/letterhead.jpg"
+
+        elif str_name_company == "ASTROL":
+            ##################################################
+            logopath = "../static/img/logos/astrol/l-logo.png"
+            mobilelogopath = "../static/img/logos/astrol/s-logo.png"
+            fulllogopath = "../static/img/logos/astrol/full-logo.jpg"
+            letterhead = "../static/img/logos/astrol/letterhead.jpg"
+
+        elif str_name_company == "Lymax Properties":
+            ##################################################
+            logopath = "../static/img/logos/lymax/l-logo.png"
+            mobilelogopath = "../static/img/logos/lymax/s-logo.png"
+            fulllogopath = "../static/img/logos/lymax/full-logo.jpg"
+            letterhead = "../static/img/logos/lymax/letterhead.jpg"
 
         else:
             if os.getenv("TARGET") != "lasshouse":
@@ -604,7 +647,9 @@ def logo(co):
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
-                letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+                # letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+                letterhead = "../static/img/logos/kiotapay/letterheadd.png"
+
                 sign = ""
             else:
                 ##################################################
@@ -691,6 +736,9 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
 
+    elif company.title() == "Lacasa":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
     #########################################################################################
     else:
         report = None
@@ -699,6 +747,13 @@ def sms_sender(company,sms_text,phonenum):
         param1 = report["apikey"]
         param2 = report["partnerID"]
         param3 = report["msgid"]
+
+        co = CompanyOp.fetch_company_by_name(company)
+        raw_rem_sms =co.remainingsms
+        rem_sms = calculate_sms_cost_alt(raw_rem_sms,sms_text)
+
+        CompanyOp.set_rem_quota(co,rem_sms)
+
         jb = q.enqueue_in(timedelta(seconds=60), advanta_sms_delivery, args=(param1,param2,param3,))
         return param3
     else:
@@ -1003,6 +1058,9 @@ def fetch_pt_prev_billing_period_bills(month,year,arr,ptid):
 def fetch_actual_payments(arr):
     actual_payment_data = []
     for i in arr:
+        print(i.ptenant_id,"bgcfxdzdcv")
+        print(i.tenant_id,"bbbbbbbbbbbbbbbb")
+
         if not i.voided:
             actual_payment_data.append(i)
     return actual_payment_data
@@ -1717,6 +1775,35 @@ def get_specific_house_obj_from_house_tenant_alt(apartment_id,raw_hses):
             house_obj = house
     return house_obj
 
+def get_specific_house_obj_from_house_tenant_alt_alt(apartment_id,raw_hses):
+    target_item = raw_hses.split('#')[0]
+    owner = False
+    if raw_hses.endswith(")"):
+        owner = True
+    # target_item = hses[0]
+    improper_houselist = target_item.lstrip("[").rstrip("]")
+    str_houses = improper_houselist.replace(",","")
+    str_houses2 = str_houses.replace(" ","")
+    proper_houselist = list(str_houses2.split(" "))
+    target_hse = proper_houselist[0]
+
+    # import pdb
+    # pdb.set_trace()
+
+    # print("okerrrrrrroooooooo",raw_hses,target_item,improper_houselist,str_houses,proper_houselist,target_hse)
+
+    house_list_compare = houseauto(apartment_id)
+    house_obj = None
+    for house in house_list_compare:
+        str_hse = str(house)
+        if str_hse.replace(" ","") == target_hse:
+            house_obj = house
+
+    if house_obj:
+        if owner:
+            return house_obj,house_obj.owner
+    return house_obj,None
+
 def extract_tenant(expr):
     id_part = expr.split(' ')[1]
     id_num = id_part[1:] 
@@ -1822,6 +1909,14 @@ def fetch_all_apartments_by_user(current_user):
         
     return apartment_list
 
+def fetch_all_houses_by_user(current_user):
+    if current_user.username == "admin":
+        house_list = HouseOp.fetch_houses()
+    else:
+        house_list = HouseOp.fetch_all_houses_by_user(current_user.id)
+        
+    return house_list
+
 # def fetch_all_apartments():
 #     apartment_list = ApartmentOp.fetch_all_apartments()
 #     return apartment_list
@@ -1891,6 +1986,21 @@ def tenantauto(apartment_id):
 
     new_tenant_list = remove_dups(tenant_list)
     return new_tenant_list
+
+def tenantauto_alt(apartment_id,status):
+    """returns active tenants in a particular apartment"""
+    apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    db.session.expire(apartment_obj)
+    ptenants = apartment_obj.ptenants
+    client_list = []
+    
+    for alloc in ptenants:
+        ptnt = alloc if alloc.status == status else None
+        if ptnt:
+            client_list.append(ptnt)
+
+    new_client_list = remove_dups(client_list)
+    return new_client_list
 
 def xtenantauto(apartment_id):
     x_tenants = []
@@ -2010,6 +2120,14 @@ def tenant_details(arr):
 
     return tenantdetails
 
+def ptenant_details(arr):
+    tenantdetails = []
+    for i in arr:
+        new_i = PermanentTenantOp.view(i)
+        tenantdetails.append(new_i)
+
+    return tenantdetails
+
 def payment_details(arr):
     detailed_payments = []
     for i in arr:
@@ -2064,6 +2182,14 @@ def reading_details(arr):
         readinglist.append(new_i)
 
     return readinglist
+
+def att_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = SalesRepOp.view(i)
+        houselist.append(new_i)
+
+    return houselist
 
 def house_details(arr):
     houselist = []
@@ -2188,6 +2314,16 @@ def filter_out_occupied_houses(selected_apartment):
 
     return new_list
 
+def filter_out_owned_houses(selected_apartment):
+    apartment_id = get_apartment_id(selected_apartment)
+    house_list = houseauto(apartment_id)
+    new_list = []
+    for house in house_list:
+        if not house.owner:
+            new_list.append(house)
+
+    return new_list
+
 def filter_in_occupied_houses(selected_apartment):
     """list of occupied houses ready for tenant clearance/payment"""
     apartment_id = get_apartment_id(selected_apartment)
@@ -2267,6 +2403,15 @@ def get_active_houses(tenant_obj):
             return "Vacated",None
 
     return "booked",None,
+
+def get_owners(hse):
+    """check whether tenant is a resident or alien""" 
+    if hse.owner:
+        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",hse.owner.name)
+        return "owned",hse.owner.name
+    else:
+        return "not owned",None
+    
 
 def fetch_active_meter(house_obj):
     """returns active meter""" 
@@ -2379,6 +2524,22 @@ def generate_house_tenants(arr):
         hses = get_active_houses(i)[1]
 
         new_arr.append(f'{hses} #{i.name}')
+    return new_arr
+
+def generate_house_ownertenants(arr,propid):
+    """combine house and tenant"""
+    new_arr = []
+    for i in arr:
+        hses = get_active_houses(i)[1][0]
+
+        new_arr.append(f'{hses}#{i.name}')
+
+    allhses = houseauto(propid)
+    for ii in allhses:
+        owner = get_owners(ii)[1]
+        if owner:
+            new_arr.append(f'{ii}#{owner}(owner)')
+
     return new_arr
 
 def generate_house_tenants_alt(arr,arr2):
@@ -2624,7 +2785,34 @@ def fetch_current_invoice(house_obj):
 
     bills = house_obj.monthlybills
     for item in bills:
-        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.tenant:
+            return item
+        continue
+    return None
+
+def fetch_target_period_invoice(house_obj,period):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == period.year and item.month == period.month and item.tenant:
+            return item
+        continue
+    return None
+
+def fetch_current_owner_invoice(house_obj):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.ptenant:
+            return item
+        continue
+    return None
+
+def fetch_target_period_owner_invoice(house_obj,period):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == period.year and item.month == period.month and item.ptenant:
             return item
         continue
     return None
@@ -2904,6 +3092,14 @@ def return_bool_alt(param):
     else:
         return True
 
+def return_bool_alt_alt(param):
+    if param == "null":
+        return "null"
+    elif param == "False":
+        return False
+    else:
+        return True
+
 def get_billing_period(prop):
     period = prop.billing_period
     return period
@@ -2996,6 +3192,22 @@ def calculate_sms_cost(sms,cost):
 
     return sms
 
+def calculate_sms_cost_alt(sms,smstext):
+    try:
+        sms_len = len(smstext)
+
+        if sms_len < 140:
+            sms -= 1
+        elif sms_len < 280:
+            sms -= 2
+        else:
+            sms -= 3
+        
+    except Exception as e:
+        print("There was an error",e,"in remaining sms calculation")
+
+    return sms
+
 # def specific_water_bill(apartment_id,chargetype,user_id):
 #     charge_type_id = get_charge_type_id(chargetype)
 #     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
@@ -3044,10 +3256,15 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
         co = prop.company
         str_co = co.name
 
+        own_shortcode = False
+
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
+            own_shortcode = True
+
         raw_rem_sms =co.remainingsms
         if tenant_obj.sms:
 
-            if raw_rem_sms > 0:
+            if raw_rem_sms > 0 or own_shortcode:
 
                 try:
                     target_bal = float(rem_bal)
@@ -3152,7 +3369,12 @@ def autosend_pending_smsreceipts(payids):
         else:
             reference = f'#{payment_obj.id}'
 
-        tenant_obj = payment_obj.tenant
+        serv = False
+        if payment_obj.ptenant:
+            serv = True
+            tenant_obj = payment_obj.ptenant
+        else:
+            tenant_obj = payment_obj.tenant
 
         if tenant_obj.balance < 0:
             bal = tenant_obj.balance * -1
@@ -3174,8 +3396,9 @@ def autosend_pending_smsreceipts(payids):
         # if not fname:
         #     fname = name
         phonenum = sms_phone_number_formatter(tele)
+        salutation = "Service Charge & Utility" if serv else "Rental"
 
-        message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
+        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
         if tenant_obj.sms:
 
@@ -3620,8 +3843,6 @@ def send_out_single_email_invoice(billid):
 
             house = bill.house
 
-            print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",tenant.name)
-
             #start here
             sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
             sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
@@ -3677,25 +3898,35 @@ def send_out_single_email_invoice(billid):
                     arrtitle = ""
                     bbfhighlight = ""
 
-                if current_target == "owner":
-                    if bill.house.watertarget == "owner":
-                        watertarget = True
+                try:
+                    if current_target == "owner":
+                        if bill.house.watertarget == "owner":
+                            watertarget = True
+                        else:
+                            watertarget = False
                     else:
-                        watertarget = False
-                else:
-                    if bill.house.watertarget == "tenant":
-                        watertarget = True
+                        if bill.house.watertarget == "tenant":
+                            watertarget = True
+                        else:
+                            watertarget = False
+                except:
+                    watertarget = True
+
+                try:
+                    if bill.apartment.paymentdetails.nartype == 'hsenum':
+                        narration = bill.house.name
                     else:
-                        watertarget = False
-
-
-                if bill.apartment_id == 398:
-                    paymentacc = f"Paybill No. {bill.apartment.payment_bankacc}, Acc: {bill.apartment.name.upper()[:3]} {bill.house.name}"
-                else:
-                    paymentacc = ""
+                        if bill.ptenant:
+                            narration = "WN"+str(tenant.id)
+                        else:
+                            narration = "TNT"+str(tenant.id)
+                except:
+                    narration = bill.house.name
 
                 template_vars = {
                     "bill":bill,
+                    "p":bill.apartment.paymentdetails,
+                    "narration":narration,
                     "servicevisibility":"",
                     "readings": wbill,
                     "w_edited": w_edited,
@@ -3713,7 +3944,6 @@ def send_out_single_email_invoice(billid):
                     "invdate":inv_date,
                     "invdue":inv_due,
                     "client":tenant,
-                    "paymentacc":paymentacc,
                     "company":co,
                     "invnum":invnum,
                     "logo":logo(co)[2],
@@ -3810,7 +4040,7 @@ def discard_bills(props):
 
                 MonthlyChargeOp.delete(bill)
 
-def send_out_sms_invoices(prop,houses,override,charge,user_id):
+def send_out_sms_invoices(prop,houses,billid,charge,user_id):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -3824,7 +4054,12 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
 
         target_bills = []
 
-        if houses and houses != "ALL":
+        if billid:
+            identifier = get_identifier(billid)
+            targetbill = MonthlyChargeOp.fetch_specific_bill(identifier)
+            target_bills.append(targetbill)
+
+        elif houses and houses != "ALL":
             # if  override:
             """Specified houses for all charges invoices"""
             update = True
@@ -3859,11 +4094,18 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             # tenant = bill.tenant
 
             sibling_water_bill = fetch_current_billing_period_readings(prop_obj.billing_period,bill.house.meter_readings)
+            sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+
 
             try:
                 wbill = sibling_water_bill[0]
             except:
                 wbill = None
+
+            try:
+                ebill = sibling_electricity_bill[0]
+            except:
+                ebill = None
 
             if wbill:
                 amount = 0.0
@@ -3873,28 +4115,44 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                     charge_obj = ChargeOp.fetch_charge_by_reading_id(wbill.id)
                     amount = charge_obj.amount
 
-                    standing_charge = house.housecode.watercharge
+                    standing_charge = bill.house.housecode.watercharge
                     if standing_charge:
                         amount += standing_charge
 
                 smslastreading = (f"{wbill.last_reading} ")
                 smscurrentreading = (f"{wbill.reading} ")
                 smsunits = (f"{wbill.units} ")
-                smsstd = f"Standing charge: Kes {standing_charge}" if house.housecode.watercharge else ""
+                smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
                 smsbill = (f"Kes {amount:,.2f} ")
 
-                wmessage = f"\n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nWater: {smsbill}"
+                wmessage = f"\n\nWater, \nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"
             else:
                 wmessage = ""
                 smsbill = "Kes 0.0"
+
+            if ebill:
+                eamount = 0.0
+
+                if ebill.charged:
+                    charge_obj = ChargeOp.fetch_charge_by_reading_id(ebill.id)
+                    eamount = charge_obj.amount
+
+                smselastreading = (f"{ebill.last_reading} ")
+                smsecurrentreading = (f"{ebill.reading} ")
+                smseunits = (f"{ebill.units} ")
+                smsebill = (f"Kes {eamount:,.2f} ")
+                emessage = f"\n\nElectricity, \nLR: {smselastreading} \nCR: {smsecurrentreading} \nUnits: {smseunits} \nBill: {smsebill}"
+            else:
+                emessage = ""
+                smsebill = "Kes 0.0"
 
             tenant2 = None
             owner_only = True
             tenant_only = True
 
-            if bill.house.owner:
+            if bill.ptenant:
                 tenant_only = False
-                tenant = bill.house.owner
+                tenant = bill.ptenant
                 print("SENDING OWNER INVOICE")
 
                 if bill.tenant:
@@ -3924,37 +4182,77 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
             else:
                 smswater = f"\nCurrent bill:{bill.water}," if bill.water else ""
 
+            if emessage:
+                smselec = emessage
+            else:
+                smselec = f"\nCurrent electricity bill:{bill.electricity}," if bill.electricity else ""
+
+
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = bill.house.name
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
+                    if tenant:
+                        narration = "WN"+str(tenant.id)
+                    else:
+                        narration = "TNT"+str(tenant2.id)
+
+                else: narration = ""
+            except:
+                narration = ""
+
+            p = bill.apartment.paymentdetails
+
             if bill.house.payment_bankacc:
                 bankdetails = f'\n\nBank: {bill.house.payment_bank} \nAcc: {bill.house.payment_bankacc}'
-            elif prop_obj.payment_bank == "PayBill":
-                prop_name = prop_obj.name.split(" ")[0]
-                bankdetails = f'\n\n {prop_obj.payment_bank}: {prop_obj.payment_bankacc} \nAcc: {prop_name.upper()[:3]} {bill.house.name}'
-            elif prop_obj.payment_bank:
-                bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
+
+            # elif prop_obj.payment_bank:
+            #     bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
+
+            elif p:
+                if p.paytype == "mpesapay":
+                    bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
+                elif p.bankpaybill:
+                    if narration:
+                        narration = "#"+narration
+                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                else:
+                    bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:
                 bankdetails = ""
+
 
             smsgarb = f"\nGarbage:{bill.garbage}," if bill.garbage else ""
             smssec = f"\nSecurity:{bill.security}," if bill.security else ""
             smssev = f"\nService charge:{bill.maintenance}," if bill.maintenance else ""
-            smselec = f"\nElectricity:{bill.electricity:,.2f}," if bill.electricity else ""
             smsdep = f"\nDeposit:{bill.deposit}" if bill.deposit else ""
             smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
             smsfine = f"\nPenalty:{bill.penalty}" if bill.penalty else ""
             smstotal = (f"{bill.total_bill:,.1f}") if not calculated_total else (f"{calculated_total:,.1f}")
+            paidd = f"\nPaid:{bill.paid_amount}" if bill.paid_amount else ""
+            paidbal = f"{paidd} \nBal:{bill.balance}" if bill.paid_amount else ""
             bankdetails = bankdetails
 
             current_user = UserOp.fetch_user_by_id(user_id)
 
             co = current_user.company
-            str_co = f"\n\n ~ {str(co)}"
+            if co.name == "LaCasa":
+                str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0735267087)"
+            else:
+                str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
+
             raw_rem_sms =co.remainingsms
+
+            own_shortcode = False
+
+            if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
+                own_shortcode = True
 
             if tenant:
                 print("OWNER SENDING STARTED......")
 
                 if tenant.sms:
-                    if raw_rem_sms > 0:
+                    if raw_rem_sms > 0 or own_shortcode:
 
                         tele = tenant.phone
                         phonenum = sms_phone_number_formatter(tele)
@@ -3963,25 +4261,44 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         tname = fname_extracter(tenant.name)
 
 
-                        if not owner_only:
-                            servicecharge = "service charge"
+                        # if not owner_only:
+                        #     servicecharge = "service charge"
+                        #     waterbill = ""
+                        #     smswater = ""
+                        #     smssev = f"\nCurrent bill:{bill.maintenance}," if bill.maintenance else ""
+
+                        #     rsmstotal = bill.total_bill - bill.water
+                        #     smstotal = (f"{rsmstotal:,.1f}")
+
+                        #     if bill.water_balance:
+                        #         rsmstotal -= bill.water_balance
+                        #         smstotal = (f"{rsmstotal:,.1f}")
+                        #         arrears -= bill.water_balance
+
+                        #     smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
+
+                        # else:
+                        #     servicecharge = ""
+                        #     waterbill = ""
+
+
+                        if bill.house.watertarget:
+                            if bill.house.watertarget == "owner":
+                                waterbill = "water consumption"
+                            else:
+                                smswater = ""
+                                waterbill = ""
+                        else:
                             waterbill = ""
-                            smswater = ""
-                            smssev = f"\nCurrent bill:{bill.maintenance}," if bill.maintenance else ""
 
-                            rsmstotal = bill.total_bill - bill.water
-                            smstotal = (f"{rsmstotal:,.1f}")
-
-                            if bill.water_balance:
-                                rsmstotal -= bill.water_balance
-                                smstotal = (f"{rsmstotal:,.1f}")
-                                arrears -= bill.water_balance
-
-                            smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
-
+                        if bill.house.servicetarget:
+                            if bill.house.servicetarget == "owner":
+                                servicecharge = "service charge"
+                            else:
+                                servicecharge = ""
                         else:
                             servicecharge = ""
-                            waterbill = ""
+                            
 
                         try:
                             recipient = [phonenum]
@@ -3989,9 +4306,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
 
 
                             else:
@@ -3999,9 +4316,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
 
 
                             char_count = len(message)
@@ -4012,14 +4329,16 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.house.owner:
+                            if bill.ptenant:
                                 pass
                             else:
                                 sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
                                 sms_obj.save()
 
                             if co.sms_provider == "Advanta":
-                                sms_sender(co.name,message,phonenum)
+                                smsid = sms_sender(co.name,message,phonenum)
+                                if smsid:
+                                    MonthlyChargeOp.update_smsid(bill,smsid)
                                 MonthlyChargeOp.update_sms_status(bill,"sent")
 
 
@@ -4092,7 +4411,7 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                 print("TENANT SENDING STARTED......")
                 if tenant2.sms:
 
-                    if raw_rem_sms > 0:
+                    if raw_rem_sms > 0 or own_shortcode:
 
                         tele = tenant2.phone
                         phonenum = sms_phone_number_formatter(tele)
@@ -4100,24 +4419,42 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                         str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         tname = fname_extracter(tenant2.name)
 
-                        if not tenant_only:
-                            servicecharge = ""
-                            waterbill = "water consumption"
-                            smssev = ""
-                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                            rsmstotal = bill.total_bill - bill.maintenance
-                            smstotal = (f"{rsmstotal:,.1f}")
+                        # if not tenant_only:
+                        #     servicecharge = ""
+                        #     waterbill = "water consumption"
+                        #     smssev = ""
+                        #     str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                        #     rsmstotal = bill.total_bill - bill.maintenance
+                        #     smstotal = (f"{rsmstotal:,.1f}")
 
-                            if bill.maintenance_balance:
-                                rsmstotal -= bill.maintenance_balance
-                                smstotal = (f"{rsmstotal:,.1f}")
-                                arrears -= bill.maintenance_balance
+                        #     if bill.maintenance_balance:
+                        #         rsmstotal -= bill.maintenance_balance
+                        #         smstotal = (f"{rsmstotal:,.1f}")
+                        #         arrears -= bill.maintenance_balance
 
-                            smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
+                        #     smsarrears = f"\nPrevious balance:{arrears}" if arrears else ""
 
+                        # else:
+                        #     servicecharge = ""
+                        #     waterbill = ""
+
+                        if bill.house.watertarget:
+                            if bill.house.watertarget == "tenant":
+                                waterbill = ""
+                            else:
+                                smswater = ""
+                                waterbill = ""
+                        else:
+                            waterbill = ""
+
+                        if bill.house.servicetarget:
+                            if bill.house.servicetarget == "tenant":
+                                servicecharge = "service charge"
+                            else:
+                                servicecharge = ""
                         else:
                             servicecharge = ""
-                            waterbill = ""
+                            
 
                         try:
                             recipient = [phonenum]
@@ -4125,9 +4462,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 # else:
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
@@ -4137,9 +4474,9 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smssev} {smselec} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                             # if prop_obj.company.name == "KIGAKA ENTERPRISES":
                             #     continue
 
@@ -4151,14 +4488,16 @@ def send_out_sms_invoices(prop,houses,override,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.house.owner:
+                            if bill.ptenant:
                                 pass
                             else:
                                 sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,prop_obj.id,co.id)
                                 sms_obj.save()
 
                             if co.sms_provider == "Advanta":
-                                sms_sender(co.name,message,phonenum)
+                                smsid = sms_sender(co.name,message,phonenum)
+                                if smsid:
+                                    MonthlyChargeOp.update_smsid(bill,smsid)
                                 MonthlyChargeOp.update_sms_status(bill,"sent")
 
 
@@ -4437,8 +4776,6 @@ def send_demo_mail(email,name,url):
     app = create_app(configuration)
     app.app_context().push()
 
-    print("goooiiing")
-
     txt = Message('Welcome to Kodimann! Demo account.', sender = mailsender, recipients = [email])
     txt.html = render_template('demo.html',name=name,target_url=url)
     mail.send(txt)
@@ -4678,7 +5015,7 @@ def upload_handler(file,current_user):
     return [rows,sheet]
 
 
-def read_excel(dict_array,apartment_id,user_id):
+def read_excel(dict_array,apartment_id,ttype,user_id):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -4691,17 +5028,17 @@ def read_excel(dict_array,apartment_id,user_id):
         desc = item["desc"]
         group = item["group"]
         tenant = item["tenant"]
-        mobile = item["mobile"]
+        raw_mobile = item["mobile"]
         email = item["email"]
         water = item["water"]
-        garb = item["garb"]
-        serv = item["serv"]
-        sec = item["sec"]
 
         natid = None
 
         if isinstance(group,float):
-            housecode = str(int(group))
+            if ttype == "ptenant":
+                housecode = "S-" + str(int(group))
+            else:
+                housecode = "G-" + str(int(group))
         else:
             housecode = group
 
@@ -4714,14 +5051,21 @@ def read_excel(dict_array,apartment_id,user_id):
             print("Skipping ",housecode)
             
         elif group:
-            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water,garb,sec,serv)
+            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
 
             print("house & amount",housecode,valid_inputs[0])
 
-            code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[4],apartment_id,user_id)
-            code_obj.save()
+            if ttype == "ptenant":
+                print("creating service")
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,apartment_id,user_id)
+                code_obj.save()
+            else:
+                print("creating rent")
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj.save()
         else:
-            pass
+            print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
+            continue
 
         try:
             housename = str(int(unit) if unit else "" )
@@ -4747,18 +5091,53 @@ def read_excel(dict_array,apartment_id,user_id):
         else:
             pass
 
+
+        print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+
         try:
-            tel = str(int(mobile))
+            if isinstance(raw_mobile,str):
+                tel = raw_mobile
+            else:
+                tel = str(int(raw_mobile))
         except:
+            print("Failed to stringify",raw_mobile)
             tel = ""
 
         if tel:
-            rawstrtel = tel.replace(" ", "")
+
+            if isinstance(tel,str):
+                mobile0 = tel.replace(" ", "")
+                mobile1 = mobile0.replace("`", "")
+                mobile2 = mobile1.replace("'", "")
+
+                if mobile2.startswith("0"):
+                    mobile = mobile2.lstrip("0")
+
+                elif mobile2.startswith("+254"):
+                    mobile = mobile2.lstrip("+254")
+
+                elif mobile2.startswith("254"):
+                    mobile = mobile2.lstrip("254")
+
+                else:
+                    mobile = mobile2
+
+            else:
+                print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                mobile = ""
+        else:
+            mobile = ""
+
+
+        if mobile:
+            rawstrtel = mobile.replace(" ", "")
             if len(rawstrtel) > 9:
+                print(mobile,"is too long")
                 strtel = ""
             else:
                 strtel = rawstrtel
         else:
+            print(mobile,"mobile does not exist")
             strtel = ""
 
         if strtel.startswith("0"):
@@ -4766,7 +5145,7 @@ def read_excel(dict_array,apartment_id,user_id):
         else:
             tenantphone = "0" + strtel
 
-        tenantemail = email
+        tenantemail = email.lower() if email else ""
         tenantnatid = str(int(natid) if natid else "" )
 
         if not tenantnatid:
@@ -4807,29 +5186,33 @@ def read_excel(dict_array,apartment_id,user_id):
                 present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
                 if present4:
                     print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
-                    similar = True
+                    similar = False
 
             if similar:
                 pass
             else:
-                tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,apartment_id,user_id)
-                tenant_obj.save()
-
-                occupancy = check_occupancy(house_obj)
-
-                if occupancy[0] == "occupied":
-                    print("Specified house occupied: ",house_obj)
-                    pass
-
+                if ttype == "ptenant":
+                    ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
+                    ptenant_obj.save()
                 else:
-                    house_id = house_obj.id
-                    tenant_id = tenant_obj.id
+                    tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,apartment_id,user_id)
+                    tenant_obj.save()
 
-                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
-                    allocate_tenant_obj.save()
+                    occupancy = check_occupancy(house_obj)
 
-                    TenantOp.update_status(tenant_obj,"Resident")
-                    TenantOp.update_residency(tenant_obj,"Old")
+                    if occupancy[0] == "occupied":
+                        print("Specified house occupied: ",house_obj)
+                        pass
+
+                    else:
+                        house_id = house_obj.id
+                        tenant_id = tenant_obj.id
+
+                        allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                        allocate_tenant_obj.save()
+
+                        TenantOp.update_status(tenant_obj,"Resident")
+                        TenantOp.update_residency(tenant_obj,"Old")
 
 
     return "completed"
@@ -4919,14 +5302,14 @@ def read_water_excel(dict_array,apartment_id,user_id):
                 continue
             else:
 
-                if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
+                if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
                     #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
                     print("Reading left out captured")
 
                     month = billing_period.month
                     year = billing_period.year
 
-                elif datetime.datetime.now().day >= 20:
+                elif datetime.datetime.now().day >= 21:
                     #Only enters this block if readings are taken early before the next month of billing
 
                     if datetime.datetime.now().month != 12:
@@ -5110,20 +5493,32 @@ def penalty_calculator(param):
         else:
             pass
 
-def water_bill(apartment_id,chargetype,user_id,month,year):
+def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
-    meter_readings = apartment_obj.meter_readings
+    # meter_readings = apartment_obj.meter_readings
     target_readings = []
 
-    for item in meter_readings:
-        if item.reading_period:
-            if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual water reading":
-                target_readings.append(item)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for h in house_list:
+        meter_readings = h.meter_readings
+
+        for item in meter_readings:
+            if item.reading_period:
+                if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual water reading":
+                    target_readings.append(item)
 
     for i in target_readings:
         units = i.units
@@ -5177,14 +5572,21 @@ def water_bill(apartment_id,chargetype,user_id,month,year):
 
                     MeterReadingOp.update_charge_status(i,charge_status)
 
-def rent_bill(apartment_id,chargetype,user_id,month,year):
+def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
-    
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
     for house in house_list:
         house_id = house.id
         checker = None
@@ -5219,13 +5621,20 @@ def rent_bill(apartment_id,chargetype,user_id,month,year):
                 rent_charge_obj = ChargeOp(charge_type_id,rent_charge,apartment_id,house_id,user_id,date)
                 rent_charge_obj.save()
 
-def garbage_bill(apartment_id,chargetype,user_id,month,year):
+def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5243,11 +5652,14 @@ def garbage_bill(apartment_id,chargetype,user_id,month,year):
                 garbage_charge = house.housecode.garbagerate
 
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
-            garbage_charges = []
             for charge in all_charges:
                 if str(charge) == "Garbage" and charge.date.month == month and charge.date.year == year:
-                    checker = "exists"
-                    break
+                    if charge.amount == 0.0:
+                        print("deleting zero charged garbage obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
 
             if checker:
                 print("Skipping",house.name, "of",house.apartment,"garbage charging",garbage_charge,"exists")
@@ -5258,13 +5670,20 @@ def garbage_bill(apartment_id,chargetype,user_id,month,year):
                 garbage_charge_obj = ChargeOp(charge_type_id,garbage_charge,apartment_id,house_id,user_id,date)
                 garbage_charge_obj.save()
 
-def fixed_water_bill(apartment_id,chargetype,user_id,month,year):
+def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5298,20 +5717,32 @@ def fixed_water_bill(apartment_id,chargetype,user_id,month,year):
                 water_charge_obj = ChargeOp(charge_type_id,fixed_water_charge,apartment_id,house_id,user_id,date)
                 water_charge_obj.save()
 
-def electricity_bill(apartment_id,chargetype,user_id,month,year):
+def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
-    meter_readings = apartment_obj.meter_readings
+    # meter_readings = apartment_obj.meter_readings
     target_readings = []
 
-    for item in meter_readings:
-        if item.reading_period:
-            if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual electricity reading":
-                target_readings.append(item)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for h in house_list:
+        meter_readings = h.meter_readings
+
+        for item in meter_readings:
+            if item.reading_period:
+                if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual electricity reading":
+                    target_readings.append(item)
 
     for i in target_readings:
         units = i.units
@@ -5347,13 +5778,20 @@ def electricity_bill(apartment_id,chargetype,user_id,month,year):
 
                     MeterReadingOp.update_charge_status(i,charge_status)
 
-def security_bill(apartment_id,chargetype,user_id,month,year):
+def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
-    house_list = houseauto(apartment_id)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
@@ -5373,11 +5811,14 @@ def security_bill(apartment_id,chargetype,user_id,month,year):
                 security_charge = house.housecode.securityrate
 
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
-            security_charges = []
             for charge in all_charges:
                 if str(charge) == "Security" and charge.date.month == month and charge.date.year == year:
-                    checker = "exists"
-                    break
+                    if charge.amount == 0.0:
+                        print("deleting zero charged security obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
 
             if checker:
                 print("Skipping",house.name, "of",house.apartment,"security charging",security_charge,"exists")
@@ -5389,7 +5830,7 @@ def security_bill(apartment_id,chargetype,user_id,month,year):
                 security_charge_obj = ChargeOp(charge_type_id,security_charge,apartment_id,house_id,user_id,date)
                 security_charge_obj.save()
 
-def maintenance_bill(apartment_id,chargetype,user_id,month,year):
+def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -5411,7 +5852,15 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
                     state = False
                     TenantRequestOp.update_state(req,state)
 
-    house_list = houseauto(apartment_id)
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
 
     for house in house_list:
         house_id = house.id
@@ -5438,8 +5887,12 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
             else:
                 for charge in all_charges:
                     if str(charge) == "Maintenance" and charge.date.month == month and charge.date.year == year:
-                        checker = "exists"
-                        break
+                        if charge.amount == 0.0:
+                            print("deleting zero charged garbage obj")
+                            ChargeOp.delete(charge)
+                        else:
+                            checker = "exists"
+                            break
 
                 if checker:
                     print("Skipping",house.name, "of",house.apartment,"service charging",service_charge,"exists")
@@ -5450,7 +5903,7 @@ def maintenance_bill(apartment_id,chargetype,user_id,month,year):
                     service_charge_obj = ChargeOp(charge_type_id,service_charge,apartment_id,house_id,user_id,date)
                     service_charge_obj.save()
 
-def total_bill(apartment_id,user_id,month,year):
+def total_bill(apartment_id,houseids,user_id,month,year):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -5471,7 +5924,14 @@ def total_bill(apartment_id,user_id,month,year):
         print("AFTER billing period is",apartment_obj.billing_period.date())
 
     prop = apartment_obj.name
-    houses = apartment_obj.houses
+    houses = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            houses.append(hse)
+    else:
+        houses = apartment_obj.houses
 
     try:
         # with mail.connect() as conn:
@@ -5550,7 +6010,8 @@ def total_bill(apartment_id,user_id,month,year):
                 
                 print('>>>>>>>',i,i.house,i.amount, 'Consumed? ',i.compiled,)
 
-            print("######################################### END OF HOUSE",prop,house,"BILLING ###############################################")
+            print("MAINTENANCE AT THE START:>>>",maintenance)
+
                 
             house_id = house.id
             result = check_occupancy(house)
@@ -5561,15 +6022,16 @@ def total_bill(apartment_id,user_id,month,year):
                 tenant = result[1]
 
             if tenant or house.owner:
-                pass
+                print("OWNER:",house.owner)
+                print("TENANT:",tenant)
             else:
-                print("BILLING SKIPPED FOR VACANT UNIT")
+                print("BILLING SKIPPED FOR VACANT UNIT TENANT:",tenant,"OWNER",house.owner)
                 continue
 
             bills = house.monthlybills
 
             if tenant:
-
+                print("starting tenant billing >>>>>",tenant.name)
                 ptenant_id = None
                 tenant_id = tenant.id
 
@@ -5840,11 +6302,18 @@ def total_bill(apartment_id,user_id,month,year):
                     if not house.billable:
                         print("House",house,"is not billablle")
 
+            else:
+                temp_water_total = water_total
+                temp_maintenance_total = maintenance
+
             #reset to default values
             water_total = temp_water_total
             maintenance = temp_maintenance_total
 
+            print("Printing stored data","SERVICE:",maintenance,"WATER:",water_total)
+
             if house.owner:
+                print("Starting OWNER BILLING >>",house.owner.name)
                 tenant = house.owner
                 ptenant_id = tenant.id
                 tenant_id = None
@@ -5853,6 +6322,7 @@ def total_bill(apartment_id,user_id,month,year):
 
                 if prev_bill:
                     arrears = prev_bill[0].balance
+                    print("FOUND PREVIOUS BILL WITH ARREARS OF: ",arrears)
 
                     if prev_bill[0].rent_due: #rent due of last period forms the base of arrears
                         rent_bal = prev_bill[0].rent_due
@@ -5860,6 +6330,8 @@ def total_bill(apartment_id,user_id,month,year):
                     else:
                         rent_due = rent
 
+                    # rent_bal = 0.0
+                    # rent_due = 0.0
 
                     if house.watertarget:
                         if house.watertarget == "owner":
@@ -5943,6 +6415,8 @@ def total_bill(apartment_id,user_id,month,year):
                             water_due = 0.0
                     else:
                         water_due = water_total
+
+                    print("at this point the service charge is:",maintenance)
 
                     if house.servicetarget:
                         if house.servicetarget == "owner":    
@@ -6076,6 +6550,8 @@ def total_bill(apartment_id,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
+                    print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
+
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
@@ -6100,6 +6576,9 @@ def total_bill(apartment_id,user_id,month,year):
 
                     if not house.billable:
                         print("House",house,"is not billablle")
+
+                    print("######################################### END OF HOUSE",prop,house,"BILLING ###############################################")
+
             else:
                 print("BILLING SKIPPED FOR NEITHER OWNED NOR RENTED UNIT (VACANT)")
 
@@ -6120,7 +6599,7 @@ def total_bill(apartment_id,user_id,month,year):
 
 
         
-def filtered_house_list(apartment_id):
+def filtered_house_list(apartment_id,readdate=None):
     """Filtering out read houses"""
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -6128,50 +6607,58 @@ def filtered_house_list(apartment_id):
     
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period
-
-    if datetime.datetime.now().day < 20 and datetime.datetime.now().month == billing_period.month:
-        #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
-        print("Reading left out captured")
-
-        month = billing_period.month
-        year = billing_period.year
-
-    elif datetime.datetime.now().day >= 20:
-        #Only enters this block if readings are taken early before the next month of billing
-
-        if datetime.datetime.now().month != 12:
-            if datetime.datetime.now().month + 1 == billing_period.month:
-
-                #Only enters this block for readings taken early and are meant for early next current billing
-                print("Reading left out captured for next month")
-                month = billing_period.month
-                year = billing_period.year
-
-            else:
-                #Only enters this block for early billing COMMON PROCESS
-                print("Reading captured early and normally for next period")
-                month = billing_period.month + 1 if billing_period.month != 12 else 1
-                year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
-        else:
-            if 1 == billing_period.month:
-                print("Reading left out captured for Jan ater early billing for Jan")
-                month = billing_period.month
-                year = billing_period.year
-            else:
-                #Only enters this block for early billing COMMON PROCESS
-                print("Reading captured early and normally for Jan")
-                month = 1
-                year = billing_period.year + 1
-    else:
-        #Only enters this block if readings are taken early in the next month of billing
-        print("Reading captured late")
-        if billing_period.month == 12:
-            month = 1
-            year = billing_period.year + 1
-
+    
+    if readdate:
+        if readdate.month == billing_period.month and readdate.year == billing_period.year:
+            month = billing_period.month
+            year = billing_period.year
         else:
             month = billing_period.month + 1 if billing_period.month != 12 else 1
             year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+    else: 
+        if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
+            #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
+            print("Reading left out captured")
+
+            month = billing_period.month
+            year = billing_period.year
+
+        elif datetime.datetime.now().day >= 21:
+            #Only enters this block if readings are taken early before the next month of billing
+
+            if datetime.datetime.now().month != 12:
+                if datetime.datetime.now().month + 1 == billing_period.month:
+
+                    #Only enters this block for readings taken early and are meant for early next current billing
+                    print("Reading left out captured for next month")
+                    month = billing_period.month
+                    year = billing_period.year
+
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for next period")
+                    month = billing_period.month + 1 if billing_period.month != 12 else 1
+                    year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+            else:
+                if 1 == billing_period.month:
+                    print("Reading left out captured for Jan ater early billing for Jan")
+                    month = billing_period.month
+                    year = billing_period.year
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for Jan")
+                    month = 1
+                    year = billing_period.year + 1
+        else:
+            #Only enters this block if readings are taken early in the next month of billing
+            print("Reading captured late")
+            if billing_period.month == 12:
+                month = 1
+                year = billing_period.year + 1
+
+            else:
+                month = billing_period.month + 1 if billing_period.month != 12 else 1
+                year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
 
     for house in house_list:
         active_meter = fetch_active_meter(house)
@@ -6198,7 +6685,7 @@ def filtered_house_list(apartment_id):
 
     return unread_houses
 
-def filtered_house_list_alt(apartment_id):
+def filtered_house_list_alt(apartment_id,readdate=None):
     """Filtering out read houses"""
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -6208,12 +6695,12 @@ def filtered_house_list_alt(apartment_id):
     current_month = datetime.datetime.now().month
 
     if period != 12:
-        if datetime.datetime.now().day < 20 and current_month == period:
+        if datetime.datetime.now().day < 21 and current_month == period:
             period = period
         else:
             period += 1
     else:
-        if datetime.datetime.now().day < 20 and current_month == period:
+        if datetime.datetime.now().day < 21 and current_month == period:
             period = 12
         else:
             period = 1
@@ -6264,7 +6751,8 @@ def auto_consume_ctob(ctob_obj):
         house_obj = check_house_occupied(tenant_obj)[1]
         house_id = house_obj.id
         created_by = 1
-        payment_obj = PaymentOp(paymode,ref_number,description,chargetype_string,None,billing_period,charged_amount,amount,apartment_id,house_id,tenant_id,created_by)
+        ptenant_id=None
+        payment_obj = PaymentOp(paymode,ref_number,description,chargetype_string,None,billing_period,charged_amount,amount,apartment_id,house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
 
         rand_id = random_generator()
@@ -6459,10 +6947,13 @@ def get_obj_ids(arr):
         if req:
             req_id = req["id"]
             obj_id_list.append(req_id)
-            editid = req["editid"]
+            editid = req.get("editid")
             obj_id_list.append(editid)
             delid = req["delid"]
             obj_id_list.append(delid)
+            # tedit = req.get("tedit")
+            # if tedit:
+            #     obj_id_list.append(tedit)
             allocid=req.get("allocid")
             if allocid:
                 obj_id_list.append(allocid)
@@ -6710,14 +7201,25 @@ def build_search_tenant(tenant_item):
     house = get_active_houses(tenant_item)[1]
 
     dict_item = {
-        "name" : remove_special_characters(tenant_item.name),
+        "name" : remove_special_characters(tenant_item.name) + "(T)",
         "id" : "tnt"+str(tenant_item.id),
         "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
         "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'
     }
     return dict_item
 
-def generate_suggestions_alt(props,houses,tenants):
+def build_search_ptenant(ptenant_item):
+    house = ptenant_item.house
+
+    dict_item = {
+        "name" : remove_special_characters(ptenant_item.name) + "(R)",
+        "id" : "ptnt"+str(ptenant_item.id),
+        "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
+        "prop" : f'-{ smart_truncate(ptenant_item.apartment.name)}'
+    }
+    return dict_item
+
+def generate_suggestions_alt(props,houses,tenants,ptenants):
 
     # for prop_item in props:
     #     dict_item = {
@@ -6733,6 +7235,7 @@ def generate_suggestions_alt(props,houses,tenants):
 
     suggestions_list1 = [build_search_unit(house) for house in houses]
     suggestions_list2 = [build_search_tenant(tenant) for tenant in tenants]
+    suggestions_list3 = [build_search_ptenant(ptenant) for ptenant in ptenants]
 
 
 
@@ -6747,7 +7250,7 @@ def generate_suggestions_alt(props,houses,tenants):
     # return listToStr
     
 
-    return suggestions_list1 + suggestions_list2
+    return suggestions_list1 + suggestions_list2 + suggestions_list3
     
 
 def access(current_user):

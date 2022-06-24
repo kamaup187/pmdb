@@ -90,41 +90,106 @@
                 <div class="card-header">Property billing info ({{prop.name}})</div>
                 <div class="card-body">
                     <form>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="bank">Bank name</label>
 
-                                <input class="form-control" type="text" id="bank" value="{{prop.landlord_bank}}">
+                        <div class="row form-group">
+                            <span class="dispnone" id="check_paytype">{{prop.paymentdetails.paytype}}</span>
+                            <span class="dispnone" id="check_nartype">{{prop.paymentdetails.nartype}}</span>
+                            <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankaccountnumber}}</span>
+
+
+                            <div class="kiota-borde col-md-6 pt-1">
+                                <div class="">
+                                    <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
+                                    <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
+                                </div>
+                            
+                                <div class="">
+                                    <input class="" id="paytype2" name="paytype" type="radio" value="bankpay" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank payment</label>
+                                </div>
+
+                                <div class="">
+                                    <input class="" id="paytype3" name="paytype" type="radio" value="" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype3">None</label>
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="accname">Account name</label>
-
-                              <input class="form-control" type="text" id="accname" value="{{prop.landlord_bankaccname}}">
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
+                                <div class="">
+                                    <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
+                                    <label class="mb-1 small font-weight-bold" for="nartype">TNT(#TNT123)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype2" name="nartype" type="radio" value="hsenum" />
+                                    <label class="small font-weight-bold mb-1" for="nartype2">House No.(#H1)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype3" name="nartype" type="radio" value="" />
+                                    <label class="small font-weight-bold mb-1" for="nartype3">None</label>
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="accno">Account no</label>
 
-                              <input class="form-control" type="text" id="accno" value="{{prop.landlord_bankacc}}">
+                        </div>
+
+                        <div id="mpesacorner" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="small mb-0" for="bank">Paybill</label>
+                        
+                                    <input class="form-control" type="text" id="mpesapaybill" value="{{prop.paymentdetails.mpesapaybill}}">
+                                </div>
+                        
+                                <div class="col-sm-6">
+                                    <label class="small mb-0" for="bank">Account</label>
+                        
+                                    <input class="form-control" type="text" id="mpesaacc" value="" readonly>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="bank">Type</label>
 
-                                <input class="form-control" type="text" id="" value="PayBill" disabled>
+                        <div id="bankcorner" class="dispnone">
+                        
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bank">Bank name</label>
+                        
+                                    <input class="form-control" type="text" id="bankname" value="{{prop.paymentdetails.bankname}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accname">Account name</label>
+                        
+                                    <input class="form-control" type="text" id="bankaccountname" value="{{prop.paymentdetails.bankaccountname}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank Paybill</label>
+                        
+                                    <input class="form-control" type="text" id="bankpaybill" value="{{prop.paymentdetails.bankpaybill}}">
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="accname">Account name</label>
-
-                              <input class="form-control" type="text" id="" value="{{prop.name}}" disabled>
+                        
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bank">Bank branch</label>
+                        
+                                    <input class="form-control" type="text" id="bankbranch" value="{{prop.paymentdetails.bankbranch}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accname">Bank Account no</label>
+                        
+                                    <input class="form-control" type="text" id="bankaccountnumber" value="{{prop.paymentdetails.bankaccountnumber}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank mpesa accno no</label>
+                        
+                                    <input class="form-control" type="text" id="bankacc" value="{{prop.paymentdetails.bankaccountnumber}}{{nartype}}">
+                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="small mb-1" for="accno">Paybill no</label>
-
-                              <input class="form-control" type="text" id="paybill" value="{{prop.tenant_bankacc}}">
-                            </div>
+                        
                         </div>
+
+
 
                         <!-- Save changes button-->
                         <div class="text-right">
@@ -173,6 +238,34 @@
         $("#billing-area").addClass("dispnone")
         $("#profile-area").addClass("dispnone")
     })
+
+
+        $('input[type=radio][name=paytype]').change(function () {
+            if (this.value == 'mpesapay') {
+                $("#mpesacorner").removeClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }else if (this.value == 'bankpay') {
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").removeClass("dispnone")
+            }else{
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }
+        });
+
+
+        $('input[type=radio][name=nartype]').change(function () {
+            if (this.value == 'hsenum') {
+                $("#mpesaacc").val("#H1 format")
+                $("#bankacc").val($("#check_accno").text()+"#H1 format")
+            }else if (this.value == 'tntnum') {
+                $("#mpesaacc").val("#TNT format")
+                $("#bankacc").val($("#check_accno").text()+"#TNT format")
+            }else{
+                $("#mpesaacc").val("")
+                $("#bankacc").val($("#check_accno").text()+"")
+            }
+        });
 </script>
 
 
@@ -203,7 +296,41 @@
             $("input[id=colltype2]").attr("checked", "checked");
 
         } else { }
-    })
+
+
+            let checkPaytype = $("#check_paytype").text()
+            if (checkPaytype == "mpesapay") {
+                $("input[id=paytype]").attr("checked", "checked");
+                $("#mpesacorner").removeClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            } else if (checkPaytype == "bankpay") {
+                $("input[id=paytype2]").attr("checked", "checked");
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").removeClass("dispnone")
+            } else { 
+                $("input[id=paytype3]").attr("checked", "checked");
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }
+
+            let checkNartype = $("#check_nartype").text()
+            if (checkNartype == "tntnum") {
+                $("input[id=nartype]").attr("checked", "checked");
+                $("#mpesaacc").val("#TNT format")
+
+            } else if (checkNartype == "hsenum") {
+                $("#mpesaacc").val("#H1 format")
+                $("input[id=nartype2]").attr("checked", "checked");
+            } else {
+                $("#mpesaacc").val("")
+                $("input[id=nartype3]").attr("checked", "checked");
+             }
+
+        })
+
+
+
+        
 </script>
 
 <script>
@@ -264,10 +391,14 @@
             type: "POST",
             data: {
                 propid: $("#edit_prop_identifier").text(),
-                bank: $("#bank").val(),
-                accname: $("#accname").val(),
-                accno: $("#accno").val(),
-                paybill: $("#paybill").val(),
+                bankname: $("#bankname").val(),
+                bankbranch: $("#bankbranch").val(),
+                bankaccountname: $("#bankaccountname").val(),
+                bankaccountnumber:$("#bankaccountnumber").val(),
+                bankpaybill: $("#bankpaybill").val(),
+                mpesapaybill: $("#mpesapaybill").val(),
+                paytype: $("input[name=paytype]:checked").val(),
+                nartype: $("input[name=nartype]:checked").val(),
                 target: "update prop billing info"
             },
             success: function (response) {

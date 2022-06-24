@@ -606,7 +606,7 @@
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="settings"></i></div>
                       <div>
                           <div class="small text-gray-500">Settings</div>
-                          <div class="text-black font-weight-bold">Set app preferences</div>
+                          <div class="text-black font-weight-bold">App preferences</div>
                       </div>
                   </a>
 
@@ -616,7 +616,7 @@
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="grid"></i></div>
                       <div>
                           <div class="small text-gray-500">Company details</div>
-                          <div class="text-black font-weight-bold">Set company details</div>
+                          <div class="text-black font-weight-bold">Company details</div>
                       </div>
                   </a>
 
@@ -682,7 +682,7 @@
                       </div>
                       <div class="">
                         <i class="feather-16 text-black" data-feather="users"></i>
-                        <button class="tenantbtn btn btn-outline-info border-none p-0 m-0  font-weight-bold ">Tenants</button>
+                        <button class="tenantbtn btn btn-outline-info border-none p-0 m-0  font-weight-bold ">Tenants/Residents</button>
                       </div>
                       <div class="">
                         <i class="feather-16 text-black" data-feather="thermometer"></i>
@@ -1641,6 +1641,14 @@
 
                             <div class="font-weight-bold mobile-malaysian">
                               <i class="fas fa-users text-info ml-1"></i>
+                              <span class="text-black">Residents: </span>
+                                <span class="text-success fa-2x mr-1 ln-10 fixloader" id="ptenantstats">
+                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                </span>
+                            </div>
+
+                            <div class="font-weight-bold mobile-malaysian">
+                              <i class="fas fa-users text-info ml-1"></i>
                               <span class="text-black">Tenants: </span>
                                 <span class="text-success fa-2x mr-1 ln-10 fixloader" id="tenantstats">
                                   <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
@@ -1649,7 +1657,7 @@
 
                             <div class="font-weight-bold">
                               <i class="fas fa-door-open text-info ml-1"></i>
-                              <span class="text-black">Vacant: </span>
+                              <span class="text-black">Vacant(rented units): </span>
                                 <span class="text-danger fa-2x mr-1 ln-10 fixloader" id="vacantstats">
                                   <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
                                 </span>
@@ -2002,16 +2010,12 @@
                   </div>
 
                   <div class="form-group no-paddin input-icons">
-                    <span class="text-danger font-weight-bold">CAUTION: Choose the next month only! </span>
                     <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                       <input id="switchperiod" class="form-control ph" type="text" placeholder="Select month to bill" readonly />
                       <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                     </div>
                   </div>
 
-                  <div class="center-btn small underline-thin mb-2">
-                    <span class="text-black">Note:</span> <span class="text-danger">This action cannot be reversed</span>
-                  </div>
 
                   <div class="mt-2 divbg">
                     <div>
@@ -2062,9 +2066,45 @@
     <div class="modal-dialog modal-kubwa-sana" role="document">
       <div class="modal-content">
         <div class="indicator"></div>
-        <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
-          <div class="alert-msgs"></div>
+        <div class="modal-header pb-0">
+
+          <div class="divjust-end">
+            <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
+            <a id="download_mpesapayments" href="" target="_blank" class="dispnone"></a>
+
+
+            <div id="mpesapayments" class="dispnone">
+
+              <div class="divjust-end">
+                <div class="form-group input-icons mb-2">
+                  <label class="mb-0">Select paybill:</label>
+                  <select name="usergroup" class="form-control" id ="shortcode" >
+                    <option disabled selected value> Select Paybill </option>
+                    {% for o in shortcodes %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="form-group mb-2 ml-2">
+                  <label class="mb-0">Select month:</label>
+                  <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
+                    <input id="from" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2 mt-3">
+                  <button id="downloadmpesapayments" type="button" class="btn borderles btn-light ml-3 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <button id="togglempesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View report</span></button>
+          </div>
+
         </div>
         <div class="modal-body pt-0">
           <div class="media mb-2">
@@ -2328,7 +2368,7 @@
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/autocomplete-v2.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 
 
@@ -3025,6 +3065,16 @@ function animateHH(element) {
   });
 </script>
 
+<script>
+  $("#from").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
 
 <!-- <script>
   // This script displays alerts and tenant name before clearance
@@ -3330,6 +3380,24 @@ function animateHH(element) {
                   },
             success: function(data) {
                 $('#housestats').text(data);
+  
+            }
+        });
+      setTimeout(getPTenantStats, 10);
+
+    }
+
+    function getPTenantStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"ptenantstats"
+
+                  },
+            success: function(data) {
+                $('#ptenantstats').text(data);
   
             }
         });
@@ -3786,6 +3854,42 @@ $("#closemodule").on('click',function(){
   }
   }
   });
+</script>
+
+<script>
+  $("#downloadmpesapayments").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+      shortcode = $("#shortcode").val()
+      from = $("#from").val()
+
+      url = "/mpesa/statement?shortcode=" + shortcode + "&from=" + from
+
+
+    $("#download_mpesapayments")[0].href = url
+
+    if (shortcode){
+
+      $("#download_mpesapayments")[0].click();
+
+      setTimeout(function(){
+          $('#togglempesapayments').removeClass("dispnone")
+          $('#mpesapayments').addClass("dispnone")
+      },1000);
+
+    }
+    else{
+      alert("select paybill first !")
+    }
+
+    });
+</script>
+
+<script>
+  $("#togglempesapayments").click(function(){ 
+    $(this).addClass("dispnone")
+    $("#mpesapayments").removeClass("dispnone")
+    });
 </script>
 
 

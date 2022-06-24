@@ -62,6 +62,11 @@
           
         }else{
           $("#c2b_identifier").html(item)
+          $("#c2bitem_id").html(item)
+          console.log("running c2b item",item)
+          $("#thouse").removeClass("dispnone")
+          $("#house_selector").addClass("dispnone")
+          $("#confirm_details").removeClass("dispnone")
 
           $.ajax({
             url: "{{ url_for('api.receivepayment') }}",
@@ -72,9 +77,86 @@
                   target:"fetch c2b item"
                 },
             success: function(response) {
-              $('#c2bitem').html(response); 
+              $('#c2bitem').html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                  cbid: item,
+                  propid: $("#prop_identifier").text(),
+                  target: "fetch target tenant"
+                },
+                success: function (response) {
+                  $('#confirm_details').html(response);
+
+                  $("#fieldset2").removeClass("dispnone")
+
+
+                  $.ajax({
+                    url: "{{ url_for('api.receivepayment') }}",
+                    type: "get",
+                    data: {
+                      propid: $("#prop_identifier_main").text(),
+                      propname: $("#select_prop").val(),
+                      house: $("#select_house").val(),
+                      cbid: item,
+                      payperiod: $("#billdatepicker").val(),
+                      paidamount: $("#paidamount").val(),
+                      target: "breakdown"
+                    },
+                    success: function (response) {
+                      $("#billbreakdown").html(response);
+
+                      $.ajax({
+                        url: "{{ url_for('api.receivepayment') }}",
+                        type: "get",
+                        data: {
+                          propid: $("#prop_identifier_main").text(),
+                          propname: $("#select_prop").val(),
+                          house: $("#select_house").val(),
+                          house2: $("#house-holder").text(),
+                          cbid: item,
+                          payperiod: $("#billdatepicker").val(),
+                          target: "amount due"
+                        },
+                        success: function (response) {
+                          $("#totaldue").html(response);
+
+                          if ($("#ctb_item_amount").text()) {
+                            $("#paidamount").val($("#ctb_item_amount").text())
+                            $('#paidamount').keyup();
+                            $("#bill_ref").val($("#ctb_item_ref").text())
+                          }
+
+
+                          if ($("#ctb_item_ref").text()) {
+                            var paymodeRadio = $('input:radio[name=paymode]');
+                            if (paymodeRadio.is(':checked') === false) {
+                              console.log("working yeeee")
+                              paymodeRadio.prop('checked', true);
+                              paymodeRadio.change();
+                            } else {
+                              console.log("not workin ffffff")
+                              // do nothing
+                            }
+                          } else {
+                            console.log("kubaad")
+                          }
+
+                        }
+                      });
+
+                    }
+                  });
+
+                }
+              });
+
             }
           });
+
+
 
         }
       });

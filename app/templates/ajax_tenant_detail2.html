@@ -1,0 +1,1451 @@
+<span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+<span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
+<span id="ttype" class="dispnone">{{tenant.tenant_type}}</span>
+<span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
+<span id="del_tenant_identifier" class="dispnone"></span>
+<span id="payment_identifier" class="dispnone"></span>
+<span id="edit_payment_identifier" class="dispnone"></span>
+<span id="del_payment_identifier" class="dispnone"></span>
+<span id="bill_identifier" class="dispnone"></span>
+<span id="edit_bill_identifier" class="dispnone"></span>
+<span id="edit_pay_identifier" class="dispnone"></span>
+<span id="del_bill_identifier" class="dispnone"></span>
+<span id="target_payment_id" class="dispnone"></span>
+<!-- <a id="download_statement" href="/tenant/statement3?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a> -->
+<a id="download_statement" href="/account/statement?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+
+<span class="multisave dispnone"></span>
+<span class="accesssms dispnone"></span>
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+      <!-- <div class="no-padding row">
+        <div class="col-12 no-padding mb-1 mt-1">
+          <div class="card-header py-1 bg-white divjust-end" >
+              <div class="font-weight-bold text-black text-115"><i class="fas fa-fw fa-address-card mr-3"></i>Tenant details</div>
+              <button id="close-searchresults" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="card-header pt-3 pb-2 divjust-end bg-skyblue">
+        <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
+        <span class="smallify text-black font-weight-bold text-uppercase text-110">Resident details</span>
+        <div>
+          <button id="close-searchresults" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+            type="button">X</button>
+        </div>
+      </div>
+
+
+            
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="divjust-start">
+                        <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-user text-info fa-2x mt-2 mr-2"></i></div>
+                        <div class="ln-14 mt-2">
+                          <div class="mb-2 ml-2">Name: <span class="text-black font-weight-bold">{{tenant.name.title()}} </span></div>
+                          <div class="mb-2 ml-2">Unique no#: <span class="text-black font-weight-bold">WN{{tenant.id}}</span></div>
+                        </div>  
+                    </div>
+                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+
+                </div>
+
+
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                    <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-building text-info fa-2x mt-2 mr-2"></i></div>
+                    <div class="ln-14 mt-2">
+                      <div class="mb-2 ml-2">House: <span class="font-weight-bold text-black">{{prop.name}}, {{houses}}</span></div>
+                      <div class="mb-2 ml-2">BookedOn#: <span
+                          class="font-weight-bold text-danger">{{tenant.date.strftime("%d/%B/%Y")}}</span></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                    data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-door-open mr-2"></i>Remove
+                      resident</span></button>
+                
+                </div>
+                
+                
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                    <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-address-card text-info fa-2x mt-2 mr-2"></i></div>
+                    <div class="ln-14 mt-2">
+                      <div class="mb-2 ml-2">Contact: <span class="font-weight-bold text-black small">{{tenant.phone}} {{tenant.email}}</span></div>
+                      <div class="mb-2 ml-2">Messaging?: <span id="smsaccessview"
+                          class="font-weight-bold text-danger">{{smsable}}</span></div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                    data-target="#tenantSmsModal"><span class="fixed-width-prop"><i class="fas fa-sms mr-2"></i>Direct message
+                      </span></button>
+                
+                </div>
+
+
+                <div class="col-lg-3">
+                  <div class="divjust-start">
+                      <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-user text-info fa-2x mt-2 mr-2"></i></div>
+                      <div class="ln-14 mt-2">
+                        <div class="mb-2 ml-2"><span class="text-black font-weight-bold">{{month}} </span>invoice: <span class="{{badge_status}}">{{paid_status}}</span></div>
+                        <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
+                      </div>  
+                  </div>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Invoice statement</span></button>
+
+              </div>
+                
+
+
+                <div class="col-lg-3 mobile-malaysian dispnone">
+
+                  <div class="info_item">
+                    <button type="button" class="update-balance borderless btn-info fixed-width-modal-btn divjust-end"><i class="fas fa-sync-alt ml-4"></i><span class="mr-4">Update balance</span></button>
+
+                    <!-- <div class="expand_button update-balanc mb-1"> 
+                      <button class="btn e-button btn-sm"> 
+                        <span class="e-button-text"><i class="fa fa-trash text-danger pr-2"></i> hey</span> 
+                      </button> 
+                    </div>
+
+                    <div class="expand_button update-balance"> 
+                      <button class="btn e-button btn-sm"> 
+                        <span class="e-button-text"><i class="fa fa-trash text-danger pr-2"></i> Remove Selected</span> 
+                      </button> 
+                    </div> -->
+
+                  </div>
+
+                  <div class="info_item">
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#newPledgeModal"><i class="fas fa-clipboard-list ml-4"></i><span class="mr-4">Notes/pledges</span></button>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 mobile-malaysian dispnone">
+                  <div class="info_item">
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-walking ml-4"></i><span class="mr-4">Clear tenant</span></button>
+                  </div>
+                  <div class="info-item">
+                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#tenantSmsModal"><i class="fas fa-envelope ml-4"></i><span class="mr-4">Send message</span></button>
+                  </div>
+                </div>
+
+
+          </div>
+
+
+
+          <div class="toggleswitch divjust-start text-black underline mt-4">
+            <span class="mr-3">
+              <label class="switch">
+                <input id="reporttoggle3" type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+              <span class="smallify">Invoices</span>
+            </span>
+
+            <span class="mr-3">
+              <label class="switch">
+                <input id="reporttoggle" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+              <span class="smallify">Payments</span>
+            </span>
+          
+            <span class="mr-3 dispnone">
+              <label class="switch">
+                <input id="reporttoggle2" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+              <span class="smallify">Profile</span>
+            </span>
+
+            <span class="mr-3 dispnone">
+              <label class="switch">
+                <input id="reporttoggle4" type="checkbox" disabled>
+                <span class="slider round"></span>
+              </label>
+              <span class="smallify text-secondary">Pledges</span>
+            </span>
+  
+          </div>
+          <div class="col-lg-12 font-weight-bold text-dark center-btn mb-0 mt-2 desktop-malaysian">Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div>
+          <div id="search-result-view" class="row">
+
+            <!-- <div class="col-lg-12 font-weight-bold text-dark center-btn smallify mb-1">Tenant bill (current billing period):</div> -->
+
+            <div class="fountainG-small desktop-malaysian">
+              <div class="fountainG_1s fountainG-s"></div>
+              <div class="fountainG_2s fountainG-s"></div>
+              <div class="fountainG_3s fountainG-s"></div>
+            </div>
+            <div class="fountainG-big mobile-malaysian">
+              <div class="fountainG_1b fountainG-b"></div>
+              <div class="fountainG_2b fountainG-b"></div>
+              <div class="fountainG_3b fountainG-b"></div>
+            </div>
+
+
+          </div>
+        <!-- <button type="button" id="receipt-btn" class="dispnone" data-toggle="modal" data-target="#receiptModal"></button> -->
+    </section>
+    <!--================Contact Area =================-->
+
+
+    <!-- <div class="text-center">
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Upload property photo</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+
+                  <div class="position-relative">
+                    <form class="divbg" action="/change/prop/image" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected" multiple required/>
+                        <label for="file-1"><span>Choose an image&hellip;</span></label>
+                        <input type="text" name="propid" class="d-none" value="{{prop.id}}">
+                        <input type="submit" class="borderless bg-danger" value="Upload">
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-foote">
+              <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="text-center">
+      <div class="modal fade" id="receiveSmsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header">
+              <h5 class="modal-title" id="paymentDetailModalLabel">Toggle sms access</h5>
+            </div>
+            <div class="modal-body">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <form class="" action="/sms/status" method="POST">
+
+                      <div class="form-group input-icons">
+                        <select name="sms_status" class="form-control">
+                          <option disabled selected value> -- Send sms -- </option>
+                         
+                          <option value="True">Yes</option>
+                          <option value="False">No</option>
+
+                        </select>
+                      </div>
+                      <input type="text" name="tenantid" class="d-none" value="{{tenant.id}}">
+                      <hr>
+                      <div class="divbg center-btn">
+                        <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newPledgeModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Payment Pledge</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group mt-2">                        
+                        <input id="datepicker" class="form-control text-info pl-5 ph" type="text" placeholder="Pledge to pay on...">
+                        <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span>
+                      </div>
+
+                      <div class="form-group mt-2">                        
+                        <input id="pledge_amount" class="form-control text-info pl-5 ph" type="text" placeholder="Pledged amount to pay...">
+                        <span class="fa fa-fw fa-money-check-alt field-icon-two text-info"></span>
+                      </div>
+                      <div class="form-group mt-2">                        
+                        <textarea id="pledge_note" class="form-control text-info pl-5 ph" rows="1" placeholder="Brief notes"></textarea>
+                        <!-- <span class="fa fa-fw fa-clipboard-list field-icon-two text-info"></span> -->
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                        <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="tenantSmsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Send sms</h5>
+            <hr>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons">
+                        
+                        <div class="form-group">
+                          <textarea id="text" class="form-control textarea-height ph" name="text" placeholder="message to be conveyed" required></textarea>
+                        </div>
+                      </div>
+        
+                      <div id="smsapi-notifications"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="sendsms" type="button" class="btn-success borderless text-white" disabled>Send</button>
+                        <button class="btn-outline btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="tenantClearanceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title" id="paymentDetailModalLabel">Clearance</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div id="clearance_notifications"></div>
+                   
+                      <div class="divbg center-btn">
+                        <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>
+                        <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <!-- <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button> -->
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="">
+      <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="divbg">
+              <button type="button" class="btn borderless" id="downloadReceiptPdf"><i class="fas fa-print text-primary">Print</i></button>
+              <button type="button" class="btn borderless" id="sendReceiptPdf"><i class="fas fa-envelope text-primary">Send</i></button>
+              <button class="btn borderless" type="button" data-dismiss="modal"><i class="fas fa-times text-danger">Close</i></button>
+            </div>
+            <div class="modal-body no-padding">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div id="receipt-bed" class="position-relative"></div>
+                  <div class="hide">spacing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="">
+      <div class="modal fade" id="billInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="divbg">
+              <button type="button" class="btn borderless" id="downloadInvoicePdf"><i class="fas fa-print text-primary">Print</i></button>
+              <button class="btn borderless" type="button" data-dismiss="modal"><i class="fas fa-times fa-2x text-danger"></i></button>
+            </div>
+            <div class="modal-body no-padding">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div id="invoice-bed" class="position-relative"></div>
+                  <div class="hide">spacing</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="editPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Edit payment</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+
+            <!-- <div class="form-group mt-2">                        
+              <input id="edit_datepicker" class="form-control text-info pl-5 ph" type="text" placeholder="Edit date">
+              <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span>
+            </div> -->
+
+            <div id="edit-datepicker" class="form-group mt-2 date" data-date-format="dd-mm-yyyy">
+              <input id="edit-pay-date" class="form-control ph" type="text" placeholder="Update date of payment" readonly />
+              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+            </div>
+
+            <div class="form-group dispnone">
+              <input id="edit_paidamount" class="form-control ph" type="text" name="paidamount" placeholder="Update amount" required>
+            </div>
+
+          </div>
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Do you really want to edit this payment?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="edit_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Update</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade center-btn" id="deletePaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabel">Warning!</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">Confirm delete</div>
+          
+          <span class="text-gray-700 small mb-2 mr-2 ml-2">Do you really want to void this payment?</span>
+          <div class="has-margin-bottom divbg">
+              <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update tenant detail</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div id="edittenantbed" class="mt-2">
+                        <!-- <div class="form-group input-icons">
+                          <input id="edit_name" class="form-control pl-5" type="text" placeholder="Tenant name">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_natid" class="form-control pl-5" type="text" placeholder="National ID">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_tel" class="form-control pl-5" type="tel" placeholder="Mobile number">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_email" class="form-control pl-5" type="email" placeholder="Email address">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div> -->
+ 
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="edittenant" type="button" class="btn-secondary borderless text-white">Update</button>
+                        <button class="btn btn-light" id="closeeditTenantModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info smallify" id="paymentDetailModalLabel">Edit <span class="text-gray-900">{{tenant.name}}</span> invoice bill</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="billeditbed"></div>
+                                          
+                      <div class="divbg center-btn">
+                        <button id="editbill" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit arrears per invoice item</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="arreditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editarr" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeArrModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editPayModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center bg-dark">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit payments</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="payeditbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editpay" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closePayModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Invoice</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+
+                    <div class="mt-2" id="invoicebed">
+                      <div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+  $("#close-searchresults").on('click',function(){
+    if($("#content-area").hasClass("isopen")){
+      $('#propdisp').removeClass('dispnone');
+      
+      $('#searchresults').addClass('dispnone');
+      $('#search-area').removeClass('isopen');
+
+      if ($('#tenant-area').hasClass('isactive')){
+        console.log("ajax expend")
+        $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"somestring"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+      }
+      $(".fixloader").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
+            );
+            $(".fixloader2").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
+            );
+      setTimeout(getPropStats, 10);
+
+      $('#searchresults').html("empty");
+
+    }else if($('#list-area').hasClass("isopen")){
+      // $('#propdisp').removeClass('dispnone');
+
+      $('#proplist').removeClass('dispnone');
+      $('#searchresults').html("empty");
+      $('#searchresults').addClass('dispnone');
+      $('#search-area').removeClass('isopen');
+    } else {
+      // $('#propdisp').removeClass('dispnone');
+
+      $('#searchresults').addClass('dispnone');
+      $('#search-area').removeClass('isopen');
+      $('#body-block').removeClass('dispnone')
+      $('#searchresults').html("empty");
+      $('#sidebarToggle').click();
+      $('#smaccordionSidebar').removeClass("toggled");
+    }
+
+  });
+</script>
+
+
+
+<script>
+  $('#edit_datepicker').datepicker();
+</script>
+
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>  
+
+  <script>
+    $('#datepicker').datepicker();
+    // $('body').append('<style>.focus_input::placeholder{color:red}</style>')
+  </script>
+
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#receiptModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.receipt') }}",
+      type: "get",
+      data: {
+            payid: $("#payment_identifier").text()
+          },
+      success: function(response) {
+        $("#receipt-bed").html(response); 
+      }
+    });
+  });
+
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#billInvoiceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.invoice') }}",
+      type: "get",
+      data: {
+            billid: $("#bill_identifier").text()
+          },
+      success: function(response) {
+        $("#invoice-bed").html(response); 
+      }
+    });
+  });
+
+</script>
+
+<script>
+  $("#invoiceModal").on('shown.bs.modal', function(){
+    $("#invoicebill").removeClass("dispnone");
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.billinvoice') }}",
+      type: "get",
+      data: {
+            billid: $("#bill_identifier").text()
+          },
+      success: function(response) {
+        $("#invoicebed").html(response);
+      },
+      error: function(xhr) {
+        $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $('#invoiceModal').on('hidden.bs.modal', function () {
+    $("#bill_identifier").empty();
+    $("#invoicebed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+})
+</script>
+
+
+
+<script>
+  
+  $("#reporttoggle").on('change',function(){
+    $("#search-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb3 = document.getElementById("reporttoggle3");
+      cb3.checked = false;
+      var cb4 = document.getElementById("reporttoggle4");
+      cb4.checked = false;
+      // $("#update-reloader").html("new");
+      // $("#allocate-reloader").html("new");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchpayments') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
+                  target:"isolated"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    $("#search-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb3 = document.getElementById("reporttoggle3");
+      cb3.checked = false;
+      var cb4 = document.getElementById("reporttoggle4");
+      cb4.checked = false;
+      // $("#update-reloader").html("current");
+      // $("#allocate-reloader").html("current");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  target:"tenant details"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+    }
+  
+  });
+
+  
+  $("#reporttoggle3").on('change',function(){
+    $("#search-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb3 = document.getElementById("reporttoggle3");
+    if (cb3.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb4 = document.getElementById("reporttoggle4");
+      cb4.checked = false;
+      // $("#update-reloader").html("old");
+      // $("#allocate-reloader").html("old");
+
+      $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+    }
+
+  });
+
+  $("#reporttoggle4").on('change',function(){
+    $("#search-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+    var x = document.getElementById("expandtoggler");
+    x.innerHTML = "expand";
+    $('.expand').addClass("dispnone-alt")
+
+    var cb4 = document.getElementById("reporttoggle4");
+    if (cb4.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+      var cb3 = document.getElementById("reporttoggle3");
+      cb3.checked = false;
+      // $("#update-reloader").html("old");
+      // $("#allocate-reloader").html("old");
+
+      // $.ajax({
+      //           url: "{{ url_for('api.fetchtenants') }}",
+      //           type: "get",
+      //           data: {
+      //             propid:  $("#prop_identifier").text(),
+      //             target:"old"
+      //           },
+      //           success: function(response) {
+                  
+      //             $("#search-result-view").html(response);
+      //           }
+      //         });
+    }
+
+  });
+
+</script>
+
+
+<script>
+  $("#editTenantModal").on('shown.bs.modal', function(){
+    $(".multisave").empty();
+    $(".accesssms").empty();
+    $("#edittenant").removeClass("dispnone");
+    $("#edittenantbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.updatetenant') }}",
+      type: "get",
+      data: {
+            tenantid: $("#edit_tenant_identifier").text(),
+            target: "nonselfupdate"
+          },
+      success: function(response) {
+        $("#edittenantbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">Error occured, it is being resolved</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+
+<script>
+  $("#edittenant").click(function(){   
+    $("#edittenant").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatetenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                tenant_id: $("#edit_tenant_identifier").text(),
+                name: $("#edit_name").val(),
+                national_id: $("#edit_natid").val(),
+                tel: $("#edit_tel").val(),
+                email: $("#edit_email").val(),
+                multi:$(".multisave").text(),
+                sms:$(".accesssms").text()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+
+          if ($(".accesssms")){
+            $.ajax({
+                  url: "{{ url_for('api.updatetenant') }}",
+                  type: "get",
+                  data: {
+                    tenantid:  $("#tenant_identifier").text(),
+                    target:"tenant sms"
+                  },
+                  success: function(response) {
+                    
+                    $("#smsaccessview").html(response);
+                  }
+                });
+          }
+
+          $(".multisave").empty();
+          $(".accesssms").empty();
+
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            // $('#edittenant').attr('disabled', 'disabled');
+            $('#closeeditTenantModal').click();
+            $('#edittenant').removeClass('btn-success')
+            $('#edittenant').addClass('btn-secondary')
+            $("#edittenant").html("submit")
+          }, 1500);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  target:"tenant details"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#text").keyup(function(){  
+    var empty = false;
+  
+    if ($('#text').val() == "") {
+        empty = true;
+    }
+
+    if (empty) {
+        $('#sendsms').attr('disabled', 'disabled');
+        $('#sendsms').removeClass('btn-success')
+        $('#sendsms').addClass('btn-secondary')
+    } else {
+      $('#sendsms').removeAttr('disabled');
+      $('#sendsms').removeClass('btn-secondary')
+      $('#sendsms').addClass('btn-success')
+    }    
+  });
+  </script>
+
+
+
+<script>
+  $("#sendsms").click(function(){   
+    $("#sendsms").html("sending...")  
+      $.ajax({
+        url: "{{ url_for('api.tenantsms') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                text: $("#text").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $('#sendsms').attr('disabled', 'disabled');
+            $('#sendsms').removeClass('btn-success')
+            $('#sendsms').addClass('btn-secondary')
+            $("#sendsms").html("Send")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+      
+  $("#editBillModal").on('shown.bs.modal', function(){
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text()
+          },
+      success: function(response) {
+        $("#billeditbed").html(response);
+      }
+    });
+  });
+
+</script>
+
+<script>
+  $("#editArrModal").on('shown.bs.modal', function(){
+    $("#editarr").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"editarrears"
+          },
+      success: function(response) {
+        $("#arreditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#arreditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        $("#editarr").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+
+
+<script>
+  $("#editbill").click(function(){   
+    $("#editbill").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent").val(),
+                water: $("#edit_water").val(),
+                garbage: $("#edit_garbage").val(),
+                electricity: $("#edit_electricity").val(),
+                deposit: $("#edit_deposit").val(),
+                agreement: $("#edit_agreement").val(),
+                security: $("#edit_security").val(),
+                fine: $("#edit_penalty").val(),
+                maintenance: $("#edit_maintenance").val(),
+                arrears:""
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                  
+                  $.ajax({
+                    url: "{{ url_for('api.updatebalance') }}",
+                    type: "get",
+                    data: {
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text(),
+                        },
+                    success: function(response) {
+                      $("#tenant-balance").html(response)
+                    }
+                  });
+                }
+              });
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset").click();
+            $("#closeModal").click();
+            $("#editbill").html("update")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#editarr").click(function(){   
+    $("#editarr").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent_arr").val(),
+                water: $("#edit_water_arr").val(),
+                garbage: $("#edit_garbage_arr").val(),
+                security: $("#edit_security_arr").val(),
+                electricity: $("#edit_electricity_arr").val(),
+                agreement: $("#edit_agreement_arr").val(),
+                fine: $("#edit_penalty_arr").val(),
+                deposit: $("#edit_deposit_arr").val(),
+                maintenance: $("#edit_maintenance_arr").val(),
+                target: "editarrears"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+
+          $.ajax({
+            url: "{{ url_for('api.editbill') }}",
+            type: "get",
+            data: {
+                  billid: $("#edit_bill_identifier").text()
+                },
+            success: function(response) {
+              $("#billeditbed").html(response);
+
+
+              $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid:  $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                  
+                  $.ajax({
+                    url: "{{ url_for('api.updatebalance') }}",
+                    type: "get",
+                    data: {
+                            tenantid: $("#tenant_identifier").text(),
+                            ttype: $("#ttype").text()
+                        },
+                    success: function(response) {
+                      $("#tenant-balance").html(response)
+                    }
+                  });
+                }
+              });
+
+            },
+            error: function(xhr) {
+              $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+              $("#editbill").addClass("dispnone");
+              }
+          });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editarr").html("Update")
+            $("#closeArrModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+<script> 
+  $("#tenantClearanceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.tenantclearance') }}",
+      type: "POST",
+      data: {
+            tenant_id: $("#tenant_identifier").text(),
+            runalert:"somestring"
+          },
+      success: function(response) {
+        $("#clearance_notifications").html(response);
+        
+      }
+    });
+  });
+</script>
+
+
+<script>
+  $("#clear_tenant").click(function(){   
+    var cb = document.getElementById("discard_bill");
+        if (cb){
+          if (cb.checked){
+            var discard = "True";
+          }else{
+              var discard = "False";
+          }
+        } else{
+          var discard = "False"
+        }
+
+    $("#clear_tenant").html("Clearing...")  
+      $.ajax({
+        url: "{{ url_for('api.tenantclearance') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                discard_bill: discard
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".dismissmodal").click();
+            $("#clearance_notifications").empty();
+            $("#clear_tenant").html("Clear")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+
+
+
+<script>
+  $(".update-balance").click(function(){   
+    $(".update-balance").html('<i class="fas fa-sync-alt fa-spin ml-2"></i>')
+      $.ajax({
+        url: "{{ url_for('api.updatebalance') }}",
+        type: "get",
+        data: {
+                tenantid: $("#tenant_identifier").text(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $(".update-balance").html('<i class="fas fa-sync-alt text-success ml-2"></i>')
+          $("#tenant-balance").html(response)
+          
+          $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid: $("#tenant_identifier").text(),
+                  ttype: $("#ttype").text(),
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+<script>
+  $('#expand').click(function(){
+    $('.expand').toggleClass("dispnone-alt")
+    tabletoggler();
+  })
+</script>
+
+<script>
+  $("#editPayModal").on('shown.bs.modal', function(){
+    $("#editpay").removeClass("dispnone");
+    $("#arreditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_pay_identifier").text(),
+            target:"editpayments"
+          },
+      success: function(response) {
+        $("#payeditbed").html(response);
+      },
+      error: function(xhr) {
+        // $("#payeditbed").html('<div class="center-btn text-danger mb-3">error</div>');
+        // $(".alert-msgs").html("You are not allowed to edit payments")
+        $("#payeditbed").html("You are not allowed to edit payments")
+
+        $("#editpay").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#editpay").click(function(){   
+    $("#editpay").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_pay_identifier").text(),
+                rent: $("#edit_rent_paid").val(),
+                water: $("#edit_water_paid").val(),
+                garbage: $("#edit_garbage_paid").val(),
+                security: $("#edit_security_paid").val(),
+                electricity: $("#edit_electricity_paid").val(),
+                agreement: $("#edit_agreement_paid").val(),
+                fine: $("#edit_penalty_paid").val(),
+                deposit: $("#edit_deposit_paid").val(),
+                maintenance: $("#edit_maintenance_paid").val(),
+                target: "editpayments"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          // location.reload();
+
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset_alt").click();
+            $("#editpay").html("Update")
+            $("#closePayModal").click();
+          }, 1000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#downloadstatement").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+
+      $("#download_statement")[0].click();
+
+        // setTimeout(function(){
+        //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
+        // },8000);
+    });
+</script>
+

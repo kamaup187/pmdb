@@ -1658,6 +1658,14 @@ clear: both;
     padding: 3px;
     margin: 0px;
   }
+  .ellipsis2 {
+    display: inline-block;
+    width: 90%;
+    height: 10%;
+    padding: 3px;
+    margin: 0px;
+    text-align:left !important;
+  }
   .namebutton {
     text-align: left !important;
     /* border-top: none !important; */
@@ -3035,6 +3043,10 @@ input:checked + .slider:before {
 }
 .hoverr:hover {
   color: rgb(246, 250, 244) !important;
+}
+.hover-text:hover {
+  color: rgb(0, 102, 255) !important;
+  font-size: large;
 }
 
 /* .select-css {

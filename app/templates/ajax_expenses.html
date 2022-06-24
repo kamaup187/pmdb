@@ -18,6 +18,7 @@
         <div class="col-lg-3 no-padding desktop-malaysian">
           <div class="center-btn expense-buttons divjust-end-sm">
               <button type="button" class="btn btn-outline-success expense-btn font-weight-bold small m-1" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus"></i>Add expense</button>
+              <button type="button" class="btn btn-outline-success expense-btn font-weight-bold small m-1" data-toggle="modal" data-target="#inclusionRequestModal"><i class="fas fa-fw fa-plus"></i>remittance</button>
               <button type="button" class="btn btn-outline-info expense-btn small m-1" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus"></i>Deposit refund</button>
           </div>
         </div>
@@ -25,6 +26,7 @@
         <div class="col-lg-12  no-padding mobile-malaysian underline-thin mb-2 mt-2">
           <div class="center-btn divjust-end-sm mb-2">
               <span type="button" class="btn btn-outline-primary font-weight-bold" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus mr-2"></i>add expense</span>
+              <span type="button" class="btn btn-outline-primary font-weight-bold" data-toggle="modal" data-target="#inclusionRequestModal"><i class="fas fa-fw fa-plus mr-2"></i>remittance</span>
               <span type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus-circle mr-2"></i>deposit refund</span>
           </div>
         </div>
@@ -105,7 +107,7 @@
             <div class="bar-alt"></div>
           </div>
             <div id="reqdata" class="table-responsive">
-              <span class="font-weight-bold mr-2 smallify text-danger mt-1">Pending expenses:</span>
+              <span class="font-weight-bold mr-2 smallify text-success mt-1">Approved expenses:</span>
               <!-- <span>
                 <label>
                   <span class="smallify text-gray-500">Recent data only</span>
@@ -345,6 +347,103 @@
                     <div class="divbg">
                       <button id="submitmodalOne" type="button" class="btn btn-outline-secondary btn-sm mt-2" disabled>Submit</button>
                       <button type="button" id="closemodalOne" class="btn btn-outline-danger btn-sm mt-2" data-dismiss="modal">Close</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+
+
+                  </form>
+  
+                </div>
+              </div>
+            </div>
+          </div>
+  
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <div class="modal fade" id="inclusionRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header">
+            <h5 class="modal-title text-xx text-info" id="exampleModalLabel">New remittance</h5>
+          </div>
+          <div class="modal-body">
+            <div class="media mb-2">
+              <div class="media-body">
+  
+                <div class="position-relative">
+                  <form class="" action="" method="POST">
+
+                    <div class="underline-thin">
+
+                    
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Description</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemname2" class="form-control ph" type="text" placeholder="April rent balance">
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Period</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <select class="select-css" id ="month2" required>
+                          <option disabled selected value> Select month </option>
+                          
+                          <option value="January">January</option>
+                          <option value="February">February</option>
+                          <option value="March">March</option>
+                          <option value="April">April</option>
+                          <option value="May">May</option>
+                          <option value="June">June</option>
+                          <option value="July">July</option>
+                          <option value="August">August</option>
+                          <option value="September">September</option>
+                          <option value="October">October</option>
+                          <option value="November">November</option>
+                          <option value="December">December</option>
+                          
+                        </select>
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>                    
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Category</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <select class="select-css" id ="expense_type2" required>
+                          <option disabled selected value> Select below </option>
+
+                          <option value="remittance">Balance remittance</option>
+                          
+                        </select>
+                        <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                      </div>
+                    </div>
+
+
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Amount</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="itemcost2" class="form-control pl-5 ph" type="text" placeholder="Eg. 45,000">
+                        <span class="fa field-icon-two text-info small">Kshs</span>
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                    <div class="divbg">
+                      <button id="submitmodalOne2" type="button" class="btn btn-outline-success btn-sm mt-2">Submit</button>
+                      <button type="button" id="closemodalOne2" class="btn btn-outline-danger btn-sm mt-2" data-dismiss="modal">Close</button>
                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                     </div>
 
@@ -782,6 +881,37 @@
               $('#submitmodalOne').attr('disabled', 'disabled');
               $('#submitmodalOne').addClass('btn-outline-secondary')
               $('#submitmodalOne').removeClass('btn-outline-success')
+       
+              $("#reqdata").html(response);
+              $(".reset").click();
+          }
+      });
+});
+</script>
+
+<script>
+  $("#submitmodalOne2").on('click',function(){
+    $("#barloader-alt").removeClass("dispnone")
+
+    $("#closemodalOne2").click();
+      url2 = "{{ url_for('api.expenses') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              propid:$("#prop_identifier").text(),
+              exp_type:$("#expense_type2").val(),
+              name:$("#itemname2").val(),
+              month:$("#month2").val(),
+              qty:$("#itemqty2").val(),
+              house:"",
+              cost:$("#itemcost2").val(),
+              labour:"",
+              desc:"",
+              run:"expenserequest"
+            },
+            success: function(response) {      
+              $("#barloader-alt").addClass("dispnone")
        
               $("#reqdata").html(response);
               $(".reset").click();

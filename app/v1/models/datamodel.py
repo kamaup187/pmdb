@@ -8,6 +8,11 @@ apartment_table = db.Table('apartment',
     db.Column('apartment_id', db.Integer, db.ForeignKey('apartments.id'))
 )
 
+house_table = db.Table('house',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('house_id', db.Integer, db.ForeignKey('houses.id'))
+)
+
 class UserGroup(db.Model):
     """db model class"""
 
@@ -39,6 +44,8 @@ class Company(db.Model):
     sphone = db.Column(db.VARCHAR)
     description = db.Column(db.String)
 
+    receipt_num = db.Column(db.Integer)
+
     balance = db.Column(db.Float,default=0)
     subscription = db.Column(db.Float,default=0)
     active = db.Column(db.Boolean,default=True)
@@ -52,6 +59,8 @@ class Company(db.Model):
     # comment = db.Column(db.String)
 
     users = db.relationship('User', backref='company',order_by='User.name', cascade="all, delete-orphan")
+    reps = db.relationship('SalesRep', backref='company',order_by='SalesRep.username', cascade="all, delete-orphan")
+
     shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
     groups = db.relationship('CompanyUserGroup', backref='company',order_by='CompanyUserGroup.name', cascade="all, delete-orphan")
@@ -60,7 +69,7 @@ class Company(db.Model):
     payments = db.relationship('ClientPayment', backref='company',order_by='ClientPayment.id', cascade="all, delete-orphan")
     template = db.relationship('TextTemplate',backref='company', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='company',order_by='SentMessages.date', cascade="all, delete-orphan")
-
+    remits = db.relationship('LandlordRemittance',backref='company',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
 
     def __repr__(self):
@@ -137,8 +146,12 @@ class User(db.Model,UserMixin):
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
 
     apartments = db.relationship("Apartment",secondary=apartment_table,backref=db.backref('users'))
+    houses = db.relationship("House",secondary=house_table,backref=db.backref('users'))
+
     expenses = db.relationship('InternalExpense', backref='user', cascade="all, delete-orphan")
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
+    rep = db.relationship('SalesRep',backref='user',uselist=False, cascade="all, delete-orphan")
+
 
     def __repr__(self):
         return self.username
@@ -292,11 +305,59 @@ class Apartment(db.Model):
     messages = db.relationship('InternalMessages',backref='apartment',order_by='InternalMessages.date', cascade="all, delete-orphan")
     reminders = db.relationship('Reminder',backref='apartment',order_by='Reminder.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
+    paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
+    remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
 
 
     def __repr__(self):
         return self.name
+
+
+class PaymentDetail(db.Model):
+    """db model class"""
+
+    __tablename__ = 'paymentdetails'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    paytype = db.Column(db.VARCHAR)
+    nartype = db.Column(db.VARCHAR)
+    mpesapaybill = db.Column(db.VARCHAR)
+    
+    bankname = db.Column(db.VARCHAR)
+    bankbranch = db.Column(db.VARCHAR)
+    bankaccountname = db.Column(db.VARCHAR)
+    bankaccountnumber = db.Column(db.VARCHAR)
+    bankpaybill = db.Column(db.VARCHAR)
+
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+
+    def __repr__(self):
+        return self.paytype
+
+
+class SalesRep(db.Model):
+    """db model class"""
+
+    __tablename__ = 'salesreps'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    name = db.Column(db.VARCHAR,default="Sales Agent")
+    phone = db.Column(db.VARCHAR)
+
+    username = db.Column(db.String)
+    active = db.Column(db.Boolean,default=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    monthly_commission = db.Column(db.Float,default=0)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    sales = db.relationship('MonthlyChargeTwo',backref='rep', cascade="all, delete-orphan")
+    clients = db.relationship('PermanentTenant',backref='rep',order_by='PermanentTenant.date', cascade="all, delete-orphan")
+    
+    def __repr__(self):
+        return str(self.username)
 
 # class Member(db.Model):
 #     """db model class"""
@@ -331,6 +392,8 @@ class HouseCode(db.Model):
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     codename = db.Column(db.String)
 
+    listprice = db.Column(db.Float,default=0)
+
     rentrate = db.Column(db.Float,default=0)
     watercharge = db.Column(db.Float,default=0)
     waterrate = db.Column(db.Float,default=0)
@@ -339,6 +402,7 @@ class HouseCode(db.Model):
     waterrate3 = db.Column(db.Float,default=0)
 
     seweragerate = db.Column(db.Float,default=0)
+    agreementrate = db.Column(db.Float,default=0)
 
     electricityrate = db.Column(db.Float,default=0)
     securityrate = db.Column(db.Float,default=0)
@@ -369,6 +433,8 @@ class House(db.Model):
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     name = db.Column(db.VARCHAR)
+    status = db.Column(db.String, default="available")
+
     description = db.Column(db.String)
     billable = db.Column(db.Boolean,default=True)
     payment_bank = db.Column(db.VARCHAR)
@@ -387,6 +453,7 @@ class House(db.Model):
     elec_readings = db.relationship('ElectricityReading',backref='house', order_by='ElectricityReading.date',cascade="all, delete-orphan")
     charges = db.relationship('Charge',backref='house',order_by='Charge.date', cascade="all, delete-orphan")
     monthlybills = db.relationship('MonthlyCharge',backref='house',order_by='MonthlyCharge.date', cascade="all, delete-orphan")
+    invoices = db.relationship('MonthlyChargeTwo',backref='house', cascade="all, delete-orphan")
     landlordsummaries = db.relationship('LandlordSummary',backref='house',order_by='LandlordSummary.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     payments = db.relationship('Payment',backref='house',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     submissions = db.relationship('Submission',backref='house',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
@@ -571,12 +638,29 @@ class PermanentTenant(db.Model):
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     initial_arrears = db.Column(db.Float,default=0)
 
+    negotiated_price = db.Column(db.Float,default=0)
+    plan = db.Column(db.String)
+    deposit = db.Column(db.Float,default=0)
+    deposit2 = db.Column(db.Float,default=0)
+    instalment = db.Column(db.Float,default=0)
+    num_instalment = db.Column(db.Float,default=0)
+    contracts_url = db.Column(db.VARCHAR)
+
+    checkin = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+
     multiple_houses =  db.Column(db.Boolean,default=False)
-    tenant_type = db.Column(db.String,default="owner")
+    tenant_type = db.Column(db.String,default="resident")
+    status = db.Column(db.String,default="Booked")
+    resident_type = db.Column(db.String,default="normal")
+    classtype = db.Column(db.String,default="investor")
+
     # cleared = db.Column(db.Boolean,default=False)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+    rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
+
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
@@ -587,6 +671,8 @@ class PermanentTenant(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='ptenant',order_by='TenantRequest.date', cascade="all, delete-orphan")
     messages = db.relationship('InternalMessages',backref='ptenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='ptenant',order_by='SentMessages.date', cascade="all, delete-orphan")
+    invoices = db.relationship('MonthlyChargeTwo',backref='tenant',cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+
 
 
 
@@ -638,6 +724,31 @@ class Tenant(db.Model):
 
     def __repr__(self):
         return self.name
+
+
+class TenantDeposit(db.Model):
+    """db model class"""
+
+    __tablename__ = 'tenantdeposits'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+
+    rentdep = db.Column(db.Float,default=0)
+    waterdep = db.Column(db.Float,default=0)
+    elecdep = db.Column(db.Float,default=0)
+    description = db.Column(db.String,default="unrefunded")
+
+    total = db.Column(db.Float,default=0)
+
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    def __repr__(self):
+        strhouse = str(self.id)
+
+        return strhouse
 
 class Occupancy(db.Model):
     """
@@ -748,6 +859,46 @@ class MonthlyCharge(db.Model):
         strhouse = str(house)
         # return str(self.total_bill)
         return strhouse
+
+class MonthlyChargeTwo(db.Model):
+    """db model class"""
+
+    __tablename__ = 'monthlychargestwo'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    total_amount = db.Column(db.Float, nullable=False,default=0) #expected full amount
+    deposit = db.Column(db.Float,default=0)
+    method = db.Column(db.String, default="partial")
+    plans = db.Column(db.Integer, default=1) #number of days (7,14,30)
+    plan_counter = db.Column(db.Integer, default=1) #decrement plan to zero then reset to original plan
+    number_instalments = db.Column(db.Integer, default=1) #number of instalments
+    remaining_number_instalments = db.Column(db.Integer, default=1) #number of remaining instalments
+    payment_stage = db.Column(db.Integer, default=1) #paystage/number of instalments
+
+    instalment = db.Column(db.Float,default=0)
+    bbf = db.Column(db.Float,default=0)
+    bill = db.Column(db.Float,default=0)
+    paid = db.Column(db.Float,default=0)
+    bcf = db.Column(db.Float,default=0)
+    cpaid = db.Column(db.Float,default=0)
+    cbal = db.Column(db.Float,default=0)
+    sms_invoice = db.Column(db.String,default="pending")
+
+    date = db.Column(db.DateTime,default=db.func.current_timestamp())
+    pay_date = db.Column(db.DateTime,default=db.func.current_timestamp())
+    state = db.Column(db.String,default="initial")
+
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+    ptenant_id = db.Column(db.Integer,db.ForeignKey(PermanentTenant.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
+
+
+    def __repr__(self):
+        name = Tenant.query.filter_by(id=self.tenant_id).first()
+        tenant = str(name)
+        return tenant
 
 # class Test(db.Model):
 #     """db model class"""
@@ -920,6 +1071,7 @@ class Payment(db.Model):
     paymode = db.Column(db.String)
     # ref_number = db.Column(db.VARCHAR,unique=True)
     ref_number = db.Column(db.VARCHAR)
+    receipt_num = db.Column(db.Integer)
     rand_id = db.Column(db.VARCHAR)
     description = db.Column(db.String)
     payment_name = db.Column(db.String)
@@ -1011,6 +1163,46 @@ class SplitPayment(db.Model):
         rep = self.id
         data = str(rep)
         return data
+
+
+class LandlordRemittance(db.Model):
+    """db model class"""
+
+    __tablename__ = 'landlordremittances'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    code = db.Column(db.VARCHAR)
+    landlord = db.Column(db.VARCHAR)
+    ll_balbf = db.Column(db.Float,default=0.0)
+
+    t_balbf = db.Column(db.Float,default=0.0)
+    rent = db.Column(db.Float,default=0.0)
+    expected = db.Column(db.Float,default=0.0)
+    actual = db.Column(db.Float,default=0.0)
+    t_balcf = db.Column(db.Float,default=0.0)
+
+    commission = db.Column(db.Float,default=0.0)
+
+    utilities = db.Column(db.Float,default=0.0)
+    deposit = db.Column(db.Float,default=0.0)
+
+    remitted = db.Column(db.Float,default=0.0)
+    ratio = db.Column(db.Float,default=0.0)
+    
+    ll_balcf = db.Column(db.Float,default=0.0)
+    agent = db.Column(db.Float,default=0.0)
+
+    status = db.Column(db.String, default="unremitted")
+
+    date_remitted = db.Column(db.DateTime, default=db.func.current_timestamp())
+    period = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    apartment_id = db.Column(db.Integer,db.ForeignKey(Apartment.id))
+    company_id = db.Column(db.Integer,db.ForeignKey(Company.id))
+
+    def __repr__(self):
+        return str(self.id)
+
 
 class ClientPayment(db.Model):
     """db model class"""
@@ -1117,6 +1309,31 @@ class CtoB(db.Model):
 
     status = db.Column(db.String,default="unclaimed")
     # tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+
+
+class BankData(db.Model):
+    """class"""
+
+    __tablename__ = 'banksdata'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    username = db.Column(db.VARCHAR)
+    password = db.Column(db.VARCHAR)
+    billNumber = db.Column(db.VARCHAR)
+    billAmount = db.Column(db.Float)
+    customerRefNumber = db.Column(db.VARCHAR)
+    bankReference = db.Column(db.VARCHAR)
+    transParticular = db.Column(db.VARCHAR)
+    paymentMode = db.Column(db.VARCHAR)
+    post_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    transDate = db.Column(db.VARCHAR)
+    phoneNumber = db.Column(db.VARCHAR)
+    debitAccount = db.Column(db.VARCHAR)
+    debitCustName = db.Column(db.VARCHAR)
+    dataType = db.Column(db.VARCHAR)
+
+
+    status = db.Column(db.String,default="unclaimed")
 
 class MpesaRequest(db.Model):
     """db model class"""

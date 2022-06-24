@@ -6,6 +6,8 @@
       <span id="prop_identifier" class="dispnone"></span>
       <span id="targeturl" class="dispnone"></span>
       <span id="c2bitem" class="dispnone"></span>
+      <span id="c2bitem_id" class="dispnone"></span>
+
 
     
       <div class="card mb-2 mt-1">
@@ -184,7 +186,7 @@
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
             </div>
-            <span id="thouse"></span><span id="tname"></span>
+            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span>
           </div>
           </div>
           <div class="modal-body pt-0">
@@ -194,18 +196,18 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
                       <fieldset class="mb-2">
-                        <legend class="legend">Select tenant:</legend>
+                        <legend class="legend">Select resident:</legend>
 
                         <div id="prop_selector" class="form-group input-icons mt-0 dispnone">
                           <select class="select-css" id ="select_prop" >
-                            <option disabled selected value> -- apartment? -- </option>
+                            <option disabled selected value> -- property? -- </option>
                             {% for o in proplist %}
                             <option value="{{ o }}">{{ o }}</option>
                             {% endfor %}
                           </select>
                         </div>
 
-                        <div class="form-group input-icons mt-0">
+                        <div id="house_selector" class="form-group input-icons mt-0">
                           <select class="select-css" id ="select_house" >
                             <option disabled selected value> -- loading -- </option>
                             {% for o in houselist %}
@@ -214,10 +216,24 @@
                           </select>
                         </div>
 
-                        <div id="tenantbed" class="center-btn smallify mb-2 text-info"></div>
+                        <div id="confirm_details" class="text-black ms-3 ml-3 form-group mb-0 dispnone">
+                          loading...
+                        </div>
 
-                        <div class="divbg form-group x-smallify mb-0">
-                          <span class="text-danger">
+                        <div id="tenantbed" class="center-btn mb-2 text-info"></div>
+
+                        <div class="ms-3 ml-3 form-group mb-0">
+
+
+                          <div class="mb-1">
+                            <input type="checkbox" name="" id="diffperiod" checked>
+                            <label class="mr-3 me-3 text-danger" for="diffperiod">{{current_month}} payment</label>
+                            <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose month..." readonly />
+                            
+                          </div>
+
+
+                          <!-- <span class="text-danger">
                             Prepayment?:
                           </span>
                           
@@ -229,23 +245,27 @@
                           <span class="">
                             <input type="radio" id="paytype2" class="check-bt" name="paytype" value="next" disabled>
                             <label for="paytype2">Yes</label> 
-                          </span>
+                          </span> -->
                         </div>
 
-                        <div class="divbg form-group x-smallify">
+                        <div class="ms-3 ml-3 form-group">
                           <span class="text-danger">
                             Notify tenant by:
                           </span>
+
+                          <div>
+                            <span class="">
+                              <input type="checkbox" id="notifysms" class="check-bt" name="chargetype1" value="Rent" checked>
+                              <label for="notifysms">Sms</label>
+                            </span>
+            
+                            <span class="">
+                              <input type="checkbox" id="notifyemail" class="check-bt" name="chargetype2" value="water">
+                              <label for="notifyemail">Email</label> 
+                            </span>
+                          </div>
                           
-                          <span class="">
-                            <input type="checkbox" id="notifysms" class="check-bt" name="chargetype1" value="Rent" checked>
-                            <label for="notifysms">Sms</label>
-                          </span>
-          
-                          <span class="">
-                            <input type="checkbox" id="notifyemail" class="check-bt" name="chargetype2" value="water">
-                            <label for="notifyemail">Email</label> 
-                          </span>
+   
                         </div>
 
 
@@ -365,6 +385,11 @@
                           <span class="spanwidth">
                             <input type="radio" id="bank6" class="check-btn ml-md-3" name="bank" value="Unaitas">
                             <label for="bank6">Unaitas</label>
+                          </span>
+
+                          <span class="spanwidth">
+                            <input type="radio" id="bank7" class="check-btn ml-md-3" name="bank" value="Family">
+                            <label for="bank7">Family</label>
                           </span>
                         </div>
                       </div>
@@ -794,6 +819,31 @@
 
 
 <script>
+
+
+  $("#billdatepicker").datepicker({
+    autoclose: true,
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+
+
+  $('#diffperiod').change(function () {
+    if (this.checked) {
+      $("#billdatepicker").addClass("dispnone")
+      $("#billdatepicker").val("")
+    }
+    else {
+      $("#billdatepicker").removeClass("dispnone")
+      $("#billdatepicker").val("")
+    }
+  });
+</script>
+
+
+<script>
     // This script displays alerts and tenant name before clearance
     $("#addPaymentModal2").on('shown.bs.modal', function () {
 
@@ -804,17 +854,17 @@
         });
       });
 
-      if ($("#ctb_item_amount").text()) {
-        $("#prop_selector").removeClass("dispnone")
-      }
+      // if ($("#ctb_item_amount").text()) {
+      //   $("#prop_selector").removeClass("dispnone")
+      // }
 
-      if ($("#ctb_item_house").text()) {
-        $("#thouse").text( " >> "+$("#ctb_item_house").text())
-      }
+      // if ($("#ctb_item_house").text()) {
+      //   $("#thouse").text( " >> "+$("#ctb_item_house").text())
+      // }
 
-      if ($("#ctb_item_name").text()) {
-        $("#tname").text(" ("+$("#ctb_item_name").text()+")")
-      }
+      // if ($("#ctb_item_name").text()) {
+      //   $("#tname").text(" ("+$("#ctb_item_name").text()+")")
+      // }
 
       $.ajax({
         url: "{{ url_for('api.receivepayment') }}",
@@ -837,6 +887,10 @@
             success: function (response) {
               $("#propname").html(response);
 
+              if ($("#ctb_item_amount").text()) {
+                    $("#prop_selector").removeClass("dispnone")
+                  }
+
               $.ajax({
                 url: "{{ url_for('api.receivepayment') }}",
                 type: "get",
@@ -848,19 +902,27 @@
                 success: function (response) {
                   $("#select_house").html(response);
 
-                  $.ajax({
-                    url: "{{ url_for('api.receivepayment') }}",
-                    type: "get",
-                    data: {
-                      propid: $("#prop_identifier_main").text(),
-                      propname:$("#select_prop").val(),
-                      target: "period-disable"
-                    },
-                    success: function (response) {
-                      $("#select_period").html(response);
 
-                    }
-                  });
+                  if ($("#ctb_item_house").text()) {
+                    $("#thouse").text(" >> " + $("#ctb_item_house").text())
+                  }
+
+                  if ($("#ctb_item_name").text()) {
+                    $("#tname").text(" (" + $("#ctb_item_name").text() + ")")
+                  }
+                  // $.ajax({
+                  //   url: "{{ url_for('api.receivepayment') }}",
+                  //   type: "get",
+                  //   data: {
+                  //     propid: $("#prop_identifier_main").text(),
+                  //     propname:$("#select_prop").val(),
+                  //     target: "period-disable"
+                  //   },
+                  //   success: function (response) {
+                  //     $("#select_period").html(response);
+
+                  //   }
+                  // });
 
                 }
               });
@@ -958,6 +1020,9 @@
   
   </script>
 
+
+
+
 <script>
   // This script displays alerts and tenant name before clearance
   $("#select_house").on('change',function(){
@@ -978,10 +1043,12 @@
             propid: $("#prop_identifier_main").text(),
             propname:$("#select_prop").val(),
             house: $("#select_house").val(),
+            cbid:$("#c2bitem_id").text(),
+            payperiod:$("#billdatepicker").val(),
             target:"amount due"
           },
       success: function(response) {
-        if (response.split(" ")[0] == "<input"){
+        if (response.split(" ")[0] == "<input") {
           $("#totaldue").html(response);
           $("#tenantbed").empty();
 
@@ -989,97 +1056,60 @@
             url: "{{ url_for('api.receivepayment') }}",
             type: "get",
             data: {
-                  propid: $("#prop_identifier_main").text(),
-                  propname:$("#select_prop").val(),
-                  house: $("#select_house").val(),
-                  paidamount:$("#paidamount").val(),
-                  target:"breakdown"
-                },
-            success: function(response) {
+              propid: $("#prop_identifier_main").text(),
+              propname: $("#select_prop").val(),
+              house: $("#select_house").val(),
+              cbid:$("#c2bitem_id").text(),
+              payperiod:$("#billdatepicker").val(),
+              paidamount: $("#paidamount").val(),
+              target: "breakdown"
+            },
+            success: function (response) {
               $("#billbreakdown").html(response);
 
-
-
-              //Disable this in futute, say May 2022
               $.ajax({
-                url: "{{ url_for('api.editbill') }}",
-                type: "POST",
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
                 data: {
-                        billid: $("#edit_bill_identifier").text(),
-                        rent:"",
-                        water:"",
-                        garbage:"",
-                        security:"",
-                        electricity:"",
-                        agreement:"",
-                        fine:"",
-                        deposit:"",
-                        maintenance:"",
-                        arrears:""
-                    },
-                success: function(response) {
-                  $(".alert-msgs").html(response);
-                  // location.reload();
-                  $.ajax({
-                    url: "{{ url_for('api.receivepayment') }}",
-                    type: "get",
-                    data: {
-                          propid: $("#prop_identifier_main").text(),
-                          propname:$("#select_prop").val(),
-                          house: $("#select_house").val(),
-                          paidamount:$("#paidamount").val(),
-                          target:"breakdown"
-                        },
-                    success: function(response) {
-                      $("#billbreakdown").html(response);
+                  propid: $("#prop_identifier_main").text(),
+                  propname: $("#select_prop").val(),
+                  house: $("#select_house").val(),
+                  house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
+                  payperiod:$("#billdatepicker").val(),
+                  target: "amount due"
+                },
+                success: function (response) {
+                  $("#totaldue").html(response);
 
-                      $.ajax({
-                        url: "{{ url_for('api.receivepayment') }}",
-                        type: "get",
-                        data: {
-                              propid: $("#prop_identifier_main").text(),
-                              propname:$("#select_prop").val(),
-                              house: $("#select_house").val(),
-                              house2: $("#house-holder").text(),
-                              target:"amount due"
-                            },
-                        success: function(response) {
-                          $("#totaldue").html(response);
-
-                          if ($("#ctb_item_amount").text()){
-                            $("#paidamount").val($("#ctb_item_amount").text())
-                            $('#paidamount').keyup();
-                            $("#bill_ref").val($("#ctb_item_ref").text())
-                          }
+                  if ($("#ctb_item_amount").text()) {
+                    $("#paidamount").val($("#ctb_item_amount").text())
+                    $('#paidamount').keyup();
+                    $("#bill_ref").val($("#ctb_item_ref").text())
+                  }
 
 
-                          if ($("#ctb_item_ref").text()) {
-                            var paymodeRadio = $('input:radio[name=paymode]');
-                            if (paymodeRadio.is(':checked') === false) {
-                              console.log("working yeeee")
-                              paymodeRadio.prop('checked', true);
-                              paymodeRadio.change();
-                            } else {
-                              console.log("not workin ffffff")
-                              // do nothing
-                            }
-                          } else {
-                            console.log("kubaad")
-                          }
-                          
-                        }
-                      });
-
-                      }
-                    });
-
+                  if ($("#ctb_item_ref").text()) {
+                    var paymodeRadio = $('input:radio[name=paymode]');
+                    if (paymodeRadio.is(':checked') === false) {
+                      console.log("working yeeee")
+                      paymodeRadio.prop('checked', true);
+                      paymodeRadio.change();
+                    } else {
+                      console.log("not workin ffffff")
+                      // do nothing
+                    }
+                  } else {
+                    console.log("kubaad")
+                  }
 
                 }
               });
-              //end of temporary function
 
-              }
-            });
+            }
+          });
+            
+          
 
         }else{
           $("#tenantbed").html(response);
@@ -1099,11 +1129,80 @@
 
 
 <script>
+  $("#billdatepicker").on('change', function(){
+    $("#billbreakdown").html(
+          '<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>'
+          );
+
+    if ($("#billdatepicker").val()) {
+
+
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier_main").text(),
+          propname: $("#select_prop").val(),
+          house: $("#select_house").val(),
+          cbid:$("#c2bitem_id").text(),
+          payperiod: $("#billdatepicker").val(),
+          target: "amount due"
+        },
+        success: function (response) {
+          if (response.split(" ")[0] == "<input") {
+            $("#totaldue").html(response);
+            $("#tenantbed").empty();
+
+            $.ajax({
+              url: "{{ url_for('api.receivepayment') }}",
+              type: "get",
+              data: {
+                propid: $("#prop_identifier_main").text(),
+                propname: $("#select_prop").val(),
+                house: $("#select_house").val(),
+                cbid:$("#c2bitem_id").text(),
+                payperiod: $("#billdatepicker").val(),
+                paidamount: $("#paidamount").val(),
+                target: "breakdown"
+              },
+              success: function (response) {
+                $("#billbreakdown").html(response);
+              }
+            });
+
+          } else {
+            $("#tenantbed").html(response);
+            // $("#totaldue").html('fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>');
+            $("#total_due").val('0.0');
+
+          }
+          // $("#fieldset2").removeClass("dispnone")
+
+        },
+        error: function (xhr) {
+          $("#tenantbed").html('<div class="center-btn text-danger mb-3">House not available in the selected apartment</div>');
+        }
+      });
+    } else{
+      alert("lolololo")
+    }
+  })
+</script>
+
+
+<script>
   $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
     $("#tenantbed").empty();
     $("#billbreakdown").empty();
     $("#fieldset2").addClass("dispnone")
     $("#totaldue").empty();
+    $("#c2bitem").empty();
+    $("#thouse").addClass("dispnone");
+    $("#thouse").text("loading...")
+
+    $("#house_selector").removeClass("dispnone")
+    $("#confirm_details").addClass("dispnone")
+
   });
 </script>
 
@@ -1279,14 +1378,15 @@
             data: {
                 propid: $("#prop_identifier_main").text(),
                 propname:$("#select_prop").val(),
-                cbid:$("#c2b_identifier").text(),
+                cbid:$("#c2bitem_id").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
                 chargetype1:"rent",
                 bank:$("input[name=bank]:checked").val(),
                 sms:notifysms,
                 email:notifyemail,
-                month:$("input[name=paytype]:checked").val(),
+                // month:$("input[name=paytype]:checked").val(),
+                payperiod:$("#billdatepicker").val(),
                 date:$("#pay-date").val(),
                 time:$("#pay-time").val(),
 
@@ -1310,6 +1410,7 @@
                 $('#paybtn_alt').addClass("dispnone")
                 // $('#pay-date').attr("type","text")
                 $(".reset").click();
+                $('#billdatepicker').addClass("dispnone")
                 // $(".closemodal").click();
 
                 // $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
@@ -1399,7 +1500,7 @@
             },
             error: function(xhr) {
               $('#paybtn_alt').html('Submit');
-              alert("Please select tenant before proceeding");
+              alert("Please select tenant/resident before proceeding");
         }
         });
   });
@@ -1430,6 +1531,7 @@
                 propid: $("#prop_identifier_main").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
+                cbid: $("#cb2item_id").text(),
                 chargetype1:"rent",
                 bank:$("input[name=bank]:checked").val(),
                 sms:notifysms,
@@ -1488,7 +1590,7 @@
             },
             error: function(xhr) {
               $('#paybtn_alt').html('Submit');
-              alert("Please select tenant before proceeding");
+              alert("Please select tenant/resident before proceeding");
         }
         });
   }
@@ -1621,6 +1723,7 @@
                   propid: $("#prop_identifier_main").text(),
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount:$("#paidamount").val(),
                   target:"breakdown"
                 },
@@ -1635,6 +1738,7 @@
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
                       house2: $("#house-holder").text(),
+                      cbid:$("#c2bitem_id").text(),
                       target:"amount due"
                     },
                 success: function(response) {
@@ -1697,6 +1801,7 @@
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
                   house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount: $("#paidamount").val(),
                   target: "breakdown"
                 },
@@ -1710,6 +1815,7 @@
                       propid: $("#prop_identifier_main").text(),
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
+                      cbid:$("#c2bitem_id").text(),
                       target: "amount due"
                     },
                     success: function (response) {
@@ -1773,6 +1879,7 @@
                   propname:$("#select_prop").val(),
                   house: $("#select_house").val(),
                   house2: $("#house-holder").text(),
+                  cbid:$("#c2bitem_id").text(),
                   paidamount:$("#paidamount").val(),
                   target:"breakdown"
                 },
@@ -1786,6 +1893,7 @@
                       propid: $("#prop_identifier_main").text(),
                       propname:$("#select_prop").val(),
                       house: $("#select_house").val(),
+                      cbid:$("#c2bitem_id").text(),
                       target:"amount due"
                     },
                 success: function(response) {

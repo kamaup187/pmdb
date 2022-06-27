@@ -3,6 +3,12 @@
 {% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
+<span id="propname" class="dispnone">{{prop}}</span>
+<span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="urlpattern" class="dispnone">/rent/statement</span>
+
+
+
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
@@ -19,19 +25,29 @@
                     <span><i class="fas fa-chevron-down ml-3"></i></span>
                   </div>
                 </a>
+                
+                <div class="divjust-end">
+                  {%if prop%}
 
-                <div class="dispnone">
-                  <a class="text-white close-report" href="{{ url_for('api.reports') }}">
-                    <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
-                  </a>
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                  {%endif%}
                 </div>
-{%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
-                </div>
-{%endif%}
                 
 
               </div>

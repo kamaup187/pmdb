@@ -409,6 +409,7 @@ class UserOp(User,Base):
             "editid":UserOp.generate_editid(self),
             "delid":UserOp.generate_delid(self),
             "name":self.name,
+            "username":self.username,
             "tel":self.phone,
             "natid":self.national_id,
             "usercode":self.usercode,
@@ -416,6 +417,7 @@ class UserOp(User,Base):
             "level":self.user_group,
             "int_level":self.user_group_id,
             "group":self.company_user_group,
+            "props":f"{[prop.id for prop in self.apartments]}",
             "company":self.company,
             "status":self.active,
             "date_reg":UserOp.format_date(self)

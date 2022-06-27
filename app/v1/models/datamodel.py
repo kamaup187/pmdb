@@ -306,12 +306,31 @@ class Apartment(db.Model):
     reminders = db.relationship('Reminder',backref='apartment',order_by='Reminder.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
     paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
+    landlordpayments = db.relationship('LandlordPayment',backref='apartment',order_by='LandlordPayment.date',cascade="all, delete-orphan")
+
     remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
 
 
     def __repr__(self):
         return self.name
+
+class LandlordPayment(db.Model):
+    """db model class"""
+
+    __tablename__ = 'landlordpayments'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    arrears = db.Column(db.Float,default=0)
+    amount = db.Column(db.Float,default=0)
+    paid = db.Column(db.Float,default=0)
+    balance = db.Column(db.Float,default=0)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+
+    def __repr__(self):
+        return str(self.id)
 
 
 class PaymentDetail(db.Model):

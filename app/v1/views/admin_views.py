@@ -1024,10 +1024,7 @@ class LinkProperty(Resource):
                 companies = CompanyOp.fetch_all_companies()
                 for company in companies:
                     if not company.name:
-                        latest_set_index = companies.index(company)
-                        print("Popped something")
-                        break
-                companies.pop(latest_set_index)
+                        CompanyOp.delete(company)
             else:
                 companies = [current_user.company]
             return render_template('ajax_multivariable.html',items=companies,placeholder="select company")
@@ -1044,78 +1041,28 @@ class LinkProperty(Resource):
 
         if target == "link":
             company = CompanyOp.fetch_company_by_name(co)
+            ApartmentOp.update_company(prop,company.id)
+            company_users = company.users
+            for i in company_users:
+                ApartmentOp.relate(prop,i)
+                print(i,"user added to ",str(prop))
 
-            agent_obj = None
-
-            co_users = company.users
-            for user in co_users:
-                if user.user_group_id == 3:
-                    agent_obj = user
-                    break
-
-            if agent_obj:
-                ApartmentOp.relate(prop,agent_obj)
-                print(agent_obj,"agent given access to ",prop)
-                UserOp.update_status(agent_obj,True)
-                ApartmentOp.update_agent(prop,agent_obj.username)
-                if prop.agency_managed:
-                    ApartmentOp.update_company(prop,company.id)
-
-                    company_users = company.users
-                    for i in company_users:
-                        if i.user_group_id == 4:
-                            ApartmentOp.relate(prop,i)
-                            print(i,"user added to ",str(prop))
-
-            else:
-                print(prop.agency_managed)
-                if not prop.agency_managed:
-                    ApartmentOp.update_company(prop,company.id)
-                    company_users = company.users
-                    for i in company_users:
-                        if i.user_group_id == 4:
-                            ApartmentOp.relate(prop,i)
-                            print(i,"user added to ",str(prop))
 
         else:
             access = True
             # if current_user.id == 1:
             if access:
-                if prop.agency_managed:
-                    agent_obj = UserOp.fetch_user_by_username(prop.agent_id)
-
-                    ApartmentOp.terminate(prop,agent_obj)
-                    print("Agent terminated from ",prop)
-                    ApartmentOp.update_agent(prop,None)
-
-                    agent_co = agent_obj.company
-                    ApartmentOp.update_company(prop,None)
-
-                    company_users = agent_co.users
-                    for i in company_users:
-                        print("These are users",company_users)
-                        if i.user_group_id == 4:
-                            current_user_apartments = fetch_all_apartments_by_user(i)
-                            if prop in current_user_apartments:
-                                ApartmentOp.terminate(prop,i)
-                                print("user removed from ",prop)
-                            else:
-                                print("User did not have access to", prop)
-                    msg = "Operation complete"
-                    return msg
-                else:
-                    prop_co = CompanyOp.fetch_company_by_id(prop.company_id)
-                    ApartmentOp.update_company(prop,None)
-                    company_users = prop_co.users
-                    for i in company_users:
-                        print("These are users",company_users)
-                        if i.user_group_id == 4:
-                            current_user_apartments = fetch_all_apartments_by_user(i)
-                            if prop in current_user_apartments:
-                                ApartmentOp.terminate(prop,i)
-                                print("user removed from ",prop)
-                            else:
-                                print("User did not have access to", prop)
+                prop_co = CompanyOp.fetch_company_by_id(prop.company_id)
+                ApartmentOp.update_company(prop,None)
+                company_users = prop_co.users
+                for i in company_users:
+                    print("These are users",company_users)
+                    current_user_apartments = fetch_all_apartments_by_user(i)
+                    if prop in current_user_apartments:
+                        ApartmentOp.terminate(prop,i)
+                        print("user removed from ",prop)
+                    else:
+                        print("User did not have access to", prop)
             else:
                 msg = "You do not have permission to terminate"
                 print(msg)

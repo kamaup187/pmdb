@@ -2308,7 +2308,7 @@ class RentStatement(Resource):
             netpay=netpay,
             bills=detailed_bills,
             expenselist=expense_list,
-            paging=page(detailed_bills),
+            paging="portrait",
             props=props,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],

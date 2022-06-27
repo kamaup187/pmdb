@@ -48,11 +48,14 @@
                       <thead>
                         <tr>
                           <th class="text-info font-weight-bold">Name</th>
+                          <th class="text-info font-weight-bold">Username</th>
+
                           <th class="text-info font-weight-bold">Phone</th>
                           <th class="text-info font-weight-bold">Email</th>
                           <th class="text-info font-weight-bold">Id</th>
                           <th class="text-info font-weight-bold">Code</th>
 
+                          <th class="text-info font-weight-bold">Props</th>
                           <th class="text-info font-weight-bold">Level</th>
 
                           <th class="text-info font-weight-bold">Group</th>
@@ -67,11 +70,14 @@
                         {% for item in items%}
                         <tr>
                           <td class="data-cell">{{ item['name'] }}</td>
+                          <td class="data-cell">{{ item['username'] }}</td>
+
                           <td class="data-cell">{{ item['tel'] }}</td>
                           <td class="data-cell">{{ item['email'] }}</td>
                           <td class="data-cell">{{ item['natid'] }}</td>
                           <td class="data-cell">{{ item['usercode'] }}</td>
 
+                          <td class="data-cell">{{ item['props'] }}</td>
                           <td class="data-cell text-gray-700 small">{{ item['int_level'] }}</td>
                           <td class="data-cell text-gray-700 small">{{ item['group'] }}</td>
 

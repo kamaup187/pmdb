@@ -647,8 +647,7 @@ def logo(co):
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
-                # letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
-                letterhead = "../static/img/logos/kiotapay/letterheadd.png"
+                letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
                 sign = ""
             else:

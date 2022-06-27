@@ -4,8 +4,10 @@
 <span id="edit_bill_identifier" class="dispnone"></span>
 <!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
 
-<span id="propname" class="dispnon">{{prop}}</span>
+<span id="propname" class="dispnone">{{prop}}</span>
 <span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="urlpattern" class="dispnone">/landlord/combined</span>
+
 
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
@@ -24,20 +26,27 @@
                   </div>
                 </a>
                 
-                <div>
+                <div class="divjust-end">
                   {%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
-                  </button>
-                </div>
 
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
-                </div>
-{%endif%}
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                  {%endif%}
                 </div>
 
               </div>
@@ -206,7 +215,7 @@
 
                 <div class="hide mb-2">space</div>
 
-                <div class="mb-3">NET PAYABLE</div>
+                <div class="text-black mb-3">NET PAYABLE</div>
               </div>
 
 
@@ -216,15 +225,15 @@
 
                 <div class="mb-3">Kshs {{gross}}</div>
 
-                <div class="mb-1">Kshs {{utilities}}</div>
-                <div class="mb-1">Kshs {{deposits}}</div>
+                <div class="mb-1">Kshs {{utilitiestotal}}</div>
+                <div class="mb-1">Kshs {{deposittotal}}</div>
                 <div class="mb-3">Kshs {{ll_balbf}}</div>
 
                 <div class="mb-1">Kshs {{expenses}}</div>
 
                 <div class="hide mb-2">space</div>
 
-                <div class="mb-3 underline">Kshs {{netpay}}</div>
+                <div class="underline mb-3">Kshs {{netpay}}</div>
               </div>
             </div>
           </div>

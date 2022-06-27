@@ -2646,7 +2646,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         total = rent + bal
         return (f"{total:,}")
 
-    def calculate_total(*args):
+    def calculate_total_alt(*args):
         tot=0.0
         for i in args:
             tot += i
@@ -2919,7 +2919,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
             'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),
             'rent-due':MonthlyChargeOp.fig_format(self.rent_due),
-            'utilities':MonthlyChargeOp.calculate_total(self.water,self.electricity,self.maintenance,self.garbage,self.security),
+            'utilities':MonthlyChargeOp.calculate_total_alt(self.water,self.electricity,self.maintenance,self.garbage,self.security),
             'water':MonthlyChargeOp.fig_format(self.water),
             'garbsec':MonthlyChargeOp.combine_garbsec(self),
             'garbage':self.garbage,

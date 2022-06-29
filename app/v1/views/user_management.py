@@ -1,4 +1,5 @@
 
+from operator import iconcat
 from flask_restful import Resource
 from flask_login import login_user,logout_user
 from flask_login import login_required, current_user
@@ -297,21 +298,30 @@ class Users(Resource):
 
         else:
             users = current_user.company.users
-            if current_user.username.startswith("qc"):
-                kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
-                if kw_user:
-                    users.remove(kw_user)
+
             if current_user.username == "admin":
                 users = fetch_all_users()
 
             user_data = user_details(users)
 
-            userids = get_obj_ids(user_data)
+            user_data_alt = []
+            if current_user.username.startswith("qc"):
+                kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
+                for i in user_data:
+                    if i.username == kw_user.username:
+                        pass
+                    else:
+                        user_data_alt.append(i)
+            else:
+                user_data_alt = user_data
+           
+
+            userids = get_obj_ids(user_data_alt)
 
             return render_template(
                 "ajax_users.html",
                 userids=userids,
-                items=user_data
+                items=user_data_alt
                 )
 
     def post(self):

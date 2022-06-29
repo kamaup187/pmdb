@@ -1000,9 +1000,9 @@ class PropStats(Resource):
         invss = f"{invs}/{num_of_occ}"
 
         if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-            total_collections = "17,500.0"
-            total_bills = "3,629,379.0"
-            total_balances = "3,629,379.0"
+            total_collections = 17,500.0
+            total_bills = 3,629,379.0
+            total_balances = 3,629,379.0
             defaulters = "168"
             invss = "170"
 

@@ -5233,14 +5233,29 @@ class FetchUsers(Resource):
     def get(self):
         com_obj = current_user.company
         users = com_obj.users
+
         if current_user.username.startswith("qc"):
             kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
             if kw_user:
                 users.remove(kw_user)
-        userlist = user_details(users)
-        subids = get_obj_ids(userlist)
 
-        return render_template("ajax_userlist.html",items=userlist,userids=subids)
+        userlist = user_details(users)
+
+
+        userlist_alt = []
+        if current_user.username.startswith("qc"):
+            kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
+            for i in userlist:
+                if i.username == kw_user.username:
+                    pass
+                else:
+                    userlist_alt.append(i)
+        else:
+            userlist_alt = userlist
+
+        subids = get_obj_ids(userlist_alt)
+
+        return render_template("ajax_userlist.html",items=userlist_alt,userids=subids)
 
 class FetchPayments(Resource):
     @login_required

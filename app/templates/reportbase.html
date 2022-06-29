@@ -539,7 +539,7 @@
     <div class="modal-content">
       <div class="indicator"></div>
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Landlord advance payment / Balance</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Landlord advance payment / Balance (<span class="text-danger small">Currently: {{llbal}}</span>)</h5>
       </div>
       <div class="modal-body">
         <div class="media mb-2">
@@ -553,7 +553,7 @@
                 <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Period</span></div>
                 <div class="form-group col-9 col-lg-10 input-icons">
                   <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                    <input id="remit-month" class="form-control ph" type="text" placeholder="-none set-" />
+                    <input id="ll-period" class="form-control ph" type="text" placeholder="-none set-" />
                     <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                   </div>
                 </div>
@@ -562,7 +562,7 @@
               <div class="row">
                 <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Category</span></div>
                 <div class="form-group col-9 col-lg-10 no-paddin input-icons">
-                  <select class="select-css" id ="expense_type2" required>
+                  <select class="select-css" id ="ll-category" required>
                     <option disabled selected value> Select below </option>
 
                     <option value="arrears">Balance owed to landlord</option>
@@ -575,7 +575,7 @@
               <div class="row">
                 <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Amount</span></div>
                 <div class="form-group col-9 col-lg-10 no-paddin input-icons">
-                  <input id="itemcost2" class="form-control pl-5 ph" type="text" placeholder="Eg. 45,000">
+                  <input id="ll-arrears" class="form-control pl-5 ph" type="text" placeholder="Eg. 45,000">
                   <span class="fa field-icon-two text-info small">Kshs</span>
                 </div>
               </div>
@@ -583,7 +583,7 @@
               <div class="row">
                 <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Description</span></div>
                 <div class="form-group col-9 col-lg-10 no-paddin input-icons">
-                  <input id="item-desc" class="form-control ph" type="text" placeholder="E.g Landlord rent balance">
+                  <input id="ll-desc" class="form-control ph" type="text" placeholder="E.g Landlord rent balance">
                   <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
                 </div>
               </div>
@@ -592,7 +592,7 @@
             </div>
 
               <div class="divbg">
-                <button id="submitmodalOne2" type="button" class="btn btn-outline-success btn-sm mt-2">Submit</button>
+                <button id="ll-submit" type="button" class="btn btn-outline-success btn-sm mt-2">Submit</button>
                 <button type="button" id="closemodalOne2" class="btn btn-outline-danger btn-sm mt-2" data-dismiss="modal">Close</button>
                 <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
               </div>
@@ -712,7 +712,7 @@
 
 
 <script>
-  $("#remit-month").datepicker({ 
+  $("#ll-period").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
     format: "mm-yyyy",
@@ -810,6 +810,29 @@
             $("#closeModal").click();
             $("#editbill").html("Update")
           }, 2000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#ll-submit").click(function(){   
+
+      $.ajax({
+        url: "/update/propinfo",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                period: $("#ll-period").val(),
+                category: $("#ll-category").val(),
+                arrears: $("#ll-arrears").val(),
+                desc: $("#ll-desc").val(),
+                target:"set llbal"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
         }
       });
   });

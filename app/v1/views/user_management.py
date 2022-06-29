@@ -308,7 +308,7 @@ class Users(Resource):
             if current_user.username.startswith("qc"):
                 kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
                 for i in user_data:
-                    if i.username == kw_user.username:
+                    if i["username"] == kw_user.username:
                         pass
                     else:
                         user_data_alt.append(i)

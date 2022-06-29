@@ -305,7 +305,7 @@ class Users(Resource):
             user_data = user_details(users)
 
             user_data_alt = []
-            if not current_user.username.startswith("qc"):
+            if current_user.username.startswith("qc"):
                 print("baridi")
                 kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
                 if kw_user:
@@ -317,7 +317,6 @@ class Users(Resource):
                             pass
                         else:
                             user_data_alt.append(i)
-                        print("final list:",user_data_alt)
                 else:
                     user_data_alt = user_data
             else:

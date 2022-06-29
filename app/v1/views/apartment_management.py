@@ -1004,7 +1004,7 @@ class PropStats(Resource):
             total_bills = 3,629,379.0
             total_balances = 3,629,379.0
             defaulters = "168"
-            invss = "170"
+            invss = "170'"
 
         #pass
 

@@ -305,17 +305,23 @@ class Users(Resource):
             user_data = user_details(users)
 
             user_data_alt = []
-            if current_user.username.startswith("qc"):
+            if not current_user.username.startswith("qc"):
+                print("baridi")
                 kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
                 if kw_user:
+                    print("got it",kw_user.username)
                     for i in user_data:
+                        print("here are ises",i["username"],"and kv_user:",kw_user.username)
                         if i["username"] == kw_user.username:
+                            print("yeya")
                             pass
                         else:
                             user_data_alt.append(i)
-                    else:
-                        user_data_alt = user_data
+                        print("final list:",user_data_alt)
+                else:
+                    user_data_alt = user_data
             else:
+                print("barida")
                 user_data_alt = user_data
            
 

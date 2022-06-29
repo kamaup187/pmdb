@@ -1006,6 +1006,8 @@ class PropStats(Resource):
             defaulters = "168"
             invss = "170"
 
+        #pass
+
             
         return Response(render_template(
             'ajax_dashboard_refresh.html',

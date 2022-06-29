@@ -314,7 +314,7 @@ class Users(Resource):
                         else:
                             user_data_alt.append(i)
                     else:
-                        user_data_alt.append(i)
+                        user_data_alt = user_data
             else:
                 user_data_alt = user_data
            

@@ -5252,7 +5252,7 @@ class FetchUsers(Resource):
                     else:
                         userlist_alt.append(i)
             else:
-                userlist_alt.append(i)
+                userlist_alt = userlist
 
         else:
             userlist_alt = userlist

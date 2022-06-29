@@ -583,6 +583,29 @@ class LocationOp(Location,Base):
     def fetch_all_locations():
         return Location.query.order_by(Location.id.asc()).all()
 
+class LandlordPaymentOp(LandlordPayment,Base):
+    """class"""
+    def __init__(self,arrears,amount,paid,balance,apartment_id):
+        self.arrears =arrears
+        self.amount = amount
+        self.paid = paid
+        self.balance = balance
+
+        self.apartment_id = apartment_id
+
+    def fetch_current_llp(propid,month,year):
+        return LandlordPayment.query.filter( extract('month', LandlordPayment.date) == month).filter(extract('year', LandlordPayment.date) == year).filter(LandlordPayment.apartment_id == propid).first()
+
+    def update_arrears(self,arrears):
+        self.arrears = arrears
+        db.session.commit()
+
+    def update_details(self,amount,paid,balance):
+        self.arrears = amount
+        self.paid = paid
+        self.balance = balance
+        db.session.commit()
+
 class PaymentDetailOp(PaymentDetail,Base):
     """class"""
     def __init__(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,apartment_id):

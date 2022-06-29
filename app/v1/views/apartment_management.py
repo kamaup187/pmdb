@@ -2,6 +2,7 @@
 from re import S
 import time
 import os
+from unicodedata import category
 from dateutil.parser import parse
 
 import cloudinary as Cloud
@@ -2567,7 +2568,15 @@ class UpdatePropertyDetails(Resource):
         pass
     def post(self):
 
+        target = request.form.get("target")
+
         prop_id = request.form.get("propid")
+        month = request.form.get("period")
+        category = request.form.get("category")
+        amount = request.form.get("arrears")
+        desc = request.form.get("desc")
+
+
         agreement = request.form.get("agreement")
         commission = request.form.get("commission")
         int_commission = request.form.get("int_commission")
@@ -2593,9 +2602,40 @@ class UpdatePropertyDetails(Resource):
         lbaccnametwo = request.form.get("lbaccnametwo")
         lbaccnotwo = request.form.get("lbaccnotwo")
 
+
         prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
 
-        ApartmentOp.update_prop_details(prop_obj,shortcode,consumer_key,consumer_secret,prop_garb,prop_garb_tel,prop_garbbank,prop_garbacc,prop_bank,prop_accname,prop_acc,lb,lbaccname,lbaccno,lbtwo,lbaccnametwo,lbaccnotwo,agreement,commission,int_commission)
+        if target == "set llbal":
+            month = request.form.get("month")
+
+            if month:
+                datestring = date_formatter_alt(month)
+                target_period = parse(datestring)
+            else:
+                target_period = prop_obj.billing_period
+
+            llp = LandlordPaymentOp.fetch_current_llp(prop_id, target_period.month, target_period.year)
+
+            try:
+                arr = float(amount)
+            except Exception as e:
+                print("ngweee",e)
+                arr = 0.0
+
+            if category == "advance":
+                if arr:
+                    arr = arr*-1
+
+            if llp:
+                LandlordPaymentOp.update_arrears(llp,arr)
+            else:
+                llp = LandlordPaymentOp(0.0,0.0,0.0,0.0,prop_id)
+                llp.save()
+
+            return proceed
+
+
+        # ApartmentOp.update_prop_details(prop_obj,shortcode,consumer_key,consumer_secret,prop_garb,prop_garb_tel,prop_garbbank,prop_garbacc,prop_bank,prop_accname,prop_acc,lb,lbaccname,lbaccno,lbtwo,lbaccnametwo,lbaccnotwo,agreement,commission,int_commission)
 
         return redirect(url_for("api.index"))
 

@@ -1990,7 +1990,7 @@ class CombinedReport(Resource):
         deposittotal = (f"{deposits:,}")
 
         try:
-            ratio = (f"{(totalrentpaid/totalrentdue)/100:,.1f} %")
+            ratio = (f"{(totalrentpaid/totalrentdue)*100:,.1f} %")
         except:
             ratio = f"0.0 %"
 
@@ -2142,12 +2142,12 @@ class RentStatement(Resource):
         else:
             target_period = datetime.datetime.now()
 
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        llp = LandlordPaymentOp.fetch_current_llp(apartment_obj.id, target_period.month, target_period.year)
+
         ##################################################################################################
         house_ids = []
         detailed_bills = []
-
-        paidtotal_sum_members = []
-        bcftotal_sum_members = []
 
         totalbbf = 0.0
         totalrent = 0.0
@@ -2156,7 +2156,6 @@ class RentStatement(Resource):
         totalbcf = 0.0
 
         ###################################################################################################
-        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         db.session.expire(apartment_obj)
 
         monthlybills = apartment_obj.monthlybills
@@ -2173,7 +2172,8 @@ class RentStatement(Resource):
                 totalrent += bill.rent if bill.rent else 0.0
                 
                 totalpaid += bill.rent_paid if bill.rent_paid else 0.0
-                totalbcf += bill.rent_due if bill.rent_due else 0.0
+                if bill.rent_due:
+                    totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
         ###################################################################################################
    
 
@@ -2205,7 +2205,6 @@ class RentStatement(Resource):
 
         paidtotal = (f"{totalpaid:,}")
 
-        totalbcf = sum_positive_values(bcftotal_sum_members)
         bcftotal = (f"{totalbcf:,}")
 
         expense_list = []
@@ -2263,10 +2262,8 @@ class RentStatement(Resource):
 
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
-
-        ll = 0.0
             
-        raw_netpay = netrent - commission - expenses_amount - loan + remittances - ll
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances + llp.arrears if llp else 0.0
 
         netpay = (f"{raw_netpay:,.1f}")
 
@@ -2277,16 +2274,21 @@ class RentStatement(Resource):
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
         try:
-            ratio = (f"{(totalpaid/totalbill)/100:,.1f} %")
+            ratio = (f"{(totalpaid/totalbill)*100:,.1f} %")
         except:
             ratio = f"0.0 %"
+
+        if llp:
+            llbal = f"Kes {llp.arrears:.1f}"
+        else:
+            llbal = "Kes 0.0"
 
         
         template_vars = {
             "code":apartment_obj.id,
             "name":selected_apartment,
             "landlord":"",
-            "ll_bbf":0.0,
+            "ll_bbf":llbal,
 
             "tnt_bbf":totalbbf,
             "rent":totalrent,
@@ -2337,6 +2339,7 @@ class RentStatement(Resource):
             netpay=netpay,
             bills=detailed_bills,
             expenselist=expense_list,
+            llbal=llbal,
             paging="portrait",
             props=props,
             apartment_name=selected_apartment,

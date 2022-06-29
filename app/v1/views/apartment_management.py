@@ -998,19 +998,6 @@ class PropStats(Resource):
             defaulters = "--"
 
         invss = f"{invs}/{num_of_occ}"
-
-        if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-            total_collections = 17,500.0
-            total_bills = 3,629,379.0
-            total_balances = 3,629,379.0
-            defaulters = "168"
-            invss = "160"
-
-        else:
-            print("missing target")
-
-        #pass
-
             
         return Response(render_template(
             'ajax_dashboard_refresh.html',
@@ -1287,7 +1274,7 @@ class Dashboard(Resource):
             month_str=f'{get_str_mnth(period.month)} invoices'
 
             if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_bills = 3,629,379.0
+                total_bills = 3629379.0
                 invs = "160"
 
             return [f'Kes {total_bills:,.1f}',invs,month_str]
@@ -1316,7 +1303,7 @@ class Dashboard(Resource):
                 ratio = 0
 
             if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_collections = 17,500.0
+                total_collections = 17500.0
                 ratio = 0.0
 
 
@@ -1347,7 +1334,7 @@ class Dashboard(Resource):
                 pass
 
             if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_balances = 3,629,379.0
+                total_balances = 3629379.0
                 defaulters = "168"
 
             return [f'Kes {total_balances:,.1f}',f'{defaulters}']

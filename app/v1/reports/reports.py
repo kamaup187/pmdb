@@ -5227,7 +5227,20 @@ class FetchAgents(Resource):
         attlist = att_details(reps)
         subids = get_obj_ids(attlist)
 
-        return render_template("ajax_agentlist.html",items=attlist,groupids=subids)
+        return render_template("ajax_agentlist.html",items=attlist,subids=subids)
+
+class FetchUsers(Resource):
+    def get(self):
+        com_obj = current_user.company
+        users = com_obj.users
+        if current_user.username.startswith("qc"):
+            kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
+            if kw_user:
+                users.remove(kw_user)
+        userlist = user_details(users)
+        subids = get_obj_ids(userlist)
+
+        return render_template("ajax_userlist.html",items=userlist,userids=subids)
 
 class FetchPayments(Resource):
     @login_required

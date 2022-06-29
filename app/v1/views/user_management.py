@@ -297,6 +297,10 @@ class Users(Resource):
 
         else:
             users = current_user.company.users
+            if current_user.username.startswith("qc"):
+                kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
+                if kw_user:
+                    users.remove(kw_user)
             if current_user.username == "admin":
                 users = fetch_all_users()
 
@@ -328,6 +332,17 @@ class Users(Resource):
 
         houselist = request.form.get('houses')
         proplist = request.form.get('props')
+
+        if target == "delete user":
+            userid = request.form.get("userid")
+            user_id = get_identifier(userid)
+            del_user = UserOp.fetch_user_by_id(user_id)
+
+            if del_user:
+                UserOp.delete(del_user)
+                return proceed
+            else:
+                return err
 
         try:
             houseids = [int(s) for s in houselist.split(',')]

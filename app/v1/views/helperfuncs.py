@@ -55,6 +55,11 @@ mailsender = os.getenv('G_ACCOUNT')
 
 configuration = os.getenv('APP_SETTINGS')
 
+if configuration == "development":
+    localenv = True
+else:
+    localenv = False
+
 typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'

@@ -1,5 +1,6 @@
 # from app.v1.models import datamodel
 # import time
+from curses import raw
 import os
 
 import cloudinary as Cloud
@@ -497,6 +498,7 @@ class DeleteReceipt(Resource):
 class AllProperties(Resource):
     def get(self):
         target =  request.args.get("target")
+
         if target == "prop update":
             propid = request.args.get("propid")
             prop_id = get_identifier(propid)
@@ -529,21 +531,24 @@ class AllProperties(Resource):
 
             return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
 
-        if current_user.username.startswith("xqc"):
-            raw_props = ApartmentOp.fetch_all_apartments()
+        if current_user.username.startswith("qc") or localenv:
+            raw_props = ApartmentOp.fetch_all_unlinked_apartments()
         else:
-            raw_props = fetch_all_apartments_by_user(current_user)
+            raw_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
 
-        if target != "tenants" and target != "tenant list":
-            new_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
-            for i in new_props:
-                raw_props.append(i)
+        raw_props2 = current_user.company.props
 
-        props = remove_dups(raw_props)
+        if localenv:
+            raw_props3 = ApartmentOp.fetch_all_apartments()
+            raw_props4 = raw_props + raw_props2 + raw_props3
+        else:
+            raw_props4 = raw_props + raw_props2
 
+        props = remove_dups(raw_props4)
+        
+        
         items = []
         prop_ids = []
-        prop_names = []
         tnt_disp = "dispnone"
 
         template = "ajax_allprops_detail.html"
@@ -561,8 +566,6 @@ class AllProperties(Resource):
                 occupancy = 0
                 
             occ = f"{occupancy:,.0f}"
-            agent_user = UserOp.fetch_user_by_username(prop.agent_id)
-            agent = agent_user.company if agent_user else "N/A"
 
             if target == "tenants":
                 template = "ajax_prop_tenants.html" 
@@ -607,7 +610,7 @@ class AllProperties(Resource):
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
                     'owner':prop.owner.name,
-                    'agent':agent,
+                    'company':prop.company.name if prop.company else "N/A",
                     'houses':houses,
                     'tenants':tenants,
                     'ptenants':ptnts,
@@ -616,7 +619,6 @@ class AllProperties(Resource):
                     'status':"active",
                     'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
                     'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",
-                    'client-disp':"" if current_user.id == 1 else "dispnone",
                     # 'unlink-disp':"dispnone" if not prop.company_id else "",
                     'createdby':prop.user_id,
                 }
@@ -636,7 +638,7 @@ class AllProperties(Resource):
         propids = ','.join(map(str, prop_ids))
 
         access = {
-            'client-disp':"" if current_user.id == 1 else "dispnone"
+            'client-disp':"" if current_user.id == 1 else ""
         }
 
 
@@ -909,17 +911,22 @@ class AddProp(Resource):
             owner = current_user.company.name.title()
         
 
-        tel = request.form.get("tel")
+        tel = request.form.get("tel") #TO DO, UPDATE APARTMENT OWNER IN THE APARTMENT TABLE
         if not tel:
+            print("###############################################")
             tel = "N/A"
             landlord = OwnerOp(owner,tel,None,"N/A",current_user.id)
             landlord.save()
+            print("###############################################")
+
 
         else:
             landlord  = OwnerOp.fetch_owner_by_phone(tel)
             if not landlord:
+                print("###############################################")
                 landlord = OwnerOp(owner,tel,None,"N/A",current_user.id)
                 landlord.save()
+                print("###############################################")
 
         region = request.form.get("region")
         if not region:
@@ -927,8 +934,12 @@ class AddProp(Resource):
 
         location = LocationOp.fetch_location(region.title())
         if not location:
+
+            print("###############################################")
             location = LocationOp(region.title(),None)
             location.save()
+            print("###############################################")
+
 
 
         if not agency:
@@ -1094,9 +1105,12 @@ class EditProp(Resource):
             raw_propid = request.form.get("editid")
             propid = get_identifier(raw_propid)
 
-        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality"):
+        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv:
             prop = ApartmentOp.fetch_apartment_by_id(propid)
-            ApartmentOp.delete(prop)
-            return "Property removed successfully"
+            if prop.company_id:
+                return "You are not allowed to perform this operation"
+            else:
+                ApartmentOp.delete(prop)
+                return "Property removed successfully"
         else:
             return "You are not allowed to perform this operation"

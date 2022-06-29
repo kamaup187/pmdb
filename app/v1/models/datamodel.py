@@ -209,7 +209,7 @@ class Owner(db.Model):
     apartments = db.relationship("Apartment",backref=db.backref('owner'),cascade="all, delete-orphan")
 
     def __repr__(self):
-        return self.uniquename
+        return self.name
 
 class BugsReport(db.Model):
     """bugs db model class"""

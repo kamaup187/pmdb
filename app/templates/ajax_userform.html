@@ -337,6 +337,19 @@
             //         $("#result-view").html(response);
             //       }
             //     });
+
+            $.ajax({
+                url: "/fetch/users",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "new"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
         }
         });
         

@@ -1,0 +1,94 @@
+
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+      <table id="tenantData" class="table shadow mb-1" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="text-info font-weight-bold">Name</th>
+            <th class="text-info font-weight-bold">Username</th>
+
+            <th class="text-info font-weight-bold">Phone</th>
+            <th class="text-info font-weight-bold">Email</th>
+            <th class="text-info font-weight-bold">Id</th>
+            <th class="text-info font-weight-bold">Code</th>
+
+            <th class="text-info font-weight-bold">Props</th>
+            <th class="text-info font-weight-bold">Level</th>
+
+            <th class="text-info font-weight-bold">Group</th>
+            <th class="text-info track-title-cell">Active</th>                    
+            <th class="text-info track-title-cell">Date</th>
+
+            <th class="text-info track-title-cell">Edit</th>
+            <th class="text-info track-title-cell">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items%}
+          <tr>
+            <td class="data-cell">{{ item['name'] }}</td>
+            <td class="data-cell">{{ item['username'] }}</td>
+
+            <td class="data-cell">{{ item['tel'] }}</td>
+            <td class="data-cell">{{ item['email'] }}</td>
+            <td class="data-cell">{{ item['natid'] }}</td>
+            <td class="data-cell">{{ item['usercode'] }}</td>
+
+            <td class="data-cell">{{ item['props'] }}</td>
+            <td class="data-cell text-gray-700 small">{{ item['int_level'] }}</td>
+            <td class="data-cell text-gray-700 small">{{ item['group'] }}</td>
+
+            <td class="data-cell">{{ item['status'] }}</td>
+            <td class="data-cell">{{ item['date_reg'] }}</td>
+
+
+            <td class="data-cell">
+              <div>
+                <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#profileModal"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
+              </div>
+            </td>
+            <td class="data-cell">
+              <div>
+                <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteUserModal"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+  var rawIds = "{{ userids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_user_identifier").html(item)
+        }else{
+          $("#edit_user_identifier").html(item)
+        }
+        
+      }else{
+        $("#user_identifier").html(item)
+      }
+    });
+  });
+</script>

@@ -683,6 +683,10 @@ class ApartmentOp(Apartment,Base):
         return Apartment.query.join(User.apartments).filter(User.id == user_id).order_by(Apartment.name.asc()).all()#many to many relationship
 
     @staticmethod
+    def fetch_all_unlinked_apartments():
+        return Apartment.query.filter(Apartment.company_id == None).all()
+
+    @staticmethod
     def search_user_props_by_matching_pattern(phrase,user_id):
         return Apartment.query.join(User.apartments).filter(User.id == user_id).filter(Apartment.name.ilike(phrase)).order_by(Apartment.name.asc()).all()#many to many relationship
 

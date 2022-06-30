@@ -394,6 +394,11 @@ class Index(Resource):
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
+            elif current_user.company.name.title() == "Denvic Property Manager":
+                sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
+                smsfrac = f"{sms_units} units"
+                color = "text-success"
+
                 # elif current_user.company.name == "KEVMA REAL ESTATE":
                 #     sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
@@ -3320,6 +3325,19 @@ class BulkSms(Resource):
 
         print(rem_date,rem_prop,rem_bal,target,rem_txt)
 
+        prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
+        propid = prop_obj.id
+
+        if target == "general":
+            job8 = q.enqueue_call(
+                func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
+            )
+            text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
+            response = sms.send(text, ["+254716674695"],sender)
+
+            return proceed
+
+
         if target == "set template":
             if rem_txt:
                 current_template = current_user.company.template
@@ -3339,9 +3357,6 @@ class BulkSms(Resource):
             except:
                 obj_date = datetime.datetime.now() + relativedelta(hours=3)
 
-            prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
-            propid = prop_obj.id
-
             rem_obj = ReminderOp(obj_date,rem_txt,rem_bal,propid)
             rem_obj.save()
 
@@ -3349,12 +3364,10 @@ class BulkSms(Resource):
             send_internal_email_notifications(prop_obj.company.name,text)
             # response = sms.send(text, ["+254716674695"],sender)
 
-            userid = current_user.id
-
             if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
                 ApartmentOp.update_reminder_status(prop_obj,"sent")
                 job8 = q.enqueue_call(
-                    func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                    func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
                 )
             else:
                 if prop_obj.reminder_status == "sent":
@@ -3364,10 +3377,10 @@ class BulkSms(Resource):
                 else:
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
-                        func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                        func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
                     )
                     # pass
-            return "success"
+            return proceed
         
 
 class TenantSms(Resource):

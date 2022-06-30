@@ -10,6 +10,7 @@ from .views.admin_views import *
 
 # Backend API
 from .views.backend_user import *
+from .views.backend_apartment import *
 
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
@@ -285,3 +286,5 @@ api.add_resource(DownloadTemplate,"/download/template/<string:file>")
 #api.add_resource(UserLogin,"/signin")
 api.add_resource(BUserLogin,"/auth")
 api.add_resource(BUserLogout,"/blogout")
+api.add_resource(BComStats,"/fetch/bcomstats")
+api.add_resource(BComGraphStats,"/fetch/bcomgraphstats")

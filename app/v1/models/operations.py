@@ -683,6 +683,10 @@ class ApartmentOp(Apartment,Base):
         return Apartment.query.join(User.apartments).filter(User.id == user_id).order_by(Apartment.name.asc()).all()#many to many relationship
 
     @staticmethod
+    def fetch_all_unlinked_apartments():
+        return Apartment.query.filter(Apartment.company_id == None).all()
+
+    @staticmethod
     def search_user_props_by_matching_pattern(phrase,user_id):
         return Apartment.query.join(User.apartments).filter(User.id == user_id).filter(Apartment.name.ilike(phrase)).order_by(Apartment.name.asc()).all()#many to many relationship
 
@@ -878,7 +882,7 @@ class HouseCodeOp(HouseCode,Base):
     def fetch_all_housecodes_by_apartment_id(prop_id):
         return HouseCode.query.filter_by(apartment_id=prop_id).order_by(HouseCode.codename.asc()).all()
 
-    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,modified_by):
+    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,billfreq,vatrate,modified_by):
         if housecode != "null":
             self.codename = housecode
         if rentrate != "null":
@@ -903,6 +907,10 @@ class HouseCodeOp(HouseCode,Base):
             self.servicerate = service
         if sewerage != "null":
             self.seweragerate = sewerage
+        if billfreq != "null":
+            self.billfrequency = billfreq
+        if vatrate != "null":
+            self.vatrate = vatrate
             
         self.user_id = modified_by
         db.session.commit()

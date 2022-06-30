@@ -204,3 +204,44 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
 # advanta_sms_delivery("fad3000bcfdfb541291ebc018bcc7868",2627,"ZAgSmYcHm5c1cfq5")
 
+def afrinet_send_sms(txt,tel,apikey,partnerid,shortcode):
+
+    url = "https://bulksms.afrinettelecom.co.ke/api/services/sendsms/"
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid,
+    "message":txt,
+    "shortcode":shortcode,
+    "mobile":tel
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        print("ADVANTA sms sending successful")
+    except Exception as e:
+        response = ""
+        print("ADVANTA sms sending failed",e)
+
+    try:
+        print(response.json())
+        print(response.json()["responses"])
+        print(response.json()["responses"][0])
+        print(response.json()["responses"][0]["messageid"])
+
+        msgid = response.json()["responses"][0]["messageid"]
+        print("ADVANTA sms response success")
+    except Exception as e:
+        print("ADVANTA sms response error",e)
+        msgid = ""
+
+    if msgid:
+        respdict = {
+        "apikey":apikey,
+        "partnerID":partnerid,
+        "msgid":msgid
+        }
+    else:
+        respdict = None
+
+    return respdict

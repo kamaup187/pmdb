@@ -10,8 +10,11 @@ from requests.auth import HTTPBasicAuth
 def generate_access_token():
     """Generates access token"""
 
-    consumer_key = "dkjAjqY5uL8m9xWGcaY3B64phATdfZiS"
-    consumer_secret = "IgymMzc9ie9IDSBe"
+    # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
+    # consumer_secret = "dAoOC51LeAFTkQaa"
+
+    consumer_key = "710QNGdu7FWDsP0Xca9VIRl9DkGIWuCA"
+    consumer_secret = "dAoOC51LeAFTkQaa"
 
     api_URL = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
@@ -35,10 +38,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4074689",
+        "ShortCode": "711905",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://kiotapay.com/m/astrol/ins/payment",
-        "ValidationURL":   "https://kiotapay.com/m/astrol/validate",
+        "ConfirmationURL": "https://kiotapay.com/m/denvic/ins/payment",
+        "ValidationURL":   "https://kiotapay.com/m/denvic/validate",
     }
 
     try:

@@ -57,8 +57,8 @@
                 <th class="text-info font-weight-bold {{tnt_disp}}">Tenants</th>
                 <th class="text-info font-weight-bold {{tnt_disp}}">Occupancy</th>
 
-                <th class="text-info font-weight-bold">Owner</th>
-                <th class="text-info font-weight-bold {{access['client-disp']}}">Client</th>
+                <th class="text-info font-weight-bold {{access['client-disp']}}">Landlord</th>
+                <th class="text-info font-weight-bold {{access['client-disp']}}">Company</th>
                 <th class="text-info track-title-cell">Status</th>
                 <th class="text-info track-title-cell">Link</th>
                 <th class="text-info track-title-cell">Edit</th>
@@ -77,8 +77,8 @@
                 <td class="data-cell {{tnt_disp}}">{{ item['tenants'] }}</td>
                 <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td>
 
-                <td class="data-cell text-gray-700 small">{{ item['owner'] }}</td>
-                <td class="data-cell text-gray-900 small {{item['client-disp']}}">{{ item['agent'] }}</td>
+                <td class="data-cell text-gray-700 small {{access['client-disp']}}">{{ item['owner'] }}</td>
+                <td class="data-cell text-gray-900 small {{access['client-disp']}}">{{ item['company'] }}</td>
 
                 <td class="data-cell">
                   <div>

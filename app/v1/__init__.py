@@ -248,6 +248,7 @@ api.add_resource(FetchPayments,"/fetch/payments")
 api.add_resource(FetchSubmissions,"/fetch/submissions")
 api.add_resource(FetchBills,"/fetch/bills")
 api.add_resource(FetchAgents,"/fetch/agents")
+api.add_resource(FetchUsers,"/fetch/users")
 
 
 api.add_resource(Privacy,"/privacy")

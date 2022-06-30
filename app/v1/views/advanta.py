@@ -158,6 +158,35 @@ def advanta_sms_balance(apikey,partnerid):
 
     return f"{balance:,.0f}"
 
+def afrinet_sms_balance(apikey,partnerid):
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid
+    }
+
+    # url = "https://quicksms.advantasms.com/api/services/getbalance/"
+
+    url = "https://bulksms.afrinettelecom.co.ke/api/services/getbalance/"
+
+    response = requests.get(url, json=payload)
+
+    try:
+        response = requests.get(url, json=payload)
+        bal = response.json()["credit"]
+
+    except Exception as e:
+        bal = 0
+        print (e)
+        
+    try:
+        balance = float(bal)
+    except Exception as e:
+        balance = 0
+        print(e)
+
+    return f"{balance:,.0f}"
+
 
 def advanta_sms_delivery(apikey,partnerid,msgid):
     from app import create_app

@@ -46,6 +46,9 @@ lesama_partner_id = 3895
 merit_api_key = "fad3000bcfdfb541291ebc018bcc7868"
 merit_partner_id = 2627
 
+greatwall_api_key = "045abd0ed75b563eb186b2a61d686a83"
+greatwall_partner_id = 321
+
 kiotanum = "+254716674695"
 
 mailsender = os.getenv('G_ACCOUNT')
@@ -730,6 +733,9 @@ def sms_sender(company,sms_text,phonenum):
 
     elif company.title() == "Merit Properties Limited":
         report = advanta_send_sms(sms_text,phonenum,merit_api_key,merit_partner_id,"MERIT_LTD")
+
+    elif company.title() == "Denvic Property Managers":
+        report = afrinet_send_sms(sms_text,phonenum,greatwall_api_key,greatwall_partner_id,"GREATWALL")
 
     ################################## OWN SENDER IDS ##################################
 
@@ -3242,16 +3248,107 @@ def calculate_sms_cost_alt(sms,smstext):
 
 #                     MeterReadingOp.update_charge_status(meter_reading,charge_status)
 
-def send_bulk_sms(propid,temp_txt,rem_bal,userid):
+def send_bulk_sms(propid,temp_txt):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     tenants = tenantauto(propid)
 
-    user_obj = UserOp.fetch_user_by_id(userid)
+    for tenant_obj in tenants:
 
-    # target_company = user_obj.company
+        prop = tenant_obj.apartment
+        co = prop.company
+        str_co = co.name
+
+        own_shortcode = False
+
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Great Wall Gardens Phase 2":
+            own_shortcode = True
+
+        raw_rem_sms =co.remainingsms
+        if tenant_obj.sms:
+
+            if raw_rem_sms > 0 or own_shortcode:
+
+                #Send the SMS
+                tele = tenant_obj.phone
+                name = tenant_obj.name
+                fname = fname_extracter(name)
+                if not fname:
+                    fname = name
+                phonenum = sms_phone_number_formatter(tele)
+
+                try:
+                    # temp_txt = "This a friendly reminder that your rent for June was due on or by 5/6/2021. We thank you for timely payment. \nPlease note: \nIf rent is received after 5/6/2021,please add a late fee 10% of your rent."
+
+                    recipient = [phonenum]
+                    message = f"Dear {fname}, \n{temp_txt}.\n\n~{str_co}."
+
+                    char_count = len(message)
+                    if char_count <= 160:
+                        cost = 1
+                    elif char_count <= 320:
+                        cost = 2
+                    else:
+                        cost = 3
+                    
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj.save()
+
+
+                    if co.sms_provider == "Advanta" or prop.name == "Great Wall Gardens Phase 2":
+                        sms_sender(co.name,message,phonenum)
+
+                    # if co.name == "Lesama Ltd":
+                    #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+                    # elif co.name == "KEVMA REAL ESTATE":
+                    #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+                    else:
+                        #Once this is done, that's it! We'll handle the rest
+                        response = sms.send(message, recipient, sender)
+                        print(response)
+                        resp = response["SMSMessageData"]["Recipients"][0]
+                                                        
+                        code = resp["statusCode"]
+
+                        if code == 101: # SMS WAS SENT
+                            raw_cost = resp["cost"]
+                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                            CompanyOp.set_rem_quota(co,rem_sms)
+                            print("EVERYTHING IS SMOOTH")
+                            
+                        elif code == 403:
+                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            
+                        elif code == 405:
+                            response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            
+                        elif code == 406:
+                            raw_cost = resp["cost"]
+                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                            CompanyOp.set_rem_quota(co,rem_sms)
+                            print("SMS BLOCKED BY ",tenant_obj,prop)
+                        else:
+                            print("ALAAAAAAAA")
+
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+            else:
+                txt = f"{co} has depleted sms"
+                response = sms.send(txt, ["+254716674695"],sender)
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                break
+        else:
+            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+def send_reminder_sms(propid,temp_txt,rem_bal):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    tenants = tenantauto(propid)
 
     for tenant_obj in tenants:
 
@@ -3274,12 +3371,9 @@ def send_bulk_sms(propid,temp_txt,rem_bal,userid):
                 except:
                     target_bal = 0.0
 
-                print("TAAAARGET BALLLLNACE",target_bal)
-
                 if tenant_obj.balance > target_bal:
                     pass
                 else:
-                    print("HUYO AMELIPA LOL")
                     continue
 
                 #Send the SMS

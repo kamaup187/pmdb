@@ -125,6 +125,21 @@
                             </div>
                         </div>
 
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="sewerage">VAT amount</label>
+
+                                <input class="form-control" id="vatrate" type="text" placeholder="sewerage amount"
+                                    value="{{group.vatrate}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="other">Bill frequency</label>
+
+                                <input class="form-control" id="billfreq" type="text" placeholder="fee"
+                                    value="{{group.billfrequency}}"/>
+                            </div>
+                        </div>
+
                         <!-- Submit button-->
                         <div class="text-center">
                             <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
@@ -189,6 +204,8 @@
             finerate: $("#finerate").val(),
             seweragerate:$("#seweragerate").val(),
             agreementrate:$("#agreementrate").val(),
+            vatrate:$("#vatrate").val(),
+            billfreq:$("#billfreq").val(),
             target:target
             },
         success: function(response) {

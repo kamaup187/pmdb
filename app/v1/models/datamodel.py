@@ -432,6 +432,9 @@ class HouseCode(db.Model):
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
 
+    billfrequency = db.Column(db.String,default="monthly")
+    vatrate = db.Column(db.Float,default=0)
+
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 

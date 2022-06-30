@@ -57,13 +57,15 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# phonenuma = sms_phone_number_formatter("0716674695")
+telll = sms_phone_number_formatter("0728539475")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
 # advanta_send_sms("Greetings John, \n your sms sender Id is ready for integration ~ KiotaPay Team",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+# afrinet_send_sms("Good morning Peter \nWe have completed Kiotapay sms integration. \n\nSent from KiotaPay servers",telll,"045abd0ed75b563eb186b2a61d686a83",321,"GREATWALL")
 
 class MonitorActivity(Resource):
     def get(self):
@@ -1275,7 +1277,7 @@ class Dashboard(Resource):
 
             if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
                 total_bills = 3629379.0
-                invs = "160"
+                invs = "170"
 
             return [f'Kes {total_bills:,.1f}',invs,month_str]
 
@@ -3690,6 +3692,8 @@ class EditHouseCode(Resource):
             agreementrate= request.form.get('agreementrate')
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
+            vatrate = request.form.get('vatrate')
+            billfreq = request.form.get('billfreq')
 
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
@@ -3724,9 +3728,9 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],current_user.id)
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
@@ -7104,8 +7108,8 @@ class Results(Resource):
                 paid_status = "-"
                 badge_status = ""
             else:
-                print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
-                print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
+                # print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
+                # print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
 
                 # PermanentTenantOp.update_resident_type(tenant_obj,"investor")
 

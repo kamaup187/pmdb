@@ -8,6 +8,9 @@ from .reports.reports import *
 from .views.admin_views import *
 # from .views.contact import *
 
+# Backend API
+from .views.backend_user import *
+
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
@@ -276,3 +279,9 @@ api.add_resource(DownloadInvoice,"/download/invoice/<string:ri>")
 api.add_resource(DeleteReceipt,"/del/r/prop/<string:propid>")
 
 api.add_resource(DownloadTemplate,"/download/template/<string:file>")
+
+
+# ADMIN FRONTEND API
+#api.add_resource(UserLogin,"/signin")
+api.add_resource(BUserLogin,"/auth")
+api.add_resource(BUserLogout,"/blogout")

@@ -394,7 +394,7 @@ class Index(Resource):
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
-            elif current_user.company.name.title() == "Denvic Property Manager":
+            elif current_user.company.name.title() == "Denvic Property Managers":
                 sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"

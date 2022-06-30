@@ -1194,25 +1194,29 @@ class LandlordRemittance(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     code = db.Column(db.VARCHAR)
+    propcode = db.Column(db.VARCHAR)
+    prop = db.Column(db.VARCHAR)
     landlord = db.Column(db.VARCHAR)
-    ll_balbf = db.Column(db.Float,default=0.0)
 
-    t_balbf = db.Column(db.Float,default=0.0)
+    tntbbf = db.Column(db.Float,default=0.0)
     rent = db.Column(db.Float,default=0.0)
     expected = db.Column(db.Float,default=0.0)
     actual = db.Column(db.Float,default=0.0)
-    t_balcf = db.Column(db.Float,default=0.0)
+    tntbcf = db.Column(db.Float,default=0.0)
 
-    commission = db.Column(db.Float,default=0.0)
+    ratio = db.Column(db.Float,default=0.0)
+    expenses = db.Column(db.Float,default=0.0)
 
     utilities = db.Column(db.Float,default=0.0)
     deposit = db.Column(db.Float,default=0.0)
 
+    commission = db.Column(db.Float,default=0.0)
+    llbbf = db.Column(db.Float,default=0.0)
+    payable = db.Column(db.Float,default=0.0)
     remitted = db.Column(db.Float,default=0.0)
-    ratio = db.Column(db.Float,default=0.0)
     
-    ll_balcf = db.Column(db.Float,default=0.0)
-    agent = db.Column(db.Float,default=0.0)
+    llbcf = db.Column(db.Float,default=0.0)
+    agent = db.Column(db.VARCHAR)
 
     status = db.Column(db.String, default="unremitted")
 

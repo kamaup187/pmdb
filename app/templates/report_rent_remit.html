@@ -43,7 +43,7 @@
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
                         <select name="reporttype" class="select-css" id="reporttype">
-                          <option slected value="collected">Overall</option>
+                          <option selected value="collected">Overall</option>
                           <option value="uncollected">Individual</option>
                         </select>
                       </div>
@@ -118,9 +118,9 @@
                     
           <div class="table-responsive">
             <table class="table" id="dataTable" width="100%" cellspacing="0">
-                  <thead class="custom-header-alt small">
+                  <thead class="custom-header-alt2 small">
                     <tr>
-                      <th class="">DATE</th>
+                      <th class="text-right">DATE</th>
                       <th class="">CODE</th>
                       <th class="">LANDLORD</th>
 
@@ -135,7 +135,7 @@
                       <th class="">COMMISSION</th>
 
                       <th class="">UTILITIES</th>
-                      <th class="">DEPOSIT</th>
+                      <th class="text-right">DEPOSIT</th>
 
                       <th class="">REMITTED</th>
                       <th class="">RATIO</th>
@@ -151,25 +151,25 @@
                       <td class="data-cell text-center">{{ bill['date'] }}</td>
 
                       <td class="data-cell text-center">{{ bill['code'] }}</td>
-                      <td class="data-cell text-left">{{ bill['landlord']}}</td>
+                      <td class="data-cell text-center">{{ bill['landlord']}}</td>
 
-                      <td class="data-cell text-right">{{ bill['ll_balbf'] }}</td>
+                      <td class="data-cell text-right">{{ bill['llbbf'] }}</td>
 
-                      <td class="data-cell text-right">{{ bill['t_balbf'] }}</td>
+                      <td class="data-cell text-right">{{ bill['tntbbf'] }}</td>
                       <td class="data-cell text-right">{{bill['rent']}}</td>
                       <td class="data-cell text-right">{{ bill['expected'] }}</td>
                       <td class="data-cell text-center">{{ bill['actual'] }}</td>
-                      <td class="data-cell text-right">{{ bill['t_balcf'] }}</td>
+                      <td class="data-cell text-right">{{ bill['tntbcf'] }}</td>
                       
                       <td class="data-cell text-right">{{ bill['commission'] }}</td>
                       
                       <td class="data-cell text-right">{{ bill['utilities'] }}</td>
                       <td class="data-cell text-right">{{ bill['deposit'] }}</td>
                       
-                      <td class="data-cell text-right">{{bill['remmitted']}}</td>
+                      <td class="data-cell text-right">{{bill['remitted']}}</td>
                       <td class="data-cell text-right">{{ bill['ratio'] }}</td>
 
-                      <td class="data-cell text-right">{{ bill['ll_balcf'] }}</td>
+                      <td class="data-cell text-right">{{ bill['llbcf'] }}</td>
                       <td class="data-cell text-right">{{ bill['agent'] }}</td>
 
                     </tr>

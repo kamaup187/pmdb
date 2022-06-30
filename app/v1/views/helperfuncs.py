@@ -3253,7 +3253,9 @@ def send_bulk_sms(propid,temp_txt):
     app = create_app(configuration)
     app.app_context().push()
 
-    tenants = tenantauto(propid)
+    tenants1 = tenantauto(propid)
+    tenants2 = ApartmentOp.fetch_apartment_by_id(propid).ptenants
+    tenants = tenants1 + tenants2
 
     for tenant_obj in tenants:
 
@@ -3348,7 +3350,9 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
     app = create_app(configuration)
     app.app_context().push()
 
-    tenants = tenantauto(propid)
+    tenants1 = tenantauto(propid)
+    tenants2 = ApartmentOp.fetch_apartment_by_id(propid).ptenants
+    tenants = tenants1 + tenants2
 
     for tenant_obj in tenants:
 

@@ -3895,28 +3895,35 @@ class CtoBop(CtoB,Base):
 
 class LandlordRemittanceOp(LandlordRemittance,Base):
     """class"""
-    def __init__(self,code,name,landlord,ll_balbf,t_balbf,rent,expected,actual,t_balcf,utilities,deposit,commission,remitted,ratio,ll_balcf,agent):
+    def __init__(self,code,name,landlord,tntbbf,rent,expected,actual,tntbcf,ratio,expenses,deposit,utilities,commission,llbbf,payable,remitted,llbcf,agent,period,propid,company_id):
         self.code = code
-        self.name = name
+        self.propcode = code
+        self.prop = name
         self.landlord = landlord
 
-        self.ll_balbf = ll_balbf
-
-        self.t_balbf = t_balbf
+        self.tntbbf = tntbbf
         self.rent = rent
         self.expected = expected
         self.actual = actual
-        self.t_balcf = t_balcf
+        self.tntbcf = tntbcf
 
+        self.ratio = ratio
+        self.expenses = expenses
+
+        self.deposit = deposit
+        self.utilities = utilities
         self.commission = commission
 
-        self.utilities = utilities
-        self.deposit = deposit
-
+        self.llbbf = llbbf
+        self.payable = payable
         self.remitted = remitted
-        self.ratio = ratio
+        self.llbcf = llbcf
 
-        self.ll_balcf = ll_balcf
+        self.period = period
+
+        self.apartment_id = propid
+        self.company_id = company_id
+
         self.agent = agent
         
 
@@ -3925,7 +3932,7 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
         db.session.commit()
 
     def get_date(self):
-        str_date = self.date_remitted.strftime("%d/%b/%y")
+        str_date = self.period.strftime("%d/%b/%y")
         return str_date
 
 
@@ -3933,16 +3940,17 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
         return {
             'id':self.id,
             'code':self.code,
-            'name':self.name,
+            'propcode':self.propcode,
+            'name':self.prop,
             'landlord':self.landlord,
 
-            'll_balbf':self.ll_balbf,
+            'llbbf':self.llbbf,
 
-            't_balbf':self.t_balbf,
+            'tntbbf':self.tntbbf,
             'rent':self.rent,
             'expected':self.expected,
             'actual':self.actual,
-            't_balcf':self.t_balcf,
+            'tntbcf':self.tntbcf,
 
             'utilities':self.utilities,
             'deposit':self.deposit,
@@ -3952,11 +3960,11 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
             'remitted':self.remitted,
             'ratio':self.ratio,
             
-            'll_balcf':self.ll_balcf,
+            'llbcf':self.llbcf,
 
             'agent':self.agent,
             'status':self.status,
-            'date':LandlordRemittance.get_date(self)
+            'date':LandlordRemittanceOp.get_date(self)
         }
 
 

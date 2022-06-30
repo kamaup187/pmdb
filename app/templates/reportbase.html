@@ -838,6 +838,45 @@
   });
 </script>
 
+
+
+<script>
+  $("#remit").click(function(){   
+
+    // alert($("#deposit-amount").val().replace(/,/g, ''))
+
+      $.ajax({
+        url: "/remit/data",
+        type: "POST",
+        data: {
+                month: $("#ll-period").val(),
+                propid: $("#prop-code").val(),
+                prop:$("#prop-name").val(),
+                landlord: $("#landlord-name").val(),
+                tntbbf:$("#tnt-bbf").val().replace(/,/g, ''),
+                mrent:$("#monthly-rent").val().replace(/,/g, ''),
+                expected:$("#total-due").val().replace(/,/g, ''),
+                actual:$("#total-paid").val().replace(/,/g, ''),
+                tntbbf:$("#tnt-bbf").val().replace(/,/g, ''), 
+                ratio: $("#percentage-ratio").val().replace(/,/g, '').replace(/' '/g, '').replace(/%/g, ''),
+                expenses: $("#expenses-amount").val().replace(/,/g, ''),  
+                deposit:$("#deposit-amount").val().replace(/,/g, ''), 
+                utilities:$("#utilities-amount").val().replace(/,/g, ''), 
+                commission:$("#commission-amount").val().replace(/,/g, ''),
+                llbbf:$("#ll-bbf").val().replace(/,/g, ''), 
+                payable:$("#net-pay").val().replace(/,/g, ''),
+                paid:$("#remit-amount").val().replace(/,/g, ''), 
+                llbcf:$("#ll-bcf").val().replace(/,/g, ''),
+                agent:$("#agent-username").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
+        }
+      });
+  });
+</script>
+
 <!-- <script type="text/javascript">
   $(document).ready(function () {
     $('#dataTable').DataTable({

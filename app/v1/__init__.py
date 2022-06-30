@@ -114,6 +114,8 @@ api.add_resource(TenantClearance,"/clear/tenant")
 api.add_resource(TenantUserSignUpStageOne,"/tenant/signup")
 api.add_resource(TenantUserSignUpStageTwo,"/tenant/signuptwo")
 api.add_resource(CheckVacancy,"/search/house")
+api.add_resource(RentRemit,"/remit/data")
+
 
 api.add_resource(Settings, "/settings")
 api.add_resource(Search, "/search")
@@ -230,7 +232,7 @@ api.add_resource(TenantDeposits,"/deposit/report")
 api.add_resource(OfficePnL,"/profitnloss/report")
 api.add_resource(OfficeExpenses,"/office/expenses")
 api.add_resource(CustomReport,"/custom/report")
-api.add_resource(RentRemit,"/rent/remit")
+api.add_resource(RemitStatement,"/remit/statement")
 
 
 api.add_resource(ExpenseDetail,"/expenses/detailed")

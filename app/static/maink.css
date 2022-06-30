@@ -641,6 +641,26 @@ body {
   border-left: 1px solid #dddddd;
 }
 
+.custom-header-alt2 th {
+  padding: 4px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  color:#000 !important;
+  background-color: #fafafa !important;
+  text-align: right !important;
+  border-top: 2px solid #000000;
+  border-bottom: 2px solid #000000 !important;
+}
+
+.custom-header-alt2 th:first-child {
+  text-align: center !important;
+  border-left: 2px solid #000000;
+}
+.custom-header-alt2 th:last-child {
+  text-align: right !important;
+  border-right: 2px solid #000000;
+}
+
 .custom-header-alt th {
   padding: 4px !important;
   text-transform: uppercase;

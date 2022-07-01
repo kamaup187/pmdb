@@ -237,14 +237,14 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            cocc = CompanyOp.fetch_company_by_name("ASTROL")
+            # cocc = CompanyOp.fetch_company_by_name("ASTROL")
 
-            props = cocc.props
+            # props = cocc.props
 
-            for prop in props:
-                hscodes = prop.housecodes
-                for code in hscodes:
-                    HouseCodeOp.update_vatrates(code,"monthly",16)
+            # for prop in props:
+            #     hscodes = prop.housecodes
+            #     for code in hscodes:
+            #         HouseCodeOp.update_vatrates(code,"monthly",16)
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:
@@ -404,7 +404,7 @@ class Index(Resource):
                 color = "text-success"
 
             elif current_user.company.name.title() == "Denvic Property Managers":
-                sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
+                sms_units = afrinet_sms_balance(greatwall_api_key,greatwall_partner_id)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
@@ -531,8 +531,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Vintage Residence Limited":
-                shorts = ["4089507"]
+            if company.name== "ASTROL":
+                shorts = ["4074689"]
             else:
                 shorts = []
 

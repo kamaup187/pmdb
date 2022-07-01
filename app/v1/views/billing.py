@@ -575,7 +575,7 @@ class BillInvoice(Resource):
         invdate = bill.date - relativedelta(days = diff)
 
         inv_date = invdate.strftime("%d/%b/%y")
-        invdue = invdate + relativedelta(days=6)
+        invdue = invdate + relativedelta(days=5)
         inv_due = invdue.strftime("%d/%b/%y")
 
         kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")

@@ -3966,7 +3966,7 @@ def send_out_single_email_invoice(billid):
             kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
             invdate = bill.date - relativedelta(days = 0)
             inv_date = invdate.strftime("%d/%b/%y")
-            invdue = invdate + relativedelta(days=6)
+            invdue = invdate + relativedelta(days=5)
             inv_due = invdue.strftime("%d/%b/%y")
 
         

@@ -4084,7 +4084,11 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
             except:
                 tname = recepient.name
 
-            period = f"{get_str_month(bill.month)} invoice"
+            if bill.house.housecode.billfrequency == 3:
+                period = f"July, August, September service charge"
+            else:
+                period = f"{get_str_month(bill.month)} invoice"
+
             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
             txt = Message(period, sender = mailsender, recipients = [email_addr])
@@ -4490,7 +4494,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                         else:
                             str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                             str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                            
+
                         tname = fname_extracter(tenant2.name)
 
 

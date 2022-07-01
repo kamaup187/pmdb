@@ -432,3 +432,100 @@ class BAdminCreateAgent(Resource):
 
 
 
+class BModifyAccessRight(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        if current_user.username.startswith('qc'):
+            pass
+        else:
+            user_group = current_user.company_user_group
+            accessright = check_accessright(user_group,"grant_rights")
+            if accessright != True:
+                return make_response(jsonify({
+                "message": "You have insufficient rights to access this form!",
+                "name":current_user.name
+    
+            }), 400)    
+        company = current_user.company
+        groups = company.groups
+
+        form = ModifyAccessRightForm()
+        usergroup_list = stringify_list_items(groups)
+        place_holder_item = '--Select Usergroup--'
+        usergroup_list.insert(0,place_holder_item)
+        form.usergroup.choices = usergroup_list
+
+
+        data= {
+            "name":current_user.name,
+            # "option_list":groups,
+            "logopath":logo(current_user.company)[0],
+            "mobilelogopath":logo(current_user.company)[1],
+            "name":current_user.name
+
+        }
+
+        return make_response(jsonify({
+            "message": "success",
+            "data":data
+            }), 200)   
+
+    
+    @login_required
+    def post(self):
+        form = ModifyAccessRightForm()
+        run = None#run value will be supplied by ajax request
+        run2 = None
+        usergroup =  form.data.get('usergroup')
+        grouprole =  form.data.get('grouprole')
+        accessright = request.form.get('access')
+        # acc = form.data.get('accessright')
+
+        run = request.form.get('run')
+        run2 = request.form.get('run2')
+        runcheckall = request.form.get('runcheckall')
+        modified_by = current_user.id
+
+        if not accessright:
+            accessright = "False"
+
+        access = return_bool(accessright)
+
+        company = current_user.company
+        groups = company.groups
+        for group in groups:
+            if str(group) == usergroup:
+                usergroup_obj = group
+                break
+        # usergroup_obj = CompanyUserGroupOp.fetch_usergroup_by_name(usergroup)
+
+        if usergroup and run:
+            usergroup_id = usergroup_obj.id
+            assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+            return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=assigngrouproleobjs_list)
+
+        if runcheckall:
+            usergroup_id = usergroup_obj.id
+            if usergroup == "Administrator" and access == False:
+                pass
+            else:
+                assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+                for item in assigngrouproleobjs_list:
+                    AssignGroupRoleOp.update_accessright(item,access,modified_by)
+            new_assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+            return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=new_assigngrouproleobjs_list)
+
+        assign_obj = get_group_role_assgn_obj(usergroup_obj,grouprole)
+        if usergroup == "Administrator" and grouprole == "grant_rights":
+            assign_obj = None
+        
+        if assign_obj:
+            AssignGroupRoleOp.update_accessright(assign_obj,access,modified_by)
+            msg = "Database update success"
+            flash(msg,"success")
+        else:
+            msg = "Update failed"
+            flash(msg,"fail")
+        return redirect(url_for('api.modifyaccessright'))
+

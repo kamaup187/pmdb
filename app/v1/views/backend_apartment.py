@@ -401,3 +401,5 @@ class BCreateApartment(Resource):
     
             }), 200)    
             
+
+

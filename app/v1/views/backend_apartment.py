@@ -147,6 +147,7 @@ class BComStats(Resource):
             }), 200)    
 
 class BComGraphStats(Resource):
+    @cross_origin()
     @login_required
     def get(self):
 
@@ -245,4 +246,70 @@ class BComGraphStats(Resource):
             
     
             
+
+class BRegisterOwner(Resource):
+    """This class registers an owner."""
+    @login_required
+    def post(self):
+        """ Handle POST request for this view. Url ---> /add/owner """
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+        
+        email= data.get('email')
+        fname= data.get('fname')
+        lname= data.get('lname')
+        ftel= data.get('ftel')
+        ltel= data.get('ltel')
+
+
+        created_by = current_user.id
+        name = fname+" "+lname
+        tel_validation = ValidatePass.validate_password(ftel,ltel)
+        if not tel_validation:
+            return make_response(jsonify({
+                "message": "Please provide owners' mobile number"
+            }), 400)    
+        if tel_validation == "no match":
+            return make_response(jsonify({
+                "message": "Please check the mobile number and try again"     
+            }), 400) 
+        else:
+            phone = ftel
+
+
+        uniquename = uniquename_generator(name,phone)
+        is_present  = OwnerOp.fetch_owner_by_uniquename(uniquename)
+        is_present2  = OwnerOp.fetch_owner_by_phone(phone)
+        
+        
+        if is_present:
+          
+            return make_response(jsonify({
+                "message": "Record exists in the database already"
+            }), 200)      
+
+
+        if is_present2:
+            return make_response(jsonify({
+                "message": "Owner with similar mobile number already registered"
+            }), 200)      
+
+
+        owner = OwnerOp(name,phone,email,uniquename,created_by)
+        owner.save()
+
+        owner_user = UserOp.fetch_user_by_phone(phone)
+        
+        if owner_user:
+            natid = owner_user.national_id
+            OwnerOp.update_natid(owner,natid)
+            UserOp.update_status(owner_user,True)
+
+        msg='Success, add apartments below.'
+        flash(msg,"success")
+        return make_response(jsonify({
+                "message": "Success, add apartments next",
+                "data":data
+            }), 200)      
 

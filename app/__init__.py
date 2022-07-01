@@ -10,6 +10,12 @@ from flask_login import LoginManager
 from config import configurations
 from flask_talisman import Talisman
 
+import jwt
+from flask_cors import CORS
+from flask_session import Session
+
+
+
 db = SQLAlchemy()
 mail = Mail()
 # rq = RQ()
@@ -38,6 +44,13 @@ def create_app(configuration):
 
     app = Flask(__name__)
     Talisman(app,content_security_policy=None)
+
+
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    Session(app)
+
+
     
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
@@ -74,6 +87,11 @@ def create_app(configuration):
         app.config['MAIL_USE_TLS'] = False
         app.config['MAIL_USE_SSL'] = True
 
+        #### CORS
+        CORS(app, resources={r"/*": {"origins": "*"}})
+        app.config['CORS_HEADERS'] = 'Content-Type'
+        app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
+
         # app.config['MAIL_SERVER']='mail.privateemail.com'
         # app.config['MAIL_PORT'] = 465
         # app.config['MAIL_USERNAME'] = 'info@kiotapay.com'
@@ -104,8 +122,36 @@ def create_app(configuration):
         except Exception as e:
             print(e)
         # User.query.filter_by(username=username).first()
+    return app
+
+
+    @login_manager.request_loader
+    def load_user(request):
+    
+        auth =request.headers.get('Authorization')
+        print(auth)
+        if not auth: 
+            return None
+        decode =  jwt.decode(auth, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+
+        try:
+            user_obj = User.query.get(int(decode['user_id']))
+            try:
+                print (f">>>>>>>>>>>>>>>>>>> ACTIVE USER: {user_obj.company.name}: ({user_obj.name} - {user_obj.company_user_group}) <<<<<<<<<<<<<<<<<<")
+            except:
+                pass
+            return user_obj
+        except Exception as e:
+            print(e)
+
         
     return app
+
+
+
+
+
+
 
 # ##############################################################################
 # from rq import Queue

@@ -11,7 +11,7 @@ from .views.admin_views import *
 # Backend API
 from .views.backend_user import *
 from .views.backend_apartment import *
-
+from .views.backend_admin import *
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
@@ -288,3 +288,6 @@ api.add_resource(BUserLogin,"/auth")
 api.add_resource(BUserLogout,"/blogout")
 api.add_resource(BComStats,"/fetch/bcomstats")
 api.add_resource(BComGraphStats,"/fetch/bcomgraphstats")
+# api.add_resource(BAdminRegisterUser,"/add/badmincreateuser")
+api.add_resource(BRegisterOwner,"/add/bowner")
+api.add_resource(BAllOwners,"/all/bowners")

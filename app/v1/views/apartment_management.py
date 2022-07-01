@@ -234,8 +234,19 @@ class Index(Resource):
 
         #         return Response(render_template("under_maintenance.html"))
 
-        if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
-        # if current_user.username == "kiotapay":
+        # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
+        if current_user.username == "kiotapay" or localenv:
+            print("getting in")
+            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            # if not cocc:
+            #     cocc = current_user.company
+
+            # props = cocc.props
+
+            # for prop in props:
+            #     hscodes = prop.housecodes
+            #     for code in hscodes:
+            #         HouseCodeOp.update_vatrates(code,3,0)
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:
@@ -395,7 +406,7 @@ class Index(Resource):
                 color = "text-success"
 
             elif current_user.company.name.title() == "Denvic Property Managers":
-                sms_units = advanta_sms_balance(merit_api_key,merit_partner_id)
+                sms_units = afrinet_sms_balance(greatwall_api_key,greatwall_partner_id)
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
@@ -522,8 +533,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Vintage Residence Limited":
-                shorts = ["4089507"]
+            if company.name== "Denvic Property Managers":
+                shorts = ["711905"]
             else:
                 shorts = []
 
@@ -3706,10 +3717,19 @@ class EditHouseCode(Resource):
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
             vatrate = request.form.get('vatrate')
-            billfreq = request.form.get('billfreq')
+            bill_freq = request.form.get('billfreq')
 
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
+
+            if bill_freq == "yearly" or bill_freq == "annually":
+                billfreq = 12
+            elif bill_freq == "semi-annually":
+                billfreq = 6
+            elif bill_freq == "quarterly":
+                billfreq = 3
+            else:
+                billfreq = 1
 
             try:
                 int_codename = int(codename)

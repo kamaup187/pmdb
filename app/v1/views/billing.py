@@ -575,7 +575,7 @@ class BillInvoice(Resource):
         invdate = bill.date - relativedelta(days = diff)
 
         inv_date = invdate.strftime("%d/%b/%y")
-        invdue = invdate + relativedelta(days=6)
+        invdue = invdate + relativedelta(days=5)
         inv_due = invdue.strftime("%d/%b/%y")
 
         kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
@@ -737,10 +737,15 @@ class BillInvoice(Resource):
 
             template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
 
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(bill.month)
+
             return render_template(
                 "ajax_tenant_invoice_mail.html",
                 bill=bill,
-                month = get_str_month(bill.month),
+                month = str_month,
                 p = bill.apartment.paymentdetails,
                 narration=narration,
                 readings = wbill,
@@ -790,8 +795,10 @@ class BillInvoice(Resource):
             tenant = bill.tenant if bill.tenant else bill.ptenant
             prop_obj= bill.apartment
 
-
-            str_month = get_str_month(prop_obj.billing_period.month)
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(prop_obj.billing_period.month)
 
             salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
             intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'
@@ -3954,7 +3961,7 @@ class CallBackUrlDenvic(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         ctob_obj.save()
 
-        response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
 
         # auto_consume_ctob2(ctob_obj)

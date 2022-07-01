@@ -3966,7 +3966,7 @@ def send_out_single_email_invoice(billid):
             kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
             invdate = bill.date - relativedelta(days = 0)
             inv_date = invdate.strftime("%d/%b/%y")
-            invdue = invdate + relativedelta(days=6)
+            invdue = invdate + relativedelta(days=5)
             inv_due = invdue.strftime("%d/%b/%y")
 
         
@@ -4084,7 +4084,11 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
             except:
                 tname = recepient.name
 
-            period = f"{get_str_month(bill.month)} invoice"
+            if bill.house.housecode.billfrequency == 3:
+                period = f"July, August, September service charge"
+            else:
+                period = f"{get_str_month(bill.month)} invoice"
+
             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
             txt = Message(period, sender = mailsender, recipients = [email_addr])
@@ -4354,8 +4358,12 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                         tele = tenant.phone
                         phonenum = sms_phone_number_formatter(tele)
-                        str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                        str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+
+                        if bill.house.housecode.billfrequency == 3:
+                            str_month = f"July, August, September"
+                        else:
+                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                         tname = fname_extracter(tenant.name)
 
                         if bill.house.watertarget:
@@ -4480,8 +4488,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                         tele = tenant2.phone
                         phonenum = sms_phone_number_formatter(tele)
-                        str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                        str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+
+                        if bill.house.housecode.billfrequency == 3:
+                            str_month = f"July, August, September"
+                        else:
+                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+
                         tname = fname_extracter(tenant2.name)
 
 
@@ -5640,8 +5653,6 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
                     rent_charge = round(raw_rent_charge,0) if raw_rent_charge else 0
                 else:
                     rent_charge = house.housecode.rentrate
-                                    
-
             all_charges = ChargeOp.fetch_charges_by_house_id(house.id)
             rent_charges = []
             for charge in all_charges:
@@ -5916,8 +5927,29 @@ def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
                     print("HOUSE GROUP MISSING FOR: ",house,"of",house.apartment)
                     continue
 
-                service_charge = house.housecode.servicerate if house.housecode.servicerate else 0.0
+                raw_service_charge = house.housecode.servicerate if house.housecode.servicerate else 0.0
 
+                if house.housecode.billfrequency:
+                    billfreq = house.housecode.billfrequency
+                else:
+                    billfreq = 1
+
+
+                if billfreq == 12:
+                    months_to_bill = [1]
+                elif billfreq == 6:
+                    months_to_bill = [1,7]
+                elif billfreq == 3:
+                    months_to_bill = [1,4,7,10]
+                else:
+                    months_to_bill = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+                if month in months_to_bill:
+                    service_charge = raw_service_charge * billfreq
+                else:
+                    service_charge = 0.0
+
+                
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
 
             accepted = True

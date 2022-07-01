@@ -313,3 +313,91 @@ class BRegisterOwner(Resource):
                 "data":data
             }), 200)      
 
+
+class BCreateApartment(Resource):
+    @login_required
+    def get(self):
+        user_group = current_user.company_user_group
+        accessright = check_accessright(user_group,"add_apartment")
+        print(user_group)
+        if accessright != True:
+            return make_response(jsonify({
+                "message": "You have insufficient rights to access this form!",
+                "name":current_user.name
+            }), 400) 
+
+        owners = OwnerOp.fetch_all_owners()
+
+        print(owners)
+
+        location_list = fetch_all_locations()
+        regions = stringify_list_items(location_list)
+        owner = stringify_list_items(owners)
+        regions.sort()
+        data={
+            "owners":owner,
+            "option_list":regions
+  
+        }
+        
+        return make_response(jsonify({
+                "message": "Success",
+                "name":current_user.name,
+                "data":data,
+                "logopath":logo(current_user.company)[0],
+                "mobilelogopath":logo(current_user.company)[1]
+            }), 200)         
+    
+
+    @cross_origin()
+    def post(self):
+        formatted_url = None
+        file_to_upload  = request.files['image'] # get uploaded image
+        name = request.form['name']
+        owner=request.form['owner']
+        location = request.form['location']
+
+        print(owner)
+       
+        if file_to_upload:
+            upload_result = upload(file_to_upload) # send image to cloud
+            # style the image and get its url after styling
+            formatted_url, options = cloudinary_url(upload_result['public_id'],format="png",crop="fill",width=64,height=64)
+            print(formatted_url)
+        secure_image  = url_security(formatted_url)
+
+        # pipeshelf = Cloud.CloudinaryImage("'upload_result[public_id]'+'.png'")
+        agency_managed = request.form.get('agency_management')
+
+        if not agency_managed:
+            agency_managed = "False"
+
+        bool_value = return_bool(agency_managed)
+
+
+        owner_id = get_owner_id(owner) 
+        location_id = get_location_id(location)
+        
+        present = ApartmentOp.fetch_apartment_by_name(name)
+        if present:
+            return make_response(jsonify({
+                "message": "Similar apartment exists",
+            }), 200)    
+            
+        
+        apartment_obj = ApartmentOp(name,secure_image,location_id,owner_id,bool_value,current_user.id)
+        apartment_obj.save()
+        owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
+        owner_natid = owner_obj.national_id
+        if owner_natid:
+            owner_user = UserOp.fetch_user_by_national_id(owner_natid)
+            ApartmentOp.relate(apartment_obj,owner_user)
+
+            if not bool_value:
+                owner_co_id = owner_user.company_id
+                ApartmentOp.update_company(apartment_obj,owner_co_id)
+        return make_response(jsonify({
+                "message": "Property registration success, time to add some houses",
+    
+            }), 200)    
+            

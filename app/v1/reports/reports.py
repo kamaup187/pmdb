@@ -5187,8 +5187,10 @@ class FetchPayments(Resource):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             print("SHORTODIIIIIII",prop.payment_bankacc)
             sifted = []
-            if prop.payment_bank == "PayBill":
+            if prop.payment_bank == "PayBill" or prop.paymentdetails.mpesapaybill:
                 shortcode = prop.payment_bankacc
+                if not shortcode:
+                    shortcode = prop.paymentdetails.mpesapaybill
                 raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
 
                 for r in raw_unclaimed:

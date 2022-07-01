@@ -2,7 +2,7 @@
 import os
 
 import africastalking
-from flask import Flask
+from flask import Flask,session
 # from flask_rq2 import RQ
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
@@ -12,7 +12,7 @@ from flask_talisman import Talisman
 
 import jwt
 from flask_cors import CORS
-from flask_session import Session
+
 
 
 
@@ -43,15 +43,7 @@ from .v1 import version_one as v1
 def create_app(configuration):
 
     app = Flask(__name__)
-    Talisman(app,content_security_policy=None)
-
-
-    app.config["SESSION_PERMANENT"] = False
-    app.config["SESSION_TYPE"] = "filesystem"
-    Session(app)
-
-
-    
+    Talisman(app,content_security_policy=None)    
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])
@@ -121,13 +113,17 @@ def create_app(configuration):
             return user_obj
         except Exception as e:
             print(e)
-        # User.query.filter_by(username=username).first()
-    return app
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return user
+        else:
+            return None
+    
 
 
     @login_manager.request_loader
     def load_user(request):
-    
+        
         auth =request.headers.get('Authorization')
         print(auth)
         if not auth: 

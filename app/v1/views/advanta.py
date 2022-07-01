@@ -161,21 +161,21 @@ def advanta_sms_balance(apikey,partnerid):
 def afrinet_sms_balance(apikey,partnerid):
 
     payload = {
-    "apikey":apikey,
-    "partnerID":partnerid
+    "partnerID":partnerid,
+    "apikey":apikey
     }
 
-    # url = "https://quicksms.advantasms.com/api/services/getbalance/"
+    url = "https://quicksms.advantasms.com/api/services/getbalance/"
 
-    url = "https://bulksms.afrinettelecom.co.ke/api/services/getbalance/"
+    # url = "https://bulksms.afrinettelecom.co.ke/api/services/getbalance/"
 
-    response = requests.get(url, json=payload)
+    # response = requests.get(url, json=payload)
 
     try:
         response = requests.get(url, json=payload)
 
         print("this is the response",response.json())
-        
+
         bal = response.json()["credit"]
 
     except Exception as e:
@@ -238,7 +238,9 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
 def afrinet_send_sms(txt,tel,apikey,partnerid,shortcode):
 
-    url = "https://bulksms.afrinettelecom.co.ke/api/services/sendsms/"
+    url = "https://quicksms.advantasms.com/api/services/sendsms/"
+
+    # url = "https://bulksms.afrinettelecom.co.ke/api/services/sendsms/"
 
     payload = {
     "apikey":apikey,

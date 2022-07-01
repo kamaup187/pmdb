@@ -57,7 +57,7 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-telll = sms_phone_number_formatter("0728539475")
+# telll = sms_phone_number_formatter("0716674695")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 

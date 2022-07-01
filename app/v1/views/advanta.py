@@ -173,6 +173,9 @@ def afrinet_sms_balance(apikey,partnerid):
 
     try:
         response = requests.get(url, json=payload)
+
+        print("this is the response",response.json())
+        
         bal = response.json()["credit"]
 
     except Exception as e:

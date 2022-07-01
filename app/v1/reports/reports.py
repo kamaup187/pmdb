@@ -2187,7 +2187,10 @@ class RentStatement(Resource):
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
 
+
         for vac in vacants:
+            if vac.id in house_ids:
+                continue
             new_item = {
                 'id':"0",
                 'delid':"0",

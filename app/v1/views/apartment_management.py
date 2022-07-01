@@ -237,14 +237,16 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            # cocc = CompanyOp.fetch_company_by_name("ASTROL")
+            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            # if not cocc:
+            #     cocc = current_user.company
 
             # props = cocc.props
 
             # for prop in props:
             #     hscodes = prop.housecodes
             #     for code in hscodes:
-            #         HouseCodeOp.update_vatrates(code,"monthly",16)
+            #         HouseCodeOp.update_vatrates(code,3,0)
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:
@@ -3715,10 +3717,19 @@ class EditHouseCode(Resource):
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
             vatrate = request.form.get('vatrate')
-            billfreq = request.form.get('billfreq')
+            bill_freq = request.form.get('billfreq')
 
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
+
+            if bill_freq == "yearly" or bill_freq == "annually":
+                billfreq = 12
+            elif bill_freq == "semi-annually":
+                billfreq = 6
+            elif bill_freq == "quarterly":
+                billfreq = 3
+            else:
+                billfreq = 1
 
             try:
                 int_codename = int(codename)

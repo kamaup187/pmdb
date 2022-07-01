@@ -737,10 +737,15 @@ class BillInvoice(Resource):
 
             template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
 
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(bill.month)
+
             return render_template(
                 "ajax_tenant_invoice_mail.html",
                 bill=bill,
-                month = get_str_month(bill.month),
+                month = str_month,
                 p = bill.apartment.paymentdetails,
                 narration=narration,
                 readings = wbill,
@@ -790,8 +795,10 @@ class BillInvoice(Resource):
             tenant = bill.tenant if bill.tenant else bill.ptenant
             prop_obj= bill.apartment
 
-
-            str_month = get_str_month(prop_obj.billing_period.month)
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(prop_obj.billing_period.month)
 
             salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
             intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'

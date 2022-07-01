@@ -335,3 +335,100 @@ class BUpdateUser(Resource):
     #     flash(msg,"success")
 
     #     return redirect(url_for("api.updateuser"))
+
+
+
+
+class BAdminCreateAgent(Resource):
+    """class"""
+
+    def post(self):
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+
+        fname=data.get('fname')
+        lname=data.get('lname')
+        phone=data.get('tel')
+        natid=data.get('natid')
+        email=data.get('email')
+        company_name = data.get('company')
+        address = data.get('address')
+        mail_box = data.get('mailbox')
+        tel = data.get('company_tel')
+        mail = data.get('company_mail')
+        description = data.get('desc')
+        pass1 = data.get('p1')
+        pass2 = data.get('p2')
+
+        created_by = 1
+        usergroup_id = 3
+
+        name = fname + " " + lname
+
+        is_present  = UserOp.fetch_user_by_national_id(natid)
+        
+        if is_present:
+            return make_response(jsonify({
+                'message':'Account exists already'
+            }), 200)
+
+        if not natid:
+            natid = nationalid_generator()
+            check_dup = TenantOp.fetch_tenant_by_nat_id(natid)
+            nat_id = nationalid_generator() if check_dup else natid
+        else:
+            nat_id = natid
+
+        usercode = usercode_generator()
+        is_present  = UserOp.fetch_user_by_usercode(usercode)
+        if is_present:
+            usercode = usercode_generator()#generate code again
+
+        check_mail = UserOp.fetch_user_by_email(email) #email provided but lets check duplicates
+        if check_mail:
+            return make_response(jsonify({
+                'message': 'Registration failed, email taken, try a different one'
+            }), 200)
+        username = username_exctractermail(email)
+
+        validate_pass = ValidatePass.validate_password(pass1,pass2)
+        if not validate_pass:
+            return make_response(jsonify({
+                'message': 'Please set a password!'
+            }), 200)
+        elif validate_pass=="no match":
+            return make_response(jsonify({
+                'message': 'Passwords do not match'
+            }), 200)
+        else:
+            co = CompanyOp.fetch_company_by_name(company_name)
+            if not co:
+                dir_group = None
+                company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)
+                company_obj.save()
+
+                groups = ["Director","Manager","Property Agent","Accounts","Owner","Caretaker","Tenant"]
+                for group in groups:
+                    group_obj = CompanyUserGroupOp(group,"",company_obj.id)
+                    group_obj.save()
+
+                    if group == "Director":
+                        dir_group = group_obj
+
+                auto_assign_company_group_roles(company_name)
+
+                user = UserOp(name,usercode,username,nat_id,phone,email,pass1,usergroup_id,dir_group.id,company_obj.id,created_by)
+                user.save()
+
+                return make_response(jsonify({
+                'message': 'Account created successfully.'
+            }), 200)
+
+            else:
+                return make_response(jsonify({
+                'message': 'Account creation failed.'
+            }), 200)
+
+
+

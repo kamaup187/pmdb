@@ -234,8 +234,17 @@ class Index(Resource):
 
         #         return Response(render_template("under_maintenance.html"))
 
-        if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
-        # if current_user.username == "kiotapay":
+        # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
+        if current_user.username == "kiotapay" or localenv:
+            print("getting in")
+            cocc = CompanyOp.fetch_company_by_name("ASTROL")
+
+            props = cocc.props
+
+            for prop in props:
+                hscodes = prop.housecodes
+                for code in hscodes:
+                    HouseCodeOp.update_vatrates(code,"monthly",16)
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:

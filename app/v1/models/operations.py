@@ -915,6 +915,15 @@ class HouseCodeOp(HouseCode,Base):
         self.user_id = modified_by
         db.session.commit()
 
+    def update_vatrates(self,billfreq,vatrate):
+        print("vat updated",vatrate)  
+        if billfreq != "null":
+            self.billfrequency = billfreq
+        if vatrate != "null":
+            self.vatrate = vatrate
+            
+        db.session.commit()
+
     def update_waterrate_scale(self,waterrate1,waterrate2,waterrate3):
         self.waterrate1 = waterrate1
         self.waterrate2 = waterrate2

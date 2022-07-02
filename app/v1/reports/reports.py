@@ -5185,7 +5185,6 @@ class FetchPayments(Resource):
             prop_id = request.args.get("propid")
             propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
-            print("SHORTODIIIIIII",prop.payment_bankacc)
             sifted = []
             if prop.payment_bank == "PayBill" or prop.paymentdetails.mpesapaybill:
                 shortcode = prop.payment_bankacc

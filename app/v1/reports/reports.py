@@ -2187,7 +2187,10 @@ class RentStatement(Resource):
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
 
+
         for vac in vacants:
+            if vac.id in house_ids:
+                continue
             new_item = {
                 'id':"0",
                 'delid':"0",
@@ -5183,8 +5186,10 @@ class FetchPayments(Resource):
             propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             sifted = []
-            if prop.payment_bank == "PayBill":
+            if prop.payment_bank == "PayBill" or prop.paymentdetails.mpesapaybill:
                 shortcode = prop.payment_bankacc
+                if not shortcode:
+                    shortcode = prop.paymentdetails.mpesapaybill
                 raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
 
                 for r in raw_unclaimed:
@@ -5438,16 +5443,35 @@ class FetchBills(Resource):
 
             tenantid = get_identifier(tenant_id)
 
-            print(tenant_id.startswith("tnt"))
+            print("Is tenant?",tenant_id.startswith("tnt"))
             print(ttarget=="ttarget")
             print(ttype!="owner",ttype)
 
+            #####################################################################################################
+            #################### ORIGINAL VERSION #################################
+            # if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype == "tenant":
+            #     print("expecting tenant here")
+            #     tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+            # else:
+            #     print("expecting owner here")
+            #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+            ######################################################################################################
+
+            #####################################################################################################
             if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype == "tenant":
                 print("expecting tenant here")
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+                if not tenant_id.startswith("tnt"):
+                    tenant_obj = None
             else:
                 print("expecting owner here")
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+
+            if not tenant_obj:
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
+            if not tenant_obj:
+                return '<span class="hide ms-5 ml-5">hide</span>' + err + "Invoices could not be retrieved"
+            #######################################################################################################
                 
             db.session.expire(tenant_obj)
 

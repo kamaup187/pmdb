@@ -57,7 +57,7 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-telll = sms_phone_number_formatter("0728539475")
+# telll = sms_phone_number_formatter("0716674695")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
@@ -237,7 +237,9 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            if cocc:
+                CompanyOp.update_sms_provider(cocc,"Advanta")
             # if not cocc:
             #     cocc = current_user.company
 

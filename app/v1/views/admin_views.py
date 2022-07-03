@@ -102,6 +102,8 @@ class ViewReceipt(Resource):
 
         server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 
+        address = None
+
         if payment_obj.receipt_num:
             receiptno = payment_obj.receipt_num
         else:

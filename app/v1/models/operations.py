@@ -3512,6 +3512,12 @@ class PaymentOp(Payment,Base):
 
         return status
 
+    def comments(self):
+        if self.booking_paid:
+            return "Booking balance payment"
+        else:
+            return "Instalment payment"
+
     
     def view(self):
         return {
@@ -3532,6 +3538,7 @@ class PaymentOp(Payment,Base):
             'charge':self.payment_name,
             'booking':self.booking_paid,
             'instalment':self.instalment_paid,
+            'comments':PaymentOp.comments(self),
             'month':PaymentOp.get_month(self),
             'date':PaymentOp.get_date_time(self)[0],
             'time':PaymentOp.get_date_time(self)[1],

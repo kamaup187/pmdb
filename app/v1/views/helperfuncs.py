@@ -1,4 +1,5 @@
 """Helper methods for views"""
+from ast import Pass
 import os
 from pickle import TRUE
 # from africastalking import initialize
@@ -5464,7 +5465,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
 
                     MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,userid)
 
-                    MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                    MonthlyChargeOp.update_balances(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                     # if bill.rent_balance:
@@ -5514,7 +5515,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                     else:
                         agreementbal = bill.agreement + update_agreement
 
-                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
                     diff = total_amount - original_amount
@@ -6152,6 +6153,14 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         # with mail.connect() as conn:
         print ("Billing has started with mail connected successfully")
         for house in houses:
+
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+                booking = house.owner.deposit + house.owner.deposit2
+                instalment = house.owner.instalment * house.owner.num_instalment
+            else:
+                booking = 0.0
+                instalment = 0.0
+
             all_charges = house.charges
 
             charges = []
@@ -6399,7 +6408,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     temp_maintenance_total = maintenance
 
 
-                total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance
+                total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance+booking+instalment
 
                 c_charge = None
                 
@@ -6457,7 +6466,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6496,8 +6505,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -6672,7 +6681,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 else:
                     pass
 
-                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance
+                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance+booking+instalment
 
                 c_charge = None
                 
@@ -6682,6 +6691,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         c_charge = bill
                 
                 if c_charge:
+                    if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+                        continue
                     print("specific charge found for HOUSE",house)
 
                     update_water = c_charge.water
@@ -6730,7 +6741,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6762,7 +6773,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                 else:
                     print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
-                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
@@ -6770,8 +6781,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)

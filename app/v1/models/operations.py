@@ -2387,7 +2387,7 @@ class ClientBillOp(ClientBill,Base):
         return {
             'id':self.id,
             'editid':ClientBillOp.generate_editid(self),
-            'delid':MonthlyChargeOp.generate_delid(self),
+            'delid':ClientBillOp.generate_delid(self),
             'client':self.company,
             'sub':ClientBillOp.fig_format(self.subscription),
             'desc':self.description,
@@ -2405,9 +2405,11 @@ class ClientBillOp(ClientBill,Base):
         }
 
 class MonthlyChargeOp(MonthlyCharge,Base):
-    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
+    def __init__(self,year,month,booking,instalment,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
         self.month = month
         self.year=year
+        self.booking = booking
+        self.instalment = instalment
         self.water=water
         self.total_bill=total_amount
         self.arrears = arrears
@@ -2448,7 +2450,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return MonthlyCharge.query.filter(MonthlyChargeOp.smsid==smsid).first()
 
 
-    def update_balances(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_balances(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_balance = booking
+        self.instalment_balance = instalment
         self.rent_balance = rent
         self.water_balance = water
         self.electricity_balance =electricity
@@ -2479,7 +2483,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_payments(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_paid = booking
+        self.instalment_paid = instalment
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity
@@ -2492,7 +2498,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_dues(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_dues(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_due = booking
+        self.instalment_due = instalment
         self.rent_due = rent
         self.water_due = water
         self.electricity_due =electricity
@@ -3355,9 +3363,11 @@ class PaymentOp(Payment,Base):
 
     @staticmethod
     def fetch_all_payments():
-        return PaymentOp.query.order_by(Payment.id.desc()).all()
+        return Payment.query.order_by(Payment.id.desc()).all()
 
-    def update_payments(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_paid = booking
+        self.instalment_paid = instalment
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity
@@ -3520,6 +3530,8 @@ class PaymentOp(Payment,Base):
             'highlight':PaymentOp.highlight(self),
             'amount':PaymentOp.fig_format(self.amount),
             'charge':self.payment_name,
+            'booking':self.booking_paid,
+            'instalment':self.instalment_paid,
             'month':PaymentOp.get_month(self),
             'date':PaymentOp.get_date_time(self)[0],
             'time':PaymentOp.get_date_time(self)[1],

@@ -1073,7 +1073,7 @@ class EditBill(Resource):
 
                 MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,current_user.id)
 
-                MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_balances(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1123,7 +1123,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1183,7 +1183,7 @@ class EditBill(Resource):
                 else:
                     MonthlyChargeOp.update_payment(bill,update_payments)
 
-                MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_payments(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1233,7 +1233,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement - bill.agreement_paid
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1341,7 +1341,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement_balance + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 # MonthlyChargeOp.update_rent_balance(bill,rentarr)
 
 
@@ -2047,6 +2047,8 @@ class ReceivePayment(Resource):
         house_name = request.form.get('house')
         house_name2 = request.form.get('house2')
 
+        bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
+        instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
         rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
         waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
         electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
@@ -2059,6 +2061,9 @@ class ReceivePayment(Resource):
 
         cbid = request.form.get("cbid")
 
+        book = "Booking balance" if bookingpaid else ""
+        inst = "Instalment" if instalmentpaid else ""
+
         water = "Water" if waterpaid else ""
         rent = "Rent" if rentpaid else ""
         garbage = "Garbage" if garbagepaid else ""
@@ -2067,7 +2072,7 @@ class ReceivePayment(Resource):
         dep = "Deposit" if depositpaid else ""
         serv = "Service" if servicepaid else ""
 
-        narration = f"{rent} {water} {garbage} {sec} {serv} {dep}"
+        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst}"
 
         print(narration)
 
@@ -2361,6 +2366,9 @@ class ReceivePayment(Resource):
                 MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
                 MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
+                booking_paid = bookingpaid + specific_charge_obj.booking_paid if specific_charge_obj.booking_paid is not None else 0
+                instalment_paid = instalmentpaid + specific_charge_obj.instalment_paid if specific_charge_obj.instalment_paid is not None else 0
+
                 rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
                 rent_paid += overpayment
                 water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
@@ -2372,11 +2380,15 @@ class ReceivePayment(Resource):
                 deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
-                MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+                MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                PaymentOp.update_payments(payment_obj,booking_paid,instalment_paid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                 try:
+                    bookbal = specific_charge_obj.booking_due - bookingpaid
+                    instbal = specific_charge_obj.instalment_due - instalmentpaid
+
                     rentbal = specific_charge_obj.rent_due - rentpaid
+
                     rentbal -= overpayment
                     waterbal = specific_charge_obj.water_due - waterpaid
                     electricitybal = specific_charge_obj.electricity_due - electricitypaid
@@ -2387,7 +2399,7 @@ class ReceivePayment(Resource):
                     depositbal = specific_charge_obj.deposit_due - depositpaid
                     agreementbal = specific_charge_obj.agreement_due - agreementpaid
 
-                    MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 except:
                     print("PAID TO LEGACY BILL")
 
@@ -2466,7 +2478,7 @@ class ReceivePayment(Resource):
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
         if os.getenv("TARGET") == "lasshouse":
-            receiptlink = f"https://kodimannapp.com/r/{rand_id}"
+            receiptlink = f"https://cr.com/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
@@ -2938,7 +2950,7 @@ class EditPayment(Resource):
                     deposit_balance = target_bill.deposit_due + payment_obj.deposit_paid
                     agreement_balance = target_bill.agreement_due + payment_obj.agreement_paid
 
-                    MonthlyChargeOp.update_dues(target_bill,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
+                    MonthlyChargeOp.update_dues(target_bill,0.0,0.0,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
                     print("VOID WORKING TO UPDATE BALANCES")
 
                 except:

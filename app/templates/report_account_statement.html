@@ -146,12 +146,12 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr class="text-black">
-                      <td class="data-cell text-center">{{ bill['payment_date'] }}</td>
-                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
-                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
+                      <td class="data-cell text-center">{{ bill['date'] }}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['ref']}}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['mode']}}</td>
 
-                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                      <td class="data-cell text-right">{{ bill['chargedamnt'] }}</td>
                       <td class="data-cell text-right">{{ bill['date2'] }}</td>
                       <td class="data-cell text-right">{{ bill['comments'] }}</td>
 

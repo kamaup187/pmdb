@@ -1874,7 +1874,7 @@ class TenantManagement(Resource):
         tenantids = get_obj_ids(tenantlist)
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
-        
+
         template = "ajax_tenants_detail2.html" if aviv(current_user) else "ajax_tenants_detail.html"
 
         return render_template(template,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
@@ -7124,6 +7124,8 @@ class Results(Resource):
 
 
         else:
+
+            print("tuko huku",item)
 
             tenant_id = get_identifier(item)
 

@@ -5894,8 +5894,13 @@ def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
             for charge in all_charges:
                 if str(charge) == "Water" and charge.date.month == month and charge.date.year == year and not charge.reading_id:
-                    checker = "exists"
-                    break
+                    if charge.amount == 0.0:
+                        print("deleting zero charged fixed water obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
+
 
             if checker:
                 print("Skipping",house.name, "of",house.apartment,"fixed_water charging",fixed_water_charge,"exists")

@@ -5436,16 +5436,15 @@ class FetchBills(Resource):
         ttype = request.args.get('ttype')
 
         co = current_user.company
-        period = co.billing_period
 
         if target == "tenant bill":
             tenant_id = request.args.get('tenantid')
 
             tenantid = get_identifier(tenant_id)
 
-            print("Is tenant?",tenant_id.startswith("tnt"))
-            print(ttarget=="ttarget")
-            print(ttype!="owner",ttype)
+            print("Is tenant?",tenant_id.startswith("tnt"),tenant_id)
+            print("What is ttarget?",ttarget)
+            print("What is ttype?",ttype)
 
             #####################################################################################################
             #################### ORIGINAL VERSION #################################

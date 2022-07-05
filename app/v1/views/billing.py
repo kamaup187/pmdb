@@ -966,7 +966,7 @@ class EditBill(Resource):
                 data_format_error = False
 
                 if sheet:
-                    if len(sheet.row_values(1)) != 2:
+                    if len(sheet.row_values(1)) != 3:
                         data_format_error = True
 
                 try:
@@ -988,15 +988,23 @@ class EditBill(Resource):
                         print("Extracted.......",housename)
 
                         try:
-                            arr = float(sheet.row_values(row)[1])
-                            print("Working")
+                            rentarr = float(sheet.row_values(row)[1])
+                            print("RENT Working")
                         except:
-                            print("Failing")
-                            arr = 0.0
+                            print("RENT Failing")
+                            rentarr = 0.0
+
+                        try:
+                            servarr = float(sheet.row_values(row)[2])
+                            print("SERV Working")
+                        except:
+                            print("SERV Failing")
+                            servarr = 0.0
                                                 
                         dict_obj = {
                         "housename":housename,
-                        "arr":arr
+                        "rentarr":rentarr,
+                        "servarr":servarr
                         }
 
                         dict_array.append(dict_obj)

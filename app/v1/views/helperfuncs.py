@@ -5429,7 +5429,8 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
     for item in dict_array:
 
         housename = item["housename"]
-        arr = item["arr"]
+        rentarr = item["rentarr"]
+        servarr = item["servarr"]
 
         house_name = housename.upper()
         house_obj = get_specific_house_obj(apartment_id,house_name)
@@ -5452,24 +5453,24 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                     #####################################################################################################################
                     if option == "add":
                         update_water = bill.water_balance
-                        update_rent = arr if arr else bill.rent_balance
+                        update_rent = rentarr if rentarr else bill.rent_balance
                         update_garbage = bill.garbage_balance
                         update_security = bill.security_balance
                         update_fine = bill.penalty_balance
                         update_agreement = bill.agreement_balance
                         update_deposit = bill.deposit_balance
                         update_electricity = bill.electricity_balance
-                        update_maintenance = bill.maintenance_balance
+                        update_maintenance = servarr if servarr else bill.maintenance_balance
                     else:
                         update_water = 0.0
-                        update_rent = arr
+                        update_rent = rentarr
                         update_garbage = 0.0
                         update_security = 0.0
                         update_fine = 0.0
                         update_agreement = 0.0
                         update_deposit = 0.0
                         update_electricity = 0.0
-                        update_maintenance = 0.0
+                        update_maintenance = servarr
 
                     update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
@@ -6166,7 +6167,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and not localenv:
                 booking = house.owner.deposit + house.owner.deposit2
                 instalment = house.owner.instalment * house.owner.num_instalment
             else:

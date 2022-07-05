@@ -2050,7 +2050,9 @@ class ReceivePayment(Resource):
             else:
                 bill_balance = 0.0
 
-            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}')
+            auto = "manual" if skip else "auto"
+
+            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}',auto=auto)
 
         if target == "tenant name2":
             house_obj = get_specific_house_obj(propid,house_name)

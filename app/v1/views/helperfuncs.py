@@ -1765,7 +1765,7 @@ def get_specific_house_obj(apartment_id,hse):
         # print("looping",hh,hse)
         # print(len(hh),"vs",len(hse))
 
-        if str(house) == good_hse:
+        if hh == good_hse:
             # print("never happen",str(house),hse)
             house_obj = house
     return house_obj

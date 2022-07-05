@@ -2050,7 +2050,10 @@ class ReceivePayment(Resource):
             else:
                 bill_balance = 0.0
 
-            auto = "manual" if skip else "auto"
+            if bill:
+                auto = "manual" if skip else "auto"
+            else:
+                auto = "manual"
 
             return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}',auto=auto)
 

@@ -1762,10 +1762,10 @@ def get_specific_house_obj(apartment_id,hse):
         str_house = str(house)
         good_str_house = str_house.upper()
         hh = good_str_house.replace(" ", "")
-        print("looping",hh,hse)
-        print(len(hh),"vs",len(hse))
+        # print("looping",hh,hse)
+        # print(len(hh),"vs",len(hse))
 
-        if str(house) == hse:
+        if str(house) == good_hse:
             # print("never happen",str(house),hse)
             house_obj = house
     return house_obj

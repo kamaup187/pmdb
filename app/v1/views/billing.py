@@ -2276,22 +2276,77 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
 
             if cb.bill_ref_num:
+                # if cb.bill_ref_num.startswith("TNT"):
+                #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                #     house_obj = check_house_occupied(tenant_obj)[1]
+                #     target_houses.append(house_obj)
+                #     tenant_id = tenant_obj.id
+
+                #     print(">>>>> STARTING PAYMENT & TENANT TYPE")
+
+
+                # elif cb.bill_ref_num.startswith("WN"):
+                #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                #     house_obj = tenant_obj.house
+                #     target_houses.append(house_obj)
+                #     ptenant_id = tenant_obj.id
+
+                #     print(">>>>> STARTING PAYMENT & OWNER TYPE")
+
+                #######################################################################################
                 if cb.bill_ref_num.startswith("TNT"):
-                    tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    house_obj = check_house_occupied(tenant_obj)[1]
-                    target_houses.append(house_obj)
-                    tenant_id = tenant_obj.id
-
-                    print(">>>>> STARTING PAYMENT & TENANT TYPE")
-
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if tenant_obj:
+                        house_obj = check_house_occupied(tenant_obj)[1]
+                        target_houses.append(house_obj)
+                        tenant_id = tenant_obj.id
+                    else:
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        if tenant_obj:
+                            house_obj = check_house_occupied(tenant_obj)[1]
+                            target_houses.append(house_obj)
+                            tenant_id = tenant_obj.id
+                        else:
+                            print("UID NOT FOUND")
+                            abort(404) 
 
                 elif cb.bill_ref_num.startswith("WN"):
-                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    house_obj = tenant_obj.house
-                    target_houses.append(house_obj)
-                    ptenant_id = tenant_obj.id
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if tenant_obj:
+                        house_obj = tenant_obj.house
+                        target_houses.append(house_obj)
+                        tenant_id = tenant_obj.id
+                    else:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        if tenant_obj:
+                            house_obj = tenant_obj.house
+                            target_houses.append(house_obj)
+                            tenant_id = tenant_obj.id
+                        else:
+                            print("UID NOT FOUND")
+                            abort(404) 
 
-                    print(">>>>> STARTING PAYMENT & OWNER TYPE")
+                ########################################################################################
+                elif prop.name == "Greatwall Gardens Phase 2":
+                    hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                    if hh:
+                        house_obj = hh
+                        target_houses.append(house_obj)
+                        tenant_obj = hh.owner
+                        tenant_id = tenant_obj.id
+                    else:
+                        print("HOUSE NOT FOUND")
+                        abort(404) 
+                elif prop.name == "Astrol Ridgeways":
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
+                    if tenant:
+                        house_obj = check_house_occupied(tenant_obj)[1]
+                        target_houses.append(house_obj)
+                        tenant_id = tenant_obj.id
+                    else:
+                        print("UID NOT FOUND")
+                        abort(404) 
+                ########################################################################################
 
 
                 else:

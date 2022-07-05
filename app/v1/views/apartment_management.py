@@ -4992,7 +4992,7 @@ class UpdateTenant(Resource):
                 tenant = TenantOp.fetch_tenant_by_id(identity)
                 db.session.expire(tenant)
                 if tenant.multiple_houses == None:
-                    TenantOp.update_tenant(tenant,"","","","","","",False,"")
+                    TenantOp.update_tenant(tenant,"","","","","","","",False,"")
             return render_template('ajax_dynamic_tenant_form.html',tenant=tenant)
 
         if target == "tenant sms":
@@ -5015,6 +5015,7 @@ class UpdateTenant(Resource):
     def post(self):
         tenant_id = request.form.get('tenant_id')
 
+        uid = request.form.get("uid")
         name = request.form.get("name")
         phone = request.form.get('tel')
         national_id = request.form.get('national_id')
@@ -5075,9 +5076,9 @@ class UpdateTenant(Resource):
                 return render_template('ajaxghosthouse.html',alert=msg)
 
         if tenant_id.startswith("pedit"):
-            PermanentTenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+            PermanentTenantOp.update_tenant(update_tenant,uid,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
         else:
-            TenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+            TenantOp.update_tenant(update_tenant,uid,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
             TenantOp.update_can_receive_sms(update_tenant,bool_sms)
 
             tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)

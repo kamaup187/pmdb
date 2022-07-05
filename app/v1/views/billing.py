@@ -1854,14 +1854,34 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
 
             if cb.bill_ref_num:
+                #######################################################################################
                 if cb.bill_ref_num.startswith("TNT"):
-                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if not tenant:
+                        tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                 elif cb.bill_ref_num.startswith("WN"):
-                    tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if not tenant:
+                        tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+
+                ########################################################################################
+                elif prop.name == "Greatwall Gardens Phase 2":
+                    hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                    if hh:
+                        tenant = hh.owner
+                    else:
+                        tenant = 'unidentified'
+                elif prop.name == "Astrol Ridgeways":
+                    tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if not tenant:
+                        tenant = "unidentified"
+                ########################################################################################
                 else:
                     tenant = "unidentified"
+                #########################################################################################
             else:
                 tenant = "unidentified"
+
 
             if isinstance(tenant, str):
                 house = "unknown"

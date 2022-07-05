@@ -649,7 +649,7 @@ class PermanentTenant(db.Model):
     __tablename__ = 'permanenttenants'
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    uniquenameid = db.Column(db.String)
+    uid = db.Column(db.VARCHAR)
     name = db.Column(db.String,nullable=False)
     phone = db.Column(db.VARCHAR)
     email = db.Column(db.VARCHAR)
@@ -707,7 +707,7 @@ class Tenant(db.Model):
     __tablename__ = 'tenants'
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    uniquenameid = db.Column(db.String)
+    uid = db.Column(db.VARCHAR)
     name = db.Column(db.String,nullable=False)
     phone = db.Column(db.VARCHAR)
     email = db.Column(db.VARCHAR)

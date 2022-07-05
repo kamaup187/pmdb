@@ -1750,6 +1750,12 @@ class PermanentTenantOp(PermanentTenant,Base):
     def fetch_tenant_by_nat_id(nat_id):
         return PermanentTenant.query.filter_by(national_id=nat_id).first()
 
+    def fetch_tenant_by_uid(uid):
+        if uid:
+            return PermanentTenant.query.filter_by(uid=uid).first()
+        else:
+            return None
+
     def fetch_tenant_by_tel(tel):
         return PermanentTenant.query.filter_by(phone=tel).first()
 
@@ -1765,7 +1771,7 @@ class PermanentTenantOp(PermanentTenant,Base):
     def fetch_all_tenants_by_apartment(apartment_id):
         return PermanentTenant.query.filter(PermanentTenant.apartment_id==apartment_id).order_by(PermanentTenant.name.asc()).all()
 
-    def update_tenant(self,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
+    def update_tenant(self,uid,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
         if name:
             self.name = name
         if phone:
@@ -1773,7 +1779,8 @@ class PermanentTenantOp(PermanentTenant,Base):
                 self.phone = None
             else:
                 self.phone = phone
-
+        if uid:
+            self.uid = uid
         if email:
             if email == "null":
                 self.email = None
@@ -2057,6 +2064,13 @@ class TenantOp(Tenant,Base):
     def fetch_tenant_by_nat_id(nat_id):
         return Tenant.query.filter_by(national_id=nat_id).first()
 
+
+    def fetch_tenant_by_uid(uid):
+        if uid:
+            return Tenant.query.filter_by(uid=uid).first()
+        else:
+            return None
+
     def fetch_tenant_by_tel(tel):
         return Tenant.query.filter_by(phone=tel).first()
 
@@ -2072,7 +2086,7 @@ class TenantOp(Tenant,Base):
     def fetch_all_tenants_by_apartment(apartment_id):
         return Tenant.query.filter(Tenant.apartment_id==apartment_id).order_by(Tenant.name.asc()).all()
 
-    def update_tenant(self,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
+    def update_tenant(self,uid,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
         if name:
             self.name = name
         if phone:
@@ -2089,6 +2103,8 @@ class TenantOp(Tenant,Base):
 
         if national_id:
             self.national_id = national_id
+        if uid:
+            self.uid = uid
         if arr:
             self.initial_arrears = arr
         # else:

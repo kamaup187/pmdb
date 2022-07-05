@@ -2424,7 +2424,6 @@ def get_active_houses(tenant_obj):
 def get_owners(hse):
     """check whether tenant is a resident or alien""" 
     if hse.owner:
-        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",hse.owner.name)
         return "owned",hse.owner.name
     else:
         return "not owned",None

@@ -2583,13 +2583,22 @@ class ReceivePayment(Resource):
                 instalment_paid = instalmentpaid + specific_charge_obj.instalment_paid if specific_charge_obj.instalment_paid is not None else 0
 
                 rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
-                rent_paid += overpayment
+
                 water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
                 penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
                 electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
                 garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
                 security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
                 service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
+
+                if specific_charge_obj.tenant_id:
+                    if specific_charge_obj.house.housecode.rentrate:
+                        rent_paid += overpayment
+                else:
+                    if specific_charge_obj.ptenant_id:
+                        if specific_charge_obj.house.housecode.servicerate:
+                            service_paid += overpayment
+
                 deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
@@ -2611,6 +2620,14 @@ class ReceivePayment(Resource):
                     garbagebal = specific_charge_obj.garbage_due - garbagepaid
                     depositbal = specific_charge_obj.deposit_due - depositpaid
                     agreementbal = specific_charge_obj.agreement_due - agreementpaid
+
+                    if specific_charge_obj.tenant_id:
+                        if specific_charge_obj.house.housecode.rentrate:
+                            rentbal -= overpayment
+                    else:
+                        if specific_charge_obj.ptenant_id:
+                            if specific_charge_obj.house.housecode.servicerate:
+                                servicebal -= overpayment
 
                     MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 except:

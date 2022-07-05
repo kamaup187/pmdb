@@ -6497,9 +6497,9 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     print("Balance updated! now",tenant.balance)
 
                 else:
-                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
+                    print("TENANT BILLING CREATED >>>>>>>> specific charge not found") #TODO
 
-                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
@@ -6772,7 +6772,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     print("Balance updated! now",tenant.balance)
 
                 else:
-                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
+                    print("RESIDENT BILLING CREATED >>>>>>>> specific charge not found") #TODO
                     monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 

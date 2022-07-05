@@ -2338,8 +2338,8 @@ class ReceivePayment(Resource):
                         print("HOUSE NOT FOUND")
                         abort(404) 
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
-                    if tenant:
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                    if tenant_obj:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)
                         tenant_id = tenant_obj.id

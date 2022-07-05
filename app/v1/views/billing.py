@@ -1676,7 +1676,14 @@ class SendSms(Resource):
             else:
                 reference = f'#{payment_obj.id}'
 
-            tenant_obj = payment_obj.tenant
+            if payment_obj.ptenant:
+                tenant_obj = payment_obj.ptenant
+                ptenant_id = tenant_obj.id
+                tenant_id = None
+            else:
+                tenant_obj = payment_obj.tenant
+                tenant_id = tenant_obj.id
+                ptenant_id = None
 
             if tenant_obj.balance < 0:
                 bal = tenant_obj.balance * -1

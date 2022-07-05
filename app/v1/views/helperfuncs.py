@@ -3277,6 +3277,14 @@ def send_bulk_sms(propid,temp_txt):
         co = prop.company
         str_co = co.name
 
+
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            ptenant_id = tenant_obj.id
+            tenant_id = None
+        else:
+            tenant_id = tenant_obj.id
+            ptenant_id = None
+
         own_shortcode = False
 
         if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens Phase 2":
@@ -3309,7 +3317,7 @@ def send_bulk_sms(propid,temp_txt):
                     else:
                         cost = 3
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
 
@@ -3374,6 +3382,13 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
         co = prop.company
         str_co = co.name
 
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            ptenant_id = tenant_obj.id
+            tenant_id = None
+        else:
+            tenant_id = tenant_obj.id
+            ptenant_id = None
+
         own_shortcode = False
 
         if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
@@ -3416,7 +3431,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     else:
                         cost = 3
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
 
@@ -4433,11 +4448,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.ptenant:
-                                pass
-                            else:
-                                sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
-                                sms_obj.save()
+                            sms_obj = SentMessagesOp(message,char_count,cost,None,tenant.id,prop_obj.id,co.id)
+                            sms_obj.save()
 
                             if co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -4568,11 +4580,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.ptenant:
-                                pass
-                            else:
-                                sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,prop_obj.id,co.id)
-                                sms_obj.save()
+
+                            sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,None,prop_obj.id,co.id)
+                            sms_obj.save()
 
                             if co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)

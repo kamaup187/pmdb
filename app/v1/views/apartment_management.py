@@ -3436,8 +3436,10 @@ class TenantSms(Resource):
                             cost = 2
                         else:
                             cost = 3
+
+                        ptenant_id = None
                         
-                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,tenant.apartment.id,co.id)
+                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
                         sms_obj.save()
 
                         if sender == "AFRICASTKNG":

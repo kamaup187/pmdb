@@ -2331,12 +2331,14 @@ class ReceivePayment(Resource):
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)
                         tenant_id = tenant_obj.id
+                        ptenant_id = None
                     else:
                         tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                         if tenant_obj:
                             house_obj = check_house_occupied(tenant_obj)[1]
                             target_houses.append(house_obj)
                             tenant_id = tenant_obj.id
+                            ptenant_id = None
                         else:
                             print("TNT NOT FOUND")
                             abort(404) 
@@ -2346,13 +2348,15 @@ class ReceivePayment(Resource):
                     if tenant_obj:
                         house_obj = tenant_obj.house
                         target_houses.append(house_obj)
-                        tenant_id = tenant_obj.id
+                        ptenant_id = tenant_obj.id
+                        tenant_id = None
                     else:
                         tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                         if tenant_obj:
                             house_obj = tenant_obj.house
                             target_houses.append(house_obj)
-                            tenant_id = tenant_obj.id
+                            ptenant_id = tenant_obj.id
+                            tenant_id = None
                         else:
                             print("WN NOT FOUND")
                             abort(404) 
@@ -2364,7 +2368,8 @@ class ReceivePayment(Resource):
                         house_obj = hh
                         target_houses.append(house_obj)
                         tenant_obj = hh.owner
-                        tenant_id = tenant_obj.id
+                        tenant_id = None
+                        ptenant_id = tenant_obj.id
                     else:
                         print("HOUSE NOT FOUND")
                         abort(404) 
@@ -2374,6 +2379,7 @@ class ReceivePayment(Resource):
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)
                         tenant_id = tenant_obj.id
+                        ptenant_id = None
                     else:
                         print("UID NOT FOUND")
                         abort(404) 

@@ -2043,10 +2043,12 @@ class ReceivePayment(Resource):
                     elif prop.name == "Astrol Ridgeways":
                         tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
                         if tenant:
+                            print("FOUND ASTROL GUY",tenant.name)
                             hh = tenant.house
                             bill = fetch_target_period_invoice(hh,pay_period_date)
 
                         else:
+                            print("DID NOT FIND ASTROL GUY KATA SIM")
                             bill = None
                     # if cb.bill_ref_num.startswith("TNT"):
                     #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))

@@ -1872,7 +1872,7 @@ class ReceivePayment(Resource):
                     else:
                         tenant = 'unidentified'
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
                     if not tenant:
                         tenant = "unidentified"
                 ########################################################################################
@@ -2307,7 +2307,7 @@ class ReceivePayment(Resource):
                             target_houses.append(house_obj)
                             tenant_id = tenant_obj.id
                         else:
-                            print("UID NOT FOUND")
+                            print("TNT NOT FOUND")
                             abort(404) 
 
                 elif cb.bill_ref_num.startswith("WN"):
@@ -2323,7 +2323,7 @@ class ReceivePayment(Resource):
                             target_houses.append(house_obj)
                             tenant_id = tenant_obj.id
                         else:
-                            print("UID NOT FOUND")
+                            print("WN NOT FOUND")
                             abort(404) 
 
                 ########################################################################################
@@ -2338,7 +2338,7 @@ class ReceivePayment(Resource):
                         print("HOUSE NOT FOUND")
                         abort(404) 
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
                     if tenant:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)

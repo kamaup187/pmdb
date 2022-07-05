@@ -1757,13 +1757,14 @@ def get_charge_type_id(chargetype):
 def get_specific_house_obj(apartment_id,hse):
     house_list_compare = houseauto(apartment_id)
     house_obj = None
-    good_hse = hse.upper()
+    str_hse = hse.replace(" ","")
+    good_hse = str_hse.upper()
     for house in house_list_compare:
         str_house = str(house)
         good_str_house = str_house.upper()
         hh = good_str_house.replace(" ", "")
-        print("looping",hh,hse)
-        print(len(hh),"vs",len(hse))
+        # print("looping",hh,hse)
+        # print(len(hh),"vs",len(hse))
 
         if hh == good_hse:
             # print("never happen",str(house),hse)

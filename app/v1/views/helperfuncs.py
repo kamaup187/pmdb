@@ -689,7 +689,7 @@ def logo(co):
     if os.getenv("TARGET") != "lasshouse":
         parent = "KiotaPay"
     else:
-        parent = "Kodimann"
+        parent = ""
         
     return logopath,mobilelogopath,fulllogopath,letterhead,sign,parent
 
@@ -4845,7 +4845,7 @@ def send_activation_mail(email,name,url):
 
     print("goooiiing")
 
-    txt = Message('Welcome to Kodimann! Please activate your account.', sender = mailsender, recipients = [email])
+    txt = Message('Welcome! Please activate your account.', sender = mailsender, recipients = [email])
     txt.html = render_template('activation.html',name=name,target_url=url)
     mail.send(txt)
 
@@ -4854,7 +4854,7 @@ def send_demo_mail(email,name,url):
     app = create_app(configuration)
     app.app_context().push()
 
-    txt = Message('Welcome to Kodimann! Demo account.', sender = mailsender, recipients = [email])
+    txt = Message('Welcome! Demo account.', sender = mailsender, recipients = [email])
     txt.html = render_template('demo.html',name=name,target_url=url)
     mail.send(txt)
 

@@ -864,7 +864,7 @@ class RequestDemo(Resource):
         send_internal_email_notifications("DEMO REQUEST",message1)
 
 
-        targeturl = "https://kodimannapp.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        targeturl = "https://app.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
         
         if os.getenv("TARGET") == "lasshouse":
             print("sending....")
@@ -966,7 +966,7 @@ class SelfUserRegisterAgent(Resource):
 
         UserOp.update_link(user,userlink)
        
-        targeturl = f"https://kodimannapp.com/user/{userlink}"
+        targeturl = f"https://app.com/user/{userlink}"
         # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
 
         print(targeturl)

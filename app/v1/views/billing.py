@@ -1957,13 +1957,13 @@ class ReceivePayment(Resource):
                         tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
                             hh = tenant.house
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
 
                         else:
                             tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
                                 hh = tenant.house
-                                bill = fetch_target_period_invoice(hh,pay_period_date)
+                                bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             else:
                                 bill = None
 
@@ -1972,7 +1972,7 @@ class ReceivePayment(Resource):
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
                             print("KATA SIM",hh,"MORIO",hh.owner)
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             print("LETA BILL BUANA",bill,"YA HII SIKU",pay_period_date)
                             tenant = hh.owner
                         else:
@@ -2078,13 +2078,13 @@ class ReceivePayment(Resource):
                         tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
                             hh = tenant.house
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
 
                         else:
                             tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
                                 hh = tenant.house
-                                bill = fetch_target_period_invoice(hh,pay_period_date)
+                                bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             else:
                                 bill = None
 
@@ -2092,7 +2092,7 @@ class ReceivePayment(Resource):
                     elif prop.name == "Greatwall Gardens Phase 2":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             tenant = hh.owner
                         else:
                             bill = None

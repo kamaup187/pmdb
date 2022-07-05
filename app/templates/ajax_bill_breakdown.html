@@ -9,6 +9,40 @@
 
     </div>
 
+{%if bill.booking_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Booking balance</span>
+        <input id="bookingdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.booking_due}}" disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Booking paid </span>
+        <input id="bookingpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+</div>
+{% endif %}
+
+{%if bill.instalment_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Instalment</span>
+        <input id="instalmentdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.instalment_due}}" disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Instalment paid </span>
+        <input id="instalmentpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+</div>
+{% endif %}
+
 {%if bill.deposit_due%}
 <div class="row">
     <div class="form-group col-6 no-paddin input-icons">

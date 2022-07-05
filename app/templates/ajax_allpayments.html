@@ -292,12 +292,12 @@
                                   <div class="fountainG_3s fountainG-s"></div>
                                 </div>
                               </div>
-                              <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
                           </div>
                           <div class="form-group col-6 no-paddin input-icons">
                             <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
                               <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
-                              <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
+                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
                           </div>
                         </div>
     
@@ -1048,6 +1048,7 @@
             target:"amount due"
           },
       success: function(response) {
+        
         if (response.split(" ")[0] == "<input") {
           $("#totaldue").html(response);
           $("#tenantbed").empty();
@@ -1313,7 +1314,10 @@
     let paid = parseInt($("#paidamount").val().replace(/,/g, ''));
     let bal = paid
 
+    let bookingdue = parseInt($("#bookingdue").val())
+    let instalmentdue = parseInt($("#instalmentdue").val())
     let rentdue = parseInt($("#rentdue").val())
+
     let waterdue = parseInt($("#waterdue").val())
     if (waterdue < 0){
       waterdue = 0
@@ -1328,6 +1332,10 @@
 
 
     if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
+
+    if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
+    if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
+
 
     if (bal >= rentdue) {$("#rentpaid").val(rentdue);bal -= rentdue}else if (bal < rentdue && bal > 0) {$("#rentpaid").val(bal);bal = 0}else {$("#rentpaid").val(0.0)}
     if (bal >= penaltydue) {$("#penaltypaid").val(penaltydue);bal -= penaltydue}else if (bal < penaltydue && bal > 0) {$("#penaltypaid").val(bal);bal = 0}else {$("#penaltypaid").val(0.0)}
@@ -1392,6 +1400,8 @@
 
                 paymode:document.querySelector('input[name="paymode"]:checked').value,
                 bill_ref:$("#bill_ref").val(),
+                bookingpaid : ($("#bookingpaid").val()),
+                instalmentpaid : ($("#instalmentpaid").val()),
                 rentpaid : ($("#rentpaid").val()),
                 waterpaid : ($("#waterpaid").val()),
                 electricitypaid : ($("#electricitypaid").val()),

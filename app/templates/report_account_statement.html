@@ -87,11 +87,12 @@
             </div>
 
             <div class="mb-4 mt-4 text-black font-weight-bold">
-              <div class="ln-14">Date : {{prop_obj.name}}</div>
-              <div class="ln-14">Apartment No. : {{tenant_obj.house.name}}</div>
-              <div class="ln-14">Unit Type : </div>
+              <div class="ln-14">Dates : {{statementdate}}</div>
+              <div class="ln-14">Apartment No : {{prop_obj.name}} {{tenant_obj.house.name}}</div>
+              <div class="ln-14">Unit Type : {{tenant_obj.house.housecode.code}}</div>
               <div class="ln-14">Client Name : {{tenant_obj.name}}</div>
-              <div class="ln-14">Purchase Price : {{tenant_obj.house.housecode.listprice}}</div>
+              
+              <div class="ln-14">Purchase Prices : {{ "Kshs{:,.2f}".format(tenant_obj.house.housecode.listprice | float) }} </div>
 
             </div>
 
@@ -146,12 +147,12 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr class="text-black">
-                      <td class="data-cell text-center">{{ bill['payment_date'] }}</td>
-                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
-                      <td class="data-cell text-left no-wrap">{{ bill['']}}</td>
+                      <td class="data-cell text-center">{{ bill['date'] }}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['ref']}}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['mode']}}</td>
 
-                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                      <td class="data-cell text-right">{{ bill['chargedamnt'] }}</td>
                       <td class="data-cell text-right">{{ bill['date2'] }}</td>
                       <td class="data-cell text-right">{{ bill['comments'] }}</td>
 

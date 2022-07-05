@@ -4812,12 +4812,12 @@ class StatementOfAccounts(Resource):
             tenantid = request.args.get("tenantid")
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
-            bills = tenant_obj.monthly_charges
+            bills = tenant_obj.payments
 
             formatted_bills = []
 
             for bill in bills:
-                formatted_bills.append(MonthlyChargeOp.view_detail(bill))
+                formatted_bills.append(PaymentOp.view(bill))
 
             return Response(render_template(
                'report_account_statement.html',

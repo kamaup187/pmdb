@@ -1152,7 +1152,7 @@ class HouseOp(House,Base):
         db.session.commit()
 
     def get_status(self):
-        print(">>>>>>>",self.status)
+        # print(">>>>>>>",self.status)
         if self.status == "available":
             return '<span class="badge bg-success badge-counter">Available</span>'
         elif self.status == "booked":
@@ -1750,6 +1750,12 @@ class PermanentTenantOp(PermanentTenant,Base):
     def fetch_tenant_by_nat_id(nat_id):
         return PermanentTenant.query.filter_by(national_id=nat_id).first()
 
+    def fetch_tenant_by_uid(uid):
+        if uid:
+            return PermanentTenant.query.filter_by(uid=uid).first()
+        else:
+            return None
+
     def fetch_tenant_by_tel(tel):
         return PermanentTenant.query.filter_by(phone=tel).first()
 
@@ -1765,7 +1771,7 @@ class PermanentTenantOp(PermanentTenant,Base):
     def fetch_all_tenants_by_apartment(apartment_id):
         return PermanentTenant.query.filter(PermanentTenant.apartment_id==apartment_id).order_by(PermanentTenant.name.asc()).all()
 
-    def update_tenant(self,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
+    def update_tenant(self,uid,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
         if name:
             self.name = name
         if phone:
@@ -1773,7 +1779,8 @@ class PermanentTenantOp(PermanentTenant,Base):
                 self.phone = None
             else:
                 self.phone = phone
-
+        if uid:
+            self.uid = uid
         if email:
             if email == "null":
                 self.email = None
@@ -2057,6 +2064,13 @@ class TenantOp(Tenant,Base):
     def fetch_tenant_by_nat_id(nat_id):
         return Tenant.query.filter_by(national_id=nat_id).first()
 
+
+    def fetch_tenant_by_uid(uid):
+        if uid:
+            return Tenant.query.filter_by(uid=uid).first()
+        else:
+            return None
+
     def fetch_tenant_by_tel(tel):
         return Tenant.query.filter_by(phone=tel).first()
 
@@ -2072,7 +2086,7 @@ class TenantOp(Tenant,Base):
     def fetch_all_tenants_by_apartment(apartment_id):
         return Tenant.query.filter(Tenant.apartment_id==apartment_id).order_by(Tenant.name.asc()).all()
 
-    def update_tenant(self,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
+    def update_tenant(self,uid,name=None,phone=None,email=None,national_id=None,arr=None,fine=None,multi="null",modified_by=None):
         if name:
             self.name = name
         if phone:
@@ -2089,6 +2103,8 @@ class TenantOp(Tenant,Base):
 
         if national_id:
             self.national_id = national_id
+        if uid:
+            self.uid = uid
         if arr:
             self.initial_arrears = arr
         # else:
@@ -2387,7 +2403,7 @@ class ClientBillOp(ClientBill,Base):
         return {
             'id':self.id,
             'editid':ClientBillOp.generate_editid(self),
-            'delid':MonthlyChargeOp.generate_delid(self),
+            'delid':ClientBillOp.generate_delid(self),
             'client':self.company,
             'sub':ClientBillOp.fig_format(self.subscription),
             'desc':self.description,
@@ -2405,9 +2421,11 @@ class ClientBillOp(ClientBill,Base):
         }
 
 class MonthlyChargeOp(MonthlyCharge,Base):
-    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
+    def __init__(self,year,month,booking,instalment,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
         self.month = month
         self.year=year
+        self.booking = booking
+        self.instalment = instalment
         self.water=water
         self.total_bill=total_amount
         self.arrears = arrears
@@ -2448,7 +2466,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return MonthlyCharge.query.filter(MonthlyChargeOp.smsid==smsid).first()
 
 
-    def update_balances(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_balances(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_balance = booking
+        self.instalment_balance = instalment
         self.rent_balance = rent
         self.water_balance = water
         self.electricity_balance =electricity
@@ -2479,7 +2499,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_payments(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_paid = booking
+        self.instalment_paid = instalment
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity
@@ -2492,7 +2514,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_dues(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_dues(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_due = booking
+        self.instalment_due = instalment
         self.rent_due = rent
         self.water_due = water
         self.electricity_due =electricity
@@ -3355,9 +3379,11 @@ class PaymentOp(Payment,Base):
 
     @staticmethod
     def fetch_all_payments():
-        return PaymentOp.query.order_by(Payment.id.desc()).all()
+        return Payment.query.order_by(Payment.id.desc()).all()
 
-    def update_payments(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.booking_paid = booking
+        self.instalment_paid = instalment
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity
@@ -3502,6 +3528,12 @@ class PaymentOp(Payment,Base):
 
         return status
 
+    def comments(self):
+        if self.booking_paid:
+            return "Booking balance payment"
+        else:
+            return "Instalment payment"
+
     
     def view(self):
         return {
@@ -3520,6 +3552,9 @@ class PaymentOp(Payment,Base):
             'highlight':PaymentOp.highlight(self),
             'amount':PaymentOp.fig_format(self.amount),
             'charge':self.payment_name,
+            'booking':self.booking_paid,
+            'instalment':self.instalment_paid,
+            'comments':PaymentOp.comments(self),
             'month':PaymentOp.get_month(self),
             'date':PaymentOp.get_date_time(self)[0],
             'time':PaymentOp.get_date_time(self)[1],
@@ -4329,11 +4364,12 @@ class InternalMessagesOp(InternalMessages,Base):
 
 class SentMessagesOp(SentMessages,Base):
     """class"""
-    def __init__(self,text,characters,cost,tenant_id,apartment_id,company_id):
+    def __init__(self,text,characters,cost,tenant_id,ptenant_id,apartment_id,company_id):
         self.text = text
         self.characters = characters
         self.cost = cost
         self.tenant_id = tenant_id
+        self.ptenant_id = ptenant_id
         self.apartment_id = apartment_id
         self.company_id = company_id
 
@@ -4350,16 +4386,24 @@ class SentMessagesOp(SentMessages,Base):
         self.status = status
         db.session.commit()
 
-    def combine_house_tenant_alt(self):
-        fname = self.tenant.name if self.tenant.name else "Tenant"
-        house =  TenantOp.get_houseno(self.tenant)
-        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+    def get_house_data(self):
+        if self.tenant_id:
+            fname = self.tenant.name
+            hsname =  TenantOp.get_houseno(self.tenant)
+        elif self.ptenant_id:
+            fname = self.ptenant.name
+            hsname = self.ptenant.house.name
+        else:
+            fname = "uknown"
+            hsname = "unavailable"
+        
+        return f'<span class="text-gray-600">({hsname})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
 
     def view(self):
         return {
             'id':self.id,
             'prop':self.apartment,
-            'hst':SentMessagesOp.combine_house_tenant_alt(self),
+            'hst':SentMessagesOp.get_house_data(self),
             'text':self.text,
             'chars':self.characters,
             'cost':self.cost,

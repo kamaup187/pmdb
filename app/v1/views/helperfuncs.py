@@ -1,4 +1,5 @@
 """Helper methods for views"""
+from ast import Pass
 import os
 from pickle import TRUE
 # from africastalking import initialize
@@ -642,6 +643,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/astrol/full-logo.jpg"
             letterhead = "../static/img/logos/astrol/letterhead.jpg"
 
+        elif str_name_company == "Denvic Property Managers":
+            ##################################################
+            logopath = "../static/img/logos/denvic/l-logo.png"
+            mobilelogopath = "../static/img/logos/denvic/s-logo.png"
+            fulllogopath = "../static/img/logos/denvic/full-logo.jpg"
+            letterhead = "../static/img/logos/denvic/letterhead.jpg"
+
         elif str_name_company == "Lymax Properties":
             ##################################################
             logopath = "../static/img/logos/lymax/l-logo.png"
@@ -681,7 +689,7 @@ def logo(co):
     if os.getenv("TARGET") != "lasshouse":
         parent = "KiotaPay"
     else:
-        parent = "Kodimann"
+        parent = ""
         
     return logopath,mobilelogopath,fulllogopath,letterhead,sign,parent
 
@@ -1749,9 +1757,16 @@ def get_charge_type_id(chargetype):
 def get_specific_house_obj(apartment_id,hse):
     house_list_compare = houseauto(apartment_id)
     house_obj = None
+    str_hse = hse.replace(" ","")
+    good_hse = str_hse.upper()
     for house in house_list_compare:
-        # print("looping",str(house),hse)
-        if str(house) == hse:
+        str_house = str(house)
+        good_str_house = str_house.upper()
+        hh = good_str_house.replace(" ", "")
+        # print("looping",hh,hse)
+        # print(len(hh),"vs",len(hse))
+
+        if hh == good_hse:
             # print("never happen",str(house),hse)
             house_obj = house
     return house_obj
@@ -2416,7 +2431,6 @@ def get_active_houses(tenant_obj):
 def get_owners(hse):
     """check whether tenant is a resident or alien""" 
     if hse.owner:
-        print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD",hse.owner.name)
         return "owned",hse.owner.name
     else:
         return "not owned",None
@@ -3263,9 +3277,17 @@ def send_bulk_sms(propid,temp_txt):
         co = prop.company
         str_co = co.name
 
+
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            ptenant_id = tenant_obj.id
+            tenant_id = None
+        else:
+            tenant_id = tenant_obj.id
+            ptenant_id = None
+
         own_shortcode = False
 
-        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Great Wall Gardens Phase 2":
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens Phase 2":
             own_shortcode = True
 
         raw_rem_sms =co.remainingsms
@@ -3295,11 +3317,11 @@ def send_bulk_sms(propid,temp_txt):
                     else:
                         cost = 3
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
 
-                    if co.sms_provider == "Advanta" or prop.name == "Great Wall Gardens Phase 2":
+                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens Phase 2":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":
@@ -3360,6 +3382,13 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
         co = prop.company
         str_co = co.name
 
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            ptenant_id = tenant_obj.id
+            tenant_id = None
+        else:
+            tenant_id = tenant_obj.id
+            ptenant_id = None
+
         own_shortcode = False
 
         if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
@@ -3402,7 +3431,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     else:
                         cost = 3
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
 
@@ -3474,8 +3503,12 @@ def autosend_pending_smsreceipts(payids):
         if payment_obj.ptenant:
             serv = True
             tenant_obj = payment_obj.ptenant
+            ptenant_id = tenant_obj.id
+            tenant_id =  None
         else:
             tenant_obj = payment_obj.tenant
+            tenant_id = tenant_obj.id
+            ptenant_id =  None
 
         if tenant_obj.balance < 0:
             bal = tenant_obj.balance * -1
@@ -3511,7 +3544,7 @@ def autosend_pending_smsreceipts(payids):
             else:
                 cost = 3
             
-            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
+            sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
             sms_obj.save()
 
             if co.sms_provider == "Advanta":
@@ -4415,11 +4448,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.ptenant:
-                                pass
-                            else:
-                                sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,prop_obj.id,co.id)
-                                sms_obj.save()
+                            sms_obj = SentMessagesOp(message,char_count,cost,None,tenant.id,prop_obj.id,co.id)
+                            sms_obj.save()
 
                             if co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -4550,11 +4580,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 cost = 3
 
-                            if bill.ptenant:
-                                pass
-                            else:
-                                sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,prop_obj.id,co.id)
-                                sms_obj.save()
+
+                            sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,None,prop_obj.id,co.id)
+                            sms_obj.save()
 
                             if co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -4817,7 +4845,7 @@ def send_activation_mail(email,name,url):
 
     print("goooiiing")
 
-    txt = Message('Welcome to Kodimann! Please activate your account.', sender = mailsender, recipients = [email])
+    txt = Message('Welcome! Please activate your account.', sender = mailsender, recipients = [email])
     txt.html = render_template('activation.html',name=name,target_url=url)
     mail.send(txt)
 
@@ -4826,7 +4854,7 @@ def send_demo_mail(email,name,url):
     app = create_app(configuration)
     app.app_context().push()
 
-    txt = Message('Welcome to Kodimann! Demo account.', sender = mailsender, recipients = [email])
+    txt = Message('Welcome! Demo account.', sender = mailsender, recipients = [email])
     txt.html = render_template('demo.html',name=name,target_url=url)
     mail.send(txt)
 
@@ -5416,7 +5444,8 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
     for item in dict_array:
 
         housename = item["housename"]
-        arr = item["arr"]
+        rentarr = item["rentarr"]
+        servarr = item["servarr"]
 
         house_name = housename.upper()
         house_obj = get_specific_house_obj(apartment_id,house_name)
@@ -5439,24 +5468,24 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                     #####################################################################################################################
                     if option == "add":
                         update_water = bill.water_balance
-                        update_rent = arr if arr else bill.rent_balance
+                        update_rent = rentarr if rentarr else bill.rent_balance
                         update_garbage = bill.garbage_balance
                         update_security = bill.security_balance
                         update_fine = bill.penalty_balance
                         update_agreement = bill.agreement_balance
                         update_deposit = bill.deposit_balance
                         update_electricity = bill.electricity_balance
-                        update_maintenance = bill.maintenance_balance
+                        update_maintenance = servarr if servarr else bill.maintenance_balance
                     else:
                         update_water = 0.0
-                        update_rent = arr
+                        update_rent = rentarr
                         update_garbage = 0.0
                         update_security = 0.0
                         update_fine = 0.0
                         update_agreement = 0.0
                         update_deposit = 0.0
                         update_electricity = 0.0
-                        update_maintenance = 0.0
+                        update_maintenance = servarr
 
                     update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
 
@@ -5464,7 +5493,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
 
                     MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,userid)
 
-                    MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                    MonthlyChargeOp.update_balances(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                     # if bill.rent_balance:
@@ -5514,17 +5543,24 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                     else:
                         agreementbal = bill.agreement + update_agreement
 
-                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
                     diff = total_amount - original_amount
 
-                    if bill.tenant_id:
+                    # if bill.tenant_id:
 
-                        tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                        running_bal = tenant_obj.balance
-                        running_bal = running_bal + diff
-                        TenantOp.update_balance(tenant_obj,running_bal)
+                    #     tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                    #     running_bal = tenant_obj.balance
+                    #     running_bal = running_bal + diff
+                    #     TenantOp.update_balance(tenant_obj,running_bal)
+
+                    # if bill.ptenant_id:
+
+                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                    #     running_bal = tenant_obj.balance
+                    #     running_bal = running_bal + diff
+                    #     PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                     # bal = bill.balance
                     # bal = bal + diff
@@ -5535,6 +5571,13 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
 
                     MonthlyChargeOp.update_balance(bill,bal)
                     MonthlyChargeOp.update_arrears_status(bill,True)
+
+                    tenant_obj = bill.tenant if bill.tenant else bill.ptenant
+
+                    if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                        PermanentTenantOp.update_balance(tenant_obj,bal)
+                    else:
+                        TenantOp.update_balance(tenant_obj,bal)
                     #####################################################################################################################
 
                 else:
@@ -6152,6 +6195,14 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         # with mail.connect() as conn:
         print ("Billing has started with mail connected successfully")
         for house in houses:
+
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and not localenv:
+                booking = house.owner.deposit + house.owner.deposit2
+                instalment = house.owner.instalment * house.owner.num_instalment
+            else:
+                booking = 0.0
+                instalment = 0.0
+
             all_charges = house.charges
 
             charges = []
@@ -6399,7 +6450,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     temp_maintenance_total = maintenance
 
 
-                total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance
+                total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance+booking+instalment
 
                 c_charge = None
                 
@@ -6457,7 +6508,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6488,16 +6539,16 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     print("Balance updated! now",tenant.balance)
 
                 else:
-                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
+                    print("TENANT BILLING CREATED >>>>>>>> specific charge not found") #TODO
 
-                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -6672,7 +6723,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 else:
                     pass
 
-                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance
+                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance+booking+instalment
 
                 c_charge = None
                 
@@ -6682,6 +6733,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         c_charge = bill
                 
                 if c_charge:
+                    if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+                        continue
                     print("specific charge found for HOUSE",house)
 
                     update_water = c_charge.water
@@ -6730,7 +6783,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6761,8 +6814,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     print("Balance updated! now",tenant.balance)
 
                 else:
-                    print("MIRACLE PART >>>>>>>> specific charge not found") #TODO
-                    monthly_charge_obj = MonthlyChargeOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    print("RESIDENT BILLING CREATED >>>>>>>> specific charge not found") #TODO
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
@@ -6770,8 +6823,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)

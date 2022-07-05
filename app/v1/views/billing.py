@@ -2004,14 +2004,59 @@ class ReceivePayment(Resource):
 
                 if cb.bill_ref_num:
                     if cb.bill_ref_num.startswith("TNT"):
-                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = check_house_occupied(tenant_obj)[1]
-                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+                        tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = check_house_occupied(tenant)[1]
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = check_house_occupied(tenant)[1]
+                                bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                            else:
+                                bill = None
 
                     elif cb.bill_ref_num.startswith("WN"):
-                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = tenant_obj.house
-                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = tenant.house
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = tenant.house
+                                bill = fetch_target_period_invoice(hh,pay_period_date)
+                            else:
+                                bill = None
+
+                    ########################################################################################
+                    elif prop.name == "Greatwall Gardens Phase 2":
+                        hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                        if hh:
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            tenant = hh.owner
+                        else:
+                            bill = None
+                    elif prop.name == "Astrol Ridgeways":
+                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
+                        if tenant:
+                            hh = tenant.house
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            bill = None
+                    # if cb.bill_ref_num.startswith("TNT"):
+                    #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = check_house_occupied(tenant_obj)[1]
+                    #     bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    # elif cb.bill_ref_num.startswith("WN"):
+                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = tenant_obj.house
+                    #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                     else:
                         skip = True
             else:

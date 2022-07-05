@@ -1973,6 +1973,7 @@ class ReceivePayment(Resource):
                         if hh:
                             print("KATA SIM",hh,"MORIO",hh.owner)
                             bill = fetch_target_period_invoice(hh,pay_period_date)
+                            print("LETA BILL BUANA",bill,"YA HII SIKU",pay_period_date)
                             tenant = hh.owner
                         else:
                             print("HAKUNAAA HIO NI UWONGO")
@@ -1993,6 +1994,8 @@ class ReceivePayment(Resource):
 
                     else:
                         skip = True
+                else:
+                    skip = True
             else:
                 skip = True
 

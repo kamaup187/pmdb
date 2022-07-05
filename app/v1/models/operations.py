@@ -1152,7 +1152,7 @@ class HouseOp(House,Base):
         db.session.commit()
 
     def get_status(self):
-        print(">>>>>>>",self.status)
+        # print(">>>>>>>",self.status)
         if self.status == "available":
             return '<span class="badge bg-success badge-counter">Available</span>'
         elif self.status == "booked":

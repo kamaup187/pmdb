@@ -1049,6 +1049,12 @@ class EditBill(Resource):
                         running_bal = running_bal - original_amount
                         TenantOp.update_balance(tenant_obj,running_bal)
 
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
+
                     MonthlyChargeOp.delete(bill)
                 else:
                     MonthlyChargeOp.delete(bill)
@@ -1145,6 +1151,12 @@ class EditBill(Resource):
                         running_bal = tenant_obj.balance
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
+
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff
@@ -1363,6 +1375,12 @@ class EditBill(Resource):
                         running_bal = tenant_obj.balance
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
+
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff

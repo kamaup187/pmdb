@@ -5540,6 +5540,13 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
 
+                    if bill.ptenant_id:
+
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
+
                     # bal = bill.balance
                     # bal = bal + diff
                     if bill.paid_amount:

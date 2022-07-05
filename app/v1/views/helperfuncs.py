@@ -643,6 +643,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/astrol/full-logo.jpg"
             letterhead = "../static/img/logos/astrol/letterhead.jpg"
 
+        elif str_name_company == "Denvic Property Managers":
+            ##################################################
+            logopath = "../static/img/logos/denvic/l-logo.png"
+            mobilelogopath = "../static/img/logos/denvic/s-logo.png"
+            fulllogopath = "../static/img/logos/denvic/full-logo.jpg"
+            letterhead = "../static/img/logos/denvic/letterhead.jpg"
+
         elif str_name_company == "Lymax Properties":
             ##################################################
             logopath = "../static/img/logos/lymax/l-logo.png"

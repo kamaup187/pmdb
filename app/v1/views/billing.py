@@ -1687,7 +1687,7 @@ class SendSms(Resource):
             amount = f'Kes {payment_obj.amount:,.0f}'
 
             if os.getenv("TARGET") == "lasshouse":
-                receipt = f"Receipt: https://kodimannapp.com/r/{payment_obj.rand_id}"
+                receipt = f"Receipt: https://km/r/{payment_obj.rand_id}"
             else:
                 receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
 
@@ -2931,7 +2931,11 @@ class UpdateBalance(Resource):
         except:
             pass
 
-        TenantOp.update_balance(tenant_obj,bill_balance)
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            PermanentTenantOp.update_balance(tenant_obj,bill_balance)
+        else:
+            TenantOp.update_balance(tenant_obj,bill_balance)
+
         db.session.expire(tenant_obj)
         print("Balance updated! now",tenant_obj.balance)
 

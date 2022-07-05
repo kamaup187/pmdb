@@ -2041,7 +2041,7 @@ class ReceivePayment(Resource):
                         else:
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
-                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
+                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = tenant.house
@@ -2049,6 +2049,8 @@ class ReceivePayment(Resource):
 
                         else:
                             print("DID NOT FIND ASTROL GUY KATA SIM")
+                            print("CBID NI HII",cb.bill_ref_num.upper())
+                            print("NGOMBE NI HUYU",PermanentTenantOp.fetch_tenant_by_uid("RT92DZ7").uid)
                             bill = None
                     # if cb.bill_ref_num.startswith("TNT"):
                     #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))

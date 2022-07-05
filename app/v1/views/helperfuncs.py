@@ -1758,7 +1758,7 @@ def get_specific_house_obj(apartment_id,hse):
     house_list_compare = houseauto(apartment_id)
     house_obj = None
     for house in house_list_compare:
-        # print("looping",str(house),hse)
+        print("looping",str(house),hse)
         if str(house) == hse:
             # print("never happen",str(house),hse)
             house_obj = house

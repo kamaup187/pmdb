@@ -1048,6 +1048,7 @@
             target:"amount due"
           },
       success: function(response) {
+        
         if (response.split(" ")[0] == "<input") {
           $("#totaldue").html(response);
           $("#tenantbed").empty();

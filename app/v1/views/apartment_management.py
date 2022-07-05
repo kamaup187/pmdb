@@ -117,6 +117,7 @@ class Index(Resource):
 
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
+        
         # for cos in coss:
         #     print(cos.name)
         #     # for x in cos.groups:

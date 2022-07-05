@@ -1872,7 +1872,7 @@ class ReceivePayment(Resource):
                     else:
                         tenant = 'unidentified'
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num.lower())
                     if not tenant:
                         tenant = "unidentified"
                 ########################################################################################

@@ -1971,9 +1971,11 @@ class ReceivePayment(Resource):
                     elif prop.name == "Greatwall Gardens Phase 2":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
+                            print("KATA SIM",hh,"MORIO",hh.owner)
                             bill = fetch_target_period_invoice(hh,pay_period_date)
                             tenant = hh.owner
                         else:
+                            print("HAKUNAAA HIO NI UWONGO")
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())

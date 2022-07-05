@@ -4364,11 +4364,12 @@ class InternalMessagesOp(InternalMessages,Base):
 
 class SentMessagesOp(SentMessages,Base):
     """class"""
-    def __init__(self,text,characters,cost,tenant_id,apartment_id,company_id):
+    def __init__(self,text,characters,cost,tenant_id,ptenant_id,apartment_id,company_id):
         self.text = text
         self.characters = characters
         self.cost = cost
         self.tenant_id = tenant_id
+        self.ptenant_id = ptenant_id
         self.apartment_id = apartment_id
         self.company_id = company_id
 
@@ -4385,16 +4386,24 @@ class SentMessagesOp(SentMessages,Base):
         self.status = status
         db.session.commit()
 
-    def combine_house_tenant_alt(self):
-        fname = self.tenant.name if self.tenant.name else "Tenant"
-        house =  TenantOp.get_houseno(self.tenant)
-        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+    def get_house_data(self):
+        if self.tenant_id:
+            fname = self.tenant.name
+            hsname =  TenantOp.get_houseno(self.tenant)
+        elif self.ptenant_id:
+            fname = self.ptenant.name
+            hsname = self.ptenant.house.name
+        else:
+            fname = "uknown"
+            hsname = "unavailable"
+        
+        return f'<span class="text-gray-600">({hsname})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
 
     def view(self):
         return {
             'id':self.id,
             'prop':self.apartment,
-            'hst':SentMessagesOp.combine_house_tenant_alt(self),
+            'hst':SentMessagesOp.get_house_data(self),
             'text':self.text,
             'chars':self.characters,
             'cost':self.cost,

@@ -3488,8 +3488,12 @@ def autosend_pending_smsreceipts(payids):
         if payment_obj.ptenant:
             serv = True
             tenant_obj = payment_obj.ptenant
+            ptenant_id = tenant_obj.id
+            tenant_id =  None
         else:
             tenant_obj = payment_obj.tenant
+            tenant_id = tenant_obj.id
+            ptenant_id =  None
 
         if tenant_obj.balance < 0:
             bal = tenant_obj.balance * -1
@@ -3525,7 +3529,7 @@ def autosend_pending_smsreceipts(payids):
             else:
                 cost = 3
             
-            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
+            sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
             sms_obj.save()
 
             if co.sms_provider == "Advanta":

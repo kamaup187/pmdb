@@ -3273,7 +3273,7 @@ def send_bulk_sms(propid,temp_txt):
 
         own_shortcode = False
 
-        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Great Wall Gardens Phase 2":
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens Phase 2":
             own_shortcode = True
 
         raw_rem_sms =co.remainingsms
@@ -3307,7 +3307,7 @@ def send_bulk_sms(propid,temp_txt):
                     sms_obj.save()
 
 
-                    if co.sms_provider == "Advanta" or prop.name == "Great Wall Gardens Phase 2":
+                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens Phase 2":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":

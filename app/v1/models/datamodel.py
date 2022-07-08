@@ -150,8 +150,6 @@ class User(db.Model,UserMixin):
 
     expenses = db.relationship('InternalExpense', backref='user', cascade="all, delete-orphan")
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
-    rep = db.relationship('SalesRep',backref='user',uselist=False, cascade="all, delete-orphan")
-
 
     def __repr__(self):
         return self.username
@@ -307,6 +305,8 @@ class Apartment(db.Model):
     sent_messages = db.relationship('SentMessages',backref='apartment',order_by='SentMessages.date', cascade="all, delete-orphan")
     paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
     landlordpayments = db.relationship('LandlordPayment',backref='apartment',order_by='LandlordPayment.date',cascade="all, delete-orphan")
+    schedules = db.relationship('PaymentSchedule',backref='apartment', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")
+
 
     remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
@@ -369,10 +369,8 @@ class SalesRep(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     monthly_commission = db.Column(db.Float,default=0)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
-    sales = db.relationship('MonthlyChargeTwo',backref='rep', cascade="all, delete-orphan")
     clients = db.relationship('PermanentTenant',backref='rep',order_by='PermanentTenant.date', cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -475,7 +473,7 @@ class House(db.Model):
     elec_readings = db.relationship('ElectricityReading',backref='house', order_by='ElectricityReading.date',cascade="all, delete-orphan")
     charges = db.relationship('Charge',backref='house',order_by='Charge.date', cascade="all, delete-orphan")
     monthlybills = db.relationship('MonthlyCharge',backref='house',order_by='MonthlyCharge.date', cascade="all, delete-orphan")
-    invoice = db.relationship('MonthlyChargeTwo',backref='house', uselist=False, cascade="all, delete-orphan")
+    schedules = db.relationship('PaymentSchedule',backref='house', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")
     landlordsummaries = db.relationship('LandlordSummary',backref='house',order_by='LandlordSummary.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     payments = db.relationship('Payment',backref='house',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     submissions = db.relationship('Submission',backref='house',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
@@ -657,7 +655,6 @@ class PermanentTenant(db.Model):
     sms = db.Column(db.Boolean,default=True)
     balance = db.Column(db.Float,default=0)
     accumulated_fine = db.Column(db.Float,default=0)
-    date = db.Column(db.DateTime, default=db.func.current_timestamp())
     initial_arrears = db.Column(db.Float,default=0)
 
     negotiated_price = db.Column(db.Float,default=0)
@@ -665,9 +662,11 @@ class PermanentTenant(db.Model):
     deposit = db.Column(db.Float,default=0)
     deposit2 = db.Column(db.Float,default=0)
     instalment = db.Column(db.Float,default=0)
-    num_instalment = db.Column(db.Float,default=0)
+    # num_instalment = db.Column(db.Float,default=0)
+    num_instalment = db.Column(db.Integer,default=1)
     contracts_url = db.Column(db.VARCHAR)
 
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
     checkin = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 
@@ -675,7 +674,7 @@ class PermanentTenant(db.Model):
     tenant_type = db.Column(db.String,default="resident")
     status = db.Column(db.String,default="Booked")
     resident_type = db.Column(db.String,default="normal")
-    classtype = db.Column(db.String,default="investor")
+    classtype = db.Column(db.String,default="normal")
 
     # cleared = db.Column(db.Boolean,default=False)
 
@@ -693,7 +692,7 @@ class PermanentTenant(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='ptenant',order_by='TenantRequest.date', cascade="all, delete-orphan")
     messages = db.relationship('InternalMessages',backref='ptenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='ptenant',order_by='SentMessages.date', cascade="all, delete-orphan")
-    invoice = db.relationship('MonthlyChargeTwo',backref='ptenant', uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    schedules = db.relationship('PaymentSchedule',backref='ptenant', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
 
 
@@ -808,6 +807,7 @@ class MonthlyCharge(db.Model):
 
     booking = db.Column(db.Float,default=0)
     instalment = db.Column(db.Float,default=0)
+    addfee = db.Column(db.Float,default=0)    
 
     rent = db.Column(db.Float,default=0)
     water = db.Column(db.Float,default=0)
@@ -821,6 +821,7 @@ class MonthlyCharge(db.Model):
 
     booking_balance = db.Column(db.Float,default=0)
     instalment_balance = db.Column(db.Float,default=0)
+    addfee_balance = db.Column(db.Float,default=0)
     rent_balance = db.Column(db.Float,default=0)
     water_balance  = db.Column(db.Float,default=0)
     garbage_balance  = db.Column(db.Float,default=0)
@@ -834,6 +835,7 @@ class MonthlyCharge(db.Model):
 
     booking_paid = db.Column(db.Float,default=0)
     instalment_paid = db.Column(db.Float,default=0)
+    addfee_paid = db.Column(db.Float,default=0)
     rent_paid = db.Column(db.Float,default=0)
     water_paid = db.Column(db.Float,default=0)
     garbage_paid = db.Column(db.Float,default=0)
@@ -847,6 +849,7 @@ class MonthlyCharge(db.Model):
 
     booking_due = db.Column(db.Float,default=0)
     instalment_due = db.Column(db.Float,default=0)
+    addfee_due = db.Column(db.Float,default=0)
     rent_due = db.Column(db.Float,default=0)
     water_due  = db.Column(db.Float,default=0)
     garbage_due  = db.Column(db.Float,default=0)
@@ -886,52 +889,40 @@ class MonthlyCharge(db.Model):
 
     # histories = db.relationship('MonthlyChargeHistory',backref='invoice',order_by='MonthlyChargeHistory.date', cascade="all, delete-orphan")
 
-
     def __repr__(self):
         house = House.query.filter_by(id=self.house_id).first()
         strhouse = str(house)
         # return str(self.total_bill)
         return strhouse
 
-class MonthlyChargeTwo(db.Model):
+class PaymentSchedule(db.Model):
     """db model class"""
 
-    __tablename__ = 'monthlychargestwo'
+    __tablename__ = 'paymentschedules'
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    total_amount = db.Column(db.Float, nullable=False,default=0) #expected full amount
-    deposit = db.Column(db.Float,default=0)
-    method = db.Column(db.String, default="partial")
-    plans = db.Column(db.Integer, default=1) #number of days (7,14,30)
-    plan_counter = db.Column(db.Integer, default=1) #decrement plan to zero then reset to original plan
-    number_instalments = db.Column(db.Integer, default=1) #number of instalments
-    remaining_number_instalments = db.Column(db.Integer, default=1) #number of remaining instalments
-    payment_stage = db.Column(db.Integer, default=1) #paystage/number of instalments
+    schedule_date = db.Column(db.DateTime,default=db.func.current_timestamp())
+    schedule_name = db.Column(db.String,default="payment")
 
-    instalment = db.Column(db.Float,default=0)
-    bbf = db.Column(db.Float,default=0)
-    bill = db.Column(db.Float,default=0)
+    payref = db.Column(db.VARCHAR)
+    paytype = db.Column(db.VARCHAR)
+
+    arrears = db.Column(db.Float,default=0)
+    schedule_amount = db.Column(db.Float,default=0)
+
+    total_amount = db.Column(db.Float,default=0)
     paid = db.Column(db.Float,default=0)
-    bcf = db.Column(db.Float,default=0)
-    cpaid = db.Column(db.Float,default=0)
-    cbal = db.Column(db.Float,default=0)
-    sms_invoice = db.Column(db.String,default="pending")
+    balance = db.Column(db.Float,default=0)
 
-    date = db.Column(db.DateTime,default=db.func.current_timestamp())
-    pay_date = db.Column(db.DateTime,default=db.func.current_timestamp())
-    state = db.Column(db.String,default="initial")
+    pay_date = db.Column(db.DateTime)
+    state = db.Column(db.String,default="")
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     ptenant_id = db.Column(db.Integer,db.ForeignKey(PermanentTenant.id))
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
-
 
     def __repr__(self):
-        name = Tenant.query.filter_by(id=self.tenant_id).first()
-        tenant = str(name)
-        return tenant
+        return self.schedule_name
 
 # class Test(db.Model):
 #     """db model class"""
@@ -1111,6 +1102,8 @@ class Payment(db.Model):
 
     booking_paid = db.Column(db.Float,default=0)
     instalment_paid = db.Column(db.Float,default=0)
+    addfee_paid = db.Column(db.Float,default=0)
+
 
     rent_paid = db.Column(db.Float,default=0)
     water_paid = db.Column(db.Float,default=0)

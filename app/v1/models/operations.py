@@ -81,6 +81,18 @@ class Base():
             }
         return switcher.get(month)
 
+    def get_str_weekday(day):
+        switcher = {
+            0:"Monday",
+            1:"Tuesday",
+            2:"Wednesday",
+            3:"Thursday",
+            4:"Friday",
+            5:"Saturday",
+            6:"Sunday"
+            }
+        return switcher.get(day)
+
     def fname_extracter(name):
         try:
             return name.split()[0]
@@ -1209,11 +1221,10 @@ class HouseOp(House,Base):
 
 class SalesRepOp(SalesRep,Base):
     """class"""
-    def __init__(self,name,username,phone,user_id,company_id):
+    def __init__(self,name,username,phone,company_id):
         self.name = name
         self.username = username
         self.phone = phone
-        self.user_id = user_id
         self.company_id = company_id
 
     @staticmethod
@@ -1276,7 +1287,7 @@ class SalesRepOp(SalesRep,Base):
             'delid':SalesRepOp.generate_delid(self),
             'name':self.name,
             'tel':self.phone,
-            'projects':SalesRepOp.get_projects(self),
+            # 'projects':SalesRepOp.get_projects(self),
             'clients':SalesRepOp.get_clients(self),
             'proposals':SalesRepOp.fetch_proposals(self),
             'closed':SalesRepOp.fetch_closed(self),
@@ -1844,7 +1855,7 @@ class PermanentTenantOp(PermanentTenant,Base):
         else:
             return "text-dark"
 
-    def update_payment_plan(self,negprice,plan,deposit,deposit2,mi,num_mi,updatedon,updatedby):
+    def update_payment_plan(self,negprice,plan,deposit,deposit2,mi,num_mi,bookedon,start):
         if negprice:
             self.negotiated_price = negprice
         if plan:
@@ -1857,6 +1868,10 @@ class PermanentTenantOp(PermanentTenant,Base):
             self.instalment = mi
         if num_mi:
             self.num_instalment = num_mi
+        if bookedon:
+            self.date =bookedon
+        if start:
+            self.checkin =start
 
         db.session.commit()
 
@@ -1864,9 +1879,12 @@ class PermanentTenantOp(PermanentTenant,Base):
         self.checkin = checkin_date
         db.session.commit()
 
-    def upload_contracts(self,contracts_url,uploadedon,updatedby):
+    def upload_contracts(self,contracts_url,uploadedon):
         if contracts_url:
             self.contracts_url = contracts_url
+        if uploadedon:
+            pass
+
         db.session.commit()
 
     def update_balance(self,balance):
@@ -2007,7 +2025,7 @@ class PermanentTenantOp(PermanentTenant,Base):
         return "pdel" + str(self.id)
 
     def view(self):
-        print("NAME >>>>",self.name)
+        # print("NAME >>>>",self.name)
         return {
             'id':"p" + str(self.id),
             'identity':PermanentTenantOp.generate_identity(self),
@@ -2242,7 +2260,7 @@ class TenantOp(Tenant,Base):
             return "Tenant"
 
     def view(self):
-        print("NAME >>>>",self.name)
+        # print("NAME >>>>",self.name)
         return {
             'id':self.id,
             'identity':TenantOp.generate_identity(self),
@@ -2421,11 +2439,12 @@ class ClientBillOp(ClientBill,Base):
         }
 
 class MonthlyChargeOp(MonthlyCharge,Base):
-    def __init__(self,year,month,booking,instalment,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
+    def __init__(self,year,month,booking,instalment,addfee,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,created_by):
         self.month = month
         self.year=year
         self.booking = booking
         self.instalment = instalment
+        self.addfee = addfee
         self.water=water
         self.total_bill=total_amount
         self.arrears = arrears
@@ -2466,9 +2485,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         return MonthlyCharge.query.filter(MonthlyChargeOp.smsid==smsid).first()
 
 
-    def update_balances(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_balances(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.booking_balance = booking
         self.instalment_balance = instalment
+        self.addfee_balance = addfee
         self.rent_balance = rent
         self.water_balance = water
         self.electricity_balance =electricity
@@ -2499,9 +2519,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.booking_paid = booking
         self.instalment_paid = instalment
+        self.addfee_paid = addfee
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity
@@ -2514,9 +2535,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         db.session.commit()
 
-    def update_dues(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_dues(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.booking_due = booking
         self.instalment_due = instalment
+        self.addfee_due = addfee
         self.rent_due = rent
         self.water_due = water
         self.electricity_due =electricity
@@ -3077,127 +3099,83 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         }
 
 
-class MonthlyChargeTwoOp(MonthlyChargeTwo,Base):
-    def __init__(self,total_amount,deposit,plans,plan_counter,nummi,rem_nummi,paystage,instalment,bbf,bill,paid,bcf,apartment_id,house_id,tenant_id,user_id):
-        self.total_amount = total_amount
-        self.deposit = deposit
-        self.plans = plans
-        self.plan_counter = plan_counter
-        self.number_instalments = nummi
-        self.remaining_number_instalments = rem_nummi
-        self.payment_stage = paystage
+class PaymentScheduleOp(PaymentSchedule,Base):
+    def __init__(self,name,arrears,amount,total,date,apartment_id,house_id,ptenant_id):
 
-        self.instalment = instalment
-        self.bbf = bbf
-        self.bill = bill
-        self.paid = paid
-        self.bcf = bcf
+        self.schedule_name = name
+        self.arrears = arrears
+        self.schedule_amount = amount
+        self.total_amount = total
+        self.schedule_date = date
 
         self.apartment_id = apartment_id
         self.house_id = house_id
-        self.tenant_id = tenant_id
-        self.user_id = user_id
+        self.ptenant_id = ptenant_id
 
+
+    def update_details(self,arr,tot,paid,bal,payref,paytype,paydate):
+        self.arrears = arr
+        self.total_amount = tot
+        self.paid = paid
+        self.balance = bal
+        self.paytype = paytype
+        self.payref = payref
+        self.pay_date = paydate
+        db.session.commit()
 
     def update_payment(self,paid):
         self.paid = paid
         db.session.commit()
 
     def update_balance(self,balance):
-        self.bcf = balance
-        db.session.commit()
-
-    def update_cumulative_payment(self,paid):
-        self.cpaid = paid
-        db.session.commit()
-
-    def update_cumulative_balance(self,balance):
-        self.cbal = balance
+        self.balance = balance
         db.session.commit()
 
     def update_payment_date(self,date):
         self.pay_date = date
         db.session.commit()
 
-    def get_plans(plans):
-        if plans == 30:
-            return "Monthly"
-        elif plans == 14:
-            return "Fortnightly"
-        elif plans == 90:
-            return "Quarterly"
+    def get_pay_date(self):
+        paydate = self.pay_date if self.pay_date else "-"
+        if not isinstance(paydate,str):
+            str_date = paydate.strftime("%d/%b/%y")
         else:
-            return "Weekly"
+            str_date = paydate
+        return str_date
 
-    # def get_stage_percentage(self):
-    #     try:
-    #         quotient = self.remaining_number_instalments / self.number_instalments
-    #     except:
-    #         quotient = 0
-    #     percentage = quotient * 100
-    #     return f"{percentage}%"
-
-    def get_stage_percentage(self):
-        try:
-            quotient = self.cpaid / self.total_amount
-        except:
-            quotient = 0
-
-        percentage = quotient * 100
-
-        return f"{percentage:,.0f}%"
-
-    def get_sms_status(self):
-        if self.sms_invoice:
-            if self.sms_invoice == "Success":
-                status = '<span class="text-success"><i class="fas fa-check-double mr-1"></i>Sent</span>'
-            elif self.sms_invoice == "success-alt":
-                status = '<span class="text-primary"><i class="fas fa-check-double mr-1"></i>Sent</span>'
-            elif self.sms_invoice == "waiting":
-                status = '<span class="text-warning font-weight-bold"><i class="fas fa-hourglass-half mr-1"></i>Resend</span>'
-            elif self.sms_invoice == "sent":
-                status = '<span class="text-primary"><i class="fas fa-check mr-1"></i>Sent</span>'
-            elif self.sms_invoice == "pending":
-                status = '<span class="text-primary"><i class="fas fa-clock mr-1"></i>Send</span>'
-            elif self.sms_invoice == "fail":
-                status = '<span class="text-danger"><i class="fas fa-exclamation-triangle mr-1">Resend</i></span>'
-            elif self.sms_invoice == "off":
-                status = '<span class="text-dark"><i class="fas fa-ban mr-1"></i>Off</span>'
+    def get_schedule_date(self):
+        # print("namit",self.schedule_name)
+        if self.schedule_name == "10% Deposit":
+            return "-"
+        if self.schedule_name.startswith("Other payments"):
+            if self.house.description.upper() == "STUDIO":
+                return f"40% Legal fees (KES 10,400) on execution of sale agreement and balance on completion"
             else:
-                status = '<span class="text-danger"><i class="fas fa-exclamation mr-1"></i>Resend</span>'
+                return f"40% Legal fees (KES 14,800) on execution of sale agreement and balance on completion"
+
+        paydate = self.schedule_date if self.schedule_date else "-"
+        if not isinstance(paydate,str):
+            str_date = PaymentScheduleOp.get_str_weekday(paydate.weekday()) + ", " + paydate.strftime("%d %B %Y")
         else:
-            status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
-
-        return status
-
-
+            str_date = paydate
+        return str_date
 
     def view_detail(self):
         
         return {
             'id':self.id,
-            'editid':MonthlyChargeTwoOp.generate_editid(self),
-            'delid':MonthlyChargeTwoOp.generate_delid(self),
-            'plot':self.house,
-            'total':MonthlyChargeTwoOp.fig_format(self.total_amount),
-            'deposit':MonthlyChargeTwoOp.fig_format(self.deposit),
-            'method':self.method,
-            'plan':MonthlyChargeTwoOp.get_plans(self.plans),
-            'counter':self.plan_counter,
-            'nummi':self.number_instalments,
-            'rem_nummi':self.remaining_number_instalments,
-            'stage':MonthlyChargeTwoOp.get_stage_percentage(self),
-            'inst':MonthlyChargeTwoOp.fig_format(self.instalment),
-            'bbf':MonthlyChargeTwoOp.fig_format(self.bbf),
-            'bill':MonthlyChargeTwoOp.fig_format(self.bill),
-            'paid':MonthlyChargeTwoOp.fig_format(self.paid),
-            'bcf':MonthlyChargeTwoOp.fig_format(self.bcf),
-            'cpaid':MonthlyChargeTwoOp.fig_format(self.paid),
-            'cbal':MonthlyChargeTwoOp.fig_format(self.bcf),
-            'smsstatus':ClientBillOp.get_sms_status(self),
-            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
-            'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
-
+            'editid':PaymentScheduleOp.generate_editid(self),
+            'delid':PaymentScheduleOp.generate_delid(self),
+            'schedule_name':self.schedule_name,
+            'schedule_arrears':PaymentScheduleOp.fig_format(self.arrears),
+            'schedule_amount':PaymentScheduleOp.fig_format(self.schedule_amount),
+            'schedule_total':PaymentScheduleOp.fig_format(self.total_amount),
+            'paid':PaymentScheduleOp.fig_format(self.paid),
+            'balance':PaymentScheduleOp.fig_format(self.balance),
+            'schedule_date':PaymentScheduleOp.get_schedule_date(self),
+            'payref':self.payref if self.payref else "-",
+            'paytype':self.paytype if self.paytype else "-",
+            'paydate':PaymentScheduleOp.get_pay_date(self)
         }
 
 # class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
@@ -3381,9 +3359,10 @@ class PaymentOp(Payment,Base):
     def fetch_all_payments():
         return Payment.query.order_by(Payment.id.desc()).all()
 
-    def update_payments(self,booking,instalment,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+    def update_payments(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.booking_paid = booking
         self.instalment_paid = instalment
+        self.addfee_paid = addfee
         self.rent_paid = rent
         self.water_paid = water
         self.electricity_paid =electricity

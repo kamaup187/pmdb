@@ -4812,27 +4812,36 @@ class StatementOfAccounts(Resource):
             tenantid = request.args.get("tenantid")
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
-            bills = tenant_obj.payments
+            schtotal = 0.0
+            schpaid = 0.0
+
+            bills = tenant_obj.schedules
 
             formatted_bills = []
 
             for bill in bills:
-                formatted_bills.append(PaymentOp.view(bill))
+                schtotal += bill.schedule_amount
+                schpaid += bill.paid
+                formatted_bills.append(PaymentScheduleOp.view_detail(bill))
 
             return Response(render_template(
                'report_account_statement.html',
-                bills=formatted_bills,
-                prop_obj=tenant_obj.apartment,
-                prop = tenant_obj.apartment.name,
-                tenant_obj=tenant_obj,
-                tenant_name=tenant_obj.name,
-                name=current_user.name,
-                tenantlist=[],
-                logopath=logo(current_user.company)[0],
-                mobilelogopath=logo(current_user.company)[1],
-                fulllogopath=logo(current_user.company)[2],
-                letterhead=logo(current_user.company)[3],
-                co=current_user.company
+               statementdate=datetime.datetime.now().strftime("%d %B %Y"),
+               bills=formatted_bills,
+               paging=page(formatted_bills),
+               schtotal=schtotal,
+               schpaid=schpaid,
+               prop_obj=tenant_obj.apartment,
+               prop = tenant_obj.apartment.name,
+               tenant_obj=tenant_obj,
+               tenant_name=tenant_obj.name,
+               name=current_user.name,
+               tenantlist=[],
+               logopath=logo(current_user.company)[0],
+               mobilelogopath=logo(current_user.company)[1],
+               fulllogopath=logo(current_user.company)[2],
+               letterhead=logo(current_user.company)[3],
+               co=current_user.company
             ))
 
 

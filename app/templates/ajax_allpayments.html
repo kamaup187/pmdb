@@ -250,7 +250,7 @@
 
                         <div class="ms-3 ml-3 form-group">
                           <span class="text-danger">
-                            Notify tenant by:
+                            Notify by:
                           </span>
 
                           <div>
@@ -392,6 +392,19 @@
                             <label for="bank7">Family</label>
                           </span>
                         </div>
+                      </div>
+
+                      <div class="form-group col-md-4 no-paddin input-icons">
+                        <span>Payment type (optional)</span>
+                        <select class="select-css" id ="paytype" >
+                          <option disabled selected value> select... </option>
+                          <option selected value="Inward telex payment"> Inward telex payment </option>
+                          <option selected value="M-banking transfer"> M-banking transfer </option>
+                          <option selected value="M-pesa paybill transfer"> M-pesa paybill transfer </option>
+                          <option selected value="Pesalink transfer">Pesalink Transfer </option>
+                          <option selected value="Other">Other</option>
+
+                        </select>
                       </div>
 
                       <!-- <div class="underline"></div> -->
@@ -1048,7 +1061,7 @@
             target:"amount due"
           },
       success: function(response) {
-        
+
         if (response.split(" ")[0] == "<input") {
           $("#totaldue").html(response);
           $("#tenantbed").empty();
@@ -1185,7 +1198,7 @@
         }
       });
     } else{
-      alert("lolololo")
+      alert("select period of payment first")
     }
   })
 </script>
@@ -1316,6 +1329,8 @@
 
     let bookingdue = parseInt($("#bookingdue").val())
     let instalmentdue = parseInt($("#instalmentdue").val())
+    let addfeedue = parseInt($("#addfeedue").val())
+
     let rentdue = parseInt($("#rentdue").val())
 
     let waterdue = parseInt($("#waterdue").val())
@@ -1335,6 +1350,7 @@
 
     if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
     if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
+    if (bal >= addfeedue) {$("#addfeedue").val(addfeedue);bal -= addfeedue} else if (bal < addfeedue && bal > 0) {$("#addfeedue").val(bal);bal = 0}else {$("#addfeedue").val(0.0)}
 
 
     if (bal >= rentdue) {$("#rentpaid").val(rentdue);bal -= rentdue}else if (bal < rentdue && bal > 0) {$("#rentpaid").val(bal);bal = 0}else {$("#rentpaid").val(0.0)}
@@ -1400,7 +1416,9 @@
 
                 paymode:document.querySelector('input[name="paymode"]:checked').value,
                 bill_ref:$("#bill_ref").val(),
+                paytype: $("#paytype").val(),
                 bookingpaid : ($("#bookingpaid").val()),
+                addfeepaid : ($("#addfeepaid").val()),
                 instalmentpaid : ($("#instalmentpaid").val()),
                 rentpaid : ($("#rentpaid").val()),
                 waterpaid : ($("#waterpaid").val()),

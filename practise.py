@@ -38,14 +38,14 @@
 # # pagegrade
 # # elimugrade
 
-class A:
-    id = 5
+# class A:
+#     id = 5
 
-bill = A()
+# bill = A()
 
-gg = f"app/temp/inv_{bill.id}.pdf"
+# gg = f"app/temp/inv_{bill.id}.pdf"
 
-billid = gg.split("_")[1].rstrip(".pdf")
+# billid = gg.split("_")[1].rstrip(".pdf")
 
 # import smtplib
 # from email.mime.text import MIMEText
@@ -80,5 +80,9 @@ billid = gg.split("_")[1].rstrip(".pdf")
 #                 print "could not attache file"
 #     msg.attach(MIMEText(msg_text,'html'))
 #     s.sendmail(sender, recipients, msg.as_string())
+
+
+
+print(list(range(1,(5+1))))
 
 

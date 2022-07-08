@@ -1,5 +1,6 @@
 
 import os
+import sched
 from dateutil.parser import parse
 
 import requests
@@ -1087,7 +1088,7 @@ class EditBill(Resource):
 
                 MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,current_user.id)
 
-                MonthlyChargeOp.update_balances(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1137,7 +1138,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1203,7 +1204,7 @@ class EditBill(Resource):
                 else:
                     MonthlyChargeOp.update_payment(bill,update_payments)
 
-                MonthlyChargeOp.update_payments(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_payments(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1253,7 +1254,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement - bill.agreement_paid
 
-                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1361,7 +1362,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement_balance + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 # MonthlyChargeOp.update_rent_balance(bill,rentarr)
 
 
@@ -2048,7 +2049,11 @@ class ReceivePayment(Resource):
                     return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                    bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
+
+                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                        bill = tenant_obj.monthly_charges[0]
+                    else:
+                        bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
                 else:
                     bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
 
@@ -2179,7 +2184,11 @@ class ReceivePayment(Resource):
                 house_item = house_obj if house_name2 else house_obj[0]
             
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                    bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+
+                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                        bill = tenant_obj.monthly_charges[0]
+                    else:
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
@@ -2213,6 +2222,7 @@ class ReceivePayment(Resource):
 
         bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
         instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
+        addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
         rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
         waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
         electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
@@ -2227,6 +2237,7 @@ class ReceivePayment(Resource):
 
         book = "Booking balance" if bookingpaid else ""
         inst = "Instalment" if instalmentpaid else ""
+        addfee = "Additional fees" if addfeepaid else ""
 
         water = "Water" if waterpaid else ""
         rent = "Rent" if rentpaid else ""
@@ -2236,7 +2247,7 @@ class ReceivePayment(Resource):
         dep = "Deposit" if depositpaid else ""
         serv = "Service" if servicepaid else ""
 
-        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst}"
+        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
 
         print(narration)
 
@@ -2277,6 +2288,7 @@ class ReceivePayment(Resource):
     
         paymode = request.form.get('paymode')#dropdown
         raw_bill_ref = request.form.get('bill_ref')#typed
+        paytype = request.form.get('paytype')#typed
         amount = request.form.get('paidamount')#typed
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
@@ -2463,17 +2475,30 @@ class ReceivePayment(Resource):
         if not narration:
             narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-        if aviv(current_user):
-            narration = get_str_month(period.month)
-
+        # if aviv(current_user):
+        #     narration = get_str_month(period.month)
 
         # monthly_charges = house_obj.monthlybills
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-            specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
+            if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                specific_charge_obj = tenant_obj.monthly_charges[0]
+            else:
+                specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
             specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
 
+        schedule_obj = None
+
+        if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            print("GONE TO PAY AVIV")
+            schedule_objs = tenant_obj.schedules
+            for sch in schedule_objs:
+                if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+                    schedule_obj = sch
+                    break
+
+        
         # if tenant_obj.tenant_type == "owner":
         #     monthly_charges = tenant_obj.monthly_charges
         # else:
@@ -2578,6 +2603,29 @@ class ReceivePayment(Resource):
 
         for h in target_houses:
 
+            if schedule_obj:
+                print("SCHEDULE OBJI FOUND")
+                sch_arrears = 0.0
+                prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+                if prev_sch:
+                    print("FOUND Previous scheduled")
+                    sch_arr = prev_sch[0].balance
+                    if sch_arr:
+                        sch_arrears = sch_arr
+                if sch_arrears:
+                    sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+                else:
+                    sch_total_amount = schedule_obj.schedule_amount
+
+                schpaid = schedule_obj.paid + valid_amount
+                
+                sch_bal = sch_total_amount - schpaid
+
+                print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
+
+                PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+            
+
 
             if specific_charge_obj:
 
@@ -2593,6 +2641,7 @@ class ReceivePayment(Resource):
 
                 booking_paid = bookingpaid + specific_charge_obj.booking_paid if specific_charge_obj.booking_paid is not None else 0
                 instalment_paid = instalmentpaid + specific_charge_obj.instalment_paid if specific_charge_obj.instalment_paid is not None else 0
+                addfee_paid = addfeepaid + specific_charge_obj.addfee_paid if specific_charge_obj.addfee_paid is not None else 0
 
                 rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
 
@@ -2614,16 +2663,17 @@ class ReceivePayment(Resource):
                 deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
-                MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                PaymentOp.update_payments(payment_obj,booking_paid,instalment_paid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+                MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,addfee_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                 try:
                     bookbal = specific_charge_obj.booking_due - bookingpaid
                     instbal = specific_charge_obj.instalment_due - instalmentpaid
+                    addfeebal = specific_charge_obj.addfee_due - addfeepaid
 
                     rentbal = specific_charge_obj.rent_due - rentpaid
 
-                    rentbal -= overpayment
+                    # rentbal -= overpayment
                     waterbal = specific_charge_obj.water_due - waterpaid
                     electricitybal = specific_charge_obj.electricity_due - electricitypaid
                     servicebal = specific_charge_obj.maintenance_due - servicepaid
@@ -2641,7 +2691,7 @@ class ReceivePayment(Resource):
                             if specific_charge_obj.house.housecode.servicerate:
                                 servicebal -= overpayment
 
-                    MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 except:
                     print("PAID TO LEGACY BILL")
 
@@ -3179,7 +3229,7 @@ class EditPayment(Resource):
                     deposit_paid = target_bill.deposit_paid - payment_obj.deposit_paid
                     agreement_paid = target_bill.agreement_paid - payment_obj.agreement_paid
 
-                    MonthlyChargeOp.update_payments(target_bill,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                    MonthlyChargeOp.update_payments(target_bill,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
                     print("VOID WORKING TO REMOVE PAYMENTS")
                 except:
                     print("Voiding DID NOT AFFECT segregated payments")
@@ -3196,7 +3246,7 @@ class EditPayment(Resource):
                     deposit_balance = target_bill.deposit_due + payment_obj.deposit_paid
                     agreement_balance = target_bill.agreement_due + payment_obj.agreement_paid
 
-                    MonthlyChargeOp.update_dues(target_bill,0.0,0.0,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
+                    MonthlyChargeOp.update_dues(target_bill,0.0,0.0,0.0,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
                     print("VOID WORKING TO UPDATE BALANCES")
 
                 except:

@@ -1,5 +1,6 @@
 <span id="edit_bill_identifier" class="dispnone">{{bill.id}}</span>
 
+<div class="container">
     <div class="form-group mb-1 text-right">
         <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal" data-target="#editBillModal"><i class="fas fa-edit mr-1"></i>edit invoice</button>
 
@@ -12,13 +13,13 @@
 {%if bill.booking_due%}
 <div class="row">
     <div class="form-group col-6 no-paddin input-icons">
-        <span>Booking balance</span>
+        <span>Total deposit <span class="text-dark"> (10% initial deposit + 20% booking balance)</span></span>
         <input id="bookingdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
             value="{{bill.booking_due}}" disabled />
         <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
     </div>
     <div class="form-group col-6 no-paddin input-icons">
-        <span>Booking paid </span>
+        <span>Deposit paid </span>
         <input id="bookingpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
             placeholder="0.0" value=""disabled />
         <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
@@ -29,7 +30,7 @@
 {%if bill.instalment_due%}
 <div class="row">
     <div class="form-group col-6 no-paddin input-icons">
-        <span>Instalment</span>
+        <span>Instalment due <span class="text-dark"> (monthly @{{bill.ptenant.instalment}})</span> </span>
         <input id="instalmentdue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
             value="{{bill.instalment_due}}" disabled />
         <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
@@ -37,6 +38,23 @@
     <div class="form-group col-6 no-paddin input-icons">
         <span>Instalment paid </span>
         <input id="instalmentpaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+            placeholder="0.0" value=""disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+</div>
+{% endif %}
+
+{%if bill.addfee_due%}
+<div class="row">
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Other payments due <span class="text-dark"> (excise duty, legal e.tc @{{bill.addfee}})</span> </span>
+        <input id="addfeedue" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger" type="text"
+            value="{{bill.addfee_due}}" disabled />
+        <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+    </div>
+    <div class="form-group col-6 no-paddin input-icons">
+        <span>Others payments </span>
+        <input id="addfeepaid" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
             placeholder="0.0" value=""disabled />
         <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
     </div>
@@ -191,6 +209,8 @@
             placeholder="0.0" value=""disabled />
         <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span>
     </div>
+</div>
+
 </div>
 {% endif %}
 

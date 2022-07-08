@@ -379,7 +379,7 @@
                                 <script>
                                     let date = d.getDate()
                                     const months = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-                                    let month = months[d.getMonth() + 1]
+                                    let month = months[d.getMonth() + 0]
                                     let year = d.getFullYear();
                                     document.write(month + " " + date + "," + year)
                                 </script> 
@@ -484,7 +484,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">Availabe</div>
+                                            <div class="text-white-75 small">Clients</div>
                                             <div class="text-lg fw-bold fixloader" id="tenantstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>

@@ -1,5 +1,6 @@
 """Helper methods for views"""
 from ast import Pass
+from mimetypes import init
 import os
 from pickle import TRUE
 # from africastalking import initialize
@@ -660,7 +661,7 @@ def logo(co):
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################
-                logopath = "../static/img/logos/kiotapay/l-logo.png"
+                logopath = "../static/img/logos/kiotapay/ll-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
                 letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
@@ -1069,6 +1070,15 @@ def fetch_pt_prev_billing_period_bills(month,year,arr,ptid):
     prev_year = get_prev_year(month,year)
     for i in arr:
         if i.month == prev_month and i.year == prev_year and i.ptenant_id == ptid:
+            prev_billling_period_data.append(i)
+    return prev_billling_period_data
+
+def fetch_prev_schedule(month,year,arr,ptid):
+    prev_billling_period_data = []
+    prev_month = get_prev_month(month)
+    prev_year = get_prev_year(month,year)
+    for i in arr:
+        if i.schedule_date.month == prev_month and i.schedule_date.year == prev_year and i.ptenant_id == ptid:
             prev_billling_period_data.append(i)
     return prev_billling_period_data
 
@@ -3195,6 +3205,11 @@ def generate_start_date(month,year):
     # day = datetime.datetime.now()
     # .day if month != 2 else datetime.datetime.now().day - 3
     return datetime.datetime(year, month, 1)
+
+def generate_end_date(month,year):
+    if month == 2:
+        return datetime.datetime(year, month, 28)
+    return datetime.datetime(year, month, 30)
 
 def calculate_sms_cost(sms,cost):
     try:
@@ -5493,7 +5508,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
 
                     MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,userid)
 
-                    MonthlyChargeOp.update_balances(bill,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                    MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                     # if bill.rent_balance:
@@ -5543,7 +5558,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
                     else:
                         agreementbal = bill.agreement + update_agreement
 
-                    MonthlyChargeOp.update_dues(bill,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
                     diff = total_amount - original_amount
@@ -6196,12 +6211,45 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and not localenv:
-                booking = house.owner.deposit + house.owner.deposit2
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and localenv:
+                project_end_date = generate_end_date(6,2023)
+                deposit1 = house.owner.deposit
+                deposit2 = house.owner.deposit2
+                bookdate = house.owner.date
+                booking = house.owner.deposit + deposit2
+                checkin = house.owner.checkin
                 instalment = house.owner.instalment * house.owner.num_instalment
+
+                if house.description.upper() == "STUDIO":
+                    addfee = 123380.0
+                else:
+                    addfee = 192380.0
+
+                mi = house.owner.instalment
+                months = house.owner.num_instalment
+
+                instalment_schedules = list(range(1,(months+1)))
+
+                initial_deposit_schedule = PaymentScheduleOp("10% Deposit",0.0,deposit1,deposit1,bookdate,apartment_id,house.id,house.owner.id)
+                initial_deposit_schedule.save()
+
+                booking_balance_schedule = PaymentScheduleOp("20% Deposit",0.0,deposit2,deposit2,checkin,apartment_id,house.id,house.owner.id)
+                booking_balance_schedule.save()
+
+                for sch in instalment_schedules:
+                    sch_date = checkin + relativedelta(months=sch)
+                    sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,sch_date,apartment_id,house.id,house.owner.id)
+                    sch.save()
+
+                others = f"Other payments (Stamp Duty, Registration fees, water and servicecharge deposit etc.)"
+
+                legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,project_end_date,apartment_id,house.id,house.owner.id)
+                legal_fee_schedule.save()
+
             else:
                 booking = 0.0
                 instalment = 0.0
+                addfee = 0.0
 
             all_charges = house.charges
 
@@ -6508,7 +6556,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6541,14 +6589,14 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 else:
                     print("TENANT BILLING CREATED >>>>>>>> specific charge not found") #TODO
 
-                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,addfee,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -6723,7 +6771,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 else:
                     pass
 
-                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance+booking+instalment
+                total_amount = water_total+garbage+electricity+security+fines+arrears+maintenance+booking+instalment+addfee
 
                 c_charge = None
                 
@@ -6783,7 +6831,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears + const_deposit + const_agreement #total amount is incremented only by updates
 
                     MonthlyChargeOp.update_monthly_charge(c_charge,update_water,update_rent,update_garbage,update_electricity,update_security,const_deposit,const_agreement,update_maintenance,update_penalty,const_arrears,total_amount,user_id)
-                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
+                    MonthlyChargeOp.update_dues(c_charge,0.0,0.0,0.0,update_rent_due,update_water_due,update_electricity_due,update_garbage_due,update_security_due,update_maintenance_due,update_penalty_due,const_deposit_due,const_agreement_due)
 
                     running_bal = tenant.balance
                     running_bal = running_bal + water_total+rent+garbage+electricity+security+maintenance+fines #these are updates, if one has update, the rest are zeros
@@ -6815,7 +6863,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                 else:
                     print("RESIDENT BILLING CREATED >>>>>>>> specific charge not found") #TODO
-                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
+                    monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,addfee,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
@@ -6823,8 +6871,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
                     # monthly_charge_obj_alt.save()
 
-                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
-                    MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
+                    MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,addfee,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)

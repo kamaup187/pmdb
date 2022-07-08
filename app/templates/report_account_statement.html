@@ -80,20 +80,30 @@
         <div class="card-body pt-0">
 
           <div class="divjust-end">
-            <div class="mb-4 mt-4 text-black h5 font-weight-bold">
+            <div class="mb-4 mt-4 text-black font-weight-bold">
               <div class="ln-16">{{co.name}}</div>
-              <div class="ln-16">{{co.mail_box}}</div>
+              <div class="ln-16">P.O BOX {{co.mail_box}}</div>
               <div class="ln-16">{{co.city}}</div>
             </div>
 
-            <div class="mb-4 mt-4 text-black font-weight-bold">
-              <div class="ln-14">Dates : {{statementdate}}</div>
-              <div class="ln-14">Apartment No : {{prop_obj.name}} {{tenant_obj.house.name}}</div>
-              <div class="ln-14">Unit Type : {{tenant_obj.house.housecode.code}}</div>
-              <div class="ln-14">Client Name : {{tenant_obj.name}}</div>
+            <div class="mb-4 mt-4 text-dark font-weight-bold">
+              <div class="ln-14 divjust-end">
+                <span>Date :</span> <span class="text-black">{{statementdate}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Apartment No :</span> <span class="text-black">{{tenant_obj.house.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Unit Type :</span> <span class="text-black">{{tenant_obj.house.description}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Client Name :</span> <span class="text-black">{{tenant_obj.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Purchase Price :</span> <span class="text-black">{{ "Kshs {:,.2f}".format(tenant_obj.negotiated_price | float) }}</span>
+              </div>
+            
               
-              <div class="ln-14">Purchase Prices : {{ "Kshs{:,.2f}".format(tenant_obj.house.housecode.listprice | float) }} </div>
-
             </div>
 
             <div class="text-right mb-4 mt-4">
@@ -103,25 +113,10 @@
           </div>
 
           
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT OF ACCOUNT</span></span>
-          </div>
-
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
-            <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.name}}</div>
-              <div>Estate : {{prop_obj.location}}</div>
-            </div>
-            <div class="pr-3">
-              <div>Date remitted : {{reportdate}}</div>
-              <div>Pin No : </div>
-            </div>
-
-          </div>
-
-          
+            <span class="font-weight-bold text-white"><span class="mt-3">STATEMENT OF ACCOUNT</span></span>
+          </div>         
 
           <!-- <div class="text-right mt-1">
             <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" ><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
@@ -129,16 +124,22 @@
 
                     
           <div class="table-responsive">
-            <table class="table" id="dataTable" width="100%" cellspacing="0">
-                  <thead class="custom-header-alt small">
+            <table class="table table-striped table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt wrap small">
                     <tr>
+                      <th class="hid"></th>
+
+                      <th class="">Date Payable</th>
+                      <th class="">Amount Payable</th>
+                      <th class="">Balance/BF</th>
+                      <th class="">Amount due</th>
+
+                      <th class="">Amount Received</th>
+                      <!-- <th class="">Current Balance</th> -->
+
                       <th class="">Date Received</th>
                       <th class="">Payment Ref</th>
                       <th class="">Payment Type</th>
-
-                      <th class="">Amount Received</th>
-                      <th class="">Amount Payable</th>
-                      <th class="">Date Payable</th>
                       <th class="">Comments</th>
 
 
@@ -147,15 +148,20 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr class="text-black">
-                      <td class="data-cell text-center">{{ bill['date'] }}</td>
-                      <td class="data-cell text-center no-wrap">{{ bill['ref']}}</td>
-                      <td class="data-cell text-center no-wrap">{{ bill['mode']}}</td>
+                      <td class="data-cell text-right hide">{{ bill['id'] }}</td>
 
-                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
-                      <td class="data-cell text-right">{{ bill['chargedamnt'] }}</td>
-                      <td class="data-cell text-right">{{ bill['date2'] }}</td>
-                      <td class="data-cell text-right">{{ bill['comments'] }}</td>
+                      <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
 
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
+  
+                      <td class="data-cell text-center">{{ bill['paydate'] }}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['paytype']}}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_name'] }}</td>
 
                     </tr>
                   {% endfor %}
@@ -163,18 +169,42 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{renttotal}}</td>
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold hid">.</td>
+                      <td class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{schtotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">{{schpaid}}</td>
+                      <!-- <td class="font-weight-bold text-right">{{sch_bal_total}}</td> -->
+
+
+
+                      <td colspan="4" class="font-weight-bold text-right">-</td>
+
+
 
                     </tr>
                   </tfoot>
                 </table>
-                <div class="divjust-end ln-16 mobile-malaysian nobreak text-black">
-                    Dear [resident], above is a statement of monies received for your purchase of [unit] at The Aviv amount payable as at [date]    
+
+                <div class="divjust-end">
+
+                  <div>
+                    <div>
+                      With regards:
+                    </div>
+                    <div class="mb-3">
+                      <div class="ln-10 font-weight-bold"></div>
+                      <div class="ln-10">________________________________</div>
+                    </div>
+                  </div>
+      
                 </div>
+                <div class="divjust-end ln-16 mobile-malaysian nobreak text-black">
+                    Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv amount payable as at {{statementdate}}. 
+                </div>
+
+
           </div>
 
         </div>
@@ -184,108 +214,133 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
-    <div class="">
+  <div id="invoice" class="col-lg-12  dispnon">
+    <div class="bg-white shadow">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
         <div class="card-body report-body">
+
           <div class="divjust-end">
-            <div class="mb-4 mt-4 text-black h5">
+            <div class="mb-1 mt-1 text-black font-weight-bold">
               <div class="ln-16">{{co.name}}</div>
-              <div class="ln-16">{{co.mail_box}}</div>
+              <div class="ln-16">P.O BOX {{co.mail_box}}</div>
               <div class="ln-16">{{co.city}}</div>
             </div>
 
-            <div class="text-right mb-4 mt-4">
+            <div class="mb-1 mt-1 text-dark font-weight-bold">
+              <div class="ln-14 divjust-end">
+                <span>Date :</span> <span class="text-black">{{statementdate}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Apartment No :</span> <span class="text-black">{{tenant_obj.house.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Unit Type :</span> <span class="text-black">{{tenant_obj.house.description}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Client Name :</span> <span class="text-black">{{tenant_obj.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Purchase Price :</span> <span class="text-black">{{ "Kshs {:,.2f}".format(tenant_obj.negotiated_price | float) }}</span>
+              </div>
+            
+              
+            </div>
+
+            <div class="text-right mb-1 mt-1">
               <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
               <img class="" src="{{logopath}}" alt="--no image--" />
             </div>
           </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT OF ACCOUNT</span></h5>
-          </div>
+            <span class="font-weight-bold text-white"><span class="mt-1">STATEMENT OF ACCOUNT</span></span>
+          </div>   
 
-          <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
-            <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.name}}</div>
-              <div>Estate : {{prop_obj.location}}</div>
-            </div>
-            <div class="pr-3">
-              <div>Date remitted : {{reportdate}}</div>
-              <div>Pin No : </div>
-            </div>
-
-          </div>
 
           <div class="table-responsive">
-            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+            <table class="table table-striped table-bordered table-hover" id="data-table" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
-                  <th class="">Unit</th>
-                  <th class="">Type</th>
-                  <th class="">Position</th>
-                  <th class="">Level</th>
-                  <th class="">Unit Size</th>
-                  <th class="">List Price</th>
-                  <th class="">Status</th>
-                  <th class="">Agent</th>
-                  <th class="">Name</th>
-                  <th class="">Email</th>
-                  <th class="">Phone</th>
-                  <th class="">Selling Price</th>
-                  <th class="">Amount Paid</th>
-                  <th class="">% Paid</th>
+                  <th class="hid"></th>
+
+                  <th class="">Date Payable</th>
+                  <th class="">Payable</th>
+                  <th class="">B/BF</th>
+                  <th class="">Due</th>
+
+                  <th class="">Received</th>
+                  <!-- <th class="">Current Balance</th> -->
+
+                  <th class="">Date</th>
+                  <th class="">Payment Ref</th>
+                  <th class="">Payment Type</th>
+                  <th class="">Comments</th>
+
 
                 </tr>
               </thead>
               <tbody>
                 {% for bill in bills%}
-                <tr>
-                  <td class="data-cell text-center">{{ bill['house'] }}</td>
-                  <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
-                  <td class="data-cell text-center">{{ bill['house'] }}</td>
-                  <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                <tr class="text-black">
+                  <td class="data-cell text-right hide">{{ bill['id'] }}</td>
+
+                  <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
+                  <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
+                  <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
+                  <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
+
+                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
+
+                  <td class="data-cell text-center">{{ bill['paydate'] }}</td>
+                  <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
+                  <td class="data-cell text-center no-wrap">{{ bill['paytype']}}</td>
+                  <td class="data-cell text-right">{{ bill['schedule_name'] }}</td>
+
                 </tr>
               {% endfor %}
 
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                  <td class="font-weight-bold text-right">{{renttotal}}</td>
-                  <td class="font-weight-bold text-right">{{billtotal}}</td>
-                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
-                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                  <td class="font-weight-bold text-right">{{renttotal}}</td>
-                  <td class="font-weight-bold text-right">{{billtotal}}</td>
-                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
-                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                  <td class="font-weight-bold hid">.</td>
+                  <td class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold text-right">{{schtotal}}</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">{{schpaid}}</td>
+                  <!-- <td class="font-weight-bold text-right">{{sch_bal_total}}</td> -->
+
+
+
+                  <td colspan="4" class="font-weight-bold text-right">-</td>
+
+
+
                 </tr>
               </tfoot>
             </table>
-            <div class="divjust-end ln-16 mobile-malaysian nobreak">
-              Dear Javier Franklin Akala, above is a statement of monies received for your purchase of E13 at The Aviv amount payable as at 24th January 2022
+            <div class="divjust-end mt-1">
+
+              <div>
+                <div>
+                  With regards:
+                </div>
+                <div class="mb-1">
+                  <div class="ln-10 font-weight-bold"></div>
+                  <div class="ln-10">________________________________</div>
+                </div>
+              </div>
+  
             </div>
+            <div class="divjust-end ln-16 mobile-malaysian nobreak text-black">
+              Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv amount payable as at {{statementdate}}.
+          </div>
          
         </div>
-      </div>
+      
     </div>
   </div>
 

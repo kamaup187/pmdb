@@ -136,16 +136,22 @@ class Index(Resource):
         #         group_obj = CompanyUserGroupOp(group,"",cos.id)
         #         group_obj.save()
 
+        # unitts = ["A13","C11","E13"]
 
-        # qws = ApartmentOp.fetch_apartment_by_id(33)
-        # if qws:
-        #     ApartmentOp.update_loan_bank_details(qws,0.0)
+        # for unit in unitts:
 
-        # if qws:
-        #     all_ptenants = qws.meters
-        #     decitype = "1"
-        #     for i in all_ptenants:
-        #         MeterOp.update_decitype(i,decitype)
+
+        #     qws = ApartmentOp.fetch_apartment_by_id(23)
+        #     hs = get_specific_house_obj(qws.id,unit)
+        #     # if qws:
+        #     #     ApartmentOp.update_loan_bank_details(qws,0.0)
+
+        #     if qws and localenv:
+        #         all_ptenants = hs.owner
+        #         bookedon = "proposal"
+        #         PermanentTenantOp.update_status(all_ptenants,bookedon)
+
+                # MeterOp.update_decitype(i,decitype)
 
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
@@ -1792,11 +1798,13 @@ class AddSalesAgent(Resource):
         # else:
         #     return err
 
-        user_obj = UserOp.fetch_user_by_email(email) if email else None
-        if not user_obj:
-            user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
-            if not user_obj:
-                user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
+        user_obj = None
+
+        # user_obj = UserOp.fetch_user_by_email(email) if email else None
+        # if not user_obj:
+        #     user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
+        #     if not user_obj:
+        #         user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
                        
         if not user_obj:
 
@@ -1816,30 +1824,30 @@ class AddSalesAgent(Resource):
             else:
                 username = username_exctractermail(email)
 
-            found = False
+            # found = False
 
-            for obj in company_obj.groups:
-                    if str(obj) == "Sales":
-                        found = True
-                        company_usergroup_obj = obj
+            # for obj in company_obj.groups:
+            #         if str(obj) == "Sales":
+            #             found = True
+            #             company_usergroup_obj = obj
 
-            if not found: #REFACTOR TO REMOVE THIS BLOCK
-                group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
-                group2.save()
-                company_usergroup_obj = group2
+            # if not found: #REFACTOR TO REMOVE THIS BLOCK
+            #     group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
+            #     group2.save()
+            #     company_usergroup_obj = group2
 
-            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
-            user_obj.save()
+            # user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
+            # user_obj.save()
 
             repp = SalesRepOp.fetch_rep_by_name(name.lower())
             if not repp:
             
-                rep_obj = SalesRepOp(name,name,phone,user_obj.id,company_obj.id)
+                rep_obj = SalesRepOp(name,name,phone,company_obj.id)
                 rep_obj.save()
 
-                if prop:
-                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-                    UserOp.relate(user_obj,prop_obj)
+                # if prop:
+                #     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                #     UserOp.relate(user_obj,prop_obj)
 
                 # att_obj = SalesRepOp(name,phone,prop_obj.id)
                 # att_obj.save()
@@ -4321,6 +4329,8 @@ class AddTenant(Resource):
     @login_required
     def get(self):
         target = request.args.get("target")
+        raw_checkin = request.args.get("date")
+
         propid = request.args.get("propid")
         prop_id = get_identifier(propid)
 
@@ -4360,7 +4370,46 @@ class AddTenant(Resource):
             return render_template('ajax_discount.html',mp=f'{ng:,.1f}')
 
         elif target == "negotiated details":
-            return render_template('ajax_client_details_two.html',client=ptenant_obj.name,plot=house_obj,mp=f"{ptenant_obj.negotiated_price:,.1f}")  
+            if not raw_checkin:
+                # return "date not specified"
+                abort(403)
+            else:
+                str_checkin = date_formatter_alt(raw_checkin)
+                datenow = parse(str_checkin)
+
+                instalment_date = datenow + relativedelta(months=1)
+
+                project_end_date = generate_start_date(7,2023)
+
+                print("START:", instalment_date.date())
+                print("ENDING:", project_end_date.date())
+
+                # diff = relativedelta(project_date, datenow)
+                delta = relativedelta(project_end_date, instalment_date)
+                months = delta.months + (delta.years * 12)
+
+                print("MONTHS",months)
+
+                negprice = ptenant_obj.negotiated_price
+                deposit = negprice * 0.1
+                deposit2 = negprice * 0.2
+
+                bal = negprice - deposit - deposit2
+
+                try:
+                    instalment = f"{(bal/months):,.0f}"
+                except:
+                    instalment = 0.0
+
+            return render_template(
+                'ajax_client_details_two.html',
+                client=ptenant_obj.name,
+                plot=house_obj,
+                mp=f"{ptenant_obj.negotiated_price:,.1f}",
+                deposit=deposit,
+                deposit2=deposit2,
+                num_mi=months,
+                mi=instalment)  
 
     def post(self):
         target = request.form.get('target')
@@ -4571,7 +4620,7 @@ class AddTenant(Resource):
                         rep_id = None
 
                         if ttype == "clients":
-                            PermanentTenantOp.update_resident_type(ptenant_obj,"investor")
+                            PermanentTenantOp.update_resident_type(ptenant_obj,"normal")
                             print("AFTER UPDATING",ptenant_obj.resident_type)
                             print("AFTER UPDATING T",ptenant_obj.tenant_type)
 
@@ -4904,10 +4953,6 @@ class Deal(Resource):
         pass
     def post(self):
         ptenant_id = request.form.get('tenant_id')
-        plan = request.form.get('plan')
-
-
-        datenow = datetime.datetime.now()
 
         target = request.form.get('target')
 
@@ -4919,25 +4964,31 @@ class Deal(Resource):
         if target=="negotiations":
             negprice = validate_input(request.form.get('negprice'))
             deposit = validate_input(request.form.get('deposit'))
-            deposit2 = validate_input(request.form.get('deposit2'))
-            mi = validate_input(request.form.get('mi'))
-            num_mi = validate_input(request.form.get('num_mi'))
+
+            # deposit2 = validate_input(request.form.get('deposit2'))
+            # mi = validate_input(request.form.get('mi'))
+            # num_mi = validate_input(request.form.get('num_mi'))
 
             PermanentTenantOp.update_status(alloc,"contracts")
 
-            PermanentTenantOp.update_payment_plan(alloc,negprice,plan,deposit,deposit2,mi,num_mi,datenow,current_user.id)
+            PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
 
             msg = "Client details updated"
             return msg + proceed
         else:
             # path = f"app/temp/litala.pdf"
+
+            deposit2 = validate_input(request.form.get('deposit2'))
+            mi = validate_input(request.form.get('mi'))
+            num_mi = validate_input(request.form.get('num_mi'))
+
             raw_checkin = request.form.get('date')
 
             if not raw_checkin:
                 # return "date not specified"
                 abort(403)
             else:
-                str_checkin = date_formatter_weekday(raw_checkin)
+                str_checkin = date_formatter_alt(raw_checkin)
                 datenow = parse(str_checkin)
 
 
@@ -4958,17 +5009,21 @@ class Deal(Resource):
             else:
                 img = ""
 
+            bookedon = datenow - relativedelta(months=1)
+
+            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,deposit2,mi,num_mi,bookedon,datenow)
+
             plot = alloc.house
-            PermanentTenantOp.upload_contracts(alloc,img,datenow,current_user.id)
+            PermanentTenantOp.upload_contracts(alloc,img,"")
             HouseOp.update_status(plot,"sold")
             PermanentTenantOp.update_status(alloc,"closed")
 
-            if alloc.plan == "partial":
-                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
-                # balance = alloc[2].deposit + alloc[2].instalment
-                # TenantOp.update_balance(tenant_obj,balance)
-            else:
-                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+            # if alloc.plan == "partial":
+            #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+            #     # balance = alloc[2].deposit + alloc[2].instalment
+            #     # TenantOp.update_balance(tenant_obj,balance)
+            # else:
+            #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
 
             # bill = alloc.instalment + alloc.deposit
 

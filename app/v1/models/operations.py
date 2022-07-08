@@ -2024,6 +2024,12 @@ class PermanentTenantOp(PermanentTenant,Base):
     def generate_delid(self):
         return "pdel" + str(self.id)
 
+    def get_uid(self):
+        if not self.uid:
+            return f"WN{self.id}"
+        else:
+            return self.uid
+
     def view(self):
         # print("NAME >>>>",self.name)
         return {
@@ -2031,6 +2037,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'identity':PermanentTenantOp.generate_identity(self),
             'editid':PermanentTenantOp.generate_editid(self),
             'delid':PermanentTenantOp.generate_delid(self),
+            'ref':TenantOp.get_uid(self),
             'name':PermanentTenantOp.generate_name(self),
             'fullname':self.name,
             'hst':PermanentTenantOp.combine_house_tenant(self),
@@ -2259,6 +2266,12 @@ class TenantOp(Tenant,Base):
         else:
             return "Tenant"
 
+    def get_uid(self):
+        if not self.uid:
+            return f"TNT{self.id}"
+        else:
+            return self.uid
+
     def view(self):
         # print("NAME >>>>",self.name)
         return {
@@ -2267,6 +2280,7 @@ class TenantOp(Tenant,Base):
             'editid':TenantOp.generate_editid(self),
             'delid':TenantOp.generate_delid(self),
             'allocid':TenantOp.generate_alloc_identity(self),
+            'ref':TenantOp.get_uid(self),
             'name':TenantOp.generate_name(self),
             'fullname':self.name,
             'hst':TenantOp.combine_house_tenant(self),

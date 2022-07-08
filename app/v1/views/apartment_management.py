@@ -4,6 +4,12 @@ import time
 import os
 from dateutil.parser import parse
 
+import json
+from openpyxl import load_workbook
+from collections import OrderedDict
+from itertools import islice
+
+
 import cloudinary as Cloud
 from sqlalchemy.sql.expression import except_
 # from sqlalchemy import inspect
@@ -24,6 +30,7 @@ from .advanta import *
 from operator import add
 from app import sms
 from app import mail
+
 
 # from rq import Queue
 # from rq.job import Job
@@ -7129,3 +7136,36 @@ class ContactManagement(Resource):
         if txt:
             txt_obj = InternalMessagesOp(title,txt,tenant_id,apartment_id)
             txt_obj.save()
+
+
+
+
+
+
+class FetchExcel(Resource):
+    @login_required
+    def get(self):
+
+        return Response(render_template(
+            'fetch_excel.html',
+        ))
+    def post(self):
+        excel_file = request.files['file']
+        wb = load_workbook(excel_file)
+        ws = wb[wb.sheetnames[0]]
+        excel_list = []    
+
+        for row in range(1, ws.max_row+1): 
+            for col in "AB":
+                cell_name="{}{}".format(col, row)
+                excel_list.append(ws[cell_name].value)
+
+        print(excel_list)
+        
+
+        
+ 
+        
+
+    
+  

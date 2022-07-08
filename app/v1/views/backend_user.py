@@ -264,7 +264,7 @@ class BUpdateUser(Resource):
         #     usergroup_list.remove(tenant_group)
         # except:
         #     pass
-
+  
         return make_response(jsonify({
             'message_user_': 'Account creation failed.',
             # "groups":usergroup_list,
@@ -277,64 +277,67 @@ class BUpdateUser(Resource):
 
             }), 200)
 
-    # @login_required
-    # def post(self):
-    #     #GLOBAL
-    #     company = current_user.company
+    @login_required
+    def post(self):
+        #GLOBAL
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+    
+        company = current_user.thatscompany
 
-    #     userid = request.form.get('userid')#this will be selected within the form
-    #     name = request.form.get('name')
-    #     phone = request.form.get('phone')
-    #     email = request.form.get('email')
-    #     national_id = request.form.get('natid')
-    #     pass1 = request.form.get('pass1')
-    #     pass2 = request.form.get('pass2')
-    #     usergroup=request.form.get('usergroup')
-
-    #     tenantcheck = request.form.get('tenantcheck')
-
-
-    #     if not userid:
-    #         print("chelaaal")
-    #         update_user = current_user
-    #     else:
-    #         user_id = get_identifier(userid)
-    #         update_user = UserOp.fetch_user_by_id(user_id)
+        userid = data.get('userid')#this will be selected within the form
+        name = data.get('name')
+        phone = data.get('phone')
+        email = data.get('email')
+        national_id = data.get('natid')
+        pass1 = data.get('pass1')
+        pass2 = data.get('pass2')
+        usergroup=data.get('usergroup')
+        tenantcheck = data.get('tenantcheck')
 
 
+        if not userid:
+            print("chelaaal")
+            update_user = current_user
+        else:
+            user_id = get_identifier(userid)
+            update_user = UserOp.fetch_user_by_id(user_id)
 
-    #     if tenantcheck:
-    #         if update_user.user_group_id == 5:
-    #             return render_template("ajaxtenantuserupdate.html",tenantname=update_user.name)
-    #         else:
-    #             usergroup_list = company.groups
-    #             for item in usergroup_list:
-    #                 if item.name == "Tenant":
-    #                     usergroup_list.remove(item)
-    #             return render_template("restoreform.html",usergroup_option_list=usergroup_list)
 
-    #     user_group_id=None
 
-    #     if usergroup:
-    #         # user_group_id = get_usergroup_id(usergroup)
+        if tenantcheck:
+            if update_user.user_group_id == 5:
+                return render_template("ajaxtenantuserupdate.html",tenantname=update_user.name)
+            else:
+                usergroup_list = company.groups
+                for item in usergroup_list:
+                    if item.name == "Tenant":
+                        usergroup_list.remove(item)
+                return render_template("restoreform.html",usergroup_option_list=usergroup_list)
+
+        user_group_id=None
+
+        if usergroup:
+            # user_group_id = get_usergroup_id(usergroup)
             
-    #         user_group_id = get_company_usergroup_id(usergroup,company)
+            user_group_id = get_company_usergroup_id(usergroup,company)
 
-    #     validate_pass = ValidatePass.validate_password(pass1,pass2)
+        validate_pass = ValidatePass.validate_password(pass1,pass2)
         
-    #     if  validate_pass=="no match":
-    #         flash("Passwords do not match!","fail")
-    #         return redirect(url_for('api.updateuser'))
+        if  validate_pass=="no match":
+            flash("Passwords do not match!","fail")
+            return redirect(url_for('api.updateuser'))
 
-    #     modified_by = current_user.id
-    #     company_id = None
+        modified_by = current_user.id
+        company_id = None
 
-    #     UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
+        UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
         
-    #     msg='User info updated.'
-    #     flash(msg,"success")
+        msg='User info updated.'
+        flash(msg,"success")
 
-    #     return redirect(url_for("api.updateuser"))
+        return redirect(url_for("api.updateuser"))
 
 
 

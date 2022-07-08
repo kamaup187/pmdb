@@ -295,3 +295,6 @@ api.add_resource(BUpdateUser,"/update/buser")
 api.add_resource(BCreateApartment,"/add/bapartment")
 api.add_resource(BAdminCreateAgent,"/add/badmincreateagent")
 api.add_resource(BModifyAccessRight,"/modify/baccess")
+
+
+api.add_resource(BAllProperties,"/all/bproperties")

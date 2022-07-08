@@ -2150,7 +2150,9 @@ class ReceivePayment(Resource):
                         else:
                             print("DID NOT FIND ASTROL GUY KATA SIM")
                             print("CBID NI HII",cb.bill_ref_num.upper())
-                            print("NGOMBE NI HUYU",TenantOp.fetch_tenant_by_uid("RT92DZ7").uid)
+                            print("length ni hii",len(cb.bill_ref_num.upper()))
+                            print("NGOMBE NI HUYU",TenantOp.fetch_tenant_by_uid("RT92U4Y").uid)
+                            print("length ya ngombe ni hii",len(TenantOp.fetch_tenant_by_uid("RT92U4Y").uid))
                             bill = None
                     # if cb.bill_ref_num.startswith("TNT"):
                     #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))

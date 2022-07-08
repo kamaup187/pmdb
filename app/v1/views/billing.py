@@ -2013,7 +2013,8 @@ class ReceivePayment(Resource):
                             print("HAKUNAAA HIO NI UWONGO")
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
-                        tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                        cbid_id = cb.bill_ref_num.replace(" ","")
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2022,8 +2023,6 @@ class ReceivePayment(Resource):
 
                         else:
                             print("DID NOT FIND ASTROL GUY KATA SIM")
-                            print("CBID NI HII",cb.bill_ref_num.upper())
-                            print("NGOMBE NI HUYU",TenantOp.fetch_tenant_by_uid("RT92DZ7").uid)
                             bill = None
 
                     else:
@@ -2140,7 +2139,8 @@ class ReceivePayment(Resource):
                         else:
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
-                        tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                        cbid_id = cb.bill_ref_num.replace(" ","")
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2149,10 +2149,6 @@ class ReceivePayment(Resource):
 
                         else:
                             print("DID NOT FIND ASTROL GUY KATA SIM")
-                            print("CBID NI HII",cb.bill_ref_num.upper())
-                            print("length ni hii",len(cb.bill_ref_num.upper()))
-                            print("NGOMBE NI HUYU",TenantOp.fetch_tenant_by_uid("RT92U4Y").uid)
-                            print("length ya ngombe ni hii",len(TenantOp.fetch_tenant_by_uid("RT92U4Y").uid))
                             bill = None
                     # if cb.bill_ref_num.startswith("TNT"):
                     #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
@@ -2400,7 +2396,8 @@ class ReceivePayment(Resource):
                         print("HOUSE NOT FOUND")
                         abort(404) 
                 elif prop.name == "Astrol Ridgeways":
-                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                    cbid_id = cb.bill_ref_num.replace(" ","")
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
                     if tenant_obj:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)

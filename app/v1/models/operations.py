@@ -2280,7 +2280,7 @@ class TenantOp(Tenant,Base):
             'editid':TenantOp.generate_editid(self),
             'delid':TenantOp.generate_delid(self),
             'allocid':TenantOp.generate_alloc_identity(self),
-            'ref':TenantOp.get_uid(self),
+            'uid':TenantOp.get_uid(self),
             'name':TenantOp.generate_name(self),
             'fullname':self.name,
             'hst':TenantOp.combine_house_tenant(self),

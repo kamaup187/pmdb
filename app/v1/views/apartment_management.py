@@ -7184,13 +7184,13 @@ class Results(Resource):
 
         else:
 
-            print("tuko huku",item)
-
             tenant_id = get_identifier(item)
 
             if item.startswith("tnt"):
+                print("fetching tenant",item)
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             else:
+                print("fetching resident",item)
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
 
             update_login_history("search",current_user)

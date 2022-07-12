@@ -661,7 +661,7 @@ def logo(co):
         else:
             if os.getenv("TARGET") != "lasshouse":
                 ##################################################
-                logopath = "../static/img/logos/kiotapay/ll-logo.png"
+                logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
                 letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
@@ -1085,9 +1085,6 @@ def fetch_prev_schedule(month,year,arr,ptid):
 def fetch_actual_payments(arr):
     actual_payment_data = []
     for i in arr:
-        print(i.ptenant_id,"bgcfxdzdcv")
-        print(i.tenant_id,"bbbbbbbbbbbbbbbb")
-
         if not i.voided:
             actual_payment_data.append(i)
     return actual_payment_data

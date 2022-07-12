@@ -744,6 +744,29 @@
 
 
 <script>
+
+    console.log("#search-result-viewssss")
+
+    $.ajax({
+    url: "{{ url_for('api.fetchbills') }}",
+    type: "get",
+    data: {
+      tenantid: $("#tenant_identifier").text(),
+      target: "tenant bill",
+      ttype: $("#ttype").text()
+    },
+    success: function (response) {
+
+      $("#search-result-view").html(response);
+    }
+  });
+  console.log("#search-result-view")
+  
+
+</script>
+
+
+<script>
   // This script autopulate house options and displays tenant name
   $("#receiptModal").on('shown.bs.modal', function(){
     $.ajax({

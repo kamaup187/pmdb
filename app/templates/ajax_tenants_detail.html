@@ -637,19 +637,19 @@
               $("#searchresults").removeClass("dispnone")
               $("#searchresults").html(response);
 
-              $.ajax({
-                url: "{{ url_for('api.fetchbills') }}",
-                type: "get",
-                data: {
-                  tenantid: item,
-                  target:"tenant bill",
-                  ttype:ttype
-                },
-                success: function(response) {
+              // $.ajax({
+              //   url: "{{ url_for('api.fetchbills') }}",
+              //   type: "get",
+              //   data: {
+              //     tenantid: item,
+              //     target:"tenant bill",
+              //     ttype:ttype
+              //   },
+              //   success: function(response) {
                   
-                  $("#search-result-view").html(response);
-                }
-              });
+              //     $("#search-result-view").html(response);
+              //   }
+              // });
             }
           });
         }else{

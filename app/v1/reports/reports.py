@@ -5444,15 +5444,11 @@ class FetchBills(Resource):
         ttarget = request.args.get('ttarget')
         ttype = request.args.get('ttype')
 
-        co = current_user.company
-
         if target == "tenant bill":
             tenant_id = request.args.get('tenantid')
 
             tenantid = get_identifier(tenant_id)
 
-            print("Is tenant?",tenant_id.startswith("tnt"),tenant_id)
-            print("What is ttarget?",ttarget)
             print("What is ttype?",ttype)
 
             #####################################################################################################
@@ -5466,17 +5462,13 @@ class FetchBills(Resource):
             ######################################################################################################
 
             #####################################################################################################
-            if tenant_id.startswith("tnt") or ttarget == "ttarget" or ttype == "tenant":
+            if ttype != "resident" and ttype != "owner":
                 print("expecting tenant here")
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
-                if not tenant_id.startswith("tnt"):
-                    tenant_obj = None
             else:
                 print("expecting owner here")
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
-            if not tenant_obj:
-                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
             if not tenant_obj:
                 return '<span class="hide ms-5 ml-5">hide</span>' + err + "Invoices could not be retrieved"
             #######################################################################################################

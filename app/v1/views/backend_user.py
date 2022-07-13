@@ -48,7 +48,6 @@ class BUserLogin(Resource):
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
             return make_response(jsonify({
                 'message': 'Login fail error',
-                'error':e
             }), 400)
 
         if user:

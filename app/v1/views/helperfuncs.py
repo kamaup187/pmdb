@@ -5455,7 +5455,7 @@ def run_update(houseids,apartment_id,user_id):
 
     # houses = [get_specific_house_obj(apartment_id,hs) for hs in houseids]
     houses = prop.houses
-    billing_period = generate_date(6,2022)
+    billing_period = generate_date(7,2022)
 
     print("STARTING UPDATE")
 

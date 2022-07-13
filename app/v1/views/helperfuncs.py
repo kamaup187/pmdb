@@ -5465,7 +5465,7 @@ def run_update(houseids,apartment_id,user_id):
         bills = hs.monthlybills
 
         for bill in bills:
-            print("RUNNING BILL UPDATE")
+            print("RUNNING BILL UPDATE FOR :",bill.house," >> ",bill.month,"/",bill.year)
             original_amount = bill.total_bill
             # if bill.apartment.billing_period.month == bill.month:
             values = validate_float_inputs("","","","","","","","","","")

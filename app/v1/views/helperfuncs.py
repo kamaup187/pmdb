@@ -5461,7 +5461,8 @@ def run_update(houseids,apartment_id,user_id):
 
     for hs in houses:
         print("ON HOUSE: ",hs)
-        bills = fetch_current_billing_period_bills(billing_period,hs.monthlybills)
+        # bills = fetch_current_billing_period_bills(billing_period,hs.monthlybills)
+        bills = hs.monthlybills
 
         for bill in bills:
             print("RUNNING BILL UPDATE")

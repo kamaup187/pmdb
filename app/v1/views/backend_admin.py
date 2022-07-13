@@ -189,28 +189,31 @@ class BAllProperties(Resource):
                 
             occ = f"{occupancy:,.0f}"
             agent_user = UserOp.fetch_user_by_username(prop.agent_id)
-            agent = agent_user.company if agent_user else "N/A"
-            agent_digest = {
-                'phone':agent.phone, 
-                'remainingsms': agent.remainingsms,
-                 'sphone': agent.sphone, 
-                 'quotamonth': agent.quotamonth,
-                  'id': agent.id, 
-                  'description': agent.description,
-                   'sms_provider': agent.sms_provider, 
-                   'name': agent.name, 
-                 'receipt_num': agent.receipt_num,
-                  'city': agent.city,
-                   'balance': agent.balance, 
-                  'region': agent.region, 
-                  'subscription': agent.subscription, 
-                  'street_address': agent.street_address,
-                 'active': agent.active, 
-                 'mail_box': agent.mail_box,
-                  'billing_period':agent.billing_period, 
-                 'email': agent.email,
-                  'smsquota': agent.smsquota
-            }
+          
+            agent = agent_user.company 
+            if agent_user:
+                agent_digest = {
+                    'phone':agent.phone, 
+                    'remainingsms': agent.remainingsms,
+                    'sphone': agent.sphone, 
+                    'quotamonth': agent.quotamonth,
+                    'id': agent.id, 
+                    'description': agent.description,
+                    'sms_provider': agent.sms_provider, 
+                    'name': agent.name, 
+                    'receipt_num': agent.receipt_num,
+                    'city': agent.city,
+                    'balance': agent.balance, 
+                    'region': agent.region, 
+                    'subscription': agent.subscription, 
+                    'street_address': agent.street_address,
+                    'active': agent.active, 
+                    'mail_box': agent.mail_box,
+                    'billing_period':agent.billing_period, 
+                    'email': agent.email,
+                    'smsquota': agent.smsquota
+                }
+            else:"N/A"
 
             if target == "tenants":
                 template = "ajax_prop_tenants.html" 
@@ -255,7 +258,7 @@ class BAllProperties(Resource):
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
                     'owner':prop.owner.name,
-                    'agent':agent_digest,
+                    # 'agent':agent_digest,
                     'houses':houses,
                     'tenants':tenants,
                     'ptenants':ptnts,
@@ -288,7 +291,7 @@ class BAllProperties(Resource):
         }
 
         user_company ={
-     
+
             'sphone': current_user.company.sphone,
             'sms_provider': current_user.company.sms_provider,
             'id': current_user.company.id, 

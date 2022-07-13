@@ -12,6 +12,8 @@ from .views.admin_views import *
 from .views.backend_user import *
 from .views.backend_apartment import *
 from .views.backend_admin import *
+from .views.backend_billing import *
+
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
@@ -298,6 +300,10 @@ api.add_resource(BUpdateUser,"/update/buser")
 api.add_resource(BCreateApartment,"/add/bapartment")
 api.add_resource(BAdminCreateAgent,"/add/badmincreateagent")
 api.add_resource(BModifyAccessRight,"/modify/baccess")
-
+api.add_resource(BRegisterUser,"/add/buser")
+api.add_resource(BPropertyAccess,"/property/baccess")
+api.add_resource(BPropertyAccessTermination,"/property/btermination")
 
 api.add_resource(BAllProperties,"/all/bproperties")
+api.add_resource(BClientBilling,"/client/bbilling")
+api.add_resource(BBilling, "/bbilling")

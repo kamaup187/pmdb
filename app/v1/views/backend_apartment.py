@@ -44,6 +44,7 @@ class BComStats(Resource):
     @login_required
     def get(self):
         data = request.get_json()
+        print(data)
         if data:
             com= data.get('com')
         else:
@@ -314,51 +315,54 @@ class BRegisterOwner(Resource):
             }), 200)      
 
 
+
 class BCreateApartment(Resource):
+    @cross_origin()
     @login_required
     def get(self):
-        user_group = current_user.company_user_group
-        accessright = check_accessright(user_group,"add_apartment")
-        print(user_group)
-        if accessright != True:
-            return make_response(jsonify({
-                "message": "You have insufficient rights to access this form!",
-                "name":current_user.name
-            }), 400) 
-
         owners = OwnerOp.fetch_all_owners()
-
-        print(owners)
-
         location_list = fetch_all_locations()
         regions = stringify_list_items(location_list)
         owner = stringify_list_items(owners)
         regions.sort()
+
         data={
-            "owners":owner,
-            "option_list":regions
-  
+           "owners":owner,
+            "option_list":regions,
+            "name":current_user.name,
+            "logopath":logo(current_user.company)[0],
+            "mobilelogopath":logo(current_user.company)[1]
+          
         }
-        
         return make_response(jsonify({
-                "message": "Success",
-                "name":current_user.name,
-                "data":data,
-                "logopath":logo(current_user.company)[0],
-                "mobilelogopath":logo(current_user.company)[1]
-            }), 200)         
+            "message": "Success",
+            "data":data
+         
+        }), 200)
     
-
     @cross_origin()
+    @login_required
     def post(self):
-        formatted_url = None
-        file_to_upload  = request.files['image'] # get uploaded image
-        name = request.form['name']
-        owner=request.form['owner']
-        location = request.form['location']
 
-        print(owner)
-       
+        user_group = current_user.company_user_group
+        accessright = check_accessright(user_group,"add_apartment")
+        if accessright != True:
+            return make_response(jsonify({
+                'msg': 'You have insufficient rights to access this form!',
+                "name":current_user.name
+            }))
+
+        owners = OwnerOp.fetch_all_owners()
+
+        location_list = fetch_all_locations()
+        regions = stringify_list_items(location_list)
+        regions.sort()
+
+        formatted_url = None
+        name = request.form.get("name")
+        owner = request.form.get("owner")
+        location = request.form.get("location")
+        file_to_upload = request.files.get("image") # get uploaded image
         if file_to_upload:
             upload_result = upload(file_to_upload) # send image to cloud
             # style the image and get its url after styling
@@ -375,15 +379,18 @@ class BCreateApartment(Resource):
         bool_value = return_bool(agency_managed)
 
 
-        owner_id = get_owner_id(owner) 
+        owner_id = get_owner_id(owner)
         location_id = get_location_id(location)
         
         present = ApartmentOp.fetch_apartment_by_name(name)
         if present:
+            flash("Similar apartment exists","fail")
+            
             return make_response(jsonify({
                 "message": "Similar apartment exists",
             }), 200)    
             
+
         
         apartment_obj = ApartmentOp(name,secure_image,location_id,owner_id,bool_value,current_user.id)
         apartment_obj.save()
@@ -396,10 +403,236 @@ class BCreateApartment(Resource):
             if not bool_value:
                 owner_co_id = owner_user.company_id
                 ApartmentOp.update_company(apartment_obj,owner_co_id)
+
         return make_response(jsonify({
                 "message": "Property registration success, time to add some houses",
-    
             }), 200)    
             
 
+            
 
+
+class BPropertyAccess(Resource):
+    """class"""
+    @cross_origin()
+    @login_required
+    def get(self):
+        accessright = current_user.username
+        if accessright != "admin":
+            return make_response(jsonify({
+                'msg': 'You have insufficient rights to access this form!',
+                "name":current_user.name
+            }))
+        
+
+        owners = OwnerOp.fetch_all_owners()
+        agents = fetch_all_agents()
+
+        
+
+        return make_response(jsonify({
+                'msg': 'Success',
+                'name':current_user.name,
+              'owners':stringify_list_items(owners),
+            'logopath':logo(current_user.company)[0],
+            'mobilelogopath':logo(current_user.company)[1],
+            'agents':stringify_list_items(agents)
+            }))
+
+    @cross_origin()
+    @login_required
+    def post(self):
+        
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+    
+   
+        owner = data.get('owner')
+        propertyauto = data.get('propertyauto')
+        username = data.get('agent')
+    
+        owner_id = OwnerOp.fetch_owner_by_uniquename(owner).id
+        apartments = ApartmentOp.fetch_all_apartments_by_owner(owner_id)
+
+        apartment = data.get('property')
+        
+        if propertyauto:
+            apartments.append("All")
+            return make_response(jsonify({
+                'msg': 'Success',
+              'apartmentlist':stringify_list_items(apartments)
+            }))
+        
+
+        agent_obj = UserOp.fetch_user_by_username(username)
+
+        if apartment == "All":
+            for prop in apartments:
+                current_apartments = fetch_all_apartments_by_user(agent_obj)
+                if prop in current_apartments:
+                    print("skipping...")
+
+                else:
+                    ApartmentOp.relate(prop,agent_obj)
+                    print("Agent given access to ",str(prop))
+                    UserOp.update_status(agent_obj,True)
+                    ApartmentOp.update_agent(prop,agent_obj.username)
+                    if prop.agency_managed:
+                        agent_co = agent_obj.company
+                        ApartmentOp.update_company(prop,agent_co.id)
+
+                        company_users = agent_co.users
+                        for i in company_users:
+                            if i.user_group_id == 4:
+                                ApartmentOp.relate(prop,i)
+                                print("user added to ",str(prop))
+                                return make_response(jsonify({
+                                    'msg':msg,
+      
+                                }))
+
+        else:
+            apartment_obj = ApartmentOp.fetch_apartment_by_name(apartment)
+            current_apartments = fetch_all_apartments_by_user(agent_obj)
+            if apartment_obj in current_apartments:
+                print("Agent already has access to ",str(apartment_obj))
+                return make_response(jsonify({
+                    'msg':"Agent already has access"
+      
+                }))
+            else:
+                ApartmentOp.relate(apartment_obj,agent_obj)
+                print("Agent given access to ",str(apartment_obj))
+                UserOp.update_status(agent_obj,True)
+                if not apartment_obj.agent_id:
+                    ApartmentOp.update_agent(apartment_obj,agent_obj.username)
+                    if apartment_obj.agency_managed:
+                        agent_co = agent_obj.company
+                        ApartmentOp.update_company(apartment_obj,agent_co.id)
+    
+                        company_users = agent_co.users
+                        for i in company_users:
+                            if i.user_group_id == 4:
+                                ApartmentOp.relate(apartment_obj,i)
+                                print("user added to apartment")
+
+
+        msg = "Operation completed"
+        flash(msg,"success")
+  
+        return make_response(jsonify({
+                'msg':msg,
+      
+            }))
+        
+
+
+class BPropertyAccessTermination(Resource):
+    """class"""
+    @login_required
+    def get(self):
+        accessright = current_user.username
+        if accessright != "admin":
+            return make_response(jsonify({
+                'msg': 'You have insufficient rights to access this form!',
+                "name":current_user.name
+            }))
+        
+
+        owners = OwnerOp.fetch_all_owners()
+        agents = fetch_all_agents()
+
+        return make_response(jsonify({
+                'msg': 'Success',
+                'name':current_user.name,
+              'owners':stringify_list_items(owners),
+            'logopath':logo(current_user.company)[0],
+            'mobilelogopath':logo(current_user.company)[1],
+            'agents':stringify_list_items(agents)
+            }))
+
+
+    @login_required
+    def post(self):
+
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+    
+   
+        owner = data.get('owner')
+        propertyauto = data.get('propertyauto')
+        username = data.get('agent')
+    
+        owner_id = OwnerOp.fetch_owner_by_uniquename(owner).id
+        apartments = ApartmentOp.fetch_all_apartments_by_owner(owner_id)
+
+        apartment = data.get('property')
+
+
+        owner_id = OwnerOp.fetch_owner_by_uniquename(owner).id
+        apartments = ApartmentOp.fetch_all_apartments_by_owner(owner_id)
+
+        if propertyauto:
+            apartments.append("All")
+            return make_response(jsonify({
+                'msg': 'Success',
+              'apartmentlist':stringify_list_items(apartments)
+            }))
+        
+
+        agent_obj = UserOp.fetch_user_by_username(username)
+
+        if apartment == "All":
+            # for prop in apartments:
+            #     current_apartments = fetch_all_apartments_by_user(agent_obj)
+            #     if prop in current_apartments:
+            #         print("skipping...")
+            #     else:
+            #         ApartmentOp.relate(prop,agent_obj)
+            #         ApartmentOp.update_agent(prop,agent_obj.username)
+            #         if prop.agency_managed:
+            #             agent_obj_co = agent_obj.company_id
+            #             ApartmentOp.update_company(prop,agent_obj_co)
+            pass
+        else:
+            apartment_obj = ApartmentOp.fetch_apartment_by_name(apartment)
+            current_apartments = fetch_all_apartments_by_user(agent_obj)
+            if apartment_obj not in current_apartments:
+                print("Agent did not have access to ",str(apartment_obj))
+            else:
+                ApartmentOp.terminate(apartment_obj,agent_obj)
+                print("Agent terminated from ",str(apartment_obj))
+                # ApartmentOp.update_agent(apartment_obj,None)
+                if apartment_obj.agent_id == agent_obj.username:
+                    ApartmentOp.update_agent(apartment_obj,None)
+
+                    agent_co = agent_obj.company
+                    ApartmentOp.update_company(apartment_obj,None)
+
+                    company_users = agent_co.users
+                    for i in company_users:
+                        print("These are users",company_users)
+                        if i.user_group_id == 4:
+                            current_user_apartments = fetch_all_apartments_by_user(i)
+                            if apartment_obj in current_user_apartments:
+                                ApartmentOp.terminate(apartment_obj,i)
+                                print("user removed from ",str(apartment_obj))
+                            else:
+                                print("User did not have access to", str(apartment_obj))
+
+
+                # # UserOp.update_status(agent_obj,True)
+                # if apartment_obj.agency_managed:
+                #     agent_obj_co = agent_obj.company_id
+                #     ApartmentOp.update_company(apartment_obj,agent_obj_co)
+
+        msg = "Operation completed"
+        flash(msg,"success")
+        return make_response(jsonify({
+                'msg': 'Success',
+              'apartmentlist':stringify_list_items(apartments)
+            }))
+        
+      

@@ -283,8 +283,8 @@ class BUpdateUser(Resource):
         data = request.get_json()
         if not data:
             return jsonify({'msg': 'Missing JSON'}), 400
-    
-        company = current_user.thatscompany
+
+        company = current_user.company
 
         userid = data.get('userid')#this will be selected within the form
         name = data.get('name')
@@ -308,13 +308,19 @@ class BUpdateUser(Resource):
 
         if tenantcheck:
             if update_user.user_group_id == 5:
-                return render_template("ajaxtenantuserupdate.html",tenantname=update_user.name)
+                return make_response(jsonify({
+                    'tentantname':update_user.name
+                }))
+                # return render_template("ajaxtenantuserupdate.html",tenantname=update_user.name)
             else:
                 usergroup_list = company.groups
                 for item in usergroup_list:
                     if item.name == "Tenant":
                         usergroup_list.remove(item)
-                return render_template("restoreform.html",usergroup_option_list=usergroup_list)
+                return make_response(jsonify({
+                    'usergroup_option_list':usergroup_list
+                }))
+                # return render_template("restoreform.html",usergroup_option_list=usergroup_list)
 
         user_group_id=None
 
@@ -334,12 +340,11 @@ class BUpdateUser(Resource):
 
         UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
         
-        msg='User info updated.'
-        flash(msg,"success")
-
-        return redirect(url_for("api.updateuser"))
-
-
+        return make_response(jsonify({
+                    'message':'User info updated.',
+                    'status':204
+                }))
+ 
 
 
 class BAdminCreateAgent(Resource):
@@ -532,3 +537,137 @@ class BModifyAccessRight(Resource):
             flash(msg,"fail")
         return redirect(url_for('api.modifyaccessright'))
 
+
+
+
+class BRegisterUser(Resource):
+    """This class registers a new user."""
+    @login_required
+    def post(self):
+        """ Handle POST request for this view. Url ---> /signup """
+        # if current_user.username.startswith('qc'):
+        #     pass
+        # else:
+        #     user_group = current_user.company_user_group
+        #     accessright = check_accessright(user_group,"add_user")
+        #     if accessright != True:
+        #         return make_response(jsonify({
+        #         'message': 'You have insufficient rights to access this form!.',
+        #         'name':current_user.name
+        #     }), 404)
+ 
+
+        props = fetch_all_apartments_by_user(current_user)
+
+        # user_group_list = fetch_all_usergroups()
+        # tenant_group = UserGroupOp.fetch_usergroup_by_name("Tenant")
+        # user_group_list.remove(tenant_group)
+
+        usergroups = ["Manager","Accounts","Caretaker"]
+
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+
+        print(data)
+
+        prop = data.get('prop')
+        email= data.get('email')
+        name= data.get('name')
+        phone = data.get('phone')
+        national_id = data.get('national_id')
+        pass1 = data.get('p1')
+        pass2 = data.get('p2')
+        usergroup = data.get('usergroup')
+        created_by = current_user.id
+
+        usercode = usercode_generator()
+        is_present  = UserOp.fetch_user_by_usercode(usercode)
+        if is_present:
+            usercode = usercode_generator()#generate code again
+
+        try:
+            preventadmin = parse_for_admin(name)
+            if preventadmin:
+                return make_response(jsonify({'msg': 'Please try a different name'}))
+            
+            if not email:
+                username = username_extracter(name)
+                is_present2  = UserOp.fetch_user_by_username(username)
+                if is_present2:
+                    username = username_extracternum(name)#append random numbers to name
+                    is_present3 = UserOp.fetch_user_by_username(username)
+                    if is_present3:
+                        username = username_extracternum(name) #generate username again
+
+            else:
+                check_mail = UserOp.fetch_user_by_email(email) #email provided but lets check duplicates
+                if check_mail:
+                    flash("Email taken, try a different one or leave blank!","fail")
+                    return make_response(jsonify({'msg': 'Email taken, try a different one or leave blank!'}))
+                username = username_exctractermail(email)
+        except:
+            flash("Check your inputs","fail")
+            return make_response(jsonify({'msg': '"Check your inputs'}))
+         
+
+        if not national_id:
+            national_id = nationalid_generator()
+            check_dup = TenantOp.fetch_tenant_by_nat_id(national_id)
+            nat_id = nationalid_generator() if check_dup else national_id
+        else:
+            nat_id = national_id
+
+        validate_pass = ValidatePass.validate_password(pass1,pass2)
+        if not validate_pass:
+            flash("Please set a password!","fail")
+            return make_response(jsonify({'msg': 'Please set a password!'}))
+        elif validate_pass=="no match":
+            flash("Passwords do not match","fail")
+            return make_response(jsonify({'msg': 'Passwords do not match'}))
+           
+        else:
+            company = current_user.company
+
+            company_usergroup_obj = None
+            for obj in company.groups:
+                if str(obj) == usergroup:
+                    company_usergroup_obj = obj
+            if company_usergroup_obj:
+                company_usergroup_id = company_usergroup_obj.id
+
+            try:
+                # REFACTOR REFACTOR 
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                # REFACTOR REFACTOR
+                if usergroup == "Caretaker":
+                    new_user = UserOp(name,usercode,username,nat_id,phone,email,pass1,6,company_usergroup_id,company.id,current_user.id)
+                    new_user.save()
+                else:
+                    new_user = UserOp(name,usercode,username,nat_id,phone,email,pass1,4,company_usergroup_id,company.id,current_user.id)
+                    new_user.save()
+
+                if usergroup == "Caretaker":
+                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                    UserOp.relate(new_user,prop_obj)
+                    ApartmentOp.update_caretaker(prop_obj,username)
+                else:
+                    company_properties = company.props
+                    for prop in company_properties:
+                        UserOp.relate(new_user,prop)
+
+                msg=f"Registered, Note usercode: {usercode} & username: {username}."
+                flash(msg,"success")
+            except:
+                msg=f"Registration failed."
+                flash(msg,"fail")
+
+            return make_response(jsonify({'msg': msg}))

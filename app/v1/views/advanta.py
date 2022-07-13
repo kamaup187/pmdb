@@ -158,6 +158,38 @@ def advanta_sms_balance(apikey,partnerid):
 
     return f"{balance:,.0f}"
 
+def afrinet_sms_balance(apikey,partnerid):
+
+    payload = {
+    "partnerID":partnerid,
+    "apikey":apikey
+    }
+
+    url = "https://quicksms.advantasms.com/api/services/getbalance/"
+
+    # url = "https://bulksms.afrinettelecom.co.ke/api/services/getbalance/"
+
+    # response = requests.get(url, json=payload)
+
+    try:
+        response = requests.get(url, json=payload)
+
+        print("this is the response",response.json())
+
+        bal = response.json()["credit"]
+
+    except Exception as e:
+        bal = 0
+        print (e)
+        
+    try:
+        balance = float(bal)
+    except Exception as e:
+        balance = 0
+        print(e)
+
+    return f"{balance:,.0f}"
+
 
 def advanta_sms_delivery(apikey,partnerid,msgid):
     from app import create_app
@@ -204,3 +236,46 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
 # advanta_sms_delivery("fad3000bcfdfb541291ebc018bcc7868",2627,"ZAgSmYcHm5c1cfq5")
 
+def afrinet_send_sms(txt,tel,apikey,partnerid,shortcode):
+
+    url = "https://quicksms.advantasms.com/api/services/sendsms/"
+
+    # url = "https://bulksms.afrinettelecom.co.ke/api/services/sendsms/"
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid,
+    "message":txt,
+    "shortcode":shortcode,
+    "mobile":tel
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        print("ADVANTA sms sending successful")
+    except Exception as e:
+        response = ""
+        print("ADVANTA sms sending failed",e)
+
+    try:
+        print(response.json())
+        print(response.json()["responses"])
+        print(response.json()["responses"][0])
+        print(response.json()["responses"][0]["messageid"])
+
+        msgid = response.json()["responses"][0]["messageid"]
+        print("ADVANTA sms response success")
+    except Exception as e:
+        print("ADVANTA sms response error",e)
+        msgid = ""
+
+    if msgid:
+        respdict = {
+        "apikey":apikey,
+        "partnerID":partnerid,
+        "msgid":msgid
+        }
+    else:
+        respdict = None
+
+    return respdict

@@ -108,6 +108,7 @@ function autocomplete(inp, arr) {
               $("#preloader-btn").click();
               $("#barloader").removeClass("dispnone")
               // $('#result-loader').html('<span class="spinner-border spinner-border mr-2" role="status" aria-hidden="true"></span>Fetching data...');
+
               $.ajax({
                 url: "/results",
                 type: "get",
@@ -121,7 +122,6 @@ function autocomplete(inp, arr) {
                   $('#searchresults').removeClass('dispnone')
 
 
-
                   if ($('#content-area').hasClass("isopen") || $('#list-area').hasClass("isopen") || $('#search-area').hasClass("isopen")){
                     console.log("pass")
                   } else {
@@ -133,12 +133,11 @@ function autocomplete(inp, arr) {
                   $("#searchresults").html(response);
                   $("#search-area").addClass("isopen")
 
-                  if ($("#tenant_identifier").text()){
                     $.ajax({
                       url: "/fetch/bills",
                       type: "get",
                       data: {
-                        tenantid:  $("#tenant_identifier").text(),
+                        tenantid:$("#id-holder").text(),
                         ttarget:"ttarget",
                         target:"tenant bill"
                       },
@@ -147,7 +146,7 @@ function autocomplete(inp, arr) {
                         $("#search-result-view").html(response);
                       }
                     });
-                  }
+                  
 
                 }
               });

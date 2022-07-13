@@ -9,7 +9,15 @@
 <div class="center-btn mb-3 ml-5 smallify">
 
     {%if bill.rent%}
+    {% if house.housecode.vatrate%}
+    <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate}}</span></div>
+    {% else %}
     <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{bill.rent}}</span></div>
+    {% endif %}
+    {% endif %}
+
+    {%if house.housecode.vatrate%}
+    <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format(house.housecode.rentrate * 0.16 | float)}}</span></div>
     {% endif %}
 
     {%if bill.deposit%}

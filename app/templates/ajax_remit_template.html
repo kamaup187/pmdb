@@ -2,39 +2,32 @@
 <div class="row">
   <div class="col-sm-6">
 
-    <div class="row dispnone">
-      <div class="col-5 no-padding text-right"><span class="form-control border-0">Code</span></div>
+    <div class="row">
+      <div class="col-5 no-padding text-right"><span class="form-control border-0">Property Code</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_rent" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.code}}" readonly>
+        <input id="prop-code" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.code}}" readonly>
       </div>
     </div>
 
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Property</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_rent" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.name}}" readonly>
+        <input id="prop-name" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.name}}" readonly>
       </div>
     </div>
   
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Landlord</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_water" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.landlord}}" readonly>
+        <input id="landlord-name" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.landlord}}" placeholder="type here">
       </div>
     </div>
   
-    <div class="row">
-      <div class="col-5 no-padding text-right"><span class="form-control border-0">LL BB/F</span></div>
-      <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_garbage" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ll_bbf}}" placeholder="type here">
-        <span class="fa field-icon-two text-info small">Kshs</span>
-      </div>
-    </div>
   
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">TNT BB/F</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_security" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.tnt_bbf}}" placeholder="type here">
+        <input id="tnt-bbf" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.tnt_bbf}}" placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -42,7 +35,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">M.rent</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_electricity" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.rent}}" placeholder="type here" disabled>
+        <input id="monthly-rent" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.rent}}" placeholder="type here" readonly>
         <span class="field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -50,7 +43,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Expected</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_garbage" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.expected}}" placeholder="type here">
+        <input id="total-due" class="form-control pl-5 ph-dark text-right text-danger" type="text" value="{{vars.expected}}" placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -58,7 +51,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Actual</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_security" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.actual}}" placeholder="type here">
+        <input id="total-paid" class="form-control pl-5 ph-dark text-right text-danger" type="text" value="{{vars.actual}}" placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -66,8 +59,16 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">TNT BC/F</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_electricity" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.tnt_bcf}}" placeholder="type here" disabled>
+        <input id="tnt-bcf" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.tnt_bcf}}" placeholder="type here" readonly>
         <span class="field-icon-two text-info small">Kshs</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 no-padding text-right"><span class="form-control border-0">Ratio</span></div>
+      <div class="form-group col-7 no-paddin input-icons">
+        <input id="percentage-ratio" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ratio}}"placeholder="type here" readonly>
+        <span class="fa field-icon-two text-info small">percentage</span>
       </div>
     </div>
 
@@ -81,10 +82,20 @@
 
 
   <div class="col-sm-6">
+
+
+    <div class="row">
+      <div class="col-5 no-padding text-right"><span class="form-control border-0">Expenses</span></div>
+      <div class="form-group col-7 no-paddin input-icons">
+        <input id="expenses-amount" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.expenses}}"placeholder="type here" readonly>
+        <span class="fa field-icon-two text-info small">Kshs</span>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Deposit</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_deposit" class="form-control pl-5 ph-dark text-right" type="text" value="{{vars.deposit}}"placeholder="type here">
+        <input id="deposit-amount" class="form-control pl-5 ph-dark text-right" type="text" value="{{vars.deposit}}"placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -92,7 +103,7 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Utilities</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_deposit" class="form-control pl-5 ph-dark text-right" type="text" value="{{vars.utilities}}"placeholder="type here">
+        <input id="utilities-amount" class="form-control pl-5 ph-dark text-right" type="text" value="{{vars.utilities}}"placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -100,7 +111,23 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Commission</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_penalty" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.commission}}"placeholder="type here">
+        <input id="commission-amount" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.commission}}"placeholder="type here">
+        <span class="fa field-icon-two text-info small">Kshs</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 no-padding text-right"><span class="form-control border-0">LL BB/F</span></div>
+      <div class="form-group col-7 no-paddin input-icons">
+        <input id="ll-bbf" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ll_bbf}}" placeholder="type here" readonly>
+        <span class="fa field-icon-two text-info small">Kshs</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-5 no-padding text-right"><span class="form-control border-0">Net Pay</span></div>
+      <div class="form-group col-7 no-paddin input-icons">
+        <input id="net-pay" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.netpay}}"placeholder="type here" readonly>
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -108,24 +135,16 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Remitted</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_maintenance" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.remitted}}"placeholder="type here">
+        <input id="remit-amount" class="form-control pl-5 ph-dark text-right text-danger" type="text" value="{{vars.remitted}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
 
-
-    <div class="row">
-      <div class="col-5 no-padding text-right"><span class="form-control border-0">Ratio</span></div>
-      <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_agreement" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ratio}}"placeholder="type here">
-        <span class="fa field-icon-two text-info small">Kshs</span>
-      </div>
-    </div>
   
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">LL BC/F</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_penalty" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ll_bcf}}"placeholder="type here">
+        <input id="ll-bcf" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.ll_bcf}}"placeholder="type here">
         <span class="fa field-icon-two text-info small">Kshs</span>
       </div>
     </div>
@@ -133,14 +152,14 @@
     <div class="row">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Remarks</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_agreement" class="form-control pl-5 text-right text-black" type="text" placeholder="remarks...">
+        <input id="remarks-written" class="form-control pl-5 text-right text-black" type="text" placeholder="remarks...">
       </div>
     </div>
   
-    <div class="row">
+    <div class="row dispnone">
       <div class="col-5 no-padding text-right"><span class="form-control border-0">Agent</span></div>
       <div class="form-group col-7 no-paddin input-icons">
-        <input id="edit_maintenance" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.agent}}" readonly>
+        <input id="agent-username" class="form-control pl-5 ph-dark text-right text-black" type="text" value="{{vars.agent}}" placeholder="type here">
       </div>
     </div>
   
@@ -148,6 +167,25 @@
   </div>
 
 </div>
+
+<script type="text/javascript">
+
+  $("#remit-amount").on('keyup', function () {
+    if ($("#net-pay").val() > 1) {
+      let netpay = $("#net-pay").val().replace(/,/g, '');
+      let remitamount = $("#remit-amount").val().replace(/,/g, '');
+
+      $("#ll-bcf").val((netpay - remitamount).toLocaleString('en-US'))
+
+    } else {
+      console.log("moboisye")
+    };
+
+  });
+
+
+</script>
+
 
 
 

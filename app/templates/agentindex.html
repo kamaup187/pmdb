@@ -998,7 +998,7 @@
                   <div class="input-group-append">
                     <button class="btn bg-white btn-outline-info border-left-0" id="search-mobile-btn" type="button" disabled>
                       <i id="search-mobile-icon" class="fas fa-search fa-sm font-weight-bold text-success"></i>
-                      <span id="id-holder" class="dispnone"></span>
+                      <span id="id-holder-mobile" class="dispnone"></span>
                     </button>
                   </div>
                 </div>
@@ -2219,7 +2219,7 @@
                     <form class="">
     
                       <div class="form-group">
-                        <select name="property" class="select-css" id ="selected_prop" required>
+                        <select name="property" class="select-css" id ="selected_prop">
                             <option disabled selected value> -- Select property -- </option>
                             {% for o in props%}
                             <option value="{{ o }}">{{ o }}</option>
@@ -2231,7 +2231,7 @@
                         <textarea id="text_sms" name="desc" class="form-control" placeholder="Notification message to be conveyed"></textarea>
                       </div>
                       <div class="divbg center-btn">
-                        <button type="sendgeneral" class="btn-success borderless text-white">Send now</button>
+                        <button id="sendgeneral" type="button" class="btn btn-success borderless text-white">Send now</button>
                       </div>
                     </form>
     
@@ -2368,7 +2368,7 @@
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/autocomplete-v2.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/autocomplete-v5.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 
 
@@ -3132,11 +3132,12 @@ function animateHH(element) {
 
 <script>
   $("#sendgeneral").on('click',function(){
+    $("#sendgeneral").html("sending...")
     // $("#closemodal").click();
     setTimeout(function(){
       url2 = "{{ url_for('api.bulksms') }}";
       $.ajax({
-            type: "get",
+            type: "POST",
             url: url2,
             data: {
               prop:$("#selected_prop").val(),
@@ -3144,10 +3145,11 @@ function animateHH(element) {
               target:"general"
             },
             success: function(response) {
-              // $("#detailed-payments").toggleClass('invoice dispnone');
-              // $("#payments-report").toggleClass('row dispnone');
-              
-              // $("#propdisp").html(response);
+              $("#sendgeneral").html("Sent!")
+
+              setTimeout(
+                $("#sendgeneral").html("Send now"), 300
+                );
           }
       });
     },300);

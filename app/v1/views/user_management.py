@@ -1,4 +1,5 @@
 
+from operator import iconcat
 from flask_restful import Resource
 from flask_login import login_user,logout_user
 from flask_login import login_required, current_user
@@ -297,17 +298,38 @@ class Users(Resource):
 
         else:
             users = current_user.company.users
+
             if current_user.username == "admin":
                 users = fetch_all_users()
 
             user_data = user_details(users)
 
-            userids = get_obj_ids(user_data)
+            user_data_alt = []
+            if current_user.username.startswith("qc"):
+                print("baridi")
+                kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+                if kw_user:
+                    print("got it",kw_user.username)
+                    for i in user_data:
+                        print("here are ises",i["username"],"and kv_user:",kw_user.username)
+                        if i["username"] == kw_user.username:
+                            print("yeya")
+                            pass
+                        else:
+                            user_data_alt.append(i)
+                else:
+                    user_data_alt = user_data
+            else:
+                print("barida")
+                user_data_alt = user_data
+           
+
+            userids = get_obj_ids(user_data_alt)
 
             return render_template(
                 "ajax_users.html",
                 userids=userids,
-                items=user_data
+                items=user_data_alt
                 )
 
     def post(self):
@@ -328,6 +350,17 @@ class Users(Resource):
 
         houselist = request.form.get('houses')
         proplist = request.form.get('props')
+
+        if target == "delete user":
+            userid = request.form.get("userid")
+            user_id = get_identifier(userid)
+            del_user = UserOp.fetch_user_by_id(user_id)
+
+            if del_user:
+                UserOp.delete(del_user)
+                return proceed
+            else:
+                return err
 
         try:
             houseids = [int(s) for s in houselist.split(',')]
@@ -831,7 +864,7 @@ class RequestDemo(Resource):
         send_internal_email_notifications("DEMO REQUEST",message1)
 
 
-        targeturl = "https://kodimannapp.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
+        targeturl = "https://app.com/trial/zjdqjpvnkgblhfweikkiloukrqcwijaofdf"
         
         if os.getenv("TARGET") == "lasshouse":
             print("sending....")
@@ -933,7 +966,7 @@ class SelfUserRegisterAgent(Resource):
 
         UserOp.update_link(user,userlink)
        
-        targeturl = f"https://kodimannapp.com/user/{userlink}"
+        targeturl = f"https://app.com/user/{userlink}"
         # targeturl = f"http://127.0.0.1:3000//user/{userlink}"
 
         print(targeturl)
@@ -1239,7 +1272,7 @@ class UserLogin(Resource):
             flash('Incorrect password!','fail')
             return redirect(url_for('api.userlogin'))
         elif downtime:
-            response = sms.send("Login is experiencing issues", ["+254716674695"],sender)
+            # response = sms.send("Login is experiencing issues", ["+254716674695"],sender)
             flash('Login failed, system undergoing maintenance!','fail')
             return redirect(url_for('api.userlogin'))
         flash('It seems you have no account yet!.','fail')

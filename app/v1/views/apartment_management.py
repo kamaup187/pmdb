@@ -2,6 +2,7 @@
 from re import S
 import time
 import os
+from unicodedata import category
 from dateutil.parser import parse
 
 import json
@@ -63,13 +64,15 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# phonenuma = sms_phone_number_formatter("0716674695")
+# telll = sms_phone_number_formatter("0716674695")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
 # advanta_send_sms("Greetings John, \n your sms sender Id is ready for integration ~ KiotaPay Team",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+# afrinet_send_sms("Good morning Peter \nWe have completed Kiotapay sms integration. \n\nSent from KiotaPay servers",telll,"045abd0ed75b563eb186b2a61d686a83",321,"GREATWALL")
 
 class MonitorActivity(Resource):
     def get(self):
@@ -121,6 +124,7 @@ class Index(Resource):
 
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
+        
         # for cos in coss:
         #     print(cos.name)
         #     # for x in cos.groups:
@@ -139,16 +143,22 @@ class Index(Resource):
         #         group_obj = CompanyUserGroupOp(group,"",cos.id)
         #         group_obj.save()
 
+        # unitts = ["A13","C11","E13"]
 
-        # qws = ApartmentOp.fetch_apartment_by_id(33)
-        # if qws:
-        #     ApartmentOp.update_loan_bank_details(qws,0.0)
+        # for unit in unitts:
 
-        # if qws:
-        #     all_ptenants = qws.meters
-        #     decitype = "1"
-        #     for i in all_ptenants:
-        #         MeterOp.update_decitype(i,decitype)
+
+        #     qws = ApartmentOp.fetch_apartment_by_id(23)
+        #     hs = get_specific_house_obj(qws.id,unit)
+        #     # if qws:
+        #     #     ApartmentOp.update_loan_bank_details(qws,0.0)
+
+        #     if qws and localenv:
+        #         all_ptenants = hs.owner
+        #         bookedon = "proposal"
+        #         PermanentTenantOp.update_status(all_ptenants,bookedon)
+
+                # MeterOp.update_decitype(i,decitype)
 
         # from rq import cancel_job
         # cancel_job('3771ae2a-e121-4834-af5a-1c61e04b5b08')
@@ -238,8 +248,21 @@ class Index(Resource):
 
         #         return Response(render_template("under_maintenance.html"))
 
-        if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
-        # if current_user.username == "kiotapay":
+        # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
+        if current_user.username == "kiotapay" or localenv:
+            print("getting in")
+            cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            if cocc:
+                CompanyOp.update_sms_provider(cocc,"Advanta")
+            # if not cocc:
+            #     cocc = current_user.company
+
+            # props = cocc.props
+
+            # for prop in props:
+            #     hscodes = prop.housecodes
+            #     for code in hscodes:
+            #         HouseCodeOp.update_vatrates(code,3,0)
 
             # prop = ApartmentOp.fetch_apartment_by_id(280)
             # if prop:
@@ -398,6 +421,11 @@ class Index(Resource):
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 
+            elif current_user.company.name.title() == "Denvic Property Managers":
+                sms_units = afrinet_sms_balance(greatwall_api_key,greatwall_partner_id)
+                smsfrac = f"{sms_units} units"
+                color = "text-success"
+
                 # elif current_user.company.name == "KEVMA REAL ESTATE":
                 #     sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
@@ -521,8 +549,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Vintage Residence Limited":
-                shorts = ["4089507"]
+            if company.name== "Denvic Property Managers":
+                shorts = ["711905"]
             else:
                 shorts = []
 
@@ -1002,6 +1030,8 @@ class PropStats(Resource):
             pass
         else:
             defaulters = "--"
+
+        invss = f"{invs}/{num_of_occ}"
             
         return Response(render_template(
             'ajax_dashboard_refresh.html',
@@ -1013,7 +1043,7 @@ class PropStats(Resource):
             total_balances=(f"{total_balances:,.1f}"),
             total_bills = (f"{total_bills:,.1f}"),
             numdefaulters = defaulters,
-            numinvs = f"{invs}/{num_of_occ}",
+            numinvs = invss,
             proponfocus=proponfocus,
             props = dashboard_props,
         ))
@@ -1277,6 +1307,10 @@ class Dashboard(Resource):
 
             month_str=f'{get_str_mnth(period.month)} invoices'
 
+            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
+                total_bills = 3629379.0
+                invs = "170"
+
             return [f'Kes {total_bills:,.1f}',invs,month_str]
 
         if target == "collectionstats":
@@ -1301,6 +1335,11 @@ class Dashboard(Resource):
                 ratio = total_collections / total_bills * 100
             except:
                 ratio = 0
+
+            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
+                total_collections = 17500.0
+                ratio = 0.0
+
 
             return [f'Kes {total_collections:,.1f}',f'{ratio:,.0f} %']
 
@@ -1327,6 +1366,10 @@ class Dashboard(Resource):
                 defaulters = "--"
             else:
                 pass
+
+            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
+                total_balances = 3629379.0
+                defaulters = "168"
 
             return [f'Kes {total_balances:,.1f}',f'{defaulters}']
 
@@ -1762,11 +1805,13 @@ class AddSalesAgent(Resource):
         # else:
         #     return err
 
-        user_obj = UserOp.fetch_user_by_email(email) if email else None
-        if not user_obj:
-            user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
-            if not user_obj:
-                user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
+        user_obj = None
+
+        # user_obj = UserOp.fetch_user_by_email(email) if email else None
+        # if not user_obj:
+        #     user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
+        #     if not user_obj:
+        #         user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
                        
         if not user_obj:
 
@@ -1786,30 +1831,30 @@ class AddSalesAgent(Resource):
             else:
                 username = username_exctractermail(email)
 
-            found = False
+            # found = False
 
-            for obj in company_obj.groups:
-                    if str(obj) == "Sales":
-                        found = True
-                        company_usergroup_obj = obj
+            # for obj in company_obj.groups:
+            #         if str(obj) == "Sales":
+            #             found = True
+            #             company_usergroup_obj = obj
 
-            if not found: #REFACTOR TO REMOVE THIS BLOCK
-                group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
-                group2.save()
-                company_usergroup_obj = group2
+            # if not found: #REFACTOR TO REMOVE THIS BLOCK
+            #     group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
+            #     group2.save()
+            #     company_usergroup_obj = group2
 
-            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
-            user_obj.save()
+            # user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
+            # user_obj.save()
 
             repp = SalesRepOp.fetch_rep_by_name(name.lower())
             if not repp:
             
-                rep_obj = SalesRepOp(name,name,phone,user_obj.id,company_obj.id)
+                rep_obj = SalesRepOp(name,name,phone,company_obj.id)
                 rep_obj.save()
 
-                if prop:
-                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-                    UserOp.relate(user_obj,prop_obj)
+                # if prop:
+                #     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                #     UserOp.relate(user_obj,prop_obj)
 
                 # att_obj = SalesRepOp(name,phone,prop_obj.id)
                 # att_obj.save()
@@ -1845,7 +1890,7 @@ class TenantManagement(Resource):
         tenantids = get_obj_ids(tenantlist)
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
-        
+
         template = "ajax_tenants_detail2.html" if aviv(current_user) else "ajax_tenants_detail.html"
 
         return render_template(template,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
@@ -2574,7 +2619,15 @@ class UpdatePropertyDetails(Resource):
         pass
     def post(self):
 
+        target = request.form.get("target")
+
         prop_id = request.form.get("propid")
+        month = request.form.get("period")
+        category = request.form.get("category")
+        amount = request.form.get("arrears")
+        desc = request.form.get("desc")
+
+
         agreement = request.form.get("agreement")
         commission = request.form.get("commission")
         int_commission = request.form.get("int_commission")
@@ -2600,9 +2653,40 @@ class UpdatePropertyDetails(Resource):
         lbaccnametwo = request.form.get("lbaccnametwo")
         lbaccnotwo = request.form.get("lbaccnotwo")
 
+
         prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
 
-        ApartmentOp.update_prop_details(prop_obj,shortcode,consumer_key,consumer_secret,prop_garb,prop_garb_tel,prop_garbbank,prop_garbacc,prop_bank,prop_accname,prop_acc,lb,lbaccname,lbaccno,lbtwo,lbaccnametwo,lbaccnotwo,agreement,commission,int_commission)
+        if target == "set llbal":
+            month = request.form.get("month")
+
+            if month:
+                datestring = date_formatter_alt(month)
+                target_period = parse(datestring)
+            else:
+                target_period = prop_obj.billing_period
+
+            llp = LandlordPaymentOp.fetch_current_llp(prop_id, target_period.month, target_period.year)
+
+            try:
+                arr = float(amount)
+            except Exception as e:
+                print("ngweee",e)
+                arr = 0.0
+
+            if category == "advance":
+                if arr:
+                    arr = arr*-1
+
+            if llp:
+                LandlordPaymentOp.update_arrears(llp,arr)
+            else:
+                llp = LandlordPaymentOp(0.0,0.0,0.0,0.0,prop_id)
+                llp.save()
+
+            return proceed
+
+
+        # ApartmentOp.update_prop_details(prop_obj,shortcode,consumer_key,consumer_secret,prop_garb,prop_garb_tel,prop_garbbank,prop_garbacc,prop_bank,prop_accname,prop_acc,lb,lbaccname,lbaccno,lbtwo,lbaccnametwo,lbaccnotwo,agreement,commission,int_commission)
 
         return redirect(url_for("api.index"))
 
@@ -3270,6 +3354,19 @@ class BulkSms(Resource):
 
         print(rem_date,rem_prop,rem_bal,target,rem_txt)
 
+        prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
+        propid = prop_obj.id
+
+        if target == "general":
+            job8 = q.enqueue_call(
+                func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
+            )
+            text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
+            response = sms.send(text, ["+254716674695"],sender)
+
+            return proceed
+
+
         if target == "set template":
             if rem_txt:
                 current_template = current_user.company.template
@@ -3289,9 +3386,6 @@ class BulkSms(Resource):
             except:
                 obj_date = datetime.datetime.now() + relativedelta(hours=3)
 
-            prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
-            propid = prop_obj.id
-
             rem_obj = ReminderOp(obj_date,rem_txt,rem_bal,propid)
             rem_obj.save()
 
@@ -3299,12 +3393,10 @@ class BulkSms(Resource):
             send_internal_email_notifications(prop_obj.company.name,text)
             # response = sms.send(text, ["+254716674695"],sender)
 
-            userid = current_user.id
-
             if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
                 ApartmentOp.update_reminder_status(prop_obj,"sent")
                 job8 = q.enqueue_call(
-                    func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                    func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
                 )
             else:
                 if prop_obj.reminder_status == "sent":
@@ -3314,10 +3406,10 @@ class BulkSms(Resource):
                 else:
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
-                        func=send_bulk_sms, args=(propid,rem_txt,rem_bal,userid,), result_ttl=5000
+                        func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
                     )
                     # pass
-            return "success"
+            return proceed
         
 
 class TenantSms(Resource):
@@ -3359,8 +3451,10 @@ class TenantSms(Resource):
                             cost = 2
                         else:
                             cost = 3
+
+                        ptenant_id = None
                         
-                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,tenant.apartment.id,co.id)
+                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
                         sms_obj.save()
 
                         if sender == "AFRICASTKNG":
@@ -3642,9 +3736,20 @@ class EditHouseCode(Resource):
             agreementrate= request.form.get('agreementrate')
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
+            vatrate = request.form.get('vatrate')
+            bill_freq = request.form.get('billfreq')
 
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
+
+            if bill_freq == "yearly" or bill_freq == "annually":
+                billfreq = 12
+            elif bill_freq == "semi-annually":
+                billfreq = 6
+            elif bill_freq == "quarterly":
+                billfreq = 3
+            else:
+                billfreq = 1
 
             try:
                 int_codename = int(codename)
@@ -3676,9 +3781,9 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],current_user.id)
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
@@ -4231,6 +4336,8 @@ class AddTenant(Resource):
     @login_required
     def get(self):
         target = request.args.get("target")
+        raw_checkin = request.args.get("date")
+
         propid = request.args.get("propid")
         prop_id = get_identifier(propid)
 
@@ -4270,7 +4377,46 @@ class AddTenant(Resource):
             return render_template('ajax_discount.html',mp=f'{ng:,.1f}')
 
         elif target == "negotiated details":
-            return render_template('ajax_client_details_two.html',client=ptenant_obj.name,plot=house_obj,mp=f"{ptenant_obj.negotiated_price:,.1f}")  
+            if not raw_checkin:
+                # return "date not specified"
+                abort(403)
+            else:
+                str_checkin = date_formatter_alt(raw_checkin)
+                datenow = parse(str_checkin)
+
+                instalment_date = datenow + relativedelta(months=1)
+
+                project_end_date = generate_start_date(7,2023)
+
+                print("START:", instalment_date.date())
+                print("ENDING:", project_end_date.date())
+
+                # diff = relativedelta(project_date, datenow)
+                delta = relativedelta(project_end_date, instalment_date)
+                months = delta.months + (delta.years * 12)
+
+                print("MONTHS",months)
+
+                negprice = ptenant_obj.negotiated_price
+                deposit = negprice * 0.1
+                deposit2 = negprice * 0.2
+
+                bal = negprice - deposit - deposit2
+
+                try:
+                    instalment = f"{(bal/months):,.0f}"
+                except:
+                    instalment = 0.0
+
+            return render_template(
+                'ajax_client_details_two.html',
+                client=ptenant_obj.name,
+                plot=house_obj,
+                mp=f"{ptenant_obj.negotiated_price:,.1f}",
+                deposit=deposit,
+                deposit2=deposit2,
+                num_mi=months,
+                mi=instalment)  
 
     def post(self):
         target = request.form.get('target')
@@ -4481,7 +4627,7 @@ class AddTenant(Resource):
                         rep_id = None
 
                         if ttype == "clients":
-                            PermanentTenantOp.update_resident_type(ptenant_obj,"investor")
+                            PermanentTenantOp.update_resident_type(ptenant_obj,"normal")
                             print("AFTER UPDATING",ptenant_obj.resident_type)
                             print("AFTER UPDATING T",ptenant_obj.tenant_type)
 
@@ -4814,10 +4960,6 @@ class Deal(Resource):
         pass
     def post(self):
         ptenant_id = request.form.get('tenant_id')
-        plan = request.form.get('plan')
-
-
-        datenow = datetime.datetime.now()
 
         target = request.form.get('target')
 
@@ -4829,25 +4971,31 @@ class Deal(Resource):
         if target=="negotiations":
             negprice = validate_input(request.form.get('negprice'))
             deposit = validate_input(request.form.get('deposit'))
-            deposit2 = validate_input(request.form.get('deposit2'))
-            mi = validate_input(request.form.get('mi'))
-            num_mi = validate_input(request.form.get('num_mi'))
+
+            # deposit2 = validate_input(request.form.get('deposit2'))
+            # mi = validate_input(request.form.get('mi'))
+            # num_mi = validate_input(request.form.get('num_mi'))
 
             PermanentTenantOp.update_status(alloc,"contracts")
 
-            PermanentTenantOp.update_payment_plan(alloc,negprice,plan,deposit,deposit2,mi,num_mi,datenow,current_user.id)
+            PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
 
             msg = "Client details updated"
             return msg + proceed
         else:
             # path = f"app/temp/litala.pdf"
+
+            deposit2 = validate_input(request.form.get('deposit2'))
+            mi = validate_input(request.form.get('mi'))
+            num_mi = validate_input(request.form.get('num_mi'))
+
             raw_checkin = request.form.get('date')
 
             if not raw_checkin:
                 # return "date not specified"
                 abort(403)
             else:
-                str_checkin = date_formatter_weekday(raw_checkin)
+                str_checkin = date_formatter_alt(raw_checkin)
                 datenow = parse(str_checkin)
 
 
@@ -4868,17 +5016,21 @@ class Deal(Resource):
             else:
                 img = ""
 
+            bookedon = datenow - relativedelta(months=1)
+
+            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,deposit2,mi,num_mi,bookedon,datenow)
+
             plot = alloc.house
-            PermanentTenantOp.upload_contracts(alloc,img,datenow,current_user.id)
+            PermanentTenantOp.upload_contracts(alloc,img,"")
             HouseOp.update_status(plot,"sold")
             PermanentTenantOp.update_status(alloc,"closed")
 
-            if alloc.plan == "partial":
-                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
-                # balance = alloc[2].deposit + alloc[2].instalment
-                # TenantOp.update_balance(tenant_obj,balance)
-            else:
-                PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+            # if alloc.plan == "partial":
+            #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
+            #     # balance = alloc[2].deposit + alloc[2].instalment
+            #     # TenantOp.update_balance(tenant_obj,balance)
+            # else:
+            #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)
 
             # bill = alloc.instalment + alloc.deposit
 
@@ -4905,7 +5057,7 @@ class UpdateTenant(Resource):
                 tenant = TenantOp.fetch_tenant_by_id(identity)
                 db.session.expire(tenant)
                 if tenant.multiple_houses == None:
-                    TenantOp.update_tenant(tenant,"","","","","","",False,"")
+                    TenantOp.update_tenant(tenant,"","","","","","","",False,"")
             return render_template('ajax_dynamic_tenant_form.html',tenant=tenant)
 
         if target == "tenant sms":
@@ -4928,6 +5080,7 @@ class UpdateTenant(Resource):
     def post(self):
         tenant_id = request.form.get('tenant_id')
 
+        uid = request.form.get("uid")
         name = request.form.get("name")
         phone = request.form.get('tel')
         national_id = request.form.get('national_id')
@@ -4988,9 +5141,9 @@ class UpdateTenant(Resource):
                 return render_template('ajaxghosthouse.html',alert=msg)
 
         if tenant_id.startswith("pedit"):
-            PermanentTenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+            PermanentTenantOp.update_tenant(update_tenant,uid,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
         else:
-            TenantOp.update_tenant(update_tenant,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
+            TenantOp.update_tenant(update_tenant,uid,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
             TenantOp.update_can_receive_sms(update_tenant,bool_sms)
 
             tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)
@@ -7041,8 +7194,10 @@ class Results(Resource):
             tenant_id = get_identifier(item)
 
             if item.startswith("tnt"):
+                print("fetching tenant",item)
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             else:
+                print("fetching resident",item)
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)
 
             update_login_history("search",current_user)
@@ -7056,8 +7211,8 @@ class Results(Resource):
                 paid_status = "-"
                 badge_status = ""
             else:
-                print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
-                print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
+                # print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
+                # print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
 
                 # PermanentTenantOp.update_resident_type(tenant_obj,"investor")
 

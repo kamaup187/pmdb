@@ -1,5 +1,6 @@
 <!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">({month} payments <button id="expand" class="btn btn-outline-primary herebtn"> <span id="expandtoggler">expand</span> </button></div> -->
 <span id="c2b_identifier" class="dispnone"></span>
+<span id="auto" class="dispnon"></span>
 <div id="dataperio" class="text-black text-left text-125">{{data}}</div>
 
 <div class="">
@@ -142,6 +143,13 @@
                             }
                           } else {
                             console.log("kubaad")
+                          }
+
+                          if($("#auto").text() == "auto"){
+                            // alert("about to submit automatically")
+                            $("#paybtn_alt").click();
+                          }else{
+                            console.log("AUTO>>",$("#auto").text());
                           }
 
                         }

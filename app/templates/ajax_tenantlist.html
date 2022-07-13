@@ -8,6 +8,7 @@
             <thead class="border-top-info">
                 <tr>
                 <th class="text-info font-weight-bold">Name</th>
+                <th class="text-info track-title-cell" data-orderable="false">Ref</th>
                 <th class="text-info track-title-cell" data-orderable="false">Label</th>
                 <th class="text-info track-title-cell" data-orderable="false">Phone</th>
                 <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
@@ -23,6 +24,7 @@
               {% for bill in items%}
               <tr>
                 <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"><span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                <td class="data-cell">{{ bill['ref']}}</td>
                 <td class="data-cell">{{ bill['badge']|safe }}</td>
                 <td class="data-cell">{{ bill['tel'] }}</td>
                 <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>

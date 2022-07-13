@@ -69,23 +69,26 @@
 </script>
 
 <script>
-    var rawIds = "{{ groupids|safe }}";
-    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
-    console.log(ids)
-    $.each(ids, function(i,item) {
-    
-      $("#"+item).on('click',function(){
-        console.log("clicked",item)
-        if( isNaN(parseInt(item)) ){
-          if(item.startsWith("del")){
-            $("#del_group_identifier").html(item)
-          }else{
-            $("#edit_group_identifier").html(item)
-          }
-          
+  var rawIds = "{{ subids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_item_identifier").html(item)
+          $("#target_item_id").html("void payment")
         }else{
-          $("#group_identifier").html(item)
+          $("#edit_item_identifier").html(item)
+          $("#target_item_id").html("edit payment")
         }
-      });
+        
+      }else{
+        $("#item_identifier").html(item)
+        $("#target_item_id").html("payment")
+      }
     });
-  </script>
+  });
+</script>

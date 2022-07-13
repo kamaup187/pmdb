@@ -185,14 +185,15 @@
                         
                         <div class="row">
                           <div class="form-group col-md-4 no-paddin input-icons">
-                            <span>Shareholder/Investor</span>
+                            <span>Shareholder/Normal</span>
                             <select class="select-css" id ="classtype" >
                               <option disabled selected value> select... </option>
                               <option selected value="shareholder"> Shareholder </option>
-                              <option selected value="investor"> Investor </option>
+                              <option selected value="normal"> Normal </option>
 
                             </select>
                           </div>
+                          
                           <div class="form-group col-md-4 no-paddin input-icons">
                             <span>Select unit to book</span>
                             <select class="select-css" id ="select_plot" >
@@ -449,7 +450,7 @@
                       </div>
 
 
-                      <div class="row mt-2">
+                      <!-- <div class="row mt-2">
                         <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Payment plan <span class="text-danger">*</span></span></div>
                         <div class="form-group col-7 no-paddin input-icons">
                           <select class="select-css" id ="select_plan" required>
@@ -459,7 +460,7 @@
 
                           </select>
                         </div>
-                      </div>
+                      </div> -->
 
                       <div id="payment_agreement" class="">
                         <div class="">
@@ -469,7 +470,7 @@
                           </div>
                         </div>
 
-                        <div class="">
+                        <!-- <div class="">
                           <div class="no-padding text-right"><span class="form-control smallify border-0">Deposit balance (20%)<span class="text-danger">*</span></span></div>
                           <div class="form-group no-paddin input-icons">
                             <input id="deposit2" class="form-control ph pl-5 text-end" type="text">
@@ -489,14 +490,14 @@
                           <div class="form-group col-7 no-paddin input-icons">
                             <input id="mi" class="form-control ph pl-5" type="text" placeholder="">
                           </div>
-                        </div>
+                        </div> -->
   
 
                       </div>
         
                     
                       <div class="divbg center-btn">
-                        <button id="negotiatebtn" type="button" class="btn-success borderless text-white dispnone">Submit</button>
+                        <button id="negotiatebtn" type="button" class="btn-success borderless text-white">Submit</button>
                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
@@ -529,17 +530,22 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
 
-                      <div id="client_details_two" class="mt-2">
 
-                        <div class="form-group mb-3 input-icons">
+
+                        <div class="form-group mb-3 input-icons row">
                           <span class="text-danger font-weight-bold">Date</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <div id="datepicker7" class="date col-8" data-date-format="dd-mm-yyyy">
                             <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                            <label for="checkindate" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
                           </div>
+                          <div class="col-4"><button id="rundate" type="button" class="btn btn-warning text-white">Run</button></div>
                         </div>
 
-                      </div>
+                        <div id="client_details_two" class="mt-2">
+                          <div id="show-contracts-spinner" class="center-btn mb-2 dispnone">
+                            <span class="spinner-border spinner-border-sm mr-2 text-success" role="status" aria-hidden="true"></span>
+                          </div>
+                        </div>
 
 
 
@@ -803,11 +809,22 @@
   $("#checkindate").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
-    format: "DD, dd-mm-yyyy",
-  //   startView: "months", 
-  //   minViewMode: "months"
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
   });
+
+
+//   $('#checkindate').datepicker({
+//   onSelect: function(d,i){
+//        if(d !== i.lastVal){
+//            $(this).change();
+//        }
+//   }
+// });
 </script>
+
+
 
 
 
@@ -1357,26 +1374,50 @@
 
 </script>
 
+<!-- <script>
+  // This script autopulate house options and displays tenant name
+  $("#contractsModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.addtenant') }}",
+      type: "get",
+      data: {
+            tenant_id:$("#tenant_identifier").text(),
+            target:"negotiated details"
+          },
+      success: function(response) {
+        $("#client_details_two").html(response);
+
+      }
+    });
+  });
+
+</script> -->
+
+
+
 <script>
   // This script autopulate house options and displays tenant name
-  // $("#contractsModal").on('shown.bs.modal', function(){
-  //   $.ajax({
-  //     url: "{{ url_for('api.deal') }}",
-  //     type: "get",
-  //     data: {
-  //           tenant_id:$("#tenant_identifier").text(),
-  //           target:"negotiated details"
-  //         },
-  //     success: function(response) {
-  //       $("#client_details_two").html(response);
+  $("#rundate").on('click', function(){
+    $("#show-contracts-spinner").removeClass("dispnone")
+    $.ajax({
+      url: "{{ url_for('api.addtenant') }}",
+      type: "get",
+      data: {
+            tenant_id:$("#tenant_identifier").text(),
+            date:$("#checkindate").val(),
+            target:"negotiated details"
+          },
+      success: function(response) {
+        $("#show-contracts-spinner").addClass("dispnone")
+        $("#client_details_two").html(response);
 
-  //     }
-  //   });
-  // });
+      }
+    });
+  });
 
 </script>
 
-<script>
+<!-- <script>
   // This script shows alerts before allocation is done
   $("#select_plan").on('change',function(){
     if ($("#select_plan").val() != 'full'){
@@ -1390,7 +1431,7 @@
     }
 
   });
-</script>
+</script> -->
 
 
 
@@ -1430,11 +1471,7 @@
         data: {
                 tenant_id: $("#tenant_identifier").text(),
                 negprice: $("#neg_price").val(),
-                plan: $("#select_plan").val(),
                 deposit: $("#deposit").val(),
-                deposit2: $("#deposit2").val(),
-                mi: $("#mi").val(),
-                num_mi:$("#num_mi").val(),
                 target: "negotiations"
             },
         success: function(response) {
@@ -1475,6 +1512,11 @@
       var fd = new FormData();
       var files = $('#contractsfile')[0].files;
       fd.append('file',files[0]);
+
+      fd.append('deposit2',$("#deposit2").val());
+      fd.append('mi',$("#mi").val());
+      fd.append('num_mi',$("#num_mi").val());
+
       fd.append('target',"contracts");
       fd.append('date',$("#checkindate").val());
       fd.append('tenant_id',$("#tenant_identifier").text());
@@ -1513,7 +1555,8 @@
                       type: "POST",
                       data: {
                         propid: $("#prop_identifier").text(),
-                        tenant_id:$("#tenant_identifier").text(),
+                        tenantid:$("#tenant_identifier").text(),
+                        target:"single",
                         date:$("#checkindate").val()
 
                       },
@@ -1719,16 +1762,14 @@ $('#expand').click(function(){
 
 
 $("#neg_price").on('keyup',function(){
-  if ($("#select_plan").val() != 'partial' && $("#neg_price").val() > 1){
+  if ($("#neg_price").val() > 1){
     let negprice = $("#neg_price").val().replace(/,/g, '');
     $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
-    $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
-    $("#negotiatebtn").removeClass("dispnone")
+    // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
   }else{
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    $("#negotiatebtn").addClass("dispnone")
     $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
-    $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
+    // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
 
     $('#num_mi').keyup();
 
@@ -1736,25 +1777,25 @@ $("#neg_price").on('keyup',function(){
   
   })
 
-  $("#deposit").on('keyup',function(){
-    $("#negotiatebtn").addClass("dispnone")
-    $('#num_mi').keyup();
-})
+//   $("#deposit").on('keyup',function(){
+//     $("#negotiatebtn").addClass("dispnone")
+//     $('#num_mi').keyup();
+// })
 
   $("#mi").on('keyup',function(){
-    $("#negotiatebtn").addClass("dispnone")
+    // $("#negotiatebtn").addClass("dispnone")
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    let deposit = $("#deposit").val().replace(/,/g, '');
+    // let deposit = $("#deposit").val().replace(/,/g, '');
     let deposit2 = $("#deposit2").val().replace(/,/g, '');
-    let diff = negprice - deposit - deposit2;
+    let diff = negprice - deposit2;
     let mi = $("#mi").val().replace(/,/g, '');
     let num_mi = diff / mi;
     if (num_mi > 101 ){
       $("#num_mi").val('');
       $("#num_mi").attr("placeholder", "Max allowed= 100")
       $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-      $("#negotiatebtn").addClass("dispnone")
+      // $("#negotiatebtn").addClass("dispnone")
     }else if (num_mi<1){
       $("#num_mi").val(1);
     }
@@ -1763,7 +1804,7 @@ $("#neg_price").on('keyup',function(){
         $("#num_mi").val('');
         $("#mi").val('');
         $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-        $("#negotiatebtn").addClass("dispnone")
+        // $("#negotiatebtn").addClass("dispnone")
 
       }else{
         let roundednum = Math.round(num_mi)
@@ -1772,7 +1813,7 @@ $("#neg_price").on('keyup',function(){
         }
         $("#num_mi").val(roundednum);
         $(".iconotifications").html('<i class="fas fa-fw fa-check-circle text-success mr-1"></i>')
-        $("#negotiatebtn").removeClass("dispnone")
+        // $("#negotiatebtn").removeClass("dispnone")
       }
 
     }
@@ -1780,12 +1821,12 @@ $("#neg_price").on('keyup',function(){
   })
 
   $("#num_mi").on('keyup',function(){
-    $("#negotiatebtn").addClass("dispnone")
+    // $("#negotiatebtn").addClass("dispnone")
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    let deposit = $("#deposit").val().replace(/,/g, '');
+    // let deposit = $("#deposit").val().replace(/,/g, '');
     let deposit2 = $("#deposit2").val().replace(/,/g, '');
-    let diff = negprice - deposit - deposit2;
+    let diff = negprice - deposit2;
     let num_mi = $("#num_mi").val().replace(/,/g, '');
     let mi = diff / num_mi;
     if (num_mi > 101 ){
@@ -1793,25 +1834,25 @@ $("#neg_price").on('keyup',function(){
       $("#mi").val('');
       $("#num_mi").attr("placeholder", "Max allowed= 100")
       $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-      $("#negotiatebtn").addClass("dispnone")
+      // $("#negotiatebtn").addClass("dispnone")
     }else if (num_mi<1){
       // $("#num_mi").val(1);
       // $("#mi").val(diff);
       $("#num_mi").val('');
       $("#mi").val('');
       $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-      $("#negotiatebtn").addClass("dispnone")
+      // $("#negotiatebtn").addClass("dispnone")
     }else if(mi<1){
       $("#num_mi").val('');
       $("#mi").val('');
       $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-      $("#negotiatebtn").addClass("dispnone")
+      // $("#negotiatebtn").addClass("dispnone")
     }else{
       if (Number.isNaN(mi)){
         $("#num_mi").val('');
         $("#mi").val('');
         $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
-        $("#negotiatebtn").addClass("dispnone")
+        // $("#negotiatebtn").addClass("dispnone")
 
       }else{
         let roundednum = Math.round(mi)
@@ -1820,7 +1861,7 @@ $("#neg_price").on('keyup',function(){
         }
         $("#mi").val(roundednum.toLocaleString("en-Us"));
         $(".iconotifications").html('<i class="fas fa-fw fa-check-circle text-success mr-1"></i>')
-        $("#negotiatebtn").removeClass("dispnone")
+        // $("#negotiatebtn").removeClass("dispnone")
       }
 
     }

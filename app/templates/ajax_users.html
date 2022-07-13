@@ -48,11 +48,14 @@
                       <thead>
                         <tr>
                           <th class="text-info font-weight-bold">Name</th>
+                          <th class="text-info font-weight-bold">Username</th>
+
                           <th class="text-info font-weight-bold">Phone</th>
                           <th class="text-info font-weight-bold">Email</th>
                           <th class="text-info font-weight-bold">Id</th>
                           <th class="text-info font-weight-bold">Code</th>
 
+                          <th class="text-info font-weight-bold">Props</th>
                           <th class="text-info font-weight-bold">Level</th>
 
                           <th class="text-info font-weight-bold">Group</th>
@@ -67,11 +70,14 @@
                         {% for item in items%}
                         <tr>
                           <td class="data-cell">{{ item['name'] }}</td>
+                          <td class="data-cell">{{ item['username'] }}</td>
+
                           <td class="data-cell">{{ item['tel'] }}</td>
                           <td class="data-cell">{{ item['email'] }}</td>
                           <td class="data-cell">{{ item['natid'] }}</td>
                           <td class="data-cell">{{ item['usercode'] }}</td>
 
+                          <td class="data-cell">{{ item['props'] }}</td>
                           <td class="data-cell text-gray-700 small">{{ item['int_level'] }}</td>
                           <td class="data-cell text-gray-700 small">{{ item['group'] }}</td>
 
@@ -86,7 +92,7 @@
                           </td>
                           <td class="data-cell">
                             <div>
-                              <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deletePropModa"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+                              <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteUserModal"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
                             </div>
                           </td>
                         </tr>
@@ -202,6 +208,23 @@
       </div>
     </div>
 
+    <div class="modal fade center-btn" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to delete this user?</span>
+          </div>
+          <div class="has-margin-bottom divbg">
+              <button id="del_att" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-kubwa" role="document">
@@ -373,6 +396,43 @@
 
   });
 </script>
+
+
+
+<script>
+      
+  $("#del_att").on('click',function(){   
+    $('#del_att').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
+    $.ajax({
+      url: "{{ url_for('api.users') }}",
+      type: "POST",
+      data: {
+            userid:$("#del_user_identifier").text(),
+            target:"delete user"
+          },
+      success: function(response) {
+        // $(".payment-info").html(response);  
+
+          $('#del_att').html('Delete');
+          $(".closemodal").click();
+
+          $.ajax({
+                url: "/fetch/users",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "new"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+      }
+    });
+  });
+  
+  </script>
 
 
 

@@ -127,6 +127,7 @@
                 <table class="table ml-4">
                     <thead>
                         <tr>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Bill Item</th>
                             <th class="no-wrap pl-0 text-info font-weight-bold text-125">Description</th>
                             <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Previous</th>
                             <th class="no-wrap text-info font-weight-bold text-125 {{visibility}}">Current</th>
@@ -140,6 +141,7 @@
                         {%if watertarget%}
                             {%if readings%}
                             <tr class="underline-thin-fade">
+                                <td class="pl-0">Water</td>
                                 <td class="pl-0">{{prevmonth}} Water readings</td>
                                 <td>{{readings.last_reading}}</td>
                                 <td>{{readings.reading}}</td>
@@ -151,6 +153,7 @@
 
                             {%if house.housecode.seweragerate%}
                             <tr class="underline-thin-fade">
+                                <td class="pl-0">Sewerage</td>
                                 <td class="pl-0">{{prevmonth}} Sewerage readings</td>
                                 <td>{{readings.last_reading}}</td>
                                 <td>{{readings.reading}}</td>
@@ -162,6 +165,7 @@
 
                             {%if house.housecode.watercharge%}
                             <tr class="underline-thin-fade">
+                                <td class="pl-0">Water</td>
                                 <td class="pl-0">Water standing charges</td>
                                 <td></td>
                                 <td></td>
@@ -173,6 +177,7 @@
 
                             {%if ereadings%}
                             <tr class="underline-thin-fade">
+                                <td class="pl-0">Electricity</td>
                                 <td class="pl-0">Electricity readings</td>
                                 <td>{{ereadings.last_reading}}</td>
                                 <td>{{ereadings.reading}}</td>
@@ -186,18 +191,37 @@
 
                         {%if bill.rent%}
                         <tr class="underline-thin-fade">
+                            <td class="pl-0">Rent</td>
                             <td class="pl-0">{{month}} Rent</td>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            {% if house.housecode.vatrate%}
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate}}</span></td>
+                            {% else %}
                             <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.rent}}</span></td>
+                            {% endif %}
+                        </tr>
+                        {%endif%}
+
+                        {%if house.housecode.vatrate%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">VAT on rent</td>
+                            <td class="pl-0">{{month}} VAT (16%) applied on rent</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format(house.housecode.rentrate * 0.16 | float)}}</span></td>
                         </tr>
                         {%endif%}
 
                         {%if bill.deposit%}
                         <tr class="underline-thin-fade">
                             <td class="pl-0">Deposit</td>
+                            <td class="pl-0">Deposit</td>
+
                             <td></td>
                             <td></td>
                             <td></td>
@@ -209,6 +233,8 @@
 
                         {%if bill.security%}
                         <tr class="underline-thin-fade">
+                            <td class="pl-0">Security</td>
+
                             <td class="pl-0">{{month}} Security</td>
                             <td></td>
                             <td></td>
@@ -221,6 +247,7 @@
 
                         {%if bill.maintenance%}
                         <tr class="underline-thin-fade {{servicevisibility}}">
+                            <td class="pl-0">Service charge</td>
                             <td class="pl-0">{{month}} Service charge</td>
                             <td></td>
                             <td></td>
@@ -232,6 +259,7 @@
 
                         {%if bill.garbage%}
                         <tr class="underline-thin-fade">
+                            <td class="pl-0">Garbage</td>
                             <td class="pl-0">{{month}} Garbage</td>
                             <td></td>
                             <td></td>
@@ -245,6 +273,7 @@
                         {%if bill.penalty%}
                         <tr class="underline-thin-fade">
                             <td class="pl-0">Fines</td>
+                            <td class="pl-0">Late payment fee</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -256,6 +285,7 @@
 
                         {%if arrears%}
                         <tr class="underline-thin-fade">
+                            <td class="pl-0">Balance brought forward</td>
                             <td class="pl-0 {{bbfhighlight}}">{{arrtitle}}</td>
                             <td></td>
                             <td></td>

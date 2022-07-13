@@ -1,5 +1,6 @@
 
 import os
+import sched
 from dateutil.parser import parse
 
 import requests
@@ -575,7 +576,7 @@ class BillInvoice(Resource):
         invdate = bill.date - relativedelta(days = diff)
 
         inv_date = invdate.strftime("%d/%b/%y")
-        invdue = invdate + relativedelta(days=6)
+        invdue = invdate + relativedelta(days=5)
         inv_due = invdue.strftime("%d/%b/%y")
 
         kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
@@ -737,10 +738,15 @@ class BillInvoice(Resource):
 
             template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
 
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(bill.month)
+
             return render_template(
                 "ajax_tenant_invoice_mail.html",
                 bill=bill,
-                month = get_str_month(bill.month),
+                month = str_month,
                 p = bill.apartment.paymentdetails,
                 narration=narration,
                 readings = wbill,
@@ -790,8 +796,10 @@ class BillInvoice(Resource):
             tenant = bill.tenant if bill.tenant else bill.ptenant
             prop_obj= bill.apartment
 
-
-            str_month = get_str_month(prop_obj.billing_period.month)
+            if bill.house.housecode.billfrequency == 3:
+                str_month = f"July, August, September"
+            else:
+                str_month = get_str_month(prop_obj.billing_period.month)
 
             salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
             intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'
@@ -947,7 +955,6 @@ class EditBill(Resource):
             if target == "excelarrearsupload":
                 apartment_id = request.form.get('propid')
                 option = request.form.get('option')
-                prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
                 file = request.files.get('file')
 
                 if file:
@@ -960,13 +967,15 @@ class EditBill(Resource):
                 data_format_error = False
 
                 if sheet:
-                    if len(sheet.row_values(1)) != 2:
+                    if len(sheet.row_values(1)) != 3:
                         data_format_error = True
 
                 try:
                     if data_format_error:
                         #Throw error
                         nonexistent_item = sheet.row_values(1)[1000000]
+
+                    dict_array = []
 
                     for row in rows:
                         print("Starting.........................................")
@@ -980,168 +989,30 @@ class EditBill(Resource):
                         print("Extracted.......",housename)
 
                         try:
-                            arr = float(sheet.row_values(row)[1])
-                            print("Working")
+                            rentarr = float(sheet.row_values(row)[1])
+                            print("RENT Working")
                         except:
-                            print("Failing")
-                            arr = 0.0
+                            print("RENT Failing")
+                            rentarr = 0.0
 
-                        house_name = housename.upper()
-                        house_obj = get_specific_house_obj(apartment_id,house_name)
-                        
-                        if house_obj:
-                            items = house_obj.monthlybills
-                            target_items = fetch_current_billing_period_bills(prop.billing_period,items)
-                            if target_items:
-                                bill = target_items[0]
-                                if bill:
-                                    if bill.arrears_updated and option != "replace":
-                                        print("Skipping", house_name,"arrears uploaded already ARR:",bill.arrears)
-                                        continue
+                        try:
+                            servarr = float(sheet.row_values(row)[2])
+                            print("SERV Working")
+                        except:
+                            print("SERV Failing")
+                            servarr = 0.0
+                                                
+                        dict_obj = {
+                        "housename":housename,
+                        "rentarr":rentarr,
+                        "servarr":servarr
+                        }
 
+                        dict_array.append(dict_obj)
 
-                                    #start of arrears upload################################################################################
-
-                                    original_amount = bill.total_bill
-
-                                    # original_amount = bill.total_bill
-                                    # total_amount = bill.total_bill
-                                    # total_amount += arr
-
-
-
-                                    # if arr:
-                                    #     arrears = arr
-                                    # else:
-                                    #     arrears = "null"
-
-                                    # if arrears == "null":
-                                    #     pass
-                                    # else:
-                                    #     MonthlyChargeOp.update_arrears_status(bill,True)
-                                        
-                                    #     MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",arr,total_amount,1)
-
-                                    #     diff = total_amount - original_amount
-
-                                    #     if bill.tenant:
-
-                                    #         tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                                    #         running_bal = tenant_obj.balance
-                                    #         running_bal = running_bal + diff
-                                    #         TenantOp.update_balance(tenant_obj,running_bal)
-
-                                    #     bal = bill.balance
-                                    #     bal = bal + diff
-                                    #     MonthlyChargeOp.update_balance(bill,bal)
-
-                                    #####################################################################################################################
-                                    if option == "add":
-                                        update_water = bill.water_balance
-                                        update_rent = arr if arr else bill.rent_balance
-                                        update_garbage = bill.garbage_balance
-                                        update_security = bill.security_balance
-                                        update_fine = bill.penalty_balance
-                                        update_agreement = bill.agreement_balance
-                                        update_deposit = bill.deposit_balance
-                                        update_electricity = bill.electricity_balance
-                                        update_maintenance = bill.maintenance_balance
-                                    else:
-                                        update_water = 0.0
-                                        update_rent = arr
-                                        update_garbage = 0.0
-                                        update_security = 0.0
-                                        update_fine = 0.0
-                                        update_agreement = 0.0
-                                        update_deposit = 0.0
-                                        update_electricity = 0.0
-                                        update_maintenance = 0.0
-
-                                    update_arrears = update_water+update_rent+update_garbage+update_security+update_fine+update_deposit+update_agreement+update_electricity+update_maintenance
-
-                                    total_amount = original_amount - bill.arrears + update_arrears
-
-                                    MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,current_user.id)
-
-                                    MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
-
-
-                                    # if bill.rent_balance:
-                                    if bill.rent_paid:
-                                        rentbal = bill.rent + update_rent - bill.rent_paid
-                                    else:
-                                        rentbal = bill.rent + update_rent
-
-                                    if bill.water_paid:
-                                        waterbal = bill.water + update_water - bill.water_paid 
-                                    else:
-                                        waterbal = bill.water + update_water
-
-                                    if bill.electricity_paid:
-                                        electricitybal = bill.electricity + update_electricity - bill.electricity_paid
-                                    else:
-                                        electricitybal = bill.electricity + update_electricity
-
-                                    if bill.maintenance_paid:
-                                        servicebal = bill.maintenance + update_maintenance - bill.maintenance_paid
-                                    else:
-                                        servicebal = bill.maintenance + update_maintenance
-
-                                    if bill.penalty_paid:
-                                        penaltybal = bill.penalty + update_fine - bill.penalty_paid
-                                    else:
-                                        penaltybal = bill.penalty + update_fine
-
-                                    if bill.security_paid:
-                                        securitybal = bill.security + update_security - bill.security_paid
-                                    else:
-                                        securitybal = bill.security + update_security
-
-                                    if bill.garbage_paid:
-                                        garbagebal = bill.garbage + update_garbage - bill.garbage_paid
-                                    else:
-                                        garbagebal = bill.garbage + update_garbage
-
-
-                                    if bill.deposit_paid:
-                                        depositbal = bill.deposit + update_deposit - bill.deposit_paid
-                                    else:
-                                        depositbal = bill.deposit + update_deposit
-
-                                    if bill.agreement_paid:
-                                        agreementbal = bill.agreement + update_agreement - bill.agreement_paid
-                                    else:
-                                        agreementbal = bill.agreement + update_agreement
-
-                                    MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-
-
-                                    diff = total_amount - original_amount
-
-                                    if bill.tenant_id:
-
-                                        tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
-                                        running_bal = tenant_obj.balance
-                                        running_bal = running_bal + diff
-                                        TenantOp.update_balance(tenant_obj,running_bal)
-
-                                    # bal = bill.balance
-                                    # bal = bal + diff
-                                    if bill.paid_amount:
-                                        bal = total_amount - bill.paid_amount
-                                    else:
-                                        bal = total_amount
-
-                                    MonthlyChargeOp.update_balance(bill,bal)
-                                    MonthlyChargeOp.update_arrears_status(bill,True)
-                                    #####################################################################################################################
-
-                                else:
-                                    print("No bill exists for ", house_name)
-                        else:
-                            print("House does not exist >>>>>>>>>>>>",house_name)
-        
-                    return '<span class="text-success">Upload successful</span>'
+                    uploadsjob2 = q.enqueue_call(
+                        func=read_arrears_excel, args=(dict_array,option,apartment_id,current_user.id,), result_ttl=5000
+                    )
 
                 except Exception as e:
                     if not sheet:
@@ -1179,6 +1050,12 @@ class EditBill(Resource):
                         running_bal = running_bal - original_amount
                         TenantOp.update_balance(tenant_obj,running_bal)
 
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
+
                     MonthlyChargeOp.delete(bill)
                 else:
                     MonthlyChargeOp.delete(bill)
@@ -1211,7 +1088,7 @@ class EditBill(Resource):
 
                 MonthlyChargeOp.update_monthly_charge(bill,"null","null","null","null","null","null","null","null","null",update_arrears,total_amount,current_user.id)
 
-                MonthlyChargeOp.update_balances(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1261,7 +1138,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1275,6 +1152,12 @@ class EditBill(Resource):
                         running_bal = tenant_obj.balance
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
+
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff
@@ -1321,7 +1204,7 @@ class EditBill(Resource):
                 else:
                     MonthlyChargeOp.update_payment(bill,update_payments)
 
-                MonthlyChargeOp.update_payments(bill,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+                MonthlyChargeOp.update_payments(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
 
                 # if bill.rent_balance:
@@ -1371,7 +1254,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement - bill.agreement_paid
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
 
 
@@ -1479,7 +1362,7 @@ class EditBill(Resource):
                 else:
                     agreementbal = bill.agreement_balance + update_agreement
 
-                MonthlyChargeOp.update_dues(bill,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 # MonthlyChargeOp.update_rent_balance(bill,rentarr)
 
 
@@ -1493,6 +1376,12 @@ class EditBill(Resource):
                         running_bal = tenant_obj.balance
                         running_bal = running_bal + diff
                         TenantOp.update_balance(tenant_obj,running_bal)
+
+                    if bill.ptenant_id:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                        running_bal = tenant_obj.balance
+                        running_bal = running_bal + diff
+                        PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                 # bal = bill.balance
                 # bal = bal + diff
@@ -1788,7 +1677,14 @@ class SendSms(Resource):
             else:
                 reference = f'#{payment_obj.id}'
 
-            tenant_obj = payment_obj.tenant
+            if payment_obj.ptenant:
+                tenant_obj = payment_obj.ptenant
+                ptenant_id = tenant_obj.id
+                tenant_id = None
+            else:
+                tenant_obj = payment_obj.tenant
+                tenant_id = tenant_obj.id
+                ptenant_id = None
 
             if tenant_obj.balance < 0:
                 bal = tenant_obj.balance * -1
@@ -1799,7 +1695,7 @@ class SendSms(Resource):
             amount = f'Kes {payment_obj.amount:,.0f}'
 
             if os.getenv("TARGET") == "lasshouse":
-                receipt = f"Receipt: https://kodimannapp.com/r/{payment_obj.rand_id}"
+                receipt = f"Receipt: https://km/r/{payment_obj.rand_id}"
             else:
                 receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
 
@@ -1992,14 +1888,34 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
 
             if cb.bill_ref_num:
+                #######################################################################################
                 if cb.bill_ref_num.startswith("TNT"):
-                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if not tenant:
+                        tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                 elif cb.bill_ref_num.startswith("WN"):
-                    tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if not tenant:
+                        tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+
+                ########################################################################################
+                elif prop.name == "Greatwall Gardens Phase 2":
+                    hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                    if hh:
+                        tenant = hh.owner
+                    else:
+                        tenant = 'unidentified'
+                elif prop.name == "Astrol Ridgeways":
+                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                    if not tenant:
+                        tenant = "unidentified"
+                ########################################################################################
                 else:
                     tenant = "unidentified"
+                #########################################################################################
             else:
                 tenant = "unidentified"
+
 
             if isinstance(tenant, str):
                 house = "unknown"
@@ -2046,18 +1962,73 @@ class ReceivePayment(Resource):
                 cb = CtoBop.fetch_record_by_id(cbid)
 
                 if cb.bill_ref_num:
+                    # if cb.bill_ref_num.startswith("TNT"):
+                    #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = check_house_occupied(tenant_obj)[1]
+                    #     bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    # elif cb.bill_ref_num.startswith("WN"):
+                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = tenant_obj.house
+                    #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+
                     if cb.bill_ref_num.startswith("TNT"):
-                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = check_house_occupied(tenant_obj)[1]
-                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+                        tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = check_house_occupied(tenant)[1]
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = check_house_occupied(tenant)[1]
+                                bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                            else:
+                                bill = None
 
                     elif cb.bill_ref_num.startswith("WN"):
-                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = tenant_obj.house
-                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = tenant.house
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = tenant.house
+                                bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+                            else:
+                                bill = None
+
+                    ########################################################################################
+                    elif prop.name == "Greatwall Gardens Phase 2":
+                        hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                        if hh:
+                            print("KATA SIM",hh,"MORIO",hh.owner)
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+                            print("LETA BILL BUANA",bill,"YA HII SIKU",pay_period_date)
+                            tenant = hh.owner
+                        else:
+                            print("HAKUNAAA HIO NI UWONGO")
+                            bill = None
+                    elif prop.name == "Astrol Ridgeways":
+                        cbid_id = cb.bill_ref_num.replace(" ","")
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if tenant:
+                            print("FOUND ASTROL GUY",tenant.name)
+                            hh = check_house_occupied(tenant)[1]
+
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            print("DID NOT FIND ASTROL GUY KATA SIM")
+                            bill = None
 
                     else:
                         skip = True
+                else:
+                    skip = True
             else:
                 skip = True
 
@@ -2077,7 +2048,11 @@ class ReceivePayment(Resource):
                     return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                    bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
+
+                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                        bill = tenant_obj.monthly_charges[0]
+                    else:
+                        bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
                 else:
                     bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
 
@@ -2086,7 +2061,12 @@ class ReceivePayment(Resource):
             else:
                 bill_balance = 0.0
 
-            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}')
+            if bill:
+                auto = "manual" if skip else "auto"
+            else:
+                auto = "manual"
+
+            return render_template('ajax_tenant_balance.html',totaldue=f'{bill_balance:,.1f}',auto=auto)
 
         if target == "tenant name2":
             house_obj = get_specific_house_obj(propid,house_name)
@@ -2122,14 +2102,63 @@ class ReceivePayment(Resource):
 
                 if cb.bill_ref_num:
                     if cb.bill_ref_num.startswith("TNT"):
-                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = check_house_occupied(tenant_obj)[1]
-                        bill = fetch_target_period_invoice(house_item,pay_period_date)
+                        tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = check_house_occupied(tenant)[1]
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = check_house_occupied(tenant)[1]
+                                bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                            else:
+                                bill = None
 
                     elif cb.bill_ref_num.startswith("WN"):
-                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                        house_item = tenant_obj.house
-                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+                        tenant = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                        if tenant:
+                            hh = tenant.house
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+
+                        else:
+                            tenant = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                            if tenant:
+                                hh = tenant.house
+                                bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+                            else:
+                                bill = None
+
+                    ########################################################################################
+                    elif prop.name == "Greatwall Gardens Phase 2":
+                        hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                        if hh:
+                            bill = fetch_target_period_owner_invoice(hh,pay_period_date)
+                            tenant = hh.owner
+                        else:
+                            bill = None
+                    elif prop.name == "Astrol Ridgeways":
+                        cbid_id = cb.bill_ref_num.replace(" ","")
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if tenant:
+                            print("FOUND ASTROL GUY",tenant.name)
+                            hh = check_house_occupied(tenant)[1]
+
+                            bill = fetch_target_period_invoice(hh,pay_period_date)
+
+                        else:
+                            print("DID NOT FIND ASTROL GUY KATA SIM")
+                            bill = None
+                    # if cb.bill_ref_num.startswith("TNT"):
+                    #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = check_house_occupied(tenant_obj)[1]
+                    #     bill = fetch_target_period_invoice(house_item,pay_period_date)
+
+                    # elif cb.bill_ref_num.startswith("WN"):
+                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    #     house_item = tenant_obj.house
+                    #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                     else:
                         skip = True
             else:
@@ -2153,7 +2182,11 @@ class ReceivePayment(Resource):
                 house_item = house_obj if house_name2 else house_obj[0]
             
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                    bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
+
+                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                        bill = tenant_obj.monthly_charges[0]
+                    else:
+                        bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
@@ -2185,6 +2218,9 @@ class ReceivePayment(Resource):
         house_name = request.form.get('house')
         house_name2 = request.form.get('house2')
 
+        bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
+        instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
+        addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
         rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
         waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
         electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
@@ -2197,6 +2233,10 @@ class ReceivePayment(Resource):
 
         cbid = request.form.get("cbid")
 
+        book = "Booking balance" if bookingpaid else ""
+        inst = "Instalment" if instalmentpaid else ""
+        addfee = "Additional fees" if addfeepaid else ""
+
         water = "Water" if waterpaid else ""
         rent = "Rent" if rentpaid else ""
         garbage = "Garbage" if garbagepaid else ""
@@ -2205,7 +2245,7 @@ class ReceivePayment(Resource):
         dep = "Deposit" if depositpaid else ""
         serv = "Service" if servicepaid else ""
 
-        narration = f"{rent} {water} {garbage} {sec} {serv} {dep}"
+        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
 
         print(narration)
 
@@ -2246,6 +2286,7 @@ class ReceivePayment(Resource):
     
         paymode = request.form.get('paymode')#dropdown
         raw_bill_ref = request.form.get('bill_ref')#typed
+        paytype = request.form.get('paytype')#typed
         amount = request.form.get('paidamount')#typed
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
@@ -2288,22 +2329,84 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
 
             if cb.bill_ref_num:
+                # if cb.bill_ref_num.startswith("TNT"):
+                #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                #     house_obj = check_house_occupied(tenant_obj)[1]
+                #     target_houses.append(house_obj)
+                #     tenant_id = tenant_obj.id
+
+                #     print(">>>>> STARTING PAYMENT & TENANT TYPE")
+
+
+                # elif cb.bill_ref_num.startswith("WN"):
+                #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                #     house_obj = tenant_obj.house
+                #     target_houses.append(house_obj)
+                #     ptenant_id = tenant_obj.id
+
+                #     print(">>>>> STARTING PAYMENT & OWNER TYPE")
+
+                #######################################################################################
                 if cb.bill_ref_num.startswith("TNT"):
-                    tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    house_obj = check_house_occupied(tenant_obj)[1]
-                    target_houses.append(house_obj)
-                    tenant_id = tenant_obj.id
-
-                    print(">>>>> STARTING PAYMENT & TENANT TYPE")
-
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if tenant_obj:
+                        house_obj = check_house_occupied(tenant_obj)[1]
+                        target_houses.append(house_obj)
+                        tenant_id = tenant_obj.id
+                        ptenant_id = None
+                    else:
+                        tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        if tenant_obj:
+                            house_obj = check_house_occupied(tenant_obj)[1]
+                            target_houses.append(house_obj)
+                            tenant_id = tenant_obj.id
+                            ptenant_id = None
+                        else:
+                            print("TNT NOT FOUND")
+                            abort(404) 
 
                 elif cb.bill_ref_num.startswith("WN"):
-                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    house_obj = tenant_obj.house
-                    target_houses.append(house_obj)
-                    ptenant_id = tenant_obj.id
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if tenant_obj:
+                        house_obj = tenant_obj.house
+                        target_houses.append(house_obj)
+                        ptenant_id = tenant_obj.id
+                        tenant_id = None
+                    else:
+                        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                        if tenant_obj:
+                            house_obj = tenant_obj.house
+                            target_houses.append(house_obj)
+                            ptenant_id = tenant_obj.id
+                            tenant_id = None
+                        else:
+                            print("WN NOT FOUND")
+                            abort(404) 
 
-                    print(">>>>> STARTING PAYMENT & OWNER TYPE")
+                ########################################################################################
+                elif prop.name == "Greatwall Gardens Phase 2":
+                    hh = get_specific_house_obj(propid,cb.bill_ref_num)
+                    if hh:
+                        house_obj = hh
+                        target_houses.append(house_obj)
+                        tenant_obj = hh.owner
+                        tenant_id = None
+                        ptenant_id = tenant_obj.id
+                    else:
+                        print("HOUSE NOT FOUND")
+                        abort(404) 
+                elif prop.name == "Astrol Ridgeways":
+                    cbid_id = cb.bill_ref_num.replace(" ","")
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                    if tenant_obj:
+                        house_obj = check_house_occupied(tenant_obj)[1]
+                        target_houses.append(house_obj)
+                        tenant_id = tenant_obj.id
+                        ptenant_id = None
+                    else:
+                        print("UID NOT FOUND")
+                        abort(404) 
+                ########################################################################################
 
 
                 else:
@@ -2371,17 +2474,30 @@ class ReceivePayment(Resource):
         if not narration:
             narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-        if aviv(current_user):
-            narration = get_str_month(period.month)
-
+        # if aviv(current_user):
+        #     narration = get_str_month(period.month)
 
         # monthly_charges = house_obj.monthlybills
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-            specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
+            if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                specific_charge_obj = tenant_obj.monthly_charges[0]
+            else:
+                specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
             specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
 
+        schedule_obj = None
+
+        if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            print("GONE TO PAY AVIV")
+            schedule_objs = tenant_obj.schedules
+            for sch in schedule_objs:
+                if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+                    schedule_obj = sch
+                    break
+
+        
         # if tenant_obj.tenant_type == "owner":
         #     monthly_charges = tenant_obj.monthly_charges
         # else:
@@ -2486,6 +2602,29 @@ class ReceivePayment(Resource):
 
         for h in target_houses:
 
+            if schedule_obj:
+                print("SCHEDULE OBJI FOUND")
+                sch_arrears = 0.0
+                prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+                if prev_sch:
+                    print("FOUND Previous scheduled")
+                    sch_arr = prev_sch[0].balance
+                    if sch_arr:
+                        sch_arrears = sch_arr
+                if sch_arrears:
+                    sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+                else:
+                    sch_total_amount = schedule_obj.schedule_amount
+
+                schpaid = schedule_obj.paid + valid_amount
+                
+                sch_bal = sch_total_amount - schpaid
+
+                print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
+
+                PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+            
+
 
             if specific_charge_obj:
 
@@ -2499,23 +2638,41 @@ class ReceivePayment(Resource):
                 MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
                 MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
+                booking_paid = bookingpaid + specific_charge_obj.booking_paid if specific_charge_obj.booking_paid is not None else 0
+                instalment_paid = instalmentpaid + specific_charge_obj.instalment_paid if specific_charge_obj.instalment_paid is not None else 0
+                addfee_paid = addfeepaid + specific_charge_obj.addfee_paid if specific_charge_obj.addfee_paid is not None else 0
+
                 rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
-                rent_paid += overpayment
+
                 water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
                 penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
                 electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
                 garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
                 security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
                 service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
+
+                if specific_charge_obj.tenant_id:
+                    if specific_charge_obj.house.housecode.rentrate:
+                        rent_paid += overpayment
+                else:
+                    if specific_charge_obj.ptenant_id:
+                        if specific_charge_obj.house.housecode.servicerate:
+                            service_paid += overpayment
+
                 deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
-                MonthlyChargeOp.update_payments(specific_charge_obj,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                PaymentOp.update_payments(payment_obj,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+                MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,addfee_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                 try:
+                    bookbal = specific_charge_obj.booking_due - bookingpaid
+                    instbal = specific_charge_obj.instalment_due - instalmentpaid
+                    addfeebal = specific_charge_obj.addfee_due - addfeepaid
+
                     rentbal = specific_charge_obj.rent_due - rentpaid
-                    rentbal -= overpayment
+
+                    # rentbal -= overpayment
                     waterbal = specific_charge_obj.water_due - waterpaid
                     electricitybal = specific_charge_obj.electricity_due - electricitypaid
                     servicebal = specific_charge_obj.maintenance_due - servicepaid
@@ -2525,7 +2682,15 @@ class ReceivePayment(Resource):
                     depositbal = specific_charge_obj.deposit_due - depositpaid
                     agreementbal = specific_charge_obj.agreement_due - agreementpaid
 
-                    MonthlyChargeOp.update_dues(specific_charge_obj,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                    if specific_charge_obj.tenant_id:
+                        if specific_charge_obj.house.housecode.rentrate:
+                            rentbal -= overpayment
+                    else:
+                        if specific_charge_obj.ptenant_id:
+                            if specific_charge_obj.house.housecode.servicerate:
+                                servicebal -= overpayment
+
+                    MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 except:
                     print("PAID TO LEGACY BILL")
 
@@ -2604,7 +2769,7 @@ class ReceivePayment(Resource):
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
         if os.getenv("TARGET") == "lasshouse":
-            receiptlink = f"https://kodimannapp.com/r/{rand_id}"
+            receiptlink = f"https://cr.com/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
@@ -2844,7 +3009,11 @@ class UpdateBalance(Resource):
         except:
             pass
 
-        TenantOp.update_balance(tenant_obj,bill_balance)
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            PermanentTenantOp.update_balance(tenant_obj,bill_balance)
+        else:
+            TenantOp.update_balance(tenant_obj,bill_balance)
+
         db.session.expire(tenant_obj)
         print("Balance updated! now",tenant_obj.balance)
 
@@ -3059,7 +3228,7 @@ class EditPayment(Resource):
                     deposit_paid = target_bill.deposit_paid - payment_obj.deposit_paid
                     agreement_paid = target_bill.agreement_paid - payment_obj.agreement_paid
 
-                    MonthlyChargeOp.update_payments(target_bill,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+                    MonthlyChargeOp.update_payments(target_bill,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
                     print("VOID WORKING TO REMOVE PAYMENTS")
                 except:
                     print("Voiding DID NOT AFFECT segregated payments")
@@ -3076,7 +3245,7 @@ class EditPayment(Resource):
                     deposit_balance = target_bill.deposit_due + payment_obj.deposit_paid
                     agreement_balance = target_bill.agreement_due + payment_obj.agreement_paid
 
-                    MonthlyChargeOp.update_dues(target_bill,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
+                    MonthlyChargeOp.update_dues(target_bill,0.0,0.0,0.0,rent_balance,water_balance,electricity_balance,garbage_balance,security_balance,service_balance,penalty_balance,deposit_balance,agreement_balance)
                     print("VOID WORKING TO UPDATE BALANCES")
 
                 except:
@@ -3928,6 +4097,70 @@ class CallBackUrlAstrol(Resource):
 
         # auto_consume_ctob2(ctob_obj)
 
+class CallBackUrlDenvic(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        lname = data['LastName']
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        # response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
+
+        # auto_consume_ctob2(ctob_obj)
+
+class CallBackUrlDenvicTwo(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        # response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
+
+        # auto_consume_ctob2(ctob_obj)
 
 class CallBackUrlVintage(Resource):
     def get(self):

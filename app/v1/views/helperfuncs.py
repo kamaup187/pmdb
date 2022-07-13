@@ -9,6 +9,8 @@ import xlrd
 import inflect
 import requests
 from natsort import natsorted
+
+import app
 try:
     from weasyprint import HTML
 except:
@@ -5443,6 +5445,139 @@ def read_water_excel(dict_array,apartment_id,user_id):
                 reading_obj.save()
                 
     return '<span class="text-success">Upload successful</span>'
+
+def run_update(houseids,apartment_id,user_id):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+    # houses = [get_specific_house_obj(apartment_id,hs) for hs in houseids]
+    houses = prop.houses
+    billing_period = generate_date(6,2022)
+
+    print("STARTING UPDATE")
+
+    for hs in houses:
+        print("ON HOUSE: ",hs)
+        bills = fetch_current_billing_period_bills(billing_period,hs.monthlybills)
+
+        for bill in bills:
+            print("RUNNING BILL UPDATE")
+            original_amount = bill.total_bill
+            # if bill.apartment.billing_period.month == bill.month:
+            values = validate_float_inputs("","","","","","","","","","")
+
+            #TODO -remove this block
+            agreement = bill.agreement if bill.agreement else 0.0
+            deposit = bill.deposit if bill.deposit else 0.0
+
+            if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
+                # update_water = bill.water
+                update_water = values[1] if values[1] != "null" else bill.water
+            else:
+                update_water = values[1] if values[1] != "null" else bill.water
+
+            update_rent = values[0] if values[0] != "null" else bill.rent
+            update_garbage = values[2] if values[2] != "null" else bill.garbage
+            update_security = values[3] if values[3] != "null" else bill.security
+            update_fine = values[4] if values[4] != "null" else bill.penalty
+            update_agreement = values[7] if values[7] != "null" else agreement
+            update_deposit = values[5] if values[5] != "null" else deposit
+            update_arrears = values[6] if values[6] != "null" else bill.arrears
+            update_maintenance = values[9] if values[9] != "null" else bill.maintenance
+
+            total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
+            MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,user_id)
+
+            # if bill.rent_balance:
+
+            # if bill.rent_balance:
+            if bill.rent_paid:
+                rentbal = bill.rent_balance + update_rent - bill.rent_paid
+            else:
+                try:
+                    rentbal = bill.rent_balance + update_rent
+                except:
+                    rentbal = update_rent
+
+            # # supplied arrears to effect rent only
+            # rentarr = bill.rent_balance 
+            # if values[6] != "null":
+            #     rentarr = bill.rent_balance + values[6]
+            #     rentbal += values[6]
+
+            if bill.water_paid:
+                waterbal = bill.water_balance + update_water - bill.water_paid
+            else:
+                waterbal = bill.water_balance + update_water
+
+            if bill.electricity_paid:
+                electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
+            else:
+                electricitybal = bill.electricity_balance + bill.electricity
+
+            if bill.maintenance_paid:
+                servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
+            else:
+                servicebal = bill.maintenance_balance + update_maintenance
+
+            if bill.penalty_paid:
+                penaltybal = bill.penalty_balance + update_fine - bill.penalty_paid
+            else:
+                penaltybal = bill.penalty_balance + update_fine
+
+            if bill.security_paid:
+                securitybal = bill.security_balance + update_security - bill.security_paid
+            else:
+                securitybal = bill.security_balance + update_security
+
+            if bill.garbage_paid:
+                garbagebal = bill.garbage_balance + update_garbage - bill.garbage_paid
+            else:
+                garbagebal = bill.garbage_balance + update_garbage
+
+
+            if bill.deposit_paid:
+                depositbal = bill.deposit_balance + update_deposit - bill.deposit_paid
+            else:
+                depositbal = bill.deposit_balance + update_deposit
+
+            if bill.agreement_paid:
+                agreementbal = bill.agreement_balance + update_agreement - bill.agreement_paid
+            else:
+                agreementbal = bill.agreement_balance + update_agreement
+
+            MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+            # MonthlyChargeOp.update_rent_balance(bill,rentarr)
+
+
+            diff = total_amount - original_amount
+
+            if bill.apartment.billing_period.month == bill.month:
+
+                if bill.tenant_id:
+
+                    tenant_obj = TenantOp.fetch_tenant_by_id(bill.tenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal = running_bal + diff
+                    TenantOp.update_balance(tenant_obj,running_bal)
+
+                if bill.ptenant_id:
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal = running_bal + diff
+                    PermanentTenantOp.update_balance(tenant_obj,running_bal)
+
+            # bal = bill.balance
+            # bal = bal + diff
+            if bill.paid_amount:
+                bal = total_amount - bill.paid_amount
+            else:
+                bal = total_amount
+
+            MonthlyChargeOp.update_balance(bill,bal)
 
 
 def read_arrears_excel(dict_array,option,apartment_id,userid):

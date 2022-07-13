@@ -1812,6 +1812,141 @@ class AmendCharge(Resource):
     def post(self):
         pass
 
+# class UploadPayments(Resource):
+#     def get(self):
+#         pass
+#     def post(self):
+
+#         apartment_id = request.form.get('propname')
+#         payperiod = request.form.get('payperiod')
+#         file = request.files.get('file')
+
+#         if file:
+#             processed_data = upload_handler(file,current_user)
+#         else:
+#             return '<span class=text-danger>Select file first!</span>'
+
+#         rows,sheet = processed_data[0],processed_data[1]
+
+#         data_format_error = False
+
+#         if sheet:
+#             if len(sheet.row_values(1)) != 3:
+#                 data_format_error = True
+
+#         try:
+#             if data_format_error:
+#                 #Throw error
+#                 nonexistent_item = sheet.row_values(1)[1000000]
+
+#             dict_array = []
+
+#             for row in rows:
+#                 print("Starting.........................................")
+#                 try:
+#                     housename = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+#                     print("Working as expected")
+#                 except:
+#                     housename = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+#                     print("house exception handled")
+
+#                 print("Extracted.......",housename)
+
+#                 payref = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
+
+
+#                 try:
+#                     rent = float(sheet.row_values(row)[2])
+#                     print("RENT Working")
+#                 except:
+#                     print("RENT Failing")
+#                     rent = 0.0
+
+#                 try:
+#                     serv = float(sheet.row_values(row)[3])
+#                     print("SERV Working")
+#                 except:
+#                     print("SERV Failing")
+#                     serv = 0.0
+
+#                 try:
+#                     water = float(sheet.row_values(row)[4])
+#                     print("water Working")
+#                 except:
+#                     print("water Failing")
+#                     water = 0.0
+                                        
+#                 dict_obj = {
+#                 "housename":housename,
+#                 "rentarr":rent,
+#                 "servarr":serv,
+#                 "water":water
+#                 }
+
+#                 dict_array.append(dict_obj)
+
+#             uploadsjob2 = q.enqueue_call(
+#                 func=read_payments_excel, args=(dict_array,payperiod,prop_id,current_user.id,), result_ttl=5000
+#             )
+
+#         except Exception as e:
+#             if not sheet:
+#                 print("FILE FORMAT UPLOADED NOT SUPPORTED")
+#                 return '<span class="text-danger">File format not supported</span>'
+#             elif type(e) == IndexError:
+#                 print("FILE DATA FIELDS INCORRECT")
+#                 return '<span class="text-danger">File data fields incorrect</span>'
+#             else:
+#                 print("RARE FATAL CASE: Error occured while saving item: ",e)
+#                 abort(403)
+
+
+#         house_name = request.form.get('house')
+#         bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
+#         instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
+#         addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
+#         rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
+#         waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
+#         electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
+#         garbagepaid = int(request.form.get('garbagepaid')) if request.form.get('garbagepaid') else 0
+#         securitypaid = int(request.form.get('securitypaid')) if request.form.get('securitypaid') else 0
+#         servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
+#         penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
+#         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
+#         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
+
+
+#         book = "Booking balance" if bookingpaid else ""
+#         inst = "Instalment" if instalmentpaid else ""
+#         addfee = "Additional fees" if addfeepaid else ""
+
+#         water = "Water" if waterpaid else ""
+#         rent = "Rent" if rentpaid else ""
+#         garbage = "Garbage" if garbagepaid else ""
+#         sec = "Security" if securitypaid else ""
+#         dep = "Deposit" if depositpaid else ""
+#         serv = "Service" if servicepaid else ""
+
+#         narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
+
+#         print(narration)
+
+
+#         payperiod = request.form.get("payperiod")
+
+#         # if payperiod:
+#         #     pay_period = date_formatter_alt(payperiod)
+#         #     pay_period_date = parse(pay_period)
+#         # else:
+#         #     pay_period_date = get_billing_period(prop)
+
+    
+#         paymode = request.form.get('paymode')#dropdown
+#         raw_bill_ref = request.form.get('bill_ref')#typed
+#         paytype = request.form.get('paytype')#typed
+#         amount = request.form.get('paidamount')#typed
+#         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
+
 class ReceivePayment(Resource):
     """class"""
     @login_required

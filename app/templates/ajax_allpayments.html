@@ -1701,7 +1701,8 @@
   $("#uploadpayments").on('click',function(){
       $("#uploadpayments").html("Uploading...") 
 
-      url = "{{ url_for('api.uploadpayments') }}"
+      // url = "{{ url_for('api.uploadpayments') }}"
+      url = ""
 
       var fd = new FormData();
       var files = $('#datafile')[0].files;

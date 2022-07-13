@@ -248,18 +248,20 @@ class Index(Resource):
             # if cocc:
             #     CompanyOp.update_sms_provider(cocc,"Advanta")
 
-            commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
+            # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
 
-            propsss = commp.props
-            for propp in propsss:
+            # propsss = commp.props
+            # for propp in propsss:
 
-                apartment_id = propp.id
+            #     apartment_id = propp.id
 
-                print("APART",apartment_id)
+            #     print("APART",apartment_id)
 
-                billupdatejob = q.enqueue_call(
-                    func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
-                )
+            #     billupdatejob = q.enqueue_call(
+            #         func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
+            #     )
+
+            
             # if not cocc:
             #     cocc = current_user.company
 

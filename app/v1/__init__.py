@@ -230,6 +230,7 @@ api.add_resource(TenantStatementThree,"/tenant/statement3")
 api.add_resource(StatementOfAccounts,"/account/statement")
 api.add_resource(BookingSchedule,"/booking/schedule")
 api.add_resource(MpesaStatement,"/mpesa/statement")
+api.add_resource(MeritStatementOne,"/st/one")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")

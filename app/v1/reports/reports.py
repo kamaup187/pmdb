@@ -1,10 +1,12 @@
 from asyncio import exceptions
+from select import select
 from dateutil.parser import parse
 
 from flask_login import login_required, current_user
 from flask_restful import Resource
 from flask_mail import Message
 from flask import render_template,Response,request,flash,redirect,url_for,json
+from pip import main
 
 # from ..forms.forms import PaymentForm,AmendChargeForm
 
@@ -4773,6 +4775,98 @@ class BookingSchedule(Resource):
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1]
             ))
+
+class MeritStatementOne(Resource):
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        owner = request.args.get("owner")
+        month = request.args.get("month")
+
+        company = current_user.company
+        users = company.users
+        owner_users = []
+        for user in users:
+            if str(user.company_user_group) == "Owner":
+                owner_users.append(user)
+
+        if not selected_apartment:
+            return Response(render_template(
+                'report_merit_one_statement.html',
+                tenant_obj=None,
+                name=current_user.name,
+                tenantlist=[],
+                owners=owner_users,
+                props = company.props,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+                ))
+
+        prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        owner_user = UserOp.fetch_user_by_username(owner)
+
+        print(owner_user,"<<<<< user")
+        units = fetch_all_houses_by_user(owner_user)
+
+        print("unitts>>>",units)
+
+        if month:
+            datestring = date_formatter_alt(month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        target_units = []
+
+        for unit in units:
+            if unit in prop.houses:
+                target_units.append(unit)
+
+        main = []
+
+        formatted_bills = []
+        for unitt in target_units:
+            main.append(fetch_current_billing_period_bills(target_period,unitt.monthlybills))
+
+        bills = flatten(main)
+        formatted_bills = []
+
+        print(bills,"<<<<<<")
+
+        totrent = 0.0
+        totserv = 0.0
+
+        for bill in bills:
+            totrent += bill.rent
+            totserv += bill.maintenance
+
+            formatted_bills.append(MonthlyChargeOp.view_merit(bill))
+
+        totmgt = 2500 * 6
+        totdue = totrent - totmgt - totserv
+
+
+        print(formatted_bills,"lhjgjj")
+
+        return Response(render_template(
+                'report_merit_one_statement.html',
+                name=current_user.name,
+                tenantlist=[],
+                bills = formatted_bills,
+                totrent=totrent,
+                totserv=totserv,
+                totmgt=totmgt,
+                totdue=totdue,
+                owners=owner_users,
+                props = company.props,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+        ))
 
 
 class StatementOfAccounts(Resource):

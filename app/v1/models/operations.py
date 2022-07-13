@@ -3112,6 +3112,23 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'balance':MonthlyChargeOp.calculate_bcf(self)
         }
 
+    def get_management_fees(self):
+        return 2500
+
+    def calculate_owner_due(self):
+        return self.rent - self.maintenance - 2500
+
+    def view_merit(self):
+        return {
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'house':self.house,
+            'rent':MonthlyChargeOp.fig_format(self.rent),
+            'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
+            'mgt':MonthlyChargeOp.get_management_fees(self),
+            'ownerdue':MonthlyChargeOp.calculate_owner_due(self),
+            'comment':"-"
+        }
+
 
 class PaymentScheduleOp(PaymentSchedule,Base):
     def __init__(self,name,arrears,amount,total,date,apartment_id,house_id,ptenant_id):

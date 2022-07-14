@@ -1,12 +1,12 @@
 # from app.v1.models import datamodel
-from re import S
-import time
+# from re import S
+# import time
 import os
-from unicodedata import category
+# from unicodedata import category
 from dateutil.parser import parse
 
 import cloudinary as Cloud
-from sqlalchemy.sql.expression import except_
+# from sqlalchemy.sql.expression import except_
 # from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
@@ -261,7 +261,7 @@ class Index(Resource):
             #         func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
             #     )
 
-            
+
             # if not cocc:
             #     cocc = current_user.company
 

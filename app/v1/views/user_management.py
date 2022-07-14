@@ -1,12 +1,12 @@
 
-from operator import iconcat
+# from operator import iconcat
 from flask_restful import Resource
 from flask_login import login_user,logout_user
 from flask_login import login_required, current_user
 
 from flask import render_template,Response,request,flash,redirect,url_for,abort
 from ..forms.forms import ModifyAccessRightForm
-from ..forms.forms import UserRegForm
+# from ..forms.forms import UserRegForm
 
 from app.v1.models.operations import *
 from .helperfuncs import *

@@ -4,9 +4,9 @@ from flask import Blueprint
 from .views.apartment_management import *
 from .views.user_management import *
 from .views.billing import *
+
 from .reports.reports import *
 from .views.admin_views import *
-# from .views.contact import *
 
 version_one = Blueprint('api', __name__)
 api = Api(version_one)

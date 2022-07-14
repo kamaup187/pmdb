@@ -1,16 +1,16 @@
 """Helper methods for views"""
-from ast import Pass
-from mimetypes import init
+# from ast import Pass
+# from mimetypes import init
 import os
-from pickle import TRUE
+# from pickle import TRUE
 # from africastalking import initialize
 import re
 import xlrd
 import inflect
-import requests
+# import requests
 from natsort import natsorted
 
-import app
+# import app
 try:
     from weasyprint import HTML
 except:

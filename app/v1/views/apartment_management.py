@@ -558,8 +558,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Denvic Property Managers":
-                shorts = ["711905"]
+            if company.name== "LaCasa":
+                shorts = ["802086"]
             else:
                 shorts = []
 

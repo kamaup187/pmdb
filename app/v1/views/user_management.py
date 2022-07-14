@@ -342,6 +342,8 @@ class Users(Resource):
         national_id = request.form.get('natid')
         pass1 = request.form.get('pass1')
         pass2 = request.form.get('pass2')
+        bank = request.form.get('bank')
+        bankacc = request.form.get('bankacc')
         usergroup=request.form.get('usergroup')
 
         status = request.form.get('status')
@@ -426,10 +428,27 @@ class Users(Resource):
             company_id = None
 
             UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
+            if bank:
+                UserOp.update_bankdetails(update_user,bank,bankacc)
 
             if status:
                 status_bool = get_bool(status)
                 UserOp.update_status(update_user,status_bool)
+
+            if properties:
+                current_props = fetch_all_apartments_by_user(update_user)
+                for i in current_props:
+                    ApartmentOp.terminate(i,update_user)
+            if houses:
+                current_houses = fetch_all_houses_by_user(update_user)
+                for i in current_houses:
+                    HouseOp.terminate_house(i,update_user)
+
+            for prop in properties:
+                UserOp.relate(update_user,prop)
+
+            for hse in houses:
+                UserOp.relate_house(update_user,hse)
 
             return "Updated successfully" + proceed
 

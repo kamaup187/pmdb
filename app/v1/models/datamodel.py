@@ -137,6 +137,9 @@ class User(db.Model,UserMixin):
     password = db.Column(db.VARCHAR,nullable=False)
     active = db.Column(db.Boolean,default=True)
 
+    bank = db.Column(db.VARCHAR)
+    bankacc = db.Column(db.VARCHAR)
+
     activation_link = db.Column(db.String,default="null")
     
     user_id = db.Column(db.Integer)
@@ -429,6 +432,8 @@ class HouseCode(db.Model):
 
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
+
+    commission = db.Column(db.Float,default=0)
 
     billfrequency = db.Column(db.Integer,default=1)
     vatrate = db.Column(db.Float,default=0)

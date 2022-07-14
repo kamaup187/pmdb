@@ -159,6 +159,8 @@ api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
 api.add_resource(CallBackUrlAstrol,"/m/astrol/ins/payment")
 api.add_resource(CallBackUrlDenvic,"/m/denvic/ins/payment")
 api.add_resource(CallBackUrlDenvicTwo,"/m/denvictwo/ins/payment")
+api.add_resource(CallBackUrlBizlineBaraka,"/m/bizlinebaraka/ins/payment")
+
 
 
 

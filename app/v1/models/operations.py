@@ -1,6 +1,7 @@
 # from cmath import e
 # from pydoc import ttypager
 # import string
+
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
 from sqlalchemy import extract 
@@ -384,6 +385,14 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_bankdetails(self,bank,bankacc):
+        if bank:
+            self.bank = bank
+        if bankacc:
+            self.bankacc = bankacc
+
+        db.session.commit()
+
     def update_password(self,password):
         self.password = Bcrypt().generate_password_hash(password).decode()
 
@@ -430,6 +439,7 @@ class UserOp(User,Base):
             "int_level":self.user_group_id,
             "group":self.company_user_group,
             "props":f"{[prop.id for prop in self.apartments]}",
+            "houses":f"{[hs.name for hs in self.houses]}",
             "company":self.company,
             "status":self.active,
             "date_reg":UserOp.format_date(self)
@@ -3113,10 +3123,27 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         }
 
     def get_management_fees(self):
-        return 2500
+        if self.house.housecode.commission:
+            comm = self.house.housecode.commission
+            try:
+                commission = comm * self.rent * 0.01
+            except:
+                commission = 0.0
+
+        elif self.apartment.commission:
+            comm = self.apartment.commission
+            try:
+                commission = comm * self.rent * 0.01
+            except:
+                commission = 0.0
+
+        else:
+            commission = self.apartment.int_commission if self.apartment.int_commission else 0.0
+
+        return commission
 
     def calculate_owner_due(self):
-        return self.rent - self.maintenance - 2500
+        return self.rent - self.maintenance - MonthlyChargeOp.get_management_fees(self)
 
     def view_merit(self):
         return {

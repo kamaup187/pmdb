@@ -2,8 +2,8 @@
 
 {% block child %}
 <span id="edit_bill_identifier" class="dispnone"></span>
-<span id="collapseid" class="dispnone">{{prop}}</span>
-<span id="filename" class="dispnone">{{prop}} {{timeline}}statement.pdf</span>
+<span id="collapseid" class="dispnone">{{propname}}</span>
+<span id="filename" class="dispnone">{{propname}} {{timeline}}statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
 <div class="row">
@@ -103,19 +103,19 @@
             <div class="mb-4 mt-4 text-dark font-weight-bold">
 
               <div class="ln-16 divjust-end">
-                <span class="mr-4">Apartment :</span> <span class="text-black">PALM MEWS HOUSE</span>
+                <span class="mr-4">Apartment :</span> <span class="text-black">{{propname}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>Unit(s) :</span> <span class="text-black">A4,A7,A9,B6,B8,B9</span>
+                <span>Unit(s) :</span> <span class="text-black">{{units}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>Client Name :</span> <span class="text-black">EDWIN BARASA</span>
+                <span>Client Name :</span> <span class="text-black">{{owner}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span class="mr-5">BANK :</span> <span class="text-black">NCBA BANK- ABC BRANCH</span>
+                <span class="mr-5">BANK :</span> <span class="text-black">{{bank}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>A/C :</span> <span class="text-black">A/C NO:1005286828</span>
+                <span>A/C :</span> <span class="text-black">{{bankacc}}</span>
               </div>
             </div>
 
@@ -166,7 +166,7 @@
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{ bill['service'] }}</td>
                       <td class="data-cell text-right">{{ bill['mgt'] }}</td>  
-                      <td class="data-cell text-center">{{ bill['ownerdue'] }}</td>
+                      <td class="data-cell text-right">{{ bill['ownerdue'] }}</td>
 
                       <td class="data-cell text-right">{{ bill['comment'] }}</td>
 
@@ -220,6 +220,43 @@
                       </table>
                 </div>
 
+                <div class="divjust-end ln-16 mobile-malaysian">
+                  <div class="">Remarks:</div>
+      
+                  <div class="divjust-end mr-5">
+                    <div class="mr-4">
+                      <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+      
+                      <div class="mb-1 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
+    
+                      <!-- <div class="mb-1 text-gray-900">LETTING FEE VAT</div> -->
+      
+                      <div class="mb-1 text-gray-900">SERVICE CHARGE</div>
+                      <div class="mb-1 text-gray-900">EXPENSES</div>
+
+                      <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
+      
+                      <div class="hide mb-2">space</div>
+                      <div class="text-gray-900 mb-3">NET PAYABLE</div>
+                    </div>
+      
+                    <div class="text-black">
+                      <div class="mb-1 text-gray-900">Kshs {{totrent}}</div>
+      
+                      <div class="mb-1">Kshs {{totmgt}} (<span class="text-danger">debit</span>)</div>
+                      <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
+                      <div class="mb-1">Kshs {{totserv}} (<span class="text-danger">debit</span>)</div>
+                      <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                      <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+      
+      
+                      <div class="hide mb-2">space</div>
+      
+                      <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="divjust-end">
 
                   <div>
@@ -243,7 +280,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoice" class="col-lg-12  dispnon">
     <div class="bg-white shadow">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -264,19 +301,19 @@
             <div class="mb-4 mt-4 text-dark font-weight-bold">
 
               <div class="ln-16 divjust-end">
-                <span class="mr-4">Apartment :</span> <span class="text-black">PALM MEWS HOUSE</span>
+                <span class="mr-4">Apartment :</span> <span class="text-black">{{propname}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>Unit(s) :</span> <span class="text-black">A4,A7,A9,B6,B8,B9</span>
+                <span>Unit(s) :</span> <span class="text-black">{{units}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>Client Name :</span> <span class="text-black">EDWIN BARASA</span>
+                <span>Client Name :</span> <span class="text-black">{{owner}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span class="mr-5">BANK :</span> <span class="text-black">NCBA BANK- ABC BRANCH</span>
+                <span class="mr-5">BANK :</span> <span class="text-black">{{bank}}</span>
               </div>
               <div class="ln-16 divjust-end">
-                <span>A/C :</span> <span class="text-black">A/C NO:1005286828</span>
+                <span>A/C :</span> <span class="text-black">{{bankacc}}</span>
               </div>
             </div>
 
@@ -374,6 +411,44 @@
                       </tr>
                     </tfoot>
                   </table>
+            </div>
+
+
+            <div class="divjust-end ln-16 mobile-malaysian">
+              <div class="">Remarks:</div>
+  
+              <div class="divjust-end mr-5">
+                <div class="mr-4">
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+  
+                  <div class="mb-1 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
+
+                  <!-- <div class="mb-1 text-gray-900">LETTING FEE VAT</div> -->
+  
+                  <div class="mb-1 text-gray-900">SERVICE CHARGE</div>
+                  <div class="mb-1 text-gray-900">EXPENSES</div>
+
+                  <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
+  
+                  <div class="hide mb-2">space</div>
+                  <div class="text-gray-900 mb-3">NET PAYABLE</div>
+                </div>
+  
+                <div class="text-black">
+                  <div class="mb-1 text-gray-900">Kshs {{totrent}}</div>
+  
+                  <div class="mb-1">Kshs {{totmgt}} (<span class="text-danger">debit</span>)</div>
+                  <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
+                  <div class="mb-1">Kshs {{totserv}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+  
+  
+                  <div class="hide mb-2">space</div>
+  
+                  <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
+                </div>
+              </div>
             </div>
  
             <div class="divjust-end mt-1">

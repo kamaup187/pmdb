@@ -4835,6 +4835,8 @@ class MeritStatementOne(Resource):
 
         totrent = 0.0
         totserv = 0.0
+        totmgt = 0.0
+        totdue = 0.0
 
         for bill in bills:
             totrent += bill.rent
@@ -4842,21 +4844,54 @@ class MeritStatementOne(Resource):
 
             formatted_bills.append(MonthlyChargeOp.view_merit(bill))
 
-        totmgt = 2500 * 6
-        totdue = totrent - totmgt - totserv
+        for item in formatted_bills:
+            totmgt += item["mgt"]
+            totdue += item["ownerdue"]
 
+        expense_list = []
 
-        print(formatted_bills,"lhjgjj")
+        expenses_amount = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in prop.expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+        debits = totmgt + totserv + expenses_amount
+        netpay = totrent - debits
 
         return Response(render_template(
                 'report_merit_one_statement.html',
                 name=current_user.name,
                 tenantlist=[],
                 bills = formatted_bills,
+                expenselist = expense_list,
+                units = ','.join(map(str, units)),
+                propname = prop.name,
+                owner = owner_user.name,
+                statementdate = f"{get_str_month(target_period.month)}, {target_period.year}",
+                bank = owner_user.bank,
+                bankacc=owner_user.bankacc,
                 totrent=totrent,
                 totserv=totserv,
                 totmgt=totmgt,
                 totdue=totdue,
+                expenses=expenses_amount,
+                debits=debits,
+                netpay=netpay,
                 owners=owner_users,
                 props = company.props,
                 logopath=logo(current_user.company)[0],

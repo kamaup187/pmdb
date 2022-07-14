@@ -65,7 +65,7 @@
                                 </select>
                             </div>
                         </div>
-                          <div class="row gx-3 mb-3">
+                        <div class="row gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="pass1">Reset password</label>
@@ -96,6 +96,21 @@
                                     {% endfor %}
                                 </select>
                             </div>
+
+                            <div id="bankdetails" class="row gx-3 mb-3 dispnone">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="bank">Bank & Branch</label>                            
+                                    <input class="form-control" id="bank" type="text" placeholder="bank name & branch" value=""/>
+                                </div>
+                                <!-- Form Group (last name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="bankacc">Bank A/C</label>    
+                                    <input class="form-control" id="bankacc" type="text" placeholder="A/C" value=""/>
+                                </div>
+                            </div>
+
+
 
                             <div class="mb-2 smallify">
                                 Properties: <input type="checkbox" name="" id="propall" checked>
@@ -256,6 +271,16 @@
     })
   </script>
 
+  <script type="text/javascript">
+    $("#inputUsergroup").on("change", function(){
+        if($("#inputUsergroup").val() == "Owner"){
+            $("#bankdetails").removeClass("dispnone")
+        }else{
+            $("#bankdetails").addClass("dispnone")
+        }
+    })
+  </script>
+
 
 
 
@@ -302,6 +327,8 @@
             phone:$("#inputTel").val(),
             natid:$("#inputNatid").val(),
             usergroup:$("#inputUsergroup").val(),
+            bank:$("#bank").val(),
+            bankacc:$("#bankacc").val(),
             pass1: $("#pass1").val(),
             pass2: $("#pass2").val(),
             props:proplist.join(", "),

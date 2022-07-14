@@ -4358,7 +4358,9 @@ class CallBackUrlBizlineBaraka(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         ctob_obj.save()
 
-        response = sms.send("Bizline Baraka MPESA DATA JUST IN",trans_amnt,"from",fname, ["+254716674695"],"KIOTAPAY")
+        msg = f"Bizline Baraka MPESA DATA JUST IN {trans_amnt} from {fname}"
+
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
 
         # auto_consume_ctob2(ctob_obj)

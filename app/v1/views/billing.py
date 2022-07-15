@@ -2041,7 +2041,12 @@ class ReceivePayment(Resource):
                     else:
                         tenant = 'unidentified'
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                    cbid_id = cb.bill_ref_num.replace(" ","")
+                    if "-" in cbid_id:
+                        cbid_id2 = cbid_id.split("-")[1]
+                    else:
+                        cbid_id2 = cbid_id
+                    tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                     if not tenant:
                         tenant = "unidentified"
                 ########################################################################################
@@ -2149,7 +2154,11 @@ class ReceivePayment(Resource):
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
                         cbid_id = cb.bill_ref_num.replace(" ","")
-                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if "-" in cbid_id:
+                            cbid_id2 = cbid_id.split("-")[1]
+                        else:
+                            cbid_id2 = cbid_id
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2275,7 +2284,11 @@ class ReceivePayment(Resource):
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
                         cbid_id = cb.bill_ref_num.replace(" ","")
-                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if "-" in cbid_id:
+                            cbid_id2 = cbid_id.split("-")[1]
+                        else:
+                            cbid_id2 = cbid_id
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2532,7 +2545,11 @@ class ReceivePayment(Resource):
                         abort(404) 
                 elif prop.name == "Astrol Ridgeways":
                     cbid_id = cb.bill_ref_num.replace(" ","")
-                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                    if "-" in cbid_id:
+                        cbid_id2 = cbid_id.split("-")[1]
+                    else:
+                        cbid_id2 = cbid_id
+                    tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                     if tenant_obj:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)

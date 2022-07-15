@@ -2553,7 +2553,7 @@ class ReceivePayment(Resource):
                         cbid_id2 = cbid_id.split("-")[1]
                     else:
                         cbid_id2 = cbid_id
-                    tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                     if tenant_obj:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)

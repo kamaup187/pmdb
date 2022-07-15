@@ -2156,7 +2156,9 @@ class ReceivePayment(Resource):
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
+                            print(cbid_id2)
                         else:
+                            print("maintained cbid")
                             cbid_id2 = cbid_id
                         tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
@@ -2286,7 +2288,9 @@ class ReceivePayment(Resource):
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
+                            print(cbid_id2)
                         else:
+                            print("maintained cbid")
                             cbid_id2 = cbid_id
                         tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
@@ -2714,6 +2718,14 @@ class ReceivePayment(Resource):
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
             CtoBop.update_status(cb,"claimed")
+
+        try:
+            cbdel = CtoBop.fetch_record_by_ref("QG63YENCLJ")
+            CtoBop.update_status(cbdel,"claimed")
+            cbdeel = CtoBop.fetch_record_by_ref("QG68YENDEU")
+            CtoBop.update_status(cbdeel,"claimed")
+        except:
+            pass
 
         if co.receipt_num:
             num = co.receipt_num

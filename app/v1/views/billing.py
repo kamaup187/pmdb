@@ -1987,6 +1987,7 @@ class ReceivePayment(Resource):
 
         if target == "proplist":
             props = fetch_all_apartments_by_user(current_user)
+            print("these are props",props)
             return render_template('ajax_multivariable.html',items=sort_items(props),placeholder="select property",access="")
 
         if target == "houselist":

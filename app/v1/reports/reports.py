@@ -1,4 +1,4 @@
-from asyncio import exceptions
+
 from dateutil.parser import parse
 
 from flask_login import login_required, current_user
@@ -4342,7 +4342,10 @@ class TenantStatementThree(Resource):
 
         if target == "direct":
             tenant_id = request.args.get("tenantid")
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            if tenant_id.startswith("ptnt"):
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
 
             begin_date = tenant_obj.date
             end_date = datetime.datetime.now()
@@ -4773,6 +4776,133 @@ class BookingSchedule(Resource):
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1]
             ))
+
+class MeritStatementOne(Resource):
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        owner = request.args.get("owner")
+        month = request.args.get("month")
+
+        company = current_user.company
+        users = company.users
+        owner_users = []
+        for user in users:
+            if str(user.company_user_group) == "Owner":
+                owner_users.append(user)
+
+        if not selected_apartment:
+            return Response(render_template(
+                'report_merit_one_statement.html',
+                tenant_obj=None,
+                name=current_user.name,
+                tenantlist=[],
+                owners=owner_users,
+                props = company.props,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+                ))
+
+        prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        owner_user = UserOp.fetch_user_by_username(owner)
+
+        print(owner_user,"<<<<< user")
+        units = fetch_all_houses_by_user(owner_user)
+
+        print("unitts>>>",units)
+
+        if month:
+            datestring = date_formatter_alt(month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        target_units = []
+
+        for unit in units:
+            if unit in prop.houses:
+                target_units.append(unit)
+
+        main = []
+
+        formatted_bills = []
+        for unitt in target_units:
+            main.append(fetch_current_billing_period_bills(target_period,unitt.monthlybills))
+
+        bills = flatten(main)
+        formatted_bills = []
+
+        print(bills,"<<<<<<")
+
+        totrent = 0.0
+        totserv = 0.0
+        totmgt = 0.0
+        totdue = 0.0
+
+        for bill in bills:
+            totrent += bill.rent
+            totserv += bill.maintenance
+
+            formatted_bills.append(MonthlyChargeOp.view_merit(bill))
+
+        for item in formatted_bills:
+            totmgt += item["mgt"]
+            totdue += item["ownerdue"]
+
+        expense_list = []
+
+        expenses_amount = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in prop.expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+        debits = totmgt + totserv + expenses_amount
+        netpay = totrent - debits
+
+        return Response(render_template(
+                'report_merit_one_statement.html',
+                name=current_user.name,
+                tenantlist=[],
+                bills = formatted_bills,
+                expenselist = expense_list,
+                units = ','.join(map(str, units)),
+                propname = prop.name,
+                owner = owner_user.name,
+                statementdate = f"{get_str_month(target_period.month)}, {target_period.year}",
+                bank = owner_user.bank,
+                bankacc=owner_user.bankacc,
+                totrent=totrent,
+                totserv=totserv,
+                totmgt=totmgt,
+                totdue=totdue,
+                expenses=expenses_amount,
+                debits=debits,
+                netpay=netpay,
+                owners=owner_users,
+                props = company.props,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+        ))
 
 
 class StatementOfAccounts(Resource):

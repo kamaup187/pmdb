@@ -4,9 +4,9 @@ from flask import Blueprint
 from .views.apartment_management import *
 from .views.user_management import *
 from .views.billing import *
+
 from .reports.reports import *
 from .views.admin_views import *
-# from .views.contact import *
 
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
@@ -136,6 +136,7 @@ api.add_resource(AmendCharge,"/amend/charge")
 api.add_resource(EditBill,"/edit/bill")
 api.add_resource(EditSummary,"/edit/summary")
 api.add_resource(ReceivePayment,"/receive/payment")
+# api.add_resource(UploadPayments,"/upload/payments")
 api.add_resource(ReceiveDepositPayment,"/deposit/payment")
 api.add_resource(TenantPayment,"/tenant/payment")
 api.add_resource(StkCallBackUrlProminance,"/datareceive")
@@ -158,6 +159,8 @@ api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
 api.add_resource(CallBackUrlAstrol,"/m/astrol/ins/payment")
 api.add_resource(CallBackUrlDenvic,"/m/denvic/ins/payment")
 api.add_resource(CallBackUrlDenvicTwo,"/m/denvictwo/ins/payment")
+api.add_resource(CallBackUrlBizlineBaraka,"/m/bizlinebaraka/ins/payment")
+
 
 
 
@@ -229,6 +232,7 @@ api.add_resource(TenantStatementThree,"/tenant/statement3")
 api.add_resource(StatementOfAccounts,"/account/statement")
 api.add_resource(BookingSchedule,"/booking/schedule")
 api.add_resource(MpesaStatement,"/mpesa/statement")
+api.add_resource(MeritStatementOne,"/st/one")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")

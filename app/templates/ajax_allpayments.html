@@ -7,6 +7,8 @@
       <span id="targeturl" class="dispnone"></span>
       <span id="c2bitem" class="dispnone"></span>
       <span id="c2bitem_id" class="dispnone"></span>
+      <a id="download_payments" href="/download/template/payments" class="dispnone">download</a>
+
 
 
     
@@ -54,6 +56,15 @@
               
               <nav class="nav nav-borders">
                 <!-- <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}(previous)</a> -->
+
+                <a class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#" data-toggle="modal" data-target="#uploadPaymentsExcelModal">
+                  <span class="btn btn-sm btn-light text-black">
+                    <!-- <i class="me-1" data-feather="user-plus"></i> -->
+                    <i class="fas fa-long-arrow-alt-up"></i>
+                    Bulk upload
+                  </span>
+                </a>
+                
                 <a id="billing" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
               </nav>
               
@@ -172,6 +183,55 @@
         </div>
       </div>
     </section>
+
+    <div class="modal fade" id="uploadPaymentsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Upload payments</span>
+              <div>
+                <button id="downloadpayments" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+
+                      <div class="form-group input-icons mt-3">
+                        <select class="select-css" id ="select_prop" >
+                          <option disabled selected value> -- Select property -- </option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+     
+                      <div class="mt-2 form-group center-btn">
+                        <p class="text-black">Payments Excel File: <input class="ph" id="tenantpaymentsfile" type = "file" name = "filename" /></p>
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="uploadpayments" type="button" class="btn-success borderless text-white">Upload</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <div class="modal fade" id="addPaymentModal2" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
@@ -674,6 +734,18 @@
   </script>
    -->
 
+   <script>
+    $("#downloadpayments").click(function(){ 
+        $('#downloadpayments').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+  
+  
+        $("#download_payments")[0].click();
+  
+          setTimeout(function(){
+              $('#downloadpayments').html("<i class='fas fa-file-download mr-2'></i>Template")
+          },8000);
+      });
+  </script>
 
   <script>
     $("#close-propdisp").on('click',function(){
@@ -1622,6 +1694,68 @@
         }
         });
   }
+</script>
+
+
+<script>
+  $("#uploadpayments").on('click',function(){
+      $("#uploadpayments").html("Uploading...") 
+
+      url = "upload/payments"
+
+      var fd = new FormData();
+      var files = $('#datafile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"excelupload");
+      fd.append('prop',$("#select_prop").val());
+      // fd.append('ttype',$("#select_ttype").val());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploadpayments").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploadpayments").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              setTimeout(function(){
+                // $.ajax({
+                //   url: "{{ url_for('api.fetchtenants') }}",
+                //   type: "get",
+                //   data: {
+                //     propid:  $("#prop_identifier").text(),
+                //     target: "somestring"
+                //   },
+                //   success: function(response) {
+                    
+                //     $("#child-result-view").html(response);
+                //   }
+                // });
+              },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploadpayments").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploadpayments").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
 </script>
 
 

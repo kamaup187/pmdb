@@ -151,7 +151,7 @@ q = Queue(connection=conn)
 from apscheduler.schedulers.background import BackgroundScheduler
 sched = BackgroundScheduler(daemon=True)
 
-import requests
+# import requests
 from app.v1.views.helperfuncs import penalty_calculator,sendlogs
 
 def scheduler():

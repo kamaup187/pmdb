@@ -2288,7 +2288,7 @@ class ReceivePayment(Resource):
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
-                            print(cbid_id2)
+                            print(cbid_id2,"length",len(cbid_id2))
                         else:
                             print("maintained cbid")
                             cbid_id2 = cbid_id

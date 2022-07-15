@@ -1,7 +1,8 @@
 import os
 from dateutil.parser import parse
-
+import datetime 
 import requests
+from requests.auth import HTTPBasicAuth
 from sqlalchemy import exc
 try:
     from weasyprint import HTML
@@ -245,4 +246,55 @@ class BBilling(Resource):
             'name':current_user.name
             }))
         
+    
+class BMpesa(Resource):
+    """class"""
 
+    def ac_token(self):
+        consumer_key = os.getenv("saf_consumer_key")
+        consumer_secret=os.getenv("saf_consumer_secret") 
+        mpesa_auth_url ='https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+        data = (requests.get(mpesa_auth_url,auth = HTTPBasicAuth(consumer_key,consumer_secret))).json()
+        return data['access_token']
+
+    def express_simulate(self):
+        ts = datetime.datetime.now().timestamp()
+        mpesa_endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {"Authorization":"Bearer %s" % self.ac_token()}
+        req_body = {
+            "BusinessShortCode":174379,
+            "password":"MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjIwNzE1MTIzOTU5",
+            "Timestamp":ts,
+            "TransactionType":"CustomerPayBillOnline",
+            "Amount":1,
+            "PartyA":+254708374149,
+            "PartyB":+254708374149,
+            "CallBackURL":"localhost:5000/bmpesa",
+            "AccountReference":"CompanyXLTD",
+            "TransactionDesc":"Payment of X"
+        }
+
+        response_data = requests.post(
+            mpesa_endpoint,
+            json=req_body,
+            headers=headers
+        )
+        return response_data.json()
+
+    @login_required
+    def get(self):
+        token = self.ac_token()
+        express_simulate = self.express_simulate()
+        print(express_simulate)
+        return make_response(jsonify({
+                'message': 'Success',
+                'token':token,
+                "express_simulate":express_simulate
+        }), 200)
+
+
+    @login_required
+    def post(self):
+        pass
+
+        

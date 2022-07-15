@@ -4342,7 +4342,10 @@ class TenantStatementThree(Resource):
 
         if target == "direct":
             tenant_id = request.args.get("tenantid")
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            if tenant_id.startswith("ptnt"):
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
 
             begin_date = tenant_obj.date
             end_date = datetime.datetime.now()

@@ -4428,6 +4428,86 @@ class CallBackUrlGoldLabel(Resource):
 
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
+class CallBackUrlBizlineBestel(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"BESTEL MPESA DATA JUST IN {trans_amnt} from {fname}"
+
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        try:
+            msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
+            clientel = sms_phone_number_formatter(msisdn)
+            response2 = sms.send(msg2, [clientel],"KIOTAPAY")
+        except:
+            pass
+
+class CallBackUrlBizlineNeema(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        try:
+            msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
+            clientel = sms_phone_number_formatter(msisdn)
+            response2 = sms.send(msg2, [clientel],"KIOTAPAY")
+        except:
+            pass
+
+
 class CallBackUrlEquity(Resource):
     def get(self):
         pass

@@ -4463,8 +4463,8 @@ class CallBackUrlBizlineBestel(Resource):
 
         try:
             msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
-            clientel = sms_phone_number_formatter(msisdn)
-            response2 = sms.send(msg2, [clientel],"KIOTAPAY")
+            # clientel = sms_phone_number_formatter(msisdn)
+            response2 = sms.send(msg2, ["+254722267087"],"KIOTAPAY")
         except Exception as e:
             print("ERROR >>",e)
 
@@ -4502,8 +4502,8 @@ class CallBackUrlBizlineNeema(Resource):
 
         try:
             msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
-            clientel = sms_phone_number_formatter(msisdn)
-            response2 = sms.send(msg2, [clientel],"KIOTAPAY")
+            # clientel = sms_phone_number_formatter(msisdn)
+            response2 = sms.send(msg2, ["+254722267087"],"KIOTAPAY")
         except Exception as e:
             print("ERROR >>",e)
 

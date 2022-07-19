@@ -4393,8 +4393,6 @@ class CallBackUrlBizlineBaraka(Resource):
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
 
-        # auto_consume_ctob2(ctob_obj)
-
 class CallBackUrlGoldLabel(Resource):
     def get(self):
         pass
@@ -4427,6 +4425,8 @@ class CallBackUrlGoldLabel(Resource):
         msg = f"Goldlabel MPESA DATA JUST IN {trans_amnt} from {fname}"
 
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response(ctob_obj)
 
 class CallBackUrlBizlineBestel(Resource):
     def get(self):
@@ -4461,12 +4461,7 @@ class CallBackUrlBizlineBestel(Resource):
 
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        try:
-            msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
-            # clientel = sms_phone_number_formatter(msisdn)
-            response2 = sms.send(msg2, ["+254722267087"],"KIOTAPAY")
-        except Exception as e:
-            print("ERROR >>",e)
+        mpesa_response(ctob_obj)
 
 class CallBackUrlBizlineNeema(Resource):
     def get(self):
@@ -4500,12 +4495,7 @@ class CallBackUrlBizlineNeema(Resource):
         msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        try:
-            msg2 = f"Dear {fname} your transaction of {trans_amnt} has been processed in favour of {bill_ref_num} REFERENCE {trans_id} Thank you."
-            # clientel = sms_phone_number_formatter(msisdn)
-            response2 = sms.send(msg2, ["+254722267087"],"KIOTAPAY")
-        except Exception as e:
-            print("ERROR >>",e)
+        mpesa_response(ctob_obj)
 
 
 class CallBackUrlEquity(Resource):

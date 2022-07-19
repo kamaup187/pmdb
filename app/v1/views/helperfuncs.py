@@ -7379,6 +7379,37 @@ def auto_consume_ctob2(ctob_obj):
                 print(f"Houston, we have a problem {e}")
 
 
+def mpesa_response(ctob_obj):
+
+    if "***" in ctob_obj.msisdn:
+        tel = ""
+    elif ctob_obj.company.name == "LaCasa" and ctob_obj.msisdn.endswith("087"):
+        tel = "254722267087"
+    else:
+        tel = ctob_obj.msisdn
+
+    try:
+        phonenum = sms_phone_number_formatter_mpesa(tel)
+
+        message = f"Dear {ctob_obj.fname} your transaction of {ctob_obj.trans_amnt} has been processed in favour of {ctob_obj.bill_ref_num} REFERENCE {ctob_obj.trans_id} Thank you."
+
+        co = ctob_obj.company
+
+        if co:
+            if co.sms_provider == "Advanta":
+                sms_sender(co.name,message,phonenum)
+            else:
+                try:
+                    recipient = [phonenum]                
+                    response = sms.send(message, recipient, sender)
+                    print(response)
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+
+    except Exception as e:
+        print("ERROR",e)
+
+
 def fetch_expenses(current_user):
     """will be deprecated in march 2021"""
     apartment_list = fetch_all_apartments_by_user(current_user)

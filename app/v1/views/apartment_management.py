@@ -559,7 +559,7 @@ class Index(Resource):
             #                 print("cbid did not find its sibling payment")
 
             if company.name== "LaCasa":
-                shorts = ["802086"]
+                shorts = ["802086","203027","602666","7555555"]
             else:
                 shorts = []
 

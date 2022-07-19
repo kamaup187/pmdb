@@ -569,7 +569,10 @@ class Index(Resource):
                     cbid = ShortcodeOp(short,"",company.id)
                     cbid.save()
 
-            shortcodes = company.shortcodes
+            if company.name == "Latitude Properties":
+                shortcodes = []
+            else:
+                shortcodes = company.shortcodes
 
             sifted = []
             for shortcode in shortcodes:

@@ -4172,7 +4172,7 @@ class CallBackUrlMLatitude(Resource):
         # ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
-        response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
 
 class CallBackUrlPremier(Resource):

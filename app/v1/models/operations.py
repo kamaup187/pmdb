@@ -1,6 +1,7 @@
-from cmath import e
-from pydoc import ttypager
-import string
+# from cmath import e
+# from pydoc import ttypager
+# import string
+
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
 from sqlalchemy import extract 
@@ -384,6 +385,14 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_bankdetails(self,bank,bankacc):
+        if bank:
+            self.bank = bank
+        if bankacc:
+            self.bankacc = bankacc
+
+        db.session.commit()
+
     def update_password(self,password):
         self.password = Bcrypt().generate_password_hash(password).decode()
 
@@ -430,6 +439,7 @@ class UserOp(User,Base):
             "int_level":self.user_group_id,
             "group":self.company_user_group,
             "props":f"{[prop.id for prop in self.apartments]}",
+            "houses":f"{[hs.name for hs in self.houses]}",
             "company":self.company,
             "status":self.active,
             "date_reg":UserOp.format_date(self)
@@ -3110,6 +3120,40 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'calc_total':MonthlyChargeOp.calculate_total(self),
             'paid':MonthlyChargeOp.calculate_paid(self),
             'balance':MonthlyChargeOp.calculate_bcf(self)
+        }
+
+    def get_management_fees(self):
+        if self.house.housecode.commission:
+            comm = self.house.housecode.commission
+            try:
+                commission = comm * self.rent * 0.01
+            except:
+                commission = 0.0
+
+        elif self.apartment.commission:
+            comm = self.apartment.commission
+            try:
+                commission = comm * self.rent * 0.01
+            except:
+                commission = 0.0
+
+        else:
+            commission = self.apartment.int_commission if self.apartment.int_commission else 0.0
+
+        return commission
+
+    def calculate_owner_due(self):
+        return self.rent - self.maintenance - MonthlyChargeOp.get_management_fees(self)
+
+    def view_merit(self):
+        return {
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'house':self.house,
+            'rent':MonthlyChargeOp.fig_format(self.rent),
+            'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
+            'mgt':MonthlyChargeOp.get_management_fees(self),
+            'ownerdue':MonthlyChargeOp.calculate_owner_due(self),
+            'comment':"-"
         }
 
 

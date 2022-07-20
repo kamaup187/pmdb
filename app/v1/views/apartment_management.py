@@ -1,8 +1,8 @@
 # from app.v1.models import datamodel
-from re import S
-import time
+# from re import S
+# import time
 import os
-from unicodedata import category
+# from unicodedata import category
 from dateutil.parser import parse
 
 import json
@@ -10,7 +10,7 @@ from openpyxl import load_workbook
 
 
 import cloudinary as Cloud
-from sqlalchemy.sql.expression import except_
+# from sqlalchemy.sql.expression import except_
 # from sqlalchemy import inspect
 from werkzeug.utils import secure_filename
 
@@ -249,15 +249,31 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
-            if cocc:
-                CompanyOp.update_sms_provider(cocc,"Advanta")
+            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            # if cocc:
+            #     CompanyOp.update_sms_provider(cocc,"Advanta")
+
+            # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
+
+            # propsss = commp.props
+            # for propp in propsss:
+
+            #     apartment_id = propp.id
+
+            #     print("APART",apartment_id)
+
+            #     billupdatejob = q.enqueue_call(
+            #         func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
+            #     )
+
+
             # if not cocc:
             #     cocc = current_user.company
 
             # props = cocc.props
 
             # for prop in props:
+
             #     hscodes = prop.housecodes
             #     for code in hscodes:
             #         HouseCodeOp.update_vatrates(code,3,0)
@@ -547,8 +563,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Denvic Property Managers":
-                shorts = ["711905"]
+            if company.name== "LaCasa":
+                shorts = ["802086"]
             else:
                 shorts = []
 
@@ -2496,6 +2512,7 @@ class Payments(Resource):
 
         return render_template(
             "ajax_allpayments.html",
+            props=props,
             renttotal = frenttotal,
             watertotal = f"{fwatertotal:,.2f}",
             electotal = felectotal,

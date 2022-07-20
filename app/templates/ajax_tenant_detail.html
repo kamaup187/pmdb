@@ -12,6 +12,8 @@
 <span id="del_bill_identifier" class="dispnone"></span>
 <span id="target_payment_id" class="dispnone"></span>
 <a id="download_statement" href="/tenant/statement3?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+<a id="download_statement2" href="/tenant/statement3?target=direct&tenantid=ptnt{{tenant.id}}" target="_blank" class="dispnone"></a>
+
 <span class="multisave dispnone"></span>
 <span class="accesssms dispnone"></span>
 
@@ -1468,8 +1470,11 @@
   $("#downloadstatement").click(function(){ 
       // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
-
+    if($("#ttype").text() == "owner" || $("#ttype").text() == "resident") {
+      $("#download_statement2")[0].click();
+    }else{
       $("#download_statement")[0].click();
+    }
 
         // setTimeout(function(){
         //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")

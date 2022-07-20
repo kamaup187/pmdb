@@ -1,6 +1,6 @@
 # from app.v1.models import datamodel
 # import time
-from curses import raw
+# from curses import raw
 import os
 
 import cloudinary as Cloud

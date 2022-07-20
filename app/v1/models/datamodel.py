@@ -434,6 +434,9 @@ class HouseCode(db.Model):
 
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
+    carddep = db.Column(db.Float,default=0)
+    otherdep = db.Column(db.Float,default=0)
+
 
     commission = db.Column(db.Float,default=0)
 

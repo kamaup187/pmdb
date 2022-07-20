@@ -6344,7 +6344,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and localenv:
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv:
                 project_end_date = generate_end_date(6,2023)
                 deposit1 = house.owner.deposit
                 deposit2 = house.owner.deposit2
@@ -6607,7 +6607,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 new_tenants = new_tenants_injector(apartment_obj.id,month,year)
 
                 if tenant in new_tenants:
-                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep
+                    carddep = house.housecode.carddep if house.housecode.carddep else 0.0
+                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep + carddep
                     agreement = apartment_obj.agreement_fee if apartment_obj.agreement_fee else 0.0 #TODO
 
 

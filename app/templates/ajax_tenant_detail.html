@@ -45,14 +45,15 @@
                     <div class="divjust-start">
                         <div class="mb-2 ml-2 text-primary font-weight-bold"><i class="fas fa-user text-info fa-2x mt-2 mr-2"></i></div>
                         <div class="ln-14 mt-2">
-                          <div class="mb-2 ml-2">Name: <span class="text-black font-weight-bold">{{tenant.name.title()}} </span></div>
+                          <div class="mb-2 ml-2">Name: <span class="text-black font-weight-bold">{{tenant.name.title()}}  
+                            {% if tenant.uid %}
+                            <span class="ml-3 text-black font-weight-bold small">#{{tenant.uid}}</span>
+                            {% else %}
+                             <span class="ml-3 text-danger font-weight-bold small">#TNT{{tenant.id}}</span>
+                            {% endif %}
+                          </span></div>
 
-                          {% if tenant.uid %}
-                          <div class="mb-2 ml-2">Unique no#: <span class="text-black font-weight-bold">{{tenant.uid}}</span></div>
-                          {% else %}
-                          <div class="mb-2 ml-2">Unique no#: <span class="text-danger font-weight-bold">TNT{{tenant.id}}</span></div>
-                          {% endif %}
-
+                          <div class="mb-2 ml-2">Deposit#: <span class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span></div>
                         </div>  
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>

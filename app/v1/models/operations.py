@@ -904,7 +904,7 @@ class HouseCodeOp(HouseCode,Base):
     def fetch_all_housecodes_by_apartment_id(prop_id):
         return HouseCode.query.filter_by(apartment_id=prop_id).order_by(HouseCode.codename.asc()).all()
 
-    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,billfreq,vatrate,modified_by):
+    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,billfreq,vatrate,carddep,modified_by):
         if housecode != "null":
             self.codename = housecode
         if rentrate != "null":
@@ -933,6 +933,8 @@ class HouseCodeOp(HouseCode,Base):
             self.billfrequency = billfreq
         if vatrate != "null":
             self.vatrate = vatrate
+        if carddep != "null":
+            self.carddep = carddep
             
         self.user_id = modified_by
         db.session.commit()

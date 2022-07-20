@@ -1025,6 +1025,67 @@
   });
 </script>
 
+
+<script>
+  $("#uploaddeposit").on('click',function(){
+      $("#uploaddeposit").html("Uploading...") 
+
+      url = "{{ url_for('api.addtenant') }}"
+
+      var fd = new FormData();
+      var files = $('#tenantdepositfile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',"exceldepositupload");
+      fd.append('propid',$("#prop_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploaddeposit").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploaddeposit").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              setTimeout(function(){
+                $.ajax({
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {
+                    propid:  $("#prop_identifier").text(),
+                    target: "somestring"
+                  },
+                  success: function(response) {
+                    
+                    $("#child-result-view").html(response);
+                  }
+                });
+              },5000);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploaddeposit").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploaddeposit").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
 <script>
   $("#uploadarrears").on('click',function(){
       $("#uploadarrears").html("Uploading...") 

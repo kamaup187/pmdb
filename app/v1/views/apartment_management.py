@@ -559,7 +559,7 @@ class Index(Resource):
             #                 print("cbid did not find its sibling payment")
 
             if company.name== "LaCasa":
-                shorts = ["802086"]
+                shorts = ["802086","203027","602666","7555555"]
             else:
                 shorts = []
 
@@ -569,7 +569,10 @@ class Index(Resource):
                     cbid = ShortcodeOp(short,"",company.id)
                     cbid.save()
 
-            shortcodes = company.shortcodes
+            if company.name == "Latitude Properties":
+                shortcodes = []
+            else:
+                shortcodes = company.shortcodes
 
             sifted = []
             for shortcode in shortcodes:
@@ -3746,6 +3749,8 @@ class EditHouseCode(Resource):
             agreementrate= request.form.get('agreementrate')
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
+            carddep = request.form.get('carddep')
+            otherdep = request.form.get('otherdep')
             vatrate = request.form.get('vatrate')
             bill_freq = request.form.get('billfreq')
 
@@ -3791,9 +3796,9 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],current_user.id)
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
@@ -4827,6 +4832,77 @@ class AddTenant(Resource):
                             if len(tenant.phone)<2:
                                 print("Updating...",tenant)
                                 TenantOp.update_phone(tenant,tenantphone)
+ 
+                return '<span class="text-success">Upload successful</span>'
+
+            except Exception as e:
+                if not sheet:
+                    print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                    return '<span class="text-danger">File format not supported</span>'
+                elif type(e) == IndexError:
+                    print("FILE DATA FIELDS INCORRECT")
+                    return '<span class="text-danger">File data fields incorrect</span>'
+                else:
+                    print("RARE FATAL CASE: Error occured while saving item: ",e)
+                    abort(403)
+
+
+        elif target == "exceldepositupload":
+            file = request.files.get('file')
+
+            if file:
+                processed_data = upload_handler(file,current_user)
+            else:
+                return '<span class=text-danger>Select file first</span>'
+
+            rows,sheet = processed_data[0],processed_data[1]
+
+            data_format_error = False
+
+            if sheet:
+                if len(sheet.row_values(1)) != 3:
+                    data_format_error = True
+
+            try:
+                if data_format_error:
+                    """introduce an error"""
+                    nonexistent_item = sheet.row_values(1)[1000000]
+
+                for row in rows:
+                    
+                    try:
+                        tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+                    except:
+                        tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+
+                    try:
+                        deposit = float(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0.0 )
+                    except:
+                        print(tenanthouse,"deposit failing")
+                        deposit = 0.0
+
+                    print("STARTING...",deposit,"Type:",type(deposit))
+
+                    tenant_house = tenanthouse.upper()
+
+                    house_obj = get_specific_house_obj(apartment_id,tenant_house)
+                    if not house_obj:
+                        print("Specified house doesnt exist: ",tenant_house)
+                        continue
+                    else:
+                        house_id = house_obj.id
+
+                    occupancy = check_occupancy(house_obj)
+
+                    if occupancy[0] == "occupied":
+                        tenant = occupancy[1]
+                    else:
+                        tenant = None
+                        continue
+                    
+                    if tenant:
+                        print("Updating...",tenant)
+                        TenantOp.update_deposit(tenant,deposit)
  
                 return '<span class="text-success">Upload successful</span>'
 

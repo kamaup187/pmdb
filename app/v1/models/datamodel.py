@@ -148,6 +148,8 @@ class User(db.Model,UserMixin):
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
 
+    owners = db.relationship('Owner', backref='user', cascade="all, delete-orphan")
+
     apartments = db.relationship("Apartment",secondary=apartment_table,backref=db.backref('users'))
     houses = db.relationship("House",secondary=house_table,backref=db.backref('users'))
 
@@ -432,6 +434,9 @@ class HouseCode(db.Model):
 
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
+    carddep = db.Column(db.Float,default=0)
+    otherdep = db.Column(db.Float,default=0)
+
 
     commission = db.Column(db.Float,default=0)
 

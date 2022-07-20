@@ -352,6 +352,11 @@ class Users(Resource):
 
         houselist = request.form.get('houses')
         proplist = request.form.get('props')
+        allocation = request.form.get('allocation')
+
+        alloc = get_bool(allocation)
+
+        print("hey hey",allocation)
 
         if target == "delete user":
             userid = request.form.get("userid")
@@ -359,7 +364,17 @@ class Users(Resource):
             del_user = UserOp.fetch_user_by_id(user_id)
 
             if del_user:
-                UserOp.delete(del_user)
+                if localenv or  current_user.username.startswith("qc"):
+                    current_props = fetch_all_apartments_by_user(del_user)
+                    for i in current_props:
+                        print("removing apartment",i)
+                        ApartmentOp.terminate(i,del_user)
+                    current_houses = fetch_all_houses_by_user(del_user)
+                    for i in current_houses:
+                        print("removing house",i)
+                        HouseOp.terminate_house(i,del_user)
+
+                    UserOp.delete(del_user)
                 return proceed
             else:
                 return err
@@ -435,11 +450,11 @@ class Users(Resource):
                 status_bool = get_bool(status)
                 UserOp.update_status(update_user,status_bool)
 
-            if properties:
+            if properties or alloc:
                 current_props = fetch_all_apartments_by_user(update_user)
                 for i in current_props:
                     ApartmentOp.terminate(i,update_user)
-            if houses:
+            if houses or alloc:
                 current_houses = fetch_all_houses_by_user(update_user)
                 for i in current_houses:
                     HouseOp.terminate_house(i,update_user)
@@ -1396,7 +1411,6 @@ class UpdateUser(Resource):
         user = UserOp.fetch_user_by_id(user_id)
 
         if not user:
-            print("chelaaal")
             user = current_user
 
         usergroup_list = user.company.groups
@@ -1432,7 +1446,6 @@ class UpdateUser(Resource):
 
 
         if not userid:
-            print("chelaaal")
             update_user = current_user
         else:
             user_id = get_identifier(userid)
@@ -1459,7 +1472,7 @@ class UpdateUser(Resource):
 
         validate_pass = ValidatePass.validate_password(pass1,pass2)
         
-        if  validate_pass=="no match":
+        if validate_pass=="no match":
             flash("Passwords do not match!","fail")
             return redirect(url_for('api.updateuser'))
 

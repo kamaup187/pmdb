@@ -4,6 +4,14 @@ import time
 import os
 from dateutil.parser import parse
 
+import json
+from collections import OrderedDict
+from openpyxl import load_workbook
+from itertools import islice
+from openpyxl_image_loader import SheetImageLoader
+import pandas as pd
+
+
 import cloudinary as Cloud
 from sqlalchemy.sql.expression import except_
 # from sqlalchemy import inspect
@@ -635,4 +643,32 @@ class BPropertyAccessTermination(Resource):
               'apartmentlist':stringify_list_items(apartments)
             }))
         
-      
+
+class FetchExcel(Resource):
+    """read/write Excel xlsx/xlsm files"""
+    def get(self):
+        return Response(render_template('fetch_excel.html'))
+
+    def post(self):
+        excel_file = request.files['file']
+        wb = load_workbook(excel_file)
+        ws = wb[wb.sheetnames[0]]
+        df = pd.read_excel(excel_file)
+        # image_loader = SheetImageLoader(ws)
+        # image = image_loader.get('A1')
+        return Response(render_template('print_excel.html',tables=[df.to_html(classes='data', header="true")]))
+
+class EditExcel(Resource):
+
+    def get(self):
+        pass
+        # return Response(render_template('print_excel.html'))
+
+    def post(self):
+        pass
+        # data = request.form.get('cell')
+        # print(data)
+        # return Response(render_template('print_excel.html'))
+
+
+

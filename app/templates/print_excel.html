@@ -1,0 +1,9 @@
+{% extends 'reportview.html' %}
+
+{% block content %}
+{{ row }}
+{% for table in tables %}
+  {{ table|safe }}
+{% endfor %}
+
+{% endblock %}

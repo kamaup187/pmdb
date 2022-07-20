@@ -253,17 +253,19 @@ class BMpesa(Resource):
     def ac_token(self):
         consumer_key = os.getenv("saf_consumer_key")
         consumer_secret=os.getenv("saf_consumer_secret") 
+        
         mpesa_auth_url ='https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
         data = (requests.get(mpesa_auth_url,auth = HTTPBasicAuth(consumer_key,consumer_secret))).json()
         return data['access_token']
 
     def express_simulate(self):
         ts = datetime.datetime.now().timestamp()
+        saf_password = os.getenv("saf_password")
         mpesa_endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
         headers = {"Authorization":"Bearer %s" % self.ac_token()}
         req_body = {
             "BusinessShortCode":174379,
-            "password":"MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjIwNzE1MTIzOTU5",
+            "password":saf_password,
             "Timestamp":ts,
             "TransactionType":"CustomerPayBillOnline",
             "Amount":1,

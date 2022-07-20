@@ -7,8 +7,6 @@ from dateutil.parser import parse
 
 import json
 from openpyxl import load_workbook
-from collections import OrderedDict
-from itertools import islice
 
 
 import cloudinary as Cloud
@@ -7294,29 +7292,6 @@ class ContactManagement(Resource):
 
 
 
-
-
-
-class FetchExcel(Resource):
-    @login_required
-    def get(self):
-
-        return Response(render_template(
-            'fetch_excel.html',
-        ))
-    def post(self):
-        excel_file = request.files['file']
-        wb = load_workbook(excel_file)
-        ws = wb[wb.sheetnames[0]]
-        excel_list = []    
-
-        for row in range(1, ws.max_row+1): 
-            for col in "AB":
-                cell_name="{}{}".format(col, row)
-                excel_list.append(ws[cell_name].value)
-
-        print(excel_list)
-        
 
         
  

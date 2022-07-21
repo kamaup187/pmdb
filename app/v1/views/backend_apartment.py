@@ -333,7 +333,7 @@ class BCreateApartment(Resource):
         regions = stringify_list_items(location_list)
         owner = stringify_list_items(owners)
         regions.sort()
-
+    
         data={
            "owners":owner,
             "option_list":regions,
@@ -360,7 +360,6 @@ class BCreateApartment(Resource):
                 "name":current_user.name
             }))
 
-        owners = OwnerOp.fetch_all_owners()
 
         location_list = fetch_all_locations()
         regions = stringify_list_items(location_list)
@@ -371,6 +370,8 @@ class BCreateApartment(Resource):
         owner = request.form.get("owner")
         location = request.form.get("location")
         file_to_upload = request.files.get("image") # get uploaded image
+
+       
         if file_to_upload:
             upload_result = upload(file_to_upload) # send image to cloud
             # style the image and get its url after styling
@@ -386,35 +387,39 @@ class BCreateApartment(Resource):
 
         bool_value = return_bool(agency_managed)
 
-
         owner_id = get_owner_id(owner)
-        location_id = get_location_id(location)
-        
-        present = ApartmentOp.fetch_apartment_by_name(name)
-        if present:
-            flash("Similar apartment exists","fail")
-            
-            return make_response(jsonify({
-                "message": "Similar apartment exists",
-            }), 200)    
-            
+        print(owner_id)
+        return 'step'
+
 
         
-        apartment_obj = ApartmentOp(name,secure_image,location_id,owner_id,bool_value,current_user.id)
-        apartment_obj.save()
-        owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
-        owner_natid = owner_obj.national_id
-        if owner_natid:
-            owner_user = UserOp.fetch_user_by_national_id(owner_natid)
-            ApartmentOp.relate(apartment_obj,owner_user)
+        # location_id = get_location_id(location)
+        
+        # present = ApartmentOp.fetch_apartment_by_name(name)
+        # if present:
+        #     flash("Similar apartment exists","fail")
+            
+        #     return make_response(jsonify({
+        #         "message": "Similar apartment exists",
+        #     }), 200)    
+            
 
-            if not bool_value:
-                owner_co_id = owner_user.company_id
-                ApartmentOp.update_company(apartment_obj,owner_co_id)
+        
+        # apartment_obj = ApartmentOp(name,secure_image,location_id,owner_id,bool_value,current_user.id)
+        # apartment_obj.save()
+        # owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
+        # owner_natid = owner_obj.national_id
+        # if owner_natid:
+        #     owner_user = UserOp.fetch_user_by_national_id(owner_natid)
+        #     ApartmentOp.relate(apartment_obj,owner_user)
 
-        return make_response(jsonify({
-                "message": "Property registration success, time to add some houses",
-            }), 200)    
+        #     if not bool_value:
+        #         owner_co_id = owner_user.company_id
+        #         ApartmentOp.update_company(apartment_obj,owner_co_id)
+
+        # return make_response(jsonify({
+        #         "message": "Property registration success, time to add some houses",
+        #     }), 200)    
             
 
             

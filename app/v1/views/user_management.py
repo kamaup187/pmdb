@@ -1407,6 +1407,8 @@ class UpdateUser(Resource):
         except:
             pass
 
+    
+
         return Response(render_template(
             'ajax_userform.html',
             groups=usergroup_list,

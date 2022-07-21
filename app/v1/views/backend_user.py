@@ -199,13 +199,21 @@ class BUpdateUser(Resource):
     @login_required
     def get(self):
         """Handle GET request for this view. Url ---> /update/user"""
-
         userid = request.args.get('userid')
-
         user_id = get_identifier(userid)
-
         user = UserOp.fetch_user_by_id(user_id)
 
+        if not user:
+            print("chelaaal")
+            user = current_user
+        
+        usergroup_list = user.company.groups
+
+        tenant_group = CompanyUserGroupOp.fetch_usergroup_by_name("Tenant")
+        try:
+            usergroup_list.remove(tenant_group)
+        except:
+            pass
         company_user_group ={
             'company_id':current_user.company_user_group.company_id, 
             'name': current_user.company_user_group.name,
@@ -213,12 +221,12 @@ class BUpdateUser(Resource):
             'id': current_user.company_user_group.id
 
         }
-        user= {
+        userr= {
              'company_usergroup_id': current_user.company_usergroup_id, 
              'usercode': current_user.usercode, 
              'username':current_user.username,
              'id': current_user.id,
-            #   'active': current_user.active, 
+              'active': current_user.active, 
             'date': current_user.date, 
             'activation_link': current_user.activation_link, 
             'name':current_user.name, 
@@ -251,27 +259,17 @@ class BUpdateUser(Resource):
                     'quotamonth': current_user.company.quotamonth
          }
 
-
-        # if not user:
-        #     print("chelaaal")
-        #     user = current_user
-
-        # usergroup_list = user.company.groups
-
-        # tenant_group = CompanyUserGroupOp.fetch_usergroup_by_name("Tenant")
-        # try:
-        #     usergroup_list.remove(tenant_group)
-        # except:
-        #     pass
+        # print(stringify_list_items(current_user))
   
         return make_response(jsonify({
             'message_user_': 'Account creation failed.',
-            # "groups":usergroup_list,
+            "groups":stringify_list_items(usergroup_list) if usergroup_list else "none" ,
             "user_status":"Active" if current_user.active else "Dormant",
             "savecontext":"Save Changes",
-            "user":user,
+            "user":userr,
             "company":company,
-            "company_user_group":company_user_group
+            "company_user_group":company_user_group,
+
            
 
             }), 200)
@@ -410,6 +408,7 @@ class BAdminCreateAgent(Resource):
             }), 200)
         else:
             co = CompanyOp.fetch_company_by_name(company_name)
+            print(co)
             if not co:
                 dir_group = None
                 company_obj = CompanyOp(company_name,address,mail_box,mail,tel,description)

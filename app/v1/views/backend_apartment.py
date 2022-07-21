@@ -387,8 +387,8 @@ class BCreateApartment(Resource):
 
         bool_value = return_bool(agency_managed)
 
-        owner_id = get_owner_id(owner)
-        print(owner_id)
+        # owner_id = get_owner_id(owner)
+    
         return 'step'
 
 
@@ -464,80 +464,83 @@ class BPropertyAccess(Resource):
         owner = data.get('owner')
         propertyauto = data.get('propertyauto')
         username = data.get('agent')
+
+        print(OwnerOp.fetch_owner_by_uniquename(owner))
+        return 'username'
     
-        owner_id = OwnerOp.fetch_owner_by_uniquename(owner).id
-        apartments = ApartmentOp.fetch_all_apartments_by_owner(owner_id)
+        # owner_id = OwnerOp.fetch_owner_by_uniquename(owner).id
+        # apartments = ApartmentOp.fetch_all_apartments_by_owner(owner_id)
 
-        apartment = data.get('property')
+        # apartment = data.get('property')
         
-        if propertyauto:
-            apartments.append("All")
-            return make_response(jsonify({
-                'msg': 'Success',
-              'apartmentlist':stringify_list_items(apartments)
-            }))
+        # if propertyauto:
+        #     apartments.append("All")
+        #     return make_response(jsonify({
+        #         'msg': 'Success',
+        #       'apartmentlist':stringify_list_items(apartments)
+        #     }))
         
 
-        agent_obj = UserOp.fetch_user_by_username(username)
+        # agent_obj = UserOp.fetch_user_by_username(username)
 
-        if apartment == "All":
-            for prop in apartments:
-                current_apartments = fetch_all_apartments_by_user(agent_obj)
-                if prop in current_apartments:
-                    print("skipping...")
+        # if apartment == "All":
+        #     for prop in apartments:
+        #         current_apartments = fetch_all_apartments_by_user(agent_obj)
+        #         if prop in current_apartments:
+        #             print("skipping...")
 
-                else:
-                    ApartmentOp.relate(prop,agent_obj)
-                    print("Agent given access to ",str(prop))
-                    UserOp.update_status(agent_obj,True)
-                    ApartmentOp.update_agent(prop,agent_obj.username)
-                    if prop.agency_managed:
-                        agent_co = agent_obj.company
-                        ApartmentOp.update_company(prop,agent_co.id)
+        #         else:
+        #             ApartmentOp.relate(prop,agent_obj)
+        #             print("Agent given access to ",str(prop))
+        #             UserOp.update_status(agent_obj,True)
+        #             ApartmentOp.update_agent(prop,agent_obj.username)
+        #             if prop.agency_managed:
+        #                 agent_co = agent_obj.company
+        #                 ApartmentOp.update_company(prop,agent_co.id)
 
-                        company_users = agent_co.users
-                        for i in company_users:
-                            if i.user_group_id == 4:
-                                ApartmentOp.relate(prop,i)
-                                print("user added to ",str(prop))
-                                return make_response(jsonify({
-                                    'msg':msg,
+        #                 company_users = agent_co.users
+        #                 for i in company_users:
+        #                     if i.user_group_id == 4:
+        #                         ApartmentOp.relate(prop,i)
+        #                         print("user added to ",str(prop))
+        #                         return make_response(jsonify({
+        #                             'msg':msg,
       
-                                }))
+        #                         }))
 
-        else:
-            apartment_obj = ApartmentOp.fetch_apartment_by_name(apartment)
-            current_apartments = fetch_all_apartments_by_user(agent_obj)
-            if apartment_obj in current_apartments:
-                print("Agent already has access to ",str(apartment_obj))
-                return make_response(jsonify({
-                    'msg':"Agent already has access"
+        # else:
+        #     apartment_obj = ApartmentOp.fetch_apartment_by_name(apartment)
+        #     current_apartments = fetch_all_apartments_by_user(agent_obj)
+        #     if apartment_obj in current_apartments:
+        #         print("Agent already has access to ",str(apartment_obj))
+        #         return make_response(jsonify({
+        #             'msg':"Agent already has access"
       
-                }))
-            else:
-                ApartmentOp.relate(apartment_obj,agent_obj)
-                print("Agent given access to ",str(apartment_obj))
-                UserOp.update_status(agent_obj,True)
-                if not apartment_obj.agent_id:
-                    ApartmentOp.update_agent(apartment_obj,agent_obj.username)
-                    if apartment_obj.agency_managed:
-                        agent_co = agent_obj.company
-                        ApartmentOp.update_company(apartment_obj,agent_co.id)
+        #         }))
+        #     else:
+        #         ApartmentOp.relate(apartment_obj,agent_obj)
+        #         print("Agent given access to ",str(apartment_obj))
+        #         UserOp.update_status(agent_obj,True)
+        #         if not apartment_obj.agent_id:
+        #             ApartmentOp.update_agent(apartment_obj,agent_obj.username)
+        #             if apartment_obj.agency_managed:
+        #                 agent_co = agent_obj.company
+        #                 ApartmentOp.update_company(apartment_obj,agent_co.id)
     
-                        company_users = agent_co.users
-                        for i in company_users:
-                            if i.user_group_id == 4:
-                                ApartmentOp.relate(apartment_obj,i)
-                                print("user added to apartment")
+        #                 company_users = agent_co.users
+        #                 for i in company_users:
+        #                     if i.user_group_id == 4:
+        #                         ApartmentOp.relate(apartment_obj,i)
+        #                         print("user added to apartment")
 
 
-        msg = "Operation completed"
-        flash(msg,"success")
+        # msg = "Operation completed"
+        # flash(msg,"success")
   
-        return make_response(jsonify({
-                'msg':msg,
+        # return make_response(jsonify({
+        #         'msg':msg,
       
-            }))
+        #     }))
         
 
 

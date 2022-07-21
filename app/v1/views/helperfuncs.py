@@ -6344,7 +6344,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" and localenv:
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv:
                 project_end_date = generate_end_date(6,2023)
                 deposit1 = house.owner.deposit
                 deposit2 = house.owner.deposit2
@@ -6607,7 +6607,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 new_tenants = new_tenants_injector(apartment_obj.id,month,year)
 
                 if tenant in new_tenants:
-                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep
+                    carddep = house.housecode.carddep if house.housecode.carddep else 0.0
+                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep + carddep
                     agreement = apartment_obj.agreement_fee if apartment_obj.agreement_fee else 0.0 #TODO
 
 
@@ -7377,6 +7378,37 @@ def auto_consume_ctob2(ctob_obj):
                 print(response)
             except Exception as e:
                 print(f"Houston, we have a problem {e}")
+
+
+def mpesa_response(ctob_obj):
+
+    if "***" in ctob_obj.msisdn:
+        tel = ""
+    elif ctob_obj.company.name == "LaCasa" and ctob_obj.msisdn.endswith("087"):
+        tel = "254722267087"
+    else:
+        tel = ctob_obj.msisdn
+
+    try:
+        phonenum = sms_phone_number_formatter_mpesa(tel)
+
+        message = f"Dear {ctob_obj.fname} your transaction of {ctob_obj.trans_amnt} has been processed in favour of {ctob_obj.bill_ref_num} REFERENCE {ctob_obj.trans_id} Thank you."
+
+        co = ctob_obj.company
+
+        if co:
+            if co.sms_provider == "Advanta":
+                sms_sender(co.name,message,phonenum)
+            else:
+                try:
+                    recipient = [phonenum]                
+                    response = sms.send(message, recipient, sender)
+                    print(response)
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+
+    except Exception as e:
+        print("ERROR",e)
 
 
 def fetch_expenses(current_user):

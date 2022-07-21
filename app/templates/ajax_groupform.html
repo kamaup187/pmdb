@@ -103,10 +103,25 @@
                                     value="{{group.waterdep}}" />
                             </div>
                             <div class="col-md-6">
-                                <label class="small mb-1" for="elecdep">Electricity deposit</label>
+                                <label class="small mb-1" for="elecdep">Electricity/meter deposit</label>
 
                                 <input class="form-control" id="elecdep" type="text" placeholder="Deposit amount"
                                     value="{{group.elecdep}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="carddep">Lift card deposit</label>
+
+                                <input class="form-control" id="carddep" type="text" placeholder="card deposit"
+                                    value="{{group.carddep}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="otherdep">Other deposit</label>
+
+                                <input class="form-control" id="otherdep" type="text" placeholder="other"
+                                    value="{{group.otherdep}}"/>
                             </div>
                         </div>
 
@@ -120,22 +135,22 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="other">Registration/Agreement</label>
 
-                                <input class="form-control" id="agreementrate" type="text" placeholder="fee"
+                                <input class="form-control" id="agreementrate" type="text" placeholder="reg fee"
                                     value="{{group.agreementrate}}"/>
                             </div>
                         </div>
 
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="sewerage">VAT amount</label>
+                                <label class="small mb-1" for="vatrate">VAT amount</label>
 
-                                <input class="form-control" id="vatrate" type="text" placeholder="sewerage amount"
+                                <input class="form-control" id="vatrate" type="text" placeholder="vat amount"
                                     value="{{group.vatrate}}" />
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="other">Bill frequency</label>
 
-                                <input class="form-control" id="billfreq" type="text" placeholder="fee"
+                                <input class="form-control" id="billfreq" type="text" placeholder="cycle of billing"
                                     value="{{group.billfrequency}}"/>
                             </div>
                         </div>
@@ -201,6 +216,8 @@
             servicerate: $("#servicerate").val(),
             waterdep: $("#waterdep").val(),
             elecdep: $("#elecdep").val(),
+            carddep: $("#carddep").val(),
+            otherdep: $("#otherdep").val(),
             finerate: $("#finerate").val(),
             seweragerate:$("#seweragerate").val(),
             agreementrate:$("#agreementrate").val(),

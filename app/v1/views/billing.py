@@ -1812,140 +1812,145 @@ class AmendCharge(Resource):
     def post(self):
         pass
 
-# class UploadPayments(Resource):
-#     def get(self):
-#         pass
-#     def post(self):
+class UploadPayments(Resource):
+    def get(self):
+        pass
+    def post(self):
 
-#         apartment_id = request.form.get('propname')
-#         payperiod = request.form.get('payperiod')
-#         file = request.files.get('file')
+        selected_prop = request.form.get('propname')
+        payperiod = request.form.get('payperiod')
+        file = request.files.get('file')
 
-#         if file:
-#             processed_data = upload_handler(file,current_user)
-#         else:
-#             return '<span class=text-danger>Select file first!</span>'
+        if file:
+            processed_data = upload_handler(file,current_user)
+        else:
+            return '<span class=text-danger>Select file first!</span>'
 
-#         rows,sheet = processed_data[0],processed_data[1]
+        rows,sheet = processed_data[0],processed_data[1]
 
-#         data_format_error = False
+        data_format_error = False
 
-#         if sheet:
-#             if len(sheet.row_values(1)) != 3:
-#                 data_format_error = True
+        if sheet:
+            if len(sheet.row_values(1)) != 7:
+                data_format_error = True
 
-#         try:
-#             if data_format_error:
-#                 #Throw error
-#                 nonexistent_item = sheet.row_values(1)[1000000]
+        try:
+            if data_format_error:
+                #Throw error
+                nonexistent_item = sheet.row_values(1)[1000000]
 
-#             dict_array = []
+            dict_array = []
 
-#             for row in rows:
-#                 print("Starting.........................................")
-#                 try:
-#                     housename = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
-#                     print("Working as expected")
-#                 except:
-#                     housename = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
-#                     print("house exception handled")
+            for row in rows:
+                print("Starting.........................................")
+                try:
+                    housename = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+                    print("Working as expected")
+                except:
+                    housename = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                    print("house exception handled")
 
-#                 print("Extracted.......",housename)
+                print("Extracted.......",housename)
 
-#                 payref = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
+                date_of_payment = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
+
+                payref = sheet.row_values(row)[2] if sheet.row_values(row)[2] else ""
+
+                paytype = sheet.row_values(row)[3] if sheet.row_values(row)[3] else ""
 
 
-#                 try:
-#                     rent = float(sheet.row_values(row)[2])
-#                     print("RENT Working")
-#                 except:
-#                     print("RENT Failing")
-#                     rent = 0.0
 
-#                 try:
-#                     serv = float(sheet.row_values(row)[3])
-#                     print("SERV Working")
-#                 except:
-#                     print("SERV Failing")
-#                     serv = 0.0
+                try:
+                    rent = float(sheet.row_values(row)[2])
+                    print("RENT Working")
+                except:
+                    print("RENT Failing")
+                    rent = 0.0
 
-#                 try:
-#                     water = float(sheet.row_values(row)[4])
-#                     print("water Working")
-#                 except:
-#                     print("water Failing")
-#                     water = 0.0
+                try:
+                    serv = float(sheet.row_values(row)[3])
+                    print("SERV Working")
+                except:
+                    print("SERV Failing")
+                    serv = 0.0
+
+                try:
+                    water = float(sheet.row_values(row)[4])
+                    print("water Working")
+                except:
+                    print("water Failing")
+                    water = 0.0
                                         
-#                 dict_obj = {
-#                 "housename":housename,
-#                 "rentarr":rent,
-#                 "servarr":serv,
-#                 "water":water
-#                 }
+                dict_obj = {
+                "housename":housename,
+                "rentarr":rent,
+                "servarr":serv,
+                "water":water
+                }
 
-#                 dict_array.append(dict_obj)
+                dict_array.append(dict_obj)
 
-#             uploadsjob2 = q.enqueue_call(
-#                 func=read_payments_excel, args=(dict_array,payperiod,prop_id,current_user.id,), result_ttl=5000
-#             )
+            # uploadsjob2 = q.enqueue_call(
+            #     func=read_payments_excel, args=(dict_array,payperiod,prop_id,current_user.id,), result_ttl=5000
+            # )
 
-#         except Exception as e:
-#             if not sheet:
-#                 print("FILE FORMAT UPLOADED NOT SUPPORTED")
-#                 return '<span class="text-danger">File format not supported</span>'
-#             elif type(e) == IndexError:
-#                 print("FILE DATA FIELDS INCORRECT")
-#                 return '<span class="text-danger">File data fields incorrect</span>'
-#             else:
-#                 print("RARE FATAL CASE: Error occured while saving item: ",e)
-#                 abort(403)
-
-
-#         house_name = request.form.get('house')
-#         bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
-#         instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
-#         addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
-#         rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
-#         waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
-#         electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
-#         garbagepaid = int(request.form.get('garbagepaid')) if request.form.get('garbagepaid') else 0
-#         securitypaid = int(request.form.get('securitypaid')) if request.form.get('securitypaid') else 0
-#         servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
-#         penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
-#         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
-#         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
+        except Exception as e:
+            if not sheet:
+                print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                return '<span class="text-danger">File format not supported</span>'
+            elif type(e) == IndexError:
+                print("FILE DATA FIELDS INCORRECT")
+                return '<span class="text-danger">File data fields incorrect</span>'
+            else:
+                print("RARE FATAL CASE: Error occured while saving item: ",e)
+                abort(403)
 
 
-#         book = "Booking balance" if bookingpaid else ""
-#         inst = "Instalment" if instalmentpaid else ""
-#         addfee = "Additional fees" if addfeepaid else ""
+        house_name = request.form.get('house')
+        bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
+        instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
+        addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
+        rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
+        waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
+        electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
+        garbagepaid = int(request.form.get('garbagepaid')) if request.form.get('garbagepaid') else 0
+        securitypaid = int(request.form.get('securitypaid')) if request.form.get('securitypaid') else 0
+        servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
+        penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
+        depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
+        agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
-#         water = "Water" if waterpaid else ""
-#         rent = "Rent" if rentpaid else ""
-#         garbage = "Garbage" if garbagepaid else ""
-#         sec = "Security" if securitypaid else ""
-#         dep = "Deposit" if depositpaid else ""
-#         serv = "Service" if servicepaid else ""
 
-#         narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
+        book = "Booking balance" if bookingpaid else ""
+        inst = "Instalment" if instalmentpaid else ""
+        addfee = "Additional fees" if addfeepaid else ""
 
-#         print(narration)
+        water = "Water" if waterpaid else ""
+        rent = "Rent" if rentpaid else ""
+        garbage = "Garbage" if garbagepaid else ""
+        sec = "Security" if securitypaid else ""
+        dep = "Deposit" if depositpaid else ""
+        serv = "Service" if servicepaid else ""
+
+        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
+
+        print(narration)
 
 
-#         payperiod = request.form.get("payperiod")
+        payperiod = request.form.get("payperiod")
 
-#         # if payperiod:
-#         #     pay_period = date_formatter_alt(payperiod)
-#         #     pay_period_date = parse(pay_period)
-#         # else:
-#         #     pay_period_date = get_billing_period(prop)
+        # if payperiod:
+        #     pay_period = date_formatter_alt(payperiod)
+        #     pay_period_date = parse(pay_period)
+        # else:
+        #     pay_period_date = get_billing_period(prop)
 
     
-#         paymode = request.form.get('paymode')#dropdown
-#         raw_bill_ref = request.form.get('bill_ref')#typed
-#         paytype = request.form.get('paytype')#typed
-#         amount = request.form.get('paidamount')#typed
-#         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
+        paymode = request.form.get('paymode')#dropdown
+        raw_bill_ref = request.form.get('bill_ref')#typed
+        paytype = request.form.get('paytype')#typed
+        amount = request.form.get('paidamount')#typed
+        overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
 class ReceivePayment(Resource):
     """class"""
@@ -1987,6 +1992,7 @@ class ReceivePayment(Resource):
 
         if target == "proplist":
             props = fetch_all_apartments_by_user(current_user)
+            print("these are props",props)
             return render_template('ajax_multivariable.html',items=sort_items(props),placeholder="select property",access="")
 
         if target == "houselist":
@@ -2041,7 +2047,12 @@ class ReceivePayment(Resource):
                     else:
                         tenant = 'unidentified'
                 elif prop.name == "Astrol Ridgeways":
-                    tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                    cbid_id = cb.bill_ref_num.replace(" ","")
+                    if "-" in cbid_id:
+                        cbid_id2 = cbid_id.split("-")[1]
+                    else:
+                        cbid_id2 = cbid_id
+                    tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                     if not tenant:
                         tenant = "unidentified"
                 ########################################################################################
@@ -2149,7 +2160,13 @@ class ReceivePayment(Resource):
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
                         cbid_id = cb.bill_ref_num.replace(" ","")
-                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if "-" in cbid_id:
+                            cbid_id2 = cbid_id.split("-")[1]
+                            print(cbid_id2)
+                        else:
+                            print("maintained cbid")
+                            cbid_id2 = cbid_id
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2275,7 +2292,13 @@ class ReceivePayment(Resource):
                             bill = None
                     elif prop.name == "Astrol Ridgeways":
                         cbid_id = cb.bill_ref_num.replace(" ","")
-                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                        if "-" in cbid_id:
+                            cbid_id2 = cbid_id.split("-")[1]
+                            print(cbid_id2,"length",len(cbid_id2))
+                        else:
+                            print("maintained cbid")
+                            cbid_id2 = cbid_id
+                        tenant = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                         if tenant:
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
@@ -2532,7 +2555,11 @@ class ReceivePayment(Resource):
                         abort(404) 
                 elif prop.name == "Astrol Ridgeways":
                     cbid_id = cb.bill_ref_num.replace(" ","")
-                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id.upper())
+                    if "-" in cbid_id:
+                        cbid_id2 = cbid_id.split("-")[1]
+                    else:
+                        cbid_id2 = cbid_id
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cbid_id2.upper())
                     if tenant_obj:
                         house_obj = check_house_occupied(tenant_obj)[1]
                         target_houses.append(house_obj)
@@ -2697,6 +2724,14 @@ class ReceivePayment(Resource):
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
             CtoBop.update_status(cb,"claimed")
+
+        try:
+            cbdel = CtoBop.fetch_record_by_ref("QG63YENCLJ")
+            CtoBop.update_status(cbdel,"claimed")
+            cbdeel = CtoBop.fetch_record_by_ref("QG68YENDEU")
+            CtoBop.update_status(cbdeel,"claimed")
+        except:
+            pass
 
         if co.receipt_num:
             num = co.receipt_num
@@ -4142,7 +4177,7 @@ class CallBackUrlMLatitude(Resource):
         # ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
-        response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("NEW LATITUDE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
 
 class CallBackUrlPremier(Resource):
@@ -4363,7 +4398,109 @@ class CallBackUrlBizlineBaraka(Resource):
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
 
-        # auto_consume_ctob2(ctob_obj)
+class CallBackUrlGoldLabel(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"Goldlabel MPESA DATA JUST IN {trans_amnt} from {fname}"
+
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response(ctob_obj)
+
+class CallBackUrlBizlineBestel(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"BESTEL MPESA DATA JUST IN {trans_amnt} from {fname}"
+
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response(ctob_obj)
+
+class CallBackUrlBizlineNeema(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response(ctob_obj)
 
 
 class CallBackUrlEquity(Resource):

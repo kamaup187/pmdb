@@ -287,6 +287,13 @@
 <script>
     $("#saveprofile").click(function(){
 
+        var cb = document.getElementById("propall");
+        if (cb.checked) {
+            var propall = "False";
+        } else {
+            var propall = "True";
+        }
+
         var proplist = [];
         $.each($("input[name='propcheckbox']:checked"), function () {
             proplist.push($(this).val());
@@ -331,6 +338,7 @@
             bankacc:$("#bankacc").val(),
             pass1: $("#pass1").val(),
             pass2: $("#pass2").val(),
+            allocation:propall,
             props:proplist.join(", "),
             houses:houselist.join(", "),
             target:target

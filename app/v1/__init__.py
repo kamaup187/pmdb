@@ -301,7 +301,7 @@ api.add_resource(DownloadTemplate,"/download/template/<string:file>")
 
 
 api.add_resource(FetchExcel,"/fetch/excel")
-api.add_resource(EditExcel,"/edit/excel")
+api.add_resource(FetchPdf,"/fetch/pdf")
 # ADMIN FRONTEND API
 #api.add_resource(UserLogin,"/signin")
 api.add_resource(BUserLogin,"/auth")

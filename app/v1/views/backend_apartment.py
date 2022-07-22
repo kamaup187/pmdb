@@ -666,17 +666,10 @@ class FetchExcel(Resource):
         # image = image_loader.get('A1')
         return Response(render_template('print_excel.html',tables=[df.to_html(classes='data', header="true")]))
 
-class EditExcel(Resource):
-
-    def get(self):
-        pass
-        # return Response(render_template('print_excel.html'))
-
+class FetchPdf(Resource):
     def post(self):
+        pdf_file = request.files['file']
         pass
-        # data = request.form.get('cell')
-        # print(data)
-        # return Response(render_template('print_excel.html'))
 
 
 

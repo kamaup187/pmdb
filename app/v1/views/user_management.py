@@ -1421,12 +1421,14 @@ class UpdateUser(Resource):
         except:
             pass
 
-        return render_template(
+    
+
+        return Response(render_template(
             'ajax_userform.html',
             groups=usergroup_list,
             user_status="Active" if user.active else "Dormant",
             savecontext="Save Changes",
-            user=user)
+            user=user))
 
     @login_required
     def post(self):

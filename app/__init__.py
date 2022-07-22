@@ -2,13 +2,19 @@
 import os
 
 import africastalking
-from flask import Flask
+from flask import Flask,session
 # from flask_rq2 import RQ
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import configurations
 from flask_talisman import Talisman
+
+import jwt
+from flask_cors import CORS
+
+
+
 
 db = SQLAlchemy()
 mail = Mail()
@@ -37,8 +43,7 @@ from .v1 import version_one as v1
 def create_app(configuration):
 
     app = Flask(__name__)
-    Talisman(app,content_security_policy=None)
-    
+    Talisman(app,content_security_policy=None)    
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])
@@ -74,6 +79,11 @@ def create_app(configuration):
         app.config['MAIL_USE_TLS'] = False
         app.config['MAIL_USE_SSL'] = True
 
+        #### CORS
+        CORS(app, resources={r"/*": {"origins": "*"}})
+        app.config['CORS_HEADERS'] = 'Content-Type'
+        app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
+
         # app.config['MAIL_SERVER']='mail.privateemail.com'
         # app.config['MAIL_PORT'] = 465
         # app.config['MAIL_USERNAME'] = 'info@kiotapay.com'
@@ -103,9 +113,41 @@ def create_app(configuration):
             return user_obj
         except Exception as e:
             print(e)
-        # User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return user
+        else:
+            return None
+    
+
+
+    @login_manager.request_loader
+    def load_user(request):
+        
+        auth =request.headers.get('Authorization')
+        print(auth)
+        if not auth: 
+            return None
+        decode =  jwt.decode(auth, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+
+        try:
+            user_obj = User.query.get(int(decode['user_id']))
+            try:
+                print (f">>>>>>>>>>>>>>>>>>> ACTIVE USER: {user_obj.company.name}: ({user_obj.name} - {user_obj.company_user_group}) <<<<<<<<<<<<<<<<<<")
+            except:
+                pass
+            return user_obj
+        except Exception as e:
+            print(e)
+
         
     return app
+
+
+
+
+
+
 
 # ##############################################################################
 # from rq import Queue

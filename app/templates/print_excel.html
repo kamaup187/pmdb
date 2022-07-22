@@ -1,0 +1,24 @@
+{% extends 'reportview.html' %}
+
+{% block content %}
+{{ row }}
+
+<div id="dvContents">
+{% for table in tables %}
+  {{ table|safe }}
+{% endfor %}
+</div>
+<input type="button" onclick="PrintTable();" value="Print"/>
+
+<script type="text/javascript">
+  function PrintTable() {
+    var printWindow = window.open('', '', 'height=200,width=400');
+      var divContents = document.getElementsByTagName("table");
+      printWindow.document.write(divContents[0].outerHTML);
+      printWindow.document.close();
+      printWindow.print();
+  }
+</script>
+
+
+{% endblock %}

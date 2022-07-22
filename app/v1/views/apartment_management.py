@@ -5,6 +5,10 @@ import os
 # from unicodedata import category
 from dateutil.parser import parse
 
+import json
+from openpyxl import load_workbook
+
+
 import cloudinary as Cloud
 # from sqlalchemy.sql.expression import except_
 # from sqlalchemy import inspect
@@ -25,6 +29,7 @@ from .advanta import *
 from operator import add
 from app import sms
 from app import mail
+
 
 # from rq import Queue
 # from rq.job import Job
@@ -7377,3 +7382,13 @@ class ContactManagement(Resource):
         if txt:
             txt_obj = InternalMessagesOp(title,txt,tenant_id,apartment_id)
             txt_obj.save()
+
+
+
+
+        
+ 
+        
+
+    
+  

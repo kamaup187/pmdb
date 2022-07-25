@@ -25,6 +25,10 @@ from app import mail
 from app import sms
 
 
+
+
+
+      
 class BClientBilling(Resource):
     def get(self):
         rawbills = []
@@ -55,8 +59,8 @@ class BClientBilling(Resource):
         billids = get_obj_ids(items)
 
         return make_response(jsonify({
-                'message': 'Success',
-                # 'bills':items[0],
+            'message': 'Success',
+            'bills':stringify_list_items(items),
             'billids':billids
 
         }), 200)

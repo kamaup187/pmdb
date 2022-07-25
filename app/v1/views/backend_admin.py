@@ -394,3 +394,217 @@ class BAllProperties(Resource):
             # ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
 
             return "Updated successfully" + proceed
+
+
+
+
+
+
+class BAddProp(Resource):
+    @login_required
+    def get(self):
+        # target = request.args.get("target")
+        # if target == "owners":
+        #     owners = []
+        #     props = fetch_all_apartments_by_user(current_user)
+        #     for prop in props:
+        #         owners.append(prop.owner)
+        #     all_owners = OwnerOp.fetch_all_owners()
+        #     for owner in all_owners:
+        #         if owner.user_id == current_user.id:
+        #             owners.append(owner)
+            
+        #     filtered_owners = remove_dups(owners)
+        #     return render_template('ajax_multivariable.html',items=filtered_owners,placeholder="select owner")
+
+        # if target == "regions":
+        #     regions = LocationOp.fetch_all_locations()
+        regions = LocationOp.fetch_all_locations()
+
+        return make_response(jsonify({"items":stringify_list_items(regions)}), 200)
+        
+
+            
+
+    @login_required
+    def post(self):
+        
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON'}), 400
+
+     
+        target = data.get('target')
+
+        if target == "excelupload":
+            file = request.files.get('file')
+
+            if file:
+                processed_data = upload_handler(file,current_user)
+            else:
+                return '<span class=text-danger>Select file first</span>'
+
+            rows,sheet = processed_data[0],processed_data[1]
+
+            data_format_error = False
+
+            if sheet:
+                if len(sheet.row_values(1)) != 4:
+                    data_format_error = True
+
+            try:
+                if data_format_error:
+                    
+                    nonexistent_item = sheet.row_values(1)[1000000]
+
+                for row in rows:
+                    prop = sheet.row_values(row)[0]
+                    region = sheet.row_values(row)[1]
+                    owner = sheet.row_values(row)[2] if sheet.row_values(row)[2] else ""
+                    if sheet.row_values(row)[3]:
+                        tel = "0" + str(int(sheet.row_values(row)[3])) if not str(int(sheet.row_values(row)[3])).startswith("0") else str(int(sheet.row_values(row)[3]))
+                    else:
+                        tel = "N/A"
+
+                    agency = "True"
+
+                    
+                    print("VALUES",prop,region,owner,tel,agency)
+
+                    housecode = prop.title()
+                    code_obj = ApartmentOp.fetch_apartment_by_name(housecode)
+
+
+                    if code_obj:
+                        print("Skipping ",housecode)
+                        continue
+                        
+                    else:
+                        if not owner:
+                            owner = current_user.company.name.title()
+                        
+                        # tel = request.form.get("tel")
+                        if not tel or tel == "N/A":
+                            tel = "N/A"
+                            landlord = OwnerOp(owner.title(),tel,None,"N/A",current_user.id)
+                            landlord.save()
+
+                        else:
+                            landlord  = OwnerOp.fetch_owner_by_phone(tel)
+                            if not landlord:
+                                landlord = OwnerOp(owner.title(),tel,None,"N/A",current_user.id)
+                                landlord.save()
+
+                        if not region:
+                            region = "Nairobi"
+
+                        location = LocationOp.fetch_location(region.title())
+                        if not location:
+                            location = LocationOp(region.title(),None)
+                            location.save()
+
+
+                        if not agency:
+                            agency = "False"
+
+                        bool_value = return_bool(agency)
+
+                        if not prop:
+                            print("Property name blank")
+                            continue
+                    
+                        
+                        apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
+                        apartment_obj.save()
+
+
+                return '<span class="text-success">Upload successful</span>'
+
+            except Exception as e:
+                if not sheet:
+                    print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                    return '<span class="text-danger">File format not supported</span>'
+                elif type(e) == IndexError:
+                    print("FILE DATA FIELDS INCORRECT")
+                    return '<span class="text-danger">File data fields incorrect</span>'
+                else:
+                    print("RARE FATAL CASE: Error occured while saving item: ",e)
+                    abort(403)
+
+
+
+        prop = data.get("prop")
+        if not prop:
+             return jsonify({'msg': 'Missing Property Name'})
+        agency = True
+       
+
+        present = ApartmentOp.fetch_apartment_by_name(prop.title())
+        if present:
+            print("SIMILAR PROP EXISTS >> ",present.name)
+            return make_response(jsonify({'msg':'similar apartments exists'}))
+            # abort(403)
+            # return f'<span class="text-danger">Similar apartment exists</span>'
+
+        owner = data.get("landlord")
+        if not owner:
+            owner = current_user.company.name.title()
+        
+
+        tel = request.form.get("tel") #TO DO, UPDATE APARTMENT OWNER IN THE APARTMENT TABLE
+        if not tel:
+            print("###############################################")
+            tel = "N/A"
+            landlord = OwnerOp(owner,tel,None,"N/A",current_user.id)
+            landlord.save()
+            print("###############################################")
+
+
+        else:
+            landlord  = OwnerOp.fetch_owner_by_phone(tel)
+            if not landlord:
+                print("###############################################")
+                landlord = OwnerOp(owner,tel,None,"N/A",current_user.id)
+                landlord.save()
+                print("###############################################")
+
+        region = data.get("region")
+        if not region:
+            region = "Nairobi"
+
+        location = LocationOp.fetch_location(region.title())
+        if not location:
+
+            print("###############################################")
+            location = LocationOp(region.title(),None)
+            location.save()
+            print("###############################################")
+
+
+
+        if not agency:
+            agency = "False"
+
+        bool_value = return_bool(agency)
+
+        if not prop:
+            return make_response(jsonify({'msg': 'property name missing'}))
+           
+    
+        
+        apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
+        apartment_obj.save()
+
+        # owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
+        # # OwnerOp.update_natid(owner_obj,"33150408") 
+        # owner_natid = owner_obj.national_id
+        # if owner_natid:
+        #     owner_user = UserOp.fetch_user_by_national_id(owner_natid)
+        #     ApartmentOp.relate(apartment_obj,owner_user)
+        #     UserOp.update_status(owner_user,True)
+
+        #     if not bool_value:
+        #         owner_co_id = owner_user.company_id
+        #         ApartmentOp.update_company(apartment_obj,owner_co_id)
+
+        return make_response(jsonify({'msg': 'property added succesfully','property':prop }))

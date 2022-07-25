@@ -318,8 +318,12 @@ api.add_resource(BModifyAccessRight,"/modify/baccess")
 api.add_resource(BRegisterUser,"/add/buser")
 api.add_resource(BPropertyAccess,"/property/baccess")
 api.add_resource(BPropertyAccessTermination,"/property/btermination")
+api.add_resource(BAddProp,"/add/bprop")
 
 api.add_resource(BAllProperties,"/all/bproperties")
 api.add_resource(BClientBilling,"/client/bbilling")
 api.add_resource(BBilling, "/bbilling")
 api.add_resource(BMpesa, "/bmpesa")
+
+api.add_resource(BRegisterUserGroup,"/add/busergroup")
+api.add_resource(BAssignRole,"/assign/brole")

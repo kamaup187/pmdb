@@ -2121,6 +2121,246 @@ class CombinedReport(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+class ServiceStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+        target = request.args.get("target")
+
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_servicecharge_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                co=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+
+        ##################################################################################################
+        house_ids = []
+        detailed_bills = []
+
+        totalbbf = 0.0
+        totalrent = 0.0
+
+        totalpaid = 0.0
+        totalbcf = 0.0
+
+        ###################################################################################################
+        db.session.expire(apartment_obj)
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                house_ids.append(bill.house_id)
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
+                totalrent += bill.maintenance if bill.maintenance else 0.0
+                
+                totalpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
+                if bill.maintenance_due:
+                    totalbcf += bill.maintenance_due if bill.maintenance_due > 0 else 0.0
+        ###################################################################################################
+   
+
+        vacants = filter_out_owned_houses(apartment_obj.name)
+
+
+        for vac in vacants:
+            if vac.id in house_ids:
+                continue
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':0.0,
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+
+        bbftotal = (f"{totalbbf:,}")
+
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = totalbbf + totalrent
+        billtotal = (f"{totalbill:,}")
+
+        paidtotal = (f"{totalpaid:,}")
+
+        bcftotal = (f"{totalbcf:,}")
+
+        expense_list = []
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+        remittances = 0.0
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+
+
+
+            
+        netrent = totalpaid
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        # commission = netrent * apartment_obj.commission * 0.01
+        commission = 0
+
+        # if apartment_obj.id == 33:
+        #     loan = 0
+        # else:
+        #     loan = 0
+
+        # if apartment_obj.commission:
+        #     commission = netrent * apartment_obj.commission * 0.01
+        #     commission_percentage = f"({apartment_obj.commission} %)"
+
+        # else:
+        #     commission = apartment_obj.int_commission
+        #     commission_percentage = f"{commission} flat rate"
+
+        # debits = commission + expenses_amount
+
+        # formatted_debits = f"{debits:,.1f}"
+
+        # formatted_commision = (f"{commission:,.1f}")
+        # formatted_loan = (f"{loan:,.1f}")
+
+        # llp_arr = llp.arrears if llp else 0.0 
+            
+        raw_netpay = netrent - commission - expenses_amount + remittances
+
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        try:
+            ratio = (f"{(totalpaid/totalbill)*100:,.1f} %")
+        except:
+            ratio = f"0.0 %"
+
+        llbal = "0.0"
+
+        
+        template_vars = {
+            "code":apartment_obj.id,
+            "name":selected_apartment,
+            "landlord":"",
+            "ll_bbf":llbal,
+
+            "tnt_bbf":totalbbf,
+            "rent":totalrent,
+            "expected":totalbill,
+            "actual":totalpaid,
+            "tnt_bcf":totalbcf,
+
+            "utilities":0.0,
+            "deposit":0.0,
+
+            "expenses":expenses_amount,
+
+            "commission":commission,
+            "netpay":raw_netpay,
+
+            "remitted":raw_netpay,
+            "ratio":ratio,
+
+            "ll_bcf":0.0,
+            "agent":current_user.name,
+        }
+
+        if target == "remit_data":
+            return render_template('ajax_remit_template.html',vars=template_vars)
+
+        remits = remittances if remittances else 0.0
+
+
+        return Response(render_template(
+            'report_servicecharge_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            selected_month=selected_month,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            bcftotal=bcftotal,
+            expenses = f"{expenses_amount:,.1f}",
+            remits = f"{remits:,.1f}",
+            formatted_netrent=formatted_netrent,
+            netpay=netpay,
+            bills=detailed_bills,
+            expenselist=expense_list,
+            llbal=llbal,
+            paging="portrait",
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
 class RentStatement(Resource):
     @login_required
     def get(self):

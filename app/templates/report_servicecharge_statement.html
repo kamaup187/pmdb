@@ -38,7 +38,7 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light" method="GET" action="/st/one">
+                    <form class="row bg-light" method="GET" action="/service/statement">
 
                     
                       <div class="col-lg-2 form-group mb-2">
@@ -52,8 +52,8 @@
                       </div>
 
                       <div class="col-lg-2 form-group mb-2">
-                        <label class="mb-0">Select owner:</label>
-                        <select name="owner" class="select-css" id="owner" required>
+                        <label class="mb-0">Select owner(disabled):</label>
+                        <select name="owner" class="select-css" id="owner" disabled>
                           <option disabled selected value> select owner </option>
                           {% for o in owners %}
                           <option value="{{ o }}">{{ o }}</option>
@@ -100,7 +100,7 @@
               </div>
             </div>
 
-            <div class="mb-4 mt-4 text-dark font-weight-bold">
+            <div class="mb-4 mt-4 text-dark font-weight-bold dispnone">
 
               <div class="ln-16 divjust-end">
                 <span class="mr-4">Apartment :</span> <span class="text-black">{{propname}}</span>
@@ -128,7 +128,7 @@
           
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">REMITTANCE STATEMENT</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">SERVICE CHARGE STATEMENT</span></span>
           </div>         
 
           <!-- <div class="text-right mt-1">
@@ -145,12 +145,11 @@
                       <th class="">UNIT NO</th>
                       <th class="">OCCUPANT</th>
 
-                      <th class="">RENT</th>
-                      <th class="">SERVICE CHARGE</th>
-                      <th class="">MGT FEES</th>
-                      <th class="">AMOUNT DUE</th>
-
-                      <th class="">Comments</th>
+                      <th class="">BB/F</th>
+                      <th class="">S.CHARGE</th>
+                      <th class="">TOTAL DUE</th>
+                      <th class="">TOTAL PAID</th>
+                      <th class="">BC/F</th>
 
 
                     </tr>
@@ -163,12 +162,11 @@
                       <td class="data-cell text-right small">{{ bill['house'] }}</td>
                       <td class="data-cell text-right">{{ bill['tenant'] }}</td>
 
-                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                      <td class="data-cell text-right">{{ bill['service'] }}</td>
-                      <td class="data-cell text-right">{{ bill['mgt'] }}</td>  
-                      <td class="data-cell text-right">{{ bill['ownerdue'] }}</td>
-
-                      <td class="data-cell text-right">{{ bill['comment'] }}</td>
+                      <td class="data-cell text-right">{{ bill['serv-arr'] }}</td>
+                      <td class="data-cell text-right">{{ bill['serv'] }}</td>
+                      <td class="data-cell text-right">{{bill['serv-total']}}</td>
+                      <td class="data-cell text-right">{{ bill['serv-paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['serv-bal'] }}</td>
 
                     </tr>
                   {% endfor %}
@@ -178,16 +176,11 @@
                     <tr>
                       <!-- <td class="font-weight-bold hid">.</td> -->
                       <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-
-                      <td class="font-weight-bold text-right">{{totrent}}</td>
-                      <td class="font-weight-bold text-right">{{totserv}}</td>
-                      <td class="font-weight-bold text-right">{{totmgt}}</td>
-                      <td class="font-weight-bold text-right">{{totdue}}</td>
-
-                      <td  class="font-weight-bold text-right">-</td>
-
-
-
+                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{billtotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -223,7 +216,7 @@
                 <div class="divjust-end ln-16 mobile-malaysian">
                   <div class="">Remarks:</div>
       
-                  <div class="divjust-end mr-5">
+                  <div class="divjust-end mr-5 hide">
                     <div class="mr-4">
                       <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
       
@@ -280,7 +273,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnon">
+  <div id="invoice" class="col-lg-12  dispnone">
     <div class="bg-white shadow">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -298,7 +291,7 @@
             </div>
 
 
-            <div class="mb-4 mt-4 text-dark font-weight-bold">
+            <div class="mb-4 mt-4 text-dark font-weight-bold dispnone">
 
               <div class="ln-16 divjust-end">
                 <span class="mr-4">Apartment :</span> <span class="text-black">{{propname}}</span>
@@ -325,7 +318,7 @@
 
           <div class="center-btn overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-1">STATEMENT OF ACCOUNT</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-1">SERVICE CHARGE STATEMENT</span></span>
           </div>   
 
 
@@ -338,12 +331,12 @@
                   <th class="">UNIT NO</th>
                   <th class="">OCCUPANT</th>
 
-                  <th class="">RENT</th>
-                  <th class="">SERVICE CHARGE</th>
-                  <th class="">MGT FEES</th>
-                  <th class="">AMOUNT DUE</th>
+                  <th class="">BB/F</th>
+                  <th class="">S.CHARGE</th>
+                  <th class="">TOTAL DUE</th>
+                  <th class="">TOTAL PAID</th>
+                  <th class="">BC/F</th>
 
-                  <th class="">Comments</th>
 
 
                 </tr>
@@ -356,12 +349,11 @@
                   <td class="data-cell text-right small">{{ bill['house'] }}</td>
                   <td class="data-cell text-right">{{ bill['tenant'] }}</td>
 
-                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{ bill['service'] }}</td>
-                  <td class="data-cell text-right">{{ bill['mgt'] }}</td>  
-                  <td class="data-cell text-center">{{ bill['ownerdue'] }}</td>
-
-                  <td class="data-cell text-right">{{ bill['comment'] }}</td>
+                  <td class="data-cell text-right">{{ bill['serv-arr'] }}</td>
+                  <td class="data-cell text-right">{{ bill['serv'] }}</td>
+                  <td class="data-cell text-right">{{bill['serv-total']}}</td>
+                  <td class="data-cell text-right">{{ bill['serv-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['serv-bal'] }}</td>
 
                 </tr>
               {% endfor %}
@@ -372,12 +364,11 @@
                   <!-- <td class="font-weight-bold hid">.</td> -->
                   <td colspan="2" class="font-weight-bold">TOTALS ...</td>
 
-                  <td class="font-weight-bold text-right">{{totrent}}</td>
-                  <td class="font-weight-bold text-right">{{totserv}}</td>
-                  <td class="font-weight-bold text-right">{{totmgt}}</td>
-                  <td class="font-weight-bold text-right">{{totdue}}</td>
-
-                  <td  class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                  <td class="font-weight-bold text-right">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right">{{billtotal}}</td>
+                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
 
 
 
@@ -417,7 +408,7 @@
             <div class="divjust-end ln-16 mobile-malaysian">
               <div class="">Remarks:</div>
   
-              <div class="divjust-end mr-5">
+              <div class="divjust-end mr-5 hide">
                 <div class="mr-4">
                   <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
   

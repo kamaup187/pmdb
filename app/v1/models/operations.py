@@ -3092,6 +3092,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'water-paid':MonthlyChargeOp.fig_format(self.water_paid),
             'water-bal':MonthlyChargeOp.fig_format(self.water_due),
 
+            'serv-arr':MonthlyChargeOp.fig_format(self.maintenance_balance),
+            'serv':MonthlyChargeOp.fig_format(self.maintenance),
+            'serv-total':MonthlyChargeOp.calculate_total_due(self.maintenance,self.maintenance_balance),
+            'serv-paid':MonthlyChargeOp.fig_format(self.maintenance_paid),
+            'serv-bal':MonthlyChargeOp.fig_format(self.maintenance_due),
+
             'garbage-arr':MonthlyChargeOp.fig_format(self.garbage_balance),
             'garbage':MonthlyChargeOp.fig_format(self.garbage),
             'garbage-total':MonthlyChargeOp.calculate_total_due(self.garbage,self.garbage_balance),

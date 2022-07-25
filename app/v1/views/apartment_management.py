@@ -254,6 +254,7 @@ class Index(Resource):
             #     CompanyOp.update_sms_provider(cocc,"Advanta")
 
             # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
+            # commp = CompanyOp.fetch_company_by_name("Sentom Investment")
 
             # propsss = commp.props
             # for propp in propsss:

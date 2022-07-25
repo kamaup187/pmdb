@@ -7170,6 +7170,9 @@ def filtered_house_list_alt(apartment_id,readdate=None):
 
     return unread_houses
 
+def autoresolve_mpesa(ctob):
+    pass
+
 
 def auto_consume_ctob(ctob_obj):
     prop = ApartmentOp.fetch_apartment_by_shortcode(ctob_obj.business_shortcode)

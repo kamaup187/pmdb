@@ -3321,7 +3321,11 @@ class EditPayment(Resource):
 
         payment_obj = PaymentOp.fetch_payment_by_id(payid)
         print("PAYMENT PAID STATUS >>","RENT PAID",payment_obj.rent_paid,"DEPOSIT PAID",payment_obj.deposit_paid)
-        return f"Tenant: <span class='text-black font-weight-bold'>{payment_obj.tenant.name}</span><br> Paid: <span class='text-black font-weight-bold'>Kshs {payment_obj.amount:,.0f}</span>"
+
+        tenant_obj = TenantOp.fetch_tenant_by_id(payment_obj.tenant_id)
+        if not tenant_obj:
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
+        return f"Tenant: <span class='text-black font-weight-bold'>{tenant_obj.name}</span><br> Paid: <span class='text-black font-weight-bold'>Kshs {payment_obj.amount:,.0f}</span>"
 
     @login_required
     def post(self):
@@ -3355,6 +3359,9 @@ class EditPayment(Resource):
             pay_date = parse(formatted_paydate)
 
         tenant_obj = TenantOp.fetch_tenant_by_id(payment_obj.tenant_id)
+        if not tenant_obj:
+            tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
+
         tenant_bills = tenant_obj.monthly_charges
 
         target_bills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,tenant_bills)
@@ -3434,16 +3441,33 @@ class EditPayment(Resource):
                     update_total = target_bill.total_bill + payment_obj.amount
                     MonthlyChargeOp.update_monthly_charge(target_bill,"null","null","null","null","null","null","null","null","null","null",update_total,None)
 
-                running_balance = tenant_obj.balance
-                running_balance += payment_obj.amount
-                TenantOp.update_balance(tenant_obj,running_balance)
+                if target_bill.tenant_id:
+                    tenant_obj = TenantOp.fetch_tenant_by_id(target_bill.tenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal += payment_obj.amount
+                    TenantOp.update_balance(tenant_obj,running_bal)
+
+                if target_bill.ptenant_id:
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(target_bill.ptenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal += payment_obj.amount
+                    PermanentTenantOp.update_balance(tenant_obj,running_bal)
+
             else:
                 print("Payment voided, no target bill")
                 PaymentOp.void(payment_obj,True,current_user.id)
 
-                running_balance = tenant_obj.balance
-                running_balance += payment_obj.amount
-                TenantOp.update_balance(tenant_obj,running_balance)
+                if payment_obj.tenant_id:
+                    tenant_obj = TenantOp.fetch_tenant_by_id(payment_obj.tenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal += payment_obj.amount
+                    TenantOp.update_balance(tenant_obj,running_bal)
+
+                if payment_obj.ptenant_id:
+                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
+                    running_bal = tenant_obj.balance
+                    running_bal += payment_obj.amount
+                    PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
             prop = payment_obj.apartment
             co = prop.company

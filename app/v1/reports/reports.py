@@ -164,6 +164,8 @@ class BalanceReport(Resource):
                     start += 1
                     sms_text += new_line
 
+            print("TEXT SENT:",sms_text)
+
             if prop_obj.company.sms_provider == "Advanta":
                 sms_sender(prop_obj.company.name,sms_text,tel)
             else:

@@ -2204,75 +2204,109 @@
             <div class="media-body">
               <div class="position-relative">
                 <div class="card-body modal-forms">
-
+                
                   <div class="text-center text-success font-weight-bold mb-2 underline">
                     <div class="divbg mb-1">
                       <button id="general_texts" type="button" class="btn btn-outline-success borderless text-dark">General</button>
+                      <button id="balance_texts" type="button" class="btn btn-outline-success borderless text-dark">Balances</button>
                       <button id="reminder_texts" type="button" class="btn btn-outline-success borderless text-dark">Reminders</button>
                       <button id="topup_texts" type="button" class="btn btn-outline-info borderless text-dark">Sms top up</button>
                       <button id="sent_texts" type="button" class="btn btn-outline-info borderless text-dark">Sent messages</button>
                     </div>
                   </div>
-
-
-                  <div id="generaltexts" class="dispnone">
-                    <form class="">
-    
+                
+                
+                  <div id="generaltexts" class="dispnone row">
+                    <form class="col-6">
+                
                       <div class="form-group">
-                        <select name="property" class="select-css" id ="selected_prop">
-                            <option disabled selected value> -- Select property -- </option>
-                            {% for o in props%}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
+                        <select name="property" class="select-css" id="selected_prop">
+                          <option disabled selected value> -- Select property -- </option>
+                          {% for o in props%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
                         </select>
                       </div>
-    
+                
                       <div class="form-group">
-                        <textarea id="text_sms" name="desc" class="form-control" placeholder="Notification message to be conveyed"></textarea>
+                        <textarea id="text_sms" name="desc" class="form-control"
+                          placeholder="Notification message to be conveyed"></textarea>
                       </div>
                       <div class="divbg center-btn">
                         <button id="sendgeneral" type="button" class="btn btn-success borderless text-white">Send now</button>
                       </div>
                     </form>
-    
+
+                    <div class="col-6">
+                      Nothing to display here.
+                    </div>
+                
                   </div>
+                
+                  <div id="balancetexts" class="dispnone row">
+                    <form class="col-6">
+                
+                      <div class="form-group">
+                        <select name="property" class="select-css" id="balanceprop">
+                          <option disabled selected value> -- Select property -- </option>
+                          {% for o in props%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                
+                      <div class="form-group">
+                        <input id="telnum" name="desc" class="form-control ph-dark" placeholder="Mobile number/Email">
+                      </div>
+                
+                      <div class="divbg center-btn">
+                        <button id="sendbalance" type="button" class="btn btn-success borderless text-white">Send now</button>
+                      </div>
+                    </form>
 
-
-                  <div id="remindertexts" class="dispnone">
-                    <form autocomplete="off">
-  
-                      <div class="form-group mt-2">                        
-                        <input id="reminder-date" class="form-control text-info pl-5 ph" type="text" placeholder="To be sent on... --date--">
+                    <div class="col-6">
+                      Enter mobile which balance reports balance will be sent reports to.
+                    </div>
+                
+                  </div>
+                
+                
+                  <div id="remindertexts" class="dispnone row">
+                    <form autocomplete="off" class="col-6">
+                
+                      <div class="form-group mt-2">
+                        <input id="reminder-date" class="form-control text-info pl-5 ph" type="text"
+                          placeholder="To be sent on... --date--">
                         <span class="fa fa-fw fa-calendar-day field-icon-two text-info"></span>
                       </div>
-  
+                
                       <div class="form-group">
-                        <select class="select-css" id ="reminderprop" required>
-                            <option disabled selected value> -- Select property -- </option>
-                            {% for o in props%}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
+                        <select class="select-css" id="reminderprop" required>
+                          <option disabled selected value> -- Select property -- </option>
+                          {% for o in props%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
                         </select>
                       </div>
-  
+                
                       <div class="form-group">
-                        <select class="select-css" id ="reminderbalance" required>
-                            <option disabled selected value> -- Balance category -- </option>
-                            
-                            <option value="0">With any balance</option>
-                            <option value="499">Above 499</option>
-                            <option value="999">Above 999</option>
-                            <option value="9999">Above 9999</option>
-  
-                            
+                        <select class="select-css" id="reminderbalance" required>
+                          <option disabled selected value> -- Balance category -- </option>
+                
+                          <option value="0">With any balance</option>
+                          <option value="499">Above 499</option>
+                          <option value="999">Above 999</option>
+                          <option value="9999">Above 9999</option>
+                
+                
                         </select>
                       </div>
-  
+                
                       <div class="row">
                         <!-- <div class="col-10 form-group dispnone mt-2">                        
-                          <textarea id="remindertext" class="form-control ph" rows="1" placeholder="{{setreminder}}"></textarea>
-                        </div> -->
-
+                                                            <textarea id="remindertext" class="form-control ph" rows="1" placeholder="{{setreminder}}"></textarea>
+                                                          </div> -->
+                
                         <div class="col-11 row form-group mt-2 dispnon">
                           <div class="col-sm-2 form-group">
                             <span class="text-info">[name(auto)]</span>
@@ -2280,42 +2314,45 @@
                           </div>
                           <div class="col-sm-8 form-group">
                             <span class="text-info">[custom message]</span>
-                            <input colspan="2" id="remindertext" class="form-control ph text-center" type="text" value="{{setreminder}}" placeholder="reminder not set!">
+                            <input colspan="2" id="remindertext" class="form-control ph text-center" type="text" value="{{setreminder}}"
+                              placeholder="reminder not set!">
                           </div>
                           <div class="col-sm-2 form-group">
                             <span class="text-info">[balance(auto)]</span>
                             <input id="" class="form-control ph text-right" type="text" value="[tenant balance]." readonly>
                           </div>
                         </div>
-
+                
                         <!-- <div class="col-2 form-group mt-3">
-                          <button id="setreminder-show" type="button" class="btn-success borderless text-white">Set seminder</button>
-                        </div> -->
-
+                                                            <button id="setreminder-show" type="button" class="btn-success borderless text-white">Set seminder</button>
+                                                          </div> -->
+                
                         <div class="col-1 form-group mt-2 pt-1 ml-4">
                           <span class="hide">hey</span>
                           <button id="setreminder" type="button" class="btn-success borderless text-white">Save</button>
                         </div>
                       </div>
-
-
-                    
+                
+                
+                
                       <div class="divbg center-btn">
                         <button id="sendreminder" type="button" class="btn-success borderless text-white">Schedule</button>
                       </div>
                     </form>
+                    <div class="col-6">
+                      Nothing to display here.
+                    </div>
                   </div>
-
-
-
+                
+                
+                
                   <div id="topuptexts" class="text-center dispnone">
                     <span class="text-black">To load sms: {{shortcode}}</span>
                   </div>
-
-                  <div id="senttexts" class="table-responsive dispnone">
-
-                </div>
-      
+                  <div id="senttexts" class="table-responsive">
+                
+                  </div>
+                
                 </div>
               </div>
             </div>
@@ -3158,6 +3195,33 @@ function animateHH(element) {
 
 
 <script>
+  $("#sendbalance").on('click',function(){
+    $("#sendbalance").html("sending...")
+    // $("#closemodal").click();
+    setTimeout(function(){
+      url2 = "{{ url_for('api.balancereport') }}";
+      $.ajax({
+            type: "get",
+            url: url2,
+            data: {
+              prop:$("#balanceprop").val(),
+              contact:$("#telnum").val(),
+              target:"general"
+            },
+            success: function(response) {
+              $("#sendbalance").html("Sent!")
+
+              setTimeout(
+                $("#sendbalance").html("Send now"), 300
+                );
+          }
+      });
+    },300);
+});
+</script>
+
+
+<script>
   $("#setreminder").on('click',function(){
     // $("#closemodal").click();
 
@@ -3207,6 +3271,17 @@ function animateHH(element) {
   $("#general_texts").on('click',function(){   
     $("#generaltexts").removeClass("dispnone")
 
+    $("#balancetexts").addClass("dispnone")
+    $("#remindertexts").addClass("dispnone")
+    $("#topuptexts").addClass("dispnone")
+    $("#senttexts").addClass("dispnone")
+
+  });
+
+  $("#balance_texts").on('click',function(){   
+    $("#balancetexts").removeClass("dispnone")
+
+    $("#generaltexts").addClass("dispnone")
     $("#remindertexts").addClass("dispnone")
     $("#topuptexts").addClass("dispnone")
     $("#senttexts").addClass("dispnone")
@@ -3216,6 +3291,7 @@ function animateHH(element) {
   $("#reminder_texts").on('click',function(){   
     $("#remindertexts").removeClass("dispnone")
 
+    $("#balancetexts").addClass("dispnone")
     $("#generaltexts").addClass("dispnone")
     $("#topuptexts").addClass("dispnone")
     $("#senttexts").addClass("dispnone")
@@ -3226,6 +3302,7 @@ function animateHH(element) {
   $("#topup_texts").on('click',function(){   
     $("#topuptexts").removeClass("dispnone")
 
+    $("#balancetexts").addClass("dispnone")
     $("#remindertexts").addClass("dispnone")
     $("#generaltexts").addClass("dispnone")
     $("#senttexts").addClass("dispnone")
@@ -3236,6 +3313,7 @@ function animateHH(element) {
   $("#sent_texts").on('click',function(){   
     $("#senttexts").removeClass("dispnone")
 
+    $("#balancetexts").addClass("dispnone")
     $("#remindertexts").addClass("dispnone")
     $("#generaltexts").addClass("dispnone")
     $("#topuptexts").addClass("dispnone")
@@ -3254,6 +3332,21 @@ function animateHH(element) {
 
   });
 
+  </script>
+
+  <script>
+    $("#messageModal").on('shown.bs.modal', function () {
+      $.ajax({
+        url: "{{ url_for('api.fetchsentsms') }}",
+        type: "get",
+        data: {
+          target: "",
+        },
+        success: function (response) {
+          $("#senttexts").html(response)
+        },
+      });
+    })
   </script>
 
 

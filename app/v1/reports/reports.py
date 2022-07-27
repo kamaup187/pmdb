@@ -155,12 +155,14 @@ class BalanceReport(Resource):
             time = datetime.datetime.now() + relativedelta(hours=3)
 
             sms_text = f"Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: "
+            second_line = "\n\nHouse & Balance"
+            sms_text += second_line
 
             start = 1
             for bill in actualbills:
                 if bill.balance > 1:
 
-                    new_line = f"\n {start}. {bill.house}: {bill.balance}"
+                    new_line = f"\n{bill.house}:  {bill.balance}"
                     start += 1
                     sms_text += new_line
 

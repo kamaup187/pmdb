@@ -1177,7 +1177,10 @@ class TenantUserSignUpStageTwo(Resource):
 class LandingPage(Resource):
     def get(self):
         if os.getenv("TARGET") != "lasshouse":
-            # return Response(render_template("landingtwo.html"))
+            # return Response(render_template("landingtwo.html"))\
+            print("STAGINGGGG???",os.getenv("STAGING"))
+            if os.getenv("STAGING") == "True":
+                return redirect(url_for('api.index'))
             return redirect("https://kiotapay.co.ke")
         else:
             # return Response(render_template("home.html"))

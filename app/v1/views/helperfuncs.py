@@ -3405,7 +3405,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
         own_shortcode = False
 
-        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited":
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 2":
             own_shortcode = True
 
         raw_rem_sms =co.remainingsms

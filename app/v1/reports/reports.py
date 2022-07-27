@@ -132,6 +132,55 @@ class ReportsThree(Resource):
             parent=logo(current_user.company)[5],
             name=current_user.name))
 
+class BalanceReport(Resource):
+    """class"""
+    def get(self):
+        prop = request.args.get("prop")
+        contact = request.args.get("contact")
+
+        if "@" in contact:
+            print("not a valid telephone number")
+            tel = ""
+        else:
+            tel = sms_phone_number_formatter(contact)
+
+        if tel:
+            recipient = [tel]
+
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            bills = prop_obj.monthlybills
+
+            actualbills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+
+            time = datetime.datetime.now() + relativedelta(hours=3)
+
+            sms_text = f"Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: "
+            second_line = "\n\nHouse & Balance"
+            sms_text += second_line
+
+            start = 1
+            for bill in actualbills:
+                if bill.balance > 1:
+
+                    new_line = f"\n{bill.house}:  {bill.balance:,.0f}"
+                    start += 1
+                    sms_text += new_line
+
+            print("TEXT SENT:",sms_text)
+
+            if prop_obj.company.sms_provider == "Advanta":
+                sms_sender(prop_obj.company.name,sms_text,tel)
+            else:
+                try:
+                    notify = sms.send(sms_text, recipient,sender)
+                    print(notify)
+                except Exception as e:
+                    print("sending logs failed",e)
+        else:
+            print("Telephone not provided")
+
+        
+
 class RentReport(Resource):
     """report class"""
     @login_required

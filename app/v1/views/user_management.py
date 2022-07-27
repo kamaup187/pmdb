@@ -1180,7 +1180,7 @@ class LandingPage(Resource):
             # return Response(render_template("landingtwo.html"))\
             print("STAGINGGGG???",os.getenv("STAGING"))
             if os.getenv("STAGING") == "True":
-                return redirect(url_for('api.userlogin'))
+                return redirect(url_for('api.index'))
             return redirect("https://kiotapay.co.ke")
         else:
             # return Response(render_template("home.html"))

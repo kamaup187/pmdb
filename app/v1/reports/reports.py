@@ -162,7 +162,7 @@ class BalanceReport(Resource):
             for bill in actualbills:
                 if bill.balance > 1:
 
-                    new_line = f"\n{bill.house}:  {bill.balance}"
+                    new_line = f"\n{bill.house}:  {bill.balance:,.0f}"
                     start += 1
                     sms_text += new_line
 

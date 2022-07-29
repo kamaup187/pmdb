@@ -2787,35 +2787,35 @@ class ReceivePayment(Resource):
                 MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,addfee_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
                 PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
-                # try:
-                bookbal = specific_charge_obj.booking_due - bookingpaid
-                instbal = specific_charge_obj.instalment_due - instalmentpaid
-                addfeebal = specific_charge_obj.addfee_due - addfeepaid
+                try:
+                    bookbal = specific_charge_obj.booking_due - bookingpaid
+                    instbal = specific_charge_obj.instalment_due - instalmentpaid
+                    addfeebal = specific_charge_obj.addfee_due - addfeepaid
 
-                rentbal = specific_charge_obj.rent_due - rentpaid
+                    rentbal = specific_charge_obj.rent_due - rentpaid
 
-                # rentbal -= overpayment
-                waterbal = specific_charge_obj.water_due - waterpaid
-                electricitybal = specific_charge_obj.electricity_due - electricitypaid
-                servicebal = specific_charge_obj.maintenance_due - servicepaid
-                penaltybal = specific_charge_obj.penalty_due - penaltypaid
-                securitybal = specific_charge_obj.security_due - securitypaid
-                garbagebal = specific_charge_obj.garbage_due - garbagepaid
-                depositbal = specific_charge_obj.deposit_due - depositpaid
-                agreementbal = specific_charge_obj.agreement_due - agreementpaid
+                    # rentbal -= overpayment
+                    waterbal = specific_charge_obj.water_due - waterpaid
+                    electricitybal = specific_charge_obj.electricity_due - electricitypaid
+                    servicebal = specific_charge_obj.maintenance_due - servicepaid
+                    penaltybal = specific_charge_obj.penalty_due - penaltypaid
+                    securitybal = specific_charge_obj.security_due - securitypaid
+                    garbagebal = specific_charge_obj.garbage_due - garbagepaid
+                    depositbal = specific_charge_obj.deposit_due - depositpaid
+                    agreementbal = specific_charge_obj.agreement_due - agreementpaid
 
-                if specific_charge_obj.tenant_id:
-                    if specific_charge_obj.house.housecode.rentrate:
-                        rentbal -= overpayment
-                else:
-                    if specific_charge_obj.ptenant_id:
-                        if specific_charge_obj.house.housecode.servicerate:
-                            servicebal -= overpayment
+                    if specific_charge_obj.tenant_id:
+                        if specific_charge_obj.house.housecode.rentrate:
+                            rentbal -= overpayment
+                    else:
+                        if specific_charge_obj.ptenant_id:
+                            if specific_charge_obj.house.housecode.servicerate:
+                                servicebal -= overpayment
 
-                MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                # except Exception as e:
-                #     print("PAID TO LEGACY BILL")
-                #     print("ERROR >>",e)
+                    MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+                except Exception as e:
+                    print("PAID TO LEGACY BILL")
+                    print("ERROR >>",e)
 
             # elif not specific_charge_obj and not current_period_payment:
             #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)

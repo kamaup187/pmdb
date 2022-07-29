@@ -1919,6 +1919,7 @@ class ReceivePayment(Resource):
         cbid = request.args.get("cbid")
         payperiod = request.args.get("payperiod")
         target = request.args.get("target")
+        housecheck = request.args.get("housecheck")
 
 
         propid = get_identifier(prop_id)
@@ -2097,7 +2098,7 @@ class ReceivePayment(Resource):
                                 bill = None
 
                     ########################################################################################
-                    elif prop.name == "Greatwall Gardens 2":
+                    elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
                             print("KATA SIM",hh,"MORIO",hh.owner)
@@ -2107,7 +2108,7 @@ class ReceivePayment(Resource):
                         else:
                             print("HAKUNAAA HIO NI UWONGO")
                             bill = None
-                    elif prop.name == "Astrol Ridgeways":
+                    elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
@@ -2232,14 +2233,14 @@ class ReceivePayment(Resource):
                                 bill = None
 
                     ########################################################################################
-                    elif prop.name == "Greatwall Gardens 2":
+                    elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
                             bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             tenant = hh.owner
                         else:
                             bill = None
-                    elif prop.name == "Astrol Ridgeways":
+                    elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
@@ -2491,7 +2492,7 @@ class ReceivePayment(Resource):
                             abort(404) 
 
                 ########################################################################################
-                elif prop.name == "Greatwall Gardens 2":
+                elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                     hh = get_specific_house_obj(propid,cb.bill_ref_num)
                     if hh:
                         house_obj = hh
@@ -2502,7 +2503,7 @@ class ReceivePayment(Resource):
                     else:
                         print("HOUSE NOT FOUND")
                         abort(404) 
-                elif prop.name == "Astrol Ridgeways":
+                elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                     cbid_id = cb.bill_ref_num.replace(" ","")
                     if "-" in cbid_id:
                         cbid_id2 = cbid_id.split("-")[1]

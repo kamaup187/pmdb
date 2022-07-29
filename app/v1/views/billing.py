@@ -2396,6 +2396,8 @@ class ReceivePayment(Resource):
         raw_bill_ref = request.form.get('bill_ref')#typed
         paytype = request.form.get('paytype')#typed
         amount = request.form.get('paidamount')#typed
+        housecheck = request.form.get("housecheck")
+
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
 

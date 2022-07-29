@@ -2813,8 +2813,9 @@ class ReceivePayment(Resource):
                                 servicebal -= overpayment
 
                     MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                except:
+                except Exception as e:
                     print("PAID TO LEGACY BILL")
+                    print("ERROR >>",e)
 
             # elif not specific_charge_obj and not current_period_payment:
             #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)

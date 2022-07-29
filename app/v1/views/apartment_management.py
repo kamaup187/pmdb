@@ -256,16 +256,19 @@ class Index(Resource):
             # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
             # commp = CompanyOp.fetch_company_by_name("Sentom Investment")
 
-            # propsss = commp.props
-            # for propp in propsss:
+            cms = CompanyOp.fetch_all_companies()
 
-            #     apartment_id = propp.id
+            for ccs in cms:
+                propsss = ccs.props
+                for propp in propsss:
 
-            #     print("APART",apartment_id)
+                    apartment_id = propp.id
 
-            #     billupdatejob = q.enqueue_call(
-            #         func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
-            #     )
+                    print("APART",apartment_id)
+
+                    billupdatejob = q.enqueue_call(
+                        func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
+                    )
 
 
             # if not cocc:

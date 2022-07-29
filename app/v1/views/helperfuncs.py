@@ -5903,7 +5903,7 @@ def run_update(houseids,apartment_id,user_id):
         bills = hs.monthlybills
 
         for bill in bills:
-            print("RUNNING BILL UPDATE FOR :",bill.house," >> ",bill.month,"/",bill.year)
+            print("RUNNING BILL UPDATE FOR : ",bill.apartment.company.name,"HOUSE: ",bill.house," >> ",bill.month,"/",bill.year)
             original_amount = bill.total_bill
             # if bill.apartment.billing_period.month == bill.month:
             values = validate_float_inputs("","","","","","","","","","")
@@ -5950,43 +5950,43 @@ def run_update(houseids,apartment_id,user_id):
             if bill.water_paid:
                 waterbal = bill.water_balance + update_water - bill.water_paid
             else:
-                waterbal = bill.water_balance + update_water
+                waterbal = bill.water_balance + update_water if bill.water_balance else update_water
 
             if bill.electricity_paid:
                 electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
             else:
-                electricitybal = bill.electricity_balance + bill.electricity
+                electricitybal = bill.electricity_balance + bill.electricity if bill.electricity_balance else bill.electricity
 
             if bill.maintenance_paid:
                 servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
             else:
-                servicebal = bill.maintenance_balance + update_maintenance
+                servicebal = bill.maintenance_balance + update_maintenance if bill.maintenance_balance else update_maintenance
 
             if bill.penalty_paid:
                 penaltybal = bill.penalty_balance + update_fine - bill.penalty_paid
             else:
-                penaltybal = bill.penalty_balance + update_fine
+                penaltybal = bill.penalty_balance + update_fine if bill.penalty_balance else update_fine
 
             if bill.security_paid:
                 securitybal = bill.security_balance + update_security - bill.security_paid
             else:
-                securitybal = bill.security_balance + update_security
+                securitybal = bill.security_balance + update_security if bill.security_balance else update_security
 
             if bill.garbage_paid:
                 garbagebal = bill.garbage_balance + update_garbage - bill.garbage_paid
             else:
-                garbagebal = bill.garbage_balance + update_garbage
+                garbagebal = bill.garbage_balance + update_garbage if bill.garbage_balance else update_garbage
 
 
             if bill.deposit_paid:
                 depositbal = bill.deposit_balance + update_deposit - bill.deposit_paid
             else:
-                depositbal = bill.deposit_balance + update_deposit
+                depositbal = bill.deposit_balance + update_deposit if bill.deposit_balance else update_deposit
 
             if bill.agreement_paid:
                 agreementbal = bill.agreement_balance + update_agreement - bill.agreement_paid
             else:
-                agreementbal = bill.agreement_balance + update_agreement
+                agreementbal = bill.agreement_balance + update_agreement if bill.agreement_balance else update_agreement
 
             MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
             # MonthlyChargeOp.update_rent_balance(bill,rentarr)

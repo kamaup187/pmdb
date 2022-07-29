@@ -2788,9 +2788,9 @@ class ReceivePayment(Resource):
                 PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                 try:
-                    bookbal = specific_charge_obj.booking_due - bookingpaid
-                    instbal = specific_charge_obj.instalment_due - instalmentpaid
-                    addfeebal = specific_charge_obj.addfee_due - addfeepaid
+                    bookbal = specific_charge_obj.booking_due - bookingpaid if specific_charge_obj.booking_due else 0.0
+                    instbal = specific_charge_obj.instalment_due - instalmentpaid if specific_charge_obj.instalment_due else 0.0
+                    addfeebal = specific_charge_obj.addfee_due - addfeepaid if specific_charge_obj.addfee_due else 0.0
 
                     rentbal = specific_charge_obj.rent_due - rentpaid
 

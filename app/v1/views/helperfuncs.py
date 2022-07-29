@@ -9,6 +9,7 @@ import xlrd
 import inflect
 # import requests
 from natsort import natsorted
+from dateutil.parser import parse
 
 # import app
 try:
@@ -1552,6 +1553,12 @@ def date_formatter(dd):
     year = dd.split('-')[2]
     return month + "-" + date + "-" + year
 
+def date_formatter_upload(dd):
+    date = dd.split('/')[0]
+    month = dd.split('/')[1]
+    year = dd.split('/')[2]
+    return month + "-" + date + "-" + "20"+year
+
 def date_formatter_alt(dd):
     date = "1"
     month = dd.split('-')[0]
@@ -1570,6 +1577,15 @@ def date_formatter_weekday(dd):
     month = target_part.split('-')[1]
     year = target_part.split('-')[2]
     return month + "-" + date + "-" + year
+
+def floatHourToTime(fh):
+    hours, hourSeconds = divmod(fh, 1)
+    minutes, seconds = divmod(hourSeconds * 60, 1)
+    return (
+        int(hours),
+        int(minutes),
+        int(seconds * 60),
+    )
 
 def uniquename_generator(name,phone):
     str_phone = phone_number_formatter(phone)
@@ -1772,8 +1788,8 @@ def get_specific_house_obj(apartment_id,hse):
         str_house = str(house)
         good_str_house = str_house.upper()
         hh = good_str_house.replace(" ", "")
-        # print("looping",hh,hse)
-        # print(len(hh),"vs",len(hse))
+        print("looping",hh,hse)
+        print(len(hh),"vs",len(hse))
 
         if hh == good_hse:
             # print("never happen",str(house),hse)
@@ -5450,6 +5466,423 @@ def read_water_excel(dict_array,apartment_id,user_id):
                 reading_obj.save()
                 
     return '<span class="text-success">Upload successful</span>'
+
+def read_payments_excel(dict_array,payperiod,apartment_id,userid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    # print(dict_array)
+
+    # return ""
+
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    co = prop.company
+
+    for item in dict_array:
+
+        unit = item["housename"]
+        amount = item["amount"]
+        datepaid = item["date"]
+        ref = item["ref"]
+        desc = item["desc"]
+        r_comment = item["comment"]
+
+        if datepaid:
+            # formatted_paydate = date_formatter_upload(datepaid)
+            # pay_date = parse(formatted_paydate)
+            pay_date = datepaid
+        else:
+            pay_date = datetime.datetime.now()
+
+        try:
+            house_name = unit.upper()
+        except:
+            house_name = unit
+
+        house_obj = get_specific_house_obj(apartment_id,house_name)
+        if house_obj:
+            pass
+        else:
+            print("specified house does not exist")
+            continue
+
+        tenant_obj = house_obj.owner
+
+        bill= ""
+
+        if payperiod:
+            pay_period = date_formatter_alt(payperiod)
+            pay_period_date = parse(pay_period)
+        
+        elif r_comment:
+            rr_comment = r_comment.replace("Installment","Instalment")
+            comment = rr_comment.replace("  "," ")
+            if "Booking Balance" in comment:
+                print("10%")
+                pay_period_date = tenant_obj.date
+            elif "Balance Payment" in comment:
+                print("20%")
+                pay_period_date = tenant_obj.checkin
+            elif "Instalment 1" in comment:
+                print("Inst 1")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=1)
+            elif "Instalment 2" in comment:
+                print("Inst 2")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=2)
+            elif "Instalment 3" in comment:
+                print("Inst 3")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=3)
+            elif "Instalment 4" in comment:
+                print("Inst 4")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=4)
+            elif "Instalment 5" in comment:
+                print("Inst 5")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=5)
+            elif "Instalment 6" in comment:
+                print("Inst 6")
+                pay_period_date = tenant_obj.checkin + relativedelta(months=6)
+            else:
+                print("Inst 7",comment)
+                pay_period_date = tenant_obj.checkin + relativedelta(months=7)
+            
+        else:
+            print("Inst momi")
+            pay_period_date = get_billing_period(prop)
+
+
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                bill = tenant_obj.monthly_charges[0]
+            else:
+                bill = fetch_target_period_owner_invoice(house_obj,pay_period_date)
+        else:
+            bill = fetch_target_period_invoice(house_obj,pay_period_date)
+
+        valid_amount = amount
+
+        if not valid_amount:
+            print("Invalid amount")
+            continue
+
+
+        bal = amount
+
+        bookingdue = bill.booking_due
+        instalmentdue = bill.instalment_due
+        addfeedue = bill.addfee_due
+
+        rentdue = bill.rent_due
+        waterdue = bill.water_due
+        electricitydue = bill.electricity_due
+        garbagedue = bill.garbage_due
+        securitydue = bill.security_due
+        servicedue = bill.maintenance_due
+
+        penaltydue = bill.penalty_due
+        depositdue = bill.deposit_due
+        agreementdue = bill.agreement_due
+
+
+        if bal >= depositdue:
+            depositpaid = depositdue
+            bal -= depositdue
+        elif bal < depositdue and bal > 0:
+            depositpaid = bal
+            bal = 0
+        else:
+            depositpaid = 0.0
+
+        if bal >= bookingdue:
+            bookingpaid = bookingdue
+            bal -= bookingdue
+        elif bal < bookingdue and bal > 0:
+            bookingpaid = bal
+            bal = 0
+        else:
+            bookingpaid = 0.0
+
+        if bal >= instalmentdue:
+            instalmentpaid = instalmentdue
+            bal -= instalmentdue
+        elif bal < instalmentdue and bal > 0:
+            instalmentpaid = bal
+            bal = 0
+        else:
+            instalmentpaid = 0.0
+
+        if bal >= addfeedue:
+            addfeepaid = addfeedue
+            bal -= addfeedue
+        elif bal < addfeedue and bal > 0:
+            addfeepaid = bal
+            bal = 0
+        else:
+            addfeepaid = 0.0
+
+        if bal >= rentdue:
+            rentpaid = rentdue
+            bal -= rentdue
+        elif bal < rentdue and bal > 0:
+            rentpaid = bal
+            bal = 0
+        else:
+            rentpaid = 0.0
+
+        if bal >= penaltydue:
+            penaltypaid = penaltydue
+            bal -= penaltydue
+        elif bal < penaltydue and bal > 0:
+            penaltypaid = bal
+            bal = 0
+        else:
+            penaltypaid = 0.0
+
+        if bal >= garbagedue:
+            garbagepaid = garbagedue
+            bal -= garbagedue
+        elif bal < garbagedue and bal > 0:
+            garbagepaid = bal
+            bal = 0
+        else:
+            garbagepaid = 0.0
+
+        if bal >= securitydue:
+            securitypaid = securitydue
+            bal -= securitydue
+        elif bal < securitydue and bal > 0:
+            securitypaid = bal
+            bal = 0
+        else:
+            securitypaid = 0.0
+
+        if bal >= servicedue:
+            servicepaid = servicedue
+            bal -= servicedue
+        elif bal < servicedue and bal > 0:
+            servicepaid = bal
+            bal = 0
+        else:
+            servicepaid = 0.0
+
+        if bal >= waterdue:
+            waterpaid = waterdue
+            bal -= waterdue
+        elif bal < waterdue and bal > 0:
+            waterpaid = bal
+            bal = 0
+        else:
+            waterpaid = 0.0
+
+        if bal >= electricitydue:
+            electricitypaid = electricitydue
+            bal -= electricitydue
+        elif bal < electricitydue and bal > 0:
+            electricitypaid = bal
+            bal = 0
+        else:
+            electricitypaid = 0.0
+
+        if bal >= agreementdue:
+            agreementpaid = agreementdue
+            bal -= agreementdue
+        elif bal < agreementdue and bal > 0:
+            agreementpaid = bal
+            bal = 0
+        else:
+            agreementpaid = 0.0
+
+        if bal:
+            overpayment = bal
+        else:
+            overpayment = 0.0
+ 
+
+
+        book = "Booking balance" if bookingpaid else ""
+        inst = "Instalment" if instalmentpaid else ""
+        addfee = "Additional fees" if addfeepaid else ""
+
+        water = "Water" if waterpaid else ""
+        rent = "Rent" if rentpaid else ""
+        garbage = "Garbage" if garbagepaid else ""
+        sec = "Security" if securitypaid else ""
+        dep = "Deposit" if depositpaid else ""
+        serv = "Service" if servicepaid else ""
+
+        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
+
+        print(narration)
+
+        paymode = "mpesa" if "mpesa" in desc else "Bank"
+        raw_bill_ref = ref
+        paytype = desc
+        amount = amount
+
+        if raw_bill_ref.upper() == "N/A":
+            bill_ref = raw_bill_ref
+        elif raw_bill_ref.upper() == "NA":
+            bill_ref = "N/A"
+        elif len(raw_bill_ref) < 5:
+            bill_ref = raw_bill_ref
+        else:
+            bill_ref = raw_bill_ref
+            payob = PaymentOp.fetch_payment_by_ref(raw_bill_ref)
+            if payob:
+                if payob.voided:
+                    pass
+                else:
+                    print("REFERENCE EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
+                    continue
+
+        tenant_id = None
+
+        payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)
+        payment_obj.save()
+
+
+        if co.receipt_num:
+            num = co.receipt_num
+            num += 1
+
+            CompanyOp.increment_receipt_num(co,num)
+            PaymentOp.update_receipt_num(payment_obj,num)
+        #################################################################################################
+
+        rand_id = random_generator()
+        if PaymentOp.fetch_payment_by_rand_id(rand_id):
+            rand_id = random_generator(size=11)
+            awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
+            if PaymentOp.fetch_payment_by_rand_id(rand_id):
+                rand_id = random_generator(size=12)
+                awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
+                if PaymentOp.fetch_payment_by_rand_id(rand_id):
+                    rand_id = random_generator(size=13)
+                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
+                    if PaymentOp.fetch_payment_by_rand_id(rand_id):
+                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
+                        return "Payment could not be processed at this time! Try again later"
+
+        tenant_bal = tenant_obj.balance
+        tenant_bal -= valid_amount
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
+        else:
+            TenantOp.update_balance(tenant_obj,tenant_bal)
+
+        running_balance = bal
+        running_balance-= valid_amount
+
+        PaymentOp.update_balance(payment_obj,running_balance)
+        PaymentOp.update_rand_id(payment_obj,rand_id)
+
+
+        schedule_obj = None
+
+        if co.name == "REVER MWIMUTO LIMITED":
+            print("GONE TO PAY AVIV")
+            schedule_objs = tenant_obj.schedules
+            for sch in schedule_objs:
+                if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+                    schedule_obj = sch
+                    break
+
+        if schedule_obj:
+            print("SCHEDULE OBJI FOUND")
+
+            print("#################################")
+            print("DATE PASSED",pay_period_date.month,pay_period_date.year)
+            print("SCHEDULE OBJ",schedule_obj.schedule_date.month,schedule_obj.schedule_date.year)
+            print("#################################")
+            sch_arrears = 0.0
+            prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+            if prev_sch:
+                print("FOUND Previous scheduled")
+                sch_arr = prev_sch[0].balance
+                if sch_arr:
+                    sch_arrears = sch_arr
+            if sch_arrears:
+                sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+            else:
+                sch_total_amount = schedule_obj.schedule_amount
+
+            schpaid = schedule_obj.paid + valid_amount
+            
+            sch_bal = sch_total_amount - schpaid
+
+            print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
+
+            PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+        
+        specific_charge_obj = bill
+
+        if specific_charge_obj:
+
+            db.session.expire(specific_charge_obj)
+            bala = specific_charge_obj.balance
+            bala-=valid_amount
+            MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+
+            paid_amount = specific_charge_obj.paid_amount
+            cumulative_pay = paid_amount + valid_amount
+            MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+            MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
+
+            booking_paid = bookingpaid + specific_charge_obj.booking_paid if specific_charge_obj.booking_paid is not None else 0
+            instalment_paid = instalmentpaid + specific_charge_obj.instalment_paid if specific_charge_obj.instalment_paid is not None else 0
+            addfee_paid = addfeepaid + specific_charge_obj.addfee_paid if specific_charge_obj.addfee_paid is not None else 0
+
+            rent_paid = rentpaid + specific_charge_obj.rent_paid if specific_charge_obj.rent_paid is not None else 0
+
+            water_paid = waterpaid + specific_charge_obj.water_paid if specific_charge_obj.water_paid is not None else 0
+            penalty_paid = penaltypaid + specific_charge_obj.penalty_paid if specific_charge_obj.penalty_paid is not None else 0
+            electricity_paid = electricitypaid + specific_charge_obj.electricity_paid if specific_charge_obj.electricity_paid  is not None else 0
+            garbage_paid = garbagepaid + specific_charge_obj.garbage_paid if specific_charge_obj.garbage_paid is not None else 0
+            security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
+            service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
+
+            if specific_charge_obj.tenant_id:
+                if specific_charge_obj.house.housecode.rentrate:
+                    rent_paid += overpayment
+            else:
+                if specific_charge_obj.ptenant_id:
+                    if specific_charge_obj.house.housecode.servicerate:
+                        service_paid += overpayment
+
+            deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+            agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
+
+            MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,addfee_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
+            PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+
+            try:
+                bookbal = specific_charge_obj.booking_due - bookingpaid
+                instbal = specific_charge_obj.instalment_due - instalmentpaid
+                addfeebal = specific_charge_obj.addfee_due - addfeepaid
+
+                rentbal = specific_charge_obj.rent_due - rentpaid
+
+                # rentbal -= overpayment
+                waterbal = specific_charge_obj.water_due - waterpaid
+                electricitybal = specific_charge_obj.electricity_due - electricitypaid
+                servicebal = specific_charge_obj.maintenance_due - servicepaid
+                penaltybal = specific_charge_obj.penalty_due - penaltypaid
+                securitybal = specific_charge_obj.security_due - securitypaid
+                garbagebal = specific_charge_obj.garbage_due - garbagepaid
+                depositbal = specific_charge_obj.deposit_due - depositpaid
+                agreementbal = specific_charge_obj.agreement_due - agreementpaid
+
+                if specific_charge_obj.tenant_id:
+                    if specific_charge_obj.house.housecode.rentrate:
+                        rentbal -= overpayment
+                else:
+                    if specific_charge_obj.ptenant_id:
+                        if specific_charge_obj.house.housecode.servicerate:
+                            servicebal -= overpayment
+
+                MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+            except:
+                print("PAID TO LEGACY BILL")
 
 def run_update(houseids,apartment_id,user_id):
     from app import create_app

@@ -1821,6 +1821,8 @@ class UploadPayments(Resource):
         payperiod = request.form.get('payperiod')
         file = request.files.get('file')
 
+        prop = ApartmentOp.fetch_apartment_by_name(selected_prop)
+
         if file:
             processed_data = upload_handler(file,current_user)
         else:
@@ -1831,7 +1833,7 @@ class UploadPayments(Resource):
         data_format_error = False
 
         if sheet:
-            if len(sheet.row_values(1)) != 7:
+            if len(sheet.row_values(1)) != 6:
                 data_format_error = True
 
         try:
@@ -1845,54 +1847,47 @@ class UploadPayments(Resource):
                 print("Starting.........................................")
                 try:
                     housename = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
-                    print("Working as expected")
+                    print("Working as expected extracted>>",housename)
                 except:
                     housename = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
-                    print("house exception handled")
+                    print("house exception handled extracted>>",housename)
 
-                print("Extracted.......",housename)
+                datepaid = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
 
-                date_of_payment = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
+                from datetime import datetime
 
+                dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
+                hour, minute, second = floatHourToTime(datepaid % 1)
+                dt = dt.replace(hour=hour, minute=minute, second=second)
+
+                print("DAAATEEEEEE >>",dt)
                 payref = sheet.row_values(row)[2] if sheet.row_values(row)[2] else ""
-
                 paytype = sheet.row_values(row)[3] if sheet.row_values(row)[3] else ""
-
+                comment = sheet.row_values(row)[5] if sheet.row_values(row)[5] else ""
 
 
                 try:
-                    rent = float(sheet.row_values(row)[2])
-                    print("RENT Working")
+                    amount = float(sheet.row_values(row)[4])
+                    print("Amount extracted >>",amount)
                 except:
-                    print("RENT Failing")
-                    rent = 0.0
+                    print("Amount failed to extract")
+                    amount = 0.0
 
-                try:
-                    serv = float(sheet.row_values(row)[3])
-                    print("SERV Working")
-                except:
-                    print("SERV Failing")
-                    serv = 0.0
-
-                try:
-                    water = float(sheet.row_values(row)[4])
-                    print("water Working")
-                except:
-                    print("water Failing")
-                    water = 0.0
-                                        
+                                    
                 dict_obj = {
                 "housename":housename,
-                "rentarr":rent,
-                "servarr":serv,
-                "water":water
+                "amount":amount,
+                "date":dt,
+                "ref":payref,
+                "desc":paytype,
+                "comment":comment
                 }
 
                 dict_array.append(dict_obj)
 
-            # uploadsjob2 = q.enqueue_call(
-            #     func=read_payments_excel, args=(dict_array,payperiod,prop_id,current_user.id,), result_ttl=5000
-            # )
+            uploadsjob2 = q.enqueue_call(
+                func=read_payments_excel, args=(dict_array,payperiod,prop.id,current_user.id,), result_ttl=5000
+            )
 
         except Exception as e:
             if not sheet:
@@ -1905,52 +1900,6 @@ class UploadPayments(Resource):
                 print("RARE FATAL CASE: Error occured while saving item: ",e)
                 abort(403)
 
-
-        house_name = request.form.get('house')
-        bookingpaid = int(request.form.get('bookingpaid')) if request.form.get('bookingpaid') else 0
-        instalmentpaid = int(request.form.get('instalmentpaid')) if request.form.get('instalmentpaid') else 0
-        addfeepaid = int(request.form.get('addfeepaid')) if request.form.get('addfeepaid') else 0
-        rentpaid = int(request.form.get('rentpaid')) if request.form.get('rentpaid') else 0
-        waterpaid = int(request.form.get('waterpaid')) if request.form.get('waterpaid') else 0
-        electricitypaid = int(request.form.get('electricitypaid')) if request.form.get('electricitypaid') else 0
-        garbagepaid = int(request.form.get('garbagepaid')) if request.form.get('garbagepaid') else 0
-        securitypaid = int(request.form.get('securitypaid')) if request.form.get('securitypaid') else 0
-        servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
-        penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
-        depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
-        agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
-
-
-        book = "Booking balance" if bookingpaid else ""
-        inst = "Instalment" if instalmentpaid else ""
-        addfee = "Additional fees" if addfeepaid else ""
-
-        water = "Water" if waterpaid else ""
-        rent = "Rent" if rentpaid else ""
-        garbage = "Garbage" if garbagepaid else ""
-        sec = "Security" if securitypaid else ""
-        dep = "Deposit" if depositpaid else ""
-        serv = "Service" if servicepaid else ""
-
-        narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
-
-        print(narration)
-
-
-        payperiod = request.form.get("payperiod")
-
-        # if payperiod:
-        #     pay_period = date_formatter_alt(payperiod)
-        #     pay_period_date = parse(pay_period)
-        # else:
-        #     pay_period_date = get_billing_period(prop)
-
-    
-        paymode = request.form.get('paymode')#dropdown
-        raw_bill_ref = request.form.get('bill_ref')#typed
-        paytype = request.form.get('paytype')#typed
-        amount = request.form.get('paidamount')#typed
-        overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
 class ReceivePayment(Resource):
     """class"""
@@ -4156,7 +4105,9 @@ class CallBackUrlLatitude(Resource):
 
             except Exception as e:
                 sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                response = {"responseCode": "200","responseMessage": "SUCCESSFUL","errorMessage":f'{e}'}
+
                 print ("It failed, Bank integration has an error")
 
             resp = jsonify(response)

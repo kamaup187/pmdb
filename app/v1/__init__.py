@@ -174,7 +174,6 @@ api.add_resource(CallBackUrlLagad,"/m/lagad/ins/payment")
 
 
 
-
 #bank urls
 api.add_resource(CallBackUrlEquity,"/nest/payment")
 api.add_resource(CallBackUrlEquityProd,"/promitech/4012401")

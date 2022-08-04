@@ -4144,7 +4144,11 @@ class CallBackUrlMLatitude(Resource):
         msisdn = data['MSISDN']
         org_acc_bal = data['OrgAccountBalance']
         fname = data['FirstName']
-        lname = data['LastName']
+
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
 
         print("MPESA DATA RECEIEVED: ",data)
 

@@ -3295,6 +3295,92 @@ def calculate_sms_cost_alt(sms,smstext):
 
 #                     MeterReadingOp.update_charge_status(meter_reading,charge_status)
 
+
+def send_statement(tenantid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    tid = get_identifier(tenantid)
+    ptenant = PermanentTenantOp.fetch_tenant_by_id(tid)
+
+    statement_url = f"https://kiotapay.com/account/statement?target=direct&tenantid={ptenant.id}"
+
+    prop = ptenant.apartment
+    co = prop.company
+    str_co = co.name
+
+    raw_rem_sms =co.remainingsms
+
+
+    #Send the SMS
+    # tele = ptenant.phone
+    tele = "0716674695"
+    name = ptenant.name
+    fname = fname_extracter(name)
+    if not fname:
+        fname = name
+    phonenum = sms_phone_number_formatter(tele)
+
+    try:
+        # temp_txt = "This a friendly reminder that your rent for June was due on or by 5/6/2021. We thank you for timely payment. \nPlease note: \nIf rent is received after 5/6/2021,please add a late fee 10% of your rent."
+
+        recipient = [phonenum]
+        message = f"Dear {fname}, \nClick on the link below to find your statement of accounts. \n{statement_url}.\n\n~{str_co}."
+
+        char_count = len(message)
+        if char_count <= 160:
+            cost = 1
+        elif char_count <= 320:
+            cost = 2
+        else:
+            cost = 3
+        
+        sms_obj = SentMessagesOp(message,char_count,cost,None,ptenant.id,prop.id,co.id)
+        sms_obj.save()
+
+
+        if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+            sms_sender(co.name,message,phonenum)
+
+        # if co.name == "Lesama Ltd":
+        #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+        # elif co.name == "KEVMA REAL ESTATE":
+        #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+        else:
+            #Once this is done, that's it! We'll handle the rest
+            response = sms.send(message, recipient, sender)
+            print(response)
+            resp = response["SMSMessageData"]["Recipients"][0]
+                                            
+            code = resp["statusCode"]
+
+            if code == 101: # SMS WAS SENT
+                raw_cost = resp["cost"]
+                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                CompanyOp.set_rem_quota(co,rem_sms)
+                print("EVERYTHING IS SMOOTH")
+                
+            elif code == 403:
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                
+            elif code == 405:
+                response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                
+            elif code == 406:
+                raw_cost = resp["cost"]
+                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                CompanyOp.set_rem_quota(co,rem_sms)
+                print("SMS BLOCKED BY ",ptenant,prop)
+            else:
+                print("ALAAAAAAAA")
+
+    except Exception as e:
+        print(f"Houston, we have a problem {e}")
+
+
+
 def send_bulk_sms(propid,temp_txt):
     from app import create_app
     app = create_app(configuration)

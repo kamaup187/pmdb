@@ -5195,7 +5195,6 @@ class MeritStatementOne(Resource):
 
 
 class StatementOfAccounts(Resource):
-    @login_required
     def get(self):
         tenant_id = None
         target = request.args.get("target")
@@ -5243,6 +5242,8 @@ class StatementOfAccounts(Resource):
                 schpaid += bill.paid
                 formatted_bills.append(PaymentScheduleOp.view_detail(bill))
 
+            prop = tenant_obj.apartment
+
             return Response(render_template(
                'report_account_statement.html',
                statementdate=datetime.datetime.now().strftime("%d %B %Y"),
@@ -5250,17 +5251,17 @@ class StatementOfAccounts(Resource):
                paging=page(formatted_bills),
                schtotal=schtotal,
                schpaid=schpaid,
-               prop_obj=tenant_obj.apartment,
+               prop_obj=prop,
                prop = tenant_obj.apartment.name,
                tenant_obj=tenant_obj,
                tenant_name=tenant_obj.name,
-               name=current_user.name,
+               name=prop.name,
                tenantlist=[],
-               logopath=logo(current_user.company)[0],
-               mobilelogopath=logo(current_user.company)[1],
-               fulllogopath=logo(current_user.company)[2],
-               letterhead=logo(current_user.company)[3],
-               co=current_user.company
+               logopath=logo(prop.company)[0],
+               mobilelogopath=logo(prop.company)[1],
+               fulllogopath=logo(prop.company)[2],
+               letterhead=logo(prop.company)[3],
+               co=prop.company
             ))
 
 

@@ -3376,8 +3376,12 @@ class BulkSms(Resource):
 
         print(rem_date,rem_prop,rem_bal,target,rem_txt)
 
-        prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
-        propid = prop_obj.id
+        try:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
+            propid = prop_obj.id
+        except:
+            print("running statement")
+            pass
 
         if target == "general":
             job8 = q.enqueue_call(
@@ -3385,6 +3389,15 @@ class BulkSms(Resource):
             )
             text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],sender)
+
+            return proceed
+
+        if target == "statement":
+            print("heeeeey")
+            tenantid = request.form.get("tenantid")
+            job9 = q.enqueue_call(
+                func=send_statement, args=(tenantid,), result_ttl=5000
+            )
 
             return proceed
 

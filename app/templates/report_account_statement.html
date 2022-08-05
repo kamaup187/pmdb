@@ -5,6 +5,7 @@
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}}statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
+<span id="tid" class="dispnone">{{tenant_obj.id}}</span>
 
 <div class="row">
     <div class="col-lg-12 ">
@@ -26,11 +27,26 @@
                   </a>
                 </div>
 {%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
-                </div>
+<div class="divjust-end">
+  <div class="mr-3 mb-1">
+    <button id="sendmail" class="btn btn-success btn-sm curve">
+      <i class="text-white feather-16 font-weight-bold" data-feather="mail"></i><span class="ml-1 mobile-malaysian text-white">email</span>
+    </button>
+  </div>
+
+  <div class="mr-3 mb-1">
+    <button id="sendsms" class="btn btn-success btn-sm curve">
+      <i class="text-white feather-16 font-weight-bold" data-feather="send"></i><span class="ml-1 mobile-malaysian text-white">sms</span>
+    </button>
+  </div>
+  
+  <div class="mr-3 mb-1">
+    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
+      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+    </button>
+  </div>
+</div>
+
 {%endif%}
                 
 
@@ -38,7 +54,7 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light" method="GET" action="/rent/statement">
+                    <form class="row bg-light" method="GET" action="#">
 
                     
                       <div class="col-lg-4 form-group mb-2">
@@ -415,6 +431,31 @@
     startView: "months", 
     minViewMode: "months"
   });
+</script>
+
+<script>
+  $("#sendsms").on('click',function(){
+    $("#sendsms").html("sending...")
+    // $("#closemodal").click();
+    setTimeout(function(){
+      url2 = "{{ url_for('api.bulksms') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              tenantid:$("#tid").text(),
+              target:"statement"
+            },
+            success: function(response) {
+              $("#sendsms").html("Sent")
+
+              setTimeout(
+                $("#sendsms").html("sms"), 300
+                );
+          }
+      });
+    },300);
+});
 </script>
 
 

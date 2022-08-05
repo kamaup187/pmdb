@@ -3304,7 +3304,7 @@ def send_statement(tenantid):
     tid = get_identifier(tenantid)
     ptenant = PermanentTenantOp.fetch_tenant_by_id(tid)
 
-    statement_url = f"https://kiotapay.com/account/statement?target=direct&tenantid={ptenant.id}"
+    statement_url = f"https://kiotapay.com/account/statement?target=direct&uuid={ptenant.id}"
 
     prop = ptenant.apartment
     co = prop.company

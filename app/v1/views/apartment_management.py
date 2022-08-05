@@ -3393,8 +3393,7 @@ class BulkSms(Resource):
             return proceed
 
         if target == "statement":
-            print("heeeeey")
-            tenantid = request.form.get("tenantid")
+            tenantid = request.form.get("uuid")
             job9 = q.enqueue_call(
                 func=send_statement, args=(tenantid,), result_ttl=5000
             )

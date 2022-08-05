@@ -5228,6 +5228,9 @@ class StatementOfAccounts(Resource):
 
         if target == "direct":
             tenantid = request.args.get("tenantid")
+            if not tenantid:
+                tenantid = request.form.get("uuid")
+                
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
             schtotal = 0.0

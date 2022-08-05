@@ -3315,7 +3315,7 @@ def send_statement(tenantid):
 
     #Send the SMS
     # tele = ptenant.phone
-    tele = "0716674695"
+    tele = "0716444750"
     name = ptenant.name
     fname = fname_extracter(name)
     if not fname:

@@ -249,26 +249,26 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
-            # if cocc:
-            #     CompanyOp.update_sms_provider(cocc,"Advanta")
+            cocc = CompanyOp.fetch_company_by_name("Lymax Properties")
+            if cocc:
+                CompanyOp.update_sms_provider(cocc,"Advanta")
 
             # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
             # commp = CompanyOp.fetch_company_by_name("Sentom Investment")
 
-            cms = CompanyOp.fetch_all_companies()
+            # cms = CompanyOp.fetch_all_companies()
 
-            for ccs in cms:
-                propsss = ccs.props
-                for propp in propsss:
+            # for ccs in cms:
+            #     propsss = ccs.props
+            #     for propp in propsss:
 
-                    apartment_id = propp.id
+            #         apartment_id = propp.id
 
-                    print("APART",apartment_id)
+            #         print("APART",apartment_id)
 
-                    billupdatejob = q.enqueue_call(
-                        func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
-                    )
+            #         # billupdatejob = q.enqueue_call(
+            #         #     func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
+            #         # )
 
 
             # if not cocc:

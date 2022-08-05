@@ -760,6 +760,9 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Lacasa":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
+    elif company.title() == "Lymax Properties":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
+
     #########################################################################################
     else:
         report = None

@@ -416,6 +416,9 @@ class HouseCode(db.Model):
 
     listprice = db.Column(db.Float,default=0)
 
+    discount = db.Column(db.Float,default=0)
+    depnum = db.Column(db.Integer,default=1)
+
     rentrate = db.Column(db.Float,default=0)
     watercharge = db.Column(db.Float,default=0)
     waterrate = db.Column(db.Float,default=0)

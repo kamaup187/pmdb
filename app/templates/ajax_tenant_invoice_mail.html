@@ -198,7 +198,11 @@
                             <td></td>
                             <td></td>
                             {% if house.housecode.vatrate%}
-                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate}}</span></td>
+                                {% if house.housecode.discount%}
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate) + house.housecode.discount}}</span></td>
+                                {% else%}
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate)}}</span></td>
+                                {%endif%}
                             {% else %}
                             <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.rent}}</span></td>
                             {% endif %}
@@ -213,7 +217,31 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format(house.housecode.rentrate * 0.16 | float)}}</span></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format(house.housecode.rentrate * house.housecode.vatrate * 0.01 | float)}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if house.housecode.discount%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Dicount on rent</td>
+                            <td class="pl-0">{{month}} discount applied on rent</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs -{{ '%0.1f'| format(house.housecode.discount | float)}}</span></td>
+                        </tr>
+                        {%endif%}
+
+                        {%if house.housecode.vatrate or house.housecode.discount%}
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0 text-black">Rent subtotal</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format(bill.rent | float)}}</span></td>
                         </tr>
                         {%endif%}
 
@@ -285,8 +313,8 @@
 
                         {%if arrears%}
                         <tr class="underline-thin-fade">
-                            <td class="pl-0">Balance brought forward</td>
                             <td class="pl-0 {{bbfhighlight}}">{{arrtitle}}</td>
+                            <td class="pl-0">Balance brought forward</td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -309,7 +337,7 @@
                             <table class="table">
                                 <tbody>   
                                     <tr>
-                                        <td class="text-left">Total:</td>
+                                        <td class="text-left text-black">Total:</td>
                                         <td class="text-right text-info">
                                             <h5 class="font-weight-bold mr-5">Kes {{total}}</h5>
                                         </td>

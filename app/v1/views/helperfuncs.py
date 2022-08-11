@@ -6505,11 +6505,13 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
                 if not house.housecode:
                     print("HOUSE GROUP MISSING FOR: ",house,"of",house.apartment)
                     continue
-                if house.housecode.vatrate:
-                    raw_rent_charge = (house.housecode.vatrate * house.housecode.rentrate * 0.01) + house.housecode.rentrate
-                    rent_charge = round(raw_rent_charge,0) if raw_rent_charge else 0
-                else:
-                    rent_charge = house.housecode.rentrate
+                # if house.housecode.vatrate:
+                #     raw_rent_charge = (house.housecode.vatrate * house.housecode.rentrate * 0.01) + house.housecode.rentrate
+                #     rent_charge = round(raw_rent_charge,0) if raw_rent_charge else 0
+                # else:
+                #     rent_charge = house.housecode.rentrate
+                rent_charge = house.housecode.rentrate
+
             all_charges = ChargeOp.fetch_charges_by_house_id(house.id)
             rent_charges = []
             for charge in all_charges:

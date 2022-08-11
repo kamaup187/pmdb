@@ -184,11 +184,11 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
-        allhses = HouseOp.fetch_houses()
-        for i in allhses:
-            if not i.housecode:
-                print("HOUSE >>",i,"PROP >>",i.apartment,"Company >>",i.apartment.company)
-                HouseOp.delete(i)
+        # allhses = HouseOp.fetch_houses()
+        # for i in allhses:
+        #     if not i.housecode:
+        #         print("HOUSE >>",i,"PROP >>",i.apartment,"Company >>",i.apartment.company)
+        #         HouseOp.delete(i)
 
         # pts = PermanentTenantOp.fetch_all_tenants()
         # for pt in pts:

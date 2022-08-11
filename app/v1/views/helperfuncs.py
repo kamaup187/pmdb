@@ -760,6 +760,9 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Lacasa":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
+    elif company.title() == "Lymax Properties":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
+
     #########################################################################################
     else:
         report = None
@@ -1788,8 +1791,8 @@ def get_specific_house_obj(apartment_id,hse):
         str_house = str(house)
         good_str_house = str_house.upper()
         hh = good_str_house.replace(" ", "")
-        print("looping",hh,hse)
-        print(len(hh),"vs",len(hse))
+        # print("looping",hh,hse)
+        # print(len(hh),"vs",len(hse))
 
         if hh == good_hse:
             # print("never happen",str(house),hse)
@@ -3291,6 +3294,92 @@ def calculate_sms_cost_alt(sms,smstext):
 #                     charge_status = True
 
 #                     MeterReadingOp.update_charge_status(meter_reading,charge_status)
+
+
+def send_statement(tenantid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    tid = get_identifier(tenantid)
+    ptenant = PermanentTenantOp.fetch_tenant_by_id(tid)
+
+    statement_url = f"https://kiotapay.com/account/statement?target=direct&uuid={ptenant.id}"
+
+    prop = ptenant.apartment
+    co = prop.company
+    str_co = co.name
+
+    raw_rem_sms =co.remainingsms
+
+
+    #Send the SMS
+    # tele = ptenant.phone
+    tele = "0716444750"
+    name = ptenant.name
+    fname = fname_extracter(name)
+    if not fname:
+        fname = name
+    phonenum = sms_phone_number_formatter(tele)
+
+    try:
+        # temp_txt = "This a friendly reminder that your rent for June was due on or by 5/6/2021. We thank you for timely payment. \nPlease note: \nIf rent is received after 5/6/2021,please add a late fee 10% of your rent."
+
+        recipient = [phonenum]
+        message = f"Dear {fname}, \nClick on the link below to find your statement of accounts. \n{statement_url}.\n\n~{str_co}."
+
+        char_count = len(message)
+        if char_count <= 160:
+            cost = 1
+        elif char_count <= 320:
+            cost = 2
+        else:
+            cost = 3
+        
+        sms_obj = SentMessagesOp(message,char_count,cost,None,ptenant.id,prop.id,co.id)
+        sms_obj.save()
+
+
+        if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+            sms_sender(co.name,message,phonenum)
+
+        # if co.name == "Lesama Ltd":
+        #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
+        # elif co.name == "KEVMA REAL ESTATE":
+        #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+        else:
+            #Once this is done, that's it! We'll handle the rest
+            response = sms.send(message, recipient, sender)
+            print(response)
+            resp = response["SMSMessageData"]["Recipients"][0]
+                                            
+            code = resp["statusCode"]
+
+            if code == 101: # SMS WAS SENT
+                raw_cost = resp["cost"]
+                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                CompanyOp.set_rem_quota(co,rem_sms)
+                print("EVERYTHING IS SMOOTH")
+                
+            elif code == 403:
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                
+            elif code == 405:
+                response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                
+            elif code == 406:
+                raw_cost = resp["cost"]
+                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                CompanyOp.set_rem_quota(co,rem_sms)
+                print("SMS BLOCKED BY ",ptenant,prop)
+            else:
+                print("ALAAAAAAAA")
+
+    except Exception as e:
+        print(f"Houston, we have a problem {e}")
+
+
 
 def send_bulk_sms(propid,temp_txt):
     from app import create_app
@@ -5903,7 +5992,7 @@ def run_update(houseids,apartment_id,user_id):
         bills = hs.monthlybills
 
         for bill in bills:
-            print("RUNNING BILL UPDATE FOR :",bill.house," >> ",bill.month,"/",bill.year)
+            print("RUNNING BILL UPDATE FOR : ",bill.apartment.company.name,"HOUSE: ",bill.house," >> ",bill.month,"/",bill.year)
             original_amount = bill.total_bill
             # if bill.apartment.billing_period.month == bill.month:
             values = validate_float_inputs("","","","","","","","","","")
@@ -5950,43 +6039,43 @@ def run_update(houseids,apartment_id,user_id):
             if bill.water_paid:
                 waterbal = bill.water_balance + update_water - bill.water_paid
             else:
-                waterbal = bill.water_balance + update_water
+                waterbal = bill.water_balance + update_water if bill.water_balance else update_water
 
             if bill.electricity_paid:
                 electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
             else:
-                electricitybal = bill.electricity_balance + bill.electricity
+                electricitybal = bill.electricity_balance + bill.electricity if bill.electricity_balance else bill.electricity
 
             if bill.maintenance_paid:
                 servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid
             else:
-                servicebal = bill.maintenance_balance + update_maintenance
+                servicebal = bill.maintenance_balance + update_maintenance if bill.maintenance_balance else update_maintenance
 
             if bill.penalty_paid:
                 penaltybal = bill.penalty_balance + update_fine - bill.penalty_paid
             else:
-                penaltybal = bill.penalty_balance + update_fine
+                penaltybal = bill.penalty_balance + update_fine if bill.penalty_balance else update_fine
 
             if bill.security_paid:
                 securitybal = bill.security_balance + update_security - bill.security_paid
             else:
-                securitybal = bill.security_balance + update_security
+                securitybal = bill.security_balance + update_security if bill.security_balance else update_security
 
             if bill.garbage_paid:
                 garbagebal = bill.garbage_balance + update_garbage - bill.garbage_paid
             else:
-                garbagebal = bill.garbage_balance + update_garbage
+                garbagebal = bill.garbage_balance + update_garbage if bill.garbage_balance else update_garbage
 
 
             if bill.deposit_paid:
                 depositbal = bill.deposit_balance + update_deposit - bill.deposit_paid
             else:
-                depositbal = bill.deposit_balance + update_deposit
+                depositbal = bill.deposit_balance + update_deposit if bill.deposit_balance else update_deposit
 
             if bill.agreement_paid:
                 agreementbal = bill.agreement_balance + update_agreement - bill.agreement_paid
             else:
-                agreementbal = bill.agreement_balance + update_agreement
+                agreementbal = bill.agreement_balance + update_agreement if bill.agreement_balance else update_agreement
 
             MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
             # MonthlyChargeOp.update_rent_balance(bill,rentarr)
@@ -6416,11 +6505,13 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
                 if not house.housecode:
                     print("HOUSE GROUP MISSING FOR: ",house,"of",house.apartment)
                     continue
-                if house.housecode.vatrate:
-                    raw_rent_charge = (house.housecode.vatrate * house.housecode.rentrate * 0.01) + house.housecode.rentrate
-                    rent_charge = round(raw_rent_charge,0) if raw_rent_charge else 0
-                else:
-                    rent_charge = house.housecode.rentrate
+                # if house.housecode.vatrate:
+                #     raw_rent_charge = (house.housecode.vatrate * house.housecode.rentrate * 0.01) + house.housecode.rentrate
+                #     rent_charge = round(raw_rent_charge,0) if raw_rent_charge else 0
+                # else:
+                #     rent_charge = house.housecode.rentrate
+                rent_charge = house.housecode.rentrate
+
             all_charges = ChargeOp.fetch_charges_by_house_id(house.id)
             rent_charges = []
             for charge in all_charges:

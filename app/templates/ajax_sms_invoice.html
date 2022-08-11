@@ -10,15 +10,28 @@
 
     {%if bill.rent%}
     {% if house.housecode.vatrate%}
-    <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate}}</span></div>
+      {% if house.housecode.discount%}
+      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate) + house.housecode.discount}}</span></div>
+      {% else %}
+      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate)}}</span></div>
+      {% endif%}
     {% else %}
     <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{bill.rent}}</span></div>
     {% endif %}
     {% endif %}
 
     {%if house.housecode.vatrate%}
-    <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format(house.housecode.rentrate * 0.16 | float)}}</span></div>
+    <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format(house.housecode.rentrate * 0.01 * house.housecode.vatrate | float)}}</span></div>
     {% endif %}
+
+    {%if house.housecode.discount%}
+    <div class="divjust-end mr-5 "><span>Discount: </span><span class="text-gray-900"> -{{ '%0.1f'| format(house.housecode.discount | float)}}</span></div>
+    {% endif %}
+
+    {%if house.housecode.vatrate or house.housecode.discount%}
+    <div class="divjust-end mr-5 "><span class="text-black">Rent subtotal: </span><span class="text-gray-900">{{bill.rent}}</span></div>
+    {% endif %}
+
 
     {%if bill.deposit%}
     <div class="divjust-end mr-5 "><span>Deposit: </span><span class="text-gray-900">{{bill.deposit}}</span></div>
@@ -69,7 +82,7 @@
     {% endif %}
 
 
-    <div class="divjust-end mr-5 "><span>Total: </span><span class="text-gray-900">{{total}}</span></div>
+    <div class="divjust-end mr-5 "><span class="text-black">TOTAL: </span><span class="text-gray-900">{{total}}</span></div>
 
     {%if bill.paid_amount%}
     <div class="divjust-end mr-5 "><span>Paid: </span><span class="text-gray-900">{{billpaid}}</span></div>

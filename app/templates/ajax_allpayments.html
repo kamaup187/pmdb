@@ -7,6 +7,7 @@
       <span id="targeturl" class="dispnone"></span>
       <span id="c2bitem" class="dispnone"></span>
       <span id="c2bitem_id" class="dispnone"></span>
+      <span id="housecheck" class="dispnone"></span>
       <a id="download_payments" href="/download/template/payments" class="dispnone">download</a>
 
 
@@ -1118,6 +1119,7 @@
 <script>
   // This script displays alerts and tenant name before clearance
   $("#select_house").on('change',function(){
+    $("#housecheck").text("manual")
     if ($("#ctb_item_name").text()) {
       //do nothing
     }else{
@@ -1137,6 +1139,7 @@
             house: $("#select_house").val(),
             cbid:$("#c2bitem_id").text(),
             payperiod:$("#billdatepicker").val(),
+            housecheck:"manual",
             target:"amount due"
           },
       success: function(response) {
@@ -1155,6 +1158,7 @@
               cbid:$("#c2bitem_id").text(),
               payperiod:$("#billdatepicker").val(),
               paidamount: $("#paidamount").val(),
+              housecheck:"manual",
               target: "breakdown"
             },
             success: function (response) {
@@ -1170,6 +1174,7 @@
                   house2: $("#house-holder").text(),
                   cbid:$("#c2bitem_id").text(),
                   payperiod:$("#billdatepicker").val(),
+                  housecheck:"manual",
                   target: "amount due"
                 },
                 success: function (response) {
@@ -1239,6 +1244,7 @@
           house: $("#select_house").val(),
           cbid:$("#c2bitem_id").text(),
           payperiod: $("#billdatepicker").val(),
+          housecheck:"manual",
           target: "amount due"
         },
         success: function (response) {
@@ -1256,6 +1262,7 @@
                 cbid:$("#c2bitem_id").text(),
                 payperiod: $("#billdatepicker").val(),
                 paidamount: $("#paidamount").val(),
+                housecheck:"manual",
                 target: "breakdown"
               },
               success: function (response) {
@@ -1290,11 +1297,13 @@
     $("#fieldset2").addClass("dispnone")
     $("#totaldue").empty();
     $("#c2bitem").empty();
+    $("#housecheck").empty();
     $("#thouse").addClass("dispnone");
     $("#thouse").text("loading...")
 
     $("#house_selector").removeClass("dispnone")
     $("#confirm_details").addClass("dispnone")
+
 
   });
 </script>
@@ -1509,7 +1518,8 @@
                 depositpaid : ($("#depositpaid").val()),
                 agreementpaid :($("#agreementpaid").val()),
                 paidamount:$("#paidamount").val(),
-                overpayment:$("#advance_pay").val()
+                overpayment:$("#advance_pay").val(),
+                housecheck:$("#housecheck").text()
             },
             success: function(response) {
                 // $('#paybtn_alt').off('click');
@@ -1527,6 +1537,7 @@
                 $("#tenantbed").empty();
                 $("#billbreakdown").empty();
                 $("#totaldue").empty();
+                $("#housecheck").empty();
                 $("#receipt-payment-btn").click();
                 $("#fieldset2").addClass("dispnone")
                 $("#fieldset3").addClass("dispnone")

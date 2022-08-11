@@ -169,7 +169,7 @@ api.add_resource(CallBackUrlBizlineBaraka,"/m/bizlinebaraka/ins/payment")
 api.add_resource(CallBackUrlGoldLabel,"/m/goldlabel/ins/payment")
 api.add_resource(CallBackUrlBizlineBestel,"/m/bizlinebestel/ins/payment")
 api.add_resource(CallBackUrlBizlineNeema,"/m/bizlineneema/ins/payment")
-
+api.add_resource(CallBackUrlLagad,"/m/lagad/ins/payment")
 
 
 

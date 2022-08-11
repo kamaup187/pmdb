@@ -1919,6 +1919,7 @@ class ReceivePayment(Resource):
         cbid = request.args.get("cbid")
         payperiod = request.args.get("payperiod")
         target = request.args.get("target")
+        housecheck = request.args.get("housecheck")
 
 
         propid = get_identifier(prop_id)
@@ -2097,7 +2098,7 @@ class ReceivePayment(Resource):
                                 bill = None
 
                     ########################################################################################
-                    elif prop.name == "Greatwall Gardens 2":
+                    elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
                             print("KATA SIM",hh,"MORIO",hh.owner)
@@ -2107,7 +2108,7 @@ class ReceivePayment(Resource):
                         else:
                             print("HAKUNAAA HIO NI UWONGO")
                             bill = None
-                    elif prop.name == "Astrol Ridgeways":
+                    elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
@@ -2232,14 +2233,14 @@ class ReceivePayment(Resource):
                                 bill = None
 
                     ########################################################################################
-                    elif prop.name == "Greatwall Gardens 2":
+                    elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
                             bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             tenant = hh.owner
                         else:
                             bill = None
-                    elif prop.name == "Astrol Ridgeways":
+                    elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                         cbid_id = cb.bill_ref_num.replace(" ","")
                         if "-" in cbid_id:
                             cbid_id2 = cbid_id.split("-")[1]
@@ -2395,6 +2396,8 @@ class ReceivePayment(Resource):
         raw_bill_ref = request.form.get('bill_ref')#typed
         paytype = request.form.get('paytype')#typed
         amount = request.form.get('paidamount')#typed
+        housecheck = request.form.get("housecheck")
+
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
 
@@ -2417,6 +2420,8 @@ class ReceivePayment(Resource):
                     pass
                 else:
                     print("REFERENCE EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
+                    cbdel = CtoBop.fetch_record_by_ref(raw_bill_ref)
+                    CtoBop.update_status(cbdel,"claimed")
                     return "<div class='center-btn text-danger text-xx'>Reference exists!</div"
 
         ########################################################################################
@@ -2491,7 +2496,7 @@ class ReceivePayment(Resource):
                             abort(404) 
 
                 ########################################################################################
-                elif prop.name == "Greatwall Gardens 2":
+                elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                     hh = get_specific_house_obj(propid,cb.bill_ref_num)
                     if hh:
                         house_obj = hh
@@ -2502,7 +2507,7 @@ class ReceivePayment(Resource):
                     else:
                         print("HOUSE NOT FOUND")
                         abort(404) 
-                elif prop.name == "Astrol Ridgeways":
+                elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                     cbid_id = cb.bill_ref_num.replace(" ","")
                     if "-" in cbid_id:
                         cbid_id2 = cbid_id.split("-")[1]
@@ -2785,9 +2790,9 @@ class ReceivePayment(Resource):
                 PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
 
                 try:
-                    bookbal = specific_charge_obj.booking_due - bookingpaid
-                    instbal = specific_charge_obj.instalment_due - instalmentpaid
-                    addfeebal = specific_charge_obj.addfee_due - addfeepaid
+                    bookbal = specific_charge_obj.booking_due - bookingpaid if specific_charge_obj.booking_due else 0.0
+                    instbal = specific_charge_obj.instalment_due - instalmentpaid if specific_charge_obj.instalment_due else 0.0
+                    addfeebal = specific_charge_obj.addfee_due - addfeepaid if specific_charge_obj.addfee_due else 0.0
 
                     rentbal = specific_charge_obj.rent_due - rentpaid
 
@@ -2810,8 +2815,9 @@ class ReceivePayment(Resource):
                                 servicebal -= overpayment
 
                     MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
-                except:
+                except Exception as e:
                     print("PAID TO LEGACY BILL")
+                    print("ERROR >>",e)
 
             # elif not specific_charge_obj and not current_period_payment:
             #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
@@ -4138,7 +4144,11 @@ class CallBackUrlMLatitude(Resource):
         msisdn = data['MSISDN']
         org_acc_bal = data['OrgAccountBalance']
         fname = data['FirstName']
-        lname = data['LastName']
+
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
 
         print("MPESA DATA RECEIEVED: ",data)
 
@@ -4473,6 +4483,40 @@ class CallBackUrlBizlineNeema(Resource):
         ctob_obj.save()
 
         msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
+        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response(ctob_obj)
+
+class CallBackUrlLagad(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data['TransID']
+        trans_time = data['TransTime']
+        trans_amnt = data['TransAmount']
+        trans_type = data['TransactionType']
+        business_shortcode = data['BusinessShortCode']
+        bill_ref_num = data['BillRefNumber']
+        invoice_num = data['InvoiceNumber']
+        msisdn = data['MSISDN']
+        org_acc_bal = data['OrgAccountBalance']
+        fname = data['FirstName']
+        try:
+            lname = data['LastName']
+        except:
+            lname = "N/A"
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj.save()
+
+        msg = f"LAGAD MPESA DATA JUST IN {trans_amnt} from {fname}"
         response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)

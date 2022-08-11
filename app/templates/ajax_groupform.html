@@ -4,8 +4,8 @@
     <div class="row">
         <div class="col-xl-4">
             <!-- Profile picture card-->
-            <div class="card mb-4 mb-xl-0">
-                <div class="card-header">Group info</div>
+            <div class="card mb-4">
+                <div class="card-header">Group name</div>
                 <div class="card-body text-center">
                     <!-- Profile picture image-->
                     <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
@@ -14,16 +14,85 @@
                         <div class="gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <label class="small mb-1" for="groupName">Group name (rent amount or letters
-                                A,B,C...</label>
+                                A,B,C...<span class="text-danger">*</span></label>
                             <input class="form-control" id="groupName" type="text"
                                 placeholder="Provide a name for the group" value="{{group.codename}}" />
 
                         </div>
                         <button type="reset" class="reset dispnone"></button>
                     </form>
-                    <!-- Profile picture help block-->
-                    <div class="small font-italic text-muted mb-4">Groups are used to cluster units/houses with similar
-                        rent and utility rates</div>
+
+                </div>
+            </div>
+
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Settings</div>
+                <div class="card-body">
+                    <!-- Profile picture image-->
+                    <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
+                    <form autocomplete="off">
+
+                        <div class="form-group">
+                            <!-- Form Group (first name)-->
+                            <label class="font-weight-bold mb-1" for="">INVOICE CYCLE</label>
+
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
+                                <span class="dispnone" id="check_freq">{{group.billfrequency}}</span>
+
+                                <div class="">
+                                    <input class="" id="monthly" name="billfreq" type="radio" value="monthly" />
+                                    <label class="mb-1 small font-weight-bold" for="monthly">Monthly</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="quaterly" name="billfreq" type="radio" value="quaterly" />
+                                    <label class="small font-weight-bold mb-1" for="quaterly">Quaterly</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="semi-annually" name="billfreq" type="radio" value="semi-annually" />
+                                    <label class="small font-weight-bold mb-1" for="semi-annually">Semi-annually</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="annually" name="billfreq" type="radio" value="annually" />
+                                    <label class="small font-weight-bold mb-1" for="annually">Annually</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label class="font-weight-bold mb-1" for="">VATABLE? (RENT ONLY)</label>
+
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
+                                <div class="">
+                                    <input class="" id="vatyes" name="vatable" type="radio" value="yes" />
+                                    <label class="mb-1 small font-weight-bold" for="vatyes">Yes</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="vatno" name="vatable" type="radio" value="no" />
+                                    <label class="small font-weight-bold mb-1" for="vatno">No</label>
+                                </div>
+
+                            </div>
+
+                        </div> -->
+
+                        <div class="gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <label class="small mb-1" for="depnum">No. of months (rent deposit only)</label>
+                            <input class="form-control" id="depnum" type="text" value="{{group.depnum}}" />
+
+                        </div>
+
+                        <div class="gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <label class="small mb-1" for="discount">Dicount (rent only)</label>
+                            <input class="form-control" id="discount" type="text" value="{{group.discount}}" />
+
+                        </div>
+                    </form>
+
                     <!-- Profile picture upload button-->
                 </div>
             </div>
@@ -31,37 +100,73 @@
         <div class="col-xl-8">
             <!-- Account details card-->
             <div class="card mb-4">
-                <div class="card-header">Group details  >> {{group.codename}}</div>
+                <div class="card-header">Group rates  >> {{group.codename}}</div>
                 <div class="card-body">
                     <form autocomplete="off">
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="rentrate">Monthly rent</label>
+                                <label class="small mb-1" for="rentrate">Monthly rent (discount & VAT inclusive)</label>
 
                                 <input class="form-control" id="rentrate" type="text" placeholder="Rent amount"
                                     value="{{group.rentrate}}" />
                             </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="vatrate">VAT amount (%)</label>
+
+                                <input class="form-control" id="vatrate" type="text" placeholder="vat amount"
+                                    value="{{group.vatrate}}" />
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
                             <div class="col-md-6">
                                 <label class="small mb-1" for="servicerate">Service charge</label>
 
                                 <input class="form-control" id="servicerate" type="text" placeholder="Service amount"
                                     value="{{group.servicerate}}" />
                             </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="other">Registration/Agreement</label>
+
+                                <input class="form-control" id="agreementrate" type="text" placeholder="reg fee"
+                                    value="{{group.agreementrate}}"/>
+                            </div>
                         </div>
 
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="unitrate">Metered water unit rates</label>
+                                <label class="small mb-1" for="unitrate">Water meter/unit rate</label>
 
                                 <input class="form-control" id="unitrate" type="text" placeholder="Unit rate amount"
                                     value="{{group.waterrate}}" />
                             </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="waterrate">Water standard charges</label>
 
-                                <input class="form-control" id="waterrate" type="text" placeholder="Standard charge amount"
-                                    value="{{group.watercharge}}" />
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="waterdep">Water/meter deposit</label>
+
+                                <input class="form-control" id="waterdep" type="text" placeholder="Deposit amount"
+                                    value="{{group.waterdep}}" />
+                            </div>
+
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="elecunitrate">Electricity meter/unit rate</label>
+
+                                <input class="form-control" id="elecunitrate" type="text" placeholder="Unit rate amount"
+                                    value="{{group.electricityrate}}" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="elecdep">Electricity/meter deposit</label>
+
+                                <input class="form-control" id="elecdep" type="text" placeholder="Deposit amount"
+                                    value="{{group.elecdep}}" />
                             </div>
                         </div>
 
@@ -82,46 +187,16 @@
 
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
-                                <label class="small mb-1" for="finerate">Penalty percentage</label>
-
-                                <input class="form-control" id="finerate" type="text" placeholder="Penalty percentage"
-                                    value="{{group.finerate}}" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="elecunitrate">Metered electricity unit rate</label>
-
-                                <input class="form-control" id="elecunitrate" type="text" placeholder="Unit rate amount"
-                                    value="{{group.electricityrate}}" />
-                            </div>
-                        </div>
-
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="waterdep">Water deposit</label>
-
-                                <input class="form-control" id="waterdep" type="text" placeholder="Deposit amount"
-                                    value="{{group.waterdep}}" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="elecdep">Electricity/meter deposit</label>
-
-                                <input class="form-control" id="elecdep" type="text" placeholder="Deposit amount"
-                                    value="{{group.elecdep}}" />
-                            </div>
-                        </div>
-
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
                                 <label class="small mb-1" for="carddep">Lift card deposit</label>
 
                                 <input class="form-control" id="carddep" type="text" placeholder="card deposit"
                                     value="{{group.carddep}}" />
                             </div>
                             <div class="col-md-6">
-                                <label class="small mb-1" for="otherdep">Other deposit</label>
+                                <label class="small mb-1" for="finerate">Penalty percentage (%)</label>
 
-                                <input class="form-control" id="otherdep" type="text" placeholder="other"
-                                    value="{{group.otherdep}}"/>
+                                <input class="form-control" id="finerate" type="text" placeholder="Penalty percentage"
+                                    value="{{group.finerate}}" />
                             </div>
                         </div>
 
@@ -133,40 +208,60 @@
                                     value="{{group.seweragerate}}" />
                             </div>
                             <div class="col-md-6">
-                                <label class="small mb-1" for="other">Registration/Agreement</label>
+                                <label class="small mb-1" for="waterrate">Water standard charges</label>
 
-                                <input class="form-control" id="agreementrate" type="text" placeholder="reg fee"
-                                    value="{{group.agreementrate}}"/>
+                                <input class="form-control" id="waterrate" type="text" placeholder="Standard charge amount"
+                                    value="{{group.watercharge}}" />
                             </div>
                         </div>
 
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="vatrate">VAT amount</label>
-
-                                <input class="form-control" id="vatrate" type="text" placeholder="vat amount"
-                                    value="{{group.vatrate}}" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="other">Bill frequency</label>
-
-                                <input class="form-control" id="billfreq" type="text" placeholder="cycle of billing"
-                                    value="{{group.billfrequency}}"/>
-                            </div>
-                        </div>
-
-                        <!-- Submit button-->
-                        <div class="text-center">
-                            <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
-                            <button type="reset" class="reset dispnone"></button>
-                        </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
+    </div>
+    <!-- Submit button-->
+    <div class="text-center">
+        <div>
+            <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
+            <button type="reset" class="reset dispnone"></button>
+        </div>
+    
+    </div>
+    </div>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+    
+            let checkFreq = $("#check_freq").text()
+    
+            if (checkFreq == "1") {
+    
+                $("input[id=monthly]").attr("checked", "checked");
+    
+            } else if (checkFreq == "3"){
+    
+                $("input[id=quaterly]").attr("checked", "checked");
+    
+            } else if (checkFreq == "6") {
+    
+                $("input[id=semi-annually]").attr("checked", "checked");
+    
+            } else if (checkFreq == "12") {
+                $("input[id=annually]").attr("checked", "checked");
+
+            } else {
+                $("input[id=monthly]").attr("checked", "checked");
+
+            }
+    
+            })
+  
+    </script>
 
 
 
@@ -217,12 +312,13 @@
             waterdep: $("#waterdep").val(),
             elecdep: $("#elecdep").val(),
             carddep: $("#carddep").val(),
-            otherdep: $("#otherdep").val(),
+            depnum: $("#depnum").val(),
+            discount: $("#discount").val(),
             finerate: $("#finerate").val(),
             seweragerate:$("#seweragerate").val(),
             agreementrate:$("#agreementrate").val(),
             vatrate:$("#vatrate").val(),
-            billfreq:$("#billfreq").val(),
+            billfreq: $("input[name=billfreq]:checked").val(),
             target:target
             },
         success: function(response) {

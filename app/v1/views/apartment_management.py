@@ -62,11 +62,11 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# telll = sms_phone_number_formatter("0716674695")
+# telll = sms_phone_number_formatter("0722801433")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
-# advanta_send_sms("Greetings John, \n your sms sender Id is ready for integration ~ KiotaPay Team",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+# advanta_send_sms("Greetings Michael 🙂, \nLymax sms sender Id is ready ~ KiotaPay Team",telll,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
@@ -184,6 +184,12 @@ class Index(Resource):
 
         time = datetime.datetime.now() + relativedelta(hours=3)
 
+        allhses = HouseOp.fetch_houses()
+        for i in allhses:
+            if not i.housecode:
+                print("HOUSE >>",i,"PROP >>",i.apartment,"Company >>",i.apartment.company)
+                HouseOp.delete(i)
+
         # pts = PermanentTenantOp.fetch_all_tenants()
         # for pt in pts:
         #     if not pt.tenant_type:
@@ -249,23 +255,26 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            # cocc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
-            # if cocc:
-            #     CompanyOp.update_sms_provider(cocc,"Advanta")
+            cocc = CompanyOp.fetch_company_by_name("Lymax Properties")
+            if cocc:
+                CompanyOp.update_sms_provider(cocc,"Advanta")
 
             # commp = CompanyOp.fetch_company_by_name("Lesama Ltd")
             # commp = CompanyOp.fetch_company_by_name("Sentom Investment")
 
-            # propsss = commp.props
-            # for propp in propsss:
+            # cms = CompanyOp.fetch_all_companies()
 
-            #     apartment_id = propp.id
+            # for ccs in cms:
+            #     propsss = ccs.props
+            #     for propp in propsss:
 
-            #     print("APART",apartment_id)
+            #         apartment_id = propp.id
 
-            #     billupdatejob = q.enqueue_call(
-            #         func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
-            #     )
+            #         print("APART",apartment_id)
+
+            #         # billupdatejob = q.enqueue_call(
+            #         #     func=run_update, args=("dict_array",apartment_id,current_user.id,), result_ttl=5000
+            #         # )
 
 
             # if not cocc:
@@ -564,8 +573,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Imani Court":
-                shorts = ["7265486"]
+            if company.name== "LaCasa":
+                shorts = ["4091201"]
             else:
                 shorts = []
 
@@ -3373,8 +3382,12 @@ class BulkSms(Resource):
 
         print(rem_date,rem_prop,rem_bal,target,rem_txt)
 
-        prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
-        propid = prop_obj.id
+        try:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
+            propid = prop_obj.id
+        except:
+            print("running statement")
+            pass
 
         if target == "general":
             job8 = q.enqueue_call(
@@ -3382,6 +3395,14 @@ class BulkSms(Resource):
             )
             text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],sender)
+
+            return proceed
+
+        if target == "statement":
+            tenantid = request.form.get("uuid")
+            job9 = q.enqueue_call(
+                func=send_statement, args=(tenantid,), result_ttl=5000
+            )
 
             return proceed
 
@@ -3676,6 +3697,8 @@ class CreateHouseCode(Resource):
             seweragerate= request.form.get('seweragerate')
             agreementrate= request.form.get('agreementrate')
             finerate = request.form.get('finerate')
+            discount = request.form.get('discount')
+            depnum = request.form.get('depnum')
 
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
@@ -3698,10 +3721,10 @@ class CreateHouseCode(Resource):
                 msg = "exist already"
                 return err + msg
             else:
-                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate)
+                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum)
                 user_id = current_user.id     
 
-                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],apartment_id,user_id)
+                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],valid_inputs[11],valid_inputs[12],apartment_id,user_id)
                 new_code_obj.save()
 
                 valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
@@ -3756,7 +3779,8 @@ class EditHouseCode(Resource):
             waterdep = request.form.get('waterdep')
             elecdep = request.form.get('elecdep')
             carddep = request.form.get('carddep')
-            otherdep = request.form.get('otherdep')
+            discount = request.form.get('discount')
+            depnum = request.form.get('depnum')
             vatrate = request.form.get('vatrate')
             bill_freq = request.form.get('billfreq')
 
@@ -3802,9 +3826,9 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep,discount,depnum)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],result[13],result[14],current_user.id)
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])

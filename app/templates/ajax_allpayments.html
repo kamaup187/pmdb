@@ -249,7 +249,7 @@
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
             </div>
-            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span>
+            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span><span id="ttname"></span>
           </div>
           </div>
           <div class="modal-body pt-0">
@@ -1040,6 +1040,10 @@
 
                   if ($("#ctb_item_name").text()) {
                     $("#tname").text(" (" + $("#ctb_item_name").text() + ")")
+                  }
+
+                  if ($("#ctb_item_tenant").text()) {
+                    $("#ttname").text(" (" + $("#ctb_item_tenant").text() + ")")
                   }
                   // $.ajax({
                   //   url: "{{ url_for('api.receivepayment') }}",

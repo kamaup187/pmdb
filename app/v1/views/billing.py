@@ -1965,12 +1965,23 @@ class ReceivePayment(Resource):
         if target == "fetch c2b item":
             cbid = request.args.get("cbid")
             cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb_obj.bill_ref_num.startswith("TNT") or cbid.startswith("tnt"):
+                tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                if not tenant:
+                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tt = tenant.name
+                else:
+                    tt = tenant.name
+            else:
+                tt = "-"
             
             cb_obj = {
                 "ref":cb.trans_id,
                 "amount":cb.trans_amnt,
                 "name":f"{cb.fname} {cb.lname}",
-                "narration":cb.bill_ref_num
+                "narration":cb.bill_ref_num,
+                tt:tt
             }
 
             return render_template("c2bitem.html",c2bitem=cb_obj)

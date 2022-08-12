@@ -1967,14 +1967,20 @@ class ReceivePayment(Resource):
             cb = CtoBop.fetch_record_by_id(cbid)
 
             if cb.bill_ref_num.startswith("TNT") or cb.bill_ref_num.startswith("tnt"):
-                tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
                 if not tenant:
+                    print("failing to get tenant by cbid id at first attempt using",cb.bill_ref_num.upper())
+
                     tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                     tt = tenant.name
+                    print("failing to get tenant by cbid id at second attempt using", get_identifier(cb.bill_ref_num))
                 else:
                     tt = tenant.name
+                    print("got at first attempt tenant by cbid id")
             else:
                 tt = "-"
+                print("failing to get tenant by cbid id totally")
+
             
             cb_obj = {
                 "ref":cb.trans_id,

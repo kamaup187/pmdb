@@ -597,7 +597,7 @@ class Index(Resource):
 
                 for r in raw_unclaimed:
                     # targets = ["532406","964399","4012401","4081687"]
-                    if r.status != "claimed":
+                    if r.status == "unclaimed":
                         sifted.append(r)
 
             cbids = ctb_payment_details(sifted)

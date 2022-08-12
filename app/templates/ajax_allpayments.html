@@ -16,8 +16,10 @@
       <div class="card mb-2 mt-1">
         <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
           <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase text-110">Tenant Payments <span id="activeprop"
-              class="text-primary ml-3"></span></span>
+          <span class="smallify text-info font-weight-bold text-uppercase text-110"> <span id="backbtn">All Payments </span>
+            <span id="activeprop"class="text-primary ml-3"></span>
+            <span id="activeprop-item"class="text-primary ml-3"></span>
+          </span>
           <div>
             <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
               type="button">X</button>
@@ -620,6 +622,42 @@
           <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Tenant will be <span class="text-danger">NOTIFIED</span> of the reversal. Continue?</span> -->
           <div class="has-margin-bottom divbg">
               <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-danger">Confirm to archive</div>
+          
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Tenant will be <span class="text-danger">NOTIFIED</span> of the reversal. Continue?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="archive_ctob" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Archive</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="unarchiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-danger">Confirm to remove from archive</div>
+          
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Tenant will be <span class="text-danger">NOTIFIED</span> of the reversal. Continue?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="unarchive_ctob" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Unarchive</button>
               <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
           </div>
         </div>

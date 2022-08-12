@@ -5631,13 +5631,39 @@ class FetchPayments(Resource):
                     # else:
                     #     if r.business_shortcode in targets:
                     #         CtoBop.update_status(r,"claimed")
-                    if r.status != "claimed":
+                    if r.status == "unclaimed":
                         sifted.append(r)
 
             unclaimed = ctb_payment_details(sifted)
             cbids = get_obj_ids(unclaimed)
 
-            return render_template("ajax_unresolved_payments.html",cbids=cbids,items=unclaimed,data=">>>>>>>>>  unclaimed payments",dataperiod="")
+            return render_template("ajax_unresolved_payments.html",cbids=cbids,items=unclaimed,dataperiod="")
+
+        if target == "archived":
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            sifted = []
+            if prop.payment_bank == "PayBill" or prop.paymentdetails.mpesapaybill:
+                shortcode = prop.payment_bankacc
+                if not shortcode:
+                    shortcode = prop.paymentdetails.mpesapaybill
+                raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
+
+                for r in raw_unclaimed:
+                    # targets = ["532406","964399","4012401","4081687"]
+                    # if r.post_date.day == 6 and r.post_date.year == 2022 and r.post_date.month == 4:
+                    #     pass
+                    # else:
+                    #     if r.business_shortcode in targets:
+                    #         CtoBop.update_status(r,"claimed")
+                    if r.status == "archived":
+                        sifted.append(r)
+
+            unclaimed = ctb_payment_details(sifted)
+            cbids = get_obj_ids(unclaimed)
+
+            return render_template("ajax_archived_payments.html",cbids=cbids,items=unclaimed,dataperiod="")
 
         if target == "new":
             prop_id = request.args.get("propid")
@@ -5698,7 +5724,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>>>  current payments",dataperiod=get_str_month(period.month))
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month))
 
         if target == "new alt":
             prop_id = request.args.get("propid")
@@ -5781,7 +5807,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>>> voided payments",dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(period.month) + " voided",greyout="text-gray-500 b-none",active="disabled")
 
         elif target == "old":
             prop_id = request.args.get("propid")
@@ -5802,7 +5828,7 @@ class FetchPayments(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,data=">>>>>>>> previous payments",dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
+            return render_template("ajax_payments_refresh.html",payids=payids,items=detailed_payments_list,dataperiod=get_str_month(month),greyout="text-gray-50 b-none",active="")
 
         else:
             tenantid = request.args.get('tenantid')

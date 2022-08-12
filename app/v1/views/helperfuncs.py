@@ -7137,7 +7137,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                 if tenant in new_tenants:
                     carddep = house.housecode.carddep if house.housecode.carddep else 0.0
-                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep + carddep
+                    nodiscount = house.housecode.discount if house.housecode.discount else 0.0
+                    deposit = house.housecode.rentrate + house.housecode.waterdep + house.housecode.elecdep + carddep + nodiscount
                     agreement = apartment_obj.agreement_fee if apartment_obj.agreement_fee else 0.0 #TODO
 
 

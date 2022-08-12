@@ -3299,6 +3299,15 @@ class EditPayment(Resource):
         else:
             payid = request.form.get("payid")
 
+        if target == "archive payment":
+            cbid_id = request.form.get("cbid_id")
+            cbidid = get_identifier(cbid_id)
+            cbid = CtoBop.fetch_record_by_id(cbidid)
+            if cbid:
+                # import pdb; pdb.set_trace()
+                CtoBop.update_status(cbid,"archived")
+                return proceed
+
         payment_obj = PaymentOp.fetch_payment_by_id(payid)
         period = payment_obj.pay_period
 

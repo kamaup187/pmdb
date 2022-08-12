@@ -706,6 +706,8 @@ class PermanentTenant(db.Model):
     messages = db.relationship('InternalMessages',backref='ptenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='ptenant',order_by='SentMessages.date', cascade="all, delete-orphan")
     schedules = db.relationship('PaymentSchedule',backref='ptenant', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    deposits = db.relationship('TenantDeposit',backref='ptenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+
 
 
 
@@ -753,6 +755,8 @@ class Tenant(db.Model):
     clearrequests = db.relationship('ClearanceRequest',backref='tenant',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
     messages = db.relationship('InternalMessages',backref='tenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='tenant',order_by='SentMessages.date', cascade="all, delete-orphan")
+    deposits = db.relationship('TenantDeposit',backref='tenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+
 
 
 
@@ -777,6 +781,7 @@ class TenantDeposit(db.Model):
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     def __repr__(self):

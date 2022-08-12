@@ -1966,7 +1966,7 @@ class ReceivePayment(Resource):
             cbid = request.args.get("cbid")
             cb = CtoBop.fetch_record_by_id(cbid)
 
-            if cb.bill_ref_num.startswith("TNT") or cb.startswith("tnt"):
+            if cb.bill_ref_num.startswith("TNT") or cb.bill_ref_num.startswith("tnt"):
                 tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                 if not tenant:
                     tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))

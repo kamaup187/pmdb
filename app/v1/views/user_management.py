@@ -1333,6 +1333,16 @@ class LandlordDemoLogin(Resource):
         login_user(user, remember=remember)
         return redirect(url_for('api.index'))
 
+class DemoLogin(Resource):
+    def get(self):
+        print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
+        # response = sms.send("Agent/Landlord Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"KIOTAPAY")
+        user = UserOp.fetch_user_by_national_id("12344321")
+        remember = False
+        if user:
+            login_user(user, remember=remember)
+        return redirect(url_for('api.index'))
+
 class Demo(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")

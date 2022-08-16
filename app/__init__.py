@@ -50,7 +50,7 @@ def create_app(configuration):
     # app.config.from_object(os.environ['APP_SETTINGS'])
 
     app.config.from_mapping(
-        CLOUDINARY_URL=os.environ.get('CLOUDINARY_URL') or 'Pegue a sua Key',
+        CLOUDINARY_URL=os.environ.get('CLOUDINARY_URL') or 'cloudinary://597783923547314:uoZkQ1VBpnG8nJbOCJ_TWieviMs@dmq9pwyon',
     )
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

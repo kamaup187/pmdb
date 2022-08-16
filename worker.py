@@ -7,7 +7,11 @@ listen = ['default']
 
 redis_url = os.getenv('REDISTOGO_URL')
 if not redis_url:
+    print("THIS IS THE NORMAL REDIS_URL >>>>",redis_url)
+
     redis_url = os.getenv('REDIS_URL')
+
+print("THIS IS THE FINAL REDIS_URL >>>>",redis_url)
 
 conn = redis.from_url(redis_url)
 

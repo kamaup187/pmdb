@@ -13,6 +13,9 @@ if not redis_url:
 
 print("THIS IS THE FINAL REDIS_URL >>>>",redis_url)
 
+if not redis_url:
+    redis_url = "redis://localhost:6379"
+
 conn = redis.from_url(redis_url)
 
 if __name__ == '__main__':

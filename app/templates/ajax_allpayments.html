@@ -249,7 +249,7 @@
                 <div class="fountainG_3s fountainG-s"></div>
               </div>
             </div>
-            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span>
+            <span id="thouse" class="dispnone">loading...</span><span id="tname"></span><span id="ttname"></span>
           </div>
           </div>
           <div class="modal-body pt-0">
@@ -1040,6 +1040,10 @@
 
                   if ($("#ctb_item_name").text()) {
                     $("#tname").text(" (" + $("#ctb_item_name").text() + ")")
+                  }
+
+                  if ($("#ctb_item_tenant").text()) {
+                    $("#ttname").text(" (" + $("#ctb_item_tenant").text() + ")")
                   }
                   // $.ajax({
                   //   url: "{{ url_for('api.receivepayment') }}",
@@ -2216,6 +2220,47 @@
       error: function(xhr) {
         $('#delete_payment').html('Delete');
         alert("Multi housed tenant payments cannot be voided. Please contact the administrator.");
+        }
+    });
+  });
+  
+  </script>
+
+
+<script>
+    
+  $("#archive_ctob").on('click',function(){   
+    
+    $('#archive_ctob').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>archiving...'); 
+    $.ajax({
+      url: "{{ url_for('api.editpayment') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            cbid_id:$("#del_c2b_identifier").text(),
+            target:"archive payment"
+          },
+      success: function(response) {
+        $(".closemodal").click();
+        $(".payment-info").html("<span class='text-success'>Payment archived successfully</span>");  
+        $('#archive_ctob').html('Archived!');
+        $.ajax({
+            url: "{{ url_for('api.fetchpayments') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier").text(),
+                  target:"unclaimed"
+                },
+            success: function(response) {
+              $("#child-result-view").html(response);
+              
+            }
+          });
+        
+      },
+      error: function(xhr) {
+        $('#archive_ctob').html('Archive');
+        alert("Multi housed tenant payments cannot be archived. Please contact the administrator.");
         }
     });
   });

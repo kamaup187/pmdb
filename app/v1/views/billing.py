@@ -1965,12 +1965,29 @@ class ReceivePayment(Resource):
         if target == "fetch c2b item":
             cbid = request.args.get("cbid")
             cb = CtoBop.fetch_record_by_id(cbid)
+
+            if cb.bill_ref_num.startswith("TNT") or cb.bill_ref_num.startswith("tnt"):
+                tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num.upper())
+                if not tenant:
+                    print("failing to get tenant by cbid id at first attempt using",cb.bill_ref_num.upper())
+
+                    tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
+                    tt = tenant.name
+                    print("failing to get tenant by cbid id at second attempt using", get_identifier(cb.bill_ref_num))
+                else:
+                    tt = tenant.name
+                    print("got at first attempt tenant by cbid id")
+            else:
+                tt = "-"
+                print("failing to get tenant by cbid id totally")
+
             
             cb_obj = {
                 "ref":cb.trans_id,
                 "amount":cb.trans_amnt,
                 "name":f"{cb.fname} {cb.lname}",
-                "narration":cb.bill_ref_num
+                "narration":cb.bill_ref_num,
+                tt:tt
             }
 
             return render_template("c2bitem.html",c2bitem=cb_obj)
@@ -3298,6 +3315,15 @@ class EditPayment(Resource):
             payid = get_identifier(raw_payid)
         else:
             payid = request.form.get("payid")
+
+        if target == "archive payment":
+            cbid_id = request.form.get("cbid_id")
+            cbidid = get_identifier(cbid_id)
+            cbid = CtoBop.fetch_record_by_id(cbidid)
+            if cbid:
+                # import pdb; pdb.set_trace()
+                CtoBop.update_status(cbid,"archived")
+                return proceed
 
         payment_obj = PaymentOp.fetch_payment_by_id(payid)
         period = payment_obj.pay_period

@@ -1,4 +1,11 @@
 """Helper methods for views"""
+
+
+    # app = Flask(__name__)
+    # app.register_blueprint(v1)
+
+    # return app
+    
 # from ast import Pass
 # from mimetypes import init
 import os
@@ -5259,11 +5266,11 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
             if ttype == "ptenant":
                 print("creating service")
-                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
             else:
                 print("creating rent")
-                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
         else:
             print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)

@@ -1,4 +1,11 @@
 """Helper methods for views"""
+
+
+    # app = Flask(__name__)
+    # app.register_blueprint(v1)
+
+    # return app
+    
 # from ast import Pass
 # from mimetypes import init
 import os

@@ -1,8 +1,10 @@
-# import os
+import os
 
-# from app import create_app
+from app import create_app
 
-# app = create_app()
+configuration = os.getenv('APP_SETTINGS')
 
-# if __name__ == "__main__":
-# 	app.run()
+app = create_app(configuration)
+
+if __name__ == "__main__":
+	app.run(host='0.0.0.0')

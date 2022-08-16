@@ -43,7 +43,7 @@ from .v1 import version_one as v1
 def create_app(configuration):
 
     app = Flask(__name__)
-    Talisman(app,content_security_policy=None)    
+    # Talisman(app,content_security_policy=None)    
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])

@@ -13,7 +13,7 @@ from flask_talisman import Talisman
 import jwt
 from flask_cors import CORS
 
-from .v1.views.secrets import *
+from global_secrets import *
 
 
 

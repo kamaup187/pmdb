@@ -2316,10 +2316,10 @@ class ReceivePayment(Resource):
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
-                    print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
+                    # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-            print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
+            # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
 
 
 

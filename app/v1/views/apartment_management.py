@@ -3472,55 +3472,56 @@ class TenantSms(Resource):
 
             co = current_user.company
 
-            if co.sms_provider == "Advanta":
-                sms_sender(co.name,sms_text,phonenum)
 
-                msg = "Message sent successfully"
-                return render_template('ajaxproceed.html',alert=msg)            
-
-            else:
                 
-                rem_sms =co.remainingsms
-                if rem_sms > 0:
-                    #Send the SMS
-                    try:
-                        recipient = [phonenum]
-                        # message = f"Rental payment #{ref_number} Confirmed. We have received sum of Kshs {paid}. Outstanding balance is Kshs. {running_bal}"
-                        new_text = current_user.company.name
-                        message_body = f"{sms_text} \n~ {new_text}"
-                        message = message_body
+            rem_sms =co.remainingsms
+            if rem_sms > 0:
+                #Send the SMS
+                try:
+                    recipient = [phonenum]
+                    # message = f"Rental payment #{ref_number} Confirmed. We have received sum of Kshs {paid}. Outstanding balance is Kshs. {running_bal}"
+                    new_text = current_user.company.name
+                    message_body = f"{sms_text} \n~ {new_text}"
+                    message = message_body
 
-                        char_count = len(message)
-                        if char_count <= 160:
-                            cost = 1
-                        elif char_count <= 320:
-                            cost = 2
-                        else:
-                            cost = 3
+                    char_count = len(message)
+                    if char_count <= 160:
+                        cost = 1
+                    elif char_count <= 320:
+                        cost = 2
+                    else:
+                        cost = 3
 
-                        ptenant_id = None
-                        
-                        sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
-                        sms_obj.save()
+                    ptenant_id = None
+                    
+                    sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
+                    sms_obj.save()
 
+                    if co.sms_provider == "Advanta":
+                        sms_sender(co.name,sms_text,phonenum)
+
+                        msg = "Message sent successfully"
+                        return render_template('ajaxproceed.html',alert=msg)            
+
+                    else:
                         if sender == "AFRICASTKNG":
                             response = sms.send(message, recipient)
                         else:
                             response = sms.send(message, recipient,sender)
-                            
-                        print(response)
-                        rem_sms -= 1
-                        CompanyOp.set_rem_quota(co,rem_sms)
-                        msg = "Message sent successfully"
-                        return render_template('ajaxproceed.html',alert=msg)
+                        
+                    print(response)
+                    rem_sms -= 1
+                    CompanyOp.set_rem_quota(co,rem_sms)
+                    msg = "Message sent successfully"
+                    return render_template('ajaxproceed.html',alert=msg)
 
-                    except Exception as e:
-                        print(f"Houston, we have a problem {e}")
-                        msg = "Sending failed!"
-                        return render_template('ajaxghosthouse.html',alert=msg)
-                else:
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
                     msg = "Sending failed!"
                     return render_template('ajaxghosthouse.html',alert=msg)
+            else:
+                msg = "Sending failed!"
+                return render_template('ajaxghosthouse.html',alert=msg)
         else:
             msg = "Sms turned off for tenant!"
             return render_template('ajaxghosthouse.html',alert=msg)

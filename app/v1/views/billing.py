@@ -2221,8 +2221,10 @@ class ReceivePayment(Resource):
             skip = False
             if cbid:
                 cb = CtoBop.fetch_record_by_id(cbid)
+                print("CHECKING CBBBBB >>>",cb)
 
                 if cb.bill_ref_num:
+                    print("CBBBB HAS REF >>>",cb.bill_ref_num)
                     if cb.bill_ref_num.startswith("TNT"):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
@@ -2289,6 +2291,10 @@ class ReceivePayment(Resource):
                     #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                     else:
                         skip = True
+
+                else:
+                    print("CBBBB HAS NO REF >>>",cb.bill_ref_num)
+                    skip = True
             else:
                 skip = True
 

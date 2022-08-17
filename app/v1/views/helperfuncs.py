@@ -3663,6 +3663,8 @@ def autosend_pending_smsreceipts(payids):
 
         co = payment_obj.apartment.company
         str_co = co.name
+        str_prop = payment_obj.apartment.name
+        end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
         raw_rem_sms =co.remainingsms
 
         tele = tenant_obj.phone
@@ -3673,7 +3675,7 @@ def autosend_pending_smsreceipts(payids):
         phonenum = sms_phone_number_formatter(tele)
         salutation = "Service Charge & Utility" if serv else "Rental"
 
-        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
+        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
 
         if tenant_obj.sms:
 

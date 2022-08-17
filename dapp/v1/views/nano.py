@@ -1,6 +1,6 @@
 import os
 
-from .secrets import *
+from .secrets2 import *
 from flask_restful import Resource
 from flask import render_template,Response,flash,redirect,url_for
 
@@ -9,9 +9,7 @@ from .decor import lfile
 
 class Home(Resource):
     def get(self):
-        text_to_print = os.getenv("JEJEJ") or jeje
         # os.environ.get('CLOUDINARY_URL') or
-        lfile(text_to_print)
         lfile("second one")
         return "yay!"
 

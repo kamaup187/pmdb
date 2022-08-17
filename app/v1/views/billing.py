@@ -22,6 +22,7 @@ from ..forms.forms import PaymentForm,AmendChargeForm
 from ..stkpush.access_token import lipa_na_mpesa_online,lipa_na_mpesa_online2,stkquery
 from app.v1.models.operations import *
 from .helperfuncs import *
+from .secrets import *
 from app import mail
 from app import sms
 
@@ -1694,7 +1695,7 @@ class SendSms(Resource):
 
             amount = f'Kes {payment_obj.amount:,.0f}'
 
-            if os.getenv("TARGET") == "lasshouse":
+            if os.getenv("TARGET") or TARGET == "lasshouse":
                 receipt = f"Receipt: https://km/r/{payment_obj.rand_id}"
             else:
                 receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
@@ -2313,6 +2314,7 @@ class ReceivePayment(Resource):
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
+                    print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
 
@@ -2910,7 +2912,7 @@ class ReceivePayment(Resource):
             outline = "text-success"
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-        if os.getenv("TARGET") == "lasshouse":
+        if os.getenv("TARGET") or TARGET == "lasshouse":
             receiptlink = f"https://cr.com/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"

@@ -13,6 +13,9 @@ from flask_talisman import Talisman
 import jwt
 from flask_cors import CORS
 
+from .v1.views.secrets import *
+
+
 
 
 
@@ -25,8 +28,8 @@ mail = Mail()
 # api_key = "744ef1a5d352fb3edd3f66e6e93a1c0c1122c9918c176ac8a8c7baaab3f74a4c"
 
 #production key
-username = os.getenv('SMS_USERNAME')
-api_key = os.getenv('SMS_API_KEY')
+username = os.getenv('SMS_USERNAME') or SMS_USERNAME
+api_key = os.getenv('SMS_API_KEY') or SMS_API_KEY
 
 # username = "eapartmentapp"
 # api_key = "d232d0d25c18be83717469452f76e60d7171cf1a5977619e93a23676fe4fc98b"
@@ -43,7 +46,7 @@ from .v1 import version_one as v1
 def create_app(configuration):
 
     app = Flask(__name__)
-    # Talisman(app,content_security_policy=None)    
+    Talisman(app,content_security_policy=None)    
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])
@@ -66,8 +69,8 @@ def create_app(configuration):
         login_manager.login_view = 'api.userlogin'
         login_manager.init_app(app)
 
-        mailusername = os.getenv('G_ACCOUNT')
-        mailpassw = os.getenv('G_PASS')
+        mailusername = os.getenv('G_ACCOUNT') or G_ACCOUNT
+        mailpassw = os.getenv('G_PASS') or G_PASS
 
         print("username: ",mailusername)
         print("password: ",mailpassw)

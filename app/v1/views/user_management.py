@@ -10,6 +10,7 @@ from ..forms.forms import ModifyAccessRightForm
 
 from app.v1.models.operations import *
 from .helperfuncs import *
+from .secrets import *
 from app import db
 from app import sms
 
@@ -1178,8 +1179,9 @@ class LandingPage(Resource):
     def get(self):
         if os.getenv("TARGET") != "lasshouse":
             # return Response(render_template("landingtwo.html"))\
-            print("STAGINGGGG???",os.getenv("STAGING"))
-            if os.getenv("STAGING") == "True":
+            main = os.getenv("STAGING") or STAGING
+            print("STAGINGGGG???",main)
+            if os.getenv("STAGING") or STAGING == "True":
                 return redirect(url_for('api.index'))
             return redirect("https://kiotapay.co.ke")
         else:

@@ -11,6 +11,10 @@
 import os
 # from pickle import TRUE
 # from africastalking import initialize
+
+import sys
+import datetime
+
 import re
 import xlrd
 import inflect
@@ -96,6 +100,15 @@ def mbogi():
     # bal = tenant.balance
     # print(bal)
     # TenantOp.update_balance(tenant,bal+1.0)
+
+original_stdout = sys.stdout # Save a reference to the original standard output
+
+def lfile(*args):
+    with open('logfile.txt', 'a') as f:
+        sys.stdout = f # Change the standard output to the file we created.
+        printout = ' '.join(locals()['args'])
+        print(datetime.datetime.now(),":", printout)
+        sys.stdout = original_stdout # Reset the standard output to its original value
 
 def run_scripts(user):
     """scripts to be performed once before any other operation is done"""

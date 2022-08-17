@@ -33,16 +33,24 @@
               <div class="logo">
                 <span><img src={{logopath}} alt="logo"></span>
               </div>
-              <!-- <div class="info text-black"> 
-                <span>{{company}}</span>
-              </div> -->
-    
+              <div class="center-btn"><strong class="text-black">~ {{prop.name.title()}} ~</strong></div>
+
+              {%if not address%}
               <div class="center-btn mb-3 ln-10 text-black"> 
-                <div class="small">Address : {{company.street_address}}</div>
+                <div class="small mt-2">Address : {{company.street_address}}</div>
                 <div class="small">PO BOX : {{company.mail_box}}</div>
                 <div class="small">Tel : {{company.phone}}</div>
                 <div class="small">Email: {{company.email}}</div>
               </div>
+              {% endif %}
+  
+              {%if address%}
+              <div class="center-btn mb-3 ln-10 text-black"> 
+                <div class="small mt-2">Address : {{address.address}}</div>
+                <div class="small">Tel : {{address.tel}}</div>
+                <div class="small">Email: {{address.email}}</div>
+              </div>
+              {% endif%}
               
             </div>
           </div>
@@ -110,8 +118,8 @@
     
           <div class="svg">
             <div class="small service mb-1 pb-1 svg-child">
-                <div class="center-btn"><strong class="small">With Thanks</strong>.</div>
-                <div class="center-btn"><strong class="small">Served by: {{user}}</strong>.</div>
+                <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
+                <div class="center-btn"><strong class="small">{{prop.name.title()}}</strong>.</div>
                 <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
             </div>
           </div>

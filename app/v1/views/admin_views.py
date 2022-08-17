@@ -290,6 +290,43 @@ class DownloadReceipt(Resource):
             else:
                 receiptno = payment_obj.id
 
+            if co.name == "LaCasa":
+                if prop.id == 419:
+                    address = {
+                        "address": "Nairobi",
+                        "tel": "0735267087",
+                        "email": "goldlabelservices@gmail.com"
+                    }
+                elif prop.id == 420:
+                    address = {
+                        "address":"Ongata Rongai",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+                elif prop.id == 421:
+                    address = {
+                        "address":"Mwiki, Kasarani",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+                elif prop.name == "Baraka House":
+                    address = {
+                        "address":"Mwiki, Kasarani",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+
+                else:
+                    address = {
+                        "address":"Mwiki, Kasarani",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+
+            else:
+                address = None
+
+
             template_vars = {
                 "tenant":tenant.name,
                 "voided" : disp,
@@ -308,6 +345,7 @@ class DownloadReceipt(Resource):
                 "refnum":payment_obj.ref_number,
                 "paymode":payment_obj.paymode,
                 "logopath":mail_logo,
+                "address":address,
                 "company":co,
                 "user":server,
                 "prop":prop

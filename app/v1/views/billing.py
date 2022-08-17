@@ -1708,14 +1708,16 @@ class SendSms(Resource):
 
             co = payment_obj.apartment.company
             str_co = co.name
+            str_prop = payment_obj.apartment.name
+            end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
             raw_rem_sms =co.remainingsms
-            message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
+            message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
 
             char_count = len(message)
 
             cost = 1 if char_count <= 160 else 2
             
-            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,payment_obj.apartment.id,co.id)
+            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,None,payment_obj.apartment.id,co.id)
             sms_obj.save()
 
             if tenant_obj.sms:

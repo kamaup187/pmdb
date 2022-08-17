@@ -3663,6 +3663,8 @@ def autosend_pending_smsreceipts(payids):
 
         co = payment_obj.apartment.company
         str_co = co.name
+        str_prop = payment_obj.apartment.name
+        end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
         raw_rem_sms =co.remainingsms
 
         tele = tenant_obj.phone
@@ -3673,7 +3675,7 @@ def autosend_pending_smsreceipts(payids):
         phonenum = sms_phone_number_formatter(tele)
         salutation = "Service Charge & Utility" if serv else "Rental"
 
-        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
+        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
 
         if tenant_obj.sms:
 
@@ -3687,11 +3689,6 @@ def autosend_pending_smsreceipts(payids):
             
             sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
             sms_obj.save()
-
-            if co.sms_provider == "Advanta":
-                smsid = sms_sender(co.name,message,phonenum)
-                if smsid:
-                    PaymentOp.update_smsid(payment_obj,smsid)
             
             own_shortcode = False
 
@@ -3712,36 +3709,41 @@ def autosend_pending_smsreceipts(payids):
                         print("Payment sms sending initiated")
                         recipient = [phonenum]
 
-                        #Once this is done, that's it! We'll handle the rest
-                        response = sms.send(message, recipient,sender)
-                        print(response)
-                        resp = response["SMSMessageData"]["Recipients"][0]
+                        if co.sms_provider == "Advanta":
+                            smsid = sms_sender(co.name,message,phonenum)
+                            if smsid:
+                                PaymentOp.update_smsid(payment_obj,smsid)
+                        else:
+                            #Once this is done, that's it! We'll handle the rest
+                            response = sms.send(message, recipient,sender)
+                            print(response)
+                            resp = response["SMSMessageData"]["Recipients"][0]
 
-                        code = resp["statusCode"]
-                        smsid = resp["messageId"]
-                        if smsid:
-                            PaymentOp.update_smsid(payment_obj,smsid)
+                            code = resp["statusCode"]
+                            smsid = resp["messageId"]
+                            if smsid:
+                                PaymentOp.update_smsid(payment_obj,smsid)
 
-                        if code == 101: # SMS WAS SENT
+                            if code == 101: # SMS WAS SENT
 
-                            PaymentOp.update_sms_status(payment_obj,"sent")
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
+                                PaymentOp.update_sms_status(payment_obj,"sent")
+                                raw_cost = resp["cost"]
+                                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                                CompanyOp.set_rem_quota(co,rem_sms)
 
-                        elif code == 403:
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                            PaymentOp.update_sms_status(payment_obj,"fail")
-                        elif code == 405:
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                            txt = f"{co} has depleted sms"
-                            response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                        elif code == 406:
-                            PaymentOp.update_sms_status(payment_obj,"blocked")
-                            print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
+                            elif code == 403:
+                                print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                                PaymentOp.update_sms_status(payment_obj,"fail")
+                            elif code == 405:
+                                print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                                txt = f"{co} has depleted sms"
+                                response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                            elif code == 406:
+                                PaymentOp.update_sms_status(payment_obj,"blocked")
+                                print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
+                                raw_cost = resp["cost"]
+                                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                                CompanyOp.set_rem_quota(co,rem_sms)
                         
                     except Exception as e:
                         print(f"Houston, we have a problem {e}")

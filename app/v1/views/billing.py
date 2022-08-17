@@ -1695,7 +1695,7 @@ class SendSms(Resource):
 
             amount = f'Kes {payment_obj.amount:,.0f}'
 
-            if os.getenv("TARGET") or TARGET == "lasshouse":
+            if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
                 receipt = f"Receipt: https://km/r/{payment_obj.rand_id}"
             else:
                 receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
@@ -2925,7 +2925,7 @@ class ReceivePayment(Resource):
             outline = "text-success"
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-        if os.getenv("TARGET") or TARGET == "lasshouse":
+        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
             receiptlink = f"https://cr.com/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"

@@ -684,7 +684,7 @@ def logo(co):
             letterhead = "../static/img/logos/lymax/letterhead.jpg"
 
         else:
-            if os.getenv("TARGET") or TARGET != "lasshouse":
+            if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"

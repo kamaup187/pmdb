@@ -30,6 +30,7 @@ from dateutil.relativedelta import relativedelta
 from sqlalchemy import exc
 from app.v1.models.operations import *
 from .helperfuncs import *
+from .secrets import *
 from .advanta import *
 from operator import add
 from app import sms
@@ -520,7 +521,7 @@ class Index(Resource):
             if aviv(current_user):
                 indexpage = "agentindex3.html"
             else:
-                indexpage = os.getenv("INDEX")
+                indexpage = os.getenv("INDEX") or INDEX
 
 
             ############################################################################################################
@@ -2637,7 +2638,7 @@ class UpdateCompanyDetails(Resource):
         co_phone = request.form.get("co_tel")
         co_sphone = request.form.get("co_stel")
 
-        if current_user.username.startswith("qc") or os.getenv('APP_SETTINGS') == "development":
+        if current_user.username.startswith("qc") or os.getenv('APP_SETTINGS') or APP_SETTINGS == "development":
             pass
         else:
             co_name = ""

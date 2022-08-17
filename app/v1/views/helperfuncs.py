@@ -22,6 +22,8 @@ import inflect
 from natsort import natsorted
 from dateutil.parser import parse
 
+from .secrets import SENDER_ID, TARGET
+
 # import app
 try:
     from weasyprint import HTML
@@ -51,7 +53,7 @@ from rq.job import Job
 from worker import conn
 q = Queue(connection=conn,default_timeout=10800)
 
-sender = os.getenv("SENDER_ID")
+sender = os.getenv("SENDER_ID") or SENDER_ID
 
 kiotapay_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
 kiotapay_partner_id = 3886
@@ -682,7 +684,7 @@ def logo(co):
             letterhead = "../static/img/logos/lymax/letterhead.jpg"
 
         else:
-            if os.getenv("TARGET") != "lasshouse":
+            if os.getenv("TARGET") or TARGET != "lasshouse":
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"

@@ -2319,6 +2319,9 @@ class ReceivePayment(Resource):
                     print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
+            print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
+
+
 
             if bill:
                 # print("BILL DATE",bill.month,"/",bill.year)

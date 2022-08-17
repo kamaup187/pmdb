@@ -2557,6 +2557,8 @@ class ReceivePayment(Resource):
 
                 else:
                     skip = True
+            else:
+                skip = True
         else:
             skip = True
 

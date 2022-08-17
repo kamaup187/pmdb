@@ -11,6 +11,7 @@ class Home(Resource):
     def get(self):
         text_to_print = os.getenv("JEJE")
         lfile(text_to_print)
+        lfile("second one")
         return "yay!"
 
 

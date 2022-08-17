@@ -1,5 +1,5 @@
 import os
-from app.v1.views.secrets import *
+from global_secrets import *
 # basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):

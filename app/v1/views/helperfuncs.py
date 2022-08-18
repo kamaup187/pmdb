@@ -44,6 +44,7 @@ import random
 from flask_mail import Message
 # from flask import render_template,Response,request,flash,redirect,url_for,json
 from app.v1.models.operations import *
+from global_secrets import *
 from .advanta import *
 from app import mail
 from app import sms
@@ -74,7 +75,7 @@ mailsender = os.getenv('G_ACCOUNT')
 
 # from ..stkpush.access_token import register_url
 
-configuration = os.getenv('APP_SETTINGS')
+configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 
 if configuration == "development":
     localenv = True

@@ -3539,6 +3539,8 @@ class DataUpload(Resource):
         prop_name = request.form.get('prop')
         ttype = request.form.get('ttype')
 
+        lfile("staring point")
+
 
         if prop_name and prop_name != "null":
 
@@ -3580,6 +3582,8 @@ class DataUpload(Resource):
                 uploadsjob = q.enqueue_call(
                     func=read_excel, args=(dict_array,apartment_id,ttype,current_user.id,), result_ttl=5000
                 )
+
+                lfile("finish point: rows",len(dict_arr))
 
                 return '<span class="text-success">Upload successful</span>'
 

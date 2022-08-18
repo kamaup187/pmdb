@@ -684,7 +684,7 @@ def logo(co):
             letterhead = "../static/img/logos/lymax/letterhead.jpg"
 
         else:
-            if os.getenv("TARGET") or TARGET != "lasshouse":
+            if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
@@ -5275,11 +5275,13 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
         if code_obj:
             print("Skipping ",housecode)
+            lfile("Skipping ",housecode)
             
         elif group:
             valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
 
             print("house & amount",housecode,valid_inputs[0])
+            lfile("house & amount",housecode,valid_inputs[0])
 
             if ttype == "ptenant":
                 print("creating service")
@@ -5287,10 +5289,12 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                 code_obj.save()
             else:
                 print("creating rent")
+                lfile("creating rent")
                 code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
         else:
             print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
+            lfile("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
             continue
 
         try:
@@ -5319,6 +5323,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
 
         print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+        lfile("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
         try:
             if isinstance(raw_mobile,str):

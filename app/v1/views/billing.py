@@ -1695,7 +1695,7 @@ class SendSms(Resource):
 
             amount = f'Kes {payment_obj.amount:,.0f}'
 
-            if os.getenv("TARGET") or TARGET == "lasshouse":
+            if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
                 receipt = f"Receipt: https://km/r/{payment_obj.rand_id}"
             else:
                 receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
@@ -2221,8 +2221,10 @@ class ReceivePayment(Resource):
             skip = False
             if cbid:
                 cb = CtoBop.fetch_record_by_id(cbid)
+                print("CHECKING CBBBBB >>>",cb)
 
                 if cb.bill_ref_num:
+                    print("CBBBB HAS REF >>>",cb.bill_ref_num)
                     if cb.bill_ref_num.startswith("TNT"):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
@@ -2289,6 +2291,10 @@ class ReceivePayment(Resource):
                     #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                     else:
                         skip = True
+
+                else:
+                    print("CBBBB HAS NO REF >>>",cb.bill_ref_num)
+                    skip = True
             else:
                 skip = True
 
@@ -2316,10 +2322,10 @@ class ReceivePayment(Resource):
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
-                    print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
+                    # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-            print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
+            # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
 
 
 
@@ -2551,6 +2557,8 @@ class ReceivePayment(Resource):
 
                 else:
                     skip = True
+            else:
+                skip = True
         else:
             skip = True
 
@@ -2917,7 +2925,7 @@ class ReceivePayment(Resource):
             outline = "text-success"
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-        if os.getenv("TARGET") or TARGET == "lasshouse":
+        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
             receiptlink = f"https://cr.com/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"

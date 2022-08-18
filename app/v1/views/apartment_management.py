@@ -3583,7 +3583,7 @@ class DataUpload(Resource):
                     func=read_excel, args=(dict_array,apartment_id,ttype,current_user.id,), result_ttl=5000
                 )
 
-                lfile("finish point: rows",len(dict_arr))
+                lfile("finish point: rows",len(dict_array))
 
                 return '<span class="text-success">Upload successful</span>'
 

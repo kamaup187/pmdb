@@ -464,7 +464,7 @@
 
                       <div id="payment_agreement" class="">
                         <div class="">
-                          <div class="no-padding text-right"><span class="form-control smallify border-0">Booking balance (10%)<span class="text-danger">*</span></span></div>
+                          <div class="no-padding text-right"><span class="form-control smallify border-0">Deposit (30%)<span class="text-danger">*</span></span></div>
                           <div class="form-group no-paddin input-icons">
                             <input id="deposit" class="form-control ph pl-5 text-end" type="text">
                           </div>
@@ -1374,24 +1374,13 @@
 
 </script>
 
-<!-- <script>
+<script>
   // This script autopulate house options and displays tenant name
-  $("#contractsModal").on('shown.bs.modal', function(){
-    $.ajax({
-      url: "{{ url_for('api.addtenant') }}",
-      type: "get",
-      data: {
-            tenant_id:$("#tenant_identifier").text(),
-            target:"negotiated details"
-          },
-      success: function(response) {
-        $("#client_details_two").html(response);
-
-      }
-    });
+  $("#contractsModal").on('hidden.bs.modal', function(){
+    $("#client_details_two").empty();
   });
 
-</script> -->
+</script>
 
 
 
@@ -1513,7 +1502,6 @@
       var files = $('#contractsfile')[0].files;
       fd.append('file',files[0]);
 
-      fd.append('deposit2',$("#deposit2").val());
       fd.append('mi',$("#mi").val());
       fd.append('num_mi',$("#num_mi").val());
 
@@ -1764,11 +1752,11 @@ $('#expand').click(function(){
 $("#neg_price").on('keyup',function(){
   if ($("#neg_price").val() > 1){
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
+    $("#deposit").val((negprice*0.3).toLocaleString('en-US'))
     // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
   }else{
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    $("#deposit").val((negprice*0.1).toLocaleString('en-US'))
+    $("#deposit").val((negprice*0.3).toLocaleString('en-US'))
     // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
 
     $('#num_mi').keyup();
@@ -1787,7 +1775,8 @@ $("#neg_price").on('keyup',function(){
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
     // let deposit = $("#deposit").val().replace(/,/g, '');
-    let deposit2 = $("#deposit2").val().replace(/,/g, '');
+    // let deposit2 = $("#deposit2").val().replace(/,/g, '');
+    let deposit2 = 0.0;
     let diff = negprice - deposit2;
     let mi = $("#mi").val().replace(/,/g, '');
     let num_mi = diff / mi;
@@ -1825,7 +1814,8 @@ $("#neg_price").on('keyup',function(){
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
     // let deposit = $("#deposit").val().replace(/,/g, '');
-    let deposit2 = $("#deposit2").val().replace(/,/g, '');
+    let deposit2 = 0.0;
+    // let deposit2 = $("#deposit2").val().replace(/,/g, '');
     let diff = negprice - deposit2;
     let num_mi = $("#num_mi").val().replace(/,/g, '');
     let mi = diff / num_mi;

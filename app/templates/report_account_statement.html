@@ -216,8 +216,8 @@
                   </div>
       
                 </div>
-                <div class="divjust-end ln-16 mobile-malaysian nobreak text-black">
-                    Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv amount payable as at {{statementdate}}. 
+                <div class="divjust-end ln-16 mobile-malaysian nobreak">
+                    <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
                 </div>
 
 
@@ -230,7 +230,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoice" class="col-lg-12  dispnon">
     <div class="bg-white shadow">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -351,9 +351,9 @@
               </div>
   
             </div>
-            <div class="divjust-end ln-16 mobile-malaysian nobreak text-black">
-              Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv amount payable as at {{statementdate}}.
-          </div>
+            <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
+            </div>
          
         </div>
       

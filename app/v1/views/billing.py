@@ -2371,7 +2371,7 @@ class ReceivePayment(Resource):
 
         cbid = request.form.get("cbid")
 
-        book = "Booking balance" if bookingpaid else ""
+        book = "Deposit" if bookingpaid else ""
         inst = "Instalment" if instalmentpaid else ""
         addfee = "Additional fees" if addfeepaid else ""
 

@@ -3221,13 +3221,13 @@ class PaymentScheduleOp(PaymentSchedule,Base):
             return "-"
         if self.schedule_name.startswith("Other payments"):
             if self.house.description.upper() == "STUDIO":
-                return f"40% Legal fees (KES 10,400) on execution of sale agreement and balance on completion"
+                return f"On execution of sale agreement"
             else:
-                return f"40% Legal fees (KES 14,800) on execution of sale agreement and balance on completion"
+                return f"On execution of sale agreement"
 
         paydate = self.schedule_date if self.schedule_date else "-"
         if not isinstance(paydate,str):
-            str_date = PaymentScheduleOp.get_str_weekday(paydate.weekday()) + ", " + paydate.strftime("%d %B %Y")
+            str_date = paydate.strftime("%d %B %Y")
         else:
             str_date = paydate
         return str_date

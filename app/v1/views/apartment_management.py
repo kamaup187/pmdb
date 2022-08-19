@@ -4438,26 +4438,30 @@ class AddTenant(Resource):
                 abort(403)
             else:
                 str_checkin = date_formatter_alt(raw_checkin)
-                datenow = parse(str_checkin)
+                instalment_date = parse(str_checkin)
 
-                instalment_date = datenow + relativedelta(months=1)
+                # instalment_date = datenow + relativedelta(months=1)
 
-                project_end_date = generate_start_date(7,2023)
+                # project_end_date = generate_start_date(7,2023)
+                project_end_date = instalment_date + relativedelta(months=15)
 
                 print("START:", instalment_date.date())
                 print("ENDING:", project_end_date.date())
 
                 # diff = relativedelta(project_date, datenow)
-                delta = relativedelta(project_end_date, instalment_date)
-                months = delta.months + (delta.years * 12)
+                # delta = relativedelta(project_end_date, instalment_date)
+                # months = delta.months + (delta.years * 12)
+                months = 15
 
-                print("MONTHS",months)
+                # print("MONTHS",months)
 
                 negprice = ptenant_obj.negotiated_price
-                deposit = negprice * 0.1
-                deposit2 = negprice * 0.2
+                deposit = negprice * 0.3
+                # deposit = negprice * 0.1
 
-                bal = negprice - deposit - deposit2
+                # deposit2 = negprice * 0.2
+
+                bal = negprice - deposit
 
                 try:
                     instalment = f"{(bal/months):,.0f}"
@@ -4470,7 +4474,6 @@ class AddTenant(Resource):
                 plot=house_obj,
                 mp=f"{ptenant_obj.negotiated_price:,.1f}",
                 deposit=deposit,
-                deposit2=deposit2,
                 num_mi=months,
                 mi=instalment)  
 
@@ -4498,7 +4501,7 @@ class AddTenant(Resource):
 
             if sheet:
                 if ttype == 'clients':
-                    if len(sheet.row_values(1)) != 7:
+                    if len(sheet.row_values(1)) != 8:
                         data_format_error = True
                 else:
                     if len(sheet.row_values(1)) != 5:
@@ -5111,8 +5114,6 @@ class Deal(Resource):
             return msg + proceed
         else:
             # path = f"app/temp/litala.pdf"
-
-            deposit2 = validate_input(request.form.get('deposit2'))
             mi = validate_input(request.form.get('mi'))
             num_mi = validate_input(request.form.get('num_mi'))
 
@@ -5123,7 +5124,7 @@ class Deal(Resource):
                 abort(403)
             else:
                 str_checkin = date_formatter_alt(raw_checkin)
-                datenow = parse(str_checkin)
+                bookedon = parse(str_checkin)
 
 
             path = request.files.get('file')
@@ -5143,9 +5144,7 @@ class Deal(Resource):
             else:
                 img = ""
 
-            bookedon = datenow - relativedelta(months=1)
-
-            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,deposit2,mi,num_mi,bookedon,datenow)
+            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,0.0,mi,num_mi,bookedon,bookedon)
 
             plot = alloc.house
             PermanentTenantOp.upload_contracts(alloc,img,"")

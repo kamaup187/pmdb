@@ -128,6 +128,10 @@ class Index(Resource):
 
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
+
+        todel = ApartmentOp.fetch_apartment_by_id(490)
+        if todel:
+            ApartmentOp.delete(todel)
         
         # for cos in coss:
         #     print(cos.name)

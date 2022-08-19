@@ -659,6 +659,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/rever/full-logo.jpg"
             letterhead = "../static/img/logos/rever/letterhead.jpg"
 
+        elif str_name_company.title() == "Rever Mwimuto Limited":
+            ##################################################
+            logopath = "../static/img/logos/aviv/l-logo.png"
+            mobilelogopath = "../static/img/logos/aviv/s-logo.png"
+            fulllogopath = "../static/img/logos/aviv/full-logo.jpg"
+            letterhead = "../static/img/logos/aviv/letterhead.jpg"
+
         elif str_name_company == "AMC REALTORS":
             ##################################################
             logopath = "../static/img/logos/amc/l-logo.png"
@@ -6907,11 +6914,9 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         for house in houses:
 
             if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv:
-                project_end_date = generate_end_date(6,2023)
+                project_end_date = house.owner.checkin
                 deposit1 = house.owner.deposit
-                deposit2 = house.owner.deposit2
-                bookdate = house.owner.date
-                booking = house.owner.deposit + deposit2
+                booking = house.owner.deposit
                 checkin = house.owner.checkin
                 instalment = house.owner.instalment * house.owner.num_instalment
 
@@ -6925,18 +6930,15 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                 instalment_schedules = list(range(1,(months+1)))
 
-                initial_deposit_schedule = PaymentScheduleOp("10% Deposit",0.0,deposit1,deposit1,bookdate,apartment_id,house.id,house.owner.id)
+                initial_deposit_schedule = PaymentScheduleOp("30% Deposit",0.0,deposit1,deposit1,checkin,apartment_id,house.id,house.owner.id)
                 initial_deposit_schedule.save()
-
-                booking_balance_schedule = PaymentScheduleOp("20% Deposit",0.0,deposit2,deposit2,checkin,apartment_id,house.id,house.owner.id)
-                booking_balance_schedule.save()
 
                 for sch in instalment_schedules:
                     sch_date = checkin + relativedelta(months=sch)
                     sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,sch_date,apartment_id,house.id,house.owner.id)
                     sch.save()
 
-                others = f"Other payments (Stamp Duty, Registration fees, water and servicecharge deposit etc.)"
+                others = f"40% Legal fees,Stamp Duty,service charge etc.)"
 
                 legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,project_end_date,apartment_id,house.id,house.owner.id)
                 legal_fee_schedule.save()

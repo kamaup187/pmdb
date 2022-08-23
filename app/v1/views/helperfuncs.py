@@ -5681,7 +5681,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
                 #TODO FINISH ALL INSTALMENTS
             
         else:
-            print("Inst momi")
+            print("Instalment type or deposit not specified !!")
             pay_period_date = get_billing_period(prop)
 
 
@@ -5833,7 +5833,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
  
 
 
-        book = "Booking balance" if bookingpaid else ""
+        book = "Deposit_" if bookingpaid else ""
         inst = "Instalment" if instalmentpaid else ""
         addfee = "Additional fees" if addfeepaid else ""
 
@@ -5846,7 +5846,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
 
         narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
 
-        print(narration)
+        print("NARRATION: ",narration)
 
         paymode = "mpesa" if "mpesa" in desc else "Bank"
         raw_bill_ref = ref
@@ -5866,7 +5866,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
                 if payob.voided:
                     pass
                 else:
-                    print("REFERENCE EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
+                    print("REFERENCE (",raw_bill_ref,")EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.ptenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
                     continue
 
         tenant_id = None
@@ -5922,7 +5922,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
                     break
 
         if schedule_obj:
-            print("SCHEDULE OBJI FOUND")
+            print("SCHEDULE OBJI FOUND FOR UNIT",unit, "of month",schedule_obj.schedule_date.month, "and year",schedule_obj.schedule_date.year)
 
             print("#################################")
             print("DATE PASSED",pay_period_date.month,pay_period_date.year)
@@ -5931,7 +5931,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             sch_arrears = 0.0
             prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
             if prev_sch:
-                print("FOUND Previous scheduled")
+                print("FOUND Previous scheduled of month",prev_sch.schedule_date.month, "and year", prev_sch.schedule_date.year)
                 sch_arr = prev_sch[0].balance
                 if sch_arr:
                     sch_arrears = sch_arr
@@ -6919,7 +6919,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         for house in houses:
 
             if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv:
-                project_end_date = house.owner.checkin
+                project_end_date = house.owner.checkin + relativedelta(months=15)
                 deposit1 = house.owner.deposit
                 booking = house.owner.deposit
                 checkin = house.owner.checkin

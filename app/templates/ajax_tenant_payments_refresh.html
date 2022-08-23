@@ -7,6 +7,8 @@
                 <th class="text-info font-weight-bold">Payment No.</th>
                 <th class="text-info track-title-cell">Particulars.</th>
                 <th class="text-info track-title-cell">Payment date</th>
+                <th class="text-info track-title-cell">Captured on</th>
+
                 <!-- <th class="text-info track-title-cell">Bill</th> -->
                 <th class="text-info track-title-cell">Paid</th>
                 <th class="text-info track-title-cell">Balance</th>
@@ -20,6 +22,8 @@
                 <td class="first-data-cell text-dark font-weight-bold">{{ item['receiptno'] }}</td>
                 <td class="data-cell">{{ item['charge'] }}</td>
                 <td class="data-cell">{{ item['date'] }}</td>
+                <td class="data-cell">{{ item['on'] }}</td>
+
                 <!-- <td class="data-cell">Kes <span class="text-primary">{{ item['chargedamnt'] }}</span></td> -->
                 <td class="data-cell">Kes <span class="text-success font-weight-bold">{{ item['amount'] }}</span></td>
                 <td class="data-cell">Kes <span class="{{item['highlight']}}">{{ item['balance'] }}</span></td>

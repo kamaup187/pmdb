@@ -5647,11 +5647,8 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
         elif r_comment:
             rr_comment = r_comment.replace("Installment","Instalment")
             comment = rr_comment.replace("  "," ")
-            if "Booking Balance" in comment:
-                print("10%")
-                pay_period_date = tenant_obj.date
-            elif "Balance Payment" in comment:
-                print("20%")
+            if "Deposit" in comment:
+                print("30%")
                 pay_period_date = tenant_obj.checkin
             elif "Instalment 1" in comment:
                 print("Inst 1")
@@ -5671,9 +5668,14 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             elif "Instalment 6" in comment:
                 print("Inst 6")
                 pay_period_date = tenant_obj.checkin + relativedelta(months=6)
-            else:
-                print("Inst 7",comment)
+            elif "Instalment 7" in comment:
+                print("Inst 7")
                 pay_period_date = tenant_obj.checkin + relativedelta(months=7)
+            else:
+                print("Inst 8",comment)
+                pay_period_date = tenant_obj.checkin + relativedelta(months=8)
+
+                #TODO FINISH ALL INSTALMENTS
             
         else:
             print("Inst momi")

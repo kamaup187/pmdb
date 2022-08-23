@@ -5687,7 +5687,11 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
-                bill = tenant_obj.monthly_charges[0]
+                try:
+                    bill = tenant_obj.monthly_charges[0]
+                except:
+                    print("BILLS FOR TENANT ",tenant_obj,"are not available")
+                    continue
             else:
                 bill = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
@@ -5931,7 +5935,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             sch_arrears = 0.0
             prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
             if prev_sch:
-                print("FOUND Previous scheduled of month",prev_sch.schedule_date.month, "and year", prev_sch.schedule_date.year)
+                print("FOUND Previous scheduled of month",prev_sch[0].schedule_date.month, "and year", prev_sch[0].schedule_date.year)
                 sch_arr = prev_sch[0].balance
                 if sch_arr:
                     sch_arrears = sch_arr

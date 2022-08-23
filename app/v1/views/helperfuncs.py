@@ -5637,6 +5637,9 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             continue
 
         tenant_obj = house_obj.owner
+        if not tenant_obj:
+            print("SKIPPING house>> ",house_obj,"because it is not occupied")
+            continue
 
         bill= ""
 

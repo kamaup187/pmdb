@@ -5209,20 +5209,20 @@ class StatementOfAccounts(Resource):
             house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
             return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
 
-        # if not prop and target != "direct":
-        #     apartment_list = fetch_all_apartments_by_user(current_user)
-        #     return Response(render_template(
-        #         'report_account_statement.html',
-        #         props=apartment_list,
-        #         name=current_user.name,
-        #         tenant_obj = None,
-        #         prop = "",
-        #         prop_obj = None,
-        #         co=current_user.company,
-        #         tenantlist=[],
-        #         logopath=logo(current_user.company)[0],
-        #         mobilelogopath=logo(current_user.company)[1]
-        #     ))
+        if not prop and target != "direct":
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_account_statement.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop = "",
+                prop_obj = None,
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
 
 
         # target = request.args.get("target")

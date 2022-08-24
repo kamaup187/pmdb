@@ -217,7 +217,9 @@
       
                 </div>
                 <div class="divjust-end ln-16 mobile-malaysian nobreak">
+                  {%if %}
                     <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
+                    {%endif%}
                 </div>
 
 
@@ -352,7 +354,9 @@
   
             </div>
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              {%if tenant_obj%}
               <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
+              {%endif%}
             </div>
          
         </div>

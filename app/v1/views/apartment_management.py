@@ -2695,7 +2695,7 @@ class UpdatePropertyDetails(Resource):
         prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
 
         if target == "set llbal":
-            month = request.form.get("month")
+            month = request.form.get("month")git
 
             if month:
                 datestring = date_formatter_alt(month)
@@ -2716,8 +2716,10 @@ class UpdatePropertyDetails(Resource):
                     arr = arr*-1
 
             if llp:
+                print("found llp")
                 LandlordPaymentOp.update_arrears(llp,arr)
             else:
+                print("llp not not found")
                 llp = LandlordPaymentOp(0.0,0.0,0.0,0.0,prop_id)
                 llp.save()
 

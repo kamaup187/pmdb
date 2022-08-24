@@ -1802,18 +1802,15 @@ class LandlordProfitAndLoss(Resource):
             paidtotal_sum_members.append(paid)
             bcftotal_sum_members.append(bcf)
 
-            availables += bill.house.id
+            availables.append(bill.house.name)
 
    
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
         print("rents",billtotal_sum_members)
 
-        print("Availables", availables)
-
         for vac in vacants:
-            if vac.id in availables:
-                print("CHECKING", vac.name,"AGAINST hapo juu")
+            if vac.name in availables:
                 continue
             new_item = {
                 'id':"0",

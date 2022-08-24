@@ -1345,7 +1345,9 @@ class Dashboard(Resource):
                 for item in monthly_bills:
                     if item.month == period.month and item.year == period.year:
                         invs += 1
-                        total_bills += item.total_bill if item.total_bill > 0 else 0
+                        # total_bills += item.total_bill if item.total_bill > 0 else 0
+                        total_bills += item.total_bill
+
 
             month_str=f'{get_str_mnth(period.month)} invoices'
 
@@ -1399,7 +1401,9 @@ class Dashboard(Resource):
                 monthly_bills = apartment.monthlybills
                 for item in monthly_bills:
                     if item.month == period.month and item.year == period.year:
-                        total_balances += item.balance if item.balance > 0 else 0
+                        # total_balances += item.balance if item.balance > 0 else 0
+                        total_balances += item.balance
+
 
                         if not item.paid_amount:
                             defaulters += 1 if item.balance > 1 else 0

@@ -1764,7 +1764,7 @@ class LandlordProfitAndLoss(Resource):
                 current_month_bills.append(bill)
 
         ###################################################################################################
-        
+        availables = []
         for bill in current_month_bills:
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
@@ -1802,12 +1802,16 @@ class LandlordProfitAndLoss(Resource):
             paidtotal_sum_members.append(paid)
             bcftotal_sum_members.append(bcf)
 
+            availables += bill.house.name
+
    
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
         print("rents",billtotal_sum_members)
 
         for vac in vacants:
+            if vac.name in availables:
+                continue
             new_item = {
                 'id':"0",
                 'delid':"0",

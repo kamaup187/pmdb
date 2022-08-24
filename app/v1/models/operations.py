@@ -607,13 +607,17 @@ class LocationOp(Location,Base):
 
 class LandlordPaymentOp(LandlordPayment,Base):
     """class"""
-    def __init__(self,arrears,amount,paid,balance,apartment_id):
+    def __init__(self,arrears,amount,paid,balance,date,apartment_id):
         self.arrears =arrears
         self.amount = amount
         self.paid = paid
         self.balance = balance
+        self.date = date
 
         self.apartment_id = apartment_id
+
+    def fetch_llp_by_id(self,llpid):
+        return LandlordPayment.query.filter_by(id=llpid).first()
 
     def fetch_current_llp(propid,month,year):
         return LandlordPayment.query.filter( extract('month', LandlordPayment.date) == month).filter(extract('year', LandlordPayment.date) == year).filter(LandlordPayment.apartment_id == propid).first()

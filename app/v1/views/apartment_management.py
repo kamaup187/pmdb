@@ -2703,12 +2703,19 @@ class UpdatePropertyDetails(Resource):
             else:
                 target_period = prop_obj.billing_period
 
+            print("llp period",target_period, "propid",prop_id)
+
             llp = LandlordPaymentOp.fetch_current_llp(prop_id, target_period.month, target_period.year)
+
+            # llp = LandlordPaymentOp.fetch_llp_by_id()
+
+            # import pdb;
+            # pdb.set_trace()
 
             try:
                 arr = float(amount)
             except Exception as e:
-                print("ngweee",e)
+                print("errror",e)
                 arr = 0.0
 
             if category == "advance":
@@ -2720,7 +2727,7 @@ class UpdatePropertyDetails(Resource):
                 LandlordPaymentOp.update_arrears(llp,arr)
             else:
                 print("llp not not found")
-                llp = LandlordPaymentOp(0.0,0.0,0.0,0.0,prop_id)
+                llp = LandlordPaymentOp(arr,0.0,0.0,0.0,target_period,prop_id)
                 llp.save()
 
             return proceed

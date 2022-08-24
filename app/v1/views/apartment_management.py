@@ -1032,8 +1032,13 @@ class PropStats(Resource):
                     # if not boolie:
                     # if not item.updated:
                     #     MonthlyChargeOp.update_balances(item,item.rent,item.water,item.electricity,item.garbage,item.security,item.maintenance,item.penalty,item.deposit,item.agreement)
-                    total_bills += item.total_bill if item.total_bill > 0 else 0
-                    total_balances += item.balance if item.balance > 0 else 0
+
+                    # total_bills += item.total_bill if item.total_bill > 0 else 0
+                    # total_balances += item.balance if item.balance > 0 else 0
+
+                    total_bills += item.total_bill
+                    total_balances += item.balance
+
                     if not item.paid_amount:
                         defaulters += 1 if item.balance > 1 else 0
 

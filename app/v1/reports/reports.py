@@ -1809,8 +1809,11 @@ class LandlordProfitAndLoss(Resource):
         vacants = filter_out_occupied_houses(apartment_obj.name)
         print("rents",billtotal_sum_members)
 
+        print("Availables", availables)
+
         for vac in vacants:
             if vac.name in availables:
+                print("CHECKING", vac.name,"AGAINST hapo juu")
                 continue
             new_item = {
                 'id':"0",

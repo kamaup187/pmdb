@@ -2695,7 +2695,7 @@ class UpdatePropertyDetails(Resource):
         prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
 
         if target == "set llbal":
-            month = request.form.get("month")git
+            month = request.form.get("month")
 
             if month:
                 datestring = date_formatter_alt(month)

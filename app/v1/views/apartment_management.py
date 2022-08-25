@@ -4922,51 +4922,80 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 3:
+                if len(sheet.row_values(1)) != 6:
                     data_format_error = True
-
             try:
                 if data_format_error:
-                    """introduce an error"""
                     nonexistent_item = sheet.row_values(1)[1000000]
 
+                dict_array = []
+
                 for row in rows:
-                    
-                    try:
-                        tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
-                    except:
-                        tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                    dict_obj = {
+                    "unit":sheet.row_values(row)[0],
+                    "rentdep":sheet.row_values(row)[1],
+                    "waterdep":sheet.row_values(row)[2],
+                    "elecdep":sheet.row_values(row)[3],
+                    "otherdep":sheet.row_values(row)[4],
+                    "status":sheet.row_values(row)[5],
+                    }
 
-                    try:
-                        deposit = float(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0.0 )
-                    except:
-                        print(tenanthouse,"deposit failing")
-                        deposit = 0.0
+                    dict_array.append(dict_obj)
 
-                    print("STARTING...",deposit,"Type:",type(deposit))
+                uploadsjob = q.enqueue_call(
+                    func=read_deposits_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                )
 
-                    tenant_house = tenanthouse.upper()
+                lfile("finish point: rows",len(dict_array))
 
-                    house_obj = get_specific_house_obj(apartment_id,tenant_house)
-                    if not house_obj:
-                        print("Specified house doesnt exist: ",tenant_house)
-                        continue
-                    else:
-                        house_id = house_obj.id
-
-                    occupancy = check_occupancy(house_obj)
-
-                    if occupancy[0] == "occupied":
-                        tenant = occupancy[1]
-                    else:
-                        tenant = None
-                        continue
-                    
-                    if tenant:
-                        print("Updating...",tenant)
-                        TenantOp.update_deposit(tenant,deposit)
- 
                 return '<span class="text-success">Upload successful</span>'
+
+            # if sheet:
+            #     if len(sheet.row_values(1)) != 6:
+            #         data_format_error = True
+
+            # try:
+            #     if data_format_error:
+            #         """introduce an error"""
+            #         nonexistent_item = sheet.row_values(1)[1000000]
+
+            #     for row in rows:
+                    
+            #         try:
+            #             tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+            #         except:
+            #             tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+
+            #         try:
+            #             deposit = float(int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0.0 )
+            #         except:
+            #             print(tenanthouse,"deposit failing")
+            #             deposit = 0.0
+
+            #         print("STARTING...",deposit,"Type:",type(deposit))
+
+            #         tenant_house = tenanthouse.upper()
+
+            #         house_obj = get_specific_house_obj(apartment_id,tenant_house)
+            #         if not house_obj:
+            #             print("Specified house doesnt exist: ",tenant_house)
+            #             continue
+            #         else:
+            #             house_id = house_obj.id
+
+            #         occupancy = check_occupancy(house_obj)
+
+            #         if occupancy[0] == "occupied":
+            #             tenant = occupancy[1]
+            #         else:
+            #             tenant = None
+            #             continue
+                    
+            #         if tenant:
+            #             print("Updating...",tenant)
+            #             TenantOp.update_deposit(tenant,deposit)
+ 
+            #     return '<span class="text-success">Upload successful</span>'
 
             except Exception as e:
                 if not sheet:

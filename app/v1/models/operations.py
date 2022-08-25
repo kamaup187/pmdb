@@ -65,6 +65,10 @@ class Base():
         decor_fig = (f"{rounded_fig:,}")
         return decor_fig
 
+    def format(amount):
+        """method to format amount"""
+        return f"{amount:,.1f}"
+
     def get_str_month(month):
         switcher = {
             1:"Jan",
@@ -2294,6 +2298,12 @@ class TenantOp(Tenant,Base):
         else:
             return self.uid
 
+    def get_deposit(alloc):
+        try:
+            return f"{alloc.deposit:,.1f}"
+        except:
+            return 0.0
+
     def view(self):
         # print("NAME >>>>",self.name)
         return {
@@ -2311,7 +2321,7 @@ class TenantOp(Tenant,Base):
             'tel':TenantOp.get_contact(self),
             'email':TenantOp.get_email(self),
             'sms':TenantOp.billable(self),
-            'deposit':self.deposit,
+            'deposit':TenantOp.get_deposit(self),
             'housenum':TenantOp.get_houseno(self),
             'status':self.status,
             'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
@@ -2326,13 +2336,35 @@ class TenantOp(Tenant,Base):
 
 
 class TenantDepositOp(TenantDeposit,Base):
-    def __init__(self,rentdep,waterdep,elecdep,total,tenant_id,apartment_id):
+    def __init__(self,rentdep,waterdep,elecdep,otherdep,total,tenant_id,ptenant_id,apartment_id):
         self.rentdep = rentdep
         self.waterdep = waterdep
         self.elecdep = elecdep
+        self.otherdep = otherdep
         self.total = total
         self.tenant_id = tenant_id
+        self.ptenant_id = ptenant_id
         self.apartment_id = apartment_id
+
+    def get_name(self):
+        if self.ptenant_id:
+            return self.ptenant.name
+        else:
+            return self.tenant.name
+
+    def view(self):
+        return {
+            'id': self.id,
+            'tenant':TenantDepositOp.get_name(self),
+            'rentdep':TenantDepositOp.format(self.rentdep),
+            'waterdep':TenantDepositOp.format(self.waterdep),
+            'elecdep':TenantDepositOp.format(self.elecdep),
+            'otherdep':TenantDepositOp.format(self.otherdep),
+            'total':TenantDepositOp.format(self.total),
+            'paid':TenantDepositOp.format(self.paid),
+            'balance':TenantDepositOp.format(self.balance),
+            'status':self.status
+        }
 
 class AllocateTenantOp(Occupancy,Base):
     def __init__(self,apartment_id,house_id,tenant_id,user_id,description=None):

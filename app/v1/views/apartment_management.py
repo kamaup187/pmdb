@@ -1032,8 +1032,11 @@ class PropStats(Resource):
                     # if not boolie:
                     # if not item.updated:
                     #     MonthlyChargeOp.update_balances(item,item.rent,item.water,item.electricity,item.garbage,item.security,item.maintenance,item.penalty,item.deposit,item.agreement)
-                    total_bills += item.total_bill if item.total_bill > 0 else 0
+
+                    # total_bills += item.total_bill if item.total_bill > 0 else 0
+                    total_bills += item.total_bill
                     total_balances += item.balance if item.balance > 0 else 0
+
                     if not item.paid_amount:
                         defaulters += 1 if item.balance > 1 else 0
 
@@ -1340,7 +1343,9 @@ class Dashboard(Resource):
                 for item in monthly_bills:
                     if item.month == period.month and item.year == period.year:
                         invs += 1
-                        total_bills += item.total_bill if item.total_bill > 0 else 0
+                        # total_bills += item.total_bill if item.total_bill > 0 else 0
+                        total_bills += item.total_bill
+
 
             month_str=f'{get_str_mnth(period.month)} invoices'
 
@@ -2703,12 +2708,19 @@ class UpdatePropertyDetails(Resource):
             else:
                 target_period = prop_obj.billing_period
 
+            print("llp period",target_period, "propid",prop_id)
+
             llp = LandlordPaymentOp.fetch_current_llp(prop_id, target_period.month, target_period.year)
+
+            # llp = LandlordPaymentOp.fetch_llp_by_id()
+
+            # import pdb;
+            # pdb.set_trace()
 
             try:
                 arr = float(amount)
             except Exception as e:
-                print("ngweee",e)
+                print("errror",e)
                 arr = 0.0
 
             if category == "advance":
@@ -2716,9 +2728,11 @@ class UpdatePropertyDetails(Resource):
                     arr = arr*-1
 
             if llp:
+                print("found llp")
                 LandlordPaymentOp.update_arrears(llp,arr)
             else:
-                llp = LandlordPaymentOp(0.0,0.0,0.0,0.0,prop_id)
+                print("llp not not found")
+                llp = LandlordPaymentOp(arr,0.0,0.0,0.0,target_period,prop_id)
                 llp.save()
 
             return proceed

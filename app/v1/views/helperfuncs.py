@@ -659,7 +659,7 @@ def logo(co):
             fulllogopath = "../static/img/logos/rever/full-logo.jpg"
             letterhead = "../static/img/logos/rever/letterhead.jpg"
 
-        elif str_name_company.title() == "Rever Mwimuto Limited":
+        elif str_name_company.title() == "Rever Mwimuto Limited" and not localenv:
             ##################################################
             logopath = "../static/img/logos/aviv/l-logo.png"
             mobilelogopath = "../static/img/logos/aviv/s-logo.png"

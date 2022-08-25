@@ -774,11 +774,16 @@ class TenantDeposit(db.Model):
     rentdep = db.Column(db.Float,default=0)
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
-    description = db.Column(db.String,default="unrefunded")
+    otherdep = db.Column(db.Float,default=0)
 
     total = db.Column(db.Float,default=0)
+    paid = db.Column(db.Float,default=0)
+    balance = db.Column(db.Float,default=0)
+
+    description = db.Column(db.String,default="unrefunded")
 
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
     ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))

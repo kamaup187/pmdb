@@ -48,6 +48,8 @@
                           <div class="mb-2 ml-2">Name: <span class="text-black font-weight-bold">{{tenant.name.title()}}  
                             {% if tenant.uid %}
                             <span class="ml-3 text-black font-weight-bold small">#{{tenant.uid}}</span>
+                            {% elif tenant.ttype == "owner" or tenant.ttype == "resident" %}
+                            <span class="ml-3 text-black font-weight-bold small">#WN{{tenant.uid}}</span>
                             {% else %}
                              <span class="ml-3 text-danger font-weight-bold small">#TNT{{tenant.id}}</span>
                             {% endif %}

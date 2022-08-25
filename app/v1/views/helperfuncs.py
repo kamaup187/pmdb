@@ -5251,6 +5251,58 @@ def upload_handler(file,current_user):
 
     return [rows,sheet]
 
+def read_deposits_excel(dict_array,apartment_id,user_id):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+    for item in dict_array:
+
+        unit = item["unit"]
+        rentdep = item["rentdep"]
+        waterdep = item["waterdep"]
+        elecdep = item["elecdep"]
+        otherdep = item["otherdep"]
+        status = item["status"]
+
+        try:
+            housename = str(int(unit) if unit else "" )
+        except:
+            housename = unit if unit else ""
+
+        if housename == "":
+            print("EMPTY CELL")
+
+        try:
+            house_name = housename.upper()
+        except:
+            house_name = housename
+
+        house_obj = get_specific_house_obj(apartment_id,house_name)
+        
+        if not house_obj:
+            print("Skipping ",house_name)
+        else:
+            check_tenant = check_occupancy(house_obj)
+        if check_tenant[0] == "occupied":
+            tenant = check_tenant[1]
+        else:
+            tenant = None
+
+        if tenant:
+            print("Updating tenant deposits...for >>",house_obj)
+            if tenant.deposits:
+                print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj)
+            else:
+                values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
+                total = values[0]+values[1]+values[2]+values[3]
+                dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,tenant.id,None,apartment_id)
+                dep.save()
+                TenantOp.update_deposit(tenant,total)
+
+    return "completed"
 
 def read_excel(dict_array,apartment_id,ttype,user_id):
     from app import create_app

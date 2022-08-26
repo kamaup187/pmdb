@@ -47,6 +47,20 @@ class DownloadTemplate(Resource):
         path = f"files/{file}.xls"
         return send_file(path, as_attachment=True)
 
+class QueryResident(Resource):
+    def get(self,ri):
+        print("QR RESULTS ...",ri)
+        resident = PermanentTenantOp.fetch_tenant_by_id(get_identifier(ri))
+
+        co = resident.apartment.company
+
+        return Response(render_template(
+            'resident_data.html',
+            logopath=logo(co)[0],
+            resident = resident,
+        ))        
+
+
 class ViewReceipt(Resource):
     def get (self,ri):
         path = f"temp/receipt_{ri}.pdf"

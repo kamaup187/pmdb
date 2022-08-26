@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>KiotaPay - Resident details</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
+
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div class="mb-2 hide center-btn">
+    Resident details
+  </div>
+  <div id="invoice">
+    <div id="invoice-POS">
+
+      <div class="r-border">
+        <div class="center-btn svg underline">
+          <div class="svg-child">
+            <div class="logo">
+              <span><img src={{logopath}} alt="logo"></span>
+            </div>
+            <!-- <div class="info text-black"> 
+              <span>{{company}}</span>
+            </div> -->
+
+            <div class="center-btn"><strong class="text-black">~ {{resident.apartment.name.title()}} ~</strong></div>
+
+              
+          </div>
+        </div>
+      
+        <div class="svg">
+          <div class="svg-child text-left">
+            <div class="center-btn underline font-weight-bold text-primary">
+                RESIDENT INFOMATION
+            </div>
+        
+            <div class="row small">
+                <span class="col-12 text-right text-black">Uid: <span class="text-info font-weight-bold pr-3">{{resident.id}}</span></span>
+            </div>
+            <span class="text-gray-600 small mb-1">Name:</span><br>
+            <div class="underline no-padding center-btn">
+              <div class="ln-10 text-black pb-1">{{resident.name}}</div>
+            </div>
+          </div>
+        </div>
+  
+  
+    
+        <div class="svg underline">
+          <div class="svg-child text-left">
+            <div class="row service mb-1 pb-1">
+              <span class="col-8 itemtext mt-0"><div class="text-gray-500 center-btn">Flat/Apartment/Estate:</div><div class="text-black">{{resident.apartment}}</div></span>
+              <span class="col-4 itemtext mt-0 border-left-semidark"><div class="text-gray-500">House</div> <div class="text-black">{{resident.house}}</div></span>
+            </div>
+          </div>
+        </div>
+  
+        <div class="svg">
+          <div class="svg-child">
+
+            <div class="row service mb-1 pb-1">
+              <div class="col-6 itemtext text-black font-weight-bold mt-2 pl-5">Balance</div>
+              <div class="col-6 itemtext text-black font-weight-bold mt-2 border-left-semidark text-right pr-5">Kes {{resident.balance}}</div>
+            </div> 
+
+            <div class="row service mb-1 pb-1">
+              <div class="col-6 itemtext text-info font-weight-bold mt-2 pl-5">Tel</div>
+              <div class="col-6 itemtext text-info font-weight-bold mt-2 border-left-semidark text-right pr-5">{{resident.phone}}</div>
+            </div> 
+
+
+
+          </div>
+        </div>
+
+        <div class="service mb-1 pb-1">
+          <div class="itemtext {{outline}} font-weight-bold mt-2 border-left-semidark text-right pr-5 x-small">Email: {{resident.email}}</div>
+        </div> 
+  
+        <div class="svg">
+          <div class="small service mb-1 pb-1 svg-child">
+              <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
+              <div class="center-btn"><strong class="small">{{resident.apartment.name.title()}}</strong>.</div>
+          </div>
+        </div>
+  
+      </div>
+      </div>
+
+  </div>
+
+
+</body>

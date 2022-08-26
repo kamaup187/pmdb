@@ -7,6 +7,7 @@
 # from re import S
 # import time
 import os
+import qrcode
 # from unicodedata import category
 from dateutil.parser import parse
 
@@ -128,6 +129,11 @@ class Index(Resource):
 
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
+
+        # tnt_url = "https://kiotapay.com/query/tnt/"
+
+        # imgg = qrcode.make(tnt_url)
+        # imgg.save("greatwallqr.png")
 
         todel = ApartmentOp.fetch_apartment_by_id(490)
         if todel:

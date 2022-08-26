@@ -294,6 +294,8 @@ api.add_resource(Demo,"/demo/abtytbhvgcfxnbh")
 # api.add_resource(Robots,"/robots")
 api.add_resource(Robots,"/robots.txt")
 api.add_resource(ViewReceipt,"/r/<string:ri>")
+api.add_resource(QueryResident,"/query/<string:ri>")
+
 api.add_resource(UserActivation,"/user/<string:ri>")
 
 api.add_resource(DownloadReceipt,"/download/receipt/<string:ri>")

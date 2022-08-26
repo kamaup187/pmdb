@@ -2661,6 +2661,64 @@ class RentStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+
+class DepositStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_deposit_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                name=current_user.name))
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+
+        ##################################################################################################
+        detailed_bills = []
+        ###################################################################################################
+        db.session.expire(apartment_obj)
+
+        deps = apartment_obj.deposits
+
+        ###################################################################################################
+        for bill in deps:
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = TenantDepositOp.view(bill)
+            detailed_bills.append(bill_item)
+
+
+        ###################################################################################################
+
+        props = fetch_all_apartments_by_user(current_user)
+
+        return Response(render_template(
+            'report_deposit_statement.html',
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            tenantlist=[],
+            bills=detailed_bills,
+            paging="portrait",
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            company=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
 class RentRemit(Resource):
 
     @login_required

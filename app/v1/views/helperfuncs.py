@@ -5292,13 +5292,14 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             tenant = None
 
         if tenant:
+            values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
+            total = values[0]+values[1]+values[2]+values[3]
             print("Updating tenant deposits...for >>",house_obj)
             if tenant.deposits:
-                print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj)
+                print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj,"UPDATING....")
+                TenantDepositOp.update_deposits(tenant.deposits,values[0],values[1],values[2],values[3],total,status)
             else:
-                values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
-                total = values[0]+values[1]+values[2]+values[3]
-                dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,tenant.id,None,apartment_id)
+                dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,status,tenant.id,None,house_obj.id,apartment_id)
                 dep.save()
                 TenantOp.update_deposit(tenant,total)
 

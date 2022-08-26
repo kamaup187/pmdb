@@ -2336,15 +2336,29 @@ class TenantOp(Tenant,Base):
 
 
 class TenantDepositOp(TenantDeposit,Base):
-    def __init__(self,rentdep,waterdep,elecdep,otherdep,total,tenant_id,ptenant_id,apartment_id):
+    def __init__(self,rentdep,waterdep,elecdep,otherdep,total,status,tenant_id,ptenant_id,house_id,apartment_id):
         self.rentdep = rentdep
         self.waterdep = waterdep
         self.elecdep = elecdep
         self.otherdep = otherdep
         self.total = total
+        self.status = status
         self.tenant_id = tenant_id
         self.ptenant_id = ptenant_id
+        self.house_id = house_id
         self.apartment_id = apartment_id
+
+
+    def update_deposits(self,rentdep,waterdep,elecdep,otherdep,total,status):
+        self.rentdep = rentdep
+        self.waterdep = waterdep
+        self.elecdep = elecdep
+        self.otherdep = otherdep
+        self.total = total
+        self.status = status
+
+        db.session.commit()
+
 
     def get_name(self):
         if self.ptenant_id:
@@ -2355,6 +2369,7 @@ class TenantDepositOp(TenantDeposit,Base):
     def view(self):
         return {
             'id': self.id,
+            'house':self.house,
             'tenant':TenantDepositOp.get_name(self),
             'rentdep':TenantDepositOp.format(self.rentdep),
             'waterdep':TenantDepositOp.format(self.waterdep),

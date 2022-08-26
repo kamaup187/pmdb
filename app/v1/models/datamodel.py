@@ -311,7 +311,7 @@ class Apartment(db.Model):
     paymentdetails = db.relationship('PaymentDetail',backref='apartment',uselist=False,cascade="all, delete-orphan")
     landlordpayments = db.relationship('LandlordPayment',backref='apartment',order_by='LandlordPayment.date',cascade="all, delete-orphan")
     schedules = db.relationship('PaymentSchedule',backref='apartment', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")
-
+    deposits = db.relationship('TenantDeposit',backref='apartment', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
     remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
@@ -494,6 +494,7 @@ class House(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='house',order_by='TenantRequest.date', cascade="all, delete-orphan")
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='house',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
+    deposits = db.relationship('TenantDeposit',backref='house', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
     owner = db.relationship('PermanentTenant',backref='house', uselist=False, cascade="all, delete-orphan")
 
@@ -780,14 +781,16 @@ class TenantDeposit(db.Model):
     paid = db.Column(db.Float,default=0)
     balance = db.Column(db.Float,default=0)
 
-    description = db.Column(db.String,default="unrefunded")
+    status = db.Column(db.String,default="unrefunded")
 
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
     ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
-    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
     def __repr__(self):
         strhouse = str(self.id)

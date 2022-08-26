@@ -3,7 +3,6 @@ import os
 
 import africastalking
 from flask import Flask,session
-# from flask_rq2 import RQ
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -42,11 +41,13 @@ except:
 
 from .v1.models.datamodel import *
 from .v1 import version_one as v1
+from .v2 import version_two as v2
 
 def create_app(configuration):
 
     app = Flask(__name__)
     Talisman(app,content_security_policy=None)    
+    
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])
@@ -59,7 +60,8 @@ def create_app(configuration):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app_context = app.app_context()
     app_context.push()
-    app.register_blueprint(v1)
+    app.register_blueprint(v1) 
+    app.register_blueprint(v2)
     with app.app_context():
         # Initialize globals/extensions in app context
         # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL','HEROKU_POSTGRESQL_AQUA_URL')
@@ -71,9 +73,6 @@ def create_app(configuration):
 
         mailusername = os.getenv('G_ACCOUNT') or G_ACCOUNT
         mailpassw = os.getenv('G_PASS') or G_PASS
-
-        print("username: ",mailusername)
-        print("password: ",mailpassw)
 
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT'] = 465

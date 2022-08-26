@@ -38,7 +38,7 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light" method="GET" action="/reports">
+                    <form class="row bg-light" method="GET" action="/deposit/statement">
 
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
@@ -90,7 +90,7 @@
 
           <div class="divjust-end underline text-black font-weight-bold  text-110">
             <div class="">
-              <div>Property : {{ame}}</div>
+              <div>Property : {{apartment_name}}</div>
               <div>Estate : {{location}}</div>
             </div>
             <div class="pr-3">
@@ -113,11 +113,14 @@
                     <tr>
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
-                      <th class="">BB/F</th>
-                      <th class="">DEPOSIT</th>
-                      <th class="">TOTAL DUE</th>
-                      <th class="">TOTAL PAID</th>
-                      <th class="">BC/F</th>
+                      <th class="">RENT</th>
+                      <th class="">WATER</th>
+                      <th class="">ELEC</th>
+                      <th class="">OTHER</th>
+                      <th class="">TOTAL</th>
+                      <th class="">PAID</th>
+                      <th class="">BALANCE</th>
+                      <th class="">STATUS</th>
 
                     </tr>
                   </thead>
@@ -125,12 +128,16 @@
                     {% for bill in bills%}
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
-                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                      <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                      <td class="data-cell text-left">{{ bill['tenant']}}</td>
+                      <td class="data-cell text-right">{{ bill['rentdep'] }}</td>
+                      <td class="data-cell text-right">{{ bill['waterdep'] }}</td>
+                      <td class="data-cell text-right">{{bill['elecdep']}}</td>
+                      <td class="data-cell text-right">{{ bill['otherdep'] }}</td>
+                      <td class="data-cell text-right">{{ bill['total'] }}</td>
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['status'] }}</td>
+
                     </tr>
                   {% endfor %}
 
@@ -138,11 +145,15 @@
                   <tfoot class="custom-footer-alt">
                     <tr>
                       <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{renttotal}}</td>
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
+                      <td class="font-weight-bold text-right">{{rentdeptotal}}</td>
+                      <td class="font-weight-bold text-right">{{waterdeptotal}}</td>
+                      <td class="font-weight-bold text-right">{{elecdeptotal}}</td>
+                      <td class="font-weight-bold text-right">{{otherdeptotal}}</td>
+                      <td class="font-weight-bold text-right">{{deptotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                      <td class="font-weight-bold text-right">{{baltotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
+
                     </tr>
                   </tfoot>
                 </table>
@@ -157,7 +168,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoic" class="col-lg-12  dispnone">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">

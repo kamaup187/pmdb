@@ -1,7 +1,7 @@
 
 APP_SETTINGS="production"
 DATABASE_URL="postgres:///kiotadb"
-HEROKU_POSTGRESQL_AQUA_URL="postgres://bbgozuzflysbpp:752252c232a69248fcaa434826b26dc492160fb8c3648c03f1396115d1ccbf70@ec2-3-221-58-65.compute-1.amazonaws.com:5432/d97c9989tu9isf"
+HEROKU_POSTGRESQL_AQUA_URL="postgres://bbgozuzflysbpp:52252c232a69248fcaa434826b26dc492160fb8c3648c03f1396115d1ccbf70@ec2-3-221-58-65.compute-1.amazonaws.com:5432/d97c9989tu9isf"
 TEST_DATABASE_URL="postgresql:///testdb"
 REDIS_URL="redis://localhost:6379"
 REDISTOGO_URL=""

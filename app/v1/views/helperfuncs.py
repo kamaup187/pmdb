@@ -6925,7 +6925,7 @@ def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
                 for charge in all_charges:
                     if str(charge) == "Maintenance" and charge.date.month == month and charge.date.year == year:
                         if charge.amount == 0.0:
-                            print("deleting zero charged garbage obj")
+                            print("deleting zero charged service charge obj")
                             ChargeOp.delete(charge)
                         else:
                             checker = "exists"

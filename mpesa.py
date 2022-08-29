@@ -14,7 +14,7 @@ def generate_access_token():
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
     consumer_key = "lGckjnCGQwWFYDXz7V71XzWPA5QeIXK2"
-    consumer_secret = "CAzALdnxpySVLc1"
+    consumer_secret = "CAzALdnxpySVLc1W"
 
     api_URL = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
@@ -33,7 +33,7 @@ def register_url():
 
     my_access_token = generate_access_token()
 
-    api_url = "https://api.safaricom.co.ke/mpesa/c2b/v2/registerurl"
+    api_url = "https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl"
 
     headers = {"Authorization": "Bearer %s" % my_access_token}
 

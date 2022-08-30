@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 logfile.txt
+global_secrets.py

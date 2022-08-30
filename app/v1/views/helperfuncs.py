@@ -106,15 +106,15 @@ def mbogi():
 
 original_stdout = sys.stdout # Save a reference to the original standard output
 
-def lfile(*args):
-    with open('logfile.txt', 'a') as f:
-        sys.stdout = f # Change the standard output to the file we created.
-        full_str = ""
-        for i in locals()['args']:
-            str_print = str(i)
-            full_str += str_print
-        print(datetime.datetime.now(),":", full_str)
-        sys.stdout = original_stdout # Reset the standard output to its original value
+# def lfile(*args):
+#     with open('logfile.txt', 'a') as f:
+#         sys.stdout = f # Change the standard output to the file we created.
+#         full_str = ""
+#         for i in locals()['args']:
+#             str_print = str(i)
+#             full_str += str_print
+#         print(datetime.datetime.now(),":", full_str)
+#         sys.stdout = original_stdout # Reset the standard output to its original value
 
 def run_scripts(user):
     """scripts to be performed once before any other operation is done"""

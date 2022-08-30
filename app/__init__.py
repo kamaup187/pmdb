@@ -111,6 +111,8 @@ def create_app(configuration):
             user_obj = User.query.get(int(user_id))
             try:
                 print (f">>>>>>>>>>>>>>>>>>> ACTIVE USER: {user_obj.company.name}: ({user_obj.name} - {user_obj.company_user_group}) <<<<<<<<<<<<<<<<<<")
+                log = f">>>>>>>>>>>>>>>>>>> ACTIVE USER: {user_obj.company.name}: ({user_obj.name} - {user_obj.company_user_group}) <<<<<<<<<<<<<<<<<<"
+                lfile(log)
             except:
                 pass
             return user_obj

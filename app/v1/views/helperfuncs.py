@@ -45,7 +45,12 @@ from flask_mail import Message
 # from flask import render_template,Response,request,flash,redirect,url_for,json
 from app.v1.models.operations import *
 from global_functions import *
-from do_secrets import *
+
+try:
+    from do_secrets import *
+except ImportError:
+    APP_SETTINGS = None
+
 from .advanta import *
 from app import mail
 from app import sms

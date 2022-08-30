@@ -44,7 +44,8 @@ import random
 from flask_mail import Message
 # from flask import render_template,Response,request,flash,redirect,url_for,json
 from app.v1.models.operations import *
-from global_secrets import *
+from global_functions import *
+from do_secrets import *
 from .advanta import *
 from app import mail
 from app import sms
@@ -104,7 +105,7 @@ def mbogi():
     # print(bal)
     # TenantOp.update_balance(tenant,bal+1.0)
 
-original_stdout = sys.stdout # Save a reference to the original standard output
+# original_stdout = sys.stdout # Save a reference to the original standard output
 
 # def lfile(*args):
 #     with open('logfile.txt', 'a') as f:

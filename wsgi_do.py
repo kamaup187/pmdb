@@ -1,6 +1,6 @@
 import os
 from app import create_app
-from global_secrets import APP_SETTINGS
+from do_secrets import APP_SETTINGS
 # from dapp import create_dapp
 
 configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS

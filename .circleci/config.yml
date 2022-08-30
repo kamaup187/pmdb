@@ -21,7 +21,23 @@ jobs:
           APP_SETTINGS: testing
           REDIS_URL: "redis://localhost:6379"
           HEROKU_POSTGRESQL_AQUA_URL: "None"
+          DATABASE_URL: "None"
           TEST_DATABASE_URL: postgresql://root@localhost/circle_test
+
+          AVIV: "REVER MWIMUTO LIMITE"
+          TARGET: "lasshous"
+          INDEX: "agentindex.html"
+          STAGING: "True"
+
+          CLOUDINARY_URL: "cloudinary://597783923547314:uoZkQ1VBpnG8nJbOCJ_TWieviMs@dmq9pwyon"
+
+          G_ACCOUNT_ALERTS: "notifications.kiotapay@gmail.com"
+          G_ACCOUNT: "kiotapay@gmail.com"
+          G_PASS: "mnswpjyxdcvzbjes"
+
+          SENDER_ID: "KIOTAPAY"
+          SMS_API_KEY: "4f501cae150c2bf1ac987dc89d8a724aedbea5b6d248dd3790c4ee7da421c957"
+          SMS_USERNAME: "eapartment"
 
     # Service container image
 

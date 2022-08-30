@@ -134,7 +134,7 @@ class Index(Resource):
         print("ready to start background job with print....")
 
         jobjob = q.enqueue_call(
-                func=show_me, args=("job to be shown now",current_user.id,), result_ttl=5000
+                func=show_me, args=("changed it",current_user.id,), result_ttl=5000
             )
 
         # tnt_url = "https://kiotapay.com/query/tnt534"

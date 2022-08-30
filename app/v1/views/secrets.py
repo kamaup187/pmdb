@@ -15,10 +15,6 @@ G_ACCOUNT_ALERTS="notifications.kiotapay@gmail.com"
 G_ACCOUNT="kiotapay@gmail.com"
 G_PASS="mnswpjyxdcvzbjes"
 
-# G_ACCOUNT_ALERTS="koechpetersn@gmail.com"
-# G_ACCOUNT="kodimannsoftware@gmail.com"
-# G_PASS="ddtayrrpzvknubng"
-
 SENDER_ID="KIOTAPAY"
 SMS_API_KEY="4f501cae150c2bf1ac987dc89d8a724aedbea5b6d248dd3790c4ee7da421c957"
 SMS_USERNAME="eapartment"

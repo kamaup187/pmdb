@@ -14,7 +14,15 @@ import jwt
 from flask_cors import CORS
 
 from global_functions import *
-from do_secrets import *
+
+try:
+    from do_secrets import *
+except ImportError:
+    SMS_USERNAME = None
+    SMS_API_KEY = None
+    G_ACCOUNT = None
+    G_PASS = None
+
 
 
 

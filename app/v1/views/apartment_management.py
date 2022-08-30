@@ -130,8 +130,6 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
-        t=errr
-
         # tnt_url = "https://kiotapay.com/query/tnt534"
 
         # imgg = qrcode.make(tnt_url)

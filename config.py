@@ -1,5 +1,12 @@
 import os
-from do_secrets import *
+
+try:
+    from do_secrets import *
+except ImportError:
+    SMS_USERNAME = None
+    SMS_API_KEY = None
+    G_ACCOUNT = None
+    G_PASS = None
 # basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):

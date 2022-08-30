@@ -1,5 +1,9 @@
 import os
-from do_secrets import *
+
+try:
+    from do_secrets import *
+except ImportError:
+    pass
 # basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):

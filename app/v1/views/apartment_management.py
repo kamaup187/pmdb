@@ -130,12 +130,12 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
-        lfile("ready to start background job with lfile....")
-        print("ready to start background job with print....")
+        # lfile("ready to start background job with lfile....")
+        # print("ready to start background job with print....")
 
-        jobjob = q.enqueue_call(
-                func=show_me, args=("changed it",current_user.id,), result_ttl=5000
-            )
+        # jobjob = q.enqueue_call(
+        #         func=show_me, args=("changed it",current_user.id,), result_ttl=5000
+        #     )
 
         # tnt_url = "https://kiotapay.com/query/tnt534"
 

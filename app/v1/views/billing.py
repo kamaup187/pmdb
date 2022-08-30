@@ -4806,6 +4806,106 @@ class CallBackUrlTestSentomEquity(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
+class CallBackUrlTestLymaxEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("TEST LYMAX Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "test"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("TEST LYMAX Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class CallBackUrlLymaxEquity(Resource):
+    def get(self):
+        pass
+    def post(self):
+        response = sms.send("PROD LYMAX Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+        try:
+            data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+       
+            print("Data will be proccessed here")
+
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
+
+            data_type = "test"
+
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+
+
+        except Exception as e:
+            sms.send("TEST LYMAX Equity has error data", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
+
 class CallBackUrlLes(Resource):
     def get(self):
         pass

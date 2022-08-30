@@ -110,6 +110,16 @@ def mbogi():
     # print(bal)
     # TenantOp.update_balance(tenant,bal+1.0)
 
+def show_me(txt,user_id):
+    print(txt)
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    mtu = UserOp.fetch_user_by_id(user_id)
+    print("normal printing...>> message : ",txt,"myu >>",mtu.name)
+    lfile("LFILING message...>> message :",txt," mtu >> ",mtu.name)
+
 # original_stdout = sys.stdout # Save a reference to the original standard output
 
 # def lfile(*args):

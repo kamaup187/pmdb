@@ -2470,10 +2470,12 @@ class RentStatement(Resource):
                 bill_item = MonthlyChargeOp.external_view(bill)
                 detailed_bills.append(bill_item)
 
-                totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                if bill.rent_balance:
+                    totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
+
                 totalrent += bill.rent if bill.rent else 0.0
-                
                 totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+
                 if bill.rent_due:
                     totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
         ###################################################################################################
@@ -3191,7 +3193,7 @@ class WaterStatement(Resource):
             detailed_bills.append(new_item)
 
 
-        totalbbf = sum_values(bbftotal_sum_members)
+        totalbbf = sum_positive_values(bbftotal_sum_members)
         bbftotal = (f"{totalbbf:,}")
 
         totalrent = sum_values(renttotal_sum_members)

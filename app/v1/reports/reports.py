@@ -3490,7 +3490,7 @@ class GarbageStatement(Resource):
             detailed_bills.append(new_item)
 
 
-        totalbbf = sum_values(bbftotal_sum_members)
+        totalbbf = sum_positive_values(bbftotal_sum_members)
         bbftotal = (f"{totalbbf:,}")
 
         totalrent = sum_values(renttotal_sum_members)

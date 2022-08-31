@@ -3278,7 +3278,7 @@ class PaymentScheduleOp(PaymentSchedule,Base):
 
         paydate = self.schedule_date if self.schedule_date else "-"
         if not isinstance(paydate,str):
-            str_date = paydate.strftime("%d %B %Y")
+            str_date = paydate.strftime("%d %b %Y")
         else:
             str_date = paydate
         return str_date

@@ -4841,11 +4841,11 @@ class CallBackUrlTestLymaxEquity(Resource):
 
             data_obj = BankDataOp.fetch_record_by_ref(bankReference)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
                 data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:
@@ -4891,11 +4891,11 @@ class CallBackUrlLymaxEquity(Resource):
 
             data_obj = BankDataOp.fetch_record_by_ref(bankReference)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
                 data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:

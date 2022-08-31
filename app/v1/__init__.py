@@ -184,7 +184,7 @@ api.add_resource(CallBackUrlTestLatitudeEquity,"/test/latitude/payment")
 api.add_resource(CallBackUrlSentomEquity,"/b/sentom/ins/payment")
 api.add_resource(CallBackUrlTestSentomEquity,"/b/sentom/ins/testpayment")
 
-api.add_resource(CallBackUrlLymaxEquity,"/bank/sentom/prod")
+api.add_resource(CallBackUrlLymaxEquity,"/bank/lymax/prod")
 api.add_resource(CallBackUrlTestLymaxEquity,"/bank/lymax/test")
 
 api.add_resource(CallBackUrlLes,"/les/45")

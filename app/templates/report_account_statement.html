@@ -147,12 +147,7 @@
 
                       <th class="">Date Payable</th>
                       <th class="">Amount Payable</th>
-                      <th class="">Balance/BF</th>
-                      <th class="">Amount due</th>
-
                       <th class="">Amount Received</th>
-                      <!-- <th class="">Current Balance</th> -->
-
                       <th class="">Date Received</th>
                       <th class="">Payment Ref</th>
                       <th class="">Payment Type</th>
@@ -168,11 +163,8 @@
 
                       <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
                       <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
-                      <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
-                      <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
 
                       <td class="data-cell text-right">{{ bill['paid'] }}</td>
-                      <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
   
                       <td class="data-cell text-center">{{ bill['paydate'] }}</td>
                       <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
@@ -188,12 +180,7 @@
                       <td class="font-weight-bold hid">.</td>
                       <td class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{schtotal}}</td>
-                      <td class="font-weight-bold text-right">-</td>
-                      <td class="font-weight-bold text-right">-</td>
                       <td class="font-weight-bold text-right">{{schpaid}}</td>
-                      <!-- <td class="font-weight-bold text-right">{{sch_bal_total}}</td> -->
-
-
 
                       <td colspan="4" class="font-weight-bold text-right">-</td>
 
@@ -285,12 +272,7 @@
 
                   <th class="">Date Payable</th>
                   <th class="">Payable</th>
-                  <th class="">B/BF</th>
-                  <th class="">Due</th>
-
                   <th class="">Received</th>
-                  <!-- <th class="">Current Balance</th> -->
-
                   <th class="">Date</th>
                   <th class="">Payment Ref</th>
                   <th class="">Payment Type</th>
@@ -306,12 +288,7 @@
 
                   <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
                   <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
-                  <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
-                  <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
-
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
-                  <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
-
                   <td class="data-cell text-center">{{ bill['paydate'] }}</td>
                   <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
                   <td class="data-cell text-center no-wrap">{{ bill['paytype']}}</td>
@@ -326,8 +303,6 @@
                   <td class="font-weight-bold hid">.</td>
                   <td class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{schtotal}}</td>
-                  <td class="font-weight-bold text-right">-</td>
-                  <td class="font-weight-bold text-right">-</td>
                   <td class="font-weight-bold text-right">{{schpaid}}</td>
                   <!-- <td class="font-weight-bold text-right">{{sch_bal_total}}</td> -->
 

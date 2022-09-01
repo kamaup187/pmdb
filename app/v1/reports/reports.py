@@ -5196,14 +5196,26 @@ class MeritStatementOne(Resource):
         totdue = 0.0
 
         for bill in bills:
-            totrent += bill.rent
-            totserv += bill.maintenance
+            totrent += bill.rent_paid + bill.maintenance_paid
+            if bill.house.name == "B3":
+                totserv += 2500
+            else:
+                totserv += bill.maintenance
+            if bill.rent_paid > 2000:
+                raw_mgt = (bill.rent_paid / bill.rent) * 2000
+                mgt = round(raw_mgt,-3) if raw_mgt > 1999 else 0
+            else:
+                mgt =  0
+
+            totmgt += mgt
+
+            totdue += (bill.rent_paid + bill.maintenance_paid)  - MonthlyChargeOp.get_management_fees(bill) - float(MonthlyChargeOp.get_maintenance(bill).replace(",",""))
 
             formatted_bills.append(MonthlyChargeOp.view_merit(bill))
 
-        for item in formatted_bills:
-            totmgt += item["mgt"]
-            totdue += item["ownerdue"]
+        # for item in formatted_bills:
+        #     totmgt += item["mgt"]
+        #     totdue += item["ownerdue"]
 
         expense_list = []
 

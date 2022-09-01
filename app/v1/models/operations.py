@@ -2296,7 +2296,7 @@ class TenantOp(Tenant,Base):
         if not self.uid:
             return f"TNT{self.id}"
         else:
-            return self.uid
+            return f"{self.uid}/TNT{self.id}"
 
     def get_deposit(alloc):
         try:

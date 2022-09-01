@@ -1216,34 +1216,55 @@ class HouseOp(House,Base):
 
 
     def view(self):
-        return {
-            'id':self.id,
-            'editid':HouseOp.generate_editid(self),
-            'delid':HouseOp.generate_delid(self),
-            "highlight":HouseOp.highlight_vacancy(self),
-            "mhighlight":HouseOp.highlight_unmetered(self),
-            'house':self.name,
-            'group':self.housecode,
-            'description':self.description,
-            'status':HouseOp.get_status(self),
+        if not self.housecode:
+            print(self.deposits)
+            return {
+                'id':self.id,
+                'editid':HouseOp.generate_editid(self),
+                'delid':HouseOp.generate_delid(self),
+                "highlight":HouseOp.highlight_vacancy(self),
+                "mhighlight":HouseOp.highlight_unmetered(self),
+                'house':self.name,
+                'group':self.housecode,
+                'description':self.description,
+                'status':HouseOp.get_status(self),
 
-            'agent':HouseOp.get_agentname(self),
-            'booking':HouseOp.get_booking(self),
+                'agent':HouseOp.get_agentname(self),
+                'booking':HouseOp.get_booking(self),
 
-            'tenant':HouseOp.get_tenantname(self),
-            'owner':self.owner.name.title() if self.owner else "N/A",
-            'meter':HouseOp.get_meterno(self),
-            'price':HouseOp.format_amount(self.housecode.listprice if self.housecode.listprice else 0),
-            'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
-            'rate':HouseOp.format_amount_and_wbilling(self,self.housecode.waterrate if self.housecode else 0),
-            'srate':HouseOp.format_amount_and_wbilling(self,self.housecode.seweragerate if self.housecode else 0),
-            'fixed':HouseOp.format_amount(self.housecode.watercharge if self.housecode else 0),
-            'maintenance':HouseOp.format_amount_and_sbilling(self,self.housecode.servicerate if self.housecode else 0),
-            'garbage':HouseOp.format_amount(self.housecode.garbagerate if self.housecode else 0),
-            'security':HouseOp.format_amount(self.housecode.securityrate if self.housecode else 0),
-            'fine':HouseOp.format_percent_amount(self.housecode.finerate if self.housecode else 0),
-            'by':HouseOp.getname(self.housecode.user_id) if self.housecode else "N/A"
-        }
+                'tenant':HouseOp.get_tenantname(self),
+                'owner':self.owner.name.title() if self.owner else "N/A",
+                'meter':HouseOp.get_meterno(self),
+            }
+        else:
+            return {
+                'id':self.id,
+                'editid':HouseOp.generate_editid(self),
+                'delid':HouseOp.generate_delid(self),
+                "highlight":HouseOp.highlight_vacancy(self),
+                "mhighlight":HouseOp.highlight_unmetered(self),
+                'house':self.name,
+                'group':self.housecode,
+                'description':self.description,
+                'status':HouseOp.get_status(self),
+
+                'agent':HouseOp.get_agentname(self),
+                'booking':HouseOp.get_booking(self),
+
+                'tenant':HouseOp.get_tenantname(self),
+                'owner':self.owner.name.title() if self.owner else "N/A",
+                'meter':HouseOp.get_meterno(self),
+                'price':HouseOp.format_amount(self.housecode.listprice if self.housecode.listprice else 0),
+                'rent':HouseOp.format_amount(self.housecode.rentrate if self.housecode else 0),
+                'rate':HouseOp.format_amount_and_wbilling(self,self.housecode.waterrate if self.housecode else 0),
+                'srate':HouseOp.format_amount_and_wbilling(self,self.housecode.seweragerate if self.housecode else 0),
+                'fixed':HouseOp.format_amount(self.housecode.watercharge if self.housecode else 0),
+                'maintenance':HouseOp.format_amount_and_sbilling(self,self.housecode.servicerate if self.housecode else 0),
+                'garbage':HouseOp.format_amount(self.housecode.garbagerate if self.housecode else 0),
+                'security':HouseOp.format_amount(self.housecode.securityrate if self.housecode else 0),
+                'fine':HouseOp.format_percent_amount(self.housecode.finerate if self.housecode else 0),
+                'by':HouseOp.getname(self.housecode.user_id) if self.housecode else "N/A"
+            }
 
 class SalesRepOp(SalesRep,Base):
     """class"""

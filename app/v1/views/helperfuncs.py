@@ -4602,7 +4602,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             if update:
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
-                                    sms_bbf = (f"{bbf:,}")
+                                    sms_bbf = (f"{bbf:,.1f}")
                                     message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
@@ -4612,7 +4612,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
-                                    sms_bbf = (f"{bbf:,}")
+                                    sms_bbf = (f"{bbf:,.1f}")
                                     message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
@@ -4731,7 +4731,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             if update:
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
-                                    sms_bbf = (f"{bbf:,}")
+                                    sms_bbf = (f"{bbf:,.1f}")
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
@@ -4743,7 +4743,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
-                                    sms_bbf = (f"{bbf:,}")
+                                    sms_bbf = (f"{bbf:,.1f}")
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."

@@ -3209,6 +3209,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         }
 
     def get_management_fees(self):
+        if self.apartment.name.upper() == "PALM MEWS APARTMENT":
+            if self.rent_paid > 2000:
+                mgt = (self.rent_paid / self.rent) * 2000
+                return round(mgt,-3) if mgt > 1999 else 0
+            else:
+                return 0
+
         if self.house.housecode.commission:
             comm = self.house.housecode.commission
             try:
@@ -3228,15 +3235,21 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         return commission
 
+    def get_maintenance(self):
+        if self.house.name == "B3":
+            return "2,500.0"
+        else:
+            return f"{self.maintenance:,.1f}"
+
     def calculate_owner_due(self):
-        return self.rent - self.maintenance - MonthlyChargeOp.get_management_fees(self)
+        return (self.rent_paid + self.maintenance_paid) - MonthlyChargeOp.get_management_fees(self) - float(MonthlyChargeOp.get_maintenance(self).replace(",",""))
 
     def view_merit(self):
         return {
             'tenant':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
-            'rent':MonthlyChargeOp.fig_format(self.rent),
-            'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
+            'rent':MonthlyChargeOp.fig_format(self.rent_paid + self.maintenance_paid),
+            'service':MonthlyChargeOp.get_maintenance(self),
             'mgt':MonthlyChargeOp.get_management_fees(self),
             'ownerdue':MonthlyChargeOp.calculate_owner_due(self),
             'comment':"-"

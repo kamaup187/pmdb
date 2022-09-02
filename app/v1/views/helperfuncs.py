@@ -4364,7 +4364,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
     app.app_context().push()
 
     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-    update = False
+    update = True
 
     if prop_obj and charge == "all":
 
@@ -4732,9 +4732,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,.1f}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 # else:
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 

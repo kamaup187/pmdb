@@ -1060,33 +1060,37 @@
 
 
                                 <div class="report-btn">
-                                    <a class="btn2" href="{{ url_for('api.customreport') }}">
+                                    <a class="btn2" href="/st/one">
                                         <button class="btn btn-outline-info report-card mb-1">
                                             <div class=""><i class="fas fa-file-contract fa-2x"></i></div>
-                                            <span class="sss text-black">Report one
+                                            <span class="sss text-black">Merit
                                             </span>
 
                                         </button>
                                     </a>
                                 </div>
 
-                                <div class="report-btn">
-                                    <a class="" href="#">
-                                        <button class="btn btn-outline-info report-card mb-1">
-                                            <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
-                                            <span class="sss text-black">Report two
-                                            </span>
 
-                                        </button>
-                                    </a>
-                                </div>
-
-                                <div class="report-btn">
-                                    <a class="" href="/st/one">
+                                <div class="report-btn hide">
+                                    <a class="" href="{{ url_for('api.customreport') }}">
                                         <button class="btn btn-outline-info report-card mb-1">
                                             <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
                                             <span class="sss text-black">Report three
                                             </span>
+
+                                        </button>
+                                    </a>
+                                </div>
+
+
+                                <div class="report-btn hide">
+                                    <a class="dev" href="#">
+                                        <button class="btn btn-outline-info report-card mb-1">
+                                            <div class="loaderx"><i class="fas fa-file-contract fa-2x"></i></div>
+                                            <span class="sss text-black">Tenant Statement II
+                                            </span>
+                                            <span class="badge badge-danger badge-counter">new </span>
+
 
                                         </button>
                                     </a>

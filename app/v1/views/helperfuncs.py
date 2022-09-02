@@ -4305,7 +4305,7 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
 
             txt = Message(period, sender = mailsender, recipients = [email_addr])
-            txt.body = f"Dear {tname}  \nyour {billfrequency} invoice is now available. Kindly find the attached invoice below. \n\n{co.name}"
+            txt.body = f"Dear {tname}  \nyour {billfrequency} updated invoice (VAT inclusive) is now available. Kindly find the attached invoice below. \n\n{co.name}"
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
             # mail.send(txt)

@@ -4155,36 +4155,38 @@ def send_out_single_email_invoice(billid):
             tenant=bill.tenant
             print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
 
-    #     co = bill.apartment.company
+        co = bill.apartment.company
 
-    #     invnum = bill.id + 13285
+        invnum = bill.id + 13285
 
-    #     house = bill.house
+        house = bill.house
 
-    #     #start here
-    #     sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
-    #     sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+        #start here
+        sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+        sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
 
-    #     try:
-    #         wbill = sibling_water_bill[0]
-    #         w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
-    #     except:
-    #         wbill = None
-    #         w_edited = "dispnone"
+        try:
+            wbill = sibling_water_bill[0]
+            w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
+        except:
+            wbill = None
+            w_edited = "dispnone"
 
-    #     try:
-    #         ebill = sibling_electricity_bill[0]
-    #         e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
-    #     except:
-    #         ebill = None
-    #         e_edited = "dispnone"
+        try:
+            ebill = sibling_electricity_bill[0]
+            e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
+        except:
+            ebill = None
+            e_edited = "dispnone"
 
 
-    #     kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
-    #     invdate = bill.date - relativedelta(days = 0)
-    #     inv_date = invdate.strftime("%d/%b/%y")
-    #     invdue = invdate + relativedelta(days=5)
-    #     inv_due = invdue.strftime("%d/%b/%y")
+        kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+        invdate = bill.date - relativedelta(days = 0)
+        inv_date = invdate.strftime("%d/%b/%y")
+        invdue = invdate + relativedelta(days=5)
+        inv_due = invdue.strftime("%d/%b/%y")
+
+        print("got here so far")
 
     
     #     email_addr = tenant.email

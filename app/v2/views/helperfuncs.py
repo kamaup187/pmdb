@@ -24,6 +24,11 @@ from dateutil.parser import parse
 
 from .secrets import SENDER_ID, TARGET
 
+try:
+    from do_secrets import *
+except ImportError:
+    APP_SETTINGS = None
+
 # import app
 try:
     from weasyprint import HTML
@@ -44,7 +49,6 @@ import random
 from flask_mail import Message
 # from flask import render_template,Response,request,flash,redirect,url_for,json
 from app.v1.models.operations import *
-from global_secrets import *
 from .advanta import *
 from app import mail
 from app import sms

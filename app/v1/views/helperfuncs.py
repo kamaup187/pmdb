@@ -4131,12 +4131,16 @@ def send_out_email_invoices(prop,houses,override,charge,user_id):
 
 
 def send_out_single_email_invoice(billid):
+
+    print("configgggs",configuration)
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
 
     try:
         bill = MonthlyChargeOp.fetch_specific_bill(billid)
+
+        print("BILL IS HERE >>>>",bill)
 
         with mail.connect() as conn:
 

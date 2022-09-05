@@ -1,7 +1,13 @@
 import os
 import requests
 from app.v1.models.operations import *
-configuration = os.getenv('APP_SETTINGS')
+
+try:
+    from do_secrets import *
+except ImportError:
+    APP_SETTINGS = None
+
+configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 
 # def advanta_sms(txt,tel):
 

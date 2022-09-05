@@ -4270,8 +4270,8 @@ def send_out_single_email_invoice(billid):
                 "slogo":logo(kiotapay)[1]
             }
 
-            # mail_sender(conn,tenant,bill,template_vars,email_addr,co)
             print("going to mail sender")
+            mail_sender(conn,tenant,bill,template_vars,email_addr,co)
         else:
             print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
 

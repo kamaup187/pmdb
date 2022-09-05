@@ -142,9 +142,9 @@ class Index(Resource):
         # imgg = qrcode.make(tnt_url)
         # imgg.save("greatwallqr.png")
 
-        todel = ApartmentOp.fetch_apartment_by_id(490)
-        if todel:
-            ApartmentOp.delete(todel)
+        # todel = ApartmentOp.fetch_apartment_by_id(490)
+        # if todel:
+        #     ApartmentOp.delete(todel)
         
         # for cos in coss:
         #     print(cos.name)
@@ -501,6 +501,10 @@ class Index(Resource):
                 else:
                     color = "text-success"
                 smsfrac = f"{remainingsms} units"
+
+            # display own sms balance:
+            if localenv:
+                print("REMAINING SMS",advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id))
 
                 
             # if current_user.username.startswith('qc'):

@@ -130,6 +130,9 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
+        if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
+            CompanyOp.update_ctype(current_user.company,"crm")
+
         # lfile("ready to start background job with lfile....")
         # print("ready to start background job with print....")
 

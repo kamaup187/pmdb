@@ -186,6 +186,10 @@ class CompanyOp(Company,Base):
         self.billing_period = period
         db.session.commit()
 
+    def update_ctype(self,ctype):
+        self.ctype = ctype
+        db.session.commit()
+
     def update_sphone(self,sphone):
         if sphone:
             self.sphone = sphone

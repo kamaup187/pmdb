@@ -56,6 +56,8 @@ class Company(db.Model):
     remainingsms = db.Column(db.Integer,default=500)
     quotamonth = db.Column(db.Integer,default=7)
     sms_provider = db.Column(db.String,default="AFRICASTALKING")
+
+    ctype = db.Column(db.String)
     # comment = db.Column(db.String)
 
     users = db.relationship('User', backref='company',order_by='User.name', cascade="all, delete-orphan")

@@ -4189,90 +4189,91 @@ def send_out_single_email_invoice(billid):
         print("got here so far")
 
     
-    #     email_addr = tenant.email
-    #     if email_addr:
-    #         if wbill or ebill:
-    #             visibility = ""
-    #         else:
-    #             visibility = "hide"
+        email_addr = tenant.email
+        if email_addr:
+            if wbill or ebill:
+                visibility = ""
+            else:
+                visibility = "hide"
 
-    #         arrears = bill.arrears
+            arrears = bill.arrears
             
-    #         if bill.paid_amount:
-    #             billpaid = f"{bill.paid_amount:,.2f}"
-    #             billbal = f"{bill.balance:,.2f}"
+            if bill.paid_amount:
+                billpaid = f"{bill.paid_amount:,.2f}"
+                billbal = f"{bill.balance:,.2f}"
 
-    #         else:
-    #             billpaid = 0.0
-    #             billbal = 0.0
+            else:
+                billpaid = 0.0
+                billbal = 0.0
 
-    #         if arrears < 0.0:
-    #             arrtitle = "Previous balance"
-    #             bbfhighlight = "text-success"
+            if arrears < 0.0:
+                arrtitle = "Previous balance"
+                bbfhighlight = "text-success"
 
-    #             arrears = f"{arrears*-1}"
-    #         elif arrears > 0.0:
-    #             arrtitle = "Previous balance"
-    #             bbfhighlight = "text-danger"
-    #         else:
-    #             arrtitle = ""
-    #             bbfhighlight = ""
+                arrears = f"{arrears*-1}"
+            elif arrears > 0.0:
+                arrtitle = "Previous balance"
+                bbfhighlight = "text-danger"
+            else:
+                arrtitle = ""
+                bbfhighlight = ""
 
-    #         try:
-    #             if current_target == "owner":
-    #                 if bill.house.watertarget == "owner":
-    #                     watertarget = True
-    #                 else:
-    #                     watertarget = False
-    #             else:
-    #                 if bill.house.watertarget == "tenant":
-    #                     watertarget = True
-    #                 else:
-    #                     watertarget = False
-    #         except:
-    #             watertarget = True
+            try:
+                if current_target == "owner":
+                    if bill.house.watertarget == "owner":
+                        watertarget = True
+                    else:
+                        watertarget = False
+                else:
+                    if bill.house.watertarget == "tenant":
+                        watertarget = True
+                    else:
+                        watertarget = False
+            except:
+                watertarget = True
 
-    #         try:
-    #             if bill.apartment.paymentdetails.nartype == 'hsenum':
-    #                 narration = bill.house.name
-    #             else:
-    #                 if bill.ptenant:
-    #                     narration = "WN"+str(tenant.id)
-    #                 else:
-    #                     narration = "TNT"+str(tenant.id)
-    #         except:
-    #             narration = bill.house.name
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = bill.house.name
+                else:
+                    if bill.ptenant:
+                        narration = "WN"+str(tenant.id)
+                    else:
+                        narration = "TNT"+str(tenant.id)
+            except:
+                narration = bill.house.name
 
-    #         template_vars = {
-    #             "bill":bill,
-    #             "p":bill.apartment.paymentdetails,
-    #             "narration":narration,
-    #             "servicevisibility":"",
-    #             "readings": wbill,
-    #             "w_edited": w_edited,
-    #             "ereadings": ebill,
-    #             "e_edited": e_edited,
-    #             "visibility":visibility,
-    #             "watertarget":watertarget,
-    #             "arrears":arrears,
-    #             "bbfhighlight ": bbfhighlight,
-    #             "arrtitle":arrtitle,
-    #             "billpaid":billpaid,
-    #             "billbal":billbal,
-    #             "house":house,
-    #             "total":f"{bill.total_bill:,.2f}",
-    #             "invdate":inv_date,
-    #             "invdue":inv_due,
-    #             "client":tenant,
-    #             "company":co,
-    #             "invnum":invnum,
-    #             "logo":logo(co)[2],
-    #             "slogo":logo(kiotapay)[1]
-    #         }
+            template_vars = {
+                "bill":bill,
+                "p":bill.apartment.paymentdetails,
+                "narration":narration,
+                "servicevisibility":"",
+                "readings": wbill,
+                "w_edited": w_edited,
+                "ereadings": ebill,
+                "e_edited": e_edited,
+                "visibility":visibility,
+                "watertarget":watertarget,
+                "arrears":arrears,
+                "bbfhighlight ": bbfhighlight,
+                "arrtitle":arrtitle,
+                "billpaid":billpaid,
+                "billbal":billbal,
+                "house":house,
+                "total":f"{bill.total_bill:,.2f}",
+                "invdate":inv_date,
+                "invdue":inv_due,
+                "client":tenant,
+                "company":co,
+                "invnum":invnum,
+                "logo":logo(co)[2],
+                "slogo":logo(kiotapay)[1]
+            }
 
-    #         mail_sender(conn,tenant,bill,template_vars,email_addr,co)
-    #     else:
-    #         print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
+            # mail_sender(conn,tenant,bill,template_vars,email_addr,co)
+            print("going to mail sender")
+        else:
+            print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
 
     # # except Exception as e:
     # #     print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)

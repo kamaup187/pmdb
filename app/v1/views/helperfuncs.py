@@ -4144,16 +4144,16 @@ def send_out_single_email_invoice(billid):
 
     print("BILL IS HERE >>>>",bill)
 
-    # with mail.connect() as conn:
+    with mail.connect() as conn:
 
-    #     if bill.ptenant:
-    #         tenant=bill.ptenant
-    #         current_target = "owner"
-    #         print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
-    #     else:
-    #         current_target = "tenant"
-    #         tenant=bill.tenant
-    #         print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
+        if bill.ptenant:
+            tenant=bill.ptenant
+            current_target = "owner"
+            print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
+        else:
+            current_target = "tenant"
+            tenant=bill.tenant
+            print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
 
     #     co = bill.apartment.company
 

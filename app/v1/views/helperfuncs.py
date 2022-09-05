@@ -6998,7 +6998,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv or apartment_obj.company.type == "crm":
+            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv or apartment_obj.company.ctype == "crm":
                 project_end_date = house.owner.checkin + relativedelta(months=15)
                 deposit1 = house.owner.deposit
                 booking = house.owner.deposit

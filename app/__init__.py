@@ -40,7 +40,7 @@ except:
 
 from .v1.models.datamodel import *
 from .v1 import version_one as v1
-from .v2 import version_two as v2
+# from .v2 import version_two as v2
 
 def create_app(configuration):
 
@@ -60,7 +60,7 @@ def create_app(configuration):
     app_context = app.app_context()
     app_context.push()
     app.register_blueprint(v1) 
-    app.register_blueprint(v2)
+    # app.register_blueprint(v2)
     with app.app_context():
         # Initialize globals/extensions in app context
         # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL','HEROKU_POSTGRESQL_AQUA_URL')

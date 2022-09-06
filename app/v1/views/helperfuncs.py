@@ -27,7 +27,8 @@ from dateutil.parser import parse
 # import app
 try:
     from weasyprint import HTML
-except:
+except Exception as e:
+    print("Cannot import weasyprint",e)
     HTML = None
 
 from flask import render_template

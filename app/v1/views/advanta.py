@@ -1,13 +1,15 @@
-import os
 import requests
-from app.v1.models.operations import *
+# from app.v1.models.operations import *
+# from .helperfuncs import *
 
-try:
-    from do_secrets import *
-except ImportError:
-    APP_SETTINGS = None
+# try:
+#     from do_secrets import *
+# except ImportError:
+#     APP_SETTINGS = None
 
-configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
+# configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
+
+
 
 # def advanta_sms(txt,tel):
 
@@ -195,48 +197,6 @@ def afrinet_sms_balance(apikey,partnerid):
         print(e)
 
     return f"{balance:,.0f}"
-
-
-def advanta_sms_delivery(apikey,partnerid,msgid):
-    from app import create_app
-    app = create_app(configuration)
-    app.app_context().push()
-
-    payload = {
-    "apikey":apikey,
-    "partnerID":partnerid,
-    "messageID":msgid
-    }
-
-    url = "https://quicksms.advantasms.com/api/services/getdlr/"
-
-    response = requests.get(url, json=payload)
-
-    try:
-        resp = response.json()["delivery-description"]
-        print("DELIVERY REPORT:", resp)
-    except:
-        resp = "unknown error"
-
-    if resp == "DeliveredToTerminal":
-        resp1 = "Success"
-    else:
-        resp1 = "blocked"
-
-    if resp1 == "unknown error":
-        pass
-    else:
-        payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
-        if payment_obj:
-            print("DELIVERY STATUS! PAYMENT FOUND")
-            PaymentOp.update_sms_status(payment_obj,resp1)
-
-        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
-        if bill_obj:
-            MonthlyChargeOp.update_sms_status(bill_obj,resp1)
-            print("DELIVERY STATUS! INVOICE FOUND")
-        else:
-            print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 
 
 

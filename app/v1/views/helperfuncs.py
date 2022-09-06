@@ -22,7 +22,7 @@ import inflect
 from natsort import natsorted
 from dateutil.parser import parse
 
-from .secrets import SENDER_ID, TARGET
+# from .secrets import SENDER_ID, TARGET
 
 # import app
 try:
@@ -46,12 +46,6 @@ from flask_mail import Message
 from app.v1.models.operations import *
 from global_functions import *
 
-try:
-    from do_secrets import *
-except ImportError:
-    APP_SETTINGS = None
-
-from .advanta import *
 from app import mail
 from app import sms
 
@@ -60,7 +54,24 @@ from rq.job import Job
 from worker import conn
 q = Queue(connection=conn,default_timeout=10800)
 
+try:
+    from do_secrets import *
+except ImportError:
+    APP_SETTINGS = None
+    SENDER_ID = None
+    TARGET = None
+    G_ACCOUNT = None
+    HOMEPAGE = None
+    INDEX = None
+    SMS_USERNAME = None
+    SMS_API_KEY = None
+
 sender = os.getenv("SENDER_ID") or SENDER_ID
+mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
+configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
+
+from .advanta import *
+
 
 kiotapay_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
 kiotapay_partner_id = 3886
@@ -76,12 +87,6 @@ greatwall_partner_id = 321
 
 kiotanum = "+254716674695"
 
-mailsender = os.getenv('G_ACCOUNT')
-
-
-# from ..stkpush.access_token import register_url
-
-configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 
 if configuration == "development":
     localenv = True
@@ -95,10 +100,9 @@ err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 
-def aviv(user):
-    rever = os.getenv('AVIV')
-    if user.company.name == rever or user.company.name.lower().startswith("demo"):
-        return aviv
+def crm(user):
+    if user.company.ctype == "crm":
+        return "crm"
     else:
         return ""
 
@@ -790,6 +794,47 @@ def update_login_history(location,user):
             send_internal_email_notifications(title,txt)
         except:
             pass
+
+def advanta_sms_delivery(apikey,partnerid,msgid):
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid,
+    "messageID":msgid
+    }
+
+    url = "https://quicksms.advantasms.com/api/services/getdlr/"
+
+    response = requests.get(url, json=payload)
+
+    try:
+        resp = response.json()["delivery-description"]
+        print("DELIVERY REPORT:", resp)
+    except:
+        resp = "unknown error"
+
+    if resp == "DeliveredToTerminal":
+        resp1 = "Success"
+    else:
+        resp1 = "blocked"
+
+    if resp1 == "unknown error":
+        pass
+    else:
+        payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
+        if payment_obj:
+            print("DELIVERY STATUS! PAYMENT FOUND")
+            PaymentOp.update_sms_status(payment_obj,resp1)
+
+        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
+        if bill_obj:
+            MonthlyChargeOp.update_sms_status(bill_obj,resp1)
+            print("DELIVERY STATUS! INVOICE FOUND")
+        else:
+            print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 
 def sms_sender(company,sms_text,phonenum):
     if company.title() == "Lesama Ltd":
@@ -5998,7 +6043,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
 
         schedule_obj = None
 
-        if co.name == "REVER MWIMUTO LIMITED":
+        if co.ctype == "crm":
             print("GONE TO PAY AVIV")
             schedule_objs = tenant_obj.schedules
             for sch in schedule_objs:

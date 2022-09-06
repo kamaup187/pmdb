@@ -31,7 +31,7 @@ from dateutil.relativedelta import relativedelta
 from sqlalchemy import exc
 from app.v1.models.operations import *
 from .helperfuncs import *
-from .secrets import *
+# from .secrets import *
 from .advanta import *
 from operator import add
 from app import sms
@@ -547,7 +547,7 @@ class Index(Resource):
                 else:
                     shortcode2= f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
-            if aviv(current_user):
+            if crm(current_user):
                 indexpage = "agentindex3.html"
             else:
                 indexpage = os.getenv("INDEX") or INDEX
@@ -1811,7 +1811,7 @@ class PropertyManagement(Resource):
         houselist = house_details(house_list)
         houseids = get_obj_ids(houselist)
 
-        template = "ajax_prop_detail2.html" if aviv(current_user) else "ajax_prop_detail.html"
+        template = "ajax_prop_detail2.html" if crm(current_user) else "ajax_prop_detail.html"
 
         return render_template(
             template,
@@ -1958,7 +1958,7 @@ class TenantManagement(Resource):
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
 
-        template = "ajax_tenants_detail2.html" if aviv(current_user) else "ajax_tenants_detail.html"
+        template = "ajax_tenants_detail2.html" if crm(current_user) else "ajax_tenants_detail.html"
 
         return render_template(template,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
 
@@ -3784,7 +3784,7 @@ class CreateHouseCode(Resource):
                 valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
                 HouseCodeOp.update_agreement_rate(new_code_obj,valid_inputs2[0])
 
-                if aviv(current_user):
+                if crm(current_user):
                     HouseCodeOp.update_listprice(new_code_obj,valid_inputs[0])
                     HouseCodeOp.update_rentrate(new_code_obj,0.0)
 
@@ -7464,7 +7464,7 @@ class Results(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            template = "ajax_tenant_detail2.html" if aviv(current_user) else "ajax_tenant_detail.html"
+            template = "ajax_tenant_detail2.html" if crm(current_user) else "ajax_tenant_detail.html"
 
             return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 

@@ -29,6 +29,7 @@ try:
     from weasyprint import HTML
 except:
     HTML = None
+
 from flask import render_template
 from jinja2 import Environment, FileSystemLoader, Template
 from dateutil.relativedelta import relativedelta
@@ -4333,6 +4334,7 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
     template = templateEnv.get_template(TEMPLATE_FILE)
 
     print("CURRENTLY SENDING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",recepient.name)
+    print("WEASYPRINT???? >>>>",HTML)
 
     html_out = template.render(template_vars)
     filename = f"app/temp/inv_{bill.id}.pdf"

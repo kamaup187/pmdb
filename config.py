@@ -1,5 +1,7 @@
 import os
 
+# from app.v2.views.secrets import DATABASE_URL, HEROKU_POSTGRESQL_AQUA_URL, TEST_DATABASE_URL
+
 try:
     from do_secrets import *
 except ImportError:
@@ -7,6 +9,11 @@ except ImportError:
     SMS_API_KEY = None
     G_ACCOUNT = None
     G_PASS = None
+    
+    HEROKU_POSTGRESQL_AQUA_URL = None
+    DATABASE_URL = None
+    TEST_DATABASE_URL = None
+
 # basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):

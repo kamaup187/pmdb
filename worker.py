@@ -1,18 +1,18 @@
 import os
-from app.v1.views.secrets import *
+
+try:
+    from do_secrets import *
+except ImportError:
+    REDIS_URL = None
 
 import redis
 from rq import Worker, Queue, Connection
 
 listen = ['default']
 
-redis_url = os.getenv('REDISTOGO_URL') or REDISTOGO_URL
-if not redis_url:
-    print("THIS IS THE NORMAL REDIS_URL >>>>",redis_url)
+redis_url = os.getenv('REDIS_URL') or REDIS_URL
 
-    redis_url = os.getenv('REDIS_URL') or REDIS_URL
-
-print("THIS IS THE FINAL REDIS_URL >>>>",redis_url)
+print("THIS IS REDIS_URL >>>>",redis_url)
 
 if not redis_url:
     redis_url = "redis://localhost:6379"

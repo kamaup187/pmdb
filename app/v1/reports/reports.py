@@ -5616,7 +5616,7 @@ class FetchHouses(Resource):
         houselist = house_details(houses)
         houseids = get_obj_ids(houselist)
 
-        template = "ajax_houselist2.html" if aviv(current_user) else "ajax_houselist.html"
+        template = "ajax_houselist2.html" if crm(current_user) else "ajax_houselist.html"
 
         return render_template(template,items=houselist,houseids=houseids)
 
@@ -5629,7 +5629,7 @@ class FetchRates(Resource):
         housecodelist = group_details(housecodes)
         groupids = get_obj_ids(housecodelist)
 
-        template = "ajax_housecodelist2.html" if aviv(current_user) else "ajax_housecodelist.html"
+        template = "ajax_housecodelist2.html" if crm(current_user) else "ajax_housecodelist.html"
 
 
         return render_template(template,items=housecodelist,groupids=groupids)
@@ -6012,7 +6012,7 @@ class FetchBills(Resource):
 
                 # billids = get_obj_ids(detailed_bills)
 
-                template = "ajax_tenantbill2.html" if aviv(current_user) else "ajax_tenantbill.html"
+                template = "ajax_tenantbill2.html" if crm(current_user) else "ajax_tenantbill.html"
 
                 return render_template(
                     template,

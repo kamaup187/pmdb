@@ -22,7 +22,7 @@ from ..forms.forms import PaymentForm,AmendChargeForm
 from ..stkpush.access_token import lipa_na_mpesa_online,lipa_na_mpesa_online2,stkquery
 from app.v1.models.operations import *
 from .helperfuncs import *
-from .secrets import *
+# from .secrets import *
 from app import mail
 from app import sms
 
@@ -737,7 +737,7 @@ class BillInvoice(Resource):
             except:
                 narration = ""
 
-            template = "ajax_tenant_invoice_mail2.html" if aviv(current_user) else "ajax_tenant_invoice_mail.html"
+            template = "ajax_tenant_invoice_mail2.html" if crm(current_user) else "ajax_tenant_invoice_mail.html"
 
             if bill.house.housecode.billfrequency == 3:
                 str_month = f"July, August, September"
@@ -853,7 +853,7 @@ class BillInvoice(Resource):
             print("READINGS: ",wbill)
             print("WATERTARGET: ",watertarget)
 
-            template = "ajax_sms_invoice2.html" if aviv(current_user) else "ajax_sms_invoice.html"
+            template = "ajax_sms_invoice2.html" if crm(current_user) else "ajax_sms_invoice.html"
 
             return render_template(
                 template,
@@ -2622,7 +2622,7 @@ class ReceivePayment(Resource):
         if not narration:
             narration = generate_string(water,rent,garbage,sec,arr,dep,serv)
 
-        # if aviv(current_user):
+        # if crm(current_user):
         #     narration = get_str_month(period.month)
 
         # monthly_charges = house_obj.monthlybills

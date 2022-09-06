@@ -6,7 +6,7 @@ from flask import Flask,session
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from config import configurations
+from config import *
 from flask_talisman import Talisman
 
 import jwt
@@ -14,33 +14,23 @@ from flask_cors import CORS
 
 from global_functions import *
 
-try:
-    from do_secrets import *
-except ImportError:
-    SMS_USERNAME = None
-    SMS_API_KEY = None
-    G_ACCOUNT = None
-    G_PASS = None
-
-
-
-
+# try:
+#     from do_secrets import *
+# except ImportError:
+#     SMS_USERNAME = None
+#     SMS_API_KEY = None
+#     G_ACCOUNT = None
+#     G_PASS = None
 
 
 db = SQLAlchemy()
 mail = Mail()
 # rq = RQ()
 
-# #sandbox keys
-# username = "sandbox"
-# api_key = "744ef1a5d352fb3edd3f66e6e93a1c0c1122c9918c176ac8a8c7baaab3f74a4c"
 
-#production key
 username = os.getenv('SMS_USERNAME') or SMS_USERNAME
 api_key = os.getenv('SMS_API_KEY') or SMS_API_KEY
 
-# username = "eapartmentapp"
-# api_key = "d232d0d25c18be83717469452f76e60d7171cf1a5977619e93a23676fe4fc98b"
 
 try:
     africastalking.initialize(username, api_key)
@@ -83,12 +73,12 @@ def create_app(configuration):
         mailusername = os.getenv('G_ACCOUNT') or G_ACCOUNT
         mailpassw = os.getenv('G_PASS') or G_PASS
 
-        app.config['MAIL_SERVER']='smtp.gmail.com'
-        app.config['MAIL_PORT'] = 465
-        app.config['MAIL_USERNAME'] = mailusername
-        app.config['MAIL_PASSWORD'] = mailpassw
-        app.config['MAIL_USE_TLS'] = False
-        app.config['MAIL_USE_SSL'] = True
+        # app.config['MAIL_SERVER']='smtp.gmail.com'
+        # app.config['MAIL_PORT'] = 465
+        # app.config['MAIL_USERNAME'] = mailusername
+        # app.config['MAIL_PASSWORD'] = mailpassw
+        # app.config['MAIL_USE_TLS'] = False
+        # app.config['MAIL_USE_SSL'] = True
 
         #### CORS
         CORS(app, resources={r"/*": {"origins": "*"}})
@@ -102,12 +92,12 @@ def create_app(configuration):
         # app.config['MAIL_USE_TLS'] = False
         # app.config['MAIL_USE_SSL'] = True
 
-        # app.config['MAIL_SERVER']='smtp.gmail.com'
-        # app.config['MAIL_PORT'] = 465
-        # app.config['MAIL_USERNAME'] = 'kiotapay@gmail.com'
-        # app.config['MAIL_PASSWORD'] = 'mnswpjyxdcvzbjes'
-        # app.config['MAIL_USE_TLS'] = False
-        # app.config['MAIL_USE_SSL'] = True
+        app.config['MAIL_SERVER']='smtp.gmail.com'
+        app.config['MAIL_PORT'] = 465
+        app.config['MAIL_USERNAME'] = 'kiotapay@gmail.com'
+        app.config['MAIL_PASSWORD'] = 'mnswpjyxdcvzbjes'
+        app.config['MAIL_USE_TLS'] = False
+        app.config['MAIL_USE_SSL'] = True
 
         mail.init_app(app)
     

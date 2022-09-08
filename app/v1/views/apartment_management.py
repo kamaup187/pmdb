@@ -353,7 +353,7 @@ class Index(Resource):
             reminder = ""
 
         if reminder:
-            setreminder = f"{reminder[0].txt}"
+            setreminder = f'Dear [<span class="text-black">waaa</span>Tenant/Resident name, ]{reminder[0].txt}. Your balance as of [date] is Kes [amount]'
         else:
             setreminder = ""
             

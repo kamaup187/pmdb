@@ -590,7 +590,9 @@ class AllProperties(Resource):
         else:
             raw_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
 
-        raw_props2 = current_user.company.props
+        # raw_props2 = current_user.company.props
+
+        raw_props2 = fetch_all_apartments_by_user(current_user)
 
         if localenv:
             raw_props3 = ApartmentOp.fetch_all_apartments()

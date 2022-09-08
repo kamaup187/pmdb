@@ -130,8 +130,8 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
-        # if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
-        #     CompanyOp.update_ctype(current_user.company,"crm")
+        if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
+            CompanyOp.update_ctype(current_user.company,"crm")
 
         # ccm = ApartmentOp.fetch_apartment_by_id(584)
         # hq = ccm.houses
@@ -2178,6 +2178,11 @@ class Bills(Resource):
     def get(self):
 
         target = request.args.get('target')
+        period_target = request.args.get('target_period')
+
+        if not period_target:
+            period_target = "current"
+
         if target == "houses":
             propid = request.args.get('propid')
             prop_id = get_identifier(propid)
@@ -2226,7 +2231,13 @@ class Bills(Resource):
         for prop in props:
             # sms = "0/0"
             monthlybills = prop.monthlybills
-            filtered_bills = fetch_current_billing_period_bills(period,monthlybills)
+
+            if period_target == "current":
+                filtered_bills = fetch_current_billing_period_bills(period,monthlybills)
+            elif period_target == "previous":
+                filtered_bills = fetch_prev_billing_period_bills(period,monthlybills)
+            else:
+                filtered_bills = fetch_next_billing_period_bills(period,monthlybills)
 
             renttotal = 0
             watertotal = 0
@@ -2349,6 +2360,7 @@ class Bills(Resource):
         propids = ','.join(map(str, prop_ids))
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
+        nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
 
         return render_template(
             "ajax_bills.html",
@@ -2373,7 +2385,9 @@ class Bills(Resource):
             items=items,
             company=current_user.company,
             previous_month = prevmonth,
-            current_month=get_str_month(period.month)
+            next_month = nextmonth,
+            current_month=get_str_month(period.month),
+            period_target=period_target
             )
 
 class Payments(Resource):
@@ -7073,6 +7087,8 @@ class Results(Resource):
     """class"""
     def get(self):
         item = request.args.get('id')
+        period_target = request.args.get('target_period')
+
         user_id = current_user.id
         if not item:
             return "Error fetching results, try refreshing the page!"
@@ -7193,9 +7209,12 @@ class Results(Resource):
 
             bills = prop_obj.monthlybills
 
-            co = prop_obj.company
-
-            current_bills = fetch_current_billing_period_bills(co.billing_period,bills)
+            if period_target == "current":
+                current_bills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+            elif period_target == "previous":
+                current_bills = fetch_prev_billing_period_bills(prop_obj.billing_period,bills)
+            else:
+                current_bills = fetch_next_billing_period_bills(prop_obj.billing_period,bills)
 
             detailed_bills = []
 

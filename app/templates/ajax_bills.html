@@ -4,6 +4,7 @@
     <section class="contact_area section_ga">
       <span id="prop_identifier_main" class="dispnone"></span>
       <span id="bill_prop_identifier" class="dispnone"></span>
+      <span id="target_period" class="dispnone">{{period_target}}</span>
 
       <span id="targeturl" class="dispnone"></span>
     
@@ -72,8 +73,9 @@
               </div>
               
               <nav class="nav nav-borders">
-                <a id="profile" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}(previous)</a>
-                <a id="billing" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
+                <a id="previous-period" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}</a>
+                <a id="current-period" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
+                <a id="next-period" class="nav-link pb-0 pt-1 text-black ms-0" href="#">{{next_month}}</a>
               </nav>
               
             </div>
@@ -326,10 +328,15 @@
 
           $("#preloader-btn-alt").click();
           // $("#spinner").removeClass("dispnone")
+
+
           $.ajax({
             url: "/results",
             type: "get",
-            data: {id: item},
+            data: {
+              id: item,
+              target_period:$("#target_period").text()
+            },
             success: function(response) {
               // $("#spinner").addClass("dispnone")
               $("#postloader-btn-alt").click();
@@ -628,6 +635,102 @@
       });
     }
   });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#current-period").removeClass('underline');
+    $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+      $("#activeprop-child").text($("#target_period").text().toUpperCase() + ' PERIOD')
+
+    if($("#target_period").text() == "current"){
+      $("#current-period").addClass('underline');
+    }else if($("#target_period").text() == "next"){
+      $("#next-period").addClass('underline');
+    }else{
+      $("#previous-period").addClass('underline');
+    }
+  })
+
+</script>
+
+
+<script>
+  $("#previous-period").on('click',function(){
+    $("#next-period").removeClass('underline');
+    $("#current-period").removeClass('underline');
+    $("#previous-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"previous"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+
+  })
+
+
+  $("#current-period").on('click',function(){
+
+    $("#next-period").removeClass('underline');
+    $("#previous-period").removeClass('underline');
+    $("#current-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"current"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+  })
+
+
+  $("#next-period").on('click',function(){
+    $("#previous-period").removeClass('underline');
+    $("#current-period").removeClass('underline');
+    $("#next-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"next"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+  })
+
+
 </script>
 
 

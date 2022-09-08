@@ -3092,6 +3092,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         
         return {
             'id':self.id,
+            'invnum':self.id + 13285,
             'viewid':MonthlyChargeOp.generate_viewid(self),
             'smsid':MonthlyChargeOp.generate_smsid(self),
             'mailid':MonthlyChargeOp.generate_mailid(self),
@@ -3154,6 +3155,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         
         return {
             'id':self.id,
+            'invnum':self.id + 13285,
             'editid':MonthlyChargeOp.generate_editid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  <!-- <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /> -->
+  <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>KiotaPay</title>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no">
+
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 ">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+          <div class="divjust-end">
+            <div class="mb-4 mt-4 text-black font-weight-bold">
+              <div class="ln-16">{{co.name}}</div>
+              <div class="ln-16">P.O BOX {{co.mail_box}}</div>
+              <div class="ln-16">{{co.city}}</div>
+            </div>
+
+            <div class="mb-4 mt-4 text-dark font-weight-bold">
+              <div class="ln-14 divjust-end">
+                <span>Date :</span> <span class="text-black">{{statementdate}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Apartment No :</span> <span class="text-black">{{tenant_obj.house.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Unit Type :</span> <span class="text-black">{{tenant_obj.house.description}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Client Name :</span> <span class="text-black">{{tenant_obj.name}}</span>
+              </div>
+              <div class="ln-14 divjust-end">
+                <span>Purchase Price :</span> <span class="text-black">{{ "Kshs {:,.2f}".format(tenant_obj.negotiated_price | float) }}</span>
+              </div>
+            
+              
+            </div>
+
+            <div class="text-right mb-4 mt-4">
+              <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
+              <img class="" src="{{logopath}}" alt="--no image--" />
+            </div>
+          </div>
+
+          
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">STATEMENT OF ACCOUNT</span></span>
+          </div>         
+
+          <!-- <div class="text-right mt-1">
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-success shadow-sm mr-1" ><i class="fas fa-download fa-sm text-white"></i><span class="mobile-malaysian">Download</span></button>
+          </div> -->
+
+                    
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt wrap small">
+                    <tr>
+                      <th class="hid"></th>
+
+                      <th class="">Date Payable</th>
+                      <th class="">Amount Payable</th>
+                      <th class="">Amount Received</th>
+                      <th class="">Date Received</th>
+                      <th class="">Payment Ref</th>
+                      <th class="">Payment Type</th>
+                      <th class="">Comments</th>
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr class="text-black">
+                      <td class="data-cell text-right hide">{{ bill['id'] }}</td>
+
+                      <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
+
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+  
+                      <td class="data-cell text-center">{{ bill['paydate'] }}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
+                      <td class="data-cell text-center no-wrap">{{ bill['paytype']}}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_name'] }}</td>
+
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td class="font-weight-bold hid">.</td>
+                      <td class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{schtotal}}</td>
+                      <td class="font-weight-bold text-right">{{schpaid}}</td>
+
+                      <td colspan="4" class="font-weight-bold text-right">-</td>
+
+
+
+                    </tr>
+                  </tfoot>
+                </table>
+
+                <div class="divjust-end">
+
+                  <div>
+                    <div>
+                      With regards:
+                    </div>
+                    <div class="mb-3">
+                      <div class="ln-10 font-weight-bold"></div>
+                      <div class="ln-10">________________________________</div>
+                    </div>
+                  </div>
+      
+                </div>
+                <div class="divjust-end ln-16 mobile-malaysian nobreak">
+                  {%if tenant_obj%}
+                    <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
+                    {%endif%}
+                </div>
+
+
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

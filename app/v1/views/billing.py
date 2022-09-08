@@ -1517,9 +1517,15 @@ class SendInvoices(Resource):
             else:
                 print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB   sending owner invoice of ",bill.ptenant.name)
 
-            job563 = q.enqueue_call(
-                func=send_out_single_email_invoice, args=(billid,), result_ttl=5000
-            )
+            if bill.apartment.company.ctype == "crm":
+
+                job563 = q.enqueue_call(
+                    func=send_out_single_email_crm_invoice, args=(billid,), result_ttl=5000
+                )
+            else:
+                job563 = q.enqueue_call(
+                    func=send_out_single_email_invoice, args=(billid,), result_ttl=5000
+                )
 
             return None
 

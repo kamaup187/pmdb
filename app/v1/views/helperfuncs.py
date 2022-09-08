@@ -968,6 +968,14 @@ def get_next_month(month):
         next_month = month + 1
     return next_month
 
+def get_next_year(month,year):
+    if month == 12:
+        target_year = year +1 
+    else:
+        target_year = year
+
+    return target_year
+
 def get_prev_month(month):
     if month == 1:
         prev_month = 12
@@ -1155,6 +1163,15 @@ def fetch_prev_billing_period_bills(billing_period,arr):
     prev_billling_period_data = []
     prev_month = get_prev_month(billing_period.month)
     prev_year = get_prev_year(billing_period.month,billing_period.year)
+    for i in arr:
+        if i.month == prev_month and i.year == prev_year:
+            prev_billling_period_data.append(i)
+    return prev_billling_period_data
+
+def fetch_next_billing_period_bills(billing_period,arr):
+    prev_billling_period_data = []
+    prev_month = get_next_month(billing_period.month)
+    prev_year = get_next_year(billing_period.month,billing_period.year)
     for i in arr:
         if i.month == prev_month and i.year == prev_year:
             prev_billling_period_data.append(i)
@@ -4325,7 +4342,6 @@ def send_out_single_email_invoice(billid):
     except Exception as e:
          print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
 
-            
 
 def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
 
@@ -4363,6 +4379,197 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
 
             txt = Message(period, sender = mailsender, recipients = [email_addr])
             txt.body = f"Dear {tname}  \nyour {billfrequency} invoice is now available. Kindly find the attached invoice below. \n\n{co.name}"
+            # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
+            txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
+            # mail.send(txt)
+            conn.send(txt)
+            MonthlyChargeOp.update_email_status(bill,"sent")
+
+        except Exception as e:
+            print(str(e))
+    #########################################################################################
+    os.remove(filename)
+    #########################################################################################
+
+
+def send_out_single_email_crm_invoice(billid):
+
+    print("printing to console")
+
+    # print("configgggs",configuration)
+    from app import create_app
+    app = create_app(configuration)
+    app.app_context().push()
+
+    try:
+        bill = MonthlyChargeOp.fetch_specific_bill(billid)
+
+        print("BILL IS HERE >>>>",bill)
+
+        with mail.connect() as conn:
+
+            if bill.ptenant:
+                tenant=bill.ptenant
+                current_target = "owner"
+                print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
+            else:
+                current_target = "tenant"
+                tenant=bill.tenant
+                print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
+
+            co = bill.apartment.company
+
+            invnum = bill.id + 13285
+
+            house = bill.house
+
+            #start here
+            sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+            sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+
+            try:
+                wbill = sibling_water_bill[0]
+                w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
+            except:
+                wbill = None
+                w_edited = "dispnone"
+
+            try:
+                ebill = sibling_electricity_bill[0]
+                e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
+            except:
+                ebill = None
+                e_edited = "dispnone"
+
+
+            kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+            invdate = bill.date - relativedelta(days = 0)
+            inv_date = invdate.strftime("%d/%b/%y")
+            invdue = invdate + relativedelta(days=5)
+            inv_due = invdue.strftime("%d/%b/%y")
+
+            print("got here so far")
+
+        
+            email_addr = tenant.email
+            if email_addr:
+                if wbill or ebill:
+                    visibility = ""
+                else:
+                    visibility = "hide"
+
+                arrears = bill.arrears
+                
+                if bill.paid_amount:
+                    billpaid = f"{bill.paid_amount:,.2f}"
+                    billbal = f"{bill.balance:,.2f}"
+
+                else:
+                    billpaid = 0.0
+                    billbal = 0.0
+
+                if arrears < 0.0:
+                    arrtitle = "Previous balance"
+                    bbfhighlight = "text-success"
+
+                    arrears = f"{arrears*-1}"
+                elif arrears > 0.0:
+                    arrtitle = "Previous balance"
+                    bbfhighlight = "text-danger"
+                else:
+                    arrtitle = ""
+                    bbfhighlight = ""
+
+                try:
+                    if current_target == "owner":
+                        if bill.house.watertarget == "owner":
+                            watertarget = True
+                        else:
+                            watertarget = False
+                    else:
+                        if bill.house.watertarget == "tenant":
+                            watertarget = True
+                        else:
+                            watertarget = False
+                except:
+                    watertarget = True
+
+                try:
+                    if bill.apartment.paymentdetails.nartype == 'hsenum':
+                        narration = bill.house.name
+                    else:
+                        if bill.ptenant:
+                            narration = "WN"+str(tenant.id)
+                        else:
+                            narration = "TNT"+str(tenant.id)
+                except:
+                    narration = bill.house.name
+
+                template_vars = {
+                    "bill":bill,
+                    "p":bill.apartment.paymentdetails,
+                    "narration":narration,
+                    "servicevisibility":"",
+                    "readings": wbill,
+                    "w_edited": w_edited,
+                    "ereadings": ebill,
+                    "e_edited": e_edited,
+                    "visibility":visibility,
+                    "watertarget":watertarget,
+                    "arrears":arrears,
+                    "bbfhighlight ": bbfhighlight,
+                    "arrtitle":arrtitle,
+                    "billpaid":billpaid,
+                    "billbal":billbal,
+                    "house":house,
+                    "total":f"{bill.total_bill:,.2f}",
+                    "invdate":inv_date,
+                    "invdue":inv_due,
+                    "client":tenant,
+                    "company":co,
+                    "invnum":invnum,
+                    "logo":logo(co)[2],
+                    "slogo":logo(kiotapay)[1]
+                }
+
+                print("going to mail sender")
+                crm_mail_sender(conn,tenant,bill,template_vars,email_addr,co)
+            else:
+                print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
+
+    except Exception as e:
+         print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
+
+
+def crm_mail_sender(conn,recepient,bill,template_vars,email_addr,co):
+
+    templateLoader = FileSystemLoader(searchpath="app/templates")
+    templateEnv = Environment(loader=templateLoader)
+    TEMPLATE_FILE = "ajax_tenant_crm_invoice_mail.html"
+    template = templateEnv.get_template(TEMPLATE_FILE)
+
+    print("CURRENTLY SENDING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",recepient.name)
+    print("WEASYPRINT???? >>>>",HTML)
+
+    html_out = template.render(template_vars)
+    filename = f"app/temp/statement_{bill.id}.pdf"
+    HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
+
+    ###################################################################################
+    # LETS SEND EMAIL
+    mail_filename = f"inv_{bill.id}"
+    with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
+        # print (fh)
+        try:
+            try:
+                tname = recepient.name.split('and')[0]
+            except:
+                tname = recepient.name
+
+            filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+
+            txt = Message("REMINDER", sender = mailsender, recipients = [email_addr])
+            txt.body = f"Dear {tname}  \nKindly find the attached statement of account below. \n\n{co.name}"
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
             # mail.send(txt)

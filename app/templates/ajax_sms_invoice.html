@@ -11,9 +11,9 @@
     {%if bill.rent%}
     {% if house.housecode.vatrate%}
       {% if house.housecode.discount%}
-      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate) + house.housecode.discount}}</span></div>
+      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{ '%0.1f' | format((house.housecode.rentrate -house.housecode.discount) - ((house.housecode.rentrate - house.housecode.discount) * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0))| float) }}</span></div>
       {% else %}
-      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate)}}</span></div>
+      <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{ '%0.1f' | format(house.housecode.rentrate - (house.housecode.rentrate * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0)) | float) }}</span></div>
       {% endif%}
     {% else %}
     <div class="divjust-end mr-5 "><span>Rent: </span><span class="text-gray-900">{{bill.rent}}</span></div>
@@ -21,7 +21,11 @@
     {% endif %}
 
     {%if house.housecode.vatrate%}
-    <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format(house.housecode.rentrate * 0.01 * house.housecode.vatrate | float)}}</span></div>
+      {% if house.housecode.discount %}
+      <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format( (house.housecode.rentrate - house.housecode.discount) * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0) | float)}}</span></div>
+      {% else %}
+      <div class="divjust-end mr-5 "><span>16% VAT on rent: </span><span class="text-gray-900">{{ '%0.1f'| format( (house.housecode.rentrate * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0)) | float)}}</span></div>
+      {% endif %}
     {% endif %}
 
     {%if house.housecode.discount%}

@@ -199,9 +199,9 @@
                             <td></td>
                             {% if house.housecode.vatrate%}
                                 {% if house.housecode.discount%}
-                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate) + house.housecode.discount}}</span></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f' | format((house.housecode.rentrate -house.housecode.discount) - ((house.housecode.rentrate - house.housecode.discount) * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0))| float) }}</span></td>
                                 {% else%}
-                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{house.housecode.rentrate - (house.housecode.vatrate * 0.01 * house.housecode.rentrate)}}</span></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f' | format(house.housecode.rentrate - (house.housecode.rentrate * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0)) | float) }}</span></td>
                                 {%endif%}
                             {% else %}
                             <td><span class="font-weight-bold mr-4 text-black">Kshs {{bill.rent}}</span></td>
@@ -217,7 +217,12 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format(house.housecode.rentrate * house.housecode.vatrate * 0.01 | float)}}</span></td>
+                            {% if house.housecode.discount%}
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format( (house.housecode.rentrate - house.housecode.discount) * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0) | float)}}</span></td>
+                            {% else %}
+                            <td><span class="font-weight-bold mr-4 text-black">Kshs {{ '%0.1f'| format( (house.housecode.rentrate * house.housecode.vatrate * 0.01 / ((house.housecode.vatrate * 0.01) + 1.0)) | float)}}</span></td>
+                            {%endif%}
+
                         </tr>
                         {%endif%}
 

@@ -298,30 +298,58 @@ class Users(Resource):
                 return proceed
 
         else:
+            # users = current_user.company.users
+
+            # if current_user.username == "admin":
+            #     users = fetch_all_users()
+
+            # user_data = user_details(users)
+
+            # user_data_alt = []
+            # if current_user.username.startswith("qc"):
+            #     print("baridi")
+            #     kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+            #     if kw_user:
+            #         print("got it",kw_user.username)
+            #         for i in user_data:
+            #             print("here are ises",i["username"],"and kv_user:",kw_user.username)
+            #             if i["username"] == kw_user.username:
+            #                 print("yeya")
+            #                 pass
+            #             else:
+            #                 user_data_alt.append(i)
+            #     else:
+            #         user_data_alt = user_data
+            # else:
+            #     print("barida")
+            #     user_data_alt = user_data
+
             users = current_user.company.users
+            allowed_categories = ["Manager","Director"]
 
             if current_user.username == "admin":
                 users = fetch_all_users()
+            elif current_user.company_user_group.name not in allowed_categories:
+                users = [current_user]
+            if current_user.username.startswith("qc"):
+                users = current_user.company.users
 
             user_data = user_details(users)
 
             user_data_alt = []
             if current_user.username.startswith("qc"):
-                print("baridi")
-                kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+                kw_user = UserOp.fetch_user_by_username(KW_USER)
                 if kw_user:
                     print("got it",kw_user.username)
                     for i in user_data:
                         print("here are ises",i["username"],"and kv_user:",kw_user.username)
                         if i["username"] == kw_user.username:
-                            print("yeya")
                             pass
                         else:
                             user_data_alt.append(i)
                 else:
                     user_data_alt = user_data
             else:
-                print("barida")
                 user_data_alt = user_data
            
 

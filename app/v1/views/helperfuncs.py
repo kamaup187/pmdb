@@ -67,6 +67,7 @@ except ImportError:
     INDEX = None
     SMS_USERNAME = None
     SMS_API_KEY = None
+    KW_USER = ""
 
 sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT

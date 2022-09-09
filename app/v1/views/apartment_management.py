@@ -130,8 +130,8 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
-        if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
-            CompanyOp.update_ctype(current_user.company,"crm")
+        # if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
+        #     CompanyOp.update_ctype(current_user.company,"crm")
 
         # ccm = ApartmentOp.fetch_apartment_by_id(584)
         # hq = ccm.houses
@@ -214,6 +214,12 @@ class Index(Resource):
         #         ChargeOp.delete(charge)
 
         time = datetime.datetime.now() + relativedelta(hours=3)
+
+        # gdsfg = CtoBop.fetch_record_by_mode("Bank")
+        # if gdsfg:
+        #     print(">>>>>>>>>>>>>>>>>>>",gdsfg)
+        # else:
+        #     print("<<<<<<<<<<<<<<<<<< NOT FOUND")
 
         # allhses = HouseOp.fetch_houses()
         # for i in allhses:

@@ -72,7 +72,7 @@ class Company(db.Model):
     template = db.relationship('TextTemplate',backref='company', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='company',order_by='SentMessages.date', cascade="all, delete-orphan")
     remits = db.relationship('LandlordRemittance',backref='company',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
-
+    cbids = db.relationship('CtoB',backref='company',order_by='CtoB.post_date', cascade="all, delete-orphan")
 
     def __repr__(self):
         return self.name
@@ -1367,9 +1367,13 @@ class CtoB(db.Model):
     mname = db.Column(db.VARCHAR)
     lname = db.Column(db.VARCHAR)
     org_acc_bal = db.Column(db.Float)
+    mode = db.Column(db.String,default="Unknown")
+    data_type = db.Column(db.String)
 
     status = db.Column(db.String,default="unclaimed")
     # tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
 
 
 class BankData(db.Model):

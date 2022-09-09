@@ -4373,7 +4373,7 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
                 billfrequency = "quarterly"
                 period = f"July, August, September service charge"
             else:
-                period = f"{get_str_month(bill.month)} invoice"
+                period = f"{co.name.title()}: {get_str_month(bill.month)} invoice"
                 billfrequency = "monthly"
 
             filename_ext = f"{get_str_month(bill.month)}invoice.pdf"

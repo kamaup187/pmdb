@@ -4012,7 +4012,7 @@ class BankDataOp(BankData,Base):
 
 class CtoBop(CtoB,Base):
     """class for c2b model operations"""
-    def __init__(self,trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname):
+    def __init__(self,trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,datatype,mode,company_id):
         self.trans_id = trans_id
         self.trans_time = trans_time
         self.trans_amnt = trans_amnt
@@ -4024,6 +4024,9 @@ class CtoBop(CtoB,Base):
         self.org_acc_bal = org_acc_bal
         self.fname = fname
         self.lname = lname
+        self.mode = mode
+        self.data_type = datatype
+        self.company_id = company_id
 
     def fetch_all_records_by_shortcode(shortcode):
         return CtoBop.query.filter_by(business_shortcode=shortcode).all()

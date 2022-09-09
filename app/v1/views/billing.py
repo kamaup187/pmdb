@@ -4040,19 +4040,23 @@ class CallBackUrlProminance(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        mode = "Mpesa"
+        company_id = 2
+
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         auto_consume_ctob(ctob_obj)
@@ -4066,19 +4070,22 @@ class CallBackUrlKiotapay(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        mode = "Mpesa"
+        company_id = 2
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         txtx = f'SMS MPESA PAYMENT DATA JUST IN from {bill_ref_num} of {trans_amnt}'
@@ -4091,80 +4098,55 @@ class CallBackUrlLatitude(Resource):
     def get(self):
         pass
     def post(self):
+
+
+        response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
         try:
-            #parse for json
-            my_data=request.data
-            my_json = my_data.decode('utf8').replace("'", '"')
             data = json.loads(my_json)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+            print(data)
+            print("#####################################EQUITY EQUITY EQUITY############################################")
+    
+            print("Data will be proccessed here")
+            
+            username = data['username']
+            password = data['password']
+            billNumber = data['billNumber']
+            billAmount = data['billAmount']
+            customerRefNumber = data['CustomerRefNumber']
+            bankReference = data['bankreference']
+            transParticular = data['tranParticular']
+            paymentMode = data['paymentMode']
+            transDate = data['transactionDate']
+            phoneNumber = data['phonenumber']
+            debitAccount = data['debitaccount']
+            debitCustName = data['debitcustname']
 
-            trans_id = data['TransID']
-            trans_time = data['TransTime']
-            trans_amnt = data['TransAmount']
-            trans_type = data['TransactionType']
-            business_shortcode = data['BusinessShortCode']
-            bill_ref_num = data['BillRefNumber']
-            invoice_num = data['InvoiceNumber']
-            msisdn = data['MSISDN']
-            org_acc_bal = data['OrgAccountBalance']
-            fname = data['FirstName']
-            lname = data['LastName']
+            data_type = "prod"
 
-            print("MPESA DATA RECEIEVED: ",data)
-
-            # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
-            # response = sms.send(message1, ["+254716674695"],sender)
-
-            ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-            ctob_obj.save()
-        except:
-
-            response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
-
-            #parse for json
-            my_data=request.data
-            my_json = my_data.decode('utf8').replace("'", '"')
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
-            try:
-                data = json.loads(my_json)
-                print("#####################################EQUITY EQUITY EQUITY############################################")
-                print(data)
-                print("#####################################EQUITY EQUITY EQUITY############################################")
-        
-                print("Data will be proccessed here")
-                
-                username = data['username']
-                password = data['password']
-                billNumber = data['billNumber']
-                billAmount = data['billAmount']
-                customerRefNumber = data['CustomerRefNumber']
-                bankReference = data['bankreference']
-                transParticular = data['tranParticular']
-                paymentMode = data['paymentMode']
-                transDate = data['transactionDate']
-                phoneNumber = data['phonenumber']
-                debitAccount = data['debitaccount']
-                debitCustName = data['debitcustname']
-
-                data_type = "prod"
-
-                data_obj = BankDataOp.fetch_record_by_ref(bankReference)
-                if data_obj:
-                    response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
-                else:
-                    data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
-                    data_obj.save()
-                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+            else:
+                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
 
 
-            except Exception as e:
-                sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
-                # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
-                response = {"responseCode": "200","responseMessage": "SUCCESSFUL","errorMessage":f'{e}'}
+        except Exception as e:
+            sms.send("TEST LATITUDE Equity has error data", ["+254716674695"],"KIOTAPAY")
+            # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+            response = {"responseCode": "200","responseMessage": "SUCCESSFUL","errorMessage":f'{e}'}
 
-                print ("It failed, Bank integration has an error")
+            print ("It failed, Bank integration has an error")
 
-            resp = jsonify(response)
-            return make_response(resp)
+        resp = jsonify(response)
+        return make_response(resp)
 
 
         # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
@@ -4181,28 +4163,27 @@ class CallBackUrlMLatitude(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
 
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        mode = "Mpesa"
+        company_id = 61
 
         print("MPESA DATA RECEIEVED: ",data)
 
         # message1 = f"Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately. \n\nThis message was auto sent by the system."
         # response = sms.send(message1, ["+254716674695"],sender)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
@@ -4221,21 +4202,24 @@ class CallBackUrlPremier(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 46
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
@@ -4249,21 +4233,24 @@ class CallBackUrlPremierRealty(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 46
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         # auto_consume_ctob2(ctob_obj)
@@ -4277,21 +4264,24 @@ class CallBackUrlAstrol(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 85
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         response = sms.send("ASTROL MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4309,24 +4299,25 @@ class CallBackUrlAstrolRuiru(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 85
+
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4344,21 +4335,24 @@ class CallBackUrlDenvic(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        lname = data['LastName']
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 94
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         # response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4375,24 +4369,24 @@ class CallBackUrlDenvicTwo(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 94
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         # response = sms.send("Denvic MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4422,9 +4416,12 @@ class CallBackUrlVintage(Resource):
         fname = data.get('FirstName')
         lname = data.get('LastName')
 
+        mode = "Mpesa"
+        company_id = 70
+
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         response = sms.send("VINTAGE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4441,24 +4438,24 @@ class CallBackUrlBizlineBaraka(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 75
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         msg = f"Bizline Baraka MPESA DATA JUST IN {trans_amnt} from {fname}"
@@ -4475,24 +4472,24 @@ class CallBackUrlGoldLabel(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 75
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         msg = f"Goldlabel MPESA DATA JUST IN {trans_amnt} from {fname}"
@@ -4510,24 +4507,24 @@ class CallBackUrlBizlineBestel(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 75
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         msg = f"BESTEL MPESA DATA JUST IN {trans_amnt} from {fname}"
@@ -4545,24 +4542,24 @@ class CallBackUrlBizlineNeema(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 75
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
@@ -4579,24 +4576,24 @@ class CallBackUrlLagad(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         data = json.loads(my_json)
 
-        trans_id = data['TransID']
-        trans_time = data['TransTime']
-        trans_amnt = data['TransAmount']
-        trans_type = data['TransactionType']
-        business_shortcode = data['BusinessShortCode']
-        bill_ref_num = data['BillRefNumber']
-        invoice_num = data['InvoiceNumber']
-        msisdn = data['MSISDN']
-        org_acc_bal = data['OrgAccountBalance']
-        fname = data['FirstName']
-        try:
-            lname = data['LastName']
-        except:
-            lname = "N/A"
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 2
 
         print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
         msg = f"LAGAD MPESA DATA JUST IN {trans_amnt} from {fname}"
@@ -4663,29 +4660,29 @@ class CallBackUrlLatitudeEquity(Resource):
             print("#####################################EQUITY EQUITY EQUITY############################################")
        
             print("Data will be proccessed here")
-            
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
 
-            data_type = "prod"
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            mode = "Bank"
+            company_id = 61
+
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:
@@ -4715,28 +4712,28 @@ class CallBackUrlTestLatitudeEquity(Resource):
        
             print("Data will be proccessed here")
 
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_type = "test"
+            mode = "Bank"
+            company_id = 61
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:
@@ -4765,28 +4762,28 @@ class CallBackUrlSentomEquity(Resource):
        
             print("Data will be proccessed here")
             
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_type = "prod"
+            mode = "Bank"
+            company_id = 78
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:
@@ -4816,28 +4813,28 @@ class CallBackUrlTestSentomEquity(Resource):
        
             print("Data will be proccessed here")
 
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_type = "test"
+            mode = "Bank"
+            company_id = 78
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
                 data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
         except Exception as e:
@@ -4866,26 +4863,26 @@ class CallBackUrlTestLymaxEquity(Resource):
        
             print("Data will be proccessed here")
 
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_type = "test"
+            mode = "Bank"
+            company_id = 89
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
                 response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
                 data_obj.save()
                 response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
@@ -4916,26 +4913,26 @@ class CallBackUrlLymaxEquity(Resource):
        
             print("Data will be proccessed here")
 
-            username = data['username']
-            password = data['password']
-            billNumber = data['billNumber']
-            billAmount = data['billAmount']
-            customerRefNumber = data['CustomerRefNumber']
-            bankReference = data['bankreference']
-            transParticular = data['tranParticular']
-            paymentMode = data['paymentMode']
-            transDate = data['transactionDate']
-            phoneNumber = data['phonenumber']
-            debitAccount = data['debitaccount']
-            debitCustName = data['debitcustname']
+            trans_id = data.get('bankreference')
+            trans_time = data.get('transactionDate')
+            trans_amnt = data.get('billAmount')
+            trans_type = data.get('tranParticular')
+            business_shortcode = "000000"
+            bill_ref_num = data.get('CustomerRefNumber')
+            invoice_num = data.get('billNumber')
+            msisdn = data.get('phonenumber')
+            org_acc_bal = 0
+            fname = data.get('debitcustname')
+            lname = "N/A"
 
-            data_type = "test"
+            mode = "Bank"
+            company_id = 89
 
-            data_obj = BankDataOp.fetch_record_by_ref(bankReference)
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:
                 response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
             else:
-                data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
                 data_obj.save()
                 response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 

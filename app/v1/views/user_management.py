@@ -308,7 +308,7 @@ class Users(Resource):
             # user_data_alt = []
             # if current_user.username.startswith("qc"):
             #     print("baridi")
-            #     kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+            #     kw_user = UserOp.fetch_user_by_username("")
             #     if kw_user:
             #         print("got it",kw_user.username)
             #         for i in user_data:

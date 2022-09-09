@@ -4657,6 +4657,7 @@ class CallBackUrlLatitudeEquity(Resource):
             data = json.loads(my_json)
             print("#####################################EQUITY EQUITY EQUITY############################################")
             print(data)
+            lfile(data)
             print("#####################################EQUITY EQUITY EQUITY############################################")
        
             print("Data will be proccessed here")
@@ -4708,6 +4709,7 @@ class CallBackUrlTestLatitudeEquity(Resource):
             data = json.loads(my_json)
             print("#####################################EQUITY EQUITY EQUITY############################################")
             print(data)
+            lfile(data)
             print("#####################################EQUITY EQUITY EQUITY############################################")
        
             print("Data will be proccessed here")
@@ -4758,6 +4760,7 @@ class CallBackUrlSentomEquity(Resource):
             data = json.loads(my_json)
             print("#####################################EQUITY EQUITY EQUITY############################################")
             print(data)
+            lfile(data)
             print("#####################################EQUITY EQUITY EQUITY############################################")
        
             print("Data will be proccessed here")
@@ -4809,6 +4812,7 @@ class CallBackUrlTestSentomEquity(Resource):
             data = json.loads(my_json)
             print("#####################################EQUITY EQUITY EQUITY############################################")
             print(data)
+            lfile(data)
             print("#####################################EQUITY EQUITY EQUITY############################################")
        
             print("Data will be proccessed here")

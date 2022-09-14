@@ -4395,6 +4395,36 @@ class CallBackUrlDenvicTwo(Resource):
 
         # auto_consume_ctob2(ctob_obj)
 
+class CallBackUrlDenvicThree(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 94
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+
 class CallBackUrlVintage(Resource):
     def get(self):
         pass

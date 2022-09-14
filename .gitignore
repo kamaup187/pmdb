@@ -130,4 +130,5 @@ dmypy.json
 
 logfile.txt
 do_secrets.py
+app/temp
 

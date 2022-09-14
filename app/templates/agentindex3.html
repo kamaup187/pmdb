@@ -33,6 +33,8 @@
 </head>
 
 <body class="nav-fixed">
+    <div id="snackbed"></div>
+
     <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white"
         id="sidenavAccordion">
         <!-- Sidenav Toggle Button-->
@@ -124,6 +126,16 @@
                     </form>
                 </div>
             </li>
+
+            <!-- Messages Dropdown-->
+            <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="modal" data-target="#messageModal" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-comments fa-fw text-black"></i>
+                  <!-- Counter - Messages -->
+                  <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+                </a>
+              </li>
+
             <!-- Alerts Dropdown-->
             <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
                 <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownAlerts"
@@ -139,8 +151,8 @@
                     <a class="dropdown-item dropdown-notifications-footer" href="#!">View All Alerts</a>
                 </div>
             </li>
-            <!-- Messages Dropdown-->
-            <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
+
+            <!-- <li class="nav-item dropdown no-caret d-none d-sm-block me-3 dropdown-notifications">
                 <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownMessages"
                     href="javascript:void(0);" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false"><i data-feather="mail"></i></a>
@@ -153,7 +165,7 @@
 
                     <a class="dropdown-item dropdown-notifications-footer" href="#!">Read All Messages</a>
                 </div>
-            </li>
+            </li> -->
             <!-- User Dropdown-->
             <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
                 <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage"
@@ -1020,6 +1032,191 @@
         </div>
       </div>
 
+      <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-kubwa-sana" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 pt-2 text-center bg-light">
+              <h5 class="modal-title text-info divjust-end underline-thin-fade">
+                <span class="mr-3 smallify font-weight-bold">SMS CENTER</span>
+                <div>
+                  <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+                </div>
+              </h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                    
+                      <div class="text-center text-success font-weight-bold mb-2 underline">
+                        <div class="divbg mb-1">
+                          <button id="general_texts" type="button" class="dispnone btn btn-outline-success borderless text-dark">General</button>
+                          <button id="balance_texts" type="button" class="dispnone btn btn-outline-success borderless text-dark">Balances</button>
+                          <button id="reminder_texts" type="button" class="btn btn-outline-success borderless text-dark">Reminders</button>
+                          <button id="topup_texts" type="button" class="dispnone btn btn-outline-info borderless text-dark">Sms top up</button>
+                          <button id="sent_texts" type="button" class="btn btn-outline-info borderless text-dark">Sent messages</button>
+                        </div>
+                      </div>
+                    
+                    
+                      <div id="generaltexts" class="dispnone row">
+                        <form class="col-6">
+                    
+                          <div class="form-group">
+                            <select name="property" class="select-css" id="selected_prop">
+                              <option disabled selected value> -- Select property -- </option>
+                              {% for o in props%}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                    
+                          <div class="form-group">
+                            <textarea id="text_sms" name="desc" class="form-control"
+                              placeholder="Notification message to be conveyed"></textarea>
+                          </div>
+                          <div class="divbg center-btn">
+                            <button id="sendgeneral" type="button" class="btn btn-success borderless text-white">Send now</button>
+                          </div>
+                        </form>
+    
+                        <div class="col-6">
+                          Nothing to display here.
+                        </div>
+                    
+                      </div>
+                    
+                      <div id="balancetexts" class="dispnone row">
+                        <form class="col-6">
+                    
+                          <div class="form-group">
+                            <select name="property" class="select-css" id="balanceprop">
+                              <option disabled selected value> -- Select property -- </option>
+                              {% for o in props%}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                    
+                          <div class="form-group">
+                            <input id="telnum" name="desc" class="form-control ph-dark" placeholder="Mobile number/Email">
+                          </div>
+                    
+                          <div class="divbg center-btn">
+                            <button id="sendbalance" type="button" class="btn btn-success borderless text-white">Send now</button>
+                          </div>
+                        </form>
+    
+                        <div class="col-6">
+                          Enter mobile which balance reports balance will be sent reports to.
+                        </div>
+                    
+                      </div>
+                    
+                    
+                      <div id="remindertexts" class="dispnone row">
+                        <form autocomplete="off" class="col-6">
+                    
+                          <div class="form-group mt-2">
+                            <label>Schedule date:</label>
+                            <input id="reminder-date" class="form-control text-info pl-5 ph" type="text" placeholder="To be sent on...">
+                          </div>
+                    
+                          <div class="form-group mt-2">
+                            <label>Project</label>
+                            <select class="select-css" id="reminderprop" required>
+                              <option disabled selected value> -- Select project -- </option>
+                              {% for o in props%}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                    
+                          <div class="form-group mt-2">
+                            <label>Channel</label>
+                            <select class="select-css" id="reminderchannel" required>
+                              <option disabled selected value> -- Email/sms -- </option>
+                              <option value="email">Email</option>
+                              <option value="sms">sms</option>
+                    
+                    
+                            </select>
+                          </div>
+
+                          <span class="text-danger small">Reminder message format:</span>
+                          <div>
+                            Dear [<span class="text-black">Tenant/Resident/client</span>] name, [your custom message goes here] [ <span class="text-black">balance as of [date] is Kes [amount]</span>]
+                          </div>
+    
+                          <div class="form-group dispnon mt-2">                        
+                            <textarea id="remindertext" class="form-control ph" rows="1" placeholder="write your custom message here"></textarea>
+                        </div>
+                        <div class="text-end mt-1">
+                            <button id="setreminder" type="button" class="btn-sm btn-success borderless text-white">Save</button>
+                        </div>
+
+
+                        <span>Saved template:</span>
+                        <div>
+                            Dear [<span class="text-black">Kamau</span>], {{setreminder}}. Your balance as of <span class="text-black"> [date]</span>  is Kes <span class="text-black"> [amount].</span>
+                        </div>
+                        
+                                     
+                          <div class="divbg center-btn mt-2">
+                            <button id="sendreminder" type="button" class="btn-success borderless text-white">Send reminders</button>
+                          </div>
+
+                        </form>
+                        <div class="border-left-dark col-6">
+                            <span class="mt-2 text-success">Sent reminders stats will appear here:</span>
+
+                            <div id="props-reminded" class="table-responsive">
+                                <table id="reminderData" class="table shadow mb-1" width="100%" cellspacing="0">
+                                  <thead>
+                                    <tr>
+                                      <th class="text-info font-weight-bold pl-0">Project</th>
+                                      <th class="text-info font-weight-bold">Clients</th>
+                                      <th class="text-info font-weight-bold">Sent sms</th>
+                                      <th class="text-info font-weight-bold">Sent mails</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for item in items%}
+                                    <tr>
+                                        <td class="data-cell">{{ item['projects'] }}</td>
+                                        <td class="data-cell">{{ item['clients'] }}</td>
+                                        <td class="data-cell">{{ item['sms'] }}</td>
+                                        <td class="data-cell">{{ item['mails'] }}</td>
+
+                                    </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+                        </div>
+                      </div>
+                    
+                    
+                    
+                      <div id="topuptexts" class="text-center dispnone">
+                        <span class="text-black">To load sms: {{shortcode}}</span>
+                      </div>
+                      <div id="senttexts" class="table-responsive">
+                    
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="text-center">
         <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
@@ -1595,12 +1792,142 @@
   </script>
 
 <script>
+    $("#messageModal").on('shown.bs.modal', function () {
+      $.ajax({
+        url: "{{ url_for('api.fetchsentsms') }}",
+        type: "get",
+        data: {
+          target: "",
+        },
+        success: function (response) {
+          $("#senttexts").html(response)
+        },
+      });
+    })
+  </script>
+<script>
+    $("#setreminder").on('click',function(){
+      // $("#closemodal").click();
+  
+        url2 = "{{ url_for('api.bulksms') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                prop:$("#reminderprop").val(),
+                text:$("#remindertext").val(),
+                target:"set template"
+              },
+              success: function(response) {             
+                $("#snackbed").html(response);
+                $("#snackbar").addClass("show");
+                setTimeout(function () {
+                    $("#snackbar").removeClass("show")
+                }, 3000);
+            }
+        });
+  
+  });
+  </script>
+
+<script>
+    
+    $("#general_texts").on('click',function(){   
+      $("#generaltexts").removeClass("dispnone")
+  
+      $("#balancetexts").addClass("dispnone")
+      $("#remindertexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+    });
+  
+    $("#balance_texts").on('click',function(){   
+      $("#balancetexts").removeClass("dispnone")
+  
+      $("#generaltexts").addClass("dispnone")
+      $("#remindertexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+    });
+    
+    $("#reminder_texts").on('click',function(){   
+      $("#remindertexts").removeClass("dispnone")
+  
+      $("#balancetexts").addClass("dispnone")
+      $("#generaltexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+  
+    });
+  
+    $("#topup_texts").on('click',function(){   
+      $("#topuptexts").removeClass("dispnone")
+  
+      $("#balancetexts").addClass("dispnone")
+      $("#remindertexts").addClass("dispnone")
+      $("#generaltexts").addClass("dispnone")
+      $("#senttexts").addClass("dispnone")
+  
+  
+    });
+  
+    $("#sent_texts").on('click',function(){   
+      $("#senttexts").removeClass("dispnone")
+  
+      $("#balancetexts").addClass("dispnone")
+      $("#remindertexts").addClass("dispnone")
+      $("#generaltexts").addClass("dispnone")
+      $("#topuptexts").addClass("dispnone")
+  
+      $.ajax({
+        url: "{{ url_for('api.fetchsentsms') }}",
+        type: "get",
+        data: {
+              target:"",
+            },
+        success: function(response) {
+          $("#senttexts").html(response)
+        },
+      });    
+  
+  
+    });
+  
+    </script>
+
+<script>
     $("#switchperiod").datepicker({ 
       autoclose: true, 
       todayHighlight: true,
       format: "mm-yyyy",
       startView: "months", 
       minViewMode: "months"
+    });
+  </script>
+
+<script>
+    $("#reminder-date").datepicker({ 
+      autoclose: true, 
+      todayHighlight: true,
+      format: "dd-mm-yyyy",
+      startDate: new Date()
+    });
+  </script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#reminderData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        "order": [[0, "asc"]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
     });
   </script>
 

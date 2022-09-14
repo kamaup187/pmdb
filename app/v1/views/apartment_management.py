@@ -359,7 +359,7 @@ class Index(Resource):
             reminder = ""
 
         if reminder:
-            setreminder = f'Dear [<span class="text-black">waaa</span>Tenant/Resident name, ]{reminder[0].txt}. Your balance as of [date] is Kes [amount]'
+            setreminder = f'{reminder[0].txt}'
         else:
             setreminder = ""
             
@@ -3464,7 +3464,7 @@ class BulkSms(Resource):
         rem_txt = request.form.get("text")
         target = request.form.get("target")
 
-        print(rem_date,rem_prop,rem_bal,target,rem_txt)
+        print("Date: ",rem_date,"Prop ",rem_prop,"Bal ",rem_bal, "Target ",target,"Text",rem_txt)
 
         try:
             prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
@@ -3499,6 +3499,9 @@ class BulkSms(Resource):
 
                 texttemplate = TextTemplateOp(rem_txt,current_user.company.id)
                 texttemplate.save()
+                return '<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>'
+            else:
+                return '<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>'
 
         else:
             try:

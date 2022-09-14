@@ -108,6 +108,55 @@ table tr.odd {
   color: black;
 }
 
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 9999999999999 !important;
+  left: 50%;
+  top: 100px;
+  font-size: 17px;
+}
+
+#snackbar.success {
+  background-color: rgb(8, 117, 31);
+}
+#snackbar.error {
+  background-color: rgb(165, 12, 12);
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {top: 0; opacity: 0;} 
+  to {top: 100px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 100px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {top: 100px; opacity: 1;} 
+  to {top: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {top: 100px; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
 /* table.expenseData tr.even{ background-color: white;  border:1px lightgrey; color: black;}
 table.expenseData tr.odd{ background-color: rgba(74, 177, 197, 0.141); border:1px lightgrey; color: black; } */
 /* body{

@@ -1612,7 +1612,7 @@ class MeterReadingOp(MeterReading,Base):
             'amount':MeterReadingOp.view_amount(self),
             'description':self.description,
             'smsstatus':MeterReadingOp.get_sms_status(self),
-            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
+            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "primary",
             'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
             'readby':MeterReadingOp.get_name(self)
         }
@@ -2113,7 +2113,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'checkin':PermanentTenantOp.checkin_date(self),
             'balance':PermanentTenantOp.format_balance(self),
             'highlight':PermanentTenantOp.highlight(self),
-            'viewable':"btn-outline-danger" if self.multiple_houses else "",
+            'viewable':"danger" if self.multiple_houses else "",
             'active':"" if self.multiple_houses else "disabled",
             'tooltip': "allow tenant to occupy more than one house first" if not self.multiple_houses else "Allocate more houses",
             'regby':PermanentTenantOp.get_name(self)
@@ -2353,7 +2353,7 @@ class TenantOp(Tenant,Base):
             'checkin':TenantOp.checkin_date(self),
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),
-            'viewable':"btn-outline-danger" if self.multiple_houses else "",
+            'viewable':"danger" if self.multiple_houses else "",
             'active':"" if self.multiple_houses else "disabled",
             'tooltip': "allow tenant to occupy more than one house first" if not self.multiple_houses else "Allocate more houses",
             'regby':TenantOp.get_name(self)
@@ -2541,7 +2541,7 @@ class ClientBillOp(ClientBill,Base):
             'balance':ClientBillOp.fig_format(self.balance),
 
             'smsstatus':ClientBillOp.get_sms_status(self),
-            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
+            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "primary",
             'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
 
         }
@@ -2791,10 +2791,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def combine_house_tenant_alt(self):
         if self.tenant:
             tname = self.tenant.name.title()
-            ttype = f'<span class="text-primary">(T)</span>'
+            ttype = f'<span class="text-black">(T)</span>'
         else:
             tname = self.house.owner.name.title()
-            ttype = f'<span class="text-warning">(R)</span>'
+            ttype = f'<span class="text-black">(R)</span>'
 
         try:
             fname = tname.split()[0]
@@ -2802,7 +2802,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             fname = "None"
 
         house =  self.house.name
-        return f'{house} {ttype} <span class="text-gray-600">{fname}</span>' 
+        return f'{house} <span class="text-gray-600">{fname}</span> {ttype}' 
 
     def combine_garbsec(self):
         garb = self.garbage if self.garbage else 0.0 #TODO - remove condition
@@ -3099,8 +3099,6 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'editid':MonthlyChargeOp.generate_editid(self),
             'payid':MonthlyChargeOp.generate_payid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
-            'highlight':MonthlyChargeOp.highlight(self),
-            'payhighlight':MonthlyChargeOp.payhighlight(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
             'ptenant':self.ptenant_id if self.ptenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
@@ -3139,14 +3137,14 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'date':self.date.date(),
             'date2':MonthlyChargeOp.get_date2(self.month,self.year),
             'smsstatus':MonthlyChargeOp.get_sms_status(self),
-            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "btn-outline-primary",
+            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "primary",
             'smsactive': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
             'mailstatus':MonthlyChargeOp.get_mail_status(self),
-            'mailoutline': "" if self.email_invoice == "sent" or self.email_invoice == "Success" else "btn-outline-primary",
+            'mailoutline': "" if self.email_invoice == "sent" or self.email_invoice == "Success" else "primary",
             'mailactive': "disabled" if self.email_invoice == "sent" or self.email_invoice == "Success" else "",
             'active':"",
-            'viewable':"btn-outline-success",
-            'editoutline':"btn-outline-danger",
+            'viewable':"text-primary",
+            'editoutline':"text-primary",
             'new':MonthlyChargeOp.current_badge(self),
             'billedby':MonthlyChargeOp.get_name(self)
         }

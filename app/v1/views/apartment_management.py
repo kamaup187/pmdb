@@ -516,9 +516,9 @@ class Index(Resource):
                     color = "text-success"
                 smsfrac = f"{remainingsms} units"
 
-            # display own sms balance:
-            if localenv:
-                print("REMAINING SMS",advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id))
+            # # display own sms balance:
+            # if localenv:
+            #     print("REMAINING SMS",advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id))
 
                 
             # if current_user.username.startswith('qc'):
@@ -1338,10 +1338,15 @@ class GraphStats(Resource):
         bill_string = ','.join(map(str, billdatalist))
         water_string = ','.join(map(str, unitdatalist))
         commission_string = ','.join(map(str,commissiondatalist))
+
+        if crm(current_user):
+            template = 'ajax_load_graph_data3.html'
+        else:
+            template = 'ajax_load_graph_data.html'
       
             
         return Response(render_template(
-            'ajax_load_graph_data.html',
+            template,
             targetprop = prop,
             collectionstring=collection_string,
             billstring=bill_string,
@@ -2294,11 +2299,11 @@ class Bills(Resource):
             numerator = smsstatus.count("1")
 
             if numerator == 0 and len(smsstatus) != 0:
-                sms_outline = "btn-outline-primary"
+                sms_outline = "text-primary"
             # elif numerator < len(smsstatus) and len(smsstatus) != 0:
             #     sms_outline = "btn-warning"
             else:
-                sms_outline = "btn-outline-success"
+                sms_outline = "text-success"
 
             sms = f'{numerator}/{len(smsstatus)}'
 
@@ -2323,9 +2328,9 @@ class Bills(Resource):
             ftotalbalance += totalbalance
 
             if prop.billing_period.month != co.billing_period.month:
-                bill_outline = "btn-outline-primary"
+                bill_outline = "text-primary"
             else:
-                bill_outline = "btn-outline-dark"
+                bill_outline = "text-dark"
 
             if prop.billprogress == "billing":
                 progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Billing'
@@ -2374,8 +2379,10 @@ class Bills(Resource):
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
         nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
 
+        template = 'crm_ajax_bills.html' if crm(current_user) else 'ajax_bills.html'
+
         return render_template(
-            "ajax_bills.html",
+            template,
             renttotal = frenttotal,
             watertotal = f"{fwatertotal:,.2f}",
             electotal = felectotal,
@@ -2589,8 +2596,10 @@ class Payments(Resource):
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
 
+        template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
+
         return render_template(
-            "ajax_allpayments.html",
+            template,
             props=props,
             renttotal = frenttotal,
             watertotal = f"{fwatertotal:,.2f}",

@@ -2457,7 +2457,8 @@ class ReceivePayment(Resource):
                 else:
                     print("REFERENCE EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
                     cbdel = CtoBop.fetch_record_by_ref(raw_bill_ref)
-                    CtoBop.update_status(cbdel,"claimed")
+                    if cbdel:
+                        CtoBop.update_status(cbdel,"claimed")
                     return "<div class='center-btn text-danger text-xx'>Reference exists!</div"
 
         ########################################################################################

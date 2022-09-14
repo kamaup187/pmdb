@@ -607,7 +607,7 @@ class AllProperties(Resource):
         prop_ids = []
         tnt_disp = "dispnone"
 
-        template = "ajax_allprops_detail.html"
+        template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
         
         for prop in props:
             tenants = len(tenantauto(prop.id))
@@ -658,7 +658,8 @@ class AllProperties(Resource):
                 }
 
             else:
-                template = "ajax_allprops_detail.html"
+                template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
+
                 dict_obj = {
                     'id':prop.id,
                     'identity':"prp"+str(prop.id),

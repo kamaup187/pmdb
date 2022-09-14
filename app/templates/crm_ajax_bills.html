@@ -1,0 +1,870 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_ga">
+      <span id="prop_identifier_main" class="dispnone"></span>
+      <span id="bill_prop_identifier" class="dispnone"></span>
+      <span id="target_period" class="dispnone">{{period_target}}</span>
+
+      <span id="targeturl" class="dispnone"></span>
+    
+      <div class="card mb-2 mt-1">
+    
+        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
+          <span class="smallify text-black font-weight-bold text-uppercase text-110">Client Invoices <span id="activeprop"
+              class="text-primary ml-3"></span></span>
+          <div>
+            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+              type="button">X</button>
+          </div>
+        </div>
+    
+        <div class="card-body flowing-body pt-2 pl-2">
+    
+    
+          <!-- <div id="reportbtns" class="row mb-3">
+                <div class="col-lg-12 center-btn">
+                  <div class="info_item">
+                    <button id="balbtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Balances report</span></button>
+                    <button id="paybtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Payments report</span></button>
+                    <button id="arrbtn" type="button" class="min-30 btn btn-outline-success font-weight-bold mb-1"><i class="fas fa-file-alt mr-4"></i><span class="mr-4">Arrears report</span></button>
+                  </div>
+                </div>
+              </div> -->
+    
+    
+    
+          <!-- <div class="row mb-3">
+                  <div class="col-lg-12 center-btn">
+                    <div class="info_item">
+                      <button type="button" class="borderless btn-info" data-toggle="modal" data-target="#addPaymentModa"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">Bill</span></button>
+                    </div>
+                  </div>
+              </div> -->
+    
+    
+          <div class="toggleswitch divbg mb-2 d-none underline">
+            <span>
+              <span class="small">View previous month data</span>
+              <label class="switch">
+                <input id="reporttoggle" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </span>
+    
+            <span class="">
+              <span class="small">View current month data</span>
+              <label class="switch">
+                <input id="reporttoggle2" type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </span>
+          </div>
+    
+          <div id="arr-view" class="d-none"></div>
+    
+          <div id="result-view" class="">
+
+            <div class="pb-2 bg-white divjust-end">
+
+              <div class="hide">
+                hide
+              </div>
+              
+              <nav class="nav nav-borders">
+                <a id="previous-period" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}</a>
+                <a id="current-period" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
+                <a id="next-period" class="nav-link pb-0 pt-1 text-black ms-0" href="#">{{next_month}}</a>
+              </nav>
+              
+            </div>
+
+    
+              <div id="reqdata" class="table-responsive">
+                <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                  <thead class="custom-header">
+                    <tr>
+                      <th class="text-dark font-weight-bold" data-orderable="true">Project</th>
+                      <th class="text-dark font-weight-bold" data-orderable="false">Clients</th>
+                      <th class="text-dark font-weight-bold dispnone" data-orderable="false">Create</th>
+                      <th class="text-dark font-weight-bold" data-orderable="false">Invoices</th>
+                      <th class="text-dark font-weight-bold" data-orderable="false">Send</th>
+                      <th class="text-dark  {{fieldshow_dep}} ">Deposit</th>
+                      <th class="text-dark   {{fieldshow_fine}}">Fine</th>
+                      <th class="text-dark ">Due</th>
+                      <th class="text-dark  ">Paid</th>
+                      <th class="text-dark   text-danger">b.c.f</th>
+                      <th class="text-dark   text-danger"><i class="fa fa-trash-alt"></i></th>
+                    </tr>
+                  </thead>
+    
+                  <tbody>
+                    {% for item in items%}
+                    <tr>
+                      <!-- <td class="first-data-cell text-dark font-weight-bold"><a href="#" id="{{item['identity']}}"> </a></td> -->
+                      <!-- <td class="font-weight-bold text-s  data-cell">
+                        <div>
+                          <button id="{{item['identity']}}" type="button"
+                            class="btn action-btn btn-outline-primary font-weight-bold namebutton modalTrigger no-wrap"><i
+                              class="fas fa-city mr-1"></i>{{ item['name'] }}</button>
+                        </div>
+                      </td> -->
+
+                      <td class="data-cell">
+                        <div>
+                            <span id="{{item['identity']}}" type="button" class="btn text-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
+                        </div>
+                      </td>
+    
+                      <td class="data-cell text-center text-black">{{item['ptenants'] }}</td>
+
+    
+    
+                      <!-- <td class="font-weight-bold text-s text-center data-cell">
+                        <div>
+                          <button id="{{item['billid']}}" type="button"
+                            class="btn action-btn-alt {{item['bill_outline']}} font-weight-bold no-wrap">{{item['progress']|safe}}</button>
+                        </div>
+                      </td> -->
+
+                      <td class="data-cell text-center dispnone">
+                        <div>
+                            <span id="{{item['billid']}}" type="button" class="btn {{item['bill_outline']}} font-weight-bold btn-sm ellipsis no-wrap" data-toggle="modal" data-target="#generateInvoiceModal">{{item['progress']|safe}}</span>
+                        </div>
+                    </td>
+    
+                      <td class="data-cell text-center text-black">{{item['invs']|safe }}</td>
+    
+    
+                      <!-- <td class="font-weight-bold text-s text-center data-cell">
+                        <div>
+                          <button id="{{item['smsid']}}" type="button"
+                            class="btn action-btn-alt {{item['sms_outline']}} font-weight-bold no-wrap">{{item['sms']
+                            }}</button>
+                        </div>
+                      </td> -->
+
+                      <td class="data-cell text-center">
+                        <div>
+                            <span id="{{item['smsid']}}" type="button" class="btn {{item['sms_outline']}} font-weight-bold btn-sm ellipsis no-wrap">{{item['sms']}}</span>
+                        </div>
+                    </td>
+    
+                      <td class="data-cell text-right {{fieldshow_dep}}">{{item['deposit'] }}</td>
+                      <td class="data-cell text-right {{fieldshow_fine}}">{{item['fine'] }}</td>
+    
+                      <td class="data-cell text-right text-black font-weight-bold">{{item['total'] }}</td>
+                      <td class="data-cell text-right {{item['payhighlight']}} font-weight-bold">{{item['paid'] }}</td>
+                      <td class="data-cell text-right {{item['highlight']}} font-weight-bold">{{item['bal'] }}</td>
+    
+                      <td class="font-weight-bold text-center data-cell">
+                        <div>
+                          <span id="{{item['propid']}}" type="button" class="blink no-wrap"><i
+                              class="fas fa-trash-alt text-danger blink-text font-weight-bold mr-2 ml-2"></i></span>
+                        </div>
+                      </td>
+    
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="4" class="center-btn font-weight-bold data-cell text-black">Total</td>
+                      <td class="font-weight-bold data-cell text-dark text-right {{fieldshow_dep}}">{{deptotal}}</td>
+                      <!-- 
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_elec}}">{{electotal}}</td>
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_garb}}">{{garbtotal}}</td>
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_sec}}">{{sectotal}}</td>
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_sev}}">{{sevtotal}}</td>
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_dep}}">{{deptotal}}</td>
+                            <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_arg}}">{{argtotal}}</td> -->
+                      <td class="font-weight-bold data-cell text-dark text-right {{fieldshow_fine}}">{{penalties}}</td>
+    
+                      <td class="font-weight-bold data-cell text-dark text-right">{{totalbills}}</td>
+                      <td class="font-weight-bold data-cell text-dark text-right">{{totalpaid}}</td>
+                      <td class="font-weight-bold data-cell text-dark text-right">{{totalbalance}}</td>
+                      <td class="font-weight-bold data-cell text-dark text-right"></td>
+    
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="modal fade" id="generateInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-dark h4 text-uppercase" id="paymentDetailModalLabel">Generate invoices</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <div class="mb-3 mt-3 h5">
+                      <span class="text-black">Current period: <span class="text-dark underline">{{current_month}} </span></span>
+                    </div>
+
+
+                  <div class="mb-1 smallify">
+                    <input type="checkbox" name="" id="diffperiod">
+                    <label class="mr-3 me-3 text-danger" for="diffperiod">Bill different period?</label>
+                    <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose date..." readonly />
+                    
+                  </div>
+  
+
+                    
+
+                    <div class="mb-2 smallify">
+                      <input type="checkbox" name="" id="billall" checked>
+                      <label class="mr-3 me-3 text-danger" for="billall">Bill all houses</label>
+                    </div>
+
+                    <fieldset id="housefield" class="mt-2 dispnone">
+                      <legend class="legend">Select houses:</legend>
+                      <div id="housebed" class="mt-"></div>
+                    </fieldset>
+
+    
+                    <div class="mt-2 divbg">
+                      <div>
+                        <span id="generatebtn" type="button" class="btn btn-sm btn-danger text-gray-danger">Generate</span>
+                      </div>
+  
+                      <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+  
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+    
+    <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editTenantModal"></button> -->
+    <!--================Contact Area =================-->
+
+
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+  
+
+  <script>
+    $("#close-propdisp").on('click',function(){
+      $('#body-block').removeClass('dispnone')
+      $('#propdisp').addClass('dispnone');
+      $('#content-area').removeClass("isopen text-danger");
+      $('#list-area').removeClass("isopen text-danger");
+      $('#sidebarToggle').click();
+      $('#smaccordionSidebar').removeClass("toggled");
+      $(".fixloader").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
+            );
+            $(".fixloader2").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
+            );
+      setTimeout(getPropStats, 10);
+
+    });
+  </script>
+
+<script>
+  var rawIds = "{{ propids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_prop_identifier").html(item)
+        }
+        else if(item.startsWith("prp")){
+          console.log("Clicked properties")
+
+          $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+          $("#activeprop-child").text($(this).text())
+
+          $("#preloader-btn-alt").click();
+          // $("#spinner").removeClass("dispnone")
+
+
+          $.ajax({
+            url: "/results",
+            type: "get",
+            data: {
+              id: item,
+              target_period:$("#target_period").text()
+            },
+            success: function(response) {
+              // $("#spinner").addClass("dispnone")
+              $("#postloader-btn-alt").click();
+              $('#result-view').toggleClass("d-none");
+              $('#reportbtns').toggleClass("d-none");
+              $('#arr-view').toggleClass("d-none");
+              $("#arr-view").html(response);
+            }
+          });
+        
+        }else if(item.startsWith("sms")){
+          console.log("Clicked sms")
+          $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>sending...');
+
+          $.ajax({
+            url: "/send/invoices",
+            type: "POST",
+            data: {propid: item},
+            success: function(response) {
+              $("#"+item).html('Sent');
+            }
+          });
+                
+        }else if(item.startsWith("bill")){
+          $("#bill_prop_identifier").html(item)
+
+          console.log("Clicked billing")
+          // $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+
+          // $.ajax({
+          //   url: "/billing",
+          //   type: "POST",
+          //   data: {propid: item},
+          //   success: function(response) {
+
+          //     var billingpoll = setInterval(function(){
+                
+          //       // $.ajax({
+          //       //   url: "/bill/progress",
+          //       //   type: "get",
+          //       //   data: {propid: item},
+          //       //   success: function(response) {
+          //       //     if (response == "completed"){
+          //       //       clearInterval(billingpoll);
+
+          //       //       $("#"+item).html('Complete');
+
+
+          //       //       $("#barloader").removeClass("dispnone")
+
+          //       //       url = "{{ url_for('api.bills') }}"
+
+          //       //       $.ajax({
+          //       //             type: "get",
+          //       //             url: url,
+          //       //             success: function(response) {
+          //       //               // $("#postloader-btn").click();
+          //       //               if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+          //       //                     $('#sidebarToggle').click();
+          //       //                     $('#smaccordionSidebar').removeClass("toggled");
+          //       //                   }
+          //       //                 $('#content-area').addClass("isopen text-danger");
+          //       //               $("#barloader").addClass("dispnone")
+          //       //               $("#propdisp").html(response);
+          //       //             }
+          //       //         });
+
+          //       //     }
+          //       //     else{
+          //       //       console.log(response)
+          //       //     }
+          //       //   }
+          //       // });
+
+          //     },5000)
+          //   }
+          // });
+        }
+        else{
+          $("#edit_prop_identifier").html(item)
+        }
+        
+      }else{
+        $("#prop_identifier_main").html(item)
+        $("#"+item).html('<i class="fas fa-hourglass-start text-warning font-weight-bold"></i>');
+        $.ajax({
+            url: "/discard/bills",
+            type: "POST",
+            data: {propid: item},
+            success: function(response) {
+              $("#"+item).html('<i class="fas fa-check text-success"></i>');
+            },
+            error: function(response) {
+              $("#"+item).html('<i class="fas fa-times text-danger">!</i>');
+            }
+          });
+      }
+    });
+  });
+</script>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantPaymentData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+<script>
+  $("#billdatepicker").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "dd-mm-yyyy"
+  });
+</script>
+
+<script>
+
+  $("#generateInvoiceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.bills') }}",
+      type: "get",
+      data: {
+            propid: $("#bill_prop_identifier").text(),
+            target:"houses"
+          },
+      success: function(response) {
+        $("#housebed").html(response);
+      },
+      error: function(xhr) {
+        alert("Error")
+        }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+
+  $('#diffperiod').change(function () {
+    if (this.checked) {
+      $("#billdatepicker").removeClass("dispnone")
+    }
+    else {
+      $("#billdatepicker").addClass("dispnone")
+    }
+  });
+
+  $('#billall').change(function () {
+    if (this.checked) {
+      $("#housefield").addClass("dispnone")
+    }
+    else {
+      $("#housefield").removeClass("dispnone")
+    }
+  });
+
+  $("#showbutton").click(function () {
+    var favorite = [];
+    $.each($("input[name='billhouse']:checked"), function () {
+      console.log(this.value);
+      favorite.push($(this).val());
+    });
+    console.log("My favourite sports are: " + favorite.join(", "));
+  });
+</script>
+
+
+
+<script>
+  $("#generatebtn").click(function () {
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+    $("#"+$("#bill_prop_identifier").text()).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+
+    var houselist = [];
+    var propitem = $("#bill_prop_identifier").text()
+
+    $.each($("input[name='billhouse']:checked"), function () {
+      houselist.push($(this).val());
+    });
+
+    $.ajax({
+      url: "/billing",
+      type: "POST",
+      data: {
+        propid: propitem,
+        houses:houselist.join(", "),
+        date:$("#billdatepicker").val()
+      },
+      success: function (response) {
+
+        var billingpoll = setInterval(function () {
+
+        $.ajax({
+          url: "/bill/progress",
+          type: "get",
+          data: {propid: propitem},
+          success: function(response) {
+            if (response == "completed"){
+              clearInterval(billingpoll);
+
+              $("#barloader").removeClass("dispnone")
+
+              url = "{{ url_for('api.bills') }}"
+
+              $.ajax({
+                    type: "get",
+                    url: url,
+                    success: function(response) {
+                      // $("#postloader-btn").click();
+                      if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                            $('#sidebarToggle').click();
+                            $('#smaccordionSidebar').removeClass("toggled");
+                          }
+                        $('#content-area').addClass("isopen text-danger");
+                      $("#barloader").addClass("dispnone")
+
+                      $('.modal-backdrop').removeClass('modal-backdrop');
+                      $('body').removeClass('modal-open');
+
+                      $("#propdisp").html(response);
+                    }
+                });
+
+            }
+            else{
+              console.log(response)
+            }
+          }
+        });
+
+        }, 5000)
+      }
+    });
+  })
+
+</script>
+
+
+
+
+<script>
+  
+  $("#reporttoggle").on('change',function(){
+    var cb = document.getElementById("reporttoggle");
+    if (cb.checked){
+      var cb2 = document.getElementById("reporttoggle2");
+      cb2.checked = false;
+
+      $.ajax({
+        url: $("#targeturl").text(),
+        type: "get",
+        data: {
+              propid:"",
+              target:"old"
+            },
+        success: function(response) {
+
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+  
+  });
+  
+  $("#reporttoggle2").on('change',function(){
+    var cb2 = document.getElementById("reporttoggle2");
+    if (cb2.checked){
+      var cb = document.getElementById("reporttoggle");
+      cb.checked = false;
+
+      $.ajax({
+        url: $("#targeturl").text(),
+        type: "get",
+        data: {
+              propid:"",
+              target:"default"
+            },
+        success: function(response) {
+
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#current-period").removeClass('underline');
+    $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+      $("#activeprop-child").text($("#target_period").text().toUpperCase() + ' PERIOD')
+
+    if($("#target_period").text() == "current"){
+      $("#current-period").addClass('underline');
+    }else if($("#target_period").text() == "next"){
+      $("#next-period").addClass('underline');
+    }else{
+      $("#previous-period").addClass('underline');
+    }
+  })
+
+</script>
+
+
+<script>
+  $("#previous-period").on('click',function(){
+    $("#next-period").removeClass('underline');
+    $("#current-period").removeClass('underline');
+    $("#previous-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"previous"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+
+  })
+
+
+  $("#current-period").on('click',function(){
+
+    $("#next-period").removeClass('underline');
+    $("#previous-period").removeClass('underline');
+    $("#current-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"current"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+  })
+
+
+  $("#next-period").on('click',function(){
+    $("#previous-period").removeClass('underline');
+    $("#current-period").removeClass('underline');
+    $("#next-period").addClass('underline');
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:"next"},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+  })
+
+
+</script>
+
+
+
+<script>
+  $("#balbtn").on('click',function(){
+    if ($("#balbtn").hasClass("closereport")){
+
+      $("#balbtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Balances report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('.toggleswitch').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#paybtn').toggleClass("d-none");
+      $('#arrbtn').toggleClass("d-none");
+      $('#balbtn').toggleClass("closereport");
+      $('#balbtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+      $("#targeturl").html("/balances");
+      $("#balbtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/balances",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#paybtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("d-none");
+          $('#balbtn').toggleClass("closereport");
+          $("#balbtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#balbtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('.toggleswitch').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+<script>
+  $("#paybtn").on('click',function(){
+    if ($("#paybtn").hasClass("closereport")){
+      $('#balbtn').toggleClass("d-none");
+      $('#arrbtn').toggleClass("d-none");
+      $("#paybtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Payments report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('.toggleswitch').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#paybtn').toggleClass("closereport");
+      $('#paybtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+      $("#targeturl").html("/compare/payments");
+      $("#paybtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/compare/payments",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#balbtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("d-none");
+          $('#paybtn').toggleClass("closereport");
+          $("#paybtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#paybtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('.toggleswitch').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+<script>
+  $("#arrbtn").on('click',function(){
+    if ($("#arrbtn").hasClass("closereport")){
+      $('#balbtn').toggleClass("d-none");
+      $('#paybtn').toggleClass("d-none");
+      $("#arrbtn").html("<i class=\"fas fa-file-alt mr-4\"></i><span class=\"mr-4\">Arrears report</span>")
+      $('#result-view').toggleClass("d-none");
+      $('#arr-view').toggleClass("d-none");
+      $('#arrbtn').toggleClass("closereport");
+      $('#arrbtn').toggleClass("btn-outline-success btn-outline-danger");
+
+    }else{
+
+      $("#arrbtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+      $.ajax({
+        url: "/arrears",
+        type: "get",
+        data: {
+              propid:""
+            },
+        success: function(response) {
+          $('#balbtn').toggleClass("d-none");
+          $('#paybtn').toggleClass("d-none");
+          $('#arrbtn').toggleClass("closereport");
+          $("#arrbtn").html("<i class=\"fas fa-times mr-4\"></i>Close report")
+          $('#arrbtn').toggleClass("btn-outline-success btn-outline-danger");
+          $('#result-view').toggleClass("d-none");
+          $('#arr-view').toggleClass("d-none");
+          $("#arr-view").html(response);
+        },
+        error: function(xhr) {
+          // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+          }
+      });
+    }
+
+
+  });
+</script>
+
+
+<!-- <script>
+    
+  $("#nextbilling").on('click',function(){   
+    
+    $('#nextbilling').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Switching...');
+    $.ajax({
+      url: "{{ url_for('api.switchperiod') }}",
+      type: "POST",
+      data: {
+            target:"",
+          },
+      success: function(response) {
+        $(".dismissparent").click();
+        $('#nextbilling').html('Switch');
+
+      },
+    });
+  });
+  
+  </script> -->
+
+
+
+
+
+

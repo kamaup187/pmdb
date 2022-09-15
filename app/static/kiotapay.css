@@ -6,6 +6,10 @@ body {
     color: #333;
     background-color: #fff;
   }
+
+  .bg-aviv{
+    background-color: #4a0544d4;
+  }
   
   table.dataTable thead th {
     background: transparent !important;

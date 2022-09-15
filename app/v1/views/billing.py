@@ -1519,9 +1519,10 @@ class SendInvoices(Resource):
 
             if bill.apartment.company.ctype == "crm":
 
-                job563 = q.enqueue_call(
-                    func=send_out_single_email_crm_invoice, args=(billid,), result_ttl=5000
-                )
+                # job563 = q.enqueue_call(
+                #     func=send_out_single_email_crm_invoice, args=(billid,), result_ttl=5000
+                # )
+                pass
             else:
                 job563 = q.enqueue_call(
                     func=send_out_single_email_invoice, args=(billid,), result_ttl=5000

@@ -68,6 +68,8 @@ except ImportError:
     SMS_USERNAME = None
     SMS_API_KEY = None
     KW_USER = ""
+    SECRETNAME = None
+    SECRETNUM = None
 
 sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
@@ -99,6 +101,8 @@ else:
 typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
+success = '<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>'
+failure = '<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>'
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
@@ -3635,12 +3639,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
             if raw_rem_sms > 0 or own_shortcode:
 
-                try:
-                    target_bal = float(rem_bal)
-                except:
-                    target_bal = 0.0
-
-                if tenant_obj.balance > target_bal:
+                if tenant_obj.balance > 0.0:
                     pass
                 else:
                     continue
@@ -4393,7 +4392,7 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
     #########################################################################################
 
 
-def send_out_single_email_crm_invoice(billid):
+def send_out_single_email_crm_invoice(ptenantid):
 
     print("printing to console")
 
@@ -4403,162 +4402,72 @@ def send_out_single_email_crm_invoice(billid):
     app.app_context().push()
 
     try:
-        bill = MonthlyChargeOp.fetch_specific_bill(billid)
-
-        print("BILL IS HERE >>>>",bill)
-
+        tenant_obj = PermanentTenantOp.fetch_tenant_by_id(ptenantid)
         with mail.connect() as conn:
+            if tenant_obj:
+                schtotal = 0.0
+                schpaid = 0.0
 
-            if bill.ptenant:
-                tenant=bill.ptenant
-                current_target = "owner"
-                print("OWNER INVOICE IS BEING PREPARED FOR" ,bill.ptenant.name)
+                bills = tenant_obj.schedules
+
+                formatted_bills = []
+
+                for bill in bills:
+                    schtotal += bill.schedule_amount
+                    schpaid += bill.paid
+                    formatted_bills.append(PaymentScheduleOp.view_detail(bill))
+
+                prop = tenant_obj.apartment
+                if tenant_obj.email:
+                    email_addr = tenant_obj.email
+
+                    template_vars = {
+                        "statementdate":datetime.datetime.now().strftime("%d %B %Y"),
+                        "bills":formatted_bills,
+                        "paging":page(formatted_bills),
+                        "schtotal":f"{schtotal:,.1f}",
+                        "schpaid":f"{schpaid:,.1f}",
+                        "prop_obj":prop,
+                        "prop ": tenant_obj.apartment.name,
+                        "tenant_obj":tenant_obj,
+                        "tenant_name":tenant_obj.name,
+                        "name":prop.name,
+                        "logopath":logo(prop.company)[0],
+                        "mobilelogopath":logo(prop.company)[1],
+                        "fulllogopath":logo(prop.company)[2],
+                        "letterhead":logo(prop.company)[3],
+                        "co":prop.company
+                    }
+
+                    print("going to mail sender")
+                    crm_mail_sender(conn,tenant_obj,template_vars,email_addr,tenant_obj.apartment)
+                else:
+                    print("Email address not found for tenant ",tenant_obj.name,"-",tenant_obj.apartment.name)  
             else:
-                current_target = "tenant"
-                tenant=bill.tenant
-                print("TENANT INVOICE IS BEING PREPARED FOR" ,bill.tenant.name)
-
-            co = bill.apartment.company
-
-            invnum = bill.id + 13285
-
-            house = bill.house
-
-            #start here
-            sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
-            sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
-
-            try:
-                wbill = sibling_water_bill[0]
-                w_edited = "dispnone" if wbill.units == float(wbill.reading) - float(wbill.last_reading) else ""
-            except:
-                wbill = None
-                w_edited = "dispnone"
-
-            try:
-                ebill = sibling_electricity_bill[0]
-                e_edited = "dispnone" if ebill.units == float(ebill.reading) - float(ebill.last_reading) else ""
-            except:
-                ebill = None
-                e_edited = "dispnone"
-
-
-            kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
-            invdate = bill.date - relativedelta(days = 0)
-            inv_date = invdate.strftime("%d/%b/%y")
-            invdue = invdate + relativedelta(days=5)
-            inv_due = invdue.strftime("%d/%b/%y")
-
-            print("got here so far")
-
-        
-            email_addr = tenant.email
-            if email_addr:
-                if wbill or ebill:
-                    visibility = ""
-                else:
-                    visibility = "hide"
-
-                arrears = bill.arrears
-                
-                if bill.paid_amount:
-                    billpaid = f"{bill.paid_amount:,.2f}"
-                    billbal = f"{bill.balance:,.2f}"
-
-                else:
-                    billpaid = 0.0
-                    billbal = 0.0
-
-                if arrears < 0.0:
-                    arrtitle = "Previous balance"
-                    bbfhighlight = "text-success"
-
-                    arrears = f"{arrears*-1}"
-                elif arrears > 0.0:
-                    arrtitle = "Previous balance"
-                    bbfhighlight = "text-danger"
-                else:
-                    arrtitle = ""
-                    bbfhighlight = ""
-
-                try:
-                    if current_target == "owner":
-                        if bill.house.watertarget == "owner":
-                            watertarget = True
-                        else:
-                            watertarget = False
-                    else:
-                        if bill.house.watertarget == "tenant":
-                            watertarget = True
-                        else:
-                            watertarget = False
-                except:
-                    watertarget = True
-
-                try:
-                    if bill.apartment.paymentdetails.nartype == 'hsenum':
-                        narration = bill.house.name
-                    else:
-                        if bill.ptenant:
-                            narration = "WN"+str(tenant.id)
-                        else:
-                            narration = "TNT"+str(tenant.id)
-                except:
-                    narration = bill.house.name
-
-                template_vars = {
-                    "bill":bill,
-                    "p":bill.apartment.paymentdetails,
-                    "narration":narration,
-                    "servicevisibility":"",
-                    "readings": wbill,
-                    "w_edited": w_edited,
-                    "ereadings": ebill,
-                    "e_edited": e_edited,
-                    "visibility":visibility,
-                    "watertarget":watertarget,
-                    "arrears":arrears,
-                    "bbfhighlight ": bbfhighlight,
-                    "arrtitle":arrtitle,
-                    "billpaid":billpaid,
-                    "billbal":billbal,
-                    "house":house,
-                    "total":f"{bill.total_bill:,.2f}",
-                    "invdate":inv_date,
-                    "invdue":inv_due,
-                    "client":tenant,
-                    "company":co,
-                    "invnum":invnum,
-                    "logo":logo(co)[2],
-                    "slogo":logo(kiotapay)[1]
-                }
-
-                print("going to mail sender")
-                crm_mail_sender(conn,tenant,bill,template_vars,email_addr,co)
-            else:
-                print("Email address not found for tenant ",tenant.name,"-",bill.apartment.name)                             
+                print("PTenant not founnd")  
+                                           
 
     except Exception as e:
          print("WORKING HAS STOPPED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",e)
 
 
-def crm_mail_sender(conn,recepient,bill,template_vars,email_addr,co):
+def crm_mail_sender(conn,recepient,template_vars,email_addr,co):
 
     templateLoader = FileSystemLoader(searchpath="app/templates")
     templateEnv = Environment(loader=templateLoader)
-    TEMPLATE_FILE = "ajax_tenant_crm_invoice_mail.html"
+    TEMPLATE_FILE = "ajax_tenant_crm_invoice.html"
     template = templateEnv.get_template(TEMPLATE_FILE)
 
     print("CURRENTLY SENDING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",recepient.name)
     print("WEASYPRINT???? >>>>",HTML)
 
     html_out = template.render(template_vars)
-    filename = f"app/temp/statement_{bill.id}.pdf"
+    filename = f"app/temp/statement_{recepient.id}.pdf"
     HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
 
     ###################################################################################
     # LETS SEND EMAIL
-    mail_filename = f"inv_{bill.id}"
+    mail_filename = f"statement_{recepient.id}"
     with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
         # print (fh)
         try:
@@ -4567,15 +4476,17 @@ def crm_mail_sender(conn,recepient,bill,template_vars,email_addr,co):
             except:
                 tname = recepient.name
 
-            filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+            filename_ext = f"{recepient.house.name}_statement.pdf"
 
-            txt = Message("REMINDER", sender = mailsender, recipients = [email_addr])
+            sal = f"{recepient.apartment.company.name}: Payment Reminder"
+
+            txt = Message(sal, sender = mailsender, recipients = [email_addr])
             txt.body = f"Dear {tname}  \nKindly find the attached statement of account below. \n\n{co.name}"
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
             # mail.send(txt)
             conn.send(txt)
-            MonthlyChargeOp.update_email_status(bill,"sent")
+            # MonthlyChargeOp.update_email_status(bill,"sent")
 
         except Exception as e:
             print(str(e))

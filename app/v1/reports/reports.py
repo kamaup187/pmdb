@@ -4957,6 +4957,10 @@ class TenantStatementThree(Resource):
 
                     ref = f'#{x.id} [{x.ref_number}]',
 
+                    # if item.month == 8:
+                    #     import pdb;
+                    #     pdb.set_trace()
+
                     if x.rent_paid:
                         cb -= x.rent_paid
                         datadict = {

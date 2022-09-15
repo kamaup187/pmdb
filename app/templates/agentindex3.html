@@ -1830,6 +1830,33 @@
   });
   </script>
 
+
+<script>
+    $("#sendreminder").on('click',function(){
+      // $("#closemodal").click();
+      setTimeout(function(){
+        url2 = "{{ url_for('api.bulksms') }}";
+        $.ajax({
+              type: "POST",
+              url: url2,
+              data: {
+                prop:$("#reminderprop").val(),
+                date:$("#reminder-date").val(),
+                channel:$("#reminderchannel").val(),
+                text:$("#remindertext").val(),
+                target:"send reminders"
+              },
+              success: function(response) {
+                $("#snackbed").html(response);
+                $("#snackbar").addClass("show");
+                setTimeout(function () {
+                    $("#snackbar").removeClass("show")
+                }, 3000);            }
+        });
+      },300);
+  });
+  </script>
+
 <script>
     
     $("#general_texts").on('click',function(){   

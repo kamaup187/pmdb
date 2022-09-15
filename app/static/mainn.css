@@ -22,7 +22,9 @@
 .text-kodi{
   color: #0e2353
 }
-
+.bg-aviv{
+  background-color: #4a0544d4;
+}
 table.dataTable thead th {
   background: transparent !important;
   white-space: nowrap;

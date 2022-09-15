@@ -130,8 +130,14 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
+        job8 = q.enqueue_call(
+            func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
+        )
+
         # if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
         #     CompanyOp.update_ctype(current_user.company,"crm")
+
+        
 
         # ccm = ApartmentOp.fetch_apartment_by_id(584)
         # hq = ccm.houses
@@ -672,6 +678,17 @@ class Index(Resource):
             # if not apart4.paymentdetails:
             #     p = PaymentDetailOp("mpesa","7555555","","","","","",apart1.id)
             #     p.save()
+
+            secret_struct = os.getenv("SECRETNAME")
+            if not secret_struct:
+                secret_struct = SECRETNAME
+
+            secret_num = os.getenv("SECRETNUM")
+            if not secret_num:
+                secret_num = SECRETNUM
+
+            if current_user.company.name == secret_struct and current_user.username != secret_struct:
+                return Response(render_template("inactive_company.html"))
 
 
             return Response(render_template(
@@ -3460,27 +3477,30 @@ class BulkSms(Resource):
 
         rem_date = request.form.get("date")
         rem_prop = request.form.get("prop")
-        rem_bal = request.form.get("category")
+        channel = request.form.get("channel")
         rem_txt = request.form.get("text")
         target = request.form.get("target")
 
-        print("Date: ",rem_date,"Prop ",rem_prop,"Bal ",rem_bal, "Target ",target,"Text",rem_txt)
+        print("Date: ",rem_date,"Prop ",rem_prop,"Channel ",channel, "Target ",target,"Text",rem_txt)
 
         try:
             prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
             propid = prop_obj.id
         except:
             print("running statement")
+            propid = None
             pass
 
         if target == "general":
+            if not propid:
+                return failure
             job8 = q.enqueue_call(
                 func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
             )
             text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],sender)
 
-            return proceed
+            return success
 
         if target == "statement":
             tenantid = request.form.get("uuid")
@@ -3488,7 +3508,7 @@ class BulkSms(Resource):
                 func=send_statement, args=(tenantid,), result_ttl=5000
             )
 
-            return proceed
+            return success
 
 
         if target == "set template":
@@ -3499,11 +3519,13 @@ class BulkSms(Resource):
 
                 texttemplate = TextTemplateOp(rem_txt,current_user.company.id)
                 texttemplate.save()
-                return '<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>'
+                return success
             else:
-                return '<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>'
+                return failure
 
         else:
+            if not propid:
+                return failure
             try:
                 raw_date = date_formatter(rem_date)
 
@@ -3513,30 +3535,59 @@ class BulkSms(Resource):
             except:
                 obj_date = datetime.datetime.now() + relativedelta(hours=3)
 
-            rem_obj = ReminderOp(obj_date,rem_txt,rem_bal,propid)
+            rem_obj = ReminderOp(obj_date,rem_txt,"0",propid)
             rem_obj.save()
 
-            text = f'Bulk sms requested by {prop_obj.company} for {prop_obj.name}'
-            send_internal_email_notifications(prop_obj.company.name,text)
-            # response = sms.send(text, ["+254716674695"],sender)
+            if channel == "email":
+                text = f'Bulk email requested by {prop_obj.company} for {prop_obj.name}'
+                send_internal_email_notifications(prop_obj.company.name,text)
 
-            if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
-                ApartmentOp.update_reminder_status(prop_obj,"sent")
-                job8 = q.enqueue_call(
-                    func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
-                )
-            else:
-                if prop_obj.reminder_status == "sent":
-                    text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
-                    send_internal_email_notifications(prop_obj.company.name,text)
-                    response = sms.send(text, ["+254716674695"],sender)
+                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or localenv:
+                    # ApartmentOp.update_reminder_status(prop_obj,"sent")
+                    for ptenant in prop_obj.ptenants:
+                        ptenantid = ptenant.id
+                        job8 = q.enqueue_call(
+                            func=send_out_single_email_crm_invoice, args=(ptenantid,), result_ttl=5000
+                        )
+                    return success
                 else:
+                    # if prop_obj.reminder_status == "sent":
+                    #     text = f'Bulk email requested again by {prop_obj.company} for {prop_obj.name}'
+                    #     send_internal_email_notifications(prop_obj.company.name,text)
+                    #     response = sms.send(text, ["+254716674695"],sender)
+                    #     return failure
+                    # else:
+                        # ApartmentOp.update_reminder_status(prop_obj,"sent")
+                    for ptenant in prop_obj.ptenants:
+                        ptenantid = ptenant.id
+                        job8 = q.enqueue_call(
+                            func=send_out_single_email_crm_invoice, args=(ptenantid,), result_ttl=5000
+                        )
+                    return success
+
+            else:
+                text = f'Bulk sms requested by {prop_obj.company} for {prop_obj.name}'
+                send_internal_email_notifications(prop_obj.company.name,text)
+                # response = sms.send(text, ["+254716674695"],sender)
+
+                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551":
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
-                        func=send_reminder_sms, args=(propid,rem_txt,rem_bal,), result_ttl=5000
+                        func=send_reminder_sms, args=(propid,rem_txt,channel,), result_ttl=5000
                     )
-                    # pass
-            return proceed
+                    return success
+                else:
+                    if prop_obj.reminder_status == "sent":
+                        text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
+                        send_internal_email_notifications(prop_obj.company.name,text)
+                        response = sms.send(text, ["+254716674695"],sender)
+                        return failure
+                    else:
+                        ApartmentOp.update_reminder_status(prop_obj,"sent")
+                        job8 = q.enqueue_call(
+                            func=send_reminder_sms, args=(propid,rem_txt,channel,), result_ttl=5000
+                        )
+                        return success
         
 
 class TenantSms(Resource):

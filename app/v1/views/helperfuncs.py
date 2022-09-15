@@ -4478,7 +4478,9 @@ def crm_mail_sender(conn,recepient,template_vars,email_addr,co):
 
             filename_ext = f"{recepient.house.name}_statement.pdf"
 
-            txt = Message("REMINDER", sender = mailsender, recipients = [email_addr])
+            sal = f"{recepient.apartment.company.name}: Payment Reminder"
+
+            txt = Message(sal, sender = mailsender, recipients = [email_addr])
             txt.body = f"Dear {tname}  \nKindly find the attached statement of account below. \n\n{co.name}"
             # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
             txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())

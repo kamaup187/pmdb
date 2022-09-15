@@ -130,9 +130,9 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         print(len(coss)," companies found")
 
-        job8 = q.enqueue_call(
-            func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
-        )
+        # job8 = q.enqueue_call(
+        #     func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
+        # )
 
         # if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
         #     CompanyOp.update_ctype(current_user.company,"crm")
@@ -3545,6 +3545,8 @@ class BulkSms(Resource):
                 if current_user.username.startswith("qc") or current_user.national_id == "12345678" or localenv:
                     # ApartmentOp.update_reminder_status(prop_obj,"sent")
                     for ptenant in prop_obj.ptenants:
+                        if ptenant.classtype.lower() != "shareholder":
+                            continue
                         ptenantid = ptenant.id
                         job8 = q.enqueue_call(
                             func=send_out_single_email_crm_invoice, args=(ptenantid,), result_ttl=5000

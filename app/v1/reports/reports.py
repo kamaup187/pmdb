@@ -133,6 +133,11 @@ class ReportsThree(Resource):
             parent=logo(current_user.company)[5],
             name=current_user.name))
 
+
+class Assetisha(Resource):
+    def get(self, id_number):
+        return {"report":"Report Unavailable"},404
+
 class BalanceReport(Resource):
     """class"""
     def get(self):

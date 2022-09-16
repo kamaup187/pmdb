@@ -173,7 +173,13 @@ api.add_resource(CallBackUrlBizlineBestel,"/m/bizlinebestel/ins/payment")
 api.add_resource(CallBackUrlBizlineNeema,"/m/bizlineneema/ins/payment")
 api.add_resource(CallBackUrlLagad,"/m/lagad/ins/payment")
 
+api.add_resource(CallBackUrlAssetisha,"/api/ins/confirm")
+api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
+# api.add_resource(Assetisha,"api/landlord/statement/<int:id_number>")
 
+api.add_resource(AgentWallet,"/api/agent/account/<int:id_number>")
+api.add_resource(AgentWithdrawal,"/api/agent/withdraw/request")
+api.add_resource(AgentWithdrawalConfirmation,"/api/ins/agent/withdraw/confirm")
 
 
 #bank urls

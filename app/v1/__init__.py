@@ -195,6 +195,9 @@ api.add_resource(CallBackUrlTestSentomEquity,"/b/sentom/ins/testpayment")
 api.add_resource(CallBackUrlLymaxEquity,"/bank/lymax/prod")
 api.add_resource(CallBackUrlTestLymaxEquity,"/bank/lymax/test")
 
+api.add_resource(CallBackUrlCherahEquity,"/bank/cherah/prod")
+api.add_resource(CallBackUrlTestCherahEquity,"/bank/cherah/test")
+
 api.add_resource(CallBackUrlLes,"/les/45")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 
@@ -257,6 +260,8 @@ api.add_resource(StatementOfAccounts,"/account/statement")
 api.add_resource(BookingSchedule,"/booking/schedule")
 api.add_resource(MpesaStatement,"/mpesa/statement")
 api.add_resource(MeritStatementOne,"/st/one")
+
+api.add_resource(TenantListing,"/tenantlisting/<string:prop_id>")
 
 api.add_resource(CollectionRatioReport,"/cr/report")
 api.add_resource(ManagementFeeReport,"/commission/report")

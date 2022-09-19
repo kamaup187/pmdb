@@ -5169,6 +5169,28 @@ class BookingSchedule(Resource):
                 mobilelogopath=logo(current_user.company)[1]
             ))
 
+
+class TenantListing(Resource):
+    def get(self,prop_id):
+        selected_apartment = request.args.get("prop")
+
+
+        company = current_user.company
+
+        if not selected_apartment:
+            return Response(render_template(
+                'testreport.html',
+                tenant_obj=None,
+                name=current_user.name,
+                tenantlist=[],
+                props = company.props,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company
+                ))
+
 class MeritStatementOne(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")

@@ -5179,7 +5179,7 @@ class TenantListing(Resource):
 
         if not selected_apartment:
             return Response(render_template(
-                'testreport.html',
+                'test.html',
                 tenant_obj=None,
                 name=current_user.name,
                 tenantlist=[],

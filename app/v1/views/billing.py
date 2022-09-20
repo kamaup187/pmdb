@@ -4686,8 +4686,18 @@ class LandlordIncomeWallet(Resource):
 
 class AgentWallet(Resource):
     def get(self,id_number):
-        response =  {"responseCode": "OK","responseMessage": "No record found"}
-        resp = jsonify(response)
+        user_obj = UserOp.fetch_user_by_national_id(id_number)
+        if user_obj:
+            return {
+                "userId":user_obj.id,
+                "userGroup":"Agent",
+                "userName":user_obj.username,
+                "accountStatus":"Insufficient funds",
+                "accountBalance":0.0
+            },200
+        else:
+            response =  {"responseCode": "OK","responseMessage": "No record found"}
+            resp = jsonify(response)
         return make_response(resp)
 
 class AgentWithdrawal(Resource):

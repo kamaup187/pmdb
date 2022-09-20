@@ -4686,7 +4686,13 @@ class LandlordIncomeWallet(Resource):
 
 class AgentWallet(Resource):
     def get(self,id_number):
-        user_obj = UserOp.fetch_user_by_national_id(id_number)
+        try:
+            id_num = str(id_number)
+        except:
+            return {
+                "errorMessage":"invalid parameter id number"
+            },404
+        user_obj = UserOp.fetch_user_by_national_id(id_num)
         if user_obj:
             return {
                 "userId":user_obj.id,

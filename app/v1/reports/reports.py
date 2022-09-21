@@ -5173,16 +5173,26 @@ class BookingSchedule(Resource):
 class TenantListing(Resource):
     def get(self,prop_id):
         selected_apartment = request.args.get("prop")
+        if prop_id == "null":
+            select_options = ""
+            if selected_apartment:
+                prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
 
+        else:
+            select_options = "d-none"
+            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+            selected_apartment = prop.name
 
         company = current_user.company
 
         if not selected_apartment:
             return Response(render_template(
                 'test.html',
+                select_options=select_options,
                 tenant_obj=None,
                 name=current_user.name,
                 tenantlist=[],
+                prop=None,
                 props = company.props,
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
@@ -5190,6 +5200,54 @@ class TenantListing(Resource):
                 letterhead=logo(current_user.company)[3],
                 co=current_user.company
                 ))
+
+        units = []
+        allrent = 0.0
+        allunits = 0
+        alltenants = 0
+        all_units = prop.houses
+
+        for unit in all_units:
+            allunits += 1
+            allrent += unit.housecode.rentrate
+            check = check_occupancy(unit)
+            if check[0] == "occupied":
+                tenant = check[1].name
+                contact = check[1].phone
+                alltenants += 1
+            else:
+                tenant = "Vacant"
+                contact = ""
+
+            dict_obj = {
+                "house":unit.name,
+                "tenant":tenant,
+                "contact":contact,
+                "schedule": get_schedule(unit.housecode.billfrequency),
+                "rent":unit.housecode.rentrate,
+                "serv":unit.housecode.servicerate,
+                "park":0.0
+            }
+            units.append(dict_obj)
+
+        return Response(render_template(
+            "test.html",
+            select_options=select_options,
+            bills=units,
+            tothouses=allunits,
+            tottetants=alltenants,
+            totrent=allrent,
+            totserv = 0.0,
+            totpark = 0.0,
+            prop=prop,
+            propname=prop.name,
+            props = company.props,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company
+        ))
 
 class MeritStatementOne(Resource):
     def get(self):

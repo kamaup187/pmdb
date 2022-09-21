@@ -50,6 +50,8 @@
             <thead>
               <tr>
                 <th class="text-info font-weight-bold pl-0">Property</th>
+                <th class="text-info font-weight-bold pl-0">Code</th>
+
                 <th class="text-info font-weight-bold">Houses</th>
 
 
@@ -61,7 +63,7 @@
                 <th class="text-info font-weight-bold {{access['client-disp']}}">Company</th>
                 <th class="text-info track-title-cell">Status</th>
                 <th class="text-info track-title-cell">Link</th>
-                <th class="text-info track-title-cell">Edit</th>
+                <!-- <th class="text-info track-title-cell">Edit</th> -->
                 <th class="text-info track-title-cell">Del</th>
                 <th class="text-info track-title-cell">By</th>
               </tr>
@@ -69,8 +71,10 @@
             <tbody>
               {% for item in items%}
               <tr>
-                <td class="first-data-cell text-primary font-weight-bold"><span class="text-info">{{item['id']}}</span>
-                  - {{ item['name'] }}</td>
+                <td id="{{item['editid']}}" class="first-data-cell text-primary font-weight-bold" data-toggle="modal"
+                  data-bs-toggle="modal" data-target="#editPropModal">{{ item['name'] }}
+                </td>
+                <td class="data-cell">{{item['id']}}</td>
                 <td class="data-cell">{{ item['houses'] }}</td>
 
                 <td class="data-cell">{{ item['ptenants'] }}</td>
@@ -97,14 +101,14 @@
                       safe}}</span>
                   </div>
                 </td>
-                <td class="data-cell">
+                <!-- <td class="data-cell">
                   <div>
                     <span id="{{item['editid']}}" type="button"
                       class="btn btn-outline-primary ellipsi borderless modalTrigger p-1" data-toggle="modal"
                       data-bs-toggle="modal" data-target="#editPropModal"><i
                         class="fas fa-cog"></i><span class="text-gray-900"></span></span>
                   </div>
-                </td>
+                </td> -->
                 <td class="data-cell">
                   <div>
                     <span id="{{item['delid']}}" type="button"
@@ -693,6 +697,7 @@
           },
           success: function (response) {
             $("#region_list").html(response);
+            
           }
         });
       }

@@ -760,6 +760,13 @@ class ApartmentOp(Apartment,Base):
         self.caretaker_id = caretaker_id
         db.session.commit()
 
+    def update_landlord_and_estate(self,landlord,location_id):
+        if landlord:
+            self.landlord = landlord
+        if location_id:
+            self.location_id = location_id
+        db.session.commit()
+
     def update_agent(self,agent_id):
         self.agent_id = agent_id
         db.session.commit()

@@ -277,6 +277,8 @@ class Apartment(db.Model):
 
     agency_managed = db.Column(db.Boolean,default=True)
 
+    landlord = db.Column(db.String)
+
     caretaker_id = db.Column(db.String)#national id for unique identification
     
     agent_id = db.Column(db.String)#national id for unique identification

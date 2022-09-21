@@ -104,6 +104,7 @@
             <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
           </div>
 
+          {%if prop%}
           <div class="mb-2 mt-1 text-dark font-weight-bold">
             <div class="ln-16">
               <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
@@ -126,6 +127,7 @@
               {% endif %}
             </div>
           </div>
+          {%endif%}
 
 
           
@@ -222,6 +224,7 @@
             <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
           </div>
 
+          {% if prop%}
           <div class="mb-2 mt-1 text-dark font-weight-bold">
             <div class="ln-16">
               <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
@@ -244,6 +247,7 @@
               {% endif %}
             </div>
           </div>
+          {%endif%}
 
 
           <div class="table-responsive">

@@ -5224,7 +5224,7 @@ class TenantListing(Resource):
                 "tenant":tenant,
                 "contact":contact,
                 "schedule": get_schedule(unit.housecode.billfrequency),
-                "rent":unit.housecode.rentrate,
+                "rent":f"{unit.housecode.rentrate:,.1f}",
                 "serv":unit.housecode.servicerate,
                 "park":0.0
             }
@@ -5235,8 +5235,8 @@ class TenantListing(Resource):
             select_options=select_options,
             bills=units,
             tothouses=allunits,
-            tottetants=alltenants,
-            totrent=allrent,
+            tottenants=alltenants,
+            totrent=f"{allrent:,.1f}",
             totserv = 0.0,
             totpark = 0.0,
             prop=prop,
@@ -5246,6 +5246,7 @@ class TenantListing(Resource):
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
+            statementdate = datetime.datetime.today().strftime("%d/%B/%Y"),
             co=current_user.company
         ))
 

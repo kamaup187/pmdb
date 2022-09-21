@@ -1823,6 +1823,7 @@ def get_schedule(param):
 
     print("pram",param)
     switcher = {
+        None:"Monthly'",
         1:"Monthly",
         3:"Quarterly",
         6:"Semi-annually",

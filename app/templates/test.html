@@ -84,7 +84,7 @@
           <div class="center-btn">
             <div class="mb-1 text-black">
               <div class="font-weight-bold">
-                {{co.name}}
+                {{co.name.upper()}}
               </div>
               <div class="">
                 <img class="" src="{{logopath}}" alt={{co.name}} />
@@ -96,26 +96,35 @@
 
           <div class="ln-14 divjust-end">
             <span class="hide">hide</span>
-            <span>Dated : <span class="text-black">{{statementdate}}hh</span></span>
+            <span>Dated : <span class="text-black">{{statementdate}}</span></span>
           </div>
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">TENANT LISTING</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
           </div>
 
           <div class="mb-2 mt-1 text-dark font-weight-bold">
-
             <div class="ln-16">
-              <span class="mr-4">PROPERTY :</span> <span class="text-black">{{prop.name}}</span>
+              <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
             </div>
             <div class="ln-16">
-              <span>LANDLORD :</span> <span class="text-black"></span>
+              <span class="mr-2">PROPERTY NAME:</span> <span class="text-black">{{prop.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              <span>ESTATE :</span> <span class="text-black"></span>
+              {% if prop.landlord%}
+              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord}}</span>
+              {% endif %}
             </div>
-
+            <div class="ln-16">
+              {% if prop.location_id%}
+              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location}}</span>
+              {% endif %}
+            </div>
           </div>
 
 
@@ -138,9 +147,9 @@
                   <th class="">OCCUPANT</th>
                   <th class="">CONTACT</th>
                   <th class="">SCHEDULE</th>
-                  <th class="">RENT AMOUNT</th>
+                  <th class="">RENT RATE</th>
                   <th class="">S/CHARGE</th>
-                  <th class="">PARK FEES</th>
+                  <th class="">PRK RATE</th>
 
                 </tr>
               </thead>
@@ -149,8 +158,8 @@
                 <tr class="text-black">
                   <!-- <td class="data-cell text-right hide">{{ bill['id'] }}</td> -->
 
-                  <td class="data-cell text-right small">{{ bill['house'] }}</td>
-                  <td class="data-cell text-right">{{ bill['tenant'] }}</td>
+                  <td class="data-cell">{{ bill['house'] }}</td>
+                  <td class="data-cell">{{ bill['tenant'] }}</td>
                   <td class="data-cell text-right">{{ bill['contact'] }}</td>
                   <td class="data-cell text-right">{{ bill['schedule'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
@@ -163,8 +172,8 @@
               <tfoot class="custom-footer-alt">
                 <tr>
                   <!-- <td class="font-weight-bold hid">.</td> -->
-                  <td class="font-weight-bold text-right">Total units : {{tothouses}}</td>
-                  <td class="font-weight-bold text-right">Total tenants : {{tottenants}}</td>
+                  <td class="font-weight-bold text-right">Total no. of premises  {{tothouses}}</td>
+                  <td class="font-weight-bold text-right">Total no. of tenants  {{tottenants}}</td>
                   <td class="font-weight-bold text-right"></td>
                   <td class="font-weight-bold text-right"></td>
                   <td class="font-weight-bold text-right">{{totrent}}</td>
@@ -193,7 +202,7 @@
           <div class="center-btn">
             <div class="mb-1 text-black">
               <div class="font-weight-bold">
-                {{co.name}}
+                {{co.name.upper()}}
               </div>
               <div class="">
                 <img class="" src="{{logopath}}" alt={{co.name}} />
@@ -205,26 +214,35 @@
 
           <div class="ln-14 divjust-end">
             <span class="hide">hide</span>
-            <span>Dated : <span class="text-black">{{statementdate}}hh</span></span>
+            <span>Dated : <span class="text-black">{{statementdate}}</span></span>
           </div>
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">TENANT LISTING</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
           </div>
 
           <div class="mb-2 mt-1 text-dark font-weight-bold">
-
             <div class="ln-16">
-              <span class="mr-4">PROPERTY :</span> <span class="text-black">{{propname}}</span>
+              <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
             </div>
             <div class="ln-16">
-              <span>LANDLORD :</span> <span class="text-black"></span>
+              <span class="mr-2">PROPERTY NAME:</span> <span class="text-black">{{prop.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              <span>ESTATE :</span> <span class="text-black"></span>
+              {% if prop.landlord%}
+              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord}}</span>
+              {% endif %}
             </div>
-
+            <div class="ln-16">
+              {% if prop.location_id%}
+              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location}}</span>
+              {% endif %}
+            </div>
           </div>
 
 
@@ -239,9 +257,9 @@
                   <th class="">OCCUPANT</th>
                   <th class="">CONTACT</th>
                   <th class="">SCHEDULE</th>
-                  <th class="">RENT AMOUNT</th>
+                  <th class="">RENT RATE</th>
                   <th class="">S/CHARGE</th>
-                  <th class="">PARK FEES</th>
+                  <th class="">PRK RATE</th>
 
                 </tr>
               </thead>
@@ -250,8 +268,8 @@
                 <tr class="text-black">
                   <!-- <td class="data-cell text-right hide">{{ bill['id'] }}</td> -->
 
-                  <td class="data-cell text-right small">{{ bill['house'] }}</td>
-                  <td class="data-cell text-right">{{ bill['tenant'] }}</td>
+                  <td class="data-cell">{{ bill['house'] }}</td>
+                  <td class="data-cell">{{ bill['tenant'] }}</td>
                   <td class="data-cell text-right">{{ bill['contact'] }}</td>
                   <td class="data-cell text-right">{{ bill['schedule'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
@@ -264,8 +282,8 @@
               <tfoot class="custom-footer-alt">
                 <tr>
                   <!-- <td class="font-weight-bold hid">.</td> -->
-                  <td class="font-weight-bold text-right">Total units : {{tothouses}}</td>
-                  <td class="font-weight-bold text-right">Total occupants : {{tottenants}}</td>
+                  <td class="font-weight-bold text-right">Total no. of premises  {{tothouses}}</td>
+                  <td class="font-weight-bold text-right">Total no. of tenants  {{tottenants}}</td>
                   <td class="font-weight-bold text-right"></td>
                   <td class="font-weight-bold text-right"></td>
                   <td class="font-weight-bold text-right">{{totrent}}</td>

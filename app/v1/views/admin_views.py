@@ -767,6 +767,27 @@ class AllProperties(Resource):
 
             return "Updated successfully" + proceed
 
+        if target == "update prop landlord info":
+            landlord = request.form.get("landlord")
+            region = request.form.get("region")
+
+            location = LocationOp.fetch_location(region.title())
+            if region:
+                if not location:
+                    location = LocationOp(region.title(),None)
+                    location.save()
+                    location_id = location.id
+                else:
+                    location_id = location.id
+            else:
+                location_id = None
+
+            ApartmentOp.update_landlord_and_estate(prop,landlord,location_id)
+
+            return "Updated successfully" + proceed
+
+
+
 
 class AllOwners(Resource):
     def get(self):

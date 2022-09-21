@@ -1819,6 +1819,17 @@ def get_str_mnth(month):
         }
     return switcher.get(month)
 
+def get_schedule(param):
+
+    print("pram",param)
+    switcher = {
+        1:"Monthly",
+        3:"Quarterly",
+        6:"Semi-annually",
+        12:"Annually",
+        }
+    return f'{switcher.get(param)}'
+
 def get_usergroup_id(name):
     #lets fetch the object first
     user_group_name = UserGroupOp.fetch_usergroup_by_name(name)

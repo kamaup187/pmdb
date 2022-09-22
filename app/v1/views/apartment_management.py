@@ -3930,6 +3930,9 @@ class EditHouseCode(Resource):
             bill_freq = request.form.get('billfreq')
             commission = request.form.get('commission')
 
+
+            print("commission is here", commission)
+
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
 

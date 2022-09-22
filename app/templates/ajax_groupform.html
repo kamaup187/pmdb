@@ -97,8 +97,8 @@
                             <label class="small mb-1" for="comm">Commission(percentage)</label>
                             <input class="form-control" id="comm" type="text" value="{{group.commission}}" />
                             {%else%}
-                            <label class="small mb-1" for="comm2">Commission(flatrate)</label>
-                            <input class="form-control" id="comm2" type="text" value="{{group.int_commission}}" />
+                            <label class="small mb-1" for="comm">Commission(flatrate)</label>
+                            <input class="form-control" id="comm" type="text" value="{{group.int_commission}}" />
                             {%endif%}
 
                         </div>
@@ -305,11 +305,11 @@
             successResponse = "Updated !"
             afterSuccess = "Update group"
         }
-        if ($("#comm").val() != "None" || $("#comm").val() != 0.0){
-            var comm = $("#comm").val()
-        }else{
-            var comm = $("#comm2").val()
-        }
+        // if ($("#comm").val() != "None" && $("#comm").val() != 0.0){
+        //     var comm = $("#comm").val()
+        // }else{
+        //     var comm = $("#comm").val()
+        // }
 
         $.ajax({
         url: baseurl,
@@ -330,7 +330,7 @@
             carddep: $("#carddep").val(),
             depnum: $("#depnum").val(),
             discount: $("#discount").val(),
-            commission: comm,
+            commission: $("#comm").val(),
             finerate: $("#finerate").val(),
             seweragerate:$("#seweragerate").val(),
             agreementrate:$("#agreementrate").val(),

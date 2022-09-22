@@ -964,6 +964,18 @@ class HouseCodeOp(HouseCode,Base):
         self.user_id = modified_by
         db.session.commit()
 
+    def update_commission(self,commission):
+        if commission:
+            self.int_commission = 0.0
+            self.commission = commission
+        db.session.commit()
+
+    def update_int_commission(self,commission):
+        if commission:
+            self.commission = 0.0
+            self.int_commission = commission
+        db.session.commit()
+
     def update_vatrates(self,billfreq,vatrate):
         print("vat updated",vatrate)  
         if billfreq != "null":

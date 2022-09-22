@@ -444,8 +444,8 @@ class HouseCode(db.Model):
     carddep = db.Column(db.Float,default=0)
     otherdep = db.Column(db.Float,default=0)
 
-
     commission = db.Column(db.Float,default=0)
+    int_commission = db.Column(db.Float,default=0)
 
     billfrequency = db.Column(db.Integer,default=1)
     vatrate = db.Column(db.Float,default=0)

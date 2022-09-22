@@ -1,5 +1,8 @@
-{% extends 'testreport.html' %}
+{% extends 'basereport.html' %}
 {% block content %}
+
+<span id="filename" class="dispnone">{{propname}} {{timeline}}statement.pdf</span>
+
 <div class="row">
   <div class="col-lg-12 noprint">
     <div class="formwrapper">
@@ -10,7 +13,7 @@
           <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button"
             aria-expanded="true" aria-controls="collapseCardExample">
             <div class="font-weight-bold text-black pt-1">
-              <span class="ml-lg-4 font-weight-bold text-uppercase">Select below</span>
+              <span class="ml-lg-4 text-uppercase">Select below</span>
               <span><i class="fas fa-chevron-down ml-3"></i></span>
             </div>
           </a>
@@ -36,27 +39,44 @@
         <!-- Card Content - Collapse -->
         <div class="noprint" id="collapseCardExample">
           <div class="card-body p-0">
-            <form class="row bg-light" method="GET" action="/tenantlisting/null">
+            <form class="bg-light" method="GET" action="/tenantstatement/null">
 
 
-              <div class="col-lg-2 form-group mb-2">
-                <label class="mb-0">Select property:</label>
-                <select name="prop" class="select-css" id="prop">
-                  <option disabled selected value> select property </option>
-                  {% for o in props %}
-                  <option value="{{ o }}">{{ o }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-              <div class="col-lg-2 form-group mb-2 mr-lg-5">
-                <label class="mb-0">Select month:</label>
-                <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                  <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
-                  <span class="input-group-addon field-icon"><i
-                      class="fas fa-fw fa-calendar-day text-info"></i></span>
+              <div class="row">
+                <div class="col-lg-6 form-group mb-2">
+                    <label class="text-danger font-weight-bold">Select property:</label>
+            
+                    <select name="selected_apartment" class="select-css" id="selected_apartment" required>
+                        <option disabled selected value> -- none selected -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-              </div>
+            
+                <div class="col-lg-6 form-group mb-2">
+                    <label class="text-danger font-weight-bold">Select tenant:</label>
+            
+                    <select name="selected_tenant" class="select-css" id="selected_tenant" required>
+                        <option disabled selected value> -- Select tenant (?) -- </option>
+                        {% for o in houses %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-6">
+                    <label class="text-danger">From:</label>
+                    <input class="form-control" type="text" id="from" name="from">
+                </div>
+            
+                <div class="form-group col-6">
+                    <label class="text-danger">To:</label>
+                    <input class="form-control" type="text" id="to" name="to">
+                </div>
+            </div>
 
               <div class="col-lg-2 form-group mb-2">
                 <button type="submit"
@@ -96,34 +116,30 @@
 
           <div class="ln-14 divjust-end">
             <span class="hide">hide</span>
-            <span>Dated : <span class="text-black">{{statementdate}}</span></span>
+            <span>Date printed : <span class="text-black">{{statementdate}}</span></span>
           </div>
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">COMBINED STATEMENT FOR THE PERIOD {{stateperiod}}</span></span>
           </div>
 
           {%if prop%}
-          <div class="mb-2 mt-1 text-dark font-weight-bold">
+          <div class="mb-2 mt-1">
             <div class="ln-16">
-              <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
+              <span class="mr-1">TENANT: {{tenant.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              <span class="mr-2">PROPERTY NAME:</span> <span class="text-black">{{prop.name.upper()}}</span>
+              <span class="mr-1">PROPERTY: {{thouse.apartment.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              {% if prop.landlord%}
-              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord.upper()}}</span>
+              <span class="mr-1">PREMISES NO: {{thouse.name.upper()}}</span>
+            </div>
+            <div class="ln-16">
+              {% if tenant.deposit%}
+              <span class="mr-1">ESTATE : {{tenant.deposits.total}}</span>
               {%else%}
-              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord}}</span>
-              {% endif %}
-            </div>
-            <div class="ln-16">
-              {% if prop.location_id%}
-              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location.name.upper()}}</span>
-              {%else%}
-              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location}}</span>
+              <span class="mr-1">ESTATE : {{tenant.deposits}}</span>
               {% endif %}
             </div>
           </div>
@@ -138,55 +154,38 @@
             </div> -->
 
 
-          <div class="table-responsive">
-            <table class="table table-striped table-bordered table-hover" id="dataTable" width="100%"
-              cellspacing="0">
-              <thead class="custom-header-alt wrap small">
-                <tr>
-                  <!-- <th class="hid"></th> -->
-
-                  <th class="">UNIT NO</th>
-                  <th class="">OCCUPANT</th>
-                  <th class="">CONTACT</th>
-                  <th class="">SCHEDULE</th>
-                  <th class="">RENT RATE</th>
-                  <th class="">S/CHARGE</th>
-                  <th class="">PRK RATE</th>
-
-                </tr>
-              </thead>
-              <tbody>
-                {% for bill in bills%}
-                <tr class="text-black">
-                  <!-- <td class="data-cell text-right hide">{{ bill['id'] }}</td> -->
-
-                  <td class="data-cell">{{ bill['house'] }}</td>
-                  <td class="data-cell">{{ bill['tenant'] }}</td>
-                  <td class="data-cell text-right">{{ bill['contact'] }}</td>
-                  <td class="data-cell text-right">{{ bill['schedule'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{ bill['serv'] }}</td>
-                  <td class="data-cell text-right">{{ bill['park'] }}</td>
-                </tr>
-                {% endfor %}
-
-              </tbody>
-              <tfoot class="custom-footer-alt">
-                <tr>
-                  <!-- <td class="font-weight-bold hid">.</td> -->
-                  <td class="font-weight-bold text-right">Total no. of premises  {{tothouses}}</td>
-                  <td class="font-weight-bold text-right">Total no. of tenants  {{tottenants}}</td>
-                  <td class="font-weight-bold text-right"></td>
-                  <td class="font-weight-bold text-right"></td>
-                  <td class="font-weight-bold text-right">{{totrent}}</td>
-                  <td class="font-weight-bold text-right">{{totserv}}</td>
-                  <td class="font-weight-bold text-right">{{totpark}}</td>
-
-                </tr>
-              </tfoot>
-            </table>
-
-          </div>
+            <div class="table-responsive">
+              <table class="table" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="custom-header-alt small">
+                      <tr>
+                        <th class="" data-orderable="false">DATE</th>
+                        <th class="" data-orderable="false">DESCRIPTION</th>
+                        <th class="" data-orderable="false">REF</th>
+                        <th class="" data-orderable="false">DEBIT</th>
+                        <th class="" data-orderable="false">CREDIT</th>
+                        <th class="" data-orderable="false">BALANCE</th>
+  
+  
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for bill in bills%}
+                      <tr>
+                        <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
+                        <td class="data-cell text-left">{{ bill['desc']}}</td>
+                        <td class="data-cell text-left">{{ bill['ref'] }}</td>
+                        <td class="data-cell text-right">{{ bill['debit'] }}</td>
+                        <td class="data-cell text-right">{{bill['credit']}}</td>
+                        <td class="data-cell text-right">{{ bill['balance'] |safe }}</td>
+  
+                      </tr>
+                    {% endfor %}
+  
+                    </tbody>
+  
+                  </table>
+  
+            </div>
 
         </div>
 
@@ -224,26 +223,23 @@
             <span class="font-weight-bold text-white"><span class="mt-3">TENANTS LISTING</span></span>
           </div>
 
-          {% if prop%}
-          <div class="mb-2 mt-1 text-dark font-weight-bold">
+
+          {%if prop%}
+          <div class="mb-2 mt-1">
             <div class="ln-16">
-              <span class="mr-2">PROPERTY CODE:</span> <span class="text-black">{{prop.id}}</span>
+              <span class="mr-1">TENANT: {{tenant.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              <span class="mr-2">PROPERTY NAME:</span> <span class="text-black">{{prop.name.upper()}}</span>
+              <span class="mr-1">PROPERTY: {{thouse.apartment.name.upper()}}</span>
             </div>
             <div class="ln-16">
-              {% if prop.landlord%}
-              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord.upper()}}</span>
+              <span class="mr-1">PREMISES NO: {{thouse.name.upper()}}</span>
+            </div>
+            <div class="ln-16">
+              {% if tenant.deposit%}
+              <span class="mr-1">ESTATE : {{tenant.deposits.total}}</span>
               {%else%}
-              <span class="mr-5">LANDLORD :</span> <span class="text-black ml-2">{{prop.landlord}}</span>
-              {% endif %}
-            </div>
-            <div class="ln-16">
-              {% if prop.location_id%}
-              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location.name.upper()}}</span>
-              {%else%}
-              <span class="mr-5">ESTATE :</span> <span class="text-black ml-4">{{prop.location}}</span>
+              <span class="mr-1">ESTATE : {{tenant.deposits}}</span>
               {% endif %}
             </div>
           </div>

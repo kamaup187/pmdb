@@ -1,13 +1,13 @@
-{% extends 'reports.html' %}
+{% extends 'basereport.html' %}
 
-{% block child %}
+{% block content %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{propname}}</span>
 <span id="filename" class="dispnone">{{propname}} {{timeline}}statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
 <div class="row">
-    <div class="col-lg-12 ">
+    <div class="col-lg-12 noprint">
         <div class="formwrapper">
             <div class="card bt-none">
               <!-- Card Header - Accordion -->
@@ -20,18 +20,26 @@
                   </div>
                 </a>
 
-                <div class="dispnone">
-                  <a class="text-white close-report" href="{{ url_for('api.reports') }}">
-                    <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
-                  </a>
+                <div class="divjust-end">
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
                 </div>
-{%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
-                </div>
-{%endif%}
                 
 
               </div>
@@ -80,7 +88,7 @@
     </div>
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
-  <div class="col-lg-12 ">
+  <div class="col-lg-12 noprint">
     <div class="card shadow mb-0">
       <!-- Card Header - Accordion -->
 
@@ -280,7 +288,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnon">
+  <div id="invoice" class="col-lg-12  dispnone printdisplay">
     <div class="bg-white shadow">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -545,7 +553,7 @@
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $("#reportbtns").addClass("dispnone")
 
@@ -565,7 +573,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
 {% endblock %}

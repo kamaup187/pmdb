@@ -1821,7 +1821,6 @@ def get_str_mnth(month):
 
 def get_schedule(param):
 
-    print("pram",param)
     switcher = {
         None:"Monthly'",
         1:"Monthly",
@@ -3202,6 +3201,23 @@ def validate_float_inputs_to_exclude_zeros(*args):
                         results.append(0.0)
 
     print("OUTPUT",results)
+    return results
+
+def validate_float_inputs_to_include_percent(*args):
+    print("Args>>>>>>>>",args)
+    results = []
+    for i in args:
+        ii = i.replace(',', '')
+        iii = ii.replace('%','')
+
+        if len(iii) == 0:
+            results.append("null")
+        else:
+            try:
+                new_i = float(iii)
+                results.append(new_i)
+            except:
+                results.append("null")
     return results
 
 

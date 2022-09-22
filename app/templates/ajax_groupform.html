@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-xl-4">
             <!-- Profile picture card-->
-            <div class="card mb-4">
+            <div class="card mb-3">
                 <div class="card-header">Group name</div>
                 <div class="card-body text-center">
                     <!-- Profile picture image-->
@@ -78,17 +78,28 @@
 
                         </div> -->
 
-                        <div class="gx-3 mb-3">
+                        <div class="gx-3 mb-2">
                             <!-- Form Group (first name)-->
                             <label class="small mb-1" for="depnum">No. of months (rent deposit only)</label>
                             <input class="form-control" id="depnum" type="text" value="{{group.depnum}}" />
 
                         </div>
 
-                        <div class="gx-3 mb-3">
+                        <div class="gx-3 mb-2">
                             <!-- Form Group (first name)-->
                             <label class="small mb-1" for="discount">Discount (rent only)</label>
                             <input class="form-control" id="discount" type="text" value="{{group.discount}}" />
+
+                        </div>
+                        <div class="gx-3 mb-2">
+                            <!-- Form Group (first name)-->
+                            {% if group.commission%}
+                            <label class="small mb-1" for="comm">Commission(percentage)</label>
+                            <input class="form-control" id="comm" type="text" value="{{group.commission}}" />
+                            {%else%}
+                            <label class="small mb-1" for="comm2">Commission(flatrate)</label>
+                            <input class="form-control" id="comm2" type="text" value="{{group.int_commission}}" />
+                            {%endif%}
 
                         </div>
                     </form>
@@ -294,6 +305,11 @@
             successResponse = "Updated !"
             afterSuccess = "Update group"
         }
+        if ($("#comm").val() != "None" || $("#comm").val() != 0.0){
+            var comm = $("#comm").val()
+        }else{
+            var comm = $("#comm2").val()
+        }
 
         $.ajax({
         url: baseurl,
@@ -314,6 +330,7 @@
             carddep: $("#carddep").val(),
             depnum: $("#depnum").val(),
             discount: $("#discount").val(),
+            commission: comm,
             finerate: $("#finerate").val(),
             seweragerate:$("#seweragerate").val(),
             agreementrate:$("#agreementrate").val(),

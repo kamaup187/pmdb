@@ -1,6 +1,6 @@
-{% extends 'reports.html' %}
+{% extends 'basereport.html' %}
 
-{% block child %}
+{% block content %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone"></span>
 <span id="filename" class="dispnone">{{timeline}} summarised management fees report.pdf</span>
@@ -33,7 +33,7 @@
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light mt-2" method="GET" action="/commission/report">
+                    <form class="row bg-light mt-2" method="GET" action="/reports">
                                         
                         <div class="form-group mb-2 ml-lg-5 col-lg-3">
                             <label class="mb-0">From:</label>
@@ -223,7 +223,7 @@
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $("#reportbtns").addClass("dispnone")
 
@@ -243,7 +243,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
 {% endblock %}

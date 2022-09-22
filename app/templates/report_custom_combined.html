@@ -1,8 +1,14 @@
-{% extends 'reports.html' %}
+{% extends 'basereport.html' %}
 
-{% block child %}
+{% block content %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
+
+<span id="propname" class="dispnone">{{prop}}</span>
+<span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="urlpattern" class="dispnone">/combined/report</span>
+
+
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord statement.pdf</span>
 <span id="orientation" class="dispnone">{{paging}}</span>
 
@@ -20,24 +26,40 @@
                   </div>
                 </a>
                 
-{%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
+                <div class="divjust-end">
+                  {%if prop%}
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                  {%endif%}
                 </div>
-{%endif%}
+
               </div>
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
                 <div class="card-body pt-0">
-                    <form class="bg-white" method="GET" action="/landlord/pl">
+                    <form class="bg-white" method="GET" action="/combined/report">
 
                       <div class="row">
                         <div class="col-lg-3 form-group mb-2 ml-lg-5">
                           <label class="mb-0">Select type:</label>
                           <select name="reporttype" class="select-css" id="reporttype">
-                            <option selected value="collected">Based on collected amount only</option>
+                            <option selected value="collected">Based on collected amount</option>
                             <option value="uncollected">Based on amount due</option>
                           </select>
                         </div>
@@ -65,47 +87,6 @@
                         </div>
                       </div>
 
-                      <div>
-                        <span class="text-danger">Items to display:</span>
-                        <div class="divbg form-group mb-0 x-smallify text-black">
-                                  
-                          <span class="spanwidth ml-4">
-                            <input type="checkbox" id="rent" class="check-btn ml-md-3" name="bank" value="rent" checked>
-                            <label for="rent">Rent</label>
-                          </span>
-          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="water" class="check-btn ml-md-3" name="bank" value="water" checked>
-                            <label for="water">Water</label> 
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="garbage" class="check-btn ml-md-2" name="bank" value="garbage" checked>
-                            <label for="garbage">Garbage</label> 
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="security" class="check-btn ml-md-1" name="bank" value="security" checked>
-                            <label for="security">Security</label>
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="service" class="check-btn ml-md-2" name="bank" value="service" checked>
-                            <label for="service">Service</label>
-                          </span>
-  
-                          <span class="spanwidth">
-                            <input type="checkbox" id="deposit" class="check-btn ml-md-3" name="bank" value="deposit" checked>
-                            <label for="deposit">Deposits</label>
-                          </span>
-
-                          <span class="spanwidth dispnone">
-                            <input type="checkbox" id="penalty" class="check-btn ml-md-2" name="bank" value="penalty" checked>
-                            <label for="penalty">Penalty</label>
-                          </span>
-                        </div>
-                      </div>
-
                     </form>
                 </div>
               </div>
@@ -123,15 +104,15 @@
 
           {% if prop%}
  
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">LANDLORD STATEMENT FOR {{timeline}}</span></span>
           </div>
 
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
+          <div class="divjust-end text-black font-weight-bold  text-110">
             <div class="">
               <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.name}}</div>
+              <div>Property : {{prop_obj.name}}</div> <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
               <div>Estate : {{prop_obj.location}}</div>
             </div>
             <div class="pr-3">
@@ -147,22 +128,24 @@
 
                     
           <div class="table-responsive">
-            <table class="table" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
-                      <th class="">PNO</th>
-                      <th class="">TENANT NAME</th>
-                      <th class="">BB/F</th>
-                      <th class="rent">RENT</th>
-                      <th class="water">WATER</th>
-                      <th class="garbage">GARBAGE</th>
-                      <th class="security">SECURITY</th>
-                      <th class="service">SERVICE</th>
-                      <th class="deposit">DEPOSIT</th>
-                      <!-- <th class="penalty">LPF</th> -->
-                      <th class="">TOTAL DUE</th>
-                      <th class="">TOTAL PAID</th>
+                      <th class="">PROPERTY</th>
+                      <th class="">OCCUPANT</th>
+
+                      <th class="">B/BF</th>
+                      <th class="">RENT</th>
+
+                      <th class="">TOTAL</th>
+                      <th class="">PAID</th>
                       <th class="">BC/F</th>
+
+                      <th class="">DEPOSIT</th>
+                      <th class="">UTILITIES</th>
+                      <!-- <th class="penalty">LPF</th> -->
+
+                      <th class="">REMARKS</th>
 
                     </tr>
                   </thead>
@@ -171,17 +154,20 @@
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['arrears'] }}</td>
+
+                      <td class="data-cell text-right">{{ bill['rent-balance'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
-                      <td class="data-cell text-right water">{{ bill['water'] }}</td>
-                      <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
-                      <td class="data-cell text-right security">{{ bill['security'] }}</td>
-                      <td class="data-cell text-right service">{{ bill['service'] }}</td>
+
+                      <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-due'] }}</td>
+
+
                       <td class="data-cell text-right deposit">{{ bill['deposit'] }}</td>
+                      <td class="data-cell text-right water">{{ bill['utilities'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
-                      <td class="data-cell text-right">{{bill['total']}}</td>
-                      <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
-                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+
+                      <td class="data-cell text-right">{{ bill['remarks'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -191,15 +177,18 @@
                       <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right rent">{{renttotal}}</td>
-                      <td class="font-weight-bold text-right water">{{watertotal}}</td>
-                      <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
-                      <td class="font-weight-bold text-right security">{{securitytotal}}</td>
-                      <td class="font-weight-bold text-right service">{{servicetotal}}</td>
+
+                      <td class="font-weight-bold text-right rent">{{renttotaldue}}</td>
+                      <td class="font-weight-bold text-right rent">{{renttotalpaid}}</td>
+                      <td class="font-weight-bold text-right rent">{{renttotalbalance}}</td>
+
+
+                      <td class="font-weight-bold text-right water">{{utilstotal}}</td>
                       <td class="font-weight-bold text-right deposit">{{deposittotal}}</td>
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
+
+                      <td class="font-weight-bold text-right"></td>
+
                     </tr>
                   </tfoot>
                 </table>
@@ -212,38 +201,92 @@
             {%endif%}
 
             <div class="divjust-end mr-5">
-              <div class="mr-4">
-                <div class="mb-1 text-black-bold">TOTAL RENT PAID TO MGT</div>
-                <div class="text-black-bold mb-1">TOTALS</div>
-                <div class="hide mb-2">space</div>
+              <div class="mr-4 font-weight-bold">
+                <div class="mb-1 text-black-bold">TOTAL RENT COLLECTION</div>
+                <div class="mb-3 text-black-bold">MGT FEES @ {{commission_percentage}} on rent paid</div>
 
+                <div class="mb-3 text-black-bold">GROSS PAY</div>
 
+                <div class="mb-1 text-black-bold">UTILITIES</div>
+                <div class="mb-1 text-black-bold">DEPOSITS</div>
+                <div class="mb-3 text-black-bold">LL BB/F</div>
 
+                <div class="mb-1 text-black-bold">EXPENSES</div>
 
-                <div class="mb-1 pt-2 text-black-bold">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <div class="hide mb-2 text-black-bold">space</div>
 
-                <div class="mb-1 text-black-bold">OTHER DEDUCTIONS</div>
-                <div class="mb-1 text-black-bold">TOTAL DEDUCTIONS</div>
-                <div class="hide mb-2">space</div>
                 <div class="mb-3 text-black-bold">NET PAYABLE</div>
-              </div>
+
 
               <div class="text-black">
-                <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
+                <div class="mb-1">Kshs {{formatted_netrent}}</div>
+                <div class="mb-3">Kshs {{commission}}</div>
 
-                <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
+                <div class="mb-3">Kshs {{gross}}</div>
+
+                <div class="mb-1">Kshs {{utilitiestotal}}</div>
+                <div class="mb-1">Kshs {{deposittotal}}</div>
+                <div class="mb-3">Kshs {{remits}}</div>
+
+                <div class="mb-1">Kshs {{expenses}}</div>
+
                 <div class="hide mb-2">space</div>
 
-                <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
-
-                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-
-                <div class="hide mb-2">space</div>
-
-                <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
+                <div class="underline mb-3">Kshs {{netpay}}</div>
               </div>
             </div>
+          </div>
+
+          <div class="divjust-end">
+
+            <div>
+              <div class="text-black-bold">
+                Prepared By:
+              </div>
+              <div>
+                <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                <div class="ln-10">__________</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-black-bold">
+                Checked By:
+              </div>
+              <div>
+                <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                <div class="ln-10">__________</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="text-black-bold">
+                Approved By:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div class="text-black-bold">
+                Cheque No:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+            <div>
+              <div class="text-black-bold">
+                Date:
+              </div>
+              <div>
+                _____________________
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -251,7 +294,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoic" class="col-lg-12  dispnone">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -262,12 +305,12 @@
             <img class="" src="{{letterhead}}" alt="--no image--"/>
           </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></h5>
           </div>
 
-          <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
+          <div class="divjust-end mb-3 text-black font-weight-bold  text-110">
             <div class="">
               <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
               <div>Property : {{prop_obj.name}}</div>
@@ -381,7 +424,7 @@
                 <div class="text-black">
                   <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
   
-                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
+                  <div class="mb-1 text-gray-900 underline ">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   
                   <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
@@ -391,7 +434,7 @@
   
                   <div class="hide mb-2">space</div>
   
-                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
+                  <div class="text-gray-900 mb-3 text-125  underline">Kshs {{netpay}}</div>
                 </div>
               </div>
             </div>
@@ -442,7 +485,7 @@
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $("#reportbtns").addClass("dispnone")
 
@@ -462,7 +505,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 <script>
   let myarr = ["rent","water","garbage","security","service","deposit","penalty"]

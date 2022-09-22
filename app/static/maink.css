@@ -1910,12 +1910,12 @@ clear: both;
     font-size: 90% !important;
   }
   .data-cell {
-    font-size: 85% !important;
+    font-size: 80% !important;
     padding-top: 0.3em !important;
     padding-bottom: 0.3em !important;
     padding-right: 0.4em !important;
     padding-left: 0.4em !important;
-    font-weight: 300;
+    font-weight: normal !important;
     line-height: 100%;
   }
   .first-data-cell {
@@ -2358,12 +2358,12 @@ clear: both;
   }
   .data-cell {
     white-space: nowrap !important;
-    font-size: 85% !important;
+    font-size: 80% !important;
     padding-top: 0.2em !important;
     padding-bottom: 0.1em !important;
     padding-right: 0.4em !important;
     /* padding-left: 0.4em !important; */
-    font-weight: 600;
+    font-weight: normal !important;
     line-height: 150%;
   }
   .text-1 {

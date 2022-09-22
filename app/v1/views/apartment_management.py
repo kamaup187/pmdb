@@ -3928,6 +3928,7 @@ class EditHouseCode(Resource):
             depnum = request.form.get('depnum')
             vatrate = request.form.get('vatrate')
             bill_freq = request.form.get('billfreq')
+            commission = request.form.get('commission')
 
             group_obj = HouseCodeOp.fetch_group_by_id(groupid)
             apartment_id = group_obj.apartment_id
@@ -3977,6 +3978,16 @@ class EditHouseCode(Resource):
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
+
+
+            valid_inputs3 = validate_float_inputs_to_include_percent(commission)
+            # import pdb; pdb.set_trace()
+
+            if "%" in commission:
+                HouseCodeOp.update_commission(group_obj,valid_inputs3[0])
+            else:
+                HouseCodeOp.update_int_commission(group_obj,valid_inputs3[0])
+
 
             msg = "Rates updated successfully"
             return render_template('ajaxproceed.html',alert=msg)

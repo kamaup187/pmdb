@@ -5,7 +5,7 @@
 <head>
 
   <!-- <title>KiotaPay | Reports</title> -->
-  <title>Reports</title>
+  <title>KiotaPay Inc : Report</title>
 
   <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
   
@@ -28,10 +28,17 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
-  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script> -->
 
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+
   <style type="text/css" media="print">
+
+    .printdisplay{
+      display: block !important;
+    }
+
     .noprint {
       display: none;
     }
@@ -44,6 +51,10 @@
   
     .bg-aviv span {
       color: white !important;
+    }
+  
+    table tfoot {
+      display: table-row-group;
     }
   </style>
 
@@ -114,10 +125,55 @@
   }
   </style>
 
+<script>
+  $( function() {
+    var date = new Date();
+    var dateFormat = "d M, y",
+      from = $( "#from" )
+        .datepicker({
+          dateFormat: "d M, y",
+          format: "MM-yyyy",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          startView: "months", 
+          minViewMode: "months",
+          autoclose: true
+        }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), 1))
+        .on( "change", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+        
+      to = $( "#to" ).datepicker({
+        dateFormat: "d M, y",
+        format: "MM-yyyy",
+        defaultDate: "+1w",
+        changeMonth: true,
+        numberOfMonths: 1,
+        startView: "months", 
+        minViewMode: "months",
+        autoclose: true, 
+      }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth() + 1, 0))
+      .on( "change", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+ 
+      return date;
+    }
+  } );
+  </script>
+
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{propname}}</span>
-<span id="filename" class="dispnone">{{propname}} {{timeline}}statement.pdf</span>
-<span id="orientation" class="dispnone">{{paging}}</span>
+<!-- <span id="orientation" class="dispnone">{{paging}}</span> -->
 </head>
 
 <body>
@@ -219,9 +275,10 @@
                   <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                  <a href="#">Link 1</a>
-                  <a href="#">Link 2</a>
-                  <a href="#">Link 3</a>
+                  <a href="/rent/statement">Rent income report</a>
+                  <a href="/combined/report">Combined report</a>
+                  <a href="/combinedreport/summary">Combined report summary</a>
+
                 </div>
               </div>               
               <div class="dropdown-dr">
@@ -230,8 +287,6 @@
                 </button>
                 <div class="dropdown-content">
                   <a href="#">Link 1</a>
-                  <a href="#">Link 2</a>
-                  <a href="#">Link 3</a>
                 </div>
               </div>               
               <div class="dropdown-dr">
@@ -239,9 +294,7 @@
                   <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                  <a href="#">Link 1</a>
-                  <a href="#">Link 2</a>
-                  <a href="#">Link 3</a>
+                  <a href="/reports">Commission report</a>
                 </div>
               </div> 
               <div class="dropdown-dr">
@@ -250,8 +303,6 @@
                 </button>
                 <div class="dropdown-content">
                   <a href="#">Link 1</a>
-                  <a href="#">Link 2</a>
-                  <a href="#">Link 3</a>
                 </div>
               </div> 
               <div class="dropdown-dr">
@@ -260,8 +311,16 @@
                 </button>
                 <div class="dropdown-content">
                   <a href="/tenantlisting/null">Tenant listing</a>
-                  <a href="#">Link 2</a>
-                  <a href="#">Link 3</a>
+                </div>
+              </div> 
+              <div class="dropdown-dr">
+                <button class="dropbtn">Custom Report
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="/st/one">Statement 1</a>
+                  <a href="#">Statement 2</a>
+
                 </div>
               </div> 
             </div>
@@ -280,8 +339,9 @@
 
 
 <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
-<script src="{{ url_for('static', filename='jspdf.js') }}"></script>
-<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='jspdf.js') }}"></script> -->
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+
 <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
 
@@ -447,7 +507,10 @@ button = document.getElementById('btnDownload');
 
 // button.addEventListener('click', generatePDF);
 
-button.addEventListener('click', () => {window.print()});
+button.addEventListener('click', () => {
+  document.title=$("#filename").text(); 
+  window.print()
+});
 
 </script>
 

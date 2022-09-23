@@ -39,6 +39,72 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
 
+  <style>
+    /* body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Times New Roman', serif;
+    } */
+    
+    .navbar-dr {
+      /* overflow: hidden; */
+      background-color: rgb(224, 224, 224);
+    }
+    
+    .navbar-dr a {
+      float: left;
+      font-size: 16px;
+      color: rgb(0, 0, 0);
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    
+    /* .dropdown-dr {
+      float: left;
+      overflow: hidden;
+    } */
+    
+    .dropdown-dr .dropbtn {
+      font-size: 16px;  
+      border: none;
+      outline: none;
+      color: white;
+      padding: 2px 6px;
+      background-color: inherit;
+      font-family: inherit;
+      margin: 0;
+    }
+
+    .navbar-dr a:hover, .dropdown-dr:hover .dropbtn {
+      background-color: rgb(7, 136, 143);
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    
+    .dropdown-content a {
+      float: none;
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+    
+    .dropdown-dr:hover .dropdown-content {
+      display: block;
+    }
+    </style>
 
   <script src="{{ url_for('static', filename='js/timepicker.js') }}"></script>
 

@@ -2775,11 +2775,28 @@ class DepositStatement(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("prop")
+        propid = request.args.get("propid")
+        target = request.args.get("target")
 
-        if not selected_apartment:
+        if target == "direct":
+            prop_id = get_identifier(propid)
+            select_options = "d-none"
+            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+            selected_apartment = prop.name
 
-            apartment_list = fetch_all_apartments_by_user(current_user)
+        elif selected_apartment:
+            select_options = ""
+            if selected_apartment:
+                prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        else:
+            prop = None
+            select_options = ""
 
+        company = current_user.company
+
+        apartment_list = fetch_all_apartments_by_user(current_user)
+
+        if not prop:
             return Response(render_template(
                 'report_deposit_statement.html',
                 tenantlist=[],
@@ -2787,9 +2804,10 @@ class DepositStatement(Resource):
                 props=apartment_list,
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
+                co=company,
                 name=current_user.name))
 
-        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        apartment_obj = prop
 
         ##################################################################################################
         detailed_bills = []
@@ -2808,23 +2826,19 @@ class DepositStatement(Resource):
 
         ###################################################################################################
 
-        props = fetch_all_apartments_by_user(current_user)
-
         return Response(render_template(
             'report_deposit_statement.html',
-            prop=selected_apartment,
+            select_options=select_options,
+            prop=apartment_obj,
             propid=apartment_obj.id,
-            prop_obj=apartment_obj,
-            tenantlist=[],
             bills=detailed_bills,
-            paging="portrait",
-            props=props,
+            props=apartment_list,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
-            company=current_user.company,
+            co=current_user.company,
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
@@ -5184,7 +5198,7 @@ class TenantStatementThree(Resource):
 
 class TenantStatementFour(Resource):
     @login_required
-    def get(self,tenant_id):
+    def get(self):
         tenant_id = None
         target = request.args.get("target")
         prop = request.args.get("selected_apartment")
@@ -5204,10 +5218,10 @@ class TenantStatementFour(Resource):
                 props=apartment_list,
                 name=current_user.name,
                 tenant_obj = None,
-                prop = "",
-                tenantlist=[],
+                prop =None,
                 logopath=logo(current_user.company)[0],
-                mobilelogopath=logo(current_user.company)[1]
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company
             ))
 
         if target == "direct":
@@ -5582,13 +5596,12 @@ class TenantStatementFour(Resource):
             tenant_obj=tenant_obj,
             tenant_name=tenant_obj.name,
             name=current_user.name,
-            tenantlist=[],
             timeline=timeline,
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
-            company=current_user.company
+            co=current_user.company
         ))
 
 
@@ -5682,27 +5695,32 @@ class BookingSchedule(Resource):
 
 
 class TenantListing(Resource):
-    def get(self,prop_id):
+    def get(self):
         selected_apartment = request.args.get("prop")
-        if prop_id == "null":
-            select_options = ""
-            if selected_apartment:
-                prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        propid = request.args.get("propid")
+        target = request.args.get("target")
 
-        else:
+        if target == "direct":
+            prop_id = get_identifier(propid)
             select_options = "d-none"
             prop = ApartmentOp.fetch_apartment_by_id(prop_id)
             selected_apartment = prop.name
 
+        elif selected_apartment:
+            select_options = ""
+            if selected_apartment:
+                prop = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        else:
+            prop = None
+            select_options = ""
+
         company = current_user.company
 
-        if not selected_apartment:
+        if not prop:
             return Response(render_template(
                 'report_tenant_listing.html',
                 select_options=select_options,
-                tenant_obj=None,
                 name=current_user.name,
-                tenantlist=[],
                 prop=None,
                 props = company.props,
                 logopath=logo(current_user.company)[0],
@@ -6982,23 +7000,3 @@ class OfficeExpenses(Resource):
                 mobilelogopath=logo(current_user.company)[1],
                 name=current_user.name))
 
-
-class TenantDeposits(Resource):
-    @login_required
-    def get(self):
-        selected_apartment = request.args.get("prop")
-        selected_month = request.args.get("month")
-
-
-        if not selected_apartment:
-
-            apartment_list = fetch_all_apartments_by_user(current_user)
-
-            return Response(render_template(
-                'report_deposit_statement.html',
-                tenantlist=[],
-                prop_obj=None,
-                props=apartment_list,
-                logopath=logo(current_user.company)[0],
-                mobilelogopath=logo(current_user.company)[1],
-                name=current_user.name))

@@ -5249,9 +5249,10 @@ class TenantStatementFour(Resource):
         if target == "tenants":
             prop = request.args.get("apartment")
             prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-            tenants = tenantauto(prop_obj.id)
+            # tenants = tenantauto(prop_obj.id)
+            houses = prop_obj.houses
             vacated_tenants = tenantauto_reverse(prop_obj.id)
-            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+            house_tenant_list = generate_house_tenants_alt2(houses,vacated_tenants)
             return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
 
         if not prop and target != "direct":

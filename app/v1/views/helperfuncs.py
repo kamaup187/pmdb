@@ -2741,6 +2741,27 @@ def generate_house_tenants_alt(arr,arr2):
 
     return new_arr
 
+def generate_house_tenants_alt2(arr,arr2):
+    """combine house and tenant"""
+    new_arr = []
+
+    for i in arr:
+        # hses = get_active_houses(i)[1]
+        tt = check_occupancy(i)
+        if tt[0] == "occupied":
+            tenant = tt[1]
+        else:
+            tenant = "Vacant"
+
+        new_arr.append(f'{i} #{tenant.name}')
+
+    for i in arr2:
+        xt_name = i.tenant.name
+        xt_id = i.tenant.id
+        new_arr.append(f'Vac #{xt_id} {xt_name}')
+
+    return new_arr
+
 def generate_tenant_houses(arr):
     """combine house and tenant"""
     new_arr = []

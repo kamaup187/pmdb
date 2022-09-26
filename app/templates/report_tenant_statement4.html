@@ -173,7 +173,7 @@
                       {% for bill in bills%}
                       <tr>
                         <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
-                        <td class="data-cell text-left text-uppercase">{{ bill['desc']}}</td>
+                        <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
                         <td class="data-cell text-left">{{ bill['ref'] }}</td>
                         <td class="data-cell text-right">{{ bill['debit'] }}</td>
                         <td class="data-cell text-right">{{bill['credit']}}</td>
@@ -266,7 +266,7 @@
                 {% for bill in bills%}
                 <tr>
                   <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
-                  <td class="data-cell text-left text-uppercase">{{ bill['desc']}}</td>
+                  <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
                   <td class="data-cell text-left">{{ bill['ref'] }}</td>
                   <td class="data-cell text-right">{{ bill['debit'] }}</td>
                   <td class="data-cell text-right">{{bill['credit']}}</td>
@@ -296,7 +296,7 @@
       
       $.ajax({
               type: "get",
-              url: "{{ url_for('api.viewpayment') }}",
+              url: "{{ url_for('api.tenantstatementfour') }}",
               data: {
                 apartment: $("#selected_apartment").val(),
                 target:"tenants"

@@ -2753,7 +2753,7 @@ def generate_house_tenants_alt2(arr,arr2):
         else:
             tenant = "Vacant"
 
-        new_arr.append(f'{i} #{tenant.name}')
+        new_arr.append(f'{i} #{tenant}')
 
     for i in arr2:
         xt_name = i.tenant.name

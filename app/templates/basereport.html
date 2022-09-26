@@ -307,7 +307,7 @@
                   <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                  <a href="deposit/statement">Statement 1</a>
+                  <a href="/deposit/statement">Statement 1</a>
                 </div>
               </div> 
               <div class="dropdown-dr">
@@ -380,6 +380,30 @@
 
 
 <script type="text/javascript">
+
+if ($("#statement").text() == "tenant statement3") {
+  $(document).ready(function () {
+    
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "order": []
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+    //   columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+    //   "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+}else{
   $(document).ready(function () {
     $("#reportbtns").addClass("dispnone")
 
@@ -399,6 +423,8 @@
     });
     $('.dataTables_length').addClass('bs-select');
   });
+}
+
 </script>
 
 <script>

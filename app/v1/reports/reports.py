@@ -2776,6 +2776,7 @@ class DepositStatement(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         propid = request.args.get("propid")
+        reporttype = request.args.get("reporttype")
         target = request.args.get("target")
 
         if target == "direct":
@@ -2815,23 +2816,65 @@ class DepositStatement(Resource):
         db.session.expire(apartment_obj)
 
         deps = apartment_obj.deposits
+        totaldep = 0.0
 
         ###################################################################################################
         for bill in deps:
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
-            bill_item = TenantDepositOp.view(bill)
-            detailed_bills.append(bill_item)
+
+            if reporttype == "unrefunded":
+                if bill.rentdep:
+                    datadict = {
+                        "house":bill.house,
+                        "tenant":bill.tenant,
+                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "paycode":'DEP',
+                        "amount":bill.rentdep
+                    }
+                    totaldep += bill.rentdep
+
+                    detailed_bills.append(datadict)
+                elif bill.waterdep:
+                    datadict = {
+                        "house":bill.house,
+                        "tenant":bill.tenant,
+                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "paycode":'WDP',
+                        "amount":bill.waterdep
+                    }
+                    totaldep += bill.waterdep
+
+                    detailed_bills.append(datadict)
+                elif bill.elecdep:
+                    datadict = {
+                        "house":bill.house,
+                        "tenant":bill.tenant,
+                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "paycode":'EDP',
+                        "amount":bill.elecdep
+                    }
+                    totaldep += bill.elecdep
+
+                    detailed_bills.append(datadict)
+            else:
+                bill_item = TenantDepositOp.view(bill)
+                detailed_bills.append(bill_item)
+                totaldep += bill.total
 
 
         ###################################################################################################
-
+        if reporttype == "unrefunded":
+            template = "report_unrefunded_deposit_statement.html"
+        else:
+            template = "report_deposit_statement.html"
         return Response(render_template(
-            'report_deposit_statement.html',
+            template,
             select_options=select_options,
             prop=apartment_obj,
             propid=apartment_obj.id,
             bills=detailed_bills,
+            deptotal=totaldep,
             props=apartment_list,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],
@@ -4643,7 +4686,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":f"{prev_month} arrears",
-                        "ref":f'bbf#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.arrears,
                         "credit":"-",
                         "balance":cb
@@ -4656,7 +4699,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":f"{month} rent",
-                        "ref":f'invoice#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"-",
                         "balance":cb
@@ -4669,7 +4712,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":"Advance payment",
-                        "ref":f'bbf#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":"-",
                         "credit":item.balance,
                         "balance":cb
@@ -4682,7 +4725,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":f"{month} water bill",
-                        "ref":f'invoice#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"-",
                         "balance":cb
@@ -4695,7 +4738,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":"Garbage fee",
-                        "ref":f'invoice#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.garbage,
                         "credit":"-",
                         "balance":cb
@@ -4708,7 +4751,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":"Security fee",
-                        "ref":f'invoice#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.security,
                         "credit":"-",
                         "balance":cb
@@ -4721,7 +4764,7 @@ class TenantStatementTwo(Resource):
                         "month":month,
                         "date":date,
                         "desc":"Service charge",
-                        "ref":f'invoice#{item.id}',
+                        "ref":f'{item.id}',
                         "debit":item.maintenance,
                         "credit":"-",
                         "balance":cb
@@ -4901,8 +4944,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {month} rent",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" {month} rent",
+                        "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"",
                         "balance":cb
@@ -4915,8 +4958,8 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} {prev_month} rent arrears",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" {prev_month} rent arrears",
+                            "ref":f'{item.id}',
                             "debit":item.rent_balance,
                             "credit":"",
                             "balance":cb
@@ -4929,8 +4972,8 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} rent advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" rent advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.rent_due,
                             "balance":cb
@@ -4942,8 +4985,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {month} water bill",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" {month} water bill",
+                        "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"",
                         "balance":cb
@@ -4955,8 +4998,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} water arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} water arrears",
+                        "ref":f'{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
                         "balance":cb
@@ -4969,8 +5012,8 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} water advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" water advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.water_due,
                             "balance":cb
@@ -4982,8 +5025,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Garbage fee",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" Garbage fee",
+                        "ref":f'{item.id}',
                         "debit":item.garbage,
                         "credit":"",
                         "balance":cb
@@ -4995,8 +5038,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} garbage arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} garbage arrears",
+                        "ref":f'{item.id}',
                         "debit":item.garbage_balance,
                         "credit":"",
                         "balance":cb
@@ -5008,8 +5051,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} security fee",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" security fee",
+                        "ref":f'{item.id}',
                         "debit":item.security,
                         "credit":"",
                         "balance":cb
@@ -5021,8 +5064,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} security arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} security arrears",
+                        "ref":f'{item.id}',
                         "debit":item.security_balance,
                         "credit":"",
                         "balance":cb
@@ -5034,8 +5077,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Service charge",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" Service charge",
+                        "ref":f'{item.id}',
                         "debit":item.maintenance,
                         "credit":"",
                         "balance":cb
@@ -5047,8 +5090,8 @@ class TenantStatementThree(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} service charge arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} service charge arrears",
+                        "ref":f'{item.id}',
                         "debit":item.maintenance_balance,
                         "credit":"",
                         "balance":cb
@@ -5062,8 +5105,8 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} service charge advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" service charge advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.maintenance_due,
                             "balance":cb
@@ -5087,7 +5130,7 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Rent payment",
+                            "desc":f" Rent payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.rent_paid,
@@ -5100,7 +5143,7 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Water bill payment",
+                            "desc":f" Water bill payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.water_paid,
@@ -5113,7 +5156,7 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Garbage fee payment",
+                            "desc":f" Garbage fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.garbage_paid,
@@ -5126,7 +5169,7 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Security fee payment",
+                            "desc":f" Security fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.security_paid,
@@ -5139,7 +5182,7 @@ class TenantStatementThree(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Service fee payment",
+                            "desc":f" Service fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.maintenance_paid,
@@ -5170,7 +5213,7 @@ class TenantStatementThree(Resource):
                     "credit":"",
                     "balance":"`"
                 }
-                main.append(datadict2)
+                # main.append(datadict2)
 
                 
         ########################################################
@@ -5254,6 +5297,8 @@ class TenantStatementFour(Resource):
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
 
+        house_obj = None
+
         if raw_tenant:
             if raw_tenant.startswith("Vac"):
                 tenant_obj = extract_tenant(raw_tenant)
@@ -5265,10 +5310,12 @@ class TenantStatementFour(Resource):
                 tenant_id = tenant_obj.id
             
 
-        if tenant_id:
+        # if tenant_id:
+        if house_obj:
+
             
             range_period_data = []
-            for i in tenant_obj.monthly_charges:
+            for i in house_obj.monthlybills:
                 period_of_billing = generate_start_date(i.month,i.year)
                 # print("PERIOD",period_of_billing)
                 if period_of_billing.month in month_range and period_of_billing.year in year_range:
@@ -5310,8 +5357,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {month} rent",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" {month} rent",
+                        "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"",
                         "balance":cb
@@ -5324,8 +5371,8 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} {prev_month} rent arrears",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" {prev_month} rent arrears",
+                            "ref":f'{item.id}',
                             "debit":item.rent_balance,
                             "credit":"",
                             "balance":cb
@@ -5338,8 +5385,8 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} rent advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" rent advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.rent_due,
                             "balance":cb
@@ -5351,8 +5398,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {month} water bill",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" {month} water bill",
+                        "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"",
                         "balance":cb
@@ -5364,8 +5411,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} water arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} water arrears",
+                        "ref":f'{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
                         "balance":cb
@@ -5378,8 +5425,8 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} water advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" water advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.water_due,
                             "balance":cb
@@ -5391,8 +5438,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Garbage fee",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" Garbage fee",
+                        "ref":f'{item.id}',
                         "debit":item.garbage,
                         "credit":"",
                         "balance":cb
@@ -5404,8 +5451,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} garbage arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} garbage arrears",
+                        "ref":f'{item.id}',
                         "debit":item.garbage_balance,
                         "credit":"",
                         "balance":cb
@@ -5417,8 +5464,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} security fee",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" security fee",
+                        "ref":f'{item.id}',
                         "debit":item.security,
                         "credit":"",
                         "balance":cb
@@ -5430,8 +5477,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} security arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} security arrears",
+                        "ref":f'{item.id}',
                         "debit":item.security_balance,
                         "credit":"",
                         "balance":cb
@@ -5443,8 +5490,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Service charge",
-                        "ref":f'invoice#{item.id}',
+                        "desc":f" Service charge",
+                        "ref":f'{item.id}',
                         "debit":item.maintenance,
                         "credit":"",
                         "balance":cb
@@ -5456,8 +5503,8 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} service charge arrears",
-                        "ref":f'bbf#{item.id}',
+                        "desc":f" {prev_month} service charge arrears",
+                        "ref":f'{item.id}',
                         "debit":item.maintenance_balance,
                         "credit":"",
                         "balance":cb
@@ -5471,8 +5518,8 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} service charge advance payment",
-                            "ref":f'bbf#{item.id}',
+                            "desc":f" service charge advance payment",
+                            "ref":f'{item.id}',
                             "debit":"",
                             "credit":item.maintenance_due,
                             "balance":cb
@@ -5481,23 +5528,23 @@ class TenantStatementFour(Resource):
 
 
 
-                that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
+                that_month_payments = fetch_specific_period_payments(item.month,item.year,house_obj.payments)
                 for x in that_month_payments:
                     paydate = x.pay_date.strftime("%d/%b/%y")
 
-                    ref = f'#{x.id} [{x.ref_number}]',
+                    ref = x.ref_number
 
                     # if item.month == 8:
-                    #     import pdb;
-                    #     pdb.set_trace()
+                    # import pdb;
+                    # pdb.set_trace()
 
                     if x.rent_paid:
                         cb -= x.rent_paid
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Rent payment",
-                            "ref":ref,
+                            "desc":f" Rent payment",
+                            "ref":x.ref_number,
                             "debit":"",
                             "credit":x.rent_paid,
                             "balance":cb
@@ -5509,7 +5556,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Water bill payment",
+                            "desc":f" Water bill payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.water_paid,
@@ -5522,7 +5569,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Garbage fee payment",
+                            "desc":f" Garbage fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.garbage_paid,
@@ -5535,7 +5582,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Security fee payment",
+                            "desc":f" Security fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.security_paid,
@@ -5548,7 +5595,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Service fee payment",
+                            "desc":f" Service fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.maintenance_paid,
@@ -5568,7 +5615,7 @@ class TenantStatementFour(Resource):
                     "credit":"",
                     "balance":f'<span class="font-weight-bold">{cb}</span>'
                 }
-                main.append(datadict)
+                # main.append(datadict)
                 datadict2 = {
                     # "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
                     "month":"",
@@ -5579,7 +5626,7 @@ class TenantStatementFour(Resource):
                     "credit":"",
                     "balance":"`"
                 }
-                main.append(datadict2)
+                # main.append(datadict2)
 
                 
         ########################################################
@@ -5595,6 +5642,7 @@ class TenantStatementFour(Resource):
             prop=apartment_obj,
             tenant_obj=tenant_obj,
             tenant_name=tenant_obj.name,
+            thouse=house_obj,
             name=current_user.name,
             timeline=timeline,
             logopath=logo(current_user.company)[0],

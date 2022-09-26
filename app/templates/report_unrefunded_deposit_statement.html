@@ -15,7 +15,7 @@
                 
                 <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
                   <div class="font-weight-bold text-black pt-1">
-                    <span class="ml-lg-4 font-weight-bold text-uppercase">Deposit statement</span>
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">Un-refunded Deposit statement</span>
                     <span><i class="fas fa-chevron-down ml-3"></i></span>
                   </div>
                 </a>
@@ -53,7 +53,7 @@
                           <option disabled selected value> type </option>
                           <option value="all">All deposits</option>
                           <option value="unrefunded">Un-refunded</option>
-                          <!-- <option value="collected">Refunded</option> -->
+                          <!-- <option value="refunded">Refunded</option> -->
 
                         </select>
                       </div>
@@ -110,11 +110,11 @@
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">DEPOSITS STATEMENTS</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">UN-REFUNDED DEPOSITS</span></span>
           </div>
 
           {%if prop%}
-          <div class="mb-2 mt-1">
+          <div class="mb-2 mt-1 text-black">
             <div class="ln-16">
               <span class="mr-1">PROPERTY CODE: {{prop.id}}</span>
             </div>
@@ -148,53 +148,38 @@
                     
           <div class="table-responsive noprint">
             <table class="table" id="dataTable" width="100%" cellspacing="0">
-                  <thead class="custom-header-alt small">
-                    <tr>
-                      <th class="">PNO</th>
-                      <th class="">TENANT NAME</th>
-                      <th class="">RENT</th>
-                      <th class="">WATER</th>
-                      <th class="">ELEC</th>
-                      <th class="">OTHER</th>
-                      <th class="">TOTAL</th>
-                      <th class="">PAID</th>
-                      <th class="">BALANCE</th>
-                      <th class="">STATUS</th>
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">PNO</th>
+                  <th class="">TENANT NAME</th>
+                  <th class="">DATE PAID</th>
+                  <th class="">PAY CODE</th>
+                  <th class="">AMOUNT</th>
 
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for bill in bills%}
-                    <tr>
-                      <td class="data-cell text-center">{{ bill['house'] }}</td>
-                      <td class="data-cell text-left">{{ bill['tenant']}}</td>
-                      <td class="data-cell text-right">{{ bill['rentdep'] }}</td>
-                      <td class="data-cell text-right">{{ bill['waterdep'] }}</td>
-                      <td class="data-cell text-right">{{bill['elecdep']}}</td>
-                      <td class="data-cell text-right">{{ bill['otherdep'] }}</td>
-                      <td class="data-cell text-right">{{ bill['total'] }}</td>
-                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
-                      <td class="data-cell text-right">{{ bill['status'] }}</td>
 
-                    </tr>
-                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-left">{{ bill['tenant']}}</td>
+                  <td class="data-cell text-left">{{ bill['datepaid'] }}</td>
+                  <td class="data-cell text-center">{{ bill['paycode'] }}</td>
+                  <td class="data-cell text-right">{{bill['amount']}}</td>
+   
 
-                  </tbody>
-                  <tfoot class="custom-footer-alt">
-                    <tr>
-                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                      <td class="font-weight-bold text-right">{{rentdeptotal}}</td>
-                      <td class="font-weight-bold text-right">{{waterdeptotal}}</td>
-                      <td class="font-weight-bold text-right">{{elecdeptotal}}</td>
-                      <td class="font-weight-bold text-right">{{otherdeptotal}}</td>
-                      <td class="font-weight-bold text-right">{{deptotal}}</td>
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                      <td class="font-weight-bold text-right">{{baltotal}}</td>
-                      <td class="font-weight-bold text-right">-</td>
+                </tr>
+              {% endfor %}
 
-                    </tr>
-                  </tfoot>
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td colspan="4" class="font-weight-bold">GRAND TOTAL ...</td>
+                  <td class="font-weight-bold text-right">{{deptotal}}</td>
+
+                </tr>
+              </tfoot>
                 </table>
 
           </div>
@@ -207,7 +192,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnon printdisplay">
+  <div id="invoice" class="col-lg-12  dispnone printdisplay">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -232,11 +217,11 @@
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">DEPOSITS STATEMENTS</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">UN-REFUNDED DEPOSITS</span></span>
           </div>
 
           {%if prop%}
-          <div class="mb-2 mt-1">
+          <div class="mb-2 mt-1 text-black">
             <div class="ln-16">
               <span class="mr-1">PROPERTY CODE: {{prop.id}}</span>
             </div>
@@ -266,14 +251,10 @@
                 <tr>
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
-                  <th class="">RENT</th>
-                  <th class="">WATER</th>
-                  <th class="">ELEC</th>
-                  <th class="">OTHER</th>
-                  <th class="">TOTAL</th>
-                  <th class="">PAID</th>
-                  <th class="">BALANCE</th>
-                  <th class="">STATUS</th>
+                  <th class="">DATE PAID</th>
+                  <th class="">PAY CODE</th>
+                  <th class="">AMOUNT</th>
+
 
                 </tr>
               </thead>
@@ -282,14 +263,10 @@
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant']}}</td>
-                  <td class="data-cell text-right">{{ bill['rentdep'] }}</td>
-                  <td class="data-cell text-right">{{ bill['waterdep'] }}</td>
-                  <td class="data-cell text-right">{{bill['elecdep']}}</td>
-                  <td class="data-cell text-right">{{ bill['otherdep'] }}</td>
-                  <td class="data-cell text-right">{{ bill['total'] }}</td>
-                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
-                  <td class="data-cell text-right">{{ bill['status'] }}</td>
+                  <td class="data-cell text-left">{{ bill['datepaid'] }}</td>
+                  <td class="data-cell text-center">{{ bill['paycode'] }}</td>
+                  <td class="data-cell text-right">{{bill['amount']}}</td>
+   
 
                 </tr>
               {% endfor %}
@@ -297,15 +274,8 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
-                  <td class="font-weight-bold text-right">{{rentdeptotal}}</td>
-                  <td class="font-weight-bold text-right">{{waterdeptotal}}</td>
-                  <td class="font-weight-bold text-right">{{elecdeptotal}}</td>
-                  <td class="font-weight-bold text-right">{{otherdeptotal}}</td>
+                  <td colspan="4" class="font-weight-bold">GRAND TOTAL ...</td>
                   <td class="font-weight-bold text-right">{{deptotal}}</td>
-                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                  <td class="font-weight-bold text-right">{{baltotal}}</td>
-                  <td class="font-weight-bold text-right">-</td>
 
                 </tr>
               </tfoot>

@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 logfile.txt
+logfiletwo.txt
 do_secrets.py
 app/temp
 

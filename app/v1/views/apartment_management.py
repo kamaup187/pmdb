@@ -5073,6 +5073,8 @@ class AddTenant(Resource):
 
                     dict_array.append(dict_obj)
 
+                lfile2("finish point: rows",len(dict_array))
+
                 uploadsjob = q.enqueue_call(
                     func=read_deposits_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
                 )

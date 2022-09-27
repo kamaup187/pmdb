@@ -1120,6 +1120,20 @@ def fetch_specific_period_payments(month,year,arr):
             current_billling_period_data.append(i)
     return current_billling_period_data
 
+def fetch_specific_period_payments2(month,year,arr,tid):
+    current_billling_period_data = []
+    for i in arr:
+        if i.pay_period.month == month and i.pay_period.year == year and not i.voided and i.tenant_id == tid:
+            current_billling_period_data.append(i)
+    return current_billling_period_data
+
+def fetch_specific_period_payments3(month,year,arr,ptid):
+    current_billling_period_data = []
+    for i in arr:
+        if i.pay_period.month == month and i.pay_period.year == year and not i.voided and i.ptenant_id == ptid:
+            current_billling_period_data.append(i)
+    return current_billling_period_data
+
 def fetch_prev_billing_period_payments(billing_period,arr):
     prev_billling_period_data = []
     prev_month = get_prev_month(billing_period.month)
@@ -2346,6 +2360,7 @@ def submission_details(arr):
 def bill_details(arr):
     detailed_bills = []
     for i in arr:
+        # print("item date and item id", i.month, i.year, "id", i.id)
         bill_item = MonthlyChargeOp.view_detail(i)
         detailed_bills.append(bill_item)
 
@@ -3385,6 +3400,15 @@ def generate_date(month,year):
     # day = datetime.datetime.now()
     # .day if month != 2 else datetime.datetime.now().day - 3
     return datetime.datetime(year, month, 15)
+
+def generate_exact_date(day,month,year):
+    # print("Month",month,"Year",year)
+    # if month == 2:
+    #     day = datetime.datetime.now()
+    
+    # day = datetime.datetime.now()
+    # .day if month != 2 else datetime.datetime.now().day - 3
+    return datetime.datetime(year, month, day)
 
 def generate_start_date(month,year):
     # if month == 2:
@@ -5542,6 +5566,8 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             if tenant.deposits:
                 print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj,"UPDATING....")
                 TenantDepositOp.update_deposits(tenant.deposits,values[0],values[1],values[2],values[3],total,status)
+                TenantOp.update_deposit(tenant,total)
+
             else:
                 dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,status,tenant.id,None,house_obj.id,apartment_id)
                 dep.save()
@@ -7219,7 +7245,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         print ("Billing has started with mail connected successfully")
         for house in houses:
 
-            if apartment_obj.company.name == "REVER MWIMUTO LIMITED" or localenv or apartment_obj.company.ctype == "crm":
+            if apartment_obj.company.ctype == "crm":
                 project_end_date = house.owner.checkin + relativedelta(months=15)
                 deposit1 = house.owner.deposit
                 booking = house.owner.deposit

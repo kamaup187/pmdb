@@ -427,94 +427,94 @@ if ($("#statement").text() == "tenant statement3") {
 
 </script>
 
+
+
 <script>
-
-
   if ($("#statement").text() == "tenant statement") {
 
-    // jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-    //   "date-range-pre": function (a) {
-    //     var monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    //     return monthArr.indexOf(a);
-    //   },
-    //   "date-range-asc": function (a, b) {
-    //     return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-    //   },
-    //   "date-range-desc": function (a, b) {
-    //     return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-    //   }
-    // });
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+      "date-range-pre": function (a) {
+        var monthArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return monthArr.indexOf(a);
+      },
+      "date-range-asc": function (a, b) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+      },
+      "date-range-desc": function (a, b) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+      }
+    });
 
-    // $('#data-table').DataTable({
-    //   "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-    //   "pageLength": 100,
-    //   // "bPaginate": false, //hide pagination control
-    //   // "bFilter": false, //hide filter control
-    //   "searching": false,
-    //   // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
-    //   // "targets": 'no-sort',
-    //   // "bSort": false,
-    //   // columnDefs: [ { type: 'date-range', targets: 0 },{ targets: 0, type: 'natural' } ],
-    //   columnDefs: [{ type: 'date-range', targets: 0 }],
-    //   // "info" : false,
-    //   "order": [[0, "asc"]],
-    //   "bLengthChange": false
-    // });
-    // $('.dataTables_length').addClass('bs-select');
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      "searching": false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { type: 'date-range', targets: 0 },{ targets: 0, type: 'natural' } ],
+      columnDefs: [{ type: 'date-range', targets: 0 }],
+      // "info" : false,
+      "order": [[0, "asc"]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
 
   } else if ($("#statement").text() == "tenant statement3") {
 
     console.log("working here for print")
 
-    // $('#data-table').DataTable({
-    //   "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-    //   "pageLength": 100,
-    //   "order": [],
-    //   "bPaginate": false, //hide pagination control
-    //   // "bFilter": false, //hide filter control
-    //   "searching":false,
-    //   // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
-    //   // "targets": 'no-sort',
-    //   // "bSort": false,
-    //   //   columnDefs: [ { targets: 0, type: 'natural' } ],
-    //   // "info" : false,
-    //   //   "order": [[ 0, "asc" ]],
-    //   // "bLengthChange": false
-    // });
-    // $('.dataTables_length').addClass('bs-select');
-
     $('#data-table').DataTable({
-        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-        "pageLength": 100,
-        "bPaginate": false, //hide pagination control
-        "bFilter": false, //hide filter control
-        "searching":false,
-        "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
-        // "targets": 'no-sort',
-        // "bSort": false,
-        // columnDefs: [ { targets: 0, type: 'natural' } ],
-        "info" : false,
-        "order": [[ 0, "asc" ]],
-        "bLengthChange": false
-      });
-      $('.dataTables_length').addClass('bs-select');
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "order": [],
+      "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      //   columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      //   "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+
+    // $('#data-table').DataTable({
+    //     "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+    //     "pageLength": 100,
+    //     "bPaginate": false, //hide pagination control
+    //     "bFilter": false, //hide filter control
+    //     "searching":false,
+    //     "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
+    //     // "targets": 'no-sort',
+    //     // "bSort": false,
+    //     // columnDefs: [ { targets: 0, type: 'natural' } ],
+    //     "info" : false,
+    //     "order": [[ 0, "asc" ]],
+    //     "bLengthChange": false
+    //   });
+    //   $('.dataTables_length').addClass('bs-select');
 
   } else {
-    // $('#data-table').DataTable({
-    //   "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-    //   "pageLength": 100,
-    //   "bPaginate": false, //hide pagination control
-    //   "bFilter": false, //hide filter control
-    //   "searching": false,
-    //   "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
-    //   // "targets": 'no-sort',
-    //   // "bSort": false,
-    //   // columnDefs: [ { targets: 0, type: 'natural' } ],
-    //   "info": false,
-    //   "order": [[0, "asc"]],
-    //   "bLengthChange": false
-    // });
-    // $('.dataTables_length').addClass('bs-select');
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "bPaginate": false, //hide pagination control
+      "bFilter": false, //hide filter control
+      "searching": false,
+      "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { targets: 0, type: 'natural' } ],
+      "info": false,
+      "order": [[0, "asc"]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
   }
 </script>
 

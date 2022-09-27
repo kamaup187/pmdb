@@ -498,7 +498,7 @@ class House(db.Model):
     tenantrequests = db.relationship('TenantRequest',backref='house',order_by='TenantRequest.date', cascade="all, delete-orphan")
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='house',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
-    deposits = db.relationship('TenantDeposit',backref='house', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    deposits = db.relationship('TenantDeposit',backref='house', uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
     owner = db.relationship('PermanentTenant',backref='house', uselist=False, cascade="all, delete-orphan")
 

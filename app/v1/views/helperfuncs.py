@@ -5536,7 +5536,11 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
         datepaid = item["datepaid"]
         rstatus = item["status"]
 
+        print("RSTATUS",rstatus)
+
         status = "unrefunded" if rstatus == "" else "refunded"
+
+        print("STATUS",status)
 
         from datetime import datetime
 
@@ -5577,13 +5581,14 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
                 total = rentdep+waterdep+elecdep+values[3]
 
-                print("Updating tenant deposits...for >>",house_obj, "total: ", total)
                 if tenant.deposits:
-                    print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj,"UPDATING....")
+                    print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
                     TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
                     TenantOp.update_deposit(tenant,total)
 
                 else:
+                    print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+
                     dep = TenantDepositOp(rentdep,waterdep,elecdep,values[3],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
                     dep.save()
                     TenantOp.update_deposit(tenant,total)

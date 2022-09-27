@@ -5542,12 +5542,6 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
         print("STATUS",status)
 
-        from datetime import datetime
-
-        dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
-        hour, minute, second = floatHourToTime(datepaid % 1)
-        dt = dt.replace(hour=hour, minute=minute, second=second)
-
         try:
             housename = str(int(unit) if unit else "" )
         except:
@@ -5565,6 +5559,7 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
         
         if not house_obj:
             print("Skipping ",house_name)
+            continue
         else:
             check_tenant = check_occupancy(house_obj)
         if check_tenant[0] == "occupied":
@@ -5573,6 +5568,16 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             tenant = None
 
         if tenant:
+
+            from datetime import datetime
+
+            try:
+                dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
+                hour, minute, second = floatHourToTime(datepaid % 1)
+                dt = dt.replace(hour=hour, minute=minute, second=second)
+            except:
+                dt = tenant.date
+
             values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
             if house_obj.housecode:
                 rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0

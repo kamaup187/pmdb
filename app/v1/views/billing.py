@@ -4710,7 +4710,21 @@ class AgentWithdrawal(Resource):
     def get(self):
         pass       
     def post(self):
-        response =  {"responseCode": "OK","responseMessage": "Not authorized"}
+        account = request.form.get("account")
+        beneficiary = request.form.get("beneficiary")
+        amount = request.form.get("amount")
+
+        if not account and not beneficiary and not amount:
+            response =  {"responseCode": "OK","responseMessage": "Request failed"}
+        else:
+            dictToSend = {'amount':amount}
+            res = requests.post('https://kiotapay.com/api/endpoint', json=dictToSend)
+            try:
+                print ('response from server:',res.text, 'and', res.json())
+            except:
+                ttx = sms.send(f'trial for withdrawal from {current_user.name} {current_user.company.name}', ["+254716674695"],"KIOTAPAY")
+            response =  {"responseCode": "OK","responseMessage": "Request sent successfully"}
+
         resp = jsonify(response)
         return make_response(resp)
 

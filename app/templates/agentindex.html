@@ -112,6 +112,8 @@
 </head>
 
 <body onload="startTime()" id="page-top" class="calibri overflow-x-hidden">
+  <div id="snackbed"></div>
+
 
   <div id="hellobar-bar" class="regular overflow-x-hidde closable dispnone topmost">
     <div id="banne" class="hb-content-wrapper dispnone">
@@ -706,7 +708,7 @@
 
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0 mr-3">
-                  <div class="font-weight-bold text-black"><span class="text-primary mr-1">Wallet</span><span id="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></div>
+                  <div class="font-weight-bold text-black"><span class="text-primary mr-1">Wallet</span><span class="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></div>
                 </div>
 
                 <div class="sidebar-brand-icon rotate-n-0">
@@ -2455,12 +2457,12 @@
 
 
   <div class="modal fade" id="walletModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-kubwa" role="document">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="indicator"></div>
         <div class="modal-header pb-0 pt-2 text-center bg-light">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify font-weight-bold">My wallet</span>
+            <span class="mr-3 smallify font-weight-bold h4">My wallet</span>
             <div>
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
             </div>
@@ -2472,8 +2474,54 @@
             <div class="media-body">
               <div class="position-relative">
                 <div class="card-body modal-forms">
+                  <div class="mt-2">
+                    Account Balance: <span class="wallet text-black"><i class="fas fa-sync-alt fa-spin ml-2"></i></span>
+                  </div>
+                  <div>
+                    Available for withdrawal: <span class="wallet text-black"><i class="fas fa-sync-alt fa-spin ml-2"></i></span>
+                  </div>
 
-                  <div id="walletModalBed"></div>
+                  <div class="card mb-4 mt-3">
+                    <div class="card-header h5 font-weight-bold">Initiate mpesa withdrawal</div>
+                    <div class="card-body">
+                        <form autocomplete="off">
+
+                          <div class="row gx-3 mb-3">
+                            <!-- Form Group (last name)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputStatus">Choose account</label>
+                                <select id="inputAccount" class="form-control" aria-label="Default select example">
+                                    <option selected disabled  value="">choose</option>
+                                    <option value="primary">Primary account</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                              <label class="small mb-1" for="inputStatus">Beneficiary </label>
+                              <select id="inputBeneficiary" class="form-control" aria-label="Default select example">
+                                  <option selected disabled  value="">choose</option>
+                                  <option value="0716674695">0716xxx695</option>
+                              </select>
+                          </div>
+                        </div>
+
+                        <!-- Form Row-->
+                        <div class="gx-3 mb-3">
+                          <!-- Form Group (first name)-->
+                          <label class="small mb-1" for="inputAmount">Amount</label>
+                          <input class="form-control" id="inputAmount" type="text" placeholder="amount" />
+                          
+                      </div>
+
+
+
+                        <!-- Submit button-->
+                        <div class="text-center">
+                            <button id="withdrawrequest" class="btn btn-primary" type="button">Request</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
 
                 </div>
               </div>
@@ -3498,7 +3546,51 @@ function animateHH(element) {
   });
 </script>
 
+
+
 <script>
+  $("#withdrawrequest").on('click',function(){
+
+      url2 = "{{ url_for('api.agentwithdrawal') }}";
+      $.ajax({
+            type: "POST",
+            url: url2,
+            data: {
+              agent:$("#current_user").text(),
+              account:$("#inputAccount").val(),
+              beneficiary:$("#inputBeneficiary").val(),
+              amount:$("#inputAmount").val()
+            },
+            success: function(response) {   
+              if (response.responseMessage == "Request sent successfully"){
+                goodSnack()
+              }else{
+                badSnack()
+              }       
+          }
+      });
+
+});
+</script>
+
+<script>
+
+function goodSnack() {
+  console.log("good got called");
+  $("#snackbed").html('<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>');
+  $("#snackbar").addClass("show");
+  setTimeout(function () {
+    $("#snackbar").removeClass("show")}, 3000);
+  }
+
+function badSnack() {
+  console.log("bad got called");
+  $("#snackbed").html('<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>');
+  $("#snackbar").addClass("show");
+  setTimeout(function () {
+    $("#snackbar").removeClass("show")}, 3000);
+  }
+
   function getCurrentProp(){
     $.ajax({
         url: "{{ url_for('api.dashboard') }}",
@@ -3672,7 +3764,7 @@ function animateHH(element) {
 
                   },
             success: function(data) {
-                $('#wallet').text('0.0 KES');
+                $('.wallet').text('0.0 KES');
   
             }
         });

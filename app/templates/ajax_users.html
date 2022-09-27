@@ -230,7 +230,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-kubwa" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -258,7 +258,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
 
@@ -361,36 +361,6 @@
 
   });
 </script>
-
-
-
-<script>
-  $("#profileModal").on('shown.bs.modal', function(){
-
-    $.ajax({
-      url: "{{ url_for('api.updateuser') }}",
-      type: "get",
-      data: {
-        userid:  $("#edit_user_identifier").text(),
-        target:"self profile"
-      },
-      success: function(response) {
-        $("#profileModalBed").html(response); 
-      }
-    });
-
-  });
-</script>
-
-
-<script>
-  $("#profileModal").on('hidden.bs.modal', function(){
-
-    $("#profileModalBed").html("loading"); 
-
-  });
-
-  </script>
 
 
   <script>

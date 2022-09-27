@@ -5398,6 +5398,45 @@ class TenantStatementFour(Resource):
                                 "balance":cb
                             }
                             main.append(datadict)
+
+
+                        if house_obj.deposits.rentdep:
+                            cb -= house_obj.deposits.rentdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"RENT DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.rentdep,
+                                "balance":cb
+                            }
+                            main.append(datadict)
+                        if house_obj.deposits.waterdep:
+                            cb -= house_obj.deposits.waterdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"WATER DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.waterdep,
+                                "balance":cb
+                            }
+                            main.append(datadict)
+
+                        if house_obj.deposits.elecdep:
+                            cb -= house_obj.deposits.elecdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"ELECTRICITY DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.elecdep,
+                                "balance":cb
+                            }
+                            main.append(datadict)
                                 
                 if item.rent:
                     cb += item.rent

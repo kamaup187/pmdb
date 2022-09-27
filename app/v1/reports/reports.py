@@ -2835,7 +2835,7 @@ class DepositStatement(Resource):
                     totaldep += bill.rentdep
 
                     detailed_bills.append(datadict)
-                elif bill.waterdep:
+                if bill.waterdep:
                     datadict = {
                         "house":bill.house,
                         "tenant":bill.tenant,
@@ -2846,7 +2846,7 @@ class DepositStatement(Resource):
                     totaldep += bill.waterdep
 
                     detailed_bills.append(datadict)
-                elif bill.elecdep:
+                if bill.elecdep:
                     datadict = {
                         "house":bill.house,
                         "tenant":bill.tenant,
@@ -5245,6 +5245,7 @@ class TenantStatementFour(Resource):
         tenant_id = None
         target = request.args.get("target")
         prop = request.args.get("selected_apartment")
+        house_obj = None
 
         if target == "tenants":
             prop = request.args.get("apartment")
@@ -5272,8 +5273,11 @@ class TenantStatementFour(Resource):
             tenant_id = request.args.get("tenantid")
             if tenant_id.startswith("ptnt"):
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+                house_obj = tenant_obj.house
             else:
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+                house_obj = check_house_occupied(tenant_obj)[1]
+
 
             begin_date = tenant_obj.date
             end_date = datetime.datetime.now()
@@ -5298,7 +5302,6 @@ class TenantStatementFour(Resource):
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
 
-        house_obj = None
 
         if raw_tenant:
             if raw_tenant.startswith("Vac"):
@@ -5350,7 +5353,50 @@ class TenantStatementFour(Resource):
                 month = get_str_month(item.month)
                 prev_month = get_str_month(prev_num)
 
-                date = item.date.strftime("%d/%b/%y")
+                # date = item.date.strftime("%d/%b/%y")
+                rdate = generate_exact_date(item.date.day,item.month,item.year)
+                date = rdate.strftime("%d/%b/%y")
+
+                # print(tenant_obj.date.month, tenant_obj.date.year, "vs", item.month, item.year)
+                if item.month == tenant_obj.date.month and item.year == tenant_obj.date.year:
+                    if house_obj.deposits:
+                        if house_obj.deposits.rentdep:
+                            cb += house_obj.deposits.rentdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"RENT DEPOSIT BILL",
+                                "ref":f'{item.id}',
+                                "debit":house_obj.deposits.rentdep,
+                                "credit":"",
+                                "balance":cb
+                            }
+                            main.append(datadict)
+                        if house_obj.deposits.waterdep:
+                            cb += house_obj.deposits.waterdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"WATER DEPOSIT BILL",
+                                "ref":f'{item.id}',
+                                "debit":house_obj.deposits.waterdep,
+                                "credit":"",
+                                "balance":cb
+                            }
+                            main.append(datadict)
+
+                        if house_obj.deposits.elecdep:
+                            cb += house_obj.deposits.elecdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"ELECTRICITY DEPOSIT BILL",
+                                "ref":f'{item.id}',
+                                "debit":house_obj.deposits.elecdep,
+                                "credit":"",
+                                "balance":cb
+                            }
+                            main.append(datadict)
                                 
                 if item.rent:
                     cb += item.rent
@@ -5358,7 +5404,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f" {month} rent",
+                        "desc":f"PREMISES RENT BILL",
                         "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"",
@@ -5399,7 +5445,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f" {month} water bill",
+                        "desc":f"water bill",
                         "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"",
@@ -5412,7 +5458,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f" {prev_month} water arrears",
+                        "desc":f"{prev_month} water arrears",
                         "ref":f'{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
@@ -5646,6 +5692,7 @@ class TenantStatementFour(Resource):
             thouse=house_obj,
             name=current_user.name,
             timeline=timeline,
+            statementdate = datetime.datetime.today().strftime("%d/%B/%Y"),
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],

@@ -122,7 +122,7 @@
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">COMBINED STATEMENT FOR THE PERIOD {{stateperiod}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">COMBINED STATEMENT FOR THE PERIOD {{timeline}}</span></span>
           </div>
 
           {%if prop%}
@@ -172,7 +172,7 @@
                     <tbody>
                       {% for bill in bills%}
                       <tr>
-                        <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
+                        <td class="data-cell text-left text-uppercase">{{ bill['date'] |safe}}</td>
                         <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
                         <td class="data-cell text-left">{{ bill['ref'] }}</td>
                         <td class="data-cell text-right">{{ bill['debit'] }}</td>
@@ -221,7 +221,7 @@
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">COMBINED STATEMENT FOR THE PERIOD {{stateperiod}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">COMBINED STATEMENT FOR THE PERIOD {{timeline}}</span></span>
           </div>
 
 
@@ -265,7 +265,7 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
-                  <td class="data-cell text-left">{{ bill['date'] |safe}}</td>
+                  <td class="data-cell text-left text-uppercase">{{ bill['date'] |safe}}</td>
                   <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
                   <td class="data-cell text-left">{{ bill['ref'] }}</td>
                   <td class="data-cell text-right">{{ bill['debit'] }}</td>

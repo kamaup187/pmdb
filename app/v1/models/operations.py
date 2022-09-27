@@ -965,13 +965,13 @@ class HouseCodeOp(HouseCode,Base):
         db.session.commit()
 
     def update_commission(self,commission):
-        if commission:
+        if commission != "null":
             self.int_commission = 0.0
             self.commission = commission
         db.session.commit()
 
     def update_int_commission(self,commission):
-        if commission:
+        if commission != "null":
             self.commission = 0.0
             self.int_commission = commission
         db.session.commit()
@@ -2380,12 +2380,13 @@ class TenantOp(Tenant,Base):
 
 
 class TenantDepositOp(TenantDeposit,Base):
-    def __init__(self,rentdep,waterdep,elecdep,otherdep,total,status,tenant_id,ptenant_id,house_id,apartment_id):
+    def __init__(self,rentdep,waterdep,elecdep,otherdep,total,date,status,tenant_id,ptenant_id,house_id,apartment_id):
         self.rentdep = rentdep
         self.waterdep = waterdep
         self.elecdep = elecdep
         self.otherdep = otherdep
         self.total = total
+        self.date = date
         self.status = status
         self.tenant_id = tenant_id
         self.ptenant_id = ptenant_id
@@ -2393,12 +2394,13 @@ class TenantDepositOp(TenantDeposit,Base):
         self.apartment_id = apartment_id
 
 
-    def update_deposits(self,rentdep,waterdep,elecdep,otherdep,total,status):
+    def update_deposits(self,rentdep,waterdep,elecdep,otherdep,total,date,status):
         self.rentdep = rentdep
         self.waterdep = waterdep
         self.elecdep = elecdep
         self.otherdep = otherdep
         self.total = total
+        self.date = date
         self.status = status
 
         db.session.commit()
@@ -2421,6 +2423,7 @@ class TenantDepositOp(TenantDeposit,Base):
             'otherdep':TenantDepositOp.format(self.otherdep),
             'total':TenantDepositOp.format(self.total),
             'paid':TenantDepositOp.format(self.paid),
+            'datepaid':TenantDepositOp.date_format(self.date),
             'balance':TenantDepositOp.format(self.balance),
             'status':self.status
         }

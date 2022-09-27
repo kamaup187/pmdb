@@ -5052,7 +5052,7 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 6:
+                if len(sheet.row_values(1)) != 7:
                     data_format_error = True
             try:
                 if data_format_error:
@@ -5067,7 +5067,8 @@ class AddTenant(Resource):
                     "waterdep":sheet.row_values(row)[2],
                     "elecdep":sheet.row_values(row)[3],
                     "otherdep":sheet.row_values(row)[4],
-                    "status":sheet.row_values(row)[5],
+                    "datepaid":sheet.row_values(row)[5],
+                    "status":sheet.row_values(row)[6],
                     }
 
                     dict_array.append(dict_obj)

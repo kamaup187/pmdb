@@ -2824,11 +2824,12 @@ class DepositStatement(Resource):
             # bill_item = LandlordSummaryOp.external_view(bill)
 
             if reporttype == "unrefunded":
+                print("kerrrrrooooon" ,bill.waterdep)
                 if bill.rentdep:
                     datadict = {
                         "house":bill.house,
                         "tenant":bill.tenant,
-                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'DEP',
                         "amount":bill.rentdep
                     }
@@ -2839,7 +2840,7 @@ class DepositStatement(Resource):
                     datadict = {
                         "house":bill.house,
                         "tenant":bill.tenant,
-                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'WDP',
                         "amount":bill.waterdep
                     }
@@ -2850,7 +2851,7 @@ class DepositStatement(Resource):
                     datadict = {
                         "house":bill.house,
                         "tenant":bill.tenant,
-                        "datepaid":bill.tenant.date.strftime("%d/%b/%y"),
+                        "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'EDP',
                         "amount":bill.elecdep
                     }

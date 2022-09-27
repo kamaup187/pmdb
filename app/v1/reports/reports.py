@@ -2824,7 +2824,11 @@ class DepositStatement(Resource):
             # bill_item = LandlordSummaryOp.external_view(bill)
 
             if reporttype == "unrefunded":
-                print("kerrrrrooooon" ,bill.waterdep)
+                if bill.status == "unrefunded":
+                    pass
+                else:
+                    continue
+                # print("kerrrrrooooon" ,bill.waterdep)
                 if bill.rentdep:
                     datadict = {
                         "house":bill.house,

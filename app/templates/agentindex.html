@@ -706,7 +706,7 @@
 
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0 mr-3">
-                  <div class="font-weight-bold text-black">Wallet 0.0 KES</div>
+                  <div class="font-weight-bold text-black"><span class="text-primary mr-1">Wallet</span><span id="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></div>
                 </div>
 
                 <div class="sidebar-brand-icon rotate-n-0">
@@ -719,9 +719,14 @@
               <div class="dropdown-menu visible dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
 
 
-                <div class="dropdown-item">
+                <div class="dropdown-item mb-3">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-900"></i>
                   <span type="button" class="text-primary font-weight-bold no-wrap" data-toggle="modal" data-target="#profileModal">My profile</span>
+                </div>
+
+                <div class="dropdown-item">
+                  <i class="fas fa-wallet fa-sm fa-fw mr-2 text-gray-900"></i>
+                  <span type="button" class="text-primary font-weight-bold no-wrap" data-toggle="modal" data-target="#walletModal">My Account</span>
                 </div>
 
                 <div class="dropdown-divider"></div>
@@ -2418,6 +2423,66 @@
     </div>
   </div>
 
+  <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify font-weight-bold">My profile</span>
+            <div>
+              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs font-weight-bold"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div id="profileModalBed"></div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="walletModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 pt-2 text-center bg-light">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify font-weight-bold">My wallet</span>
+            <div>
+              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs font-weight-bold"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div id="walletModalBed"></div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal center-btn" id="preloaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2550,6 +2615,9 @@
             //     setTimeout(getFeed, 1000);
             // }
         });
+
+        setTimeout(getWalletBalance, 10);
+
     }
     
     // $(document).ready(function() {
@@ -3593,6 +3661,24 @@ function animateHH(element) {
 
     }
 
+
+    function getWalletBalance() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"vacantstats"
+
+                  },
+            success: function(data) {
+                $('#wallet').text('0.0 KES');
+  
+            }
+        });
+
+    }
+
   getCurrentProp()
 
 </script>
@@ -3911,7 +3997,33 @@ $("#closemodule").on('click',function(){
 
 </script>
 
+<script>
+  $("#profileModal").on('shown.bs.modal', function(){
 
+    $.ajax({
+      url: "{{ url_for('api.updateuser') }}",
+      type: "get",
+      data: {
+        userid:  $("#edit_user_identifier").text(),
+        target:"self profile"
+      },
+      success: function(response) {
+        $("#profileModalBed").html(response); 
+      }
+    });
+
+  });
+</script>
+
+
+<script>
+  $("#profileModal").on('hidden.bs.modal', function(){
+
+    $("#profileModalBed").html("loading"); 
+
+  });
+
+ </script>
 
 
 <script>

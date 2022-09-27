@@ -2824,7 +2824,11 @@ class DepositStatement(Resource):
             # bill_item = LandlordSummaryOp.external_view(bill)
 
             if reporttype == "unrefunded":
-                print("kerrrrrooooon" ,bill.waterdep)
+                if bill.status == "unrefunded":
+                    pass
+                else:
+                    continue
+                # print("kerrrrrooooon" ,bill.waterdep)
                 if bill.rentdep:
                     datadict = {
                         "house":bill.house,
@@ -5395,6 +5399,45 @@ class TenantStatementFour(Resource):
                                 "ref":f'{item.id}',
                                 "debit":house_obj.deposits.elecdep,
                                 "credit":"",
+                                "balance":cb
+                            }
+                            main.append(datadict)
+
+
+                        if house_obj.deposits.rentdep:
+                            cb -= house_obj.deposits.rentdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"RENT DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.rentdep,
+                                "balance":cb
+                            }
+                            main.append(datadict)
+                        if house_obj.deposits.waterdep:
+                            cb -= house_obj.deposits.waterdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"WATER DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.waterdep,
+                                "balance":cb
+                            }
+                            main.append(datadict)
+
+                        if house_obj.deposits.elecdep:
+                            cb -= house_obj.deposits.elecdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"ELECTRICITY DEPOSIT PAYMENT",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":house_obj.deposits.elecdep,
                                 "balance":cb
                             }
                             main.append(datadict)

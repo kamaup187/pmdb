@@ -5534,7 +5534,9 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
         elecdep = item["elecdep"]
         otherdep = item["otherdep"]
         datepaid = item["datepaid"]
-        status = item["status"]
+        rstatus = item["status"]
+
+        status = "unrefunded" if rstatus == "" else "refunded"
 
         from datetime import datetime
 

@@ -2835,7 +2835,7 @@ class DepositStatement(Resource):
                         "tenant":bill.tenant,
                         "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'DEP',
-                        "amount":bill.rentdep
+                        "amount":f'{bill.rentdep:,.1f}'
                     }
                     totaldep += bill.rentdep
 
@@ -2846,7 +2846,7 @@ class DepositStatement(Resource):
                         "tenant":bill.tenant,
                         "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'WDP',
-                        "amount":bill.waterdep
+                        "amount":f'{bill.waterdep:,.1f}'
                     }
                     totaldep += bill.waterdep
 
@@ -2857,7 +2857,7 @@ class DepositStatement(Resource):
                         "tenant":bill.tenant,
                         "datepaid":bill.date.strftime("%d/%b/%y"),
                         "paycode":'EDP',
-                        "amount":bill.elecdep
+                        "amount":f'{bill.elecdep:,.1f}'
                     }
                     totaldep += bill.elecdep
 
@@ -2879,7 +2879,7 @@ class DepositStatement(Resource):
             prop=apartment_obj,
             propid=apartment_obj.id,
             bills=detailed_bills,
-            deptotal=totaldep,
+            deptotal=f'{totaldep:,.1f}',
             props=apartment_list,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],
@@ -2887,7 +2887,7 @@ class DepositStatement(Resource):
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
             co=current_user.company,
-            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            statementdate = datetime.datetime.today().strftime("%d/%B/%Y"),
             name=current_user.name))
 
 class RentRemit(Resource):

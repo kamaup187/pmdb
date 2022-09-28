@@ -3736,6 +3736,11 @@ class ReceiveDepositPayment(Resource):
             prop=stored_apartment
         )
 
+
+class Income(Resource):
+    def get(self):
+        pass
+
 class Invoice(Resource):
     """invoice class"""
     def get(self):

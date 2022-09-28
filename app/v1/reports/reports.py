@@ -5252,6 +5252,8 @@ class TenantStatementFour(Resource):
         prop = request.args.get("selected_apartment")
         house_obj = None
 
+        main = []
+
         if target == "tenants":
             prop = request.args.get("apartment")
             prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
@@ -5313,6 +5315,7 @@ class TenantStatementFour(Resource):
                 tenant_obj = extract_tenant(raw_tenant)
                 print("VACATED TENANT >>>>STATEMENT",tenant_obj.monthly_charges)
                 tenant_id = tenant_obj.id
+                house_obj = check_house_occupied(tenant_obj)[2]
             else:
                 house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
                 tenant_obj = check_occupancy(house_obj)[1]
@@ -5331,8 +5334,6 @@ class TenantStatementFour(Resource):
                     # print("PERIOD",period_of_billing)
                     range_period_data.append(i)
 
-
-            main = []
 
             # if range_period_data:
             #     sorted_ids = sort_items_by_id(range_period_data)

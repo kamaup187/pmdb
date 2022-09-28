@@ -5315,7 +5315,7 @@ class TenantStatementFour(Resource):
                 tenant_obj = extract_tenant(raw_tenant)
                 print("VACATED TENANT >>>>STATEMENT",tenant_obj.monthly_charges)
                 tenant_id = tenant_obj.id
-                house_obj = check_house_occupied(tenant_obj)[2]
+                house_obj = check_house_occupied(tenant_obj)[2].house
             else:
                 house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
                 tenant_obj = check_occupancy(house_obj)[1]

@@ -4937,12 +4937,14 @@ class TenantStatementThree(Resource):
 
                 cb = 0.0
 
+                journal_rent_correction = 0.0
+
                 prev_num = item.month -1 if item != 1 else 12
                 month = get_str_month(item.month)
                 prev_month = get_str_month(prev_num)
 
                 date = item.date.strftime("%d/%b/%y")
-                                
+
                 if item.rent:
                     cb += item.rent
                     
@@ -4979,8 +4981,8 @@ class TenantStatementThree(Resource):
                             "date":date,
                             "desc":f" rent advance payment",
                             "ref":f'{item.id}',
-                            "debit":item.rent_balance,
-                            "credit":"",
+                            "debit":"",
+                            "credit":item.rent_balance,
                             "balance":cb
                         }
                         main.append(datadict)
@@ -5130,7 +5132,17 @@ class TenantStatementThree(Resource):
                     #     import pdb;
                     #     pdb.set_trace()
 
+                    # if item.month == 7 and item.year == 2022:
+                    #     import pdb; pdb.set_trace()
+                                
+
                     if x.rent_paid:
+                        credit = 0.0
+                        if item.rent_due:
+                            if item.rent_due < 0:
+                                cb += item.rent_due
+                                credit += abs(item.rent_due)
+                        credit += x.rent_paid
                         cb -= x.rent_paid
                         datadict = {
                             "month":month,
@@ -5138,7 +5150,7 @@ class TenantStatementThree(Resource):
                             "desc":f" Rent payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":x.rent_paid,
+                            "credit":f'{credit:,.1f}',
                             "balance":cb
                         }
                         main.append(datadict)
@@ -5281,9 +5293,12 @@ class TenantStatementFour(Resource):
             if tenant_id.startswith("ptnt"):
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
                 house_obj = tenant_obj.house
+                prop = house_obj.apartment.name
             else:
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
                 house_obj = check_house_occupied(tenant_obj)[1]
+                prop = house_obj.apartment.name
+
 
 
             begin_date = tenant_obj.date
@@ -5471,16 +5486,16 @@ class TenantStatementFour(Resource):
                         }
                         main.append(datadict)
 
-                if item.rent_due:
-                    if item.rent_due < 0:
-                        cb += item.rent_due
+                if item.rent_balance:
+                    if item.rent_balance < 0:
+                        cb += item.rent_balance
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
                             "desc":f" rent advance payment",
                             "ref":f'{item.id}',
                             "debit":"",
-                            "credit":item.rent_due,
+                            "credit":f'{abs(item.rent_balance):,.1f}',
                             "balance":cb
                         }
                         main.append(datadict)
@@ -5630,7 +5645,26 @@ class TenantStatementFour(Resource):
                     # import pdb;
                     # pdb.set_trace()
 
+                    # if x.rent_paid:
+                    #     cb -= x.rent_paid
+                    #     datadict = {
+                    #         "month":month,
+                    #         "date":paydate,
+                    #         "desc":f" Rent payment",
+                    #         "ref":x.ref_number,
+                    #         "debit":"",
+                    #         "credit":x.rent_paid,
+                    #         "balance":cb
+                    #     }
+                    #     main.append(datadict)
+
                     if x.rent_paid:
+                        credit = 0.0
+                        if item.rent_due:
+                            if item.rent_due < 0:
+                                cb += item.rent_due
+                                credit += abs(item.rent_due)
+                        credit += x.rent_paid
                         cb -= x.rent_paid
                         datadict = {
                             "month":month,
@@ -5638,7 +5672,7 @@ class TenantStatementFour(Resource):
                             "desc":f" Rent payment",
                             "ref":x.ref_number,
                             "debit":"",
-                            "credit":x.rent_paid,
+                            "credit":f'{credit:,.1f}',
                             "balance":cb
                         }
                         main.append(datadict)
@@ -5698,7 +5732,7 @@ class TenantStatementFour(Resource):
                 period = generate_date(item.month,item.year)
 
                 datadict = {
-                    # "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
+                    "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
                     "month":f'<span class="text-muted">Closing balance</span>',
                     "date":"",
                     "desc":"",
@@ -5707,9 +5741,9 @@ class TenantStatementFour(Resource):
                     "credit":"",
                     "balance":f'<span class="font-weight-bold">{cb}</span>'
                 }
-                # main.append(datadict)
+                main.append(datadict)
                 datadict2 = {
-                    # "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
+                    "month":f'<span class="font-weight-bold">End of {period.strftime("%B/%y")}</span>',
                     "month":"",
                     "date":"",
                     "desc":"",
@@ -5718,7 +5752,7 @@ class TenantStatementFour(Resource):
                     "credit":"",
                     "balance":"`"
                 }
-                # main.append(datadict2)
+                main.append(datadict2)
 
                 
         ########################################################

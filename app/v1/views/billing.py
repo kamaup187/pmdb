@@ -2178,7 +2178,8 @@ class ReceivePayment(Resource):
 
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
 
-                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                    # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                    if crm(current_user):
                         bill = tenant_obj.monthly_charges[0]
                     else:
                         bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
@@ -2324,7 +2325,8 @@ class ReceivePayment(Resource):
             
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
 
-                    if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                    # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+                    if crm(current_user):
                         bill = tenant_obj.monthly_charges[0]
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
@@ -2636,7 +2638,8 @@ class ReceivePayment(Resource):
         # monthly_charges = house_obj.monthlybills
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-            if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            if crm(current_user):
                 specific_charge_obj = tenant_obj.monthly_charges[0]
             else:
                 specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
@@ -2645,7 +2648,8 @@ class ReceivePayment(Resource):
 
         schedule_obj = None
 
-        if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+        # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+        if crm(current_user):
             print("GONE TO PAY AVIV")
             schedule_objs = tenant_obj.schedules
             for sch in schedule_objs:

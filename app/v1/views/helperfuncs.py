@@ -6047,7 +6047,9 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
 
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-            if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
+            user_obj = UserOp.fetch_user_by_id(userid)
+            if crm(user_obj):
                 try:
                     bill = tenant_obj.monthly_charges[0]
                 except:
@@ -7850,7 +7852,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         c_charge = bill
                 
                 if c_charge:
-                    if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+                    # if apartment_obj.company.name == "REVER MWIMUTO LIMITED":
+                    if apartment_obj.company.ctype == "crm":
                         continue
                     print("specific charge found for HOUSE",house)
 

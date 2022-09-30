@@ -298,7 +298,7 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
-            cocc = CompanyOp.fetch_company_by_name("Lymax Properties")
+            cocc = CompanyOp.fetch_company_by_name("Greatwall ")
             if cocc:
                 CompanyOp.update_sms_provider(cocc,"Advanta")
 

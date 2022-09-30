@@ -711,6 +711,8 @@ def logo(co):
             letterhead = "../static/img/logos/astrol/letterhead.jpg"
 
         elif str_name_company == "Denvic Property Managers":
+            coc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
+            CompanyOp.update_sms_provider(coc,"Advantah")
             ##################################################
             logopath = "../static/img/logos/denvic/l-logo.png"
             mobilelogopath = "../static/img/logos/denvic/s-logo.png"
@@ -3601,7 +3603,7 @@ def send_bulk_sms(propid,temp_txt):
 
         own_shortcode = False
 
-        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 2":
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 22":
             own_shortcode = True
 
         raw_rem_sms =co.remainingsms
@@ -3635,7 +3637,7 @@ def send_bulk_sms(propid,temp_txt):
                     sms_obj.save()
 
 
-                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 22":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":

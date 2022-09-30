@@ -3588,7 +3588,8 @@ def send_bulk_sms(propid,temp_txt):
 
         prop = tenant_obj.apartment
         co = prop.company
-        str_co = co.name
+        # str_co = co.name
+        str_co = ""
 
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":

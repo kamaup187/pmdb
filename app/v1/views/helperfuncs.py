@@ -712,7 +712,7 @@ def logo(co):
 
         elif str_name_company == "Denvic Property Managers":
             coc = CompanyOp.fetch_company_by_name("Denvic Property Managers")
-            CompanyOp.update_sms_provider(coc,"Advantah")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/denvic/l-logo.png"
             mobilelogopath = "../static/img/logos/denvic/s-logo.png"
@@ -871,7 +871,8 @@ def sms_sender(company,sms_text,phonenum):
 
     #########################################################################################
     else:
-        report = None
+        # report = None
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
         
     if report:
         param1 = report["apikey"]
@@ -3603,10 +3604,10 @@ def send_bulk_sms(propid,temp_txt):
 
         own_shortcode = False
 
-        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 22":
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 2":
             own_shortcode = True
 
-        raw_rem_sms =co.remainingsms
+        raw_rem_sms = co.remainingsms
         if tenant_obj.sms:
 
             if raw_rem_sms > 0 or own_shortcode:
@@ -4881,7 +4882,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,None,tenant.id,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            if co.sms_provider == "Advanta":
+                            # if co.sms_provider == "Advanta":
+                            allowed = True
+                            if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
                                 if smsid:
                                     MonthlyChargeOp.update_smsid(bill,smsid)
@@ -5014,7 +5017,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,None,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            if co.sms_provider == "Advanta":
+                            # if co.sms_provider == "Advanta":
+                            allowed = True
+                            if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
                                 if smsid:
                                     MonthlyChargeOp.update_smsid(bill,smsid)

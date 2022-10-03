@@ -3808,7 +3808,7 @@ class ExternalDetail(Resource):
             month_list = generate_month_list()
             return Response(render_template(
                 'report_external_detailed.html',
-                tenantlist=[],
+                co=current_user.company,
                 prop_obj=None,
                 props=apartment_list,
                 month_list=month_list,
@@ -4155,7 +4155,7 @@ class ExternalDetail(Resource):
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
-            company=current_user.company,
+            co=current_user.company,
             billids = get_obj_ids(detailed_bills),
             name=current_user.name))
 

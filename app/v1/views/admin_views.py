@@ -666,7 +666,7 @@ class AllProperties(Resource):
                     'editid':"edit"+str(prop.id),
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
-                    'owner':prop.owner.name,
+                    'owner':prop.landlord if prop.landlord else "not set",
                     'company':prop.company.name if prop.company else "N/A",
                     'houses':houses,
                     'tenants':tenants,

@@ -771,6 +771,12 @@ class AllProperties(Resource):
             landlord = request.form.get("landlord")
             region = request.form.get("region")
 
+            bank = request.form.get("landlordbank")
+            accname = request.form.get("landlordaccname")
+            accno = request.form.get("landlordaccno")
+
+            print(">>>>",bank,accname,accno)
+
             location = LocationOp.fetch_location(region.title())
             if region:
                 if not location:
@@ -783,6 +789,7 @@ class AllProperties(Resource):
                 location_id = None
 
             ApartmentOp.update_landlord_and_estate(prop,landlord,location_id)
+            ApartmentOp.update_landlord_bank_details(prop,bank,accname,accno)
 
             return "Updated successfully" + proceed
 

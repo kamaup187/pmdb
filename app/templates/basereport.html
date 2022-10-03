@@ -63,7 +63,9 @@
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: 'Times New Roman', serif;
   }
-  
+  .scroll-hidden{
+      overflow-x: hidden !important; /* Hide scrollbars */
+    }
   .navbar-dr {
     overflow: hidden;
     background-color: #333;
@@ -171,9 +173,6 @@
   } );
   </script>
 
-<span id="edit_bill_identifier" class="dispnone"></span>
-<span id="collapseid" class="dispnone">{{propname}}</span>
-<!-- <span id="orientation" class="dispnone">{{paging}}</span> -->
 </head>
 
 <body>
@@ -271,7 +270,7 @@
 
             <div class="navbar-dr noprint">
               <div class="dropdown-dr">
-                <button class="dropbtn">Invoice statement 
+                <button class="dropbtn">Landlord statements 
                   <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
@@ -279,6 +278,9 @@
                   <a href="/water/statement">Water statement</a>
                   <a href="/garbage/statement">Garbage fee statement</a>
                   <a href="/service/statement">Service charge statement</a>
+
+                  <a href="/external/detailed">Landlord statement II</a>
+
 
 
                   <a href="/combined/report">Combined report</a>
@@ -324,7 +326,7 @@
                 </button>
                 <div class="dropdown-content">
                   <a href="/st/one">Statement 1</a>
-                  <a href="#">Statement 2</a>
+                  <a href="/service/statement">Old report format</a>
 
                 </div>
               </div> 
@@ -366,6 +368,133 @@
 <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
 
+
+<script>
+  $("#editBillModal").on('shown.bs.modal', function(){
+    $("#editbill").removeClass("dispnone");
+    $("#billeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editsummary') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text()
+          },
+      success: function(response) {
+        $("#billeditbed").html(response);
+      },
+      error: function(xhr) {
+        $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
+        $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $('#editBillModal').on('hidden.bs.modal', function () {
+    $("#edit_bill_identifier").empty();
+})
+</script>
+
+
+<script>
+  $("#editbill").click(function(){   
+
+    var cb22 = document.getElementById("delinv");
+      if (cb22.checked){
+        var delinv = "True";
+      }else{
+        var delinv = "False";
+      }
+    $("#editbill").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editsummary') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                rent: $("#edit_rent").val(),
+                water: $("#edit_water").val(),
+                deposit: $("#edit_deposit").val(),
+                arrears: $("#edit_arrears").val(),
+                paid: $("#edit_paid").val(),
+                delinv:delinv
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#closeModal").click();
+            $("#editbill").html("Update")
+          }, 2000);
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#ll-submit").click(function(){   
+
+      $.ajax({
+        url: "/update/propinfo",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                period: $("#ll-period").val(),
+                category: $("#ll-category").val(),
+                arrears: $("#ll-arrears").val(),
+                desc: $("#ll-desc").val(),
+                target:"set llbal"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
+        }
+      });
+  });
+</script>
+
+
+
+<script>
+  $("#remit").click(function(){   
+
+    // alert($("#deposit-amount").val().replace(/,/g, ''))
+
+      $.ajax({
+        url: "/remit/data",
+        type: "POST",
+        data: {
+                month: $("#ll-period").val(),
+                propid: $("#prop-code").val(),
+                prop:$("#prop-name").val(),
+                landlord: $("#landlord-name").val(),
+                tntbbf:$("#tnt-bbf").val().replace(/,/g, ''),
+                mrent:$("#monthly-rent").val().replace(/,/g, ''),
+                expected:$("#total-due").val().replace(/,/g, ''),
+                actual:$("#total-paid").val().replace(/,/g, ''),
+                tntbbf:$("#tnt-bbf").val().replace(/,/g, ''), 
+                ratio: $("#percentage-ratio").val().replace(/,/g, '').replace(/' '/g, '').replace(/%/g, ''),
+                expenses: $("#expenses-amount").val().replace(/,/g, ''),  
+                deposit:$("#deposit-amount").val().replace(/,/g, ''), 
+                utilities:$("#utilities-amount").val().replace(/,/g, ''), 
+                commission:$("#commission-amount").val().replace(/,/g, ''),
+                llbbf:$("#ll-bbf").val().replace(/,/g, ''), 
+                payable:$("#net-pay").val().replace(/,/g, ''),
+                paid:$("#remit-amount").val().replace(/,/g, ''), 
+                llbcf:$("#ll-bcf").val().replace(/,/g, ''),
+                agent:$("#agent-username").val()
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          location.reload();
+        }
+      });
+  });
+</script>
 
 
 <script>

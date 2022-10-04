@@ -134,8 +134,8 @@ class Index(Resource):
         #     func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
         # )
 
-        # if current_user.company.name == "REVER MWIMUTO LIMITED" or current_user.company.name == "Demo Company Two":
-        #     CompanyOp.update_ctype(current_user.company,"crm")
+        if current_user.company.name == "Litala":
+            CompanyOp.update_ctype(current_user.company,"crm")
 
         
 

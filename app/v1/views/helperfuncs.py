@@ -5022,7 +5022,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj.save()
 
                             # if co.sms_provider == "Advanta":
-                            if co.name.lower() == "rhino park place":
+                            if co.name.lower() == "rhino park place" or co.name.lower() == "test agencies":
                                 allowed = False
                             else:
                                 allowed = True

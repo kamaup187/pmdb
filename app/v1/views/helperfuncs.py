@@ -886,7 +886,7 @@ def sms_sender(company,sms_text,phonenum):
 
         CompanyOp.set_rem_quota(co,rem_sms)
 
-        jb = q.enqueue_in(timedelta(seconds=60), advanta_sms_delivery, args=(param1,param2,param3,))
+        jb = q.enqueue_in(timedelta(seconds=300), advanta_sms_delivery, args=(param1,param2,param3,))
         return param3
     else:
         print("NO REPORT TO CHECK")

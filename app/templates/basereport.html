@@ -26,6 +26,8 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='buttons.css') }}">
+
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
   <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script> -->
@@ -369,6 +371,13 @@
 <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
 
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> -->
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script> -->
+
 
 <script>
   $("#editBillModal").on('shown.bs.modal', function(){
@@ -538,8 +547,18 @@ if ($("#statement").text() == "tenant statement3") {
     $("#reportbtns").addClass("dispnone")
 
     $('#dataTable').DataTable({
+      dom: '<"dt-buttons"Bf><"clear">lirtp',
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,
+      autoWidth: true,
+      buttons: [
+        "colvis",
+        "copyHtml5",
+        "csvHtml5",
+        "excelHtml5",
+        "pdfHtml5",
+        "print"
+      ],
       // "bPaginate": false, //hide pagination control
       // "bFilter": false, //hide filter control
       // "searching":false,

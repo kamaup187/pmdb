@@ -8,6 +8,7 @@
     
 # from ast import Pass
 # from mimetypes import init
+from multiprocessing import allow_connection_pickling
 import os
 # from pickle import TRUE
 # from africastalking import initialize
@@ -3637,8 +3638,9 @@ def send_bulk_sms(propid,temp_txt):
                     sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
-
-                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 22":
+                    allowed = True
+                    if allowed:
+                    # if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":
@@ -3747,7 +3749,9 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     sms_obj.save()
 
 
-                    if co.sms_provider == "Advanta":
+                    # if co.sms_provider == "Advanta":
+                    allowed = True
+                    if allowed:
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":
@@ -5018,7 +5022,11 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj.save()
 
                             # if co.sms_provider == "Advanta":
-                            allowed = True
+                            if co.name.lower() == "rhino park place":
+                                allowed = False
+                            else:
+                                allowed = True
+
                             if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
                                 if smsid:

@@ -180,6 +180,8 @@ api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
 api.add_resource(AgentWallet,"/api/agent/account/<int:id_number>")
 api.add_resource(AgentWithdrawal,"/api/agent/withdraw/request")
 api.add_resource(AgentWithdrawalConfirmation,"/api/ins/agent/withdraw/confirm")
+api.add_resource(HouseData,"/api/unit/data/<string:unit_number>")
+
 
 
 #bank urls

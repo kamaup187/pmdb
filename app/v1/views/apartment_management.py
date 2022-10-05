@@ -7603,6 +7603,79 @@ class ContactManagement(Resource):
             txt_obj = InternalMessagesOp(title,txt,tenant_id,apartment_id)
             txt_obj.save()
 
+class HouseData(Resource):
+    def get(self,unit_number):
+        try:
+            house_obj = HouseOp.fetch_house(unit_number)
+            tenant_obj = None
+            if house_obj:
+                check = check_occupancy(house_obj)
+                if check[0] == "occupied":
+                    tenant_obj = check[1]
+
+                if tenant_obj:
+                    try:
+                        fname = tenant_obj.name.split(' ')[0]
+                    except:
+                        fname = "Unnamed"
+
+                    try:
+                        lname = tenant_obj.name.split(' ')[1]
+                    except:
+                        lname = "Unnamed"
+
+                    try:
+                        deposit = tenant_obj.deposits.total
+                    except:
+                        deposit = 0.0
+
+
+                    payload = {
+                        "success":"true",
+                        "message":"success",
+                        'unit_id':unit_number,
+                        'occupied':"true",
+                        "tenant_details":{
+                            "first_name":fname,
+                            "last_name":lname,
+                            "unit_number":unit_number,
+                            "phone_number":tenant_obj.phone,
+                            "check_in":tenant_obj.date.strftime("%m-%d-%Y, %H:%M:%S"),
+                            "deposit":deposit,
+                            "id":tenant_obj.national_id
+                            }
+                        }
+                else:
+                    payload = {
+                        "success":"true",
+                        "message":"success",
+                        'unit_id':unit_number,
+                        'occupied':"false",
+                        "tenant_details":{}
+                        }
+
+            else:
+                payload = {
+                    "success":"true",
+                    "message":"unit not found",
+                    'unit_id':unit_number,
+                    'occupied':"",
+                    "tenant_details":{}
+                    }
+
+        except:
+            payload = {
+                "success":"false",
+                "message":f"unit number {unit_number} format error",
+                'unit_id':unit_number,
+                'occupied':"",
+                "tenant_details":{}
+                }
+
+        return payload
+
+
+
 
 
 

@@ -128,6 +128,13 @@ class Index(Resource):
     def get(self):
 
         coss = CompanyOp.fetch_all_companies()
+        for t in coss:
+            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "DEMO COMPANY 2":
+                CompanyOp.update_ctype(current_user.company,"crm")
+            else:
+                CompanyOp.update_ctype(current_user.company,"noncrm")
+
+
         print(len(coss)," companies found")
 
         # job8 = q.enqueue_call(
@@ -138,7 +145,7 @@ class Index(Resource):
         #     CompanyOp.update_ctype(current_user.company,"crm")
 
 
-        CompanyOp.update_ctype(current_user.company,"crm")
+        # CompanyOp.update_ctype(current_user.company,"crm")
 
 
         # ccm = ApartmentOp.fetch_apartment_by_id(584)

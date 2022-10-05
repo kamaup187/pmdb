@@ -130,9 +130,9 @@ class Index(Resource):
         coss = CompanyOp.fetch_all_companies()
         for t in coss:
             if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "DEMO COMPANY 2":
-                CompanyOp.update_ctype(current_user.company,"crm")
+                CompanyOp.update_ctype(t,"crm")
             else:
-                CompanyOp.update_ctype(current_user.company,"noncrm")
+                CompanyOp.update_ctype(t,"noncrm")
 
 
         print(len(coss)," companies found")

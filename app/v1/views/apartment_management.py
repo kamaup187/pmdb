@@ -7605,8 +7605,14 @@ class ContactManagement(Resource):
 
 class HouseData(Resource):
     def get(self,unit_number):
+        props = current_user.company.props
+        raw_units = []
+        for prop in props:
+            raw_units.append(prop.houses)
+        units = flatten(raw_units)
+
         try:
-            house_obj = HouseOp.fetch_house(unit_number)
+            house_obj = get_specific_house_obj_alt(units,unit_number)
             tenant_obj = None
             if house_obj:
                 check = check_occupancy(house_obj)

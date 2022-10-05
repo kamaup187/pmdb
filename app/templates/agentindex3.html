@@ -1217,6 +1217,36 @@
         </div>
       </div>
 
+      <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-kubwa" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 pt-2 text-center bg-light">
+              <h5 class="modal-title text-info divjust-end underline-thin-fade">
+                <span class="mr-3 smallify font-weight-bold">My profile</span>
+                <div>
+                  <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+                </div>
+              </h5>
+              <div class="alert-msgs font-weight-bold"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+    
+                      <div id="profileModalBed"></div>
+    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="text-center">
         <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg" role="document">
@@ -1957,6 +1987,34 @@
       $('.dataTables_length').addClass('bs-select');
     });
   </script>
+
+<script>
+    $("#profileModal").on('shown.bs.modal', function(){
+  
+      $.ajax({
+        url: "{{ url_for('api.updateuser') }}",
+        type: "get",
+        data: {
+          userid:  $("#edit_user_identifier").text(),
+          target:"self profile"
+        },
+        success: function(response) {
+          $("#profileModalBed").html(response); 
+        }
+      });
+  
+    });
+  </script>
+  
+  
+  <script>
+    $("#profileModal").on('hidden.bs.modal', function(){
+  
+      $("#profileModalBed").html("loading"); 
+  
+    });
+  
+   </script>
 
 
 <!-- <script>

@@ -246,6 +246,14 @@ class CompanyUserGroupOp(CompanyUserGroup,Base):
 
     def view_users(self):
         return self.users
+
+    def view(self):
+        return {
+            "id": self.id,
+            "delid": "delg" + str(self.id),
+            "name": self.name,
+            "users": len(self.users)
+        }
    
 class ShortcodeOp(Shortcode,Base):
     """class to house company user groups"""

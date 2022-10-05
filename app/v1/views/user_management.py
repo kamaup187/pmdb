@@ -222,7 +222,100 @@ class ModifyAccessRight(Resource):
             flash(msg,"fail")
         return redirect(url_for('api.modifyaccessright'))
 
+class CompanyGroup(Resource):
+    # def get(self):
+    #     co = current_user.company
+    #     groups = co.groups
+    #     groupitems = []
+    #     for g in groups:
+    #         groupitems.append(CompanyUserGroupOp.view(g))
 
+    #     groupids = get_obj_ids(groupitems)
+
+    #     return render_template(
+    #         "ajax_grouplist.html",
+    #         groupids=groupids,
+    #         groupitems=groupitems
+    #         )
+
+    def post(self):
+        co = current_user.company
+        groupitems = []
+
+        target = request.form.get('target')
+        groupid = request.form.get('groupid')
+
+        print("Posting",target,"iddd",groupid)
+        if target == "add group":
+            target_group = request.form.get('group')
+            if target_group:
+                group = target_group.title()
+                existing_group = CompanyUserGroupOp.fetch_usergroup_by_name(group)
+                if existing_group:
+
+                    for g in co.groups:
+                        groupitems.append(CompanyUserGroupOp.view(g))
+
+                    return [render_template(
+                        "ajax_grouplist.html",
+                        groupids=get_obj_ids(groupitems),
+                        groupitems=groupitems
+                        ), err + "group already exists"]
+                    
+                else:
+                    group_obj = CompanyUserGroupOp(group,"",current_user.company.id)
+                    group_obj.save()
+
+                    
+                    for g in co.groups:
+                        groupitems.append(CompanyUserGroupOp.view(g))
+
+                    return [render_template(
+                        "ajax_grouplist.html",
+                        groupids=get_obj_ids(groupitems),
+                        groupitems=groupitems
+                        ), proceed + "group successfully added"]
+
+
+        elif target == "delete group":
+            if groupid:
+                group = get_identifier(groupid)
+                existing_group = CompanyUserGroupOp.fetch_usergroup_by_id(group)
+                if existing_group:
+                    if existing_group.users:
+
+                        for g in co.groups:
+                            groupitems.append(CompanyUserGroupOp.view(g))
+
+                        return [render_template(
+                            "ajax_grouplist.html",
+                            groupids=get_obj_ids(groupitems),
+                            groupitems=groupitems
+                            ), err + "Group is in use by users in the organization"]
+                        
+                    else:
+                        CompanyUserGroupOp.delete(existing_group)
+
+                        for g in co.groups:
+                            groupitems.append(CompanyUserGroupOp.view(g))
+
+                        return [render_template(
+                            "ajax_grouplist.html",
+                            groupids=get_obj_ids(groupitems),
+                            groupitems=groupitems
+                            ), proceed + "Group deleted successfully"]
+                else:
+
+                    for g in co.groups:
+                        groupitems.append(CompanyUserGroupOp.view(g))
+
+                    return [render_template(
+                        "ajax_grouplist.html",
+                        groupids=get_obj_ids(groupitems),
+                        groupitems=groupitems
+                        ), err + "group does not exist"]
+                                        
+                
 class Users(Resource):
     """class"""
     @login_required
@@ -363,8 +456,18 @@ class Users(Resource):
 
             userids = get_obj_ids(user_data_alt)
 
+            co = current_user.company
+            groups = co.groups
+            groupitems = []
+            for g in groups:
+                groupitems.append(CompanyUserGroupOp.view(g))
+
+            groupids = get_obj_ids(groupitems)
+
             return render_template(
                 "ajax_users.html",
+                groupids=groupids,
+                groupitems=groupitems,
                 userids=userids,
                 items=user_data_alt
                 )

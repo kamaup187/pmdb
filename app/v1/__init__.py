@@ -23,6 +23,7 @@ api.add_resource(LandingPage,"/")
 api.add_resource(DbInitializer,"/restricted")
 api.add_resource(RegisterUserGroup,"/add/usergroup")
 api.add_resource(DeleteUserGroup,"/remove/usergroup")
+api.add_resource(CompanyGroup,"/company/group")
 api.add_resource(Users,"/users")
 api.add_resource(RegisterUser,"/add/user")
 api.add_resource(SignUpCategory,"/signup")
@@ -180,7 +181,7 @@ api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
 api.add_resource(AgentWallet,"/api/agent/account/<int:id_number>")
 api.add_resource(AgentWithdrawal,"/api/agent/withdraw/request")
 api.add_resource(AgentWithdrawalConfirmation,"/api/ins/agent/withdraw/confirm")
-api.add_resource(HouseData,"/api/unit/data/<string:unit_number>")
+api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>")
 
 
 

@@ -1,0 +1,82 @@
+
+
+      <table id="groupData" class="table shadow mb-1" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="text-info font-weight-bold">Name</th>
+
+            <th class="text-info font-weight-bold">No. of users</th>
+
+            <th class="text-info track-title-cell">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in groupitems%}
+          <tr>
+            <td class="data-cell text-primary font-weight-bold h5">{{ item['name'] }}</td>
+   
+            <td class="data-cell">{{ item['users'] }}</td>
+
+            <td class="data-cell">
+              <div>
+                <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#groupData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+  var groupIds = "{{ groupids|safe }}";
+  var ids = groupIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_group_identifier").html(item)
+
+          $.ajax({
+                  url: "/company/group",
+                  type: "POST",
+                  data: {
+                    groupid: $("#del_group_identifier").text(),
+                    target: "delete group"
+                  },
+                  success: function(response) {
+                    $(".alert-msgs").html(response[1]);
+                    $("#group-data").html(response[0]);
+
+                    setTimeout(function () {
+                      $(".alert-msgs").empty();
+                      $(".reset").click();
+                    }, 2500);
+                  }
+                });
+
+        }else{
+          $("#edit_group_identifier").html(item)
+        }
+        
+      }else{
+        $("#group_identifier").html(item)
+      }
+    });
+  });
+</script>

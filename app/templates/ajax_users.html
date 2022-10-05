@@ -5,6 +5,8 @@
       <span id="user_identifier" class="dispnone"></span>
       <span id="edit_user_identifier" class="dispnone"></span>
       <span id="del_user_identifier" class="dispnone"></span>
+      <span id="del_group_identifier" class="dispnone"></span>
+
 
 
         <!-- <div class="row no-padding">
@@ -34,7 +36,7 @@
                 <i class="me-1" data-feather="users"></i>
                 Add New User
               </span>
-              <span class="btn btn-sm btn-light text-black">
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addgroupModal">
                 <i class="me-1" data-feather="user-plus"></i>
                 Manage Groups
               </span>
@@ -263,11 +265,155 @@
 
 
 
+    <div class="modal fade" id="addgroupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify font-weight-bold">Add new group</span>
+              <div>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs font-weight-bold"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body">
+  
+                        <!-- Account details card-->
+                        <div class="card mb-4">
+                            <div class="card-header">Group info</div>
+                            <div class="card-body">
+                                <form autocomplete="off">
+                                    <!-- Form Row-->
+  
+                                    <div class="row gx-3 mb-3">
+                                      <!-- Form Group (first name)-->
+                                      <div class="col-md-6">
+                                          <label class="small mb-1" for="inputgroupName">Name</label>
+                                          <!-- <span id="idResp" class="ml-3"></span> -->
+        
+                                          <input class="form-control" id="inputgroupName" type="text" placeholder="Enter group name"/>
+                                      </div>
+                                      <!-- Form Group (last name)-->
+                                      <div class="col-md-6">
+                                          <label class="small mb-1" for="inputgroupDesc">Description (optional)</label>
+                                          <!-- <span id="emailResp" class="ml-3"></span> -->
+        
+                                          <input class="form-control" id="inputgroupDesc" type="text" placeholder="Short escription" />
+                                      </div>
+                                  </div>
+        
+                                    <!-- Submit button-->
+                                    <div class="text-center">
+                                        <button class="reset btn btn-primary dispnone" type="reset"></button>
+                                        <button id="savegroup" class="btn btn-primary" type="button">save</button>
+                                    </div>
+                                </form>
+                            </div>
+  
+                            <div class="col-lg-12 no-padding">
+                              <div id="group-data" class="table-responsive">
+                                <table id="groupData" class="table shadow mb-1" width="100%" cellspacing="0">
+                                  <thead>
+                                    <tr>
+                                      <th class="text-info font-weight-bold">Name</th>
+                          
+                                      <th class="text-info font-weight-bold">No. of users</th>
+                          
+                                      <th class="text-info track-title-cell">Remove</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for item in groupitems%}
+                                    <tr>
+                                      <td class="data-cell text-primary font-weight-bold h5">{{ item['name'] }}</td>
+                             
+                                      <td class="data-cell">{{ item['users'] }}</td>
+                          
+                                      <td class="data-cell">
+                                        <div>
+                                          <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  {% endfor %}
+                                  </tbody>
+                              </table>
+                              </div>
+                          </div>
+                        </div>
+                    
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#groupData').DataTable({
+          "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+          "pageLength": 100,
+          "searching":false,
+          "bLengthChange": false
+        });
+        $('.dataTables_length').addClass('bs-select');
+        });
+  </script>
+  
+  <script>
+    var groupIds = "{{ groupids|safe }}";
+    var ids = groupIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_group_identifier").html(item)
 
 
+            $.ajax({
+                  url: "/company/group",
+                  type: "POST",
+                  data: {
+                    groupid: $("#del_group_identifier").text(),
+                    target: "delete group"
+                  },
+                  success: function(response) {
+                    $(".alert-msgs").html(response[1]);
+                    $("#group-data").html(response[0]);
+
+                    setTimeout(function () {
+                      $(".alert-msgs").empty();
+                      $(".reset").click();
+                    }, 2500);
+                  }
+                });
+
+
+          }else{
+            $("#edit_group_identifier").html(item)
+          }
+          
+        }else{
+          $("#group_identifier").html(item)
+        }
+      });
+    });
+  </script>
 
 
 
@@ -370,6 +516,32 @@
 
   });
 </script>
+
+
+<script>
+  $("#savegroup").click(function(){
+
+      $.ajax({
+        url: "/company/group",
+        type: "POST",
+        data: {
+          group: $("#inputgroupName").val(),
+          target: "add group"
+        },
+        success: function (response) {
+          $(".alert-msgs").html(response[1]);
+          $("#group-data").html(response[0]);
+
+          setTimeout(function () {
+            $(".alert-msgs").empty();
+            $(".reset").click();
+          }, 2500);
+        }
+      });
+
+    })
+
+  </script>
 
 
 

@@ -134,10 +134,12 @@ class Index(Resource):
         #     func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
         # )
 
-        if current_user.company.name == "Litala":
-            CompanyOp.update_ctype(current_user.company,"crm")
+        # if current_user.company.name == "Litala":
+        #     CompanyOp.update_ctype(current_user.company,"crm")
 
-        
+
+        CompanyOp.update_ctype(current_user.company,"crm")
+
 
         # ccm = ApartmentOp.fetch_apartment_by_id(584)
         # hq = ccm.houses
@@ -7604,79 +7606,89 @@ class ContactManagement(Resource):
             txt_obj.save()
 
 class HouseData(Resource):
-    def get(self,unit_number):
-        props = current_user.company.props
-        raw_units = []
-        for prop in props:
-            raw_units.append(prop.houses)
-        units = flatten(raw_units)
-
-        try:
-            house_obj = get_specific_house_obj_alt(units,unit_number)
-            tenant_obj = None
-            if house_obj:
-                check = check_occupancy(house_obj)
-                if check[0] == "occupied":
-                    tenant_obj = check[1]
-
-                if tenant_obj:
-                    try:
-                        fname = tenant_obj.name.split(' ')[0]
-                    except:
-                        fname = "Unnamed"
-
-                    try:
-                        lname = tenant_obj.name.split(' ')[1]
-                    except:
-                        lname = "Unnamed"
-
-                    try:
-                        deposit = tenant_obj.deposits.total
-                    except:
-                        deposit = 0.0
-
-
-                    payload = {
-                        "success":"true",
-                        "message":"success",
-                        'unit_id':unit_number,
-                        'occupied':"true",
-                        "tenant_details":{
-                            "first_name":fname,
-                            "last_name":lname,
-                            "unit_number":unit_number,
-                            "phone_number":tenant_obj.phone,
-                            "check_in":tenant_obj.date.strftime("%m-%d-%Y, %H:%M:%S"),
-                            "deposit":deposit,
-                            "id":tenant_obj.national_id
-                            }
-                        }
-                else:
-                    payload = {
-                        "success":"true",
-                        "message":"success",
-                        'unit_id':unit_number,
-                        'occupied':"false",
-                        "tenant_details":{}
-                        }
-
-            else:
-                payload = {
-                    "success":"true",
-                    "message":"unit not found",
-                    'unit_id':unit_number,
-                    'occupied':"",
-                    "tenant_details":{}
-                    }
-
-        except:
+    def get(self,user_id,unit_number):
+        user_obj = UserOp.fetch_user_by_national_id(user_id)
+        if not user_obj:
             payload = {
                 "success":"false",
-                "message":f"unit number {unit_number} format error",
+                "message":f"user of {user_id} not found",
                 'unit_id':unit_number,
                 'occupied':"",
                 "tenant_details":{}
                 }
+        else:
+            props = user_obj.company.props
+            raw_units = []
+            for prop in props:
+                raw_units.append(prop.houses)
+            units = flatten(raw_units)
+
+            try:
+                house_obj = get_specific_house_obj_alt(units,unit_number)
+                tenant_obj = None
+                if house_obj:
+                    check = check_occupancy(house_obj)
+                    if check[0] == "occupied":
+                        tenant_obj = check[1]
+
+                    if tenant_obj:
+                        try:
+                            fname = tenant_obj.name.split(' ')[0]
+                        except:
+                            fname = "Unnamed"
+
+                        try:
+                            lname = tenant_obj.name.split(' ')[1]
+                        except:
+                            lname = "Unnamed"
+
+                        try:
+                            deposit = tenant_obj.deposits.total
+                        except:
+                            deposit = 0.0
+
+
+                        payload = {
+                            "success":"true",
+                            "message":"success",
+                            'unit_id':unit_number,
+                            'occupied':"true",
+                            "tenant_details":{
+                                "first_name":fname,
+                                "last_name":lname,
+                                "unit_number":unit_number,
+                                "phone_number":tenant_obj.phone,
+                                "check_in":tenant_obj.date.strftime("%m-%d-%Y, %H:%M:%S"),
+                                "deposit":deposit,
+                                "id":tenant_obj.national_id
+                                }
+                            }
+                    else:
+                        payload = {
+                            "success":"true",
+                            "message":"success",
+                            'unit_id':unit_number,
+                            'occupied':"false",
+                            "tenant_details":{}
+                            }
+
+                else:
+                    payload = {
+                        "success":"true",
+                        "message":"unit not found",
+                        'unit_id':unit_number,
+                        'occupied':"",
+                        "tenant_details":{}
+                        }
+
+            except:
+                payload = {
+                    "success":"false",
+                    "message":f"unit number {unit_number} format error",
+                    'unit_id':unit_number,
+                    'occupied':"",
+                    "tenant_details":{}
+                    }
 
         return payload
 

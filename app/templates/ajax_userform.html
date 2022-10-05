@@ -17,6 +17,36 @@
                         <button class="btn btn-primary" type="button" disabled>Upload new image</button>
                     </div>
                 </div>
+
+                <div class="card mb-4 mb-xl-0 mt-3">
+                    <div class="card-header">Access Levels</div>
+                    <div class="card-body text-center">
+                        <fieldset class="mt-2 mb-2">
+                            <legend class="legend">Select roles:</legend>
+                            <div class="text-left">
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="admin" value="admin">
+                                    <label class="mr-3 me-3 hover-text" for="admin">Admin</label>
+                                  </div>
+                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="edit" value="edit">
+                                    <label class="mr-3 me-3 hover-text" for="edit">Edit</label>
+                                  </div>
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="write" value="write">
+                                    <label class="mr-3 me-3 hover-text" for="write">Add</label>
+                                  </div>
+
+                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="read" value="read">
+                                    <label class="mr-3 me-3 hover-text" for="read">View</label>
+                                  </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
             </div>
             <div class="col-xl-8">
                 <!-- Account details card-->
@@ -89,7 +119,7 @@
                             <div class="mb-3 form-group">
                                 <label class="small mb-1">Group</label>
                                 <select class="form-control" aria-label="Default select example" id="inputUsergroup">
-                                    <option selected disabled>Select a role:</option>
+                                    <option selected disabled>Select group:</option>
                                     <!-- <option disabled selected value> -- none selected -- </option> -->
                                     {% for o in groups %}
                                     <option value="{{ o }}">{{ o }}</option>
@@ -160,6 +190,23 @@
     }
     someFun()
   </script>
+
+
+<script>
+    $(document).ready(function(){
+
+        var str_roles = "{{ roles|safe }}";
+        var roles = str_roles.split`,`.map(x=>x);
+        console.log(roles);
+
+        $.each(roles, function (i, item) {
+
+        $("#"+item).prop("checked", true);
+
+        });
+
+    });
+    </script>
 
 
     <script>
@@ -311,6 +358,12 @@
         let successResponse
         let afterSuccess
 
+        var new_roles = new Array();
+
+        $('input:checkbox[name=rolecheckbox]:checked').each(function () {
+            new_roles.push($(this).val());
+        });
+
         if (target_func == "new"){
             target = "add new user"
             successResponse = "Saved !"
@@ -323,6 +376,8 @@
             afterSuccess = "Update user"
         }
 
+        roles = new_roles.toString()
+
         $.ajax({
         url: baseurl,
         type: "POST",
@@ -334,6 +389,7 @@
             phone:$("#inputTel").val(),
             natid:$("#inputNatid").val(),
             usergroup:$("#inputUsergroup").val(),
+            roles:roles,
             bank:$("#bank").val(),
             bankacc:$("#bankacc").val(),
             pass1: $("#pass1").val(),
@@ -344,6 +400,7 @@
             target:target
             },
         success: function(response) {
+
             $("#workarea").addClass("dispnone")
             $(".alert-msgs").html(response);
             $("#saveprofile").html(successResponse)

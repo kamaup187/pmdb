@@ -13,7 +13,7 @@
             <th class="text-info font-weight-bold">Code</th>
 
             <th class="text-info font-weight-bold">Props</th>
-            <th class="text-info font-weight-bold">Houses</th>
+            <th class="text-info font-weight-bold">Units</th>
 
             <th class="text-info font-weight-bold">Level</th>
 
@@ -21,14 +21,13 @@
             <th class="text-info track-title-cell">Active</th>                    
             <th class="text-info track-title-cell">Date</th>
 
-            <th class="text-info track-title-cell">Edit</th>
             <th class="text-info track-title-cell">Remove</th>
           </tr>
         </thead>
         <tbody>
           {% for item in items%}
           <tr>
-            <td class="data-cell">{{ item['name'] }}</td>
+            <td class="data-cell text-primary font-weight-bold h5" id="{{item['editid']}}" data-toggle="modal" data-target="#profileModal">{{ item['name'] }}</td>
             <td class="data-cell">{{ item['username'] }}</td>
 
             <td class="data-cell">{{ item['tel'] }}</td>
@@ -46,11 +45,11 @@
             <td class="data-cell">{{ item['date_reg'] }}</td>
 
 
-            <td class="data-cell">
+            <!-- <td class="data-cell">
               <div>
                 <span id="{{item['editid']}}" type="button" class="btn-outline-primary ellipsis borderless modalTrigger text-gray-700 " data-toggle="modal" data-target="#profileModal"><i class="fas fa-i-cursor mr-1 text-primary"><span class="text-gray-900">edit</span></i></span>
               </div>
-            </td>
+            </td> -->
             <td class="data-cell">
               <div>
                 <span id="{{item['delid']}}" type="button" class="btn-outline-danger ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteUserModal"><i class="fas fa-trash-alt mr-1 text-danger"><span class="text-gray-900">del</span></i></span>

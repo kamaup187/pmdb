@@ -1,10 +1,20 @@
 {% for prop in propboxes %}
-<div class="fancy-checkbox-group form-control mb-2 smallify">
+<!-- <div class="fancy-checkbox-group form-control mb-2 smallify">
   <input type="checkbox" name="propcheckbox" id="{{prop.id}}" value="{{prop.id}}">
   <label class="mr-3 me-3 hover-text" for="{{prop.id}}">
     {{prop.name}}
   </label>
   <span id="{{'h'+prop.id|string}}" class="btn btn-light borderless btn-sm">specify houses</span>
+</div> -->
+
+<div class="fancy-checkbox-group form-control mb-2 smallify divjust-end">
+  <div>
+      <input type="checkbox" name="propcheckbox" id="{{prop.id}}" value="{{prop.id}}">
+      <label class="mr-3 me-3 hover-text" for="{{prop.id}}">
+        {{prop.name}}
+      </label>
+  </div>
+  <span id="{{'h'+prop.id|string}}" class="btn btn-light borderless btn-sm">specify units</span>
 </div>
 
 <div id="{{'hbed'+prop.id|string}}" class="ml-4 ms-4 dispnone">

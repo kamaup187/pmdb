@@ -242,9 +242,17 @@ class Users(Resource):
             except:
                 pass
 
+            try:
+                roles = user.roles.split(",")
+            except:
+                roles = []
+
+            # roles = ["admin","read","write","edit"]
+
             return render_template(
                 'ajax_userform.html',
                 groups=usergroup_list,
+                roles=roles,
                 savecontext="Submit",
                 target_func="new",
                 user_status="Active",
@@ -374,6 +382,7 @@ class Users(Resource):
         bank = request.form.get('bank')
         bankacc = request.form.get('bankacc')
         usergroup=request.form.get('usergroup')
+        roles = request.form.get('roles')
 
         status = request.form.get('status')
 
@@ -384,8 +393,6 @@ class Users(Resource):
         allocation = request.form.get('allocation')
 
         alloc = get_bool(allocation)
-
-        print("hey hey",allocation)
 
         if target == "delete user":
             userid = request.form.get("userid")
@@ -443,11 +450,14 @@ class Users(Resource):
                 return err + "user exists"
 
         if national_id and national_id != "None":
-            if len(national_id) < 6:
-                return err + "invalid id"
             user = fetch_user(national_id)
             if user and user.national_id != national_id:
                 return err + "user exists"
+            if len(national_id) < 6:
+                if user:
+                    pass
+                else:
+                    return err + "invalid id"
 
         if pass1:
             validate_pass = ValidatePass.validate_password(pass1,pass2)
@@ -474,6 +484,9 @@ class Users(Resource):
             UserOp.update_user(update_user,name,phone,national_id,email,pass1,user_group_id,company_id,modified_by)
             if bank:
                 UserOp.update_bankdetails(update_user,bank,bankacc)
+
+            if roles:
+                UserOp.update_roles(update_user,roles)
 
             if status:
                 status_bool = get_bool(status)
@@ -1462,11 +1475,19 @@ class UpdateUser(Resource):
         except:
             pass
 
-    
+        try:
+            roles = user.roles.split(",")
+        except:
+            roles = []
+
+        # roles = ["admin","read","write","edit"]
+
+        str_roles = ','.join(map(str, roles))
 
         return Response(render_template(
             'ajax_userform.html',
             groups=usergroup_list,
+            roles=str_roles,
             user_status="Active" if user.active else "Dormant",
             savecontext="Save Changes",
             user=user))

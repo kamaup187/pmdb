@@ -727,6 +727,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/lymax/full-logo.jpg"
             letterhead = "../static/img/logos/lymax/letterhead.jpg"
 
+        elif str_name_company == "Litala":
+            ##################################################
+            logopath = "../static/img/logos/litala/l-logo.png"
+            mobilelogopath = "../static/img/logos/litala/s-logo.png"
+            fulllogopath = "../static/img/logos/litala/full-logo.jpg"
+            letterhead = "../static/img/logos/litala/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
                 ##################################################

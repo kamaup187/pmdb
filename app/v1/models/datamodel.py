@@ -1,3 +1,4 @@
+
 from flask_login import UserMixin
 from app import db
 import datetime
@@ -138,6 +139,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String)
     password = db.Column(db.VARCHAR,nullable=False)
     active = db.Column(db.Boolean,default=True)
+    roles = db.Column(db.VARCHAR,default="None")
 
     bank = db.Column(db.VARCHAR)
     bankacc = db.Column(db.VARCHAR)

@@ -413,6 +413,11 @@ class UserOp(User,Base):
         self.active = status
         db.session.commit()
 
+    def update_roles(self,roles):
+        if roles:
+            self.roles = roles
+        db.session.commit()
+
     def update_link(self,link):
         self.activation_link = link
         db.session.commit()

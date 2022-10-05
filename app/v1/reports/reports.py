@@ -6479,34 +6479,72 @@ class FetchAgents(Resource):
 
 class FetchUsers(Resource):
     def get(self):
-        com_obj = current_user.company
-        users = com_obj.users
+        # com_obj = current_user.company
+        # users = com_obj.users
 
+        # if current_user.username.startswith("qc"):
+        #     kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
+        #     if kw_user:
+        #         users.remove(kw_user)
+
+        # userlist = user_details(users)
+
+
+        # userlist_alt = []
+        # if current_user.username.startswith("qc"):
+        #     kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+        #     if kw_user:
+        #         for i in userlist:
+        #             if i["username"] == kw_user.username:
+        #                 pass
+        #             else:
+        #                 userlist_alt.append(i)
+        #     else:
+        #         userlist_alt = userlist
+        # else:
+        #     userlist_alt = userlist
+
+        # subids = get_obj_ids(userlist_alt)
+
+        users = current_user.company.users
+        allowed_categories = ["Manager","Director"]
+
+        if current_user.username == "admin":
+            users = fetch_all_users()
+        elif current_user.company_user_group.name not in allowed_categories:
+            users = [current_user]
         if current_user.username.startswith("qc"):
-            kw_user = UserOp.fetch_user_by_username("kelvinwanjiku")
-            if kw_user:
-                users.remove(kw_user)
+            users = current_user.company.users
 
-        userlist = user_details(users)
+        user_data = user_details(users)
 
-
-        userlist_alt = []
+        user_data_alt = []
         if current_user.username.startswith("qc"):
-            kw_user = UserOp.fetch_user_by_username("wanjikukelvin")
+            kw_user = UserOp.fetch_user_by_username(KW_USER)
             if kw_user:
-                for i in userlist:
+                print("got it",kw_user.username)
+                for i in user_data:
+                    print("here are ises",i["username"],"and kv_user:",kw_user.username)
                     if i["username"] == kw_user.username:
                         pass
                     else:
-                        userlist_alt.append(i)
+                        user_data_alt.append(i)
             else:
-                userlist_alt = userlist
+                user_data_alt = user_data
         else:
-            userlist_alt = userlist
+            user_data_alt = user_data
+        
 
-        subids = get_obj_ids(userlist_alt)
+        userids = get_obj_ids(user_data_alt)
 
-        return render_template("ajax_userlist.html",items=userlist_alt,userids=subids)
+        # return render_template("ajax_userlist.html",items=userlist_alt,userids=subids)
+
+        return render_template(
+            "ajax_userlist.html",
+            userids=userids,
+            items=user_data_alt
+            )
+
 
 class FetchPayments(Resource):
     @login_required

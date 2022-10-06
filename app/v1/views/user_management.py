@@ -325,6 +325,10 @@ class Users(Resource):
         target = request.args.get('target')
 
         if target == "add user":
+
+            if not permission(current_user,"write"):
+                return err + "insufficient permissions to add a user" 
+
             user = current_user
 
             usergroup_list = user.company.groups
@@ -340,12 +344,13 @@ class Users(Resource):
             except:
                 roles = []
 
+            str_roles = ','.join(map(str, roles))
             # roles = ["admin","read","write","edit"]
 
             return render_template(
                 'ajax_userform.html',
                 groups=usergroup_list,
-                roles=roles,
+                roles=str_roles,
                 savecontext="Submit",
                 target_func="new",
                 user_status="Active",
@@ -588,7 +593,9 @@ class Users(Resource):
             if bank:
                 UserOp.update_bankdetails(update_user,bank,bankacc)
 
-            if roles:
+            if not roles:
+                UserOp.update_roles(update_user,"none")
+            else:
                 UserOp.update_roles(update_user,roles)
 
             if status:
@@ -1560,6 +1567,9 @@ class UpdateUser(Resource):
     @login_required
     def get(self):
         """Handle GET request for this view. Url ---> /update/user"""
+
+        if not permission(current_user,"edit"):
+            return err + "insufficient permissions to edit" 
 
         userid = request.args.get('userid')
 

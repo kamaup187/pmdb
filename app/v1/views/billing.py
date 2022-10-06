@@ -884,6 +884,9 @@ class EditBill(Resource):
     """class"""
     @login_required
     def get(self):
+        if not permission(current_user, 'edit'):
+            return err + "Insufficient permissions to edit invoice"
+
         billid = request.args.get('billid')
         target = request.args.get('target')
 
@@ -1931,6 +1934,9 @@ class ReceivePayment(Resource):
         target = request.args.get("target")
         housecheck = request.args.get("housecheck")
 
+        if not permission(current_user, 'write'):
+            return err + "Insufficient permissions to add payments"
+
 
         propid = get_identifier(prop_id)
 
@@ -2343,6 +2349,7 @@ class ReceivePayment(Resource):
                 # print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
                 # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
                 # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
+
                 return render_template('ajax_bill_breakdown.html',bill=bill)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"

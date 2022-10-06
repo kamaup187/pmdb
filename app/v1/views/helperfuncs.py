@@ -9336,6 +9336,23 @@ def access(current_user):
         if accessright != True:
             return False
         
+def permission(user,param):
+    if user.username.startswith('qc'): #or user.user_group_id == 3 or user.user_group_id == 2:
+        return True
+    # elif user.company_user_group.name == 'Director':
+    #     return True
+    else:
+        print("roles length",len(user.roles),"param",param)
+        if user.roles:
+            roles = user.roles.split(",")
+            if param in roles:
+                return True
+            elif "admin" in roles:
+                return True
+            else:
+                return False
+        else:
+            return True
 
 def run_props(prop,user):
 

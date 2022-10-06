@@ -7465,7 +7465,10 @@ class Results(Resource):
             fieldshow_dep = "dispnone" if not totaldeposit else ""
             fieldshow_arg = "dispnone" if not totalagreement else ""
             fieldshow_fine = "dispnone" if not totalfine else ""
-            fieldshow_arr = "dispnone" if not totalarrears else ""
+
+            # fieldshow_arr = "dispnone" if not totalarrears else ""
+
+            fieldshow_arr = ""
 
             print(totalagreement,fieldshow_arg)
 

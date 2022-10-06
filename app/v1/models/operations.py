@@ -422,8 +422,7 @@ class UserOp(User,Base):
         db.session.commit()
 
     def update_roles(self,roles):
-        if roles:
-            self.roles = roles
+        self.roles = roles
         db.session.commit()
 
     def update_link(self,link):
@@ -3123,6 +3122,28 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             }
         return f'{switcher.get(month)},{year}'
 
+    def calculate_breakdown(self):
+        arrears = self.arrears
+        breaks = 0.0
+
+        breaks += self.booking_balance if self.booking_balance else 0.0
+        breaks += self.instalment_balance if self.instalment_balance else 0.0
+        breaks += self.addfee_balance if self.addfee_balance else 0.0
+        breaks += self.rent_balance if self.rent_balance else 0.0
+        breaks += self.water_balance if self.water_balance else 0.0
+        breaks += self.garbage_balance if self.garbage_balance else 0.0
+        breaks += self.security_balance if self.security_balance else 0.0
+        breaks += self.electricity_balance if self.electricity_balance else 0.0
+        breaks += self.maintenance_balance if self.maintenance_balance else 0.0
+        breaks += self.agreement_balance if self.agreement_balance else 0.0
+        breaks += self.deposit_balance if self.deposit_balance else 0.0
+        breaks += self.penalty_balance if self.penalty_balance else 0.0
+
+        if breaks == arrears:
+            return f"{arrears:,.1f}"
+        else:
+            return f"{arrears:,.1f} **"
+
     def view_detail(self):
         
         return {
@@ -3161,7 +3182,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'deposit':self.deposit,
             'deparg':MonthlyChargeOp.combine_deparg(self),
             'fine':MonthlyChargeOp.fig_format(self.penalty),
-            'arrears':MonthlyChargeOp.fig_format(self.arrears),
+            'arrears':MonthlyChargeOp.calculate_breakdown(self),
             'derrived_arrears':MonthlyChargeOp.derive_arrears(self),
             'total':MonthlyChargeOp.fig_format(self.total_bill),
             'paid':MonthlyChargeOp.fig_format(self.paid_amount),

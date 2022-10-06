@@ -198,12 +198,18 @@
         var str_roles = "{{ roles|safe }}";
         var roles = str_roles.split`,`.map(x=>x);
         console.log(roles);
+        let target_func = $("#func").text()
 
-        $.each(roles, function (i, item) {
+        if (target_func == "new"){
+            // do nothing
+        } else{
+            $.each(roles, function (i, item) {
 
-        $("#"+item).prop("checked", true);
+                $("#"+item).prop("checked", true);
 
-        });
+            });
+        }
+
 
     });
     </script>
@@ -377,6 +383,8 @@
         }
 
         roles = new_roles.toString()
+
+        console.log("herereeeeee",roles)
 
         $.ajax({
         url: baseurl,

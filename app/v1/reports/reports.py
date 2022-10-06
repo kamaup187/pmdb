@@ -6779,9 +6779,9 @@ class FetchPayments(Resource):
 
             tenant_payments = tenant_obj.payments
 
-            filtered_payments = filter_in_recent_data(tenant_payments)
+            # filtered_payments = filter_in_recent_data(tenant_payments)
 
-            actual_payments = fetch_actual_payments(filtered_payments)
+            actual_payments = fetch_actual_payments(tenant_payments)
 
             detailed_payments_list = payment_details(actual_payments)
 

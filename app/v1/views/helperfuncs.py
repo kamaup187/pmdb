@@ -9342,8 +9342,8 @@ def permission(user,param):
     # elif user.company_user_group.name == 'Director':
     #     return True
     else:
-        print("roles length",len(user.roles),"param",param)
         if user.roles:
+            # print("roles length",len(user.roles),"param",param)
             roles = user.roles.split(",")
             if param in roles:
                 return True

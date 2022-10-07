@@ -183,8 +183,6 @@ api.add_resource(AgentWithdrawal,"/api/agent/withdraw/request")
 api.add_resource(AgentWithdrawalConfirmation,"/api/ins/agent/withdraw/confirm")
 api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>")
 
-
-
 #bank urls
 api.add_resource(CallBackUrlEquity,"/nest/payment")
 api.add_resource(CallBackUrlEquityProd,"/promitech/4012401")

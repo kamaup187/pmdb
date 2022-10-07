@@ -4659,6 +4659,9 @@ class CallBackUrlAssetisha(Resource):
             my_json = my_data.decode('utf8').replace("'", '"')
             data = json.loads(my_json)
 
+            msg3 = f"ASSET{data}"
+            res = sms.send(msg3, ["+254716674695"],"KIOTAPAY")
+
             trans_id = data.get('TransID')
             trans_time = data.get('TransTime')
             trans_amnt = data.get('TransAmount')

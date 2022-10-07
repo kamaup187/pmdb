@@ -4688,7 +4688,8 @@ class CallBackUrlAssetisha(Resource):
 
 
         except Exception as e:
-            sms.send("TEST ASSETISHA has error data", ["+254716674695"],"KIOTAPAY")
+            t_error = f"TEST ASSETISHA has error data {e}"
+            sms.send(t_error, ["+254716674695"],"KIOTAPAY")
             response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
 
         resp = jsonify(response)

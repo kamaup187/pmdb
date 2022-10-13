@@ -5,11 +5,11 @@
         <thead class="border-top-info">
             <tr>
               <th class="text-info track-title-cell font-weight-bold ">Name</th>
-              <th class="text-info track-title-cell " data-orderable="false">Tel</th>
-              <th class="text-info track-title-cell " data-orderable="false">Project(s)</th>
-              <th class="text-info track-title-cell " data-orderable="false">Clients</th>
+              <th class="text-info track-title-cell " data-orderable="false">Contact</th>
+              <th class="text-info track-title-cell " data-orderable="false">Leads</th>
               <th class="text-info track-title-cell " data-orderable="false">Proposals</th>
               <th class="text-info track-title-cell " data-orderable="false">Closed deals</th>
+              <th class="text-black " data-orderable="false">Conversion rate</th>
 
               <th class="text-info track-title-cell " data-orderable="false">Commission</th>
 
@@ -23,23 +23,23 @@
             <tr>
               <td class="data-cell">{{ item['name'] }}</td>
               <td class="data-cell ">{{ item['tel'] }}</td>  
-              <td class="data-cell">{{ item['projects'] |safe }}</td>
-              <td class="data-cell">{{ item['clients'] }}</td>
+              <td class="data-cell">{{ item['leads'] }}</td>
               <td class="data-cell">{{ item['proposals'] }}</td>
               <td class="data-cell">{{ item['closed'] }}</td>
 
+              <td class="data-cell text-end">{{ item['crate'] }}</td>
 
               <td class="data-cell"><span class="text-info font-weight-bold">{{ item['comm'] }}</span></td>
 
 
               <td class="text-s data-cell ">
                 <div>
-                  <button id="{{item['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i>Edit</button>
+                  <button id="{{item['editid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i>Edit</button>
                 </div>
               </td>
               <td class="text-s data-cell ">
                 <div>
-                  <button id="{{item['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteAttendantModal"><i class="fas fa-trash-alt mr-1"></i>Del</button>
+                  <button id="{{item['delid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteAttendantModal"><i class="fas fa-trash-alt mr-1"></i>Del</button>
                 </div>
               </td>
 

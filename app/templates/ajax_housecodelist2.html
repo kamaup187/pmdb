@@ -7,6 +7,12 @@
                 <tr>
                 <th class="text-black">Group</th>
                 <th class="text-black">Price</th>
+
+                <th class="text-black">Deposit</th>
+                <th class="text-black">Commission</th>
+                <th class="text-black">Discount</th>
+                <th class="text-black">instalments</th>
+
                 <th class="text-black">Service</th>
                 <th class="text-black">Action</th>
                 
@@ -16,8 +22,14 @@
                 {% for i in items%}
                 <tr>
                     <td class="first-data-cell text-dark font-weight-bold">{{ i['housecode'] }}</td>
-                    <td class="data-cell text-right">{{ i['price'] }}</td>
-                    <td class="data-cell text-right">{{ i['service'] }}</td>
+                    <td class="data-cell text-end">{{ i['price'] }}</td>
+
+                    <td class="data-cell text-end">{{ i['deposit'] }}</td>
+                    <td class="data-cell text-end">{{ i['commission'] }}</td>
+                    <td class="data-cell text-end">{{ i['discount'] }}</td>
+                    <td class="data-cell text-end">{{ i['instalments'] }}</td>
+
+                    <td class="data-cell text-end">{{ i['service'] }}</td>
 
 
                     <td class="data-cell">

@@ -229,7 +229,7 @@
                       <div class="row mt-2">
                         <div class="col-3 no-padding text-right"><span class="form-control border-0">Size <span class="text-danger">*</span></span></div>
                         <div class="form-group col-9 no-paddin input-icons">
-                          <input id="enter_house_code" class="form-control ph" type="text" placeholder="E.g One bedroom">
+                          <input id="enter_house_code" class="form-control ph" type="text">
                           <span class="fa field-icon text-info iconotifications">--</span>
                         </div>
                       </div>
@@ -252,9 +252,9 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Price</span></div>
+                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Price <span class="text-danger">*</span></span></div>
                         <div class="form-group col-9 no-paddin input-icons">
-                          <input id="rentrate" class="form-control ph" type="text" placeholder="1,800,000">
+                          <input id="rentrate" class="form-control ph" type="text">
                         </div>
                       </div>
                    
@@ -264,6 +264,39 @@
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-kubwa" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify font-weight-bold">Add/Update Group</span>
+              <div>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fa fa-upload"></i></button>
+                <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger dismissModal" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs font-weight-bold"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+  
+                    <div id="groupModalBed"></div>
+  
                   </div>
                 </div>
               </div>
@@ -310,7 +343,7 @@
     </div>
 
 
-    <div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -352,7 +385,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div class="modal fade center-btn" id="deleteHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -993,7 +1026,7 @@
   });
 </script>
 
-
+<!-- 
 <script>
       
   $("#editGroupModal").on('shown.bs.modal', function(){
@@ -1022,7 +1055,35 @@
     });
   });
 
+</script> -->
+
+
+<script>
+  $("#groupModal").on('shown.bs.modal', function(){
+
+    $.ajax({
+      url: "{{ url_for('api.createhousecode') }}",
+      type: "get",
+      data: {
+        groupid:  $("#group_identifier").text(),
+      },
+      success: function(response) {
+        $("#groupModalBed").html(response); 
+      }
+    });
+
+  });
 </script>
+
+
+<script>
+  $("#groupModal").on('hidden.bs.modal', function(){
+
+    $("#groupModalBed").html("empty"); 
+
+  });
+
+  </script>
 
 
 <script>

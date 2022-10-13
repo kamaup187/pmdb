@@ -12,67 +12,56 @@
         <div id="parent-section">
           <div class="col-12 no-padding mb-1">
             <div class="card-header py-1 bg-warning divjust-end" >
-                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>Manage clients</div>
+                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>Manage clients <span class="ms-2"> >> {{prop.name}}</span></div>
                 <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
             </div>
           </div>
 
-          <div class="col-lg-12 center-btn mb-3">
-            <span class="text-black text-xx smallify underline shadow-alt">{{prop.name}}</span>
-          </div>
-          
-          <div class="row mb-3">
-              <div class="col-lg-12 center-btn">
-                <div class="info_item">
-                  <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add new clients</span></button>
-                  <!-- <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadPhoneExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Phone numbers</span></span>
-                  <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadArrearsExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Arrears bulk upload</span></span> -->
 
+          <div class="pb-2 bg-white divjust-end">
+
+            <div class="">
+  
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addTenantModal">
+                <i class="me-1" data-feather="user-plus"></i>
+                Add lead/client
+              </span>
+  
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
+                <i class="me-1" data-feather="user-plus"></i>
+                Import data
+              </span>
+  
+              <span class="navbar-drr d-inline-block">
+                <span class="dropdown-dr">
+                  <span class="dropbtn text-black mt-2">Reports
+                    <i class="fa fa-caret-down"></i>
+                  </span>
+                  <span class="dropdown-content">
+                    <a href="/tenant/listing?target=direct&propid={{prop.id}}" target="_blank">Tenants listings</a>
+                    <a href="/deposit/statement?target=direct&propid={{prop.id}}" target="_blank">Tenants deposits</a>
+                  </span>
+                </span>               
+              </span>
+  
+            </div>
+  
+            <div class="dispnon">
+              <nav class="nav nav-borders">
+                <!-- <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+                <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+                <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a> -->
+                <div>
+                  <label class="me-2"><input type="checkbox" value="cb1" class="chb"/> Hot/cold leads</label>
+                  <label class="me-2"><input type="checkbox" value="cb2" class="chb" /> Booked clients</label>
+                  <label class="me-2"><input type="checkbox" value="cb3" class="chb" /> Negotiations</label>
+                  <label class="me-2"><input type="checkbox" value="cb4" class="chb" checked/> Closed sales</label>
                 </div>
-
-              </div>
-
+              </nav>
+            </div>
+  
           </div>
         
-
-        <div class="toggleswitch text-black font-weight-bold divbg mb-3">
-          <span>
-            <span class="mobile-malaysian underline-thin"><i class="fas fa-user-edit text-warning mr-1"></i>Client proposals</span>
-            <span class="small desktop-malaysian">Proposals</span>
-            <label class="switch">
-              <input id="reporttoggle" type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </span>
-        
-          <span class="">
-            <span class="mobile-malaysian underline-thin"><i class="fas fa-file-signature text-warning mr-1"></i>Pending contracts</span>
-            <span class="small desktop-malaysian">Contracts</span>
-            <label class="switch">
-              <input id="reporttoggle2" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-          <span class="">
-            <span class="mobile-malaysian underline-thin"><i class="fas fa-hands-helping text-warning mr-1"></i>Closed deals</span>
-            <span class="small desktop-malaysian">Closed</span>
-            <label class="switch">
-              <input id="reporttoggle3" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-          <span class="">
-            <span class="mobile-malaysian underline-thin"><i class="fas fa-user-friends text-warning mr-1"></i>All clients</span>
-            <span class="small desktop-malaysian">All</span>
-            <label class="switch">
-              <input id="reporttoggle4" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-        </div>
 
         <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
         <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
@@ -127,7 +116,7 @@
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
             <h5 class="modal-title text-info divjust-end underline-thin-fade">
-              <span class="mr-3 smallify">Add new client</span>
+              <span class="mr-3 smallify">Add client</span>
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
 
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
@@ -735,8 +724,8 @@
   $("#close-propdisp").on('click',function(){
     $('#proplist').removeClass('dispnone')
     $('#propdisp').addClass('dispnone');
-    $('#tenant-area').removeClass('isactive')
-    $('#content-area').removeClass("isopen text-danger");
+    // $('#tenant-area').removeClass('isactive')
+    // $('#content-area').removeClass("isopen text-danger");
   });
 </script>
 
@@ -826,148 +815,91 @@
 
 
 
-
-
 <script>
-  
-  $("#reporttoggle").on('change',function(){
 
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb = document.getElementById("reporttoggle");
-    if (cb.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-      var cb4 = document.getElementById("reporttoggle4");
-      cb4.checked = false;
-
-
+    function getProposals() {
       $("#current-reloader").html("proposals");
-
       $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"proposals"
-                },
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-  
-  });
-  
-  $("#reporttoggle2").on('change',function(){
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
+        url: "{{ url_for('api.fetchtenants') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier").text(),
+          target: "proposals"
+        },
+        success: function (response) {
 
-    var cb2 = document.getElementById("reporttoggle2");
-    if (cb2.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-      var cb4 = document.getElementById("reporttoggle4");
-      cb4.checked = false;
-
-
-      $("#current-reloader").html("contracts");
-
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"contracts"
-                },
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-  
-  });
-
-  
-  $("#reporttoggle3").on('change',function(){
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb3 = document.getElementById("reporttoggle3");
-    if (cb3.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb4 = document.getElementById("reporttoggle4");
-      cb4.checked = false;
-
-      $("#current-reloader").html("closed");
-
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"closed"
-                },
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
+          $("#result-view").html(response);
+        }
+      });
     }
 
-  });
-
-  $("#reporttoggle4").on('change',function(){
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb4 = document.getElementById("reporttoggle4");
-    if (cb4.checked){
-      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-
-      $("#current-reloader").html("all");
+      function getClosedDeals() {
+        $("#current-reloader").html("closed");
 
 
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"all"
-                },
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
+        $.ajax({
+          url: "{{ url_for('api.fetchtenants') }}",
+          type: "get",
+          data: {
+            propid: $("#prop_identifier").text(),
+            target: "closed"
+          },
+          success: function (response) {
 
-  });
+            $("#result-view").html(response);
+          }
+        });
+      }
+
+        function getContracts() {
+          $("#current-reloader").html("contracts");
+
+
+          $.ajax({
+            url: "{{ url_for('api.fetchtenants') }}",
+            type: "get",
+            data: {
+              propid: $("#prop_identifier").text(),
+              target: "contracts"
+            },
+            success: function (response) {
+
+              $("#result-view").html(response);
+            }
+          });
+        }
+
+
+
+
+      $(".chb").change(function (e) {
+        $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+        }else{
+          // console.log("hewwww",$(this).val())
+          if ($(this).val() == "cb1"){}
+          else if ($(this).val() == "cb2") {
+            getProposals()
+          } else if ($(this).val() == "cb3"){
+            getContracts()
+          }else{
+            getClosedDeals()
+          }
+        }
+
+
+
+      });
+
 
 </script>
 

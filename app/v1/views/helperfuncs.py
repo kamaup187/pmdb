@@ -3211,6 +3211,10 @@ def validate_float_inputs(*args):
     print("Args>>>>>>>>",args)
     results = []
     for i in args:
+        if i is None:
+            results.append("null")
+            continue
+
         ii = i.replace(',', '')
         print(len(ii))
 
@@ -3254,6 +3258,9 @@ def validate_float_inputs_to_include_percent(*args):
     print("Args>>>>>>>>",args)
     results = []
     for i in args:
+        if i is None:
+            results.append("null")
+            continue
         ii = i.replace(',', '')
         iii = ii.replace('%','')
 
@@ -9337,10 +9344,10 @@ def access(current_user):
             return False
         
 def permission(user,param):
-    if user.username.startswith('qc'): #or user.user_group_id == 3 or user.user_group_id == 2:
+    if user.username.startswith('qc') or user.user_group_id == 3 or user.user_group_id == 2:
         return True
-    # elif user.company_user_group.name == 'Director':
-    #     return True
+    elif user.company_user_group.name == 'Director':
+        return True
     else:
         if user.roles:
             # print("roles length",len(user.roles),"param",param)

@@ -64,12 +64,12 @@
                 <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
                   <thead class="custom-header">
                       <tr>
-                        <th class="text-black ">Name</th>
-                        <th class="text-black " data-orderable="false">Tel</th>
-                        <th class="text-black " data-orderable="false">Project(s)</th>
-                        <th class="text-black " data-orderable="false">Clients</th>
+                        <th class="text-black">Name</th>
+                        <th class="text-black " data-orderable="false">Contact</th>
+                        <th class="text-black " data-orderable="false">Leads</th>
                         <th class="text-black " data-orderable="false">Proposals</th>
                         <th class="text-black " data-orderable="false">Closed deals</th>
+                        <th class="text-black " data-orderable="false">Conversion rate</th>
 
                         <th class="text-black " data-orderable="false">Commission</th>
 
@@ -82,24 +82,25 @@
                       {% for item in bills%}
                       <tr>
                         <td class="data-cell">{{ item['name'] }}</td>
-                        <td class="data-cell ">{{ item['tel'] }}</td>  
-                        <td class="data-cell">{{ item['projects'] |safe }}</td>
-                        <td class="data-cell">{{ item['clients'] }}</td>
-                        <td class="data-cell">{{ item['proposals'] }}</td>
-                        <td class="data-cell">{{ item['closed'] }}</td>
+                        <td class="data-cell text-end ">{{ item['tel'] }}</td>  
+                        <td class="data-cell text-end">{{ item['leads'] }}</td>
+                        <td class="data-cell text-end">{{ item['proposals'] }}</td>
+                        <td class="data-cell text-end">{{ item['closed'] }}</td>
+                        
+                        <td class="data-cell text-end">{{ item['crate'] }}</td>
 
 
-                        <td class="data-cell"><span class="text-info font-weight-bold">{{ item['comm'] }}</span></td>
+                        <td class="data-cell text-end"><span class="font-weight-bold">{{ item['comm'] }}</span></td>
 
 
-                        <td class="text-s data-cell ">
+                        <td class="text-s data-cell text-center">
                           <div>
-                            <button id="{{item['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i>Edit</button>
+                            <button id="{{item['editid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i></button>
                           </div>
                         </td>
-                        <td class="text-s data-cell ">
+                        <td class="text-s data-cell text-center">
                           <div>
-                            <button id="{{item['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteAttendantModal"><i class="fas fa-trash-alt mr-1"></i>Del</button>
+                            <button id="{{item['delid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteAttendantModal"><i class="fas fa-trash-alt mr-1"></i></button>
                           </div>
                         </td>
 
@@ -144,35 +145,35 @@
                       <div class="mt-2">
 
                         <div class="row">
-                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Name <span class="text-danger">*</span></span></div>
+                          <div class="col-3 no-padding text-end"><span class="form-control border-0">Name <span class="text-danger">*</span></span></div>
                           <div class="form-group col-9 no-paddin input-icons">
                             <input id="new_name" class="form-control ph" type="text" placeholder="Eg John Kamau">
                           </div>
                         </div>
                         
                         <div class="row">
-                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Mobile</span></div>
+                          <div class="col-3 no-padding text-end"><span class="form-control border-0">Mobile</span></div>
                           <div class="form-group col-9 no-paddin input-icons">
                             <input id="new_tel" class="form-control ph" type="text" placeholder="07xxxxxxxx">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Email</span></div>
+                          <div class="col-3 no-padding text-end"><span class="form-control border-0">Email</span></div>
                           <div class="form-group col-9 no-paddin input-icons">
                             <input id="new_mail" class="form-control ph" type="text" placeholder="sales@example.com">
                           </div>
                         </div>
 
                         <div class="row">
-                          <div class="col-3 no-padding text-right"><span class="form-control border-0">NationalId</span></div>
+                          <div class="col-3 no-padding text-end"><span class="form-control border-0">NationalId</span></div>
                           <div class="form-group col-9 no-paddin input-icons">
                             <input id="new_id" class="form-control ph" type="text" placeholder="12345678">
                           </div>
                         </div>
       
-                        <div class="row">
-                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Project</span></div>
+                        <div class="row dispnone">
+                          <div class="col-3 no-padding text-end"><span class="form-control border-0">Project</span></div>
                           <div class="form-group col-9 input-icons">
                             <select class="select-css" id ="select_prop" >
                               <option disabled selected value> Assign project </option>
@@ -418,10 +419,10 @@
   $("#close-propdisp").on('click',function(){
     $('#body-block').removeClass('dispnone')
     $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-    $('#list-area').removeClass("isopen text-danger");
-    $('#sidebarToggle').click();
-    $('#smaccordionSidebar').removeClass("toggled");
+    // $('#content-area').removeClass("isopen text-danger");
+    // $('#list-area').removeClass("isopen text-danger");
+    // $('#sidebarToggle').click();
+    // $('#smaccordionSidebar').removeClass("toggled");
   });
 </script>
 

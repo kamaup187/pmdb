@@ -58,9 +58,8 @@ class QueryResident(Resource):
             'resident_data.html',
             logopath=logo(co)[0],
             resident = resident,
-        ))        
-
-
+        )) 
+  
 class ViewReceipt(Resource):
     def get (self,ri):
         path = f"temp/receipt_{ri}.pdf"

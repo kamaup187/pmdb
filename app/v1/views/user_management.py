@@ -371,7 +371,7 @@ class Users(Resource):
             email = request.args.get('email')
             if not email:
                 return typing
-            if "@" not in email or ".com" or ".co" not in email:
+            if "@" not in email and (".com" or ".co") not in email:
                 return err + "invalid"
             user = fetch_user(email)
             if user:

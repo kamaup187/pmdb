@@ -1,0 +1,292 @@
+<!-- Main page content-->
+<span id="func" class="dispnone">{{savecontext}}</span>
+<div id="workarea" class="container-xl px-4 mt-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-3">
+                <div class="card-header">Group name</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
+                    <form autocomplete="off">
+
+                        <div class="gx-3 mb-3">
+                            <!-- Form Group (first name)-->
+                            <label class="small mb-1" for="groupName">Group name (price amount or letters
+                                A,B,C...<span class="text-danger">*</span></label>
+                            <input class="form-control" id="groupName" type="text"
+                                placeholder="Provide a name for the group" value="{{group.codename}}" />
+
+                        </div>
+                        <button type="reset" class="reset dispnone"></button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Settings</div>
+                <div class="card-body">
+                    <!-- Profile picture image-->
+                    <!-- <img class="img-account-profile rounded-circle mb-2" src="assets/img/illustrations/profiles/profile-1.png" alt="" /> -->
+                    <form autocomplete="off">
+
+                        <div class="form-group">
+                            <!-- Form Group (first name)-->
+                            <label class="font-weight-bold mb-1" for="">INVOICE CYCLE</label>
+
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
+                                <span class="dispnone" id="check_freq">{{group.billfrequency}}</span>
+
+                                <div class="">
+                                    <input class="" id="monthly" name="billfreq" type="radio" value="monthly" />
+                                    <label class="mb-1 small font-weight-bold" for="monthly">Monthly</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="quaterly" name="billfreq" type="radio" value="quaterly" />
+                                    <label class="small font-weight-bold mb-1" for="quaterly">Quaterly</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="semi-annually" name="billfreq" type="radio" value="semi-annually" />
+                                    <label class="small font-weight-bold mb-1" for="semi-annually">Semi-annually</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="annually" name="billfreq" type="radio" value="annually" />
+                                    <label class="small font-weight-bold mb-1" for="annually">Annually</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                    <!-- Profile picture upload button-->
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Group rates  >> {{group.codename}}</div>
+                <div class="card-body">
+                    <form autocomplete="off">
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="listprice">Price (discount & VAT inclusive)</label>
+
+                                <input class="form-control" id="listprice" type="text" placeholder="Listprice"
+                                    value="{{group.listprice}}" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="vatrate">VAT amount (%)</label>
+
+                                <input class="form-control" id="vatrate" type="text" placeholder="vat amount"
+                                    value="{{group.vatrate}}" />
+                            </div>
+                        </div>
+
+
+                        <div class="row gx-3 mb-2">
+                            <div class="col-md-6">
+                                {% if group.percentage_deposit%}
+                                <label class="small mb-1" for="depp">Deposit amount(percentage)</label>
+                                <input class="form-control" id="depp" type="text" value="{{group.percentage_deposit}}" />
+                                {%else%}
+                                <label class="small mb-1" for="depp">Deposit amount(flatrate)</label>
+                                <input class="form-control" id="depp" type="text" value="{{group.deposit}}" />
+                                {%endif%}
+                            </div>
+
+                            <div class="col-md-6">
+                                {% if group.commission%}
+                                <label class="small mb-1" for="comm">Sales commission rates(percentage)</label>
+                                <input class="form-control" id="comm" type="text" value="{{group.commission}}" />
+                                {%else%}
+                                <label class="small mb-1" for="comm">Sales commission rates(flatrate)</label>
+                                <input class="form-control" id="comm" type="text" value="{{group.int_commission}}" />
+                                {%endif%}
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="servicerate">Service charge</label>
+
+                                <input class="form-control" id="servicerate" type="text" placeholder="Service amount"
+                                    value="{{group.servicerate}}" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="other">Registration/Agreement</label>
+
+                                <input class="form-control" id="agreementrate" type="text" placeholder="reg fee"
+                                    value="{{group.agreementrate}}"/>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3 mb-2">
+                            <div class="col-md-6">
+                                {% if group.percentage_discount%}
+                                <label class="small mb-1" for="disc">Discount rate(percentage)</label>
+                                <input class="form-control" id="disc" type="text" value="{{group.percentage_discount}}" />
+                                {%else%}
+                                <label class="small mb-1" for="disc">Discount rate(flatrate)</label>
+                                <input class="form-control" id="disc" type="text" value="{{group.discount}}" />
+                                {%endif%}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inst">Number of instalments(months)</label>
+                                <input class="form-control" id="inst" type="text" value="{{group.instalments}}" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Submit button-->
+    <div class="text-center">
+        <div>
+            <button id="submitgroup" class="btn btn-primary" type="button">{{savecontext}}</button>
+            <button type="reset" class="reset dispnone"></button>
+        </div>
+    
+    </div>
+    </div>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+    
+            let checkFreq = $("#check_freq").text()
+    
+            if (checkFreq == "1") {
+    
+                $("input[id=monthly]").attr("checked", "checked");
+    
+            } else if (checkFreq == "3"){
+    
+                $("input[id=quaterly]").attr("checked", "checked");
+    
+            } else if (checkFreq == "6") {
+    
+                $("input[id=semi-annually]").attr("checked", "checked");
+    
+            } else if (checkFreq == "12") {
+                $("input[id=annually]").attr("checked", "checked");
+
+            } else {
+                $("input[id=monthly]").attr("checked", "checked");
+
+            }
+    
+            })
+  
+    </script>
+
+
+
+
+
+
+
+
+
+
+<script>
+    $("#submitgroup").click(function(){
+        let target_func = $("#func").text()
+        let baseurl
+        let target
+        let successResponse
+        let afterSuccess
+
+        if (target_func == "Submit"){
+            
+            baseurl = "{{ url_for('api.createhousecode') }}"
+            target = "add new group"
+            successResponse = "Saved !"
+            afterSuccess = "Submit"
+            $("#submitgroup").html("submitting...")  
+        }else{
+            baseurl = "{{ url_for('api.edithousecode') }}"
+            $("#submitgroup").html("updating...")
+            target = "update group"
+            successResponse = "Updated !"
+            afterSuccess = "Update group"
+        }
+        // if ($("#comm").val() != "None" && $("#comm").val() != 0.0){
+        //     var comm = $("#comm").val()
+        // }else{
+        //     var comm = $("#comm").val()
+        // }
+
+        $.ajax({
+        url: baseurl,
+        type: "POST",
+        data: {
+            propid: $("#prop_identifier").text(),
+            groupid: $("#group_identifier").text(),
+            housecode: $("#groupName").val(),
+            
+            pricerate: $("#listprice").val(),
+            deposit: $("#depp").val(),
+
+            servicerate: $("#servicerate").val(),
+            agreementrate:$("#agreementrate").val(),
+
+            discount: $("#disc").val(),
+            commission: $("#comm").val(),
+            instalments: $("#inst").val(),
+
+
+            vatrate:$("#vatrate").val(),
+            billfreq: $("input[name=billfreq]:checked").val(),
+            target:target
+            },
+        success: function(response) {
+            $("#workarea").addClass("dispnone")
+            $(".alert-msgs").html(response);
+            $("#submitgroup").html(successResponse)
+
+            
+            setTimeout(function(){
+            $("#workarea").removeClass("dispnone")
+            $(".alert-msgs").empty();            
+            $("#submitgroup").html(afterSuccess)
+            
+            if (target_func == "Submit"){
+                $(".reset").click();
+                $('.dismissModal').click();
+            }
+            // $('#submitgroup').attr('disabled', 'disabled');
+            //   $('#submitgroup').removeClass('btn-success')
+            //   $('#submitgroup').addClass('btn-secondary')
+            }, 2500);
+            
+            $.ajax({
+              url: "{{ url_for('api.fetchrates') }}",
+              type: "get",
+              data: {propid:  $("#prop_identifier").text()},
+              success: function(response) {
+                
+                $("#result-view").html(response);
+              }
+            });
+        }
+        });
+        
+
+
+
+    });
+  </script>

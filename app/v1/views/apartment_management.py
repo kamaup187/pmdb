@@ -1910,18 +1910,18 @@ class AddSalesAgent(Resource):
             else:
                 return err
 
-        # if email and phone and name and natid:
-        #     pass
-        # else:
-        #     return err
+        if email and name:
+            pass
+        else:
+            return err + "name or email missing"
 
         user_obj = None
 
-        # user_obj = UserOp.fetch_user_by_email(email) if email else None
-        # if not user_obj:
-        #     user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
-        #     if not user_obj:
-        #         user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
+        user_obj = UserOp.fetch_user_by_email(email) if email else None
+        if not user_obj:
+            user_obj = UserOp.fetch_user_by_phone(phone) if phone else None
+            if not user_obj:
+                user_obj = UserOp.fetch_user_by_national_id(natid) if natid else None
                        
         if not user_obj:
 
@@ -1941,20 +1941,20 @@ class AddSalesAgent(Resource):
             else:
                 username = username_exctractermail(email)
 
-            # found = False
+            found = False
 
-            # for obj in company_obj.groups:
-            #         if str(obj) == "Sales":
-            #             found = True
-            #             company_usergroup_obj = obj
+            for obj in company_obj.groups:
+                    if str(obj) == "Sales":
+                        found = True
+                        company_usergroup_obj = obj
 
-            # if not found: #REFACTOR TO REMOVE THIS BLOCK
-            #     group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
-            #     group2.save()
-            #     company_usergroup_obj = group2
+            if not found: #REFACTOR TO REMOVE THIS BLOCK
+                group2 = CompanyUserGroupOp("Sales","Sales rep",company_obj.id)
+                group2.save()
+                company_usergroup_obj = group2
 
-            # user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
-            # user_obj.save()
+            user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
+            user_obj.save()
 
             repp = SalesRepOp.fetch_rep_by_name(name.lower())
             if not repp:
@@ -1962,9 +1962,9 @@ class AddSalesAgent(Resource):
                 rep_obj = SalesRepOp(name,name,phone,company_obj.id)
                 rep_obj.save()
 
-                # if prop:
-                #     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-                #     UserOp.relate(user_obj,prop_obj)
+                if prop:
+                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                    UserOp.relate(user_obj,prop_obj)
 
                 # att_obj = SalesRepOp(name,phone,prop_obj.id)
                 # att_obj.save()
@@ -3761,8 +3761,10 @@ class CreateHouseCode(Resource):
         else:
             savecontext = "Update"
 
+        template = "ajax_groupform2.html" if crm(current_user) else "ajax_groupform.html"
+
         return render_template(
-            'ajax_groupform.html',
+            template,
             savecontext=savecontext,
             group=housegroup)
 
@@ -3893,18 +3895,18 @@ class CreateHouseCode(Resource):
 
 class EditHouseCode(Resource):
     """update codes class"""
-    @login_required
-    def get(self):
-        groupid = request.args.get('groupid')
-        target = request.args.get('target')
+    # @login_required
+    # def get(self):
+    #     groupid = request.args.get('groupid')
+    #     target = request.args.get('target')
 
-        group_obj = HouseCodeOp.fetch_group_by_id(groupid)
+    #     group_obj = HouseCodeOp.fetch_group_by_id(groupid)
 
-        if target == "groupname":
-            return f"<span class='text-success'>Enter new rates for group {group_obj.codename}</span>"
-            # return render_template('ajaxproceed.html',alert=msg)
-        else:
-            return render_template('ajax_hscode_form.html',obj=group_obj)
+    #     if target == "groupname":
+    #         return f"<span class='text-success'>Enter new rates for group {group_obj.codename}</span>"
+    #         # return render_template('ajaxproceed.html',alert=msg)
+    #     else:
+    #         return render_template('ajax_hscode_form.html',obj=group_obj)
 
     @login_required
     def post(self):
@@ -3938,6 +3940,9 @@ class EditHouseCode(Resource):
             vatrate = request.form.get('vatrate')
             bill_freq = request.form.get('billfreq')
             commission = request.form.get('commission')
+            deposit = request.form.get('deposit')
+            listprice = request.form.get('listprice')
+            instalments = request.form.get("instalments")
 
 
             print("commission is here", commission)
@@ -3984,7 +3989,12 @@ class EditHouseCode(Resource):
                 print("Group name missing")
                 housecode = "null"
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep,discount,depnum)
+            if "%" in discount:
+                disc = ""
+            else:
+                disc = discount
+
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep,disc,depnum)
 
             HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],result[13],result[14],current_user.id)
 
@@ -3992,14 +4002,24 @@ class EditHouseCode(Resource):
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])
 
 
-            valid_inputs3 = validate_float_inputs_to_include_percent(commission)
+            valid_inputs3 = validate_float_inputs_to_include_percent(listprice,deposit,commission,discount,instalments)
             # import pdb; pdb.set_trace()
 
             if "%" in commission:
-                HouseCodeOp.update_commission(group_obj,valid_inputs3[0])
+                HouseCodeOp.update_commission(group_obj,valid_inputs3[2])
             else:
-                HouseCodeOp.update_int_commission(group_obj,valid_inputs3[0])
+                HouseCodeOp.update_int_commission(group_obj,valid_inputs3[2])
 
+            if "%" in deposit:
+                HouseCodeOp.update_percentage_deposit(group_obj,valid_inputs3[1])
+            else:
+                HouseCodeOp.update_deposit(group_obj,valid_inputs3[1])
+
+            if "%" in discount:
+                HouseCodeOp.update_percentage_discount(group_obj,valid_inputs3[3])
+
+            HouseCodeOp.update_listprice(group_obj,valid_inputs3[0])
+            HouseCodeOp.update_instalments(group_obj,valid_inputs3[4])
 
             msg = "Rates updated successfully"
             return render_template('ajaxproceed.html',alert=msg)

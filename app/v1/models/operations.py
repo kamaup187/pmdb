@@ -59,12 +59,20 @@ class Base():
         name = house_obj.name
         return name
 
+    # @staticmethod
+    # def fig_format(fig):
+    #     rounded_fig = round(fig,2) if fig else 0.0
+    #     decor_fig = (f"{rounded_fig:,}")
+    #     return decor_fig
+
     @staticmethod
     def fig_format(fig):
-        rounded_fig = round(fig,2) if fig else 0.0
-        decor_fig = (f"{rounded_fig:,}")
+        try:
+            decor_fig = (f"{fig:,.1f}")
+        except:
+            decor_fig = f"{fig}"
         return decor_fig
-
+        
     def format(amount):
         """method to format amount"""
         return f"{amount:,.1f}"
@@ -988,6 +996,30 @@ class HouseCodeOp(HouseCode,Base):
             self.int_commission = commission
         db.session.commit()
 
+    def update_percentage_deposit(self,deposit):
+        if deposit != "null":
+            self.percentage_deposit = deposit
+            self.deposit = 0.0
+        db.session.commit()
+
+    def update_deposit(self,deposit):
+        if deposit != "null":
+            self.percentage_deposit = 0.0
+            self.deposit = deposit
+        db.session.commit()
+
+    def update_percentage_discount(self,discount):
+        if discount != "null":
+            self.percentage_discount = discount
+            self.discount = 0.0
+        db.session.commit()
+
+    def update_discount(self,discount):
+        if discount != "null":
+            self.percentage_discount = 0.0
+            self.discount = discount
+        db.session.commit()
+
     def update_vatrates(self,billfreq,vatrate):
         print("vat updated",vatrate)  
         if billfreq != "null":
@@ -1008,7 +1040,13 @@ class HouseCodeOp(HouseCode,Base):
         db.session.commit()
 
     def update_listprice(self,rate):
-        self.listprice = rate
+        if rate != "null":
+            self.listprice = rate
+        db.session.commit()
+
+    def update_instalments(self,instalments):
+        if instalments:
+            self.instalments = instalments
         db.session.commit()
 
     def update_rentrate(self,rate):
@@ -1041,6 +1079,10 @@ class HouseCodeOp(HouseCode,Base):
             'fine':HouseCodeOp.format_percent_amount(self.finerate),
             'waterdep':HouseCodeOp.fig_format(self.waterdep),
             'elecdep':HouseCodeOp.fig_format(self.elecdep),
+            'deposit':HouseCodeOp.fig_format(self.deposit),
+            'commission':HouseCodeOp.fig_format(self.commission) if self.commission else HouseCodeOp.fig_format(self.int_commission),
+            'instalments':HouseCodeOp.fig_format(self.instalments),
+            'discount':HouseCodeOp.fig_format(self.discount),
             'user':HouseCodeOp.get_name(self)
         }
 

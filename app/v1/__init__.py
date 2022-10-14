@@ -177,7 +177,7 @@ api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 
 
 api.add_resource(CallBackUrlAssetisha,"/api/ins/confirm")
-api.add_resource(RentNaiveraStatement,"/report/fetch/<string:month>/-/<string:year>/<string:prop>")
+api.add_resource(RentNaiveraStatement,"/report/fetch/<string:id_number>/<string:month>/-/<string:year>/<string:prop>")
 api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
 # api.add_resource(Assetisha,"api/landlord/statement/<int:id_number>")
 

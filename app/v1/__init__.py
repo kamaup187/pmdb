@@ -173,6 +173,8 @@ api.add_resource(CallBackUrlGoldLabel,"/m/goldlabel/ins/payment")
 api.add_resource(CallBackUrlBizlineBestel,"/m/bizlinebestel/ins/payment")
 api.add_resource(CallBackUrlBizlineNeema,"/m/bizlineneema/ins/payment")
 api.add_resource(CallBackUrlLagad,"/m/lagad/ins/payment")
+api.add_resource(CallBackUrlImani,"/imani/payment")
+
 
 api.add_resource(CallBackUrlAssetisha,"/api/ins/confirm")
 api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")

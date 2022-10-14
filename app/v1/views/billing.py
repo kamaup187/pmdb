@@ -4762,6 +4762,8 @@ class CallBackUrlAssetisha(Resource):
                 func=read_payments_excel, args=(dict_array,payperiod,propid,1,), result_ttl=5000
             )
 
+            CtoBop.update_status(ctob_obj,"claimed")
+
             response = {
                 "responseCode": "OK",
                 "responseMessage": "SUCCESSFUL",

@@ -4711,6 +4711,7 @@ class CallBackUrlAssetisha(Resource):
 
             mode = "Bank"
             company_id = 108
+            # company_id = 5
 
             print("MPESA DATA RECEIEVED: ",data)
 
@@ -4726,12 +4727,19 @@ class CallBackUrlAssetisha(Resource):
             props = com.props
 
             prop = None
+            target_house = None
+
+            print("PROPS: ",bill_ref_num)
 
             for prp in props:
                 for house in prp.houses:
                     if house.name == bill_ref_num:
                         prop = house.apartment
+                        target_house = house
                         break
+
+            if not target_house:
+                return {"message": "House not found"}, 404
 
             propid = prop.id if prop else None
 
@@ -4754,7 +4762,15 @@ class CallBackUrlAssetisha(Resource):
                 func=read_payments_excel, args=(dict_array,payperiod,propid,1,), result_ttl=5000
             )
 
-            response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+            response = {
+                "responseCode": "OK",
+                "responseMessage": "SUCCESSFUL",
+                "unit_number": bill_ref_num,
+                "gross_rent": trans_amnt,
+                "service_charge": target_house.housecode.servicerate,
+                "commission": target_house.housecode.int_commission,
+                "pay_date": trans_time
+            }
 
 
         except Exception as e:

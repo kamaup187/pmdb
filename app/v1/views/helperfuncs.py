@@ -6027,16 +6027,24 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             print("specified house does not exist")
             continue
 
+        # URGENT TO DO REVISIT FOR RESIDENT AND TENANTS
         tenant_obj = house_obj.owner
         if not tenant_obj:
-            print("SKIPPING house>> ",house_obj,"because it is not occupied")
-            continue
+            check = check_occupancy(house_obj)
+            if check[0] == "occupied":
+                tenant_obj = check[1]
+            else:
+                print("SKIPPING house>> ",house_obj,"because it is not occupied")
+                continue
 
         bill= ""
 
         if payperiod:
-            pay_period = date_formatter_alt(payperiod)
-            pay_period_date = parse(pay_period)
+            if isinstance(payperiod,datetime.date):
+                pay_period_date = payperiod
+            else:
+                pay_period = date_formatter_alt(payperiod)
+                pay_period_date = parse(pay_period)
         
         elif r_comment:
             rr_comment = r_comment.replace("Installment","Instalment")
@@ -6096,6 +6104,9 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             print("Invalid amount")
             continue
 
+        if isinstance(amount,str):
+            amount = float(int(valid_amount.replace(",","")))
+            valid_amount = float(int(valid_amount.replace(",","")))
 
         bal = amount
 
@@ -6268,8 +6279,12 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
 
         tenant_id = None
 
-        payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)
-        payment_obj.save()
+        if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)
+            payment_obj.save()
+        else:
+            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_obj.id,tenant_id,userid)
+            payment_obj.save()
 
 
         if co.receipt_num:

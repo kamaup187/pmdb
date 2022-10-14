@@ -360,7 +360,8 @@ class Users(Resource):
             if current_user.username.startswith("admin") or current_user.username.startswith("qc"):
                 props = current_user.company.props
             else:
-                props = fetch_all_apartments_by_user(current_user)
+                props = current_user.company.props
+                # props = fetch_all_apartments_by_user(current_user)
  
             propids = [prop.id for prop in props]
             str_propids = ','.join(map(str, propids))

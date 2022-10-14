@@ -4697,16 +4697,16 @@ class CallBackUrlAssetisha(Resource):
             msg3 = f"ASSET{data}"
             res = sms.send(msg3, ["+254716674695"],"KIOTAPAY")
 
-            trans_id = data.get('TransID')
-            trans_time = data.get('TransTime')
-            trans_amnt = data.get('TransAmount')
+            trans_id = data.get('transaction_code')
+            trans_time = data.get('date_time')
+            trans_amnt = data.get('amount')
             trans_type = data.get('TransactionType')
             business_shortcode = "000000"
-            bill_ref_num = data.get('BillRefNumber')
+            bill_ref_num = data.get('unit_number')
             invoice_num = data.get('InvoiceNumber')
             msisdn = data.get('MSISDN')
             org_acc_bal = data.get('OrgAccountBalance')
-            fname = data.get('FirstName')
+            fname = data.get('unit_number')
             lname = data.get('LastName')
 
             mode = "Bank"
@@ -4721,6 +4721,38 @@ class CallBackUrlAssetisha(Resource):
             res = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
             # mpesa_response(ctob_obj)
+
+            com = CompanyOp.fetch_company_by_id(company_id)
+            props = com.props
+
+            prop = None
+
+            for prp in props:
+                for house in prp.houses:
+                    if house.name == bill_ref_num:
+                        prop = house.apartment
+                        break
+
+            propid = prop.id if prop else None
+
+            dict_array = []
+
+            payperiod = com.payperiod
+
+            dict_obj = {
+            "housename":bill_ref_num,
+            "amount":trans_amnt,
+            "date":"",
+            "ref":trans_id,
+            "desc":"",
+            "comment":""
+            }
+
+            dict_array.append(dict_obj)
+
+            uploadsjob2 = q.enqueue_call(
+                func=read_payments_excel, args=(dict_array,payperiod,propid,1,), result_ttl=5000
+            )
 
             response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 

@@ -2772,15 +2772,20 @@ class RentStatement(Resource):
 
 
 class RentNaiveraStatement(Resource):
-    @login_required
-    def get(self,month,year,prop):
+    def get(self,id_number,month,year,prop):
+
+        curr_user = UserOp.fetch_user_by_national_id(id_number)
+        if not curr_user:
+            return {"message":"User not found"}, 404
+        else:
+            current_user = curr_user
 
         selected_apartment = prop
         try:
             monthyear = month + "-" + year
         except:
             return {"message":"Bad url encoding"},404
-            
+
         selected_month = monthyear
         target = request.args.get("target")
 

@@ -4737,7 +4737,7 @@ class CallBackUrlAssetisha(Resource):
 
             dict_array = []
 
-            payperiod = com.payperiod
+            payperiod = com.billing_period
 
             dict_obj = {
             "housename":bill_ref_num,

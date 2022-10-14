@@ -201,6 +201,9 @@ api.add_resource(CallBackUrlTestLymaxEquity,"/bank/lymax/test")
 api.add_resource(CallBackUrlCherahEquity,"/bank/cherah/prod")
 api.add_resource(CallBackUrlTestCherahEquity,"/bank/cherah/test")
 
+api.add_resource(CallBackUrlMerit,"/bank/merit/prod")
+api.add_resource(CallBackUrlTestMerit,"/bank/merit/test")
+
 api.add_resource(CallBackUrlLes,"/les/45")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 

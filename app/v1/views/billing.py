@@ -4709,7 +4709,7 @@ class CallBackUrlAssetisha(Resource):
             fname = data.get('FirstName')
             lname = data.get('LastName')
 
-            mode = "Mpesa"
+            mode = "Bank"
             company_id = 108
 
             print("MPESA DATA RECEIEVED: ",data)

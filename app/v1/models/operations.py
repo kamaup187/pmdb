@@ -2925,7 +2925,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 tot += i
             except:
                 tot += 0.0
-                
+
         return (f"{tot:,}")
     
     #######################TODO TODO############################
@@ -3300,6 +3300,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'lpf-total':MonthlyChargeOp.calculate_total_due(self.penalty,self.penalty_balance),
             'lpf-paid':MonthlyChargeOp.fig_format(self.penalty_paid),
             'lpf-bal':MonthlyChargeOp.fig_format(self.penalty_due),
+
+            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housesecode.sevicerate),
 
             'electricity':self.electricity,
             'security':self.security,

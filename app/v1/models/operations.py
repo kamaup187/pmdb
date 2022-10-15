@@ -2921,7 +2921,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def calculate_total_alt(*args):
         tot=0.0
         for i in args:
-            tot += i
+            try:
+                tot += i
+            except:
+                tot += 0.0
+                
         return (f"{tot:,}")
     
     #######################TODO TODO############################
@@ -3222,6 +3226,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
+            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housesecode.sevicerate),
             'deparg':MonthlyChargeOp.combine_deparg(self),
             'fine':MonthlyChargeOp.fig_format(self.penalty),
             'arrears':MonthlyChargeOp.calculate_breakdown(self),

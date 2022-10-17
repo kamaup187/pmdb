@@ -2818,7 +2818,7 @@ class RentNaiveraStatement(Resource):
                 house_ids.append(bill.house_id)
                 """compute subtotals"""
                 # bill_item = LandlordSummaryOp.external_view(bill)
-                bill_item = MonthlyChargeOp.external_view(bill)
+                bill_item = MonthlyChargeOp.str_data(bill)
                 detailed_bills.append(bill_item)
 
                 if bill.rent_balance:

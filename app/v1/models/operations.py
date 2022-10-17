@@ -3317,6 +3317,24 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'balance':MonthlyChargeOp.calculate_bcf(self)
         }
 
+
+    def str_data(self):
+        
+        return {
+            'month':MonthlyChargeOp.year_month(self),
+            'year':self.year,
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'house':str(self.house),
+            'arrears':MonthlyChargeOp.fig_format(self.rent_balance),
+            'rent':MonthlyChargeOp.fig_format(self.rent),
+            'total_due':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
+            'amount_paid':MonthlyChargeOp.fig_format(self.rent_paid),
+            'balance':MonthlyChargeOp.fig_format(self.rent_due),
+            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
+            # 'paid':MonthlyChargeOp.calculate_paid(self),
+            # 'balance':MonthlyChargeOp.calculate_bcf(self)
+        }
+
     def get_management_fees(self):
         if self.apartment.name.upper() == "PALM MEWS APARTMENT":
             if self.rent_paid > 2000:

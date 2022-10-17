@@ -382,6 +382,7 @@ class SalesRep(db.Model):
     monthly_commission = db.Column(db.Float,default=0)
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
+    leads = db.relationship('Lead',backref='rep',order_by='Lead.date', cascade="all, delete-orphan")
     clients = db.relationship('PermanentTenant',backref='rep',order_by='PermanentTenant.date', cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -724,6 +725,29 @@ class PermanentTenant(db.Model):
 
 
 
+
+    def __repr__(self):
+        return self.name
+
+
+class Lead(db.Model):
+    """db model class"""
+
+    __tablename__ = 'leads'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    name = db.Column(db.String,nullable=False)
+    phone = db.Column(db.VARCHAR)
+    email = db.Column(db.VARCHAR)
+    national_id = db.Column(db.String)
+    sms = db.Column(db.Boolean,default=True)
+
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    lead_type = db.Column(db.String,default="hot")
+
+    rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     def __repr__(self):
         return self.name

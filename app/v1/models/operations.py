@@ -1871,6 +1871,34 @@ class ChargeOp(Charge, Base):
         db.session.commit()
 
 
+class LeadOp(Lead,Base):
+    def __init__(self,name,phone,national_id,email,company_id,created_by):
+        self.name = name
+        self.phone = phone
+        self.national_id = national_id
+        self.email = email
+        self.company_id = company_id
+        self.user_id = created_by
+
+    def view(self):
+        # print("NAME >>>>",self.name)
+        return {
+            'id':"p" + str(self.id),
+            'identity':LeadOp.generate_identity(self),
+            'editid':LeadOp.generate_editid(self),
+            'delid':LeadOp.generate_delid(self),
+
+            'name':LeadOp.generate_name(self),
+            'fullname':self.name,
+
+            'idno':self.national_id,
+            'tel':LeadOp.get_contact(self),
+            'email':LeadOp.get_email(self),
+
+            'status':LeadOp.get_status(self),
+ 
+        }
+
 class PermanentTenantOp(PermanentTenant,Base):
     def __init__(self,name,phone,national_id,email,arrears,house_id,apartment_id,created_by):
         self.name = name

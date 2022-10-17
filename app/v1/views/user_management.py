@@ -432,7 +432,7 @@ class Users(Resource):
             #     user_data_alt = user_data
 
             users = current_user.company.users
-            allowed_categories = ["Manager","Director"]
+            allowed_categories = ["Admin","Manager","Director","Office Admin","Sales Supervisor"]
 
             if current_user.username == "admin":
                 users = fetch_all_users()
@@ -442,8 +442,13 @@ class Users(Resource):
                 users = current_user.company.users
 
             user_data = user_details(users)
+            for i in user_data:
+                if i["username"] == current_user.username:
+                    i["name"] = i["name"] + " (Me)"
+                    break
 
             user_data_alt = []
+  
             if current_user.username.startswith("qc"):
                 kw_user = UserOp.fetch_user_by_username(KW_USER)
                 if kw_user:

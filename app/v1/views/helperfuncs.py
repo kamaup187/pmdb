@@ -2329,6 +2329,14 @@ def tenant_details(arr):
 
     return tenantdetails
 
+def lead_details(arr):
+    tenantdetails = []
+    for i in arr:
+        new_i = LeadOp.view(i)
+        tenantdetails.append(new_i)
+
+    return tenantdetails
+
 def ptenant_details(arr):
     tenantdetails = []
     for i in arr:

@@ -1565,7 +1565,6 @@ class OccupancyOverview(Resource):
         print(numptnts,houses_num)
         p_rate = f'{(pfrac * 100):,.0f} %'
 
-
         # return  occupancy_rate
         return f'<span class="me-5">{occupancy_rate}</span> <span class="ms-4">{p_rate}</span>'
 

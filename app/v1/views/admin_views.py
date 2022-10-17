@@ -1119,7 +1119,9 @@ class LinkProperty(Resource):
                 companies = CompanyOp.fetch_all_companies()
                 for company in companies:
                     if not company.name:
-                        CompanyOp.delete(company)
+                        print(company.users)
+                        return None
+                        # CompanyOp.delete(company)
             else:
                 companies = [current_user.company]
             return render_template('ajax_multivariable.html',items=companies,placeholder="select company")

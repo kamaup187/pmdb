@@ -1120,7 +1120,7 @@ class LinkProperty(Resource):
                 for company in companies:
                     if not company.name:
                         print(company.users)
-                        return None
+                        # return None
                         # CompanyOp.delete(company)
             else:
                 companies = [current_user.company]

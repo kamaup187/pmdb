@@ -3331,7 +3331,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'amount_paid':MonthlyChargeOp.fig_format(self.rent_paid),
             'balance':MonthlyChargeOp.fig_format(self.rent_due),
             'service_charge':self.house.housecode.int_servicerate if self.house.housecode.servicerate else 0.0,
-            'commission':self.house.housecode.int_commission if self.house.housecode.int_commision else 0.0
+            'commission':self.house.housecode.int_commission if self.house.housecode.int_commission else 0.0
             # 'paid':MonthlyChargeOp.calculate_paid(self),
             # 'balance':MonthlyChargeOp.calculate_bcf(self)
         }

@@ -1520,11 +1520,20 @@ class PropOverview(Resource):
         prop = request.args.get('prop')
         return len(run_props(prop,current_user))
 
+def get_status(arr,status):
+    return [x for x in arr if x.status == status]
+
 class HouseOverview(Resource):
     @login_required
     def get(self):
         prop = request.args.get('prop')
         props = run_props(prop,current_user)
+        if request.args.get('target') == "unit status":
+            available = len((flatten([ get_status(prop.houses,"available") for prop in props])))
+            booked = len((flatten([ get_status(prop.houses,"booked") for prop in props])))
+            sold = len((flatten([ get_status(prop.houses,"sold") for prop in props])))
+
+            return f'<span class="me-5">{available}</span> <span class="ms-5 me-5">{booked}</span> <span class="ms-5">{sold}</span>'
         return len(flatten([prop.houses for prop in props]))
 
 class TenantOverview(Resource):
@@ -1533,10 +1542,16 @@ class TenantOverview(Resource):
         prop = request.args.get('prop')
         props = run_props(prop,current_user)
 
-        numtnts = len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
+        if request.args.get('target') == "client status":
+            numtnts = len(flatten([co.leads for co in [current_user.company]]))
+        else:
+            numtnts = len(flatten([filter_in_occupied_houses(prop.name) for prop in props]))
+
         numptnts =len(flatten([prop.ptenants for prop in props]))
 
         return f'<span class="me-5">{numtnts}</span> <span class="ms-4">{numptnts}</span>'
+
+
 
             
 class OccupancyOverview(Resource):
@@ -1975,6 +1990,10 @@ class TenantManagement(Resource):
     """class"""
     @login_required
     def get(self):
+
+        if request.args.get("target") == "get leads":
+            # return current_user.company.leads
+            return render_template('ajax_multivariable.html',items=current_user.company.leads,placeholder="select lead")
         prop_id = request.args.get("propid")
         propid = get_identifier(prop_id)
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
@@ -5292,6 +5311,58 @@ class AddTenant(Resource):
             
                 msg = "Tenant added successfully"
             return msg + proceed
+
+class AddLead(Resource):
+    def post(self):
+        name = request.form.get('name')
+        if not name:
+            fname = request.form.get('fname')
+            oname = request.form.get('oname')
+            sname = request.form.get('sname')
+
+            try:
+                name = fname + oname + sname
+            except:
+                name = fname
+
+        phone = request.form.get('tel')
+        national_id = request.form.get('national_id')
+        email = request.form.get('email')
+
+
+        
+        # rep_id = SalesRepOp.fetch_rep_by_username(current_user.username).id
+
+        created_by = current_user.id
+
+        if not national_id:
+            natid = nationalid_generator()
+            check_dup = TenantOp.fetch_tenant_by_nat_id(natid)
+            nat_id = nationalid_generator() if check_dup else natid
+        else:
+            nat_id = national_id
+
+
+        if email:
+            present2 = TenantOp.fetch_tenant_by_email(email)
+            present3 = UserOp.fetch_user_by_email(email)
+
+            if present2 or present3:
+                msg="Email taken, use another email or leave blank"
+                return render_template('ajaxghosthouse.html',alert=msg)
+
+        present = TenantOp.fetch_tenant_by_nat_id(national_id)
+        if present:
+            msg = "Tenant of similar national id exists"
+            return render_template('ajaxghosthouse.html',alert=msg)
+
+        else:
+
+            lead_obj = LeadOp(name,phone,nat_id,email,current_user.company_id,created_by)
+            lead_obj.save()
+
+            msg = "Lead added successfully"
+        return msg + proceed
 
 class Deal(Resource):
     def get(self):

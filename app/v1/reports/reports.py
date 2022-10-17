@@ -2796,6 +2796,8 @@ class RentNaiveraStatement(Resource):
             target_period = datetime.datetime.now()
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        if not apartment_obj:
+            return "Apartment/Property not selected", 404
         llp = LandlordPaymentOp.fetch_current_llp(apartment_obj.id, target_period.month, target_period.year)
 
         ##################################################################################################
@@ -6546,6 +6548,15 @@ class SubmissionsReport(Resource):
             letterhead=logo(current_user.company)[3],
             company=current_user.company,
             name=current_user.name))
+
+
+class FetchLeads(Resource):
+    def get(self):
+        co = current_user.company
+        leads = co.leads
+        tenant_data = lead_details(leads)
+        tenantids = get_obj_ids(tenant_data)
+        return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
 
 class FetchTenants(Resource):
     def get(self):

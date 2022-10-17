@@ -63,6 +63,7 @@ class Company(db.Model):
 
     users = db.relationship('User', backref='company',order_by='User.name', cascade="all, delete-orphan")
     reps = db.relationship('SalesRep', backref='company',order_by='SalesRep.username', cascade="all, delete-orphan")
+    leads = db.relationship('Lead', backref='company',order_by='Lead.name', cascade="all, delete-orphan")
 
     shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
@@ -746,6 +747,7 @@ class Lead(db.Model):
     lead_type = db.Column(db.String,default="hot")
 
     rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 

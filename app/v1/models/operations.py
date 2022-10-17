@@ -3203,7 +3203,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
             'ptenant':self.ptenant_id if self.ptenant_id else "-",
-            'month':MonthlyChargeOp.year_month(self),
+            'month':self.month(self),
             'year':self.year,
             'tenant':MonthlyChargeOp.get_tenant_name(self),
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
@@ -3260,7 +3260,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'editid':MonthlyChargeOp.generate_editid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
-            'month':MonthlyChargeOp.year_month(self),
+            'month':self.month(self),
             'year':self.year,
             'tenant':MonthlyChargeOp.get_tenant_name(self),
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
@@ -3321,16 +3321,17 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def str_data(self):
         
         return {
-            'month':MonthlyChargeOp.year_month(self),
+            'month':self.month,
             'year':self.year,
-            'tenant':MonthlyChargeOp.get_tenant_name(self),
-            'house':str(self.house),
+            # 'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'unit_number':str(self.house),
             'arrears':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'total_due':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
             'amount_paid':MonthlyChargeOp.fig_format(self.rent_paid),
             'balance':MonthlyChargeOp.fig_format(self.rent_due),
-            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
+            'service_charge':self.house.housecode.int_servicerate if self.house.housecode.servicerate else 0.0,
+            'commission':self.house.housecode.int_commission if self.house.housecode.int_commision else 0.0
             # 'paid':MonthlyChargeOp.calculate_paid(self),
             # 'balance':MonthlyChargeOp.calculate_bcf(self)
         }

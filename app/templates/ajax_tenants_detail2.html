@@ -22,9 +22,14 @@
 
             <div class="">
   
+              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addLeadModal">
+                <i class="me-1" data-feather="user-plus"></i>
+                Add lead
+              </span>
+
               <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addTenantModal">
                 <i class="me-1" data-feather="user-plus"></i>
-                Add lead/client
+                Add client
               </span>
   
               <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
@@ -110,6 +115,86 @@
       </div>
     </div>
 
+    <div class="modal fade" id="addLeadModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Add leads</span>
+              <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
+
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3">
+
+                        <div class="row underline-thin">
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>Surname? <span class="text-danger">*</span></span>
+                              <input id="l-sname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Wanjiku"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
+                          </div>
+
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>First name? <span class="text-danger">*</span></span>
+                              <input id="l-fname" class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" placeholder="John"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
+                          </div>
+
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>Other?</span>
+                              <input id="l-oname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Kipchoge"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
+                          </div>
+                        </div>
+
+                        <div class="row mt-1 underline-thin">
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>National id <span class="text-danger">*</span></span>
+                              <input id="l-natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="123456**"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                          </div>
+
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>Mobile number <span class="text-danger">*</span></span>
+                              <input id="l-tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07123456**"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-phone text-info"></i></span>
+                          </div>
+
+                          <div class="form-group col-md-4 no-paddin input-icons">
+                            <span>Email</span>
+                              <input id="l-email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-envelope text-info"></i></span>
+                          </div>
+                        </div>
+
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="newlead" type="button" class="btn-secondary borderless text-white">Submit</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -131,6 +216,19 @@
                     <form autocomplete="off" method="POST" action="">
      
                       <div class="mt-2 mb-3">
+
+                        <div id="tenanttype" class="fancy-checkbox-group form-control mb-2 divjust">
+                          <div>
+                            <input type="radio" id="ttype" name="ttype" value="tenant" checked/>
+                            <label for="ttype">Direct entry</label>
+                          </div>
+
+                          <div>
+                            <input type="radio" id="ttype2" name="ttype" value="owner"/>
+                            <label for="ttype2">Convert lead</label>
+                          </div>
+                             
+                      </div>
 
                         <div class="row underline-thin">
                           <div class="form-group col-md-4 no-paddin input-icons">

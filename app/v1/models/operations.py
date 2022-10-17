@@ -3226,7 +3226,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
-            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housesecode.sevicerate),
+            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
             'deparg':MonthlyChargeOp.combine_deparg(self),
             'fine':MonthlyChargeOp.fig_format(self.penalty),
             'arrears':MonthlyChargeOp.calculate_breakdown(self),
@@ -3301,7 +3301,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'lpf-paid':MonthlyChargeOp.fig_format(self.penalty_paid),
             'lpf-bal':MonthlyChargeOp.fig_format(self.penalty_due),
 
-            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housesecode.sevicerate),
+            'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
 
             'electricity':self.electricity,
             'security':self.security,

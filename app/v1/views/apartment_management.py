@@ -3595,6 +3595,12 @@ class BulkSms(Resource):
                     return success
 
             else:
+                current_template = current_user.company.template
+                if current_template:
+                    rem_txt = current_template.txt
+                else:
+                    return failure
+
                 text = f'Bulk sms requested by {prop_obj.company} for {prop_obj.name}'
                 send_internal_email_notifications(prop_obj.company.name,text)
                 # response = sms.send(text, ["+254716674695"],sender)

@@ -799,7 +799,10 @@ class FetchSentSms(Resource):
         items = []
         for m in sent_texts:
             if m.date.month == company.billing_period.month and m.date.year == company.billing_period.year:
-                target_texts.append(m)
+                if m.cost == 1.0 and m.date.day == 18 and m.company.name == "ASTROL":
+                    SentMessagesOp.delete(m)
+                else:
+                    target_texts.append(m)
 
         for t in target_texts:
             items.append(SentMessagesOp.view(t))

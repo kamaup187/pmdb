@@ -3771,9 +3771,9 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     sms_obj.save()
 
 
-                    # if co.sms_provider == "Advanta":
-                    allowed = True
-                    if allowed:
+                    if co.sms_provider == "Advanta":
+                    # allowed = True
+                    # if allowed:
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":

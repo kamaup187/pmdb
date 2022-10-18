@@ -3333,7 +3333,7 @@ function animateHH(element) {
             target:"",
           },
       success: function(response) {
-
+        snack(response);
       },
     });
   });
@@ -3355,11 +3355,12 @@ function animateHH(element) {
               target:"general"
             },
             success: function(response) {
-              $("#sendgeneral").html("Sent!")
+              // $("#sendgeneral").html("Sent!")
 
-              setTimeout(
-                $("#sendgeneral").html("Send now"), 300
-                );
+              // setTimeout(
+              //   $("#sendgeneral").html("Send now"), 300
+              //   );
+              snack(response);
           }
       });
     },300);
@@ -3382,11 +3383,13 @@ function animateHH(element) {
               target:"general"
             },
             success: function(response) {
-              $("#sendbalance").html("Sent!")
+              // $("#sendbalance").html("Sent!")
 
-              setTimeout(
-                $("#sendbalance").html("Send now"), 300
-                );
+              // setTimeout(
+              //   $("#sendbalance").html("Send now"), 300
+              //   );
+
+              snack(response);
           }
       });
     },300);

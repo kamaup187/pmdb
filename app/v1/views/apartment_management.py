@@ -3597,7 +3597,7 @@ class BulkSms(Resource):
             else:
                 current_template = current_user.company.template
                 if current_template:
-                    rem_txt = current_template.txt
+                    rem_txt = f'{current_template[0].txt}'
                 else:
                     return failure
 

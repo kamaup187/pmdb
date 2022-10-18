@@ -1364,6 +1364,14 @@
 
 
     <script>
+        function snack(msg) {
+            $("#snackbed").html(msg);
+            $("#snackbar").addClass("show");
+            setTimeout(function () {
+                $("#snackbar").removeClass("show")
+            }, 3000);
+        }
+
         function getFeed() {
             $("#searchInput").attr("placeholder", "Please wait...");
             $.ajax({
@@ -1893,11 +1901,7 @@
                 target:"set template"
               },
               success: function(response) {             
-                $("#snackbed").html(response);
-                $("#snackbar").addClass("show");
-                setTimeout(function () {
-                    $("#snackbar").removeClass("show")
-                }, 3000);
+                snack(response);
             }
         });
   
@@ -1921,11 +1925,8 @@
                 target:"send reminders"
               },
               success: function(response) {
-                $("#snackbed").html(response);
-                $("#snackbar").addClass("show");
-                setTimeout(function () {
-                    $("#snackbar").removeClass("show")
-                }, 3000);            }
+                snack(response);
+              }
         });
       },300);
   });

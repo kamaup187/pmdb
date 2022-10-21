@@ -18,8 +18,8 @@
     <div class="no-padding"><span class="form-control smallify border-0">
       <span class="me-3">Asking price</span>
       <span class="ms-3">
-        <input type="checkbox" name="" id="discount" checked>
-        <label class="text-danger d-inline" for="discount">Apply 5% discount?</label>
+        <input type="checkbox" name="" id="discount">
+        <label class="text-danger d-inline" for="discount">Apply discount?</label>
       </span>
     </span>
     </div>
@@ -33,21 +33,24 @@
 
   <script>
 
-$("#neg_price").val($("#asking_price").val());
-$("#neg_price").keyup();
+  $("#neg_price").val($("#asking_price").val());
+  $("#neg_price").keyup();
 
-    $('#discount').change(function () {
-      $.ajax({
-        url: "{{ url_for('api.addtenant') }}",
-        type: "get",
-        data: {
-          tenant_id: $("#tenant_identifier").text(),
-          discount: this.checked,
-          target: "client discount"
-        },
-        success: function (response) {
-          $("#mpafterdiscount").html(response);
-        }
-      });
+  $('#discount').change(function () {
+
+    $.ajax({
+      url: "{{ url_for('api.addtenant') }}",
+      type: "get",
+      data: {
+        tenant_id: $("#tenant_identifier").text(),
+        discount: this.checked,
+        target: "client discount"
+      },
+      success: function (response) {
+        $("#mpafterdiscount").html(response);
+        $("#neg_price").val($("#asking_price").val());
+        $("#neg_price").keyup();
+      }
     });
+  });
   </script>

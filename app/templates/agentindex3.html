@@ -477,7 +477,9 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">All units</div>
+                                            <div class="text-white-75 small d-inline">All units</div>
+                                            <div class="text-white-75 small d-inline ms-4">Available</div>
+
                                             <div class="text-lg fw-bold fixloader" id="housestats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
@@ -519,8 +521,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small d-inline">Available</div>
-                                            <div class="text-white-75 small d-inline ms-4">Booked</div>
+                                            <div class="text-white-75 small d-inline">Booked</div>
                                             <div class="text-white-75 small d-inline ms-4">Sold</div>
 
 
@@ -1430,7 +1431,7 @@
                     prop: localStorage.getItem('propvar')
                   },
             success: function(data) {
-                $('#housestats').text(data);
+                $('#housestats').html(data);
   
             },
             complete:function(data) {

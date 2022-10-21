@@ -1856,6 +1856,11 @@ class UploadPayments(Resource):
 
             dict_array = []
 
+            if crm(current_user):
+                payperiod = None
+            else:
+                payperiod = current_user.company.billing_period
+
             for row in rows:
                 print("Starting.........................................")
                 try:

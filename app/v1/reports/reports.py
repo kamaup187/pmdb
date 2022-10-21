@@ -6552,11 +6552,15 @@ class SubmissionsReport(Resource):
 
 class FetchLeads(Resource):
     def get(self):
+        if request.args.get("target") == "lead name":
+            lead_obj = LeadOp.fetch_lead_by_id(get_identifier(request.args.get("lead_id")))
+            return f' ({lead_obj.name})'
+
         co = current_user.company
         leads = co.leads
         tenant_data = lead_details(leads)
         tenantids = get_obj_ids(tenant_data)
-        return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
+        return render_template("ajax_leads.html",tenantids=tenantids,items=tenant_data)
 
 class FetchTenants(Resource):
     def get(self):

@@ -1532,12 +1532,14 @@ class HouseOverview(Resource):
         prop = request.args.get('prop')
         props = run_props(prop,current_user)
         if request.args.get('target') == "unit status":
-            available = len((flatten([ get_status(prop.houses,"available") for prop in props])))
             booked = len((flatten([ get_status(prop.houses,"booked") for prop in props])))
             sold = len((flatten([ get_status(prop.houses,"sold") for prop in props])))
+            return f'<span class="me-5">{booked}</span> <span class="ms-5">{sold}</span>'
 
-            return f'<span class="me-5">{available}</span> <span class="ms-5 me-5">{booked}</span> <span class="ms-5">{sold}</span>'
-        return len(flatten([prop.houses for prop in props]))
+        all = len(flatten([prop.houses for prop in props]))
+        available = len((flatten([ get_status(prop.houses,"available") for prop in props])))
+
+        return f'<span class="me-5">{all}</span> <span class="ms-5">{available}</span>' 
 
 class TenantOverview(Resource):
     @login_required
@@ -1995,8 +1997,11 @@ class TenantManagement(Resource):
     def get(self):
 
         if request.args.get("target") == "get leads":
-            # return current_user.company.leads
-            return render_template('ajax_multivariable.html',items=current_user.company.leads,placeholder="select lead")
+            leads = []
+            for l in current_user.company.leads:
+                leads.append(f'{str(l)} {l.email}')
+            return render_template('ajax_multivariable.html',items=leads,placeholder="select lead")
+
         prop_id = request.args.get("propid")
         propid = get_identifier(prop_id)
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
@@ -4044,6 +4049,8 @@ class EditHouseCode(Resource):
 
             if "%" in discount:
                 HouseCodeOp.update_percentage_discount(group_obj,valid_inputs3[3])
+            else:
+                HouseCodeOp.update_discount(group_obj,valid_inputs3[3])
 
             HouseCodeOp.update_listprice(group_obj,valid_inputs3[0])
             HouseCodeOp.update_instalments(group_obj,valid_inputs3[4])
@@ -4630,11 +4637,23 @@ class AddTenant(Resource):
         if target == "client discount":
             discount = request.args.get("discount")
             if discount == "true":
-                ng = house_obj.housecode.listprice * 0.95
+                if house_obj.housecode.discount:
+                    ng = house_obj.housecode.listprice - house_obj.housecode.discount
+                elif house_obj.housecode.percentage_discount:
+                    ng = house_obj.housecode.listprice * (0.01 * house_obj.housecode.percentage_discount)
+                else:
+                    ng = house_obj.housecode.listprice
             else:
                 ng = house_obj.housecode.listprice
 
             return render_template('ajax_discount.html',mp=f'{ng:,.1f}')
+
+        if target == "deposit info":
+            pdep = f'{house_obj.housecode.percentage_deposit}' if house_obj.housecode.percentage_deposit else ""
+            dep = f'{house_obj.housecode.deposit}' if house_obj.housecode.deposit else ""
+            num_mi = f'{house_obj.housecode.instalments}' if house_obj.housecode.instalments else ""
+
+            return render_template('ajax_deposit_info.html',deposit_percentage=pdep,deposit_amount=dep,num_mi=num_mi)
 
         elif target == "negotiated details":
             if not raw_checkin:
@@ -5330,7 +5349,7 @@ class AddLead(Resource):
             sname = request.form.get('sname')
 
             try:
-                name = fname + oname + sname
+                name = fname + " " + oname + " " + sname
             except:
                 name = fname
 
@@ -5338,8 +5357,6 @@ class AddLead(Resource):
         national_id = request.form.get('national_id')
         email = request.form.get('email')
 
-
-        
         # rep_id = SalesRepOp.fetch_rep_by_username(current_user.username).id
 
         created_by = current_user.id

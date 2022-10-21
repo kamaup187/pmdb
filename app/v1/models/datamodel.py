@@ -694,6 +694,8 @@ class PermanentTenant(db.Model):
     num_instalment = db.Column(db.Integer,default=1)
     contracts_url = db.Column(db.VARCHAR)
 
+    wallet = db.Column(db.Float,default=0)
+
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     checkin = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -724,9 +726,6 @@ class PermanentTenant(db.Model):
     deposits = db.relationship('TenantDeposit',backref='ptenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
 
-
-
-
     def __repr__(self):
         return self.name
 
@@ -744,15 +743,36 @@ class Lead(db.Model):
     sms = db.Column(db.Boolean,default=True)
 
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    lead_type = db.Column(db.String,default="hot")
+    status = db.Column(db.String,default="hot")
 
     rep_id = db.Column(db.Integer, db.ForeignKey(SalesRep.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
+    conversations = db.relationship('Conversation',backref='lead', cascade="all, delete-orphan")#will create allocation obj
+
     def __repr__(self):
         return self.name
+
+
+class Conversation(db.Model):
+    """db model class"""
+
+    __tablename__ = 'conversations'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    action = db.Column(db.String)
+    message = db.Column(db.String)
+    feedback = db.Column(db.VARCHAR)
+    date = db.Column(db.DateTime,default=db.func.current_timestamp())
+    status = db.Column(db.String,default="pending")
+    #foreign keys
+    lead_id = db.Column(db.Integer, db.ForeignKey(Lead.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    def __repr__(self):
+        return self.subject
 
 class Tenant(db.Model):
     """db model class"""
@@ -775,6 +795,9 @@ class Tenant(db.Model):
     initial_arrears = db.Column(db.Float,default=0)
 
     tenant_type = db.Column(db.String,default="tenant")
+
+    wallet = db.Column(db.Float,default=0)
+
 
     multiple_houses =  db.Column(db.Boolean,default=False)
     # cleared = db.Column(db.Boolean,default=False)

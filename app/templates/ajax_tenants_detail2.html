@@ -20,6 +20,20 @@
 
           <div class="pb-2 bg-white divjust-end">
 
+            <div class="dispnon">
+              <nav class="nav nav-borders">
+                <!-- <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+                <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+                <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a> -->
+                <div>
+                  <label class="me-2"><input type="checkbox" value="cb1" class="chb"/> Hot/cold leads</label>
+                  <label class="me-2"><input type="checkbox" value="cb2" class="chb" /> Booked clients</label>
+                  <label class="me-2"><input type="checkbox" value="cb3" class="chb" /> Negotiations</label>
+                  <label class="me-2"><input type="checkbox" value="cb4" class="chb" checked/> Closed sales</label>
+                </div>
+              </nav>
+            </div>
+
             <div class="">
   
               <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addLeadModal">
@@ -32,10 +46,10 @@
                 Add client
               </span>
   
-              <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
+              <!-- <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
                 <i class="me-1" data-feather="user-plus"></i>
                 Import data
-              </span>
+              </span> -->
   
               <span class="navbar-drr d-inline-block">
                 <span class="dropdown-dr">
@@ -51,19 +65,7 @@
   
             </div>
   
-            <div class="dispnon">
-              <nav class="nav nav-borders">
-                <!-- <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
-                <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
-                <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a> -->
-                <div>
-                  <label class="me-2"><input type="checkbox" value="cb1" class="chb"/> Hot/cold leads</label>
-                  <label class="me-2"><input type="checkbox" value="cb2" class="chb" /> Booked clients</label>
-                  <label class="me-2"><input type="checkbox" value="cb3" class="chb" /> Negotiations</label>
-                  <label class="me-2"><input type="checkbox" value="cb4" class="chb" checked/> Closed sales</label>
-                </div>
-              </nav>
-            </div>
+
   
           </div>
         
@@ -282,11 +284,11 @@
                         
                         <div class="row mb-5">
                           <div class="form-group col-md-4  ">
-                            <span>Shareholder/Normal</span>
+                            <span>Type</span>
                             <select class="select-css" id ="classtype" >
                               <option disabled selected value> select... </option>
-                              <option selected value="shareholder"> Shareholder </option>
-                              <option selected value="normal"> Normal </option>
+                              <option value="other">Other</option>
+                              <option value="shareholder"> Shareholder </option>
 
                             </select>
                           </div>
@@ -299,7 +301,7 @@
                           </div>
 
                           <div class="form-group col-md-4  ">
-                            <span>Select sales rep</span>
+                            <span>Select sales agent</span>
                             <select class="select-css" id ="select_rep" >
                               <option disabled selected value> loading... </option>
                             </select>
@@ -493,6 +495,72 @@
     </div>
 
 
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fad">
+              <span class="mr-3 smallify font-weight-bold">Lead conversation <span class="text-black" id="lead-name"></span></span>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            </h5>
+            <!-- <span class="text-gray-900">Client: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span> -->
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+
+                      <!-- <div class="center-btn"><span id="notifications" class="text-info smallify">heyeye</span></div> -->
+
+                      <div class="mt-4">
+
+                        <div class="form-group mt-2 mb-3">
+                          <label>Channel</label>
+                          <select class="select-css" id="channel" required>
+                            <option disabled selected value> -- select below -- </option>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone call</option>
+                            <option value="meeting">In-persion meeting</option>
+                            <option value="site">Site visit</option>
+                  
+                          </select>
+                        </div>
+  
+                        <div class="row mb-3">
+                          <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Subject</span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="subject_input" class="form-control ph pl-5" type="text" placeholder="{{plot}}">
+                          </div>
+                        </div>
+  
+                        <div class="form-group dispnon mt-2 mb-3">
+                          <label>Feedback</label>                     
+                          <textarea rows="4" id="remindertext" class="form-control ph" rows="1" placeholder="Write lead responses here"></textarea>
+                        </div>
+                      </div>
+        
+                    
+                      <div class="divbg center-btn">
+                        <button id="chatbtn" type="button" class="btn-success borderless text-white">Submit</button>
+                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade" id="negotiationsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -517,28 +585,7 @@
                       <!-- <div class="center-btn"><span id="notifications" class="text-info smallify">heyeye</span></div> -->
 
                       <div id="client_details" class="mt-2">
-                        <div class="row">
-                          <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Client</span></div>
-                          <div class="form-group col-7 no-paddin input-icons">
-                            <input id="client" class="form-control ph pl-5" type="text" placeholder="{{client}}">
-                            <span class="fa field-icon-two text-info"><i class="fas fa-user"></i></span>
-                          </div>
-                        </div>
-  
-                        <div class="row">
-                          <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Unit</span></div>
-                          <div class="form-group col-7 no-paddin input-icons">
-                            <input id="client" class="form-control ph pl-5" type="text" placeholder="{{plot}}">
-                            <span class="fa field-icon-two text-info"><i class="fas fa-home"></i></span>
-                          </div>
-                        </div>
-  
-                        <div class="row">
-                          <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Asking price</span></div>
-                          <div class="form-group col-7 no-paddin input-icons">
-                            <input id="client" class="form-control ph pl-5" type="text" placeholder="{{mp}}">
-                          </div>
-                        </div>
+                          <div>Fetching data...</div>
                       </div>
 
                       <div class="">
@@ -563,7 +610,15 @@
 
                       <div id="payment_agreement" class="">
                         <div class="">
-                          <div class="no-padding text-right"><span class="form-control smallify border-0">Deposit (30%)<span class="text-danger">*</span></span></div>
+
+                          <div id="deposit_details" class="dispnone">
+                            <span id="deposit_percentage">{{deposit_percentage}}</span>
+                            <span id="deposit_amount">{{deposit_amount}}</span>
+                            <span id="num_of_mi">{{num_mi}}</span>
+
+                          </div>
+
+                          <div class="no-padding text-right"><span class="form-control smallify border-0">Deposit<span class="text-danger">*</span></span></div>
                           <div class="form-group no-paddin input-icons">
                             <input id="deposit" class="form-control ph pl-5 text-end" type="text">
                           </div>
@@ -574,12 +629,12 @@
                           <div class="form-group no-paddin input-icons">
                             <input id="deposit2" class="form-control ph pl-5 text-end" type="text">
                           </div>
-                        </div>
+                        </div>-->
   
                         <div class="row">
                           <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">No. of Installments</span></div>
                           <div class="form-group col-7 no-paddin input-icons">
-                            <input id="num_mi" class="form-control ph" type="text" placeholder="">
+                            <input id="num_mi" class="form-control ph" type="text" placeholder="" value="787">
                             <span class="fa field-icon text-info iconotifications">--</span>
                           </div>
                         </div>
@@ -589,7 +644,7 @@
                           <div class="form-group col-7 no-paddin input-icons">
                             <input id="mi" class="form-control ph pl-5" type="text" placeholder="">
                           </div>
-                        </div> -->
+                        </div> 
   
 
                       </div>
@@ -927,6 +982,22 @@
 
 <script>
 
+    function getLeads() {
+      $("#current-reloader").html("leads");
+      $.ajax({
+        url: "{{ url_for('api.fetchleads') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier").text(),
+          target: "leads"
+        },
+        success: function (response) {
+
+          $("#result-view").html(response);
+        }
+      });
+    }
+
     function getProposals() {
       $("#current-reloader").html("proposals");
       $.ajax({
@@ -996,7 +1067,9 @@
           $(this).prop('checked', false);
         }else{
           // console.log("hewwww",$(this).val())
-          if ($(this).val() == "cb1"){}
+          if ($(this).val() == "cb1"){
+            getLeads()
+          }
           else if ($(this).val() == "cb2") {
             getProposals()
           } else if ($(this).val() == "cb3"){
@@ -1475,10 +1548,23 @@
       type: "get",
       data: {
             tenant_id:$("#tenant_identifier").text(),
-            target:"client details"
+            target: "deposit info"
           },
       success: function(response) {
-        $("#client_details").html(response);
+        $("#deposit_details").html(response);
+
+        $.ajax({
+          url: "{{ url_for('api.addtenant') }}",
+          type: "get",
+          data: {
+            tenant_id: $("#tenant_identifier").text(),
+            target:"client details"
+          },
+          success: function (response) {
+            $("#client_details").html(response);
+
+          }
+        });
 
       }
     });
@@ -1856,40 +1942,47 @@ $('#expand').click(function(){
       setTimeout(refresh,10);
   });
   </script>
-
+<script>
+    $("num_mi").val(89)
+</script>
 
 <script>
-
-
-$("#neg_price").on('keyup',function(){
-  if ($("#neg_price").val() > 1){
+  $("#neg_price").on('keyup', function () {
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    $("#deposit").val((negprice*0.3).toLocaleString('en-US'))
-    // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
-  }else{
-    let negprice = $("#neg_price").val().replace(/,/g, '');
-    $("#deposit").val((negprice*0.3).toLocaleString('en-US'))
-    // $("#deposit2").val((negprice*0.2).toLocaleString('en-US'))
 
-    $('#num_mi').keyup();
+    if (negprice > 1) {
+      if ($("#deposit_percentage").text().length > 1) {
+        $("#deposit").val((negprice * 0.01 * $("#deposit_percentage").text()).toLocaleString('en-US'))
+      } else if ($("#deposit_amount").text().length > 1) {
+        $("#deposit").val($("#deposit_amount").text().toLocaleString('en-US'))
+      } else {
+        $("#deposit").val(0.0)
+      }
+      console.log("rararrarara", $("#num_of_mi").text())
+      // $("num_mi").val($("#num_of_mi").text())
+      $("num_mi").val(89)
 
-  }
-  
+      $('#num_mi').keyup();
+    } else {
+      $("#deposit").val(0.0)
+      // $("num_mi").val($("#num_of_mi").text())
+      $("num_mi").val(89)
+      $('#num_mi').keyup();
+    }
   })
 
-//   $("#deposit").on('keyup',function(){
-//     $("#negotiatebtn").addClass("dispnone")
-//     $('#num_mi').keyup();
-// })
+
+
+    $("#deposit").on('keyup', function () {
+      $('#num_mi').keyup();
+    })
 
   $("#mi").on('keyup',function(){
     // $("#negotiatebtn").addClass("dispnone")
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    // let deposit = $("#deposit").val().replace(/,/g, '');
-    // let deposit2 = $("#deposit2").val().replace(/,/g, '');
-    let deposit2 = 0.0;
-    let diff = negprice - deposit2;
+    let deposit = $("#deposit").val().replace(/,/g, '');
+    let diff = negprice - deposit;
     let mi = $("#mi").val().replace(/,/g, '');
     let num_mi = diff / mi;
     if (num_mi > 101 ){
@@ -1925,10 +2018,8 @@ $("#neg_price").on('keyup',function(){
     // $("#negotiatebtn").addClass("dispnone")
 
     let negprice = $("#neg_price").val().replace(/,/g, '');
-    // let deposit = $("#deposit").val().replace(/,/g, '');
-    let deposit2 = 0.0;
-    // let deposit2 = $("#deposit2").val().replace(/,/g, '');
-    let diff = negprice - deposit2;
+    let deposit = $("#deposit").val().replace(/,/g, '');
+    let diff = negprice - deposit;
     let num_mi = $("#num_mi").val().replace(/,/g, '');
     let mi = diff / num_mi;
     if (num_mi > 101 ){

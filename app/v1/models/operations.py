@@ -1015,6 +1015,7 @@ class HouseCodeOp(HouseCode,Base):
         db.session.commit()
 
     def update_discount(self,discount):
+        print("DISCCCCC",discount)
         if discount != "null":
             self.percentage_discount = 0.0
             self.discount = discount
@@ -1045,7 +1046,7 @@ class HouseCodeOp(HouseCode,Base):
         db.session.commit()
 
     def update_instalments(self,instalments):
-        if instalments:
+        if instalments != "null":
             self.instalments = instalments
         db.session.commit()
 
@@ -1880,23 +1881,22 @@ class LeadOp(Lead,Base):
         self.company_id = company_id
         self.user_id = created_by
 
+    def fetch_lead_by_id(lead_id):
+        return Lead.query.filter_by(id=lead_id).first()
+
     def view(self):
         # print("NAME >>>>",self.name)
         return {
-            'id':"p" + str(self.id),
-            'identity':LeadOp.generate_identity(self),
+            'id':self.id,
             'editid':LeadOp.generate_editid(self),
             'delid':LeadOp.generate_delid(self),
-
-            'name':LeadOp.generate_name(self),
-            'fullname':self.name,
-
+            'name':self.name,
             'idno':self.national_id,
-            'tel':LeadOp.get_contact(self),
-            'email':LeadOp.get_email(self),
-
-            'status':LeadOp.get_status(self),
- 
+            'tel':self.phone,
+            'email':self.email,
+            'status':self.status,
+            'date':self.date.date(),
+            'chats': len(self.conversations)
         }
 
 class PermanentTenantOp(PermanentTenant,Base):

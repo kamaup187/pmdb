@@ -3660,9 +3660,9 @@ def send_bulk_sms(propid,temp_txt):
                     sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
-                    allowed = True
-                    if allowed:
-                    # if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+                    # allowed = True
+                    # if allowed:
+                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":
@@ -4908,9 +4908,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,None,tenant.id,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            # if co.sms_provider == "Advanta":
-                            allowed = True
-                            if allowed:
+                            if co.sms_provider == "Advanta":
+                            # allowed = True
+                            # if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
                                 if smsid:
                                     MonthlyChargeOp.update_smsid(bill,smsid)
@@ -5043,13 +5043,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,None,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            # if co.sms_provider == "Advanta":
-                            if co.name.lower() == "rhino park place" or co.name.lower() == "test agencies":
-                                allowed = False
-                            else:
-                                allowed = True
+                            if co.sms_provider == "Advanta":
+                            # if co.name.lower() == "rhino park place" or co.name.lower() == "test agencies":
+                            #     allowed = False
+                            # else:
+                            #     allowed = True
 
-                            if allowed:
+                            # if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
                                 if smsid:
                                     MonthlyChargeOp.update_smsid(bill,smsid)

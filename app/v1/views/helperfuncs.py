@@ -5995,7 +5995,7 @@ def read_water_excel(dict_array,apartment_id,user_id):
                 
     return '<span class="text-success">Upload successful</span>'
 
-def read_payments_excel(dict_array,payperiod,apartment_id,userid):
+def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
     from app import create_app
     app = create_app(configuration)
     app.app_context().push()
@@ -6033,6 +6033,11 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid):
             pass
         else:
             print("specified house does not exist")
+            if cbid:
+                ctob_obj = CtoBop.fetch_c2b_by_id(cbid)
+                if ctob_obj:
+                    CtoBop.update_status(ctob_obj,"unclaimed")
+
             continue
 
         # URGENT TO DO REVISIT FOR RESIDENT AND TENANTS

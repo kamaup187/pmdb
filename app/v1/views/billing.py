@@ -1904,7 +1904,7 @@ class UploadPayments(Resource):
                 dict_array.append(dict_obj)
 
             uploadsjob2 = q.enqueue_call(
-                func=read_payments_excel, args=(dict_array,payperiod,prop.id,current_user.id,), result_ttl=5000
+                func=read_payments_excel, args=(dict_array,payperiod,prop.id,current_user.id,None,), result_ttl=5000
             )
 
         except Exception as e:
@@ -4764,7 +4764,7 @@ class CallBackUrlAssetisha(Resource):
             dict_array.append(dict_obj)
 
             uploadsjob2 = q.enqueue_call(
-                func=read_payments_excel, args=(dict_array,payperiod,propid,1,), result_ttl=5000
+                func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
             )
 
             CtoBop.update_status(ctob_obj,"claimed")

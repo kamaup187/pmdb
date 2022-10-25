@@ -1,0 +1,220 @@
+<!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">({month} payments <button id="expand" class="btn btn-outline-primary herebtn"> <span id="expandtoggler">expand</span> </button></div> -->
+<span id="c2b_identifier" class="dispnone"></span>
+<span id="del_c2b_identifier" class="dispnone"></span>
+
+<span id="auto" class="dispnone"></span>
+<!-- <div id="dataperio" class="text-black text-left text-125">{{data}}</div> -->
+
+<div class="">
+  <div id="reqdata" class="table-responsive">
+    <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+      <thead class="custom-header">
+        <tr>
+          <th class="text-info font-weight-bold">Shortcode</th>
+          <th class="text-info font-weight-bold">FirstName</th>
+          <th class="text-info font-weight-bold">LastName</th>
+          <th class="text-info font-weight-bold">Phone</th> 
+          <th class="text-info font-weight-bold">House</th>                                                                 
+          <th class="text-info">Ref</th>
+          <th class="text-info text-danger">Amount</th>
+          <th class="text-info">Date</th>
+          <!-- <th class="text-info">Resolve</th> -->
+          <th class="text-info">Void</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items%}
+        <tr>
+                                                                   
+          <td class="data-cell ">{{ item['paybill'] }}</td>
+          <td class="data-cell ">{{ item['fname'] }}</td>
+          <td class="data-cell ">{{ item['lname'] }}</td>
+          <td class="data-cell ">{{ item['phone'] }}</td>
+          <td class="data-cell ">{{ item['billref'] }}</td>
+          <td class="data-cell ">{{ item['transid'] }}</td>
+          <td class="data-cell ">{{ item['amount'] }}</td>
+          <td class="data-cell ">{{ item['date'] }}</td>
+          <!-- <td class="data-cell">
+            <div>
+              <span id="{{item['id']}}" type="button"
+                class="resolve btn btn-outline-success ellipsis borderless modalTrigger p-1" data-toggle="modal"
+                data-bs-toggle="modal" data-target="#addPaymentModal2"><i
+                  class="fas fa-angle-double-right"></i></span>
+            </div>
+          </td> -->
+
+          <td class="data-cell">
+            <div>
+              <span id="{{item['delid']}}" type="button"
+                class="resolve btn btn-outline-danger ellipsis borderless modalTrigger p-1" data-toggle="modal"
+                data-bs-toggle="modal" data-target="#unclaimModal">Void</span>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+  </table>
+  </div>
+</div>
+
+<script>
+    var rawIds = "{{ cbids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_c2b_identifier").html(item)
+          }else{
+            $("#edit_c2b_identifier").html(item)
+          }
+          
+        }else{
+          // $("#c2b_identifier").html(item)
+          // $("#c2bitem_id").html(item)
+          // console.log("running c2b item",item)
+          // $("#thouse").removeClass("dispnone")
+          // $("#house_selector").addClass("dispnone")
+          // $("#confirm_details").removeClass("dispnone")
+
+          // $.ajax({
+          //   url: "{{ url_for('api.receivepayment') }}",
+          //   type: "get",
+          //   data: {
+          //         cbid:item,
+          //         propid: $("#prop_identifier").text(),
+          //         target:"fetch c2b item"
+          //       },
+          //   success: function(response) {
+          //     $('#c2bitem').html(response);
+
+          //     $.ajax({
+          //       url: "{{ url_for('api.receivepayment') }}",
+          //       type: "get",
+          //       data: {
+          //         cbid: item,
+          //         propid: $("#prop_identifier").text(),
+          //         target: "fetch target tenant"
+          //       },
+          //       success: function (response) {
+          //         $('#confirm_details').html(response);
+
+          //         $("#fieldset2").removeClass("dispnone")
+
+
+          //         $.ajax({
+          //           url: "{{ url_for('api.receivepayment') }}",
+          //           type: "get",
+          //           data: {
+          //             propid: $("#prop_identifier_main").text(),
+          //             propname: $("#select_prop").val(),
+          //             house: $("#select_house").val(),
+          //             cbid: item,
+          //             payperiod: $("#billdatepicker").val(),
+          //             paidamount: $("#paidamount").val(),
+          //             target: "breakdown"
+          //           },
+          //           success: function (response) {
+          //             $("#billbreakdown").html(response);
+
+          //             $.ajax({
+          //               url: "{{ url_for('api.receivepayment') }}",
+          //               type: "get",
+          //               data: {
+          //                 propid: $("#prop_identifier_main").text(),
+          //                 propname: $("#select_prop").val(),
+          //                 house: $("#select_house").val(),
+          //                 house2: $("#house-holder").text(),
+          //                 cbid: item,
+          //                 payperiod: $("#billdatepicker").val(),
+          //                 target: "amount due"
+          //               },
+          //               success: function (response) {
+          //                 $("#totaldue").html(response);
+
+          //                 if ($("#ctb_item_amount").text()) {
+          //                   $("#paidamount").val($("#ctb_item_amount").text())
+          //                   $('#paidamount').keyup();
+          //                   $("#bill_ref").val($("#ctb_item_ref").text())
+          //                 }
+
+
+          //                 if ($("#ctb_item_ref").text()) {
+          //                   var paymodeRadio = $('input:radio[name=paymode]');
+          //                   if (paymodeRadio.is(':checked') === false) {
+          //                     console.log("working yeeee")
+          //                     paymodeRadio.prop('checked', true);
+          //                     paymodeRadio.change();
+          //                   } else {
+          //                     console.log("not workin ffffff")
+          //                     // do nothing
+          //                   }
+          //                 } else {
+          //                   console.log("kubaad")
+          //                 }
+
+          //                 if($("#auto").text() == "auto"){
+          //                   // alert("about to submit automatically")
+          //                   $("#paybtn_alt").click();
+          //                 }else{
+          //                   console.log("AUTO>>",$("#auto").text());
+          //                 }
+
+          //               }
+          //             });
+
+          //           }
+          //         });
+
+          //       }
+          //     });
+
+          //   }
+          // });
+
+
+
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        "order": [[ 0, "asc" ]],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script>
+
+<!-- <script>
+
+  var x = document.getElementById("period");
+  var y = document.getElementById("dataperiod");
+
+  x.innerHTML =  y.innerHTML ;
+
+</script> -->
+
+
+
+<!-- <script>
+    
+  $(".resolve").on('click',function(){ 
+    var propcode =  $("#prop_identifier").text()
+    $("#prop_identifier_main").html(propcode)
+  });
+  
+  </script> -->

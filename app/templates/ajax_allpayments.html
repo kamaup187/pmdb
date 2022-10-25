@@ -664,6 +664,24 @@
       </div>
     </div>
 
+    <div class="modal fade center-btn" id="unclaimModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-danger">Confirm to reverse the allocation</div>
+          
+          <!-- <span class="text-gray-700 small mb-2 mr-2 ml-2">Tenant will be <span class="text-danger">NOTIFIED</span> of the reversal. Continue?</span> -->
+          <div class="has-margin-bottom divbg">
+              <button id="void_ctob" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Void</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -2229,6 +2247,7 @@
 
 <script>
     
+    
   $("#archive_ctob").on('click',function(){   
     
     $('#archive_ctob').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>archiving...'); 
@@ -2267,6 +2286,48 @@
   
   </script>
 
+<script>
+
+      
+$("#void_ctob").on('click',function(){   
+    
+    $('#void_ctob').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>reversing...'); 
+    $.ajax({
+      url: "{{ url_for('api.editpayment') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            cbid_id:$("#del_c2b_identifier").text(),
+            target:"reverse payment"
+          },
+      success: function(response) {
+        $(".closemodal").click();
+        $(".payment-info").html("<span class='text-success'>Payment reversed successfully</span>");  
+        $('#void_ctob').html('Voided!');
+        $.ajax({
+            url: "{{ url_for('api.fetchpayments') }}",
+            type: "get",
+            data: {
+                  propid: $("#prop_identifier").text(),
+                  target:"claimed"
+                },
+            success: function(response) {
+              $("#child-result-view").html(response);
+              $('#void_ctob').html('Void!');
+
+              
+            }
+          });
+        
+      },
+      error: function(xhr) {
+        $('#void_ctob').html('Archive');
+        alert("Multi housed tenant payments cannot be archived. Please contact the administrator.");
+        }
+    });
+  });
+  
+  </script>
 
 <script>
   $("#edit_payment").on('click',function(){

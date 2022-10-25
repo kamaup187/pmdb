@@ -3364,8 +3364,29 @@ class EditPayment(Resource):
                 CtoBop.update_status(cbid,"archived")
                 return proceed
 
-        payment_obj = PaymentOp.fetch_payment_by_id(payid)
-        period = payment_obj.pay_period
+        if target == "reverse payment":
+            cbid_id = request.form.get("cbid_id")
+            cbidid = get_identifier(cbid_id)
+            cbid = CtoBop.fetch_record_by_id(cbidid)
+            if cbid:
+                # import pdb; pdb.set_trace()
+                CtoBop.update_status(cbid,"unclaimed")
+                target = "void payment"
+
+                if cbid:
+                    payment_obj = PaymentOp.fetch_payment_by_ref(cbid.trans_id)
+                    if payment_obj:
+                        period = payment_obj.pay_period
+        else:
+            payment_obj = PaymentOp.fetch_payment_by_id(payid)
+            period = payment_obj.pay_period
+
+        try:
+            print(period)
+        except:
+            print("NO PERIOD")
+
+        # import pdb; pdb.set_trace()
 
         if paydate:
             formatted_paydate = date_formatter(paydate)
@@ -3457,9 +3478,9 @@ class EditPayment(Resource):
                 MonthlyChargeOp.update_payment(target_bill,cumulative_pay)
                 MonthlyChargeOp.update_payment_date(target_bill,None)
 
-                if period.month != payment_obj.apartment.billing_period.month:
-                    update_total = target_bill.total_bill + payment_obj.amount
-                    MonthlyChargeOp.update_monthly_charge(target_bill,"null","null","null","null","null","null","null","null","null","null",update_total,None)
+                # if period.month != payment_obj.apartment.billing_period.month:
+                #     update_total = target_bill.total_bill + payment_obj.amount
+                #     MonthlyChargeOp.update_monthly_charge(target_bill,"null","null","null","null","null","null","null","null","null","null",update_total,None)
 
                 if target_bill.tenant_id:
                     tenant_obj = TenantOp.fetch_tenant_by_id(target_bill.tenant_id)

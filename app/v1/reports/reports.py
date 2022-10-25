@@ -6852,7 +6852,7 @@ class FetchPayments(Resource):
                     # else:
                     #     if r.business_shortcode in targets:
                     #         CtoBop.update_status(r,"claimed")
-                    if r.status == "claimed":
+                    if r.status == "claimed" and r.post_date.month == prop.billing_period.month and r.post_date.year == prop.billing_period.year:
                         sifted.append(r)
 
             unclaimed = ctb_payment_details(sifted)

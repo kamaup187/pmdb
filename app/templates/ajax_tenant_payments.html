@@ -11,8 +11,11 @@
       <a id="current" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">current</a>
       <a id="previous" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">previous</a>
       <a id="voided" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
+      <a class="hide nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
       <a id="unclaimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">unclaimed</a>
       <a id="archived" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">archived</a>
+      <a id="claimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Resolved</a>
+
 
       <!-- <a id="closebtn" class="nav-link pb-0 pt-1 text-danger underline d-none active ms-0" href="#">Close voided payments</a> -->
     </nav>
@@ -167,6 +170,8 @@
       $("#previous").removeClass("underline")
       $("#unclaimed").removeClass("underline")
       $("#archived").removeClass("underline")
+      $("#claimed").removeClass("underline")
+
 
 
       $("#current-reloader").html("new");
@@ -194,6 +199,8 @@
       $("#voided").removeClass("underline")
       $("#unclaimed").removeClass("underline")
       $("#archived").removeClass("underline")
+      $("#claimed").removeClass("underline")
+
 
 
       $("#current-reloader").html("old");
@@ -221,6 +228,8 @@
       $("#previous").removeClass("underline")
       $("#voided").removeClass("underline")
       $("#archived").removeClass("underline")
+      $("#claimed").removeClass("underline")
+
 
 
       $("#current-reloader").html("unclaimed");
@@ -252,6 +261,8 @@
       $("#previous").removeClass("underline")
       $("#unclaimed").removeClass("underline")
       $("#archived").removeClass("underline")
+      $("#claimed").removeClass("underline")
+
 
       $("#activeprop-item").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-item-child"></span></span>')
       $("#activeprop-item-child").text($(this).text() + " PAYMENTS")
@@ -279,6 +290,8 @@
       $("#previous").removeClass("underline")
       $("#unclaimed").removeClass("underline")
       $("#voided").removeClass("underline")
+      $("#claimed").removeClass("underline")
+
 
       $("#activeprop-item").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-item-child"></span></span>')
       $("#activeprop-item-child").text($(this).text() + " PAYMENTS")
@@ -292,6 +305,35 @@
                 data: {
                   propid:  $("#prop_identifier").text(),
                   target:"archived"
+                },
+                success: function(response) {
+                  
+                  $("#child-result-view").html(response);
+                }
+              });
+  })
+
+
+  $("#claimed").click(function(){
+      $(this).addClass("underline")
+      $("#current").removeClass("underline")
+      $("#previous").removeClass("underline")
+      $("#unclaimed").removeClass("underline")
+      $("#voided").removeClass("underline")
+      $("#archived").removeClass("underline")
+
+      $("#activeprop-item").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-item-child"></span></span>')
+      $("#activeprop-item-child").text($(this).text() + " PAYMENTS")
+
+      $("#current-reloader").html("claimed");
+
+
+      $.ajax({
+                url: "{{ url_for('api.fetchpayments') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"claimed"
                 },
                 success: function(response) {
                   

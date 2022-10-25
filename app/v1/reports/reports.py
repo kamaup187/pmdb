@@ -6834,6 +6834,32 @@ class FetchPayments(Resource):
 
             return render_template("ajax_archived_payments.html",cbids=cbids,items=unclaimed,dataperiod="")
 
+        if target == "claimed":
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
+            prop = ApartmentOp.fetch_apartment_by_id(propid)
+            sifted = []
+            if prop.payment_bank == "PayBill" or prop.paymentdetails.mpesapaybill:
+                shortcode = prop.payment_bankacc
+                if not shortcode:
+                    shortcode = prop.paymentdetails.mpesapaybill
+                raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
+
+                for r in raw_unclaimed:
+                    # targets = ["532406","964399","4012401","4081687"]
+                    # if r.post_date.day == 6 and r.post_date.year == 2022 and r.post_date.month == 4:
+                    #     pass
+                    # else:
+                    #     if r.business_shortcode in targets:
+                    #         CtoBop.update_status(r,"claimed")
+                    if r.status == "claimed":
+                        sifted.append(r)
+
+            unclaimed = ctb_payment_details(sifted)
+            cbids = get_obj_ids(unclaimed)
+
+            return render_template("ajax_claimed_payments.html",cbids=cbids,items=unclaimed,dataperiod="")
+
         if target == "new":
             prop_id = request.args.get("propid")
             propid = get_identifier(prop_id)

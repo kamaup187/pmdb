@@ -49,7 +49,7 @@
                           <div class="mb-2 ml-2">Unique no#: <span class="text-black font-weight-bold">WN{{tenant.id}}</span></div>
                         </div>  
                     </div>
-                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-pro"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
 
                 </div>
 
@@ -63,9 +63,9 @@
                           class="font-weight-bold text-danger">{{tenant.date.strftime("%d/%B/%Y")}}</span></div>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                  <!-- <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
                     data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-door-open mr-2"></i>Remove
-                      resident</span></button>
+                      resident</span></button> -->
                 
                 </div>
                 
@@ -80,7 +80,7 @@
                     </div>
                   </div>
                   <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
-                    data-target="#tenantSmsModal"><span class="fixed-width-prop"><i class="fas fa-sms mr-2"></i>Direct message
+                    data-target="#tenantSmsModal"><span class="fixed-width-pro"><i class="fas fa-sms mr-2"></i>Direct message
                       </span></button>
                 
                 </div>
@@ -94,7 +94,7 @@
                         <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                       </div>  
                   </div>
-                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Invoice statement</span></button>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-pro"><i class="fas fa-print mr-2"></i>Invoice statement</span></button>
 
               </div>
                 
@@ -487,7 +487,7 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update tenant detail</h5>
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update client personal info</h5>
             <span id="update-reloader" class="dispnone"></span>
             <div class="alert-msgs"></div>
           </div>
@@ -740,6 +740,27 @@
 
 
 <script>
+
+
+  $.ajax({
+  url: "{{ url_for('api.fetchbills') }}",
+  type: "get",
+  data: {
+    tenantid: $("#tenant_identifier").text(),
+    target: "tenant bill",
+    ttype: $("#ttype").text()
+  },
+  success: function (response) {
+
+    $("#search-result-view").html(response);
+  }
+});
+
+
+</script>
+
+
+<script>
   // This script autopulate house options and displays tenant name
   $("#receiptModal").on('shown.bs.modal', function(){
     $.ajax({
@@ -954,6 +975,7 @@
       type: "get",
       data: {
             tenantid: $("#edit_tenant_identifier").text(),
+            ttype: $("#ttype").text(),
             target: "nonselfupdate"
           },
       success: function(response) {

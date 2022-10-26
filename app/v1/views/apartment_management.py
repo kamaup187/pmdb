@@ -5485,7 +5485,7 @@ class UpdateTenant(Resource):
         if target == "nonselfupdate":
             tenantid = request.args.get("tenantid")
             identity = get_identifier(tenantid)
-            if tenantid.startswith("pedit"):
+            if tenantid.startswith("pedit") or request.args.get("ttype") == "resident" or request.args.get("ttype") == "owner":
                 tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
             else:
                 tenant = TenantOp.fetch_tenant_by_id(identity)

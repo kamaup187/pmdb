@@ -9,16 +9,14 @@
       <a id="download_tenants" href="/download/template/clientdata" class="dispnone">download</a>
 
 
-        <div id="parent-section">
-          <div class="col-12 no-padding mb-1">
-            <div class="card-header py-1 bg-warning divjust-end" >
-                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>Manage clients <span class="ms-2"> >> {{prop.name}}</span></div>
-                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
-            </div>
-          </div>
 
 
           <div class="pb-2 bg-white divjust-end">
+            <span id="backbtn" class="btn btn-sm btn-light text-primary">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-long-arrow-alt-left me-2"></i>
+              Go back
+            </span>
 
             <div class="dispnon">
               <nav class="nav nav-borders">
@@ -28,8 +26,8 @@
                 <div>
                   <label class="me-2"><input type="checkbox" value="cb1" class="chb"/> Hot/cold leads</label>
                   <label class="me-2"><input type="checkbox" value="cb2" class="chb" /> Booked clients</label>
-                  <label class="me-2"><input type="checkbox" value="cb3" class="chb" /> Negotiations</label>
-                  <label class="me-2"><input type="checkbox" value="cb4" class="chb" checked/> Closed sales</label>
+                  <label class="me-2"><input type="checkbox" value="cb3" class="chb" checked/> Current sales</label>
+                  <label class="me-2"><input type="checkbox" value="cb4" class="chb"/> Closed sales</label>
                 </div>
               </nav>
             </div>
@@ -70,14 +68,13 @@
           </div>
         
 
-        <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
         <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
           <div class="bar-alt"></div>
           <div class="bar-alt"></div>
           <div class="bar-alt"></div>
         </div>
         
-        <div id="result-view" class="row">
+        <div id="child-result-view" class="row">
 
         </div>
         </div>
@@ -664,6 +661,59 @@
       </div>
     </div>
 
+    <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Create invoice</span>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            </h5>
+            <!-- <span class="text-gray-900">Client: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span> -->
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+
+
+                        <div class="form-group mb-3 input-icons">
+                          <span class="text-danger font-weight-bold">Choose starting date</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate1" class="form-control ph" type="text" placeholder="Select date" readonly />
+                            <label for="checkindate1" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
+                          </div>
+                        </div>
+
+                      <div class="row mb-3 underline-thin-fade">
+                        <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
+                        <div class="form-group no-paddin input-icons"> Contracts <span class="text-info">optional</span>
+                          <input class="ph" id="contractsfile1" type = "file" name = "filename" />
+                          <span class="fa field-icon text-info iconotifications">--</span>
+                        </div>
+                      </div>
+        
+                    
+                      <div class="divbg center-btn">
+                        <button id="invoicebtn" type="button" class="btn-secondary borderless text-white">Submit</button>
+                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="contractsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -686,27 +736,19 @@
 
 
 
-                        <div class="form-group mb-3 input-icons row">
-                          <span class="text-danger font-weight-bold">Date</span>
-                          <div id="datepicker7" class="date col-8" data-date-format="dd-mm-yyyy">
-                            <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                            <label for="checkindate" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
-                          </div>
-                          <div class="col-4"><button id="rundate" type="button" class="btn btn-warning text-white">Run</button></div>
-                        </div>
-
-                        <div id="client_details_two" class="mt-2">
-                          <div id="show-contracts-spinner" class="center-btn mb-2 dispnone">
-                            <span class="spinner-border spinner-border-sm mr-2 text-success" role="status" aria-hidden="true"></span>
+                        <div class="form-group mb-3 input-icons">
+                          <span class="text-danger font-weight-bold">Date contracts signed</span>
+                          <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate2" class="form-control ph" type="text" placeholder="Select date" readonly />
+                            <label for="checkindate2" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
                           </div>
                         </div>
-
 
 
                       <div class="row mb-3 underline-thin-fade">
                         <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
                         <div class="form-group no-paddin input-icons"> Contracts <span class="text-danger">*</span>
-                          <input class="ph" id="contractsfile" type = "file" name = "filename" />
+                          <input class="ph" id="contractsfile2" type = "file" name = "filename" />
                           <span class="fa field-icon text-info iconotifications">--</span>
                         </div>
                       </div>
@@ -885,13 +927,22 @@
     var url = "{{ url_for('static', filename='upload.js') }}";
     $.getScript(url);
   </script>
-<script>
+
+<!-- <script>
   $("#close-propdisp").on('click',function(){
     $('#proplist').removeClass('dispnone')
     $('#propdisp').addClass('dispnone');
     // $('#tenant-area').removeClass('isactive')
     // $('#content-area').removeClass("isopen text-danger");
   });
+</script> -->
+
+<script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
 </script>
 
 <script>
@@ -960,7 +1011,7 @@
 </script> -->
 
 <script>
-  $("#checkindate").datepicker({ 
+  $("#checkindate1").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
     format: "mm-yyyy",
@@ -968,6 +1019,13 @@
     minViewMode: "months"
   });
 
+  $("#checkindate2").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
 
 //   $('#checkindate').datepicker({
 //   onSelect: function(d,i){
@@ -993,7 +1051,7 @@
         },
         success: function (response) {
 
-          $("#result-view").html(response);
+          $("#child-result-view").html(response);
         }
       });
     }
@@ -1009,7 +1067,7 @@
         },
         success: function (response) {
 
-          $("#result-view").html(response);
+          $("#child-result-view").html(response);
         }
       });
     }
@@ -1027,7 +1085,7 @@
           },
           success: function (response) {
 
-            $("#result-view").html(response);
+            $("#child-result-view").html(response);
           }
         });
       }
@@ -1045,7 +1103,7 @@
             },
             success: function (response) {
 
-              $("#result-view").html(response);
+              $("#child-result-view").html(response);
             }
           });
         }
@@ -1054,8 +1112,6 @@
 
 
       $(".chb").change(function (e) {
-        $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-
         //Getting status before unchecking all
         var status = $(this).prop("checked");
 
@@ -1066,7 +1122,8 @@
         if (status === false) {
           $(this).prop('checked', false);
         }else{
-          // console.log("hewwww",$(this).val())
+          $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+
           if ($(this).val() == "cb1"){
             getLeads()
           }
@@ -1233,7 +1290,7 @@
                     },
                     success: function(response) {
                       
-                      $("#result-view").html(response);
+                      $("#child-result-view").html(response);
                     }
                   });
                 },5000);
@@ -1293,7 +1350,7 @@
                   },
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
                   }
                 });
               },5000);
@@ -1353,7 +1410,7 @@
                   },
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
                   }
                 });
               },5000);
@@ -1410,7 +1467,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1459,7 +1516,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1531,7 +1588,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1657,8 +1714,12 @@
         type: "POST",
         data: {
                 tenant_id: $("#tenant_identifier").text(),
+
                 negprice: $("#neg_price").val(),
                 deposit: $("#deposit").val(),
+                mi:$("#mi").val(),
+                num_mi:$("#num_mi").val(),
+
                 target: "negotiations"
             },
         success: function(response) {
@@ -1681,7 +1742,7 @@
                   target:$("#current-reloader").text()                },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1691,20 +1752,91 @@
 
 
 <script>
+  $("#invoicebtn").on('click',function(){
+      $("#invoicebtn").html("Invoicing...") 
+
+      url = "{{ url_for('api.deal') }}"
+
+      var fd = new FormData();
+      var files = $('#contractsfile1')[0].files;
+      fd.append('file',files[0]);
+
+      fd.append('target',"invoice");
+      fd.append('date',$("#checkindate1").val());
+      fd.append('tenant_id',$("#tenant_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#invoicebtn").html("Invoiced") 
+
+              setTimeout(function(){
+                $("#invoicebtn").html("Invoice") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              setTimeout(function(){
+                $.ajax({
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {
+                    propid:  $("#prop_identifier").text(),
+                    target:$("#current-reloader").text()  
+                  },
+                  success: function(response) {
+                    
+                    $("#child-result-view").html(response);
+
+                    $.ajax({
+                      url: "/billing",
+                      type: "POST",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        tenantid:$("#tenant_identifier").text(),
+                        target:"single",
+                        date:$("#checkindate").val()
+
+                      },
+                      success: function (response) { }
+                    });
+                  }
+                });
+              },10);
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#invoicebtn").html("Retry") 
+
+            setTimeout(function(){
+              $("#invoicebtn").html("Invoice") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+<script>
   $("#contractsbtn").on('click',function(){
       $("#contractsbtn").html("Uploading...") 
 
       url = "{{ url_for('api.deal') }}"
 
       var fd = new FormData();
-      var files = $('#contractsfile')[0].files;
+      var files = $('#contractsfile2')[0].files;
       fd.append('file',files[0]);
 
-      fd.append('mi',$("#mi").val());
-      fd.append('num_mi',$("#num_mi").val());
-
       fd.append('target',"contracts");
-      fd.append('date',$("#checkindate").val());
       fd.append('tenant_id',$("#tenant_identifier").text());
 
       $.ajax({
@@ -1734,20 +1866,20 @@
                   },
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
 
-                    $.ajax({
-                      url: "/billing",
-                      type: "POST",
-                      data: {
-                        propid: $("#prop_identifier").text(),
-                        tenantid:$("#tenant_identifier").text(),
-                        target:"single",
-                        date:$("#checkindate").val()
+                    // $.ajax({
+                    //   url: "/billing",
+                    //   type: "POST",
+                    //   data: {
+                    //     propid: $("#prop_identifier").text(),
+                    //     tenantid:$("#tenant_identifier").text(),
+                    //     target:"single",
+                    //     date:$("#checkindate").val()
 
-                      },
-                      success: function (response) { }
-                    });
+                    //   },
+                    //   success: function (response) { }
+                    // });
                   }
                 });
               },10);
@@ -1851,7 +1983,7 @@
                   target:$("#current-reloader").text()                },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1888,7 +2020,7 @@
             },
               success: function(response) {
                 
-                $("#result-view").html(response);
+                $("#child-result-view").html(response);
               }
             });
 
@@ -1928,11 +2060,11 @@ $('#expand').click(function(){
           type: "get",
           data: {
             propid:  $("#prop_identifier").text(),
-            target:"proposals"
+            target:"contracts"
           },
           success: function(response) {
             $("#barloader-alt").addClass("dispnone")
-            $("#result-view").html(response);
+            $("#child-result-view").html(response);
           }
         });
   }
@@ -1943,7 +2075,7 @@ $('#expand').click(function(){
   });
   </script>
 <script>
-    $("num_mi").val(89)
+    $("num_mi").val($("#num_of_mi").text())
 </script>
 
 <script>
@@ -1958,15 +2090,15 @@ $('#expand').click(function(){
       } else {
         $("#deposit").val(0.0)
       }
-      console.log("rararrarara", $("#num_of_mi").text())
+
       // $("num_mi").val($("#num_of_mi").text())
-      $("num_mi").val(89)
+      $("#num_mi").val($("#num_of_mi").text())
 
       $('#num_mi').keyup();
     } else {
       $("#deposit").val(0.0)
       // $("num_mi").val($("#num_of_mi").text())
-      $("num_mi").val(89)
+      $("#num_mi").val($("#num_of_mi").text())
       $('#num_mi').keyup();
     }
   })

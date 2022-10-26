@@ -7350,17 +7350,19 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 checkin = house.owner.checkin
                 instalment = house.owner.instalment * house.owner.num_instalment
 
-                if house.description.upper() == "STUDIO":
-                    addfee = 123380.0
-                else:
-                    addfee = 192380.0
+                # if house.description.upper() == "STUDIO":
+                #     addfee = 123380.0
+                # else:
+                #     addfee = 192380.0
+
+                addfee = 0.0
 
                 mi = house.owner.instalment
                 months = house.owner.num_instalment
 
                 instalment_schedules = list(range(1,(months+1)))
 
-                initial_deposit_schedule = PaymentScheduleOp("30% Deposit",0.0,deposit1,deposit1,checkin,apartment_id,house.id,house.owner.id)
+                initial_deposit_schedule = PaymentScheduleOp("Deposit",0.0,deposit1,deposit1,checkin,apartment_id,house.id,house.owner.id)
                 initial_deposit_schedule.save()
 
                 for sch in instalment_schedules:

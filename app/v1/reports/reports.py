@@ -6587,7 +6587,7 @@ class FetchTenants(Resource):
             return render_template("ajax_oldtenantlist2.html",items=tenantlist,tenantids=full_ids)
 
         elif target == "proposals":
-            tenancy = tenantauto_alt(propid,"proposal")
+            tenancy = tenantauto_alt(propid,"proposal") + tenantauto_alt(propid,"negotiated")
             tenantlist = ptenant_details(tenancy)
             tenantids = get_obj_ids(tenantlist)
             moreids = inject_tenants_ids(tenantlist) 
@@ -6595,7 +6595,7 @@ class FetchTenants(Resource):
             return render_template("ajax_newtenantlist2.html",items=tenantlist,tenantids=full_ids)
 
         elif target == "contracts":
-            tenancy = tenantauto_alt(propid,"contracts")
+            tenancy = tenantauto_alt(propid,"invoiced and missing contracts") + tenantauto_alt(propid,"invoiced and contracts")
             tenantlist = ptenant_details(tenancy)
             tenantids = get_obj_ids(tenantlist)
             moreids = inject_tenants_ids(tenantlist) 

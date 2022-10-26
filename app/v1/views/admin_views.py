@@ -623,7 +623,8 @@ class AllProperties(Resource):
             occ = f"{occupancy:,.0f}"
 
             if target == "tenants":
-                template = "ajax_prop_tenants.html" 
+                template = "ajax_prop_tenants2.html" if crm(current_user) else "ajax_prop_tenants.html"
+
                 dict_obj = {
                     'id':prop.id,
                     'identity':"prp"+str(prop.id),

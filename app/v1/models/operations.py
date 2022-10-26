@@ -1986,12 +1986,12 @@ class PermanentTenantOp(PermanentTenant,Base):
         except:
             fname = "Tenant"
         house =  PermanentTenantOp.get_houseno(self)
-        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{fname}</span>' 
 
     def combine_house_tenant_alt(self):
         fname = self.name if self.name else "Tenant"
         house =  PermanentTenantOp.get_houseno(self)
-        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold small">{fname}</span>' 
+        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{fname}</span>' 
 
     def format_balance(self):
         bal = self.balance
@@ -2118,8 +2118,12 @@ class PermanentTenantOp(PermanentTenant,Base):
     def get_status(self):
         if self.status == "proposal":
             return '<span class="badge bg-info badge-counter">Proposal</span>'
-        elif self.status == "contracts":
+        elif self.status == "negotiated":
             return '<span class="badge bg-success badge-counter">Negotiations</span> <i class="fas fa-check text-success"></i>'
+        elif self.status == "invoiced and missing contracts":
+            return '<span class="badge bg-danger badge-counter">Missing contracts</span> <i class="fas fa-times text-danger"></i>'
+        elif self.status == "invoiced and contracts":
+            return '<span class="badge bg-success badge-counter">Current sale</span> <i class="fas fa-check text-success"></i>'
         else:
             return '<span class="badge bg-dark badge-counter">Closed</span>'
 

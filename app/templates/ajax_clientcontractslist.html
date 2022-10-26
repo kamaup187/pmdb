@@ -1,5 +1,4 @@
 
-<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1 smallify"><span class="text-danger">(pending contracts)</span> :</div>
 <div class="col-lg-12 no-padding">
     <div id="reqdata" class="table-responsive">
         <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
@@ -9,11 +8,19 @@
                 <th class="text-info track-title-cell">Date</th>
                 <th class="text-info track-title-cell">Phone</th>
                 <th class="text-info track-title-cell ">Email</th>
-                <th class="text-info track-title-cell ">Rep</th>
+                <!-- <th class="text-info track-title-cell ">Rep</th> -->
                 <th class="text-info track-title-cell ">Status</th>
+
+                <th class="text-info track-title-cell ">Price</th>
+                <th class="text-info track-title-cell ">Plan</th>
+                <th class="text-info track-title-cell ">Progress</th>
+                <th class="text-info track-title-cell ">Paid</th>
+                <th class="text-info track-title-cell ">Balance</th>
                 <th class="text-info track-title-cell text-success" data-orderable="false">Contracts</th>
-                <th class="text-info track-title-cell text-primary dispnone" data-orderable="false">Edit</th>
-                <th class="text-info track-title-cell  text-danger" data-orderable="false">Remove</th>
+          
+                <!-- <th class="text-info track-title-cell text-success" data-orderable="false">Contracts</th> -->
+                <!-- <th class="text-info track-title-cell text-primary dispnone" data-orderable="false">Edit</th> -->
+                <!-- <th class="text-info track-title-cell  text-danger" data-orderable="false">Remove</th> -->
 
 
                 </tr>
@@ -25,23 +32,44 @@
                 <td class="data-cell ">{{ i['booking'] }}</td>
                 <td class="data-cell">{{ i['tel'] }}</td>
                 <td class="data-cell ">{{ i['email'] }}</td>
-                <td class="data-cell ">{{ i['rep'] }}</td>
+                <!-- <td class="data-cell ">{{ i['rep'] }}</td> -->
                 <td class="data-cell ">{{ i['status']|safe }}</td>
+
+
+                <td class="data-cell">{{ i['price'] }}</td>
+                <td class="data-cell">{{ i['plan'] }}</td>
+                <td class="data-cell">
+                  <div class="progress">
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{i['stage']}}">{{i['stage']}}</div>
+                  </div>
+                  <!-- <label for="prog" class="text-success">5/8</label>
+                  <progress class="text-succes" id = "prog" value="30" max="100" >50%</progress> -->
+                </td>
+
+                <td class="data-cell">{{ i['paid'] }}</td>
+                <td class="data-cell">{{ i['balance'] }}</td>
+
                 <td class="text-s data-cell">
+                  <div>
+                    <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  no-wrap" data-toggle="modal" data-target="#receiptModal"><i class="fas fa-eye mr-1"></i>View</button>
+                  </div>
+                </td>
+
+                <!-- <td class="text-s data-cell">
                   <div>
                     <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  no-wrap" data-toggle="modal" data-target="#contractsModal">Sign <i class="fas fa-pen-alt ml-1"></i></button>
                   </div>
-                </td>
-                <td class="text-s data-cell dispnone">
+                </td> -->
+                <!-- <td class="text-s data-cell dispnone">
                   <div>
                     <button id="{{i['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                   </div>
-                </td>
-                <td class="text-s data-cell ">
+                </td> -->
+                <!-- <td class="text-s data-cell ">
                   <div>
                     <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteTenantModal"><i class="fas fa-trash-alt mr-1"></i>Remove</button>
                   </div>
-                </td>
+                </td> -->
 
                 </tr>
                 {% endfor %}
@@ -76,10 +104,10 @@ $.each(ids, function(i,item) {
       if(item.startsWith("del")){
         $("#del_tenant_identifier").html(item)
       }
-      else if(item.startsWith("p")){
+      else if(item.startsWith("tnt")){
           $("#tenant_identifier").html(item)
         }
-      else if(item.startsWith("tnt")){
+      else if(item.startsWith("ptnt")){
         $("#barloader").removeClass("dispnone")
         $.ajax({
           url: "/results",

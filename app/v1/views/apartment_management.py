@@ -4627,10 +4627,10 @@ class AddTenant(Resource):
 
             print(ptenant_obj.classtype,"<<<<<<<<<<<<<<<<<<<<<<")
 
-            if ptenant_obj.classtype.lower() == "shareholder":
-                ng = house_obj.housecode.listprice * 0.95
-            else:
-                ng = house_obj.housecode.listprice
+            # if ptenant_obj.classtype.lower() == "shareholder":
+            #     ng = house_obj.housecode.listprice * 0.95
+            # else:
+            ng = house_obj.housecode.listprice
 
             return render_template('ajax_client_details.html',client=ptenant_obj.name,plot=house_obj,mp=f'{ng:,.1f}')
 
@@ -5407,21 +5407,21 @@ class Deal(Resource):
             negprice = validate_input(request.form.get('negprice'))
             deposit = validate_input(request.form.get('deposit'))
 
+            mi = validate_input(request.form.get('mi'))
+            num_mi = validate_input(request.form.get('num_mi'))
+
             # deposit2 = validate_input(request.form.get('deposit2'))
             # mi = validate_input(request.form.get('mi'))
             # num_mi = validate_input(request.form.get('num_mi'))
 
-            PermanentTenantOp.update_status(alloc,"contracts")
+            PermanentTenantOp.update_status(alloc,"negotiated")
 
-            PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
+            # PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
+            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",deposit,0.0,mi,num_mi,"","")
 
             msg = "Client details updated"
             return msg + proceed
         else:
-            # path = f"app/temp/litala.pdf"
-            mi = validate_input(request.form.get('mi'))
-            num_mi = validate_input(request.form.get('num_mi'))
-
             raw_checkin = request.form.get('date')
 
             if not raw_checkin:
@@ -5445,16 +5445,19 @@ class Deal(Resource):
                 pdf2img = res['secure_url'][:-4]
                 img = pdf2img + ".png"
 
+                PermanentTenantOp.update_status(alloc,"invoiced and contracts")
+
                 os.remove(filename)
             else:
                 img = ""
+                PermanentTenantOp.update_status(alloc,"invoiced and missing contracts")
 
-            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,0.0,mi,num_mi,bookedon,bookedon)
+
+            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,0.0,0.0,0.0,bookedon,bookedon)
 
             plot = alloc.house
             PermanentTenantOp.upload_contracts(alloc,img,"")
             HouseOp.update_status(plot,"sold")
-            PermanentTenantOp.update_status(alloc,"closed")
 
             # if alloc.plan == "partial":
             #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)

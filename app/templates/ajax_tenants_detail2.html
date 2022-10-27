@@ -4,6 +4,11 @@
       <span id="tenant_identifier" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
+
+      <span id="lead_identifier" class="dispnone"></span>
+      <span id="edit_lead_identifier" class="dispnone"></span>
+      <span id="del_lead_identifier" class="dispnone"></span>
+
       <span id="current-reloader" class="dispnone">proposals</span>
       <span class="multisave dispnone"></span>
       <a id="download_tenants" href="/download/template/clientdata" class="dispnone">download</a>
@@ -49,7 +54,7 @@
                 Import data
               </span> -->
   
-              <span class="navbar-drr d-inline-block">
+              <!-- <span class="navbar-drr d-inline-block">
                 <span class="dropdown-dr">
                   <span class="dropbtn text-black mt-2">Reports
                     <i class="fa fa-caret-down"></i>
@@ -59,7 +64,20 @@
                     <a href="/deposit/statement?target=direct&propid={{prop.id}}" target="_blank">Tenants deposits</a>
                   </span>
                 </span>               
-              </span>
+              </span> -->
+
+              <div class="dropdown d-inline dropstart">
+                <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Reports
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                  <!-- <li><a class="dropdown-item" href="/tenant/listing?target=direct&propid={{prop.id}}">Client listing</a></li>
+                  <li><a class="dropdown-item" href="/deposit/statement?target=direct&propid={{prop.id}}">Client performance</a></li> -->
+
+                  <li><a class="dropdown-item" href="#">Client listing</a></li>
+                  <li><a class="dropdown-item" href="#">Client performance</a></li>
+                </ul>
+              </div>
   
             </div>
   
@@ -498,7 +516,7 @@
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
             <h5 class="modal-title text-info divjust-end underline-thin-fad">
-              <span class="mr-3 smallify font-weight-bold">Lead conversation <span class="text-black" id="lead-name"></span></span>
+              <span class="mr-3 smallify font-weight-bold">Lead conversation <span class="text-black lead-name"></span></span>
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
             </h5>
             <!-- <span class="text-gray-900">Client: <span class="tenantname" class="text-info"></span></span>
@@ -842,6 +860,24 @@
                 <div class="hide">spacing</div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade center-btn" id="removeLeadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal: <span class="text-black lead-name"></span></h5>
+          </div>
+          <div class="text-info payment-info"></div>
+          <div class="modal-body text-gray-900">
+            <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to delete this lead?</span>
+          </div>
+          <div class="has-margin-bottom divbg">
+              <button id="del_lead" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+              <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -1447,16 +1483,16 @@
 
             },
         success: function(response) {
-          $(".alert-msgs").html(response);
+          snack(response);
           
           setTimeout(function(){
-            $(".alert-msgs").empty();
             $(".reset").click();
             // $('#newlead').attr('disabled', 'disabled');
             $('#newlead').removeClass('btn-success')
             $('#newlead').addClass('btn-secondary')
             $("#newlead").html("Submit")
           }, 2000);
+          
           $.ajax({
                 url: "{{ url_for('api.fetchleads') }}",
                 type: "get",
@@ -1522,6 +1558,29 @@
       });
   });
 </script>
+
+<script>
+      
+  $("#del_lead").on('click',function(){   
+    $('#del_lead').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
+    $.ajax({
+      url: "{{ url_for('api.addlead') }}",
+      type: "POST",
+      data: {
+            leadid:$("#del_lead_identifier").text(),
+            target:"delete"
+          },
+      success: function(response) {
+        snack(response);
+        // $(".payment-info").html(response);  
+        $('#del_lead').html('Delete');
+        $(".closemodal").click();
+        getLeads()
+      }
+    });
+  });
+  
+  </script>
 
 <script>
   $("#editTenantModal").on('shown.bs.modal', function(){

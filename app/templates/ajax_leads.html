@@ -11,8 +11,8 @@
                 <th class="text-black font-weight-bold ">Status</th>
                 <th class="text-black font-weight-bold">Date</th>
                 <th class="text-black font-weight-bold ">Engagements</th>
-                <!-- <th class="text-black font-weight-bold text-primary dispnone" data-orderable="false">Edit</th>
-                <th class="text-black font-weight-bold  text-danger dispnone" data-orderable="false">Remove</th> -->
+                <!-- <th class="text-black font-weight-bold text-primary dispnone" data-orderable="false">Edit</th> -->
+                <th class="text-black font-weight-bold  text-danger" data-orderable="false">Remove</th>
 
                 </tr>
             </thead>
@@ -36,12 +36,13 @@
                   <div>
                     <button id="{{i['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                   </div>
-                </td>
+                </td> -->
+
                 <td class="text-s data-cell ">
                   <div>
-                    <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteTenantModal"><i class="fas fa-trash-alt mr-1"></i>Remove</button>
+                    <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#removeLeadModal"><i class="fas fa-trash-alt mr-1"></i>Remove</button>
                   </div>
-                </td> -->
+                </td>
 
                 </tr>
                 {% endfor %}
@@ -82,21 +83,20 @@
               target:"lead name"
             },
             success: function(response) {
-              console.log("yoooooooo",response)
-              $("#lead-name").html(response);
+              $(".lead-name").html(response);
             }
           });
 
       if( isNaN(parseInt(item)) ){
         if(item.startsWith("del")){
-          $("#del_tenant_identifier").html(item)
+          $("#del_lead_identifier").html(item)
         }
         else{
           $("#edit_lead_identifier").html(item)
         }
         
       }else{
-        $("#tenant_identifier").html(item)
+        $("#lead_identifier").html(item)
       }
     });
   });

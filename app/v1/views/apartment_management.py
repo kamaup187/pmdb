@@ -1925,9 +1925,9 @@ class AddSalesAgent(Resource):
 
             if att_obj:
                 SalesRepOp.delete(att_obj)
-                return proceed
+                return success
             else:
-                return err
+                return failure
 
         if email and name:
             pass
@@ -1974,6 +1974,8 @@ class AddSalesAgent(Resource):
 
             user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
             user_obj.save()
+
+            
 
             repp = SalesRepOp.fetch_rep_by_name(name.lower())
             if not repp:
@@ -5345,6 +5347,14 @@ class AddTenant(Resource):
 
 class AddLead(Resource):
     def post(self):
+
+        if request.form.get("target") == "delete":
+            group_id = request.form.get("leadid")
+            groupid = get_identifier(group_id)
+            group_obj = LeadOp.fetch_lead_by_id(groupid)
+            LeadOp.delete(group_obj)
+            return success
+
         name = request.form.get('name')
         if not name:
             fname = request.form.get('fname')
@@ -5357,41 +5367,31 @@ class AddLead(Resource):
                 name = fname
 
         phone = request.form.get('tel')
-        national_id = request.form.get('national_id')
+        nat_id = request.form.get('national_id')
         email = request.form.get('email')
-
-        # rep_id = SalesRepOp.fetch_rep_by_username(current_user.username).id
 
         created_by = current_user.id
 
-        if not national_id:
-            natid = nationalid_generator()
-            check_dup = TenantOp.fetch_tenant_by_nat_id(natid)
-            nat_id = nationalid_generator() if check_dup else natid
-        else:
-            nat_id = national_id
+        dup_id,dup_email,dup_phone = None,None,None
 
-
+        if nat_id:
+            dup_id = LeadOp.fetch_lead_by_natid(nat_id)
         if email:
-            present2 = TenantOp.fetch_tenant_by_email(email)
-            present3 = UserOp.fetch_user_by_email(email)
+            dup_email = LeadOp.fetch_lead_by_email(email)
+        if phone:
+            dup_phone = LeadOp.fetch_lead_by_phone(phone)
 
-            if present2 or present3:
-                msg="Email taken, use another email or leave blank"
-                return render_template('ajaxghosthouse.html',alert=msg)
+        if dup_id:
+            return failure + "Duplicate national id"
+        if dup_email:
+            return failure + "Duplicate email"
+        if dup_phone:
+            return failure + "Duplicate phone number"
+        
+        lead_obj = LeadOp(name,phone,nat_id,email,current_user.company_id,created_by)
+        lead_obj.save()
 
-        present = TenantOp.fetch_tenant_by_nat_id(national_id)
-        if present:
-            msg = "Tenant of similar national id exists"
-            return render_template('ajaxghosthouse.html',alert=msg)
-
-        else:
-
-            lead_obj = LeadOp(name,phone,nat_id,email,current_user.company_id,created_by)
-            lead_obj.save()
-
-            msg = "Lead added successfully"
-        return msg + proceed
+        return success
 
 class Deal(Resource):
     def get(self):

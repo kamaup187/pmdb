@@ -3974,6 +3974,7 @@ class EditHouseCode(Resource):
             commission = request.form.get('commission')
             deposit = request.form.get('deposit')
             listprice = request.form.get('listprice')
+            print("chaaaai",listprice)
             instalments = request.form.get("instalments")
 
 
@@ -4051,6 +4052,8 @@ class EditHouseCode(Resource):
                 HouseCodeOp.update_percentage_discount(group_obj,valid_inputs3[3])
             else:
                 HouseCodeOp.update_discount(group_obj,valid_inputs3[3])
+
+            print("chuuuuui",valid_inputs3[0])
 
             HouseCodeOp.update_listprice(group_obj,valid_inputs3[0])
             HouseCodeOp.update_instalments(group_obj,valid_inputs3[4])
@@ -4640,7 +4643,7 @@ class AddTenant(Resource):
                 if house_obj.housecode.discount:
                     ng = house_obj.housecode.listprice - house_obj.housecode.discount
                 elif house_obj.housecode.percentage_discount:
-                    ng = house_obj.housecode.listprice * (0.01 * house_obj.housecode.percentage_discount)
+                    ng = house_obj.housecode.listprice - (house_obj.housecode.listprice * (0.01 * house_obj.housecode.percentage_discount))
                 else:
                     ng = house_obj.housecode.listprice
             else:
@@ -5414,10 +5417,10 @@ class Deal(Resource):
             # mi = validate_input(request.form.get('mi'))
             # num_mi = validate_input(request.form.get('num_mi'))
 
-            PermanentTenantOp.update_status(alloc,"negotiated")
+            PermanentTenantOp.update_status(alloc,"prospective")
 
             # PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
-            PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",deposit,0.0,mi,num_mi,"","")
+            PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,mi,num_mi,"","")
 
             msg = "Client details updated"
             return msg + proceed

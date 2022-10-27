@@ -146,8 +146,14 @@
                       <th class="hid"></th>
 
                       <th class="">Date Payable</th>
+                      <th class="">Balance/BF</th>
                       <th class="">Amount Payable</th>
+
+                      <th class="">Amount Due</th>
                       <th class="">Amount Received</th>
+                      <th class="">Balance/CF</th>
+                      <th class="">Running Balance</th>
+
                       <th class="">Date Received</th>
                       <th class="">Payment Ref</th>
                       <th class="">Payment Type</th>
@@ -162,9 +168,15 @@
                       <td class="data-cell text-right hide">{{ bill['id'] }}</td>
 
                       <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
+                      <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
                       <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
 
+                      <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
                       <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rbalance'] }}</td>
+
+
   
                       <td class="data-cell text-center">{{ bill['paydate'] }}</td>
                       <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
@@ -177,15 +189,15 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td class="font-weight-bold hid">.</td>
+                      <td class="font-weight-bold hid"></td>
                       <td class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold hid"></td>
                       <td class="font-weight-bold text-right">{{schtotal}}</td>
+                      <td class="font-weight-bold hid"></td>
                       <td class="font-weight-bold text-right">{{schpaid}}</td>
-
+                      <td class="font-weight-bold hid"></td>
+                      <td class="font-weight-bold text-right">{{rbal}}</td>
                       <td colspan="4" class="font-weight-bold text-right">-</td>
-
-
-
                     </tr>
                   </tfoot>
                 </table>
@@ -205,7 +217,7 @@
                 </div>
                 <div class="divjust-end ln-16 mobile-malaysian nobreak">
                   {%if tenant_obj%}
-                    <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at The Aviv. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{tenant_obj.balance}}</span></span>
+                    <span>Dear {{tenant_obj.name}}, above is a statement of monies received for your purchase of [{{tenant_obj.house.name}}] at {{tenant_obj.apartment.name}}. Your outstanding balance as at {{statementdate}} is Kes. <span class="text-black">{{rbal}}</span></span>
                     {%endif%}
                 </div>
 
@@ -271,9 +283,15 @@
                   <th class="hid"></th>
 
                   <th class="">Date Payable</th>
-                  <th class="">Payable</th>
-                  <th class="">Received</th>
-                  <th class="">Date</th>
+                  <th class="">Balance/BF</th>
+                  <th class="">Amount Payable</th>
+
+                  <th class="">Amount Due</th>
+                  <th class="">Amount Received</th>
+                  <th class="">Balance/CF</th>
+                  <th class="">Running Balance</th>
+
+                  <th class="">Date Received</th>
                   <th class="">Payment Ref</th>
                   <th class="">Payment Type</th>
                   <th class="">Comments</th>
@@ -287,8 +305,16 @@
                   <td class="data-cell text-right hide">{{ bill['id'] }}</td>
 
                   <td class="data-cell text-right small">{{ bill['schedule_date'] }}</td>
+                  <td class="data-cell text-right">{{ bill['schedule_arrears'] }}</td>
                   <td class="data-cell text-right">{{ bill['schedule_amount'] }}</td>
+
+                  <td class="data-cell text-right">{{ bill['schedule_total'] }}</td>
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rbalance'] }}</td>
+
+
+
                   <td class="data-cell text-center">{{ bill['paydate'] }}</td>
                   <td class="data-cell text-center no-wrap">{{ bill['payref']}}</td>
                   <td class="data-cell text-center no-wrap">{{ bill['paytype']}}</td>
@@ -300,18 +326,15 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td class="font-weight-bold hid">.</td>
+                  <td class="font-weight-bold hid"></td>
                   <td class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold hid"></td>
                   <td class="font-weight-bold text-right">{{schtotal}}</td>
+                  <td class="font-weight-bold hid"></td>
                   <td class="font-weight-bold text-right">{{schpaid}}</td>
-                  <!-- <td class="font-weight-bold text-right">{{sch_bal_total}}</td> -->
-
-
-
+                  <td class="font-weight-bold hid"></td>
+                  <td class="font-weight-bold text-right">{{rbal}}</td>
                   <td colspan="4" class="font-weight-bold text-right">-</td>
-
-
-
                 </tr>
               </tfoot>
             </table>

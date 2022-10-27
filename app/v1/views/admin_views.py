@@ -594,7 +594,8 @@ class AllProperties(Resource):
         raw_props2 = fetch_all_apartments_by_user(current_user)
 
         if localenv:
-            raw_props3 = ApartmentOp.fetch_all_apartments()
+            # raw_props3 = ApartmentOp.fetch_all_apartments()
+            raw_props3 = []
             raw_props4 = raw_props + raw_props2 + raw_props3
         else:
             raw_props4 = raw_props + raw_props2
@@ -634,6 +635,10 @@ class AllProperties(Resource):
                     'houses':houses,
                     'tenants':tenants,
                     'ptenants':ptnts,
+                    'proposals':len(get_clients_by_status(prop.ptenants,"proposal")),
+                    'prospective':len(get_clients_by_status(prop.ptenants,"negotiated")),
+                    'invoiced':len(get_clients_by_status(prop.ptenants,"invoiced and contracts") + get_clients_by_status(prop.ptenants,"invoiced and missing contracts")),
+                    'closed':len(get_clients_by_status(prop.ptenants,"closed")),
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,

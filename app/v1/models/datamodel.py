@@ -1000,6 +1000,7 @@ class PaymentSchedule(db.Model):
     total_amount = db.Column(db.Float,default=0)
     paid = db.Column(db.Float,default=0)
     balance = db.Column(db.Float,default=0)
+    rbalance = db.Column(db.Float,default=0)
 
     pay_date = db.Column(db.DateTime)
     state = db.Column(db.String,default="")

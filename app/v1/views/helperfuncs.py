@@ -2211,6 +2211,13 @@ def tenantauto_alt(apartment_id,status):
     new_client_list = remove_dups(client_list)
     return new_client_list
 
+def get_clients_by_status(arr,status):
+    client_list = []
+    for client in arr:
+        if client.status == status:
+            client_list.append(client)
+    return client_list
+
 def xtenantauto(apartment_id):
     x_tenants = []
 
@@ -7359,20 +7366,21 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                 mi = house.owner.instalment
                 months = house.owner.num_instalment
+                negprice = house.owner.negotiated_price
 
                 instalment_schedules = list(range(1,(months+1)))
 
-                initial_deposit_schedule = PaymentScheduleOp("Deposit",0.0,deposit1,deposit1,checkin,apartment_id,house.id,house.owner.id)
+                initial_deposit_schedule = PaymentScheduleOp("Deposit",0.0,deposit1,deposit1,negprice,checkin,apartment_id,house.id,house.owner.id)
                 initial_deposit_schedule.save()
 
                 for sch in instalment_schedules:
                     sch_date = checkin + relativedelta(months=sch)
-                    sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,sch_date,apartment_id,house.id,house.owner.id)
+                    sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
                     sch.save()
 
                 others = f"40% Legal fees,Stamp Duty,service charge etc.)"
 
-                legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,project_end_date,apartment_id,house.id,house.owner.id)
+                legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
                 legal_fee_schedule.save()
 
             else:

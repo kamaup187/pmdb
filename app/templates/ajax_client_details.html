@@ -24,11 +24,145 @@
     </span>
     </div>
     
-    <div id="mpafterdiscount" class="form-group no-paddin input-icons">
+    <!-- <div id="mpafterdiscount" class="form-group no-paddin input-icons">
+      <input class="form-control ph-dark pl-5 text-end" type="text" id="asking_price" placeholder="{{mp}}" value="{{mp}}">
+      <span class="fa field-icon-two small text-info">Kes</span>
+    </div> -->
+    <div class="form-group no-paddin input-icons">
       <input class="form-control ph-dark pl-5 text-end" type="text" id="asking_price" placeholder="{{mp}}" value="{{mp}}">
       <span class="fa field-icon-two small text-info">Kes</span>
     </div>
   </div>
+
+  <div id="discount_bed" class="dispnone"></div>
+
+
+  <div class="">
+  <div class="no-padding text-right"><span class="form-control smallify border-0">Negotiated price<span class="text-danger">*</span></span></div>
+  <div class="form-group col-7 no-paddin input-icons">
+    <input id="neg_price" class="form-control ph pl-5 text-end" type="text" placeholder="">
+  </div>
+</div>
+
+
+
+
+<script>
+  $("#neg_price").on('keyup', function () {
+    let negprice = $("#neg_price").val().replace(/,/g, '');
+
+    if (negprice > 1) {
+      if ($("#deposit_percentage").text().length > 1) {
+        $("#deposit").val((negprice * 0.01 * $("#deposit_percentage").text()).toLocaleString('en-US'))
+      } else if ($("#deposit_amount").text().length > 1) {
+        $("#deposit").val($("#deposit_amount").text().toLocaleString('en-US'))
+      } else {
+        $("#deposit").val(0.0)
+      }
+
+      // $("num_mi").val($("#num_of_mi").text())
+      $("#num_mi").val($("#num_of_mi").text())
+
+      $('#num_mi').keyup();
+    } else {
+      $("#deposit").val(0.0)
+      // $("num_mi").val($("#num_of_mi").text())
+      $("#num_mi").val($("#num_of_mi").text())
+      $('#num_mi').keyup();
+    }
+  })
+
+
+
+    $("#deposit").on('keyup', function () {
+      $('#num_mi').keyup();
+    })
+
+  $("#mi").on('keyup',function(){
+    // $("#negotiatebtn").addClass("dispnone")
+
+    let negprice = $("#neg_price").val().replace(/,/g, '');
+    let deposit = $("#deposit").val().replace(/,/g, '');
+    let diff = negprice - deposit;
+    let mi = $("#mi").val().replace(/,/g, '');
+    let num_mi = diff / mi;
+    if (num_mi > 101 ){
+      $("#num_mi").val('');
+      $("#num_mi").attr("placeholder", "Max allowed= 100")
+      $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+      // $("#negotiatebtn").addClass("dispnone")
+    }else if (num_mi<1){
+      $("#num_mi").val(1);
+    }
+    else{
+      if (Number.isNaN(num_mi)){
+        $("#num_mi").val('');
+        $("#mi").val('');
+        $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+        // $("#negotiatebtn").addClass("dispnone")
+
+      }else{
+        let roundednum = Math.round(num_mi)
+        if(roundednum * mi < diff){
+          roundednum ++
+        }
+        $("#num_mi").val(roundednum);
+        $(".iconotifications").html('<i class="fas fa-fw fa-check-circle text-success mr-1"></i>')
+        // $("#negotiatebtn").removeClass("dispnone")
+      }
+
+    }
+
+  })
+
+  $("#num_mi").on('keyup',function(){
+    // $("#negotiatebtn").addClass("dispnone")
+
+    let negprice = $("#neg_price").val().replace(/,/g, '');
+    let deposit = $("#deposit").val().replace(/,/g, '');
+    let diff = negprice - deposit;
+    let num_mi = $("#num_mi").val().replace(/,/g, '');
+    let mi = diff / num_mi;
+    if (num_mi > 101 ){
+      $("#num_mi").val('');
+      $("#mi").val('');
+      $("#num_mi").attr("placeholder", "Max allowed= 100")
+      $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+      // $("#negotiatebtn").addClass("dispnone")
+    }else if (num_mi<1){
+      // $("#num_mi").val(1);
+      // $("#mi").val(diff);
+      $("#num_mi").val('');
+      $("#mi").val('');
+      $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+      // $("#negotiatebtn").addClass("dispnone")
+    }else if(mi<1){
+      $("#num_mi").val('');
+      $("#mi").val('');
+      $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+      // $("#negotiatebtn").addClass("dispnone")
+    }else{
+      if (Number.isNaN(mi)){
+        $("#num_mi").val('');
+        $("#mi").val('');
+        $(".iconotifications").html('<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>');
+        // $("#negotiatebtn").addClass("dispnone")
+
+      }else{
+        let roundednum = Math.round(mi)
+        if(roundednum * num_mi < diff){
+          roundednum ++
+        }
+        $("#mi").val(roundednum.toLocaleString("en-Us"));
+        $(".iconotifications").html('<i class="fas fa-fw fa-check-circle text-success mr-1"></i>')
+        // $("#negotiatebtn").removeClass("dispnone")
+      }
+
+    }
+
+  })
+
+</script>
 
 
   <script>
@@ -47,8 +181,8 @@
         target: "client discount"
       },
       success: function (response) {
-        $("#mpafterdiscount").html(response);
-        $("#neg_price").val($("#asking_price").val());
+        $("#discount_bed").html(response);
+        $("#neg_price").val($("#neg_price_after_discount").val());
         $("#neg_price").keyup();
       }
     });

@@ -6,117 +6,91 @@
       <span id="edit_item_identifier" class="dispnone"></span>
       <span id="del_item_identifier" class="dispnone"></span>
       <span id="target_item_id" class="dispnone"></span>
-        <div>
-          
-            <div class="card-header py-1 bg-warning divjust-end" >
-                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-coins mr-2"></i>Manage sales agents</div>
-                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
-            </div>
-
-
-          <div class="center-btn mb-3 d-none">
-            <span class="text-black text-xx smallify underline shadow-alt"></span>
+    
+      <div class="card mb-2 mt-1">
+    
+        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+          <span class="smallify text-black font-weight-bold text-uppercase text-110">Manage Sales team <span
+              id="activeprop" class="text-primary ml-3"></span></span>
+          <div>
+            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+              type="button">X</button>
+          </div>
+        </div>
+    
+        <div class="card-body flowing-body pt-2 pl-2">
+          <div class="mb-4">
+            <span id="backbtn" class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#addRepModal">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-add-user me-2"></i>
+              add agent
+            </span>
           </div>
 
-            <div class="mb-3 mt-2">
-                <div class="center-btn">
-                  <div class="info_item">
-                    <button type="button" class="borderless btn-success" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus-circle mr-4"></i><span class="mr-4">add agent</span></button>
-                  </div>
 
-                </div>
-
-            </div>
-        </div>
-
-        <div class="toggleswitch divbg center-btn mb-2 dispnone">
-
-          <span>
-            <span class="x-small"><span class="text-danger">Last month </span>activities</span>
-            <label class="switch">
-              <input id="reporttoggle2" type="checkbox" disabled>
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-          <span>
-            <span class="x-small"><span class="text-danger">This month </span>activities</span>
-            <label class="switch">
-              <input id="reporttoggle" type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-          <span class="dispnone">
-            <span class="small"><span class="text-danger">Voided </span>activities</span>
-            <label class="switch">
-              <input id="reporttoggle3" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-        </div>
-        
-
-        <div id="result-view" class="row">
-          <div class="col-lg-12 no-padding">
-            <div id="reqdata" class="table-responsive">
+          <div id="result-view" class="row">
+            <div class="col-lg-12 no-padding">
+              <div id="reqdata" class="table-responsive">
                 <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
                   <thead class="custom-header">
-                      <tr>
-                        <th class="text-black">Name</th>
-                        <th class="text-black " data-orderable="false">Contact</th>
-                        <th class="text-black " data-orderable="false">Leads</th>
-                        <th class="text-black " data-orderable="false">Proposals</th>
-                        <th class="text-black " data-orderable="false">Closed deals</th>
-                        <th class="text-black " data-orderable="false">Conversion rate</th>
-
-                        <th class="text-black " data-orderable="false">Commission</th>
-
-                        <th class="text-black text-primary " data-orderable="false">Edit</th>
-                        <th class="text-black text-danger" data-orderable="false">Remove</th>
-
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for item in bills%}
-                      <tr>
-                        <td class="data-cell">{{ item['name'] }}</td>
-                        <td class="data-cell text-end ">{{ item['tel'] }}</td>  
-                        <td class="data-cell text-end">{{ item['leads'] }}</td>
-                        <td class="data-cell text-end">{{ item['proposals'] }}</td>
-                        <td class="data-cell text-end">{{ item['closed'] }}</td>
-                        
-                        <td class="data-cell text-end">{{ item['crate'] }}</td>
-
-
-                        <td class="data-cell text-end"><span class="font-weight-bold">{{ item['comm'] }}</span></td>
-
-
-                        <td class="text-s data-cell text-center">
-                          <div>
-                            <button id="{{item['editid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i></button>
-                          </div>
-                        </td>
-                        <td class="text-s data-cell text-center">
-                          <div>
-                            <button id="{{item['delid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#deleteAttendantModal"><i class="fas fa-trash-alt mr-1"></i></button>
-                          </div>
-                        </td>
-
-                      </tr>
+                    <tr>
+                      <th class="text-black">Name</th>
+                      <th class="text-black " data-orderable="false">Contact</th>
+                      <th class="text-black " data-orderable="false">Leads</th>
+                      <th class="text-black " data-orderable="false">Proposals</th>
+                      <th class="text-black " data-orderable="false">Closed deals</th>
+                      <th class="text-black " data-orderable="false">Conversion rate</th>
+    
+                      <th class="text-black " data-orderable="false">Commission</th>
+    
+                      <!-- <th class="text-black text-primary " data-orderable="false">Edit</th> -->
+                      <th class="text-black text-danger" data-orderable="false">Remove</th>
+    
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in bills%}
+                    <tr>
+                      <td class="data-cell">{{ item['name'] }}</td>
+                      <td class="data-cell text-end ">{{ item['tel'] }}</td>
+                      <td class="data-cell text-end">{{ item['leads'] }}</td>
+                      <td class="data-cell text-end">{{ item['proposals'] }}</td>
+                      <td class="data-cell text-end">{{ item['closed'] }}</td>
+    
+                      <td class="data-cell text-end">{{ item['crate'] }}</td>
+    
+    
+                      <td class="data-cell text-end"><span class="font-weight-bold">{{ item['comm'] }}</span></td>
+    
+    
+                      <!-- <td class="text-s data-cell text-center">
+                              <div>
+                                <button id="{{item['editid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i></button>
+                              </div>
+                            </td> -->
+                      <td class="text-s data-cell text-center">
+                        <div>
+                          <button id="{{item['delid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap"
+                            data-toggle="modal" data-target="#deleteAttendantModal"><i
+                              class="fas fa-trash-alt mr-1"></i></button>
+                        </div>
+                      </td>
+    
+                    </tr>
                     {% endfor %}
-                    </tbody>
-                    <!-- <tfoot>
-                      <tr>
-                        <td colspan="2" class="center-btn font-weight-bold squeeze text-info footer-cell">Grand Total</td>
-                        <td class="font-weight-bold squeeze text-info footer-cell">{{gtotal}}</td>
-                      </tr>
-                    </tfoot> -->
+                  </tbody>
+                  <!-- <tfoot>
+                          <tr>
+                            <td colspan="2" class="center-btn font-weight-bold squeeze text-info footer-cell">Grand Total</td>
+                            <td class="font-weight-bold squeeze text-info footer-cell">{{gtotal}}</td>
+                          </tr>
+                        </tfoot> -->
                 </table>
+              </div>
             </div>
           </div>
         </div>
+      </div>
     </section>
     <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editTenantModal"></button> -->
     <!--================Contact Area =================-->
@@ -125,7 +99,7 @@
     <button type="button" id="receipt-payment-btn" class="dispnone" data-toggle="modal" data-target="#receiptPaymentModal"></button>
 
 
-    <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addRepModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -188,7 +162,7 @@
                       </div>
                     
                       <div class="divbg center-btn">
-                        <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                        <button id="newrep" type="button" class="btn-secondary borderless text-white">Save</button>
                         <button class="btn btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
@@ -648,7 +622,7 @@ $('#expand').click(function(){
 
 <script>
   $(document).ready(function(){
-    $("#addTenantModal").on('shown.bs.modal', function(){
+    $("#addRepModal").on('shown.bs.modal', function(){
       $(this).find('#new_name').focus();
     });
   });
@@ -656,8 +630,8 @@ $('#expand').click(function(){
 
 
 <script>
-  $("#newtenant").click(function(){   
-    $("#newtenant").html("saving...")  
+  $("#newrep").click(function(){   
+    $("#newrep").html("saving...")  
       $.ajax({
         url: "{{ url_for('api.addsalesagent') }}",
         type: "POST",
@@ -670,15 +644,14 @@ $('#expand').click(function(){
                 tel: $("#new_tel").val()
             },
         success: function(response) {
-          $(".alert-msgs").html(response);
+          snack(response);
           
           setTimeout(function(){
-            $(".alert-msgs").empty();
             $(".reset").click();
-            // $('#newtenant').attr('disabled', 'disabled');
-            $('#newtenant').removeClass('btn-success')
-            $('#newtenant').addClass('btn-secondary')
-            $("#newtenant").html("submit")
+            // $('#newrep').attr('disabled', 'disabled');
+            $('#newrep').removeClass('btn-success')
+            $('#newrep').addClass('btn-secondary')
+            $("#newrep").html("submit")
           }, 2000);
           $.ajax({
                 url: "/fetch/agents",
@@ -709,7 +682,8 @@ $('#expand').click(function(){
             target:"delete"
           },
       success: function(response) {
-        // $(".payment-info").html(response);  
+        // $(".payment-info").html(response);
+        snack(response);
 
           $('#del_att').html('Delete');
           $(".closemodal").click();

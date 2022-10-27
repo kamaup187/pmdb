@@ -1061,7 +1061,37 @@ class HouseCodeOp(HouseCode,Base):
 
     def format_percent_amount(amount):
         decor_fig = f"{amount} %"
-        return decor_fig 
+        return decor_fig
+
+    def format_discount(self):
+        if self.discount:
+            return f"{self.discount:,.1f}"
+        elif self.percentage_discount:
+            return HouseCodeOp.format_percent_amount(self.percentage_discount)
+        else:
+            return "0.0"
+
+    def format_deposit(self):
+        if self.deposit:
+            return f"{self.deposit:,.1f}"
+        elif self.percentage_deposit:
+            return HouseCodeOp.format_percent_amount(self.percentage_deposit)
+        else:
+            return "not set"
+
+    def format_commission(self):
+        if self.commission:
+            return HouseCodeOp.format_percent_amount(self.commission)
+        elif self.int_commission:
+            return f"{self.int_commission:,.1f}"
+        else:
+            return "not set"
+
+    def format_instalments(self):
+        if self.instalments:
+            return f"{self.instalments} month(s)"
+        else:
+            return "not set"
 
     def view(self):
         return {
@@ -1080,10 +1110,10 @@ class HouseCodeOp(HouseCode,Base):
             'fine':HouseCodeOp.format_percent_amount(self.finerate),
             'waterdep':HouseCodeOp.fig_format(self.waterdep),
             'elecdep':HouseCodeOp.fig_format(self.elecdep),
-            'deposit':HouseCodeOp.fig_format(self.deposit),
-            'commission':HouseCodeOp.fig_format(self.commission) if self.commission else HouseCodeOp.fig_format(self.int_commission),
-            'instalments':HouseCodeOp.fig_format(self.instalments),
-            'discount':HouseCodeOp.fig_format(self.discount),
+            'deposit':HouseCodeOp.format_deposit(self),
+            'commission':HouseCodeOp.format_commission(self),
+            'instalments':HouseCodeOp.format_instalments(self),
+            'discount':HouseCodeOp.format_discount(self),
             'user':HouseCodeOp.get_name(self)
         }
 
@@ -1883,6 +1913,15 @@ class LeadOp(Lead,Base):
 
     def fetch_lead_by_id(lead_id):
         return Lead.query.filter_by(id=lead_id).first()
+
+    def fetch_lead_by_natid(national_id):
+        return Lead.query.filter_by(national_id=national_id).first()
+
+    def fetch_lead_by_phone(phone):
+        return Lead.query.filter_by(phone=phone).first()
+
+    def fetch_lead_by_email(email):
+        return Lead.query.filter_by(email=email).first()
 
     def view(self):
         # print("NAME >>>>",self.name)

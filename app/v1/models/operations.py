@@ -2117,17 +2117,19 @@ class PermanentTenantOp(PermanentTenant,Base):
 
     def get_status(self):
         if self.status == "proposal":
-            return '<span class="badge bg-info badge-counter">Proposal</span>'
-        elif self.status == "negotiated":
-            return '<span class="badge bg-success badge-counter">Negotiations</span> <i class="fas fa-check text-success"></i>'
+            return '<span class="badge bg-warning badge-counter">Proposal</span>'
+        elif self.status == "prospective":
+            return '<span class="badge bg-success badge-counter">Prospective</span>'
         elif self.status == "invoiced and missing contracts":
             return '<span class="badge bg-danger badge-counter">Missing contracts</span> <i class="fas fa-times text-danger"></i>'
         elif self.status == "invoiced and contracts":
-            return '<span class="badge bg-success badge-counter">Current sale</span> <i class="fas fa-check text-success"></i>'
+            return '<span class="badge bg-success badge-counter">Invoiced</span>'
         else:
             return '<span class="badge bg-dark badge-counter">Closed</span>'
 
     def get_price(alloc):
+        # import pdb;
+        # pdb.set_trace()
         try:
             return f"{alloc.negotiated_price:,.1f}"
         except:
@@ -3417,12 +3419,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
 
 class PaymentScheduleOp(PaymentSchedule,Base):
-    def __init__(self,name,arrears,amount,total,date,apartment_id,house_id,ptenant_id):
+    def __init__(self,name,arrears,amount,total,rbal,date,apartment_id,house_id,ptenant_id):
 
         self.schedule_name = name
         self.arrears = arrears
         self.schedule_amount = amount
         self.total_amount = total
+        self.rbalance = rbal
         self.schedule_date = date
 
         self.apartment_id = apartment_id
@@ -3430,11 +3433,12 @@ class PaymentScheduleOp(PaymentSchedule,Base):
         self.ptenant_id = ptenant_id
 
 
-    def update_details(self,arr,tot,paid,bal,payref,paytype,paydate):
+    def update_details(self,arr,tot,paid,bal,rbal,payref,paytype,paydate):
         self.arrears = arr
         self.total_amount = tot
         self.paid = paid
         self.balance = bal
+        self.rbalance = rbal
         self.paytype = paytype
         self.payref = payref
         self.pay_date = paydate
@@ -3477,6 +3481,12 @@ class PaymentScheduleOp(PaymentSchedule,Base):
             str_date = paydate
         return str_date
 
+    def generate_rbal(self):
+        if self.rbalance:
+            return f"{self.rbalance:,.1f}"
+        else:
+            return "-"
+
     def view_detail(self):
         
         return {
@@ -3489,6 +3499,7 @@ class PaymentScheduleOp(PaymentSchedule,Base):
             'schedule_total':PaymentScheduleOp.fig_format(self.total_amount),
             'paid':PaymentScheduleOp.fig_format(self.paid),
             'balance':PaymentScheduleOp.fig_format(self.balance),
+            'rbalance':PaymentScheduleOp.generate_rbal(self),
             'schedule_date':PaymentScheduleOp.get_schedule_date(self),
             'payref':self.payref if self.payref else "-",
             'paytype':self.paytype if self.paytype else "-",

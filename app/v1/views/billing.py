@@ -2789,8 +2789,12 @@ class ReceivePayment(Resource):
                 if prev_sch:
                     print("FOUND Previous scheduled")
                     sch_arr = prev_sch[0].balance
+                    sch_rbal = prev_sch[0].rbalance if prev_sch[0].rbalance is not None else 0.0
                     if sch_arr:
                         sch_arrears = sch_arr
+                else:
+                    sch_rbal = h.owner.negotiated_price
+
                 if sch_arrears:
                     sch_total_amount = schedule_obj.schedule_amount + sch_arrears
                 else:
@@ -2800,11 +2804,15 @@ class ReceivePayment(Resource):
                 
                 sch_bal = sch_total_amount - schpaid
 
-                print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
+                if sch_rbal < 0:
+                    sch_rbal = 0.0
+                else:
+                    sch_rbal -= valid_amount
 
-                PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+                print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+
+                PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
             
-
 
             if specific_charge_obj:
 

@@ -18,18 +18,13 @@
   
       <div class="card-body flowing-body pt-2 pl-2">
   
-        <!-- <div class="pb-1 bg-white">
+        <div class="pb-1 bg-white">
           <div class="mb-1">
-            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
-              <i class="me-1" data-feather="users"></i>
-              Add New Tenant
-            </span>
-            <span class="btn btn-sm btn-light text-black">
-              <i class="me-1" data-feather="user-plus"></i>
-              Upload data
+            <span class="text-black">
+             Total Leads: <span id="total_leads" class="text-primary">{{leads}}</span>
             </span>
           </div>
-        </div> -->
+        </div>
   
   
         <div id="result-view" class="">
@@ -37,10 +32,14 @@
             <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th class="text-info font-weight-bold pl-0">Property</th>
-                        <th class="text-info font-weight-bold">Units</th>
-                        <th class="text-info font-weight-bold">Leads</th>
-                        <th class="text-info font-weight-bold ">Clients</th>
+                        <th class="text-black font-weight-bold pl-0">Property</th>
+                        <th class="text-black font-weight-bold">Units</th>
+                        <th class="text-black font-weight-bold">Clients</th>
+
+                        <th class="text-black font-weight-bold ">Proposals</th>
+                        <th class="text-black font-weight-bold ">Prospective</th>
+                        <th class="text-black font-weight-bold ">Invoiced</th>
+                        <th class="text-black font-weight-bold ">Closed</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,8 +54,13 @@
                         </td>
             
                         <td class="data-cell">{{ item['houses'] }}</td>
-                        <td class="data-cell">{{ item['leads'] }}</td>
-                        <td class="data-cell">{{ item['ptenants'] }}</td>          
+                        <td class="data-cell">{{ item['ptenants'] }}</td> 
+
+                        <td class="data-cell">{{ item['proposals'] }}</td>
+                        <td class="data-cell">{{ item['prospective'] }}</td>
+                        <td class="data-cell">{{ item['invoiced'] }}</td>
+                        <td class="data-cell">{{ item['closed'] }}</td>
+
             
                     </tr>
                     {% endfor %}

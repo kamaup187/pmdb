@@ -6357,6 +6357,8 @@ class StatementOfAccounts(Resource):
                 schpaid += bill.paid
                 formatted_bills.append(PaymentScheduleOp.view_detail(bill))
 
+            rbal = f"{tenant_obj.balance:,.1f}"
+
             prop = tenant_obj.apartment
 
             return Response(render_template(
@@ -6366,6 +6368,7 @@ class StatementOfAccounts(Resource):
                paging=page(formatted_bills),
                schtotal=f"{schtotal:,.1f}",
                schpaid=f"{schpaid:,.1f}",
+               rbal=rbal,
                prop_obj=prop,
                prop = tenant_obj.apartment.name,
                tenant_obj=tenant_obj,
@@ -6587,7 +6590,7 @@ class FetchTenants(Resource):
             return render_template("ajax_oldtenantlist2.html",items=tenantlist,tenantids=full_ids)
 
         elif target == "proposals":
-            tenancy = tenantauto_alt(propid,"proposal") + tenantauto_alt(propid,"negotiated")
+            tenancy = tenantauto_alt(propid,"proposal") + tenantauto_alt(propid,"prospective")
             tenantlist = ptenant_details(tenancy)
             tenantids = get_obj_ids(tenantlist)
             moreids = inject_tenants_ids(tenantlist) 

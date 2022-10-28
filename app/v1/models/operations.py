@@ -4,9 +4,11 @@
 
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
-from sqlalchemy import extract 
+from sqlalchemy import extract,or_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
+
+ROWS_PER_PAGE = 2
 
 class Base():
     """base class"""
@@ -1922,6 +1924,10 @@ class LeadOp(Lead,Base):
 
     def fetch_lead_by_email(email):
         return Lead.query.filter_by(email=email).first()
+
+    def fetch_all_leads_per_company_id(company_id):
+        return Lead.query.filter_by(company_id=company_id).all()
+
 
     def view(self):
         # print("NAME >>>>",self.name)

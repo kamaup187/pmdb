@@ -1844,12 +1844,32 @@ class PropertyManagement(Resource):
     @login_required
     def get(self):
         prop_id = request.args.get("propid")
-        prop_obj = ApartmentOp.fetch_apartment_by_id(prop_id)
+        propid = get_identifier(prop_id)
+
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
         db.session.expire(prop_obj)
         period=get_billing_period(prop_obj)
         str_period=get_str_month(period.month)
-        house_list = prop_obj.houses
-        houses = len(house_list)
+
+        # house_list = prop_obj.houses
+
+        # page = request.args.get('page', 1, type=int)
+        # pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
+
+        pg = None
+
+        if crm(current_user):
+            page = request.args.get('page', 1, type=int)
+            pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
+            houselist = house_details(pg.items)
+            houses = len(pg.items)
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+            house_list = prop_obj.houses
+            houselist = house_details(house_list)
+            houses = len(house_list)
+
+        
         tenancy = tenantauto(prop_obj.id)
         tenants = len(tenancy)
         owner = prop_obj.owner
@@ -1870,7 +1890,6 @@ class PropertyManagement(Resource):
             contact = "N/A"
 
 
-        houselist = house_details(house_list)
         houseids = get_obj_ids(houselist)
 
         template = "ajax_prop_detail2.html" if crm(current_user) else "ajax_prop_detail.html"
@@ -1886,7 +1905,8 @@ class PropertyManagement(Resource):
             contact=contact,
             items=houselist,
             period=str_period,
-            houseids=houseids
+            houseids=houseids,
+            pg=pg
             )
 
 class SalesRepsManagement(Resource):
@@ -5453,7 +5473,9 @@ class Deal(Resource):
                 os.remove(filename)
             else:
                 img = ""
-                PermanentTenantOp.update_status(alloc,"invoiced and missing contracts")
+                # PermanentTenantOp.update_status(alloc,"invoiced and missing contracts")
+                PermanentTenantOp.update_status(alloc,"invoiced and contracts")
+
 
 
             PermanentTenantOp.update_payment_plan(alloc,0.0,"partial",0.0,0.0,0.0,0.0,bookedon,bookedon)

@@ -51,12 +51,40 @@
                 {% endfor %}
             </tbody>
         </table>
+                        <!-- Pagination Links-->
+                        <div class="text-right">
+                          <button id="prev{{pg.prev_num}}" class="btn btn-outline-dark 
+                          {% if pg.page == 1 %}disabled{% endif %}">&laquo;</button>
+                          <!-- Loop through the number of pages to display a link for each-->
+                          {% for page_num in pg.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                              {% if page_num %}
+                                <!-- Check for the active page and set the link to "Active"-->
+                                {% if pg.page == page_num %}
+                                    <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+                                {% else %}
+                                    <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+                                {% endif %}
+                              {% else %}
+                                ...
+                              {% endif %}
+                          {% endfor %}
+                          <button id="next{{pg.next_num}}" class="btn btn-outline-dark 
+                          {% if pg.page == pg.pages %}disabled{% endif %}">&raquo;
+                          </button>
+                        </div>
+                        <p class="text-right mt-3">
+                          <span id="pages" class="dispnone">{{pg.pages}}</span>
+                          Showing page {{ pg.page }} of {{ pg.pages }}
+                        </p>
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
       $('#tenantData').DataTable({
+        "processing": true,
+        "paging": false,
+        "info" : false,
         "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
         "pageLength": 100,
         "searching":false,
@@ -88,3 +116,28 @@
       });
     });
   </script>
+
+<script>
+  var pages = range(1, $("#pages").text())
+
+  function loader(item) {
+    getUnits($("#prop_identifier").text(), "", item)
+    $("#currenthousepage").text(item)
+  }
+
+  $.each(pages, function (i, item) {
+    $("#num" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#next" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#prev" + item).on('click', function () {
+      loader(item)
+    })
+  })
+</script> 

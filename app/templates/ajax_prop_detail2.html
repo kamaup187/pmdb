@@ -10,6 +10,9 @@
       <span id="edit_group_identifier" class="dispnone"></span>
       <span id="del_group_identifier" class="dispnone"></span>
 
+      <span id="currentunitpage" class="dispnone">1</span>
+
+
       <a id="download_units" href="/download/template/units" class="dispnone">download</a>
 
 
@@ -169,6 +172,32 @@
                       {% endfor %}
                   </tbody>
                   </table>
+
+                <!-- Pagination Links-->
+                <div class="text-right">
+                  <button id="prev{{pg.prev_num}}" class="btn btn-outline-dark 
+                  {% if pg.page == 1 %}disabled{% endif %}">&laquo;</button>
+                  <!-- Loop through the number of pages to display a link for each-->
+                  {% for page_num in pg.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                      {% if page_num %}
+                        <!-- Check for the active page and set the link to "Active"-->
+                        {% if pg.page == page_num %}
+                            <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+                        {% else %}
+                            <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+                        {% endif %}
+                      {% else %}
+                        ...
+                      {% endif %}
+                  {% endfor %}
+                  <button id="next{{pg.next_num}}" class="btn btn-outline-dark 
+                  {% if pg.page == pg.pages %}disabled{% endif %}">&raquo;
+                  </button>
+                </div>
+                <p class="text-right mt-3">
+                  <span id="pages" class="dispnone">{{pg.pages}}</span>
+                  Showing page {{ pg.page }} of {{ pg.pages }}
+                </p>
               </div>
           </div>
         </div>
@@ -737,10 +766,35 @@
   });
 </script>
 
+<script>
+      function getUnits(propid, target, page) {
+        showSpin();
+
+        // $("#current-reloader").html(target);
+
+        $.ajax({
+          url: "{{ url_for('api.fetchhouses') }}",
+          type: "get",
+          data: { 
+            propid:propid,
+            target:target,
+            page:page
+           },
+          success: function (response) {
+
+            $("#result-view").html(response);
+          }
+        });
+      }
+</script>
+
 
 <script type="text/javascript">
   $(document).ready(function () {
     $('#tenantData').DataTable({
+      "processing": true,
+      "paging": false,
+      "info" : false,
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
       "pageLength": 100,
       "searching":false,
@@ -774,6 +828,31 @@
     });
   });
 </script>
+
+<script>
+  var pages = range(1, $("#pages").text())
+
+  function loader(item) {
+    getUnits($("#prop_identifier").text(), "", item)
+    $("#currenthousepage").text(item)
+  }
+
+  $.each(pages, function (i, item) {
+    $("#num" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#next" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#prev" + item).on('click', function () {
+      loader(item)
+    })
+  })
+</script> 
 
 
 
@@ -810,15 +889,17 @@
       var cb3 = document.getElementById("reporttoggle3");
       cb3.checked = false;
 
-      $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
+      getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+      // $.ajax({
+      //           url: "{{ url_for('api.fetchhouses') }}",
+      //           type: "get",
+      //           data: {propid:  $("#prop_identifier").text()},
+      //           success: function(response) {
                   
-                  $("#result-view").html(response);
-                }
-              });
+      //             $("#result-view").html(response);
+      //           }
+      //         });
     }
   
   });
@@ -1148,16 +1229,17 @@
           $(".closemodal").click();
             }, 1500);
         setTimeout(function(){
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-          $.ajax({
-              url: "{{ url_for('api.fetchhouses') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
+          // $.ajax({
+          //     url: "{{ url_for('api.fetchhouses') }}",
+          //     type: "get",
+          //     data: {propid:  $("#prop_identifier").text()},
+          //     success: function(response) {
                 
-                $("#result-view").html(response);
-              }
-            });
+          //       $("#result-view").html(response);
+          //     }
+          //   });
 
             }, 3000);  
         
@@ -1271,15 +1353,17 @@
               },3000)
 
               setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchhouses') }}",
-                  type: "get",
-                  data: {propid:  $("#prop_identifier").text()},
-                  success: function(response) {
+                getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+                // $.ajax({
+                //   url: "{{ url_for('api.fetchhouses') }}",
+                //   type: "get",
+                //   data: {propid:  $("#prop_identifier").text()},
+                //   success: function(response) {
                     
-                    $("#result-view").html(response);
-                  }
-                });
+                //     $("#result-view").html(response);
+                //   }
+                // });
               },5000);
 
           },
@@ -1409,16 +1493,17 @@
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchhouses') }}",
+          //       type: "get",
+          //       data: {propid:  $("#prop_identifier").text()},
+          //       success: function(response) {
                   
-                  $("#result-view").html(response);
-                }
-              });
+          //         $("#result-view").html(response);
+          //       }
+          //     });
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1516,15 +1601,18 @@
             $('#updatehouse').attr('disabled', 'disabled');
             $("#updatehouse").html("Update")
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
+
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchhouses') }}",
+          //       type: "get",
+          //       data: {propid:  $("#prop_identifier").text()},
+          //       success: function(response) {
                   
-                  $("#result-view").html(response);
-                }
-              });
+          //         $("#result-view").html(response);
+          //       }
+          //     });
         }
       });
   });
@@ -1553,15 +1641,17 @@
             // $('#edithouse').attr('disabled', 'disabled');
             $("#edithouse").html("Update")
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchhouses') }}",
+          //       type: "get",
+          //       data: {propid:  $("#prop_identifier").text()},
+          //       success: function(response) {
                   
-                  $("#result-view").html(response);
-                }
-              });
+          //         $("#result-view").html(response);
+          //       }
+          //     });
         }
       });
   });

@@ -5,6 +5,12 @@
       <span id="edit_tenant_identifier" class="dispnone"></span>
       <span id="del_tenant_identifier" class="dispnone"></span>
 
+      <span id="currentleadpage" class="dispnone">1</span>
+      <span id="currentproposalpage" class="dispnone">1</span>
+      <span id="currentcontractpage" class="dispnone">1</span>
+      <span id="currentclosedpage" class="dispnone">1</span>
+
+
       <span id="lead_identifier" class="dispnone"></span>
       <span id="edit_lead_identifier" class="dispnone"></span>
       <span id="del_lead_identifier" class="dispnone"></span>
@@ -1075,30 +1081,34 @@
 
 <script>
 
-    function getLeads() {
-      $("#current-reloader").html("leads");
+    function getLeads(propid,target,page) {
+      showSpin();
+      $("#current-reloader").html(target);
       $.ajax({
         url: "{{ url_for('api.fetchleads') }}",
         type: "get",
         data: {
-          propid: $("#prop_identifier").text(),
-          target: "leads"
+          propid:propid,
+          target:target,
+          page:page
         },
         success: function (response) {
-
           $("#child-result-view").html(response);
         }
       });
     }
 
-    function getProposals() {
-      $("#current-reloader").html("proposals");
+    function getClients(propid,target,page) {
+      showSpin();
+
+      $("#current-reloader").html(target);
       $.ajax({
         url: "{{ url_for('api.fetchtenants') }}",
         type: "get",
         data: {
-          propid: $("#prop_identifier").text(),
-          target: "proposals"
+          propid:propid,
+          target:target,
+          page:page
         },
         success: function (response) {
 
@@ -1106,44 +1116,6 @@
         }
       });
     }
-
-      function getClosedDeals() {
-        $("#current-reloader").html("closed");
-
-
-        $.ajax({
-          url: "{{ url_for('api.fetchtenants') }}",
-          type: "get",
-          data: {
-            propid: $("#prop_identifier").text(),
-            target: "closed"
-          },
-          success: function (response) {
-
-            $("#child-result-view").html(response);
-          }
-        });
-      }
-
-        function getContracts() {
-          $("#current-reloader").html("contracts");
-
-
-          $.ajax({
-            url: "{{ url_for('api.fetchtenants') }}",
-            type: "get",
-            data: {
-              propid: $("#prop_identifier").text(),
-              target: "contracts"
-            },
-            success: function (response) {
-
-              $("#child-result-view").html(response);
-            }
-          });
-        }
-
-
 
 
       $(".chb").change(function (e) {
@@ -1153,25 +1125,22 @@
         $(".chb").prop('checked', false);
         $(this).prop('checked', true);
 
-        //false means checkbox was checked and became unchecked on change event, so let it stay unchecked
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
         if (status === false) {
           $(this).prop('checked', false);
         }else{
-          $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
 
           if ($(this).val() == "cb1"){
-            getLeads()
-          }
-          else if ($(this).val() == "cb2") {
-            getProposals()
+            getLeads($("#prop_identifier").text(),"leads",$("#currentleadpage").text())
+          }else if ($(this).val() == "cb2") {
+            getClients($("#prop_identifier").text(),"proposals",$("#currentproposalpage").text())
           } else if ($(this).val() == "cb3"){
-            getContracts()
+            getClients($("#prop_identifier").text(),"contracts",$("#currentcontractpage").text())
           }else{
-            getClosedDeals()
+            getClients($("#prop_identifier").text(),"closed",$("#currentclosedpage").text())
           }
         }
-
-
 
       });
 
@@ -1575,7 +1544,7 @@
         // $(".payment-info").html(response);  
         $('#del_lead').html('Delete');
         $(".closemodal").click();
-        getLeads()
+        getLeads($("#prop_identifier").text(),"leads",$("#currentleadpage").text())
       }
     });
   });

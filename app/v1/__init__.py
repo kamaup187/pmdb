@@ -9,10 +9,6 @@ from .reports.reports import *
 from .views.admin_views import *
 
 # Backend API
-from .views.backend_user import *
-from .views.backend_apartment import *
-from .views.backend_admin import *
-from .views.backend_billing import *
 
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
@@ -334,30 +330,3 @@ api.add_resource(DownloadTemplate,"/download/template/<string:file>")
 
 
 
-api.add_resource(FetchExcel,"/fetch/excel")
-api.add_resource(FetchPdf,"/fetch/pdf")
-# ADMIN FRONTEND API
-#api.add_resource(UserLogin,"/signin")
-api.add_resource(BUserLogin,"/auth")
-api.add_resource(BUserLogout,"/blogout")
-api.add_resource(BComStats,"/fetch/bcomstats")
-api.add_resource(BComGraphStats,"/fetch/bcomgraphstats")
-# api.add_resource(BAdminRegisterUser,"/add/badmincreateuser")
-api.add_resource(BRegisterOwner,"/add/bowner")
-api.add_resource(BAllOwners,"/all/bowners")
-api.add_resource(BUpdateUser,"/update/buser")
-api.add_resource(BCreateApartment,"/add/bapartment")
-api.add_resource(BAdminCreateAgent,"/add/badmincreateagent")
-api.add_resource(BModifyAccessRight,"/modify/baccess")
-api.add_resource(BRegisterUser,"/add/buser")
-api.add_resource(BPropertyAccess,"/property/baccess")
-api.add_resource(BPropertyAccessTermination,"/property/btermination")
-api.add_resource(BAddProp,"/add/bprop")
-
-api.add_resource(BAllProperties,"/all/bproperties")
-api.add_resource(BClientBilling,"/client/bbilling")
-api.add_resource(BBilling, "/bbilling")
-api.add_resource(BMpesa, "/bmpesa")
-
-api.add_resource(BRegisterUserGroup,"/add/busergroup")
-api.add_resource(BAssignRole,"/assign/brole")

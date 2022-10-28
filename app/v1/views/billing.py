@@ -18,7 +18,7 @@ from flask_login import login_required, current_user
 from flask_restful import Resource, abort
 from flask_mail import Message
 from flask import render_template,Response,request,flash,redirect,url_for,json,jsonify,make_response
-from ..forms.forms import PaymentForm,AmendChargeForm
+# from ..forms.forms import PaymentForm,AmendChargeForm
 from ..stkpush.access_token import lipa_na_mpesa_online,lipa_na_mpesa_online2,stkquery
 from app.v1.models.operations import *
 from .helperfuncs import *

@@ -6562,12 +6562,12 @@ class FetchLeads(Resource):
         # co = current_user.company
         # leads = co.leads
 
-        # import pdb; pdb.set_trace()
 
         # Set the pagination configuration
         page = request.args.get('page', 1, type=int)
         pg = Lead.query.filter_by(company_id=current_user.company.id).paginate(page=page, per_page=ROWS_PER_PAGE)
 
+        # import pdb; pdb.set_trace()
         tenant_data = lead_details(pg.items)
         tenantids = get_obj_ids(tenant_data)
 

@@ -56,6 +56,12 @@
         </table>
 
                 <!-- Pagination Links-->
+
+                <p class="text-right mt-3">
+                  <span id="pages" class="dispnone">{{pg.pages}}</span>
+                  Showing {{ pg.first }} to {{ pg.last }} of {{ pg.total }} entries
+                </p>
+
                 <div class="text-right">
                   <button id="prev{{pg.prev_num}}" class="btn btn-outline-dark 
                   {% if pg.page == 1 %}disabled{% endif %}">&laquo;</button>

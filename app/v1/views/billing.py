@@ -5030,7 +5030,7 @@ class CallBackUrlSentomEquity(Resource):
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
         ww = f"{my_json},PROD SENTOM Equity has sent data"
         response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
-        response2 = sms.send(ww, ["+254725538750"],"KIOTAPAY")
+        # response2 = sms.send(ww, ["+254725538750"],"KIOTAPAY")
 
 
         try:

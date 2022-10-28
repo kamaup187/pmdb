@@ -1,0 +1,30 @@
+.spinner-opacity {
+    opacity: .3;
+    pointer-events:none;
+  }
+  
+  .spinner::after {
+    content: '';
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    border-radius: 50%;
+  }
+  
+  .spinner.smooth::after {
+    border-top: 4px solid rgb(214, 132, 7);
+    border-left: 4px solid rgba(205, 141, 13, 0.656);
+    border-right: 4px solid rgba(251, 186, 8, 0);
+    animation: spinner .3s linear infinite;
+  }
+  
+  
+  @keyframes spinner {
+    to {transform: rotate(360deg);}
+  }
+  
+
+  

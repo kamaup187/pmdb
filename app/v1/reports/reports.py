@@ -6559,11 +6559,19 @@ class FetchLeads(Resource):
             lead_obj = LeadOp.fetch_lead_by_id(get_identifier(request.args.get("lead_id")))
             return f' ({lead_obj.name})'
 
-        co = current_user.company
-        leads = co.leads
-        tenant_data = lead_details(leads)
+        # co = current_user.company
+        # leads = co.leads
+
+        # import pdb; pdb.set_trace()
+
+        # Set the pagination configuration
+        page = request.args.get('page', 1, type=int)
+        pg = Lead.query.filter_by(company_id=current_user.company.id).paginate(page=page, per_page=ROWS_PER_PAGE)
+
+        tenant_data = lead_details(pg.items)
         tenantids = get_obj_ids(tenant_data)
-        return render_template("ajax_leads.html",tenantids=tenantids,items=tenant_data)
+
+        return render_template("ajax_leads.html",tenantids=tenantids,items=tenant_data,pg=pg)
 
 class FetchTenants(Resource):
     def get(self):
@@ -6598,12 +6606,16 @@ class FetchTenants(Resource):
             return render_template("ajax_newtenantlist2.html",items=tenantlist,tenantids=full_ids)
 
         elif target == "contracts":
-            tenancy = tenantauto_alt(propid,"invoiced and missing contracts") + tenantauto_alt(propid,"invoiced and contracts")
-            tenantlist = ptenant_details(tenancy)
+            # tenancy = tenantauto_alt(propid,"invoiced and missing contracts") + tenantauto_alt(propid,"invoiced and contracts")
+
+            page = request.args.get('page', 1, type=int)
+            pg = PermanentTenant.query.filter_by(apartment_id=propid).filter(or_(PermanentTenant.status == 'invoiced and missing contracts', PermanentTenant.status == 'invoiced and contracts')).paginate(page=page, per_page=ROWS_PER_PAGE)
+
+            tenantlist = ptenant_details(pg.items)
             tenantids = get_obj_ids(tenantlist)
             moreids = inject_tenants_ids(tenantlist) 
             full_ids = tenantids + "," + moreids
-            return render_template("ajax_clientcontractslist.html",items=tenantlist,tenantids=full_ids)
+            return render_template("ajax_clientcontractslist.html",items=tenantlist,tenantids=full_ids,pg=pg)
 
         elif target == "old":
             tenancy = xtenantauto(propid)
@@ -6660,16 +6672,26 @@ class FetchReadings(Resource):
 class FetchHouses(Resource):
     @login_required
     def get(self):
-        propid = request.args.get('propid')
-        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
-        houses = prop_obj.houses
+        prop_id = request.args.get('propid')
+        propid = get_identifier(prop_id)
 
-        houselist = house_details(houses)
+        pg = None
+
+        if crm(current_user):
+            page = request.args.get('page', 1, type=int)
+            pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
+            houselist = house_details(pg.items)
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+            houses = prop_obj.houses
+            houselist = house_details(houses)
+
+
         houseids = get_obj_ids(houselist)
 
         template = "ajax_houselist2.html" if crm(current_user) else "ajax_houselist.html"
 
-        return render_template(template,items=houselist,houseids=houseids)
+        return render_template(template,items=houselist,houseids=houseids,pg=pg)
 
 class FetchRates(Resource):
     def get(self):

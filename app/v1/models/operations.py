@@ -8,7 +8,7 @@ from sqlalchemy import extract,or_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 
-ROWS_PER_PAGE = 15
+ROWS_PER_PAGE = 10
 
 class Base():
     """base class"""

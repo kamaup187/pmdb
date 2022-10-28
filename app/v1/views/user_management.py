@@ -5,7 +5,7 @@ from flask_login import login_user,logout_user
 from flask_login import login_required, current_user
 
 from flask import render_template,Response,request,flash,redirect,url_for,abort
-from ..forms.forms import ModifyAccessRightForm
+# from ..forms.forms import ModifyAccessRightForm
 # from ..forms.forms import UserRegForm
 
 from app.v1.models.operations import *
@@ -83,144 +83,147 @@ class AssignRole(Resource):
     @login_required
     def post(self):
         """we are modifying roles here by assigning its fields with user and group data"""
+        pass
 
-        role = request.form.get('role')#this will be selected first within the form
-        usergroup = request.form.get('usergroupsessionvar')#this will be selected within the form
-        run = request.form.get('run')
-        # import pdb; pdb.set_trace()
+        # role = request.form.get('role')#this will be selected first within the form
+        # usergroup = request.form.get('usergroupsessionvar')#this will be selected within the form
+        # run = request.form.get('run')
+        # # import pdb; pdb.set_trace()
 
-        if usergroup == '--Select Usergroup--':
-            pass
-        else:
-            stored_usergroup = usergroup
+        # if usergroup == '--Select Usergroup--':
+        #     pass
+        # else:
+        #     stored_usergroup = usergroup
 
-        if run:
-            usergroup_name = f"{stored_usergroup}"
-            return render_template('ajaxusergroupname.html',usergroup_name=usergroup_name)
+        # if run:
+        #     usergroup_name = f"{stored_usergroup}"
+        #     return render_template('ajaxusergroupname.html',usergroup_name=usergroup_name)
             
-        if not role:
-            role_list = filterroles(stored_usergroup)
-            return render_template("ajaxassignroleoptions.html",role_options=role_list)
+        # if not role:
+        #     role_list = filterroles(stored_usergroup)
+        #     return render_template("ajaxassignroleoptions.html",role_options=role_list)
 
-        grouprole_id = GroupRoleOp.fetch_role_by_name(role).id
-        usergroup_obj = CompanyUserGroupOp.fetch_usergroup_by_name(stored_usergroup)
-        usergroup_id = usergroup_obj.id
-        user_id = current_user.id
-        present = get_group_role_assgn_obj(usergroup_obj,role)
-        if not present:
-            assign_obj = AssignGroupRoleOp(usergroup_id,grouprole_id,user_id)
-            assign_obj.save()
+        # grouprole_id = GroupRoleOp.fetch_role_by_name(role).id
+        # usergroup_obj = CompanyUserGroupOp.fetch_usergroup_by_name(stored_usergroup)
+        # usergroup_id = usergroup_obj.id
+        # user_id = current_user.id
+        # present = get_group_role_assgn_obj(usergroup_obj,role)
+        # if not present:
+        #     assign_obj = AssignGroupRoleOp(usergroup_id,grouprole_id,user_id)
+        #     assign_obj.save()
 
-        msg='Role assigned.'
-        flash(msg,"success")
+        # msg='Role assigned.'
+        # flash(msg,"success")
 
-        role_list = filterroles(stored_usergroup)
-        company = current_user.company
-        groups = company.groups
+        # role_list = filterroles(stored_usergroup)
+        # company = current_user.company
+        # groups = company.groups
 
-        form = ModifyAccessRightForm()
-        usergroup_list = stringify_list_items(groups)
-        place_holder_item = '--Select Usergroup--'
-        usergroup_list.insert(0,place_holder_item)
-        form.usergroup.choices = usergroup_list
+        # form = ModifyAccessRightForm()
+        # usergroup_list = stringify_list_items(groups)
+        # place_holder_item = '--Select Usergroup--'
+        # usergroup_list.insert(0,place_holder_item)
+        # form.usergroup.choices = usergroup_list
 
-        current_usergroup = f"{stored_usergroup}"
+        # current_usergroup = f"{stored_usergroup}"
 
-        return Response(render_template(
-            'modifyaccessclone.html',
-            option_list=groups,
-            role_option_list=role_list,
-            current_usergroup=current_usergroup,
-            form=form,
-            logopath=logo(current_user.company)[0],
-            mobilelogopath=logo(current_user.company)[1],
-            name=current_user.name))
+        # return Response(render_template(
+        #     'modifyaccessclone.html',
+        #     option_list=groups,
+        #     role_option_list=role_list,
+        #     current_usergroup=current_usergroup,
+        #     form=form,
+        #     logopath=logo(current_user.company)[0],
+        #     mobilelogopath=logo(current_user.company)[1],
+        #     name=current_user.name))
            
 class ModifyAccessRight(Resource):
     """class"""
     @login_required
     def get(self):
-        if current_user.username.startswith('qc'):
-            pass
-        else:
-            user_group = current_user.company_user_group
-            accessright = check_accessright(user_group,"grant_rights")
-            if accessright != True:
-                return Response(render_template('noaccess.html',name=current_user.name))
+        pass
+        # if current_user.username.startswith('qc'):
+        #     pass
+        # else:
+        #     user_group = current_user.company_user_group
+        #     accessright = check_accessright(user_group,"grant_rights")
+        #     if accessright != True:
+        #         return Response(render_template('noaccess.html',name=current_user.name))
 
-        company = current_user.company
-        groups = company.groups
+        # company = current_user.company
+        # groups = company.groups
 
-        form = ModifyAccessRightForm()
-        usergroup_list = stringify_list_items(groups)
-        place_holder_item = '--Select Usergroup--'
-        usergroup_list.insert(0,place_holder_item)
-        form.usergroup.choices = usergroup_list
+        # form = ModifyAccessRightForm()
+        # usergroup_list = stringify_list_items(groups)
+        # place_holder_item = '--Select Usergroup--'
+        # usergroup_list.insert(0,place_holder_item)
+        # form.usergroup.choices = usergroup_list
 
-        return Response(render_template(
-            'modifyaccess.html',
-            option_list=groups,
-            form=form,
-            logopath=logo(current_user.company)[0],
-            mobilelogopath=logo(current_user.company)[1],
-            name=current_user.name))
+        # return Response(render_template(
+        #     'modifyaccess.html',
+        #     option_list=groups,
+        #     form=form,
+        #     logopath=logo(current_user.company)[0],
+        #     mobilelogopath=logo(current_user.company)[1],
+        #     name=current_user.name))
     
     @login_required
     def post(self):
-        form = ModifyAccessRightForm()
-        run = None#run value will be supplied by ajax request
-        run2 = None
-        usergroup =  form.data.get('usergroup')
-        grouprole =  form.data.get('grouprole')
-        accessright = request.form.get('access')
-        # acc = form.data.get('accessright')
+        pass
+        # form = ModifyAccessRightForm()
+        # run = None#run value will be supplied by ajax request
+        # run2 = None
+        # usergroup =  form.data.get('usergroup')
+        # grouprole =  form.data.get('grouprole')
+        # accessright = request.form.get('access')
+        # # acc = form.data.get('accessright')
 
-        run = request.form.get('run')
-        run2 = request.form.get('run2')
-        runcheckall = request.form.get('runcheckall')
-        modified_by = current_user.id
+        # run = request.form.get('run')
+        # run2 = request.form.get('run2')
+        # runcheckall = request.form.get('runcheckall')
+        # modified_by = current_user.id
 
-        if not accessright:
-            accessright = "False"
+        # if not accessright:
+        #     accessright = "False"
 
-        access = return_bool(accessright)
+        # access = return_bool(accessright)
 
-        company = current_user.company
-        groups = company.groups
-        for group in groups:
-            if str(group) == usergroup:
-                usergroup_obj = group
-                break
-        # usergroup_obj = CompanyUserGroupOp.fetch_usergroup_by_name(usergroup)
+        # company = current_user.company
+        # groups = company.groups
+        # for group in groups:
+        #     if str(group) == usergroup:
+        #         usergroup_obj = group
+        #         break
+        # # usergroup_obj = CompanyUserGroupOp.fetch_usergroup_by_name(usergroup)
 
-        if usergroup and run:
-            usergroup_id = usergroup_obj.id
-            assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
-            return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=assigngrouproleobjs_list)
+        # if usergroup and run:
+        #     usergroup_id = usergroup_obj.id
+        #     assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+        #     return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=assigngrouproleobjs_list)
 
-        if runcheckall:
-            usergroup_id = usergroup_obj.id
-            if usergroup == "Administrator" and access == False:
-                pass
-            else:
-                assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
-                for item in assigngrouproleobjs_list:
-                    AssignGroupRoleOp.update_accessright(item,access,modified_by)
-            new_assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
-            return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=new_assigngrouproleobjs_list)
+        # if runcheckall:
+        #     usergroup_id = usergroup_obj.id
+        #     if usergroup == "Administrator" and access == False:
+        #         pass
+        #     else:
+        #         assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+        #         for item in assigngrouproleobjs_list:
+        #             AssignGroupRoleOp.update_accessright(item,access,modified_by)
+        #     new_assigngrouproleobjs_list = fetch_all_assigned_roles(usergroup_id)
+        #     return render_template('ajaxaccessrights.html',assigngrouproleobjs_list=new_assigngrouproleobjs_list)
 
-        assign_obj = get_group_role_assgn_obj(usergroup_obj,grouprole)
-        if usergroup == "Administrator" and grouprole == "grant_rights":
-            assign_obj = None
+        # assign_obj = get_group_role_assgn_obj(usergroup_obj,grouprole)
+        # if usergroup == "Administrator" and grouprole == "grant_rights":
+        #     assign_obj = None
         
-        if assign_obj:
-            AssignGroupRoleOp.update_accessright(assign_obj,access,modified_by)
-            msg = "Database update success"
-            flash(msg,"success")
-        else:
-            msg = "Update failed"
-            flash(msg,"fail")
-        return redirect(url_for('api.modifyaccessright'))
+        # if assign_obj:
+        #     AssignGroupRoleOp.update_accessright(assign_obj,access,modified_by)
+        #     msg = "Database update success"
+        #     flash(msg,"success")
+        # else:
+        #     msg = "Update failed"
+        #     flash(msg,"fail")
+        # return redirect(url_for('api.modifyaccessright'))
 
 class CompanyGroup(Resource):
     # def get(self):

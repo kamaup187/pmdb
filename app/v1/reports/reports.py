@@ -1996,8 +1996,6 @@ class CombinedReport(Resource):
             commission_percentage = f"{commission} flat rate"
 
 
-
-
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
 
@@ -2110,7 +2108,7 @@ class CustomCombinedReport(Resource):
 
                 """compute subtotals"""
                 # bill_item = LandlordSummaryOp.external_view(bill)
-                bill_item = MonthlyChargeOp.view_detail(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
                 detailed_bills.append(bill_item)
 
                 totalrentarrears += bill.rent_balance
@@ -2119,7 +2117,7 @@ class CustomCombinedReport(Resource):
                 totalrentpaid += bill.rent_paid
                 totalrentbalance += bill.rent_due
 
-                utility += bill.water + bill.garbage + bill.security + bill.maintenance
+                utility += bill.water_paid + bill.garbage_paid + bill.security_paid + bill.maintenance_paid
                 deposits += bill.deposit   
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
@@ -2142,7 +2140,7 @@ class CustomCombinedReport(Resource):
 
 
 
-        renttotalbalance = (f"{totalrentbalance:,}")
+        renttotalarrears = (f"{totalrentarrears:,}")
         renttotal = (f"{totalrent:,}")
         renttotaldue = (f"{totalrentdue:,}")
         renttotalpaid = (f"{totalrentpaid:,}")
@@ -2164,20 +2162,13 @@ class CustomCombinedReport(Resource):
             if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
                 expenses_amount += exp.amount
 
-        if apartment_obj.id == 33:
-            loan = 0
-        else:
-            loan = 0
-
             
         netrent = totalrentpaid
 
         formatted_netrent = (f"{netrent:,.1f}")
 
         if apartment_obj.commission:
-        
             commission = netrent * apartment_obj.commission * 0.01
-
             commission_percentage = f"({apartment_obj.commission} %)"
 
         else:
@@ -2185,16 +2176,12 @@ class CustomCombinedReport(Resource):
             commission_percentage = f"{commission} flat rate"
 
 
-
-
         formatted_commision = (f"{commission:,.1f}")
         grosspay = f"{(totalrentpaid - commission):,.1f}"
 
-        formatted_loan = (f"{loan:,.1f}")
-
         llp_arr = llp.arrears if llp else 0.0
 
-        raw_netpay = netrent - commission + deposits + utility - expenses_amount - loan + llp_arr
+        raw_netpay = netrent - commission + deposits + utility - expenses_amount + llp_arr
 
         remitted = raw_netpay
         netpay = (f"{raw_netpay:,.1f}")
@@ -2202,8 +2189,6 @@ class CustomCombinedReport(Resource):
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
         timeline = f"{str_month.upper()} / {target_period.year}"
-
-        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
         if llp:
             llbal = f"{llp.arrears:.1f}"
@@ -2235,7 +2220,6 @@ class CustomCombinedReport(Resource):
             "ll_bcf":0.0,
             "agent":current_user.name,
         }
-
         if target == "remit_data":
             return render_template('ajax_remit_template.html',vars=template_vars)
 
@@ -2250,18 +2234,21 @@ class CustomCombinedReport(Resource):
             propid=apartment_obj.id,
             prop_obj=apartment_obj,
             
-            fieldshow_loan=fieldshow_loan,
             tenantlist=[],
             timeline = timeline,
 
+            renttotalarrears=renttotalarrears,
             renttotal=renttotal,
+            renttotaldue = renttotaldue,
+            renttotalbalance = renttotalbalance,
+            renttotalpaid = renttotalpaid,
+
             utilitiestotal=utilities,
             deposittotal=deposittotal,
 
             expenses = f"{expenses_amount:,.1f}",
             remits = f"{remits:,.1f}",
 
-            loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             commission=formatted_commision,
             commission_percentage=commission_percentage,
@@ -2279,6 +2266,7 @@ class CustomCombinedReport(Resource):
             company=current_user.company,
             billids = get_obj_ids(detailed_bills),
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            reportmonth = datetime.datetime.now().strftime("%B"),
             name=current_user.name))
 
 class ServiceStatement(Resource):
@@ -3216,6 +3204,7 @@ class RemitStatement(Resource):
             letterhead=logo(current_user.company)[3],
             company=current_user.company,
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            reportmonth = datetime.datetime.now().strftime("%B"),
             name=current_user.name))
 
 

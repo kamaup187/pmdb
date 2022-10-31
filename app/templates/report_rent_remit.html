@@ -91,21 +91,34 @@
           </div>
          
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2 overline mb-4">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
             <span class="font-weight-bold text-black"><span class="underline mt-3">{{timeline}} RENT REMITTANCE</span></span>
           </div>
 
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
+          <div class="divjust-end underline text-black">
             <div class="">
               <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
               <div>Period : </div>
-              <div>Average Collection Ratio : %</div>
+              <!-- <div>Average Collection Ratio : %</div> -->
+              <div>Total paid to LL:</div>
+
             </div>
-            <div class="pr-3 hide">
-              <div>Date remitted : {{reportdate}}</div>
-              <div>Pin No : </div>
+            <div class="pr-3">
+              <div>Total property value:</div>
+              <div>Total money collected:</div>
+              <div>Total money uncollected:</div>
+
+              <div></div>
             </div>
+
+            <div class="pr-3">
+              <div>Percentage uncollected:</div>
+              <div>Percentage collected:</div>
+              <div>Average failure:</div>
+
+            </div>
+
 
           </div>
 
@@ -158,7 +171,7 @@
                       <td class="data-cell text-right">{{ bill['tntbbf'] }}</td>
                       <td class="data-cell text-right">{{bill['rent']}}</td>
                       <td class="data-cell text-right">{{ bill['expected'] }}</td>
-                      <td class="data-cell text-center">{{ bill['actual'] }}</td>
+                      <td class="data-cell text-right">{{ bill['actual'] }}</td>
                       <td class="data-cell text-right">{{ bill['tntbcf'] }}</td>
                       
                       <td class="data-cell text-right">{{ bill['commission'] }}</td>
@@ -180,23 +193,23 @@
                     <tr>
                       <td colspan="3" class="font-weight-bold text-right">TOTALS ...</td>
 
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}0.0</td>
 
-                      <td class="font-weight-bold text-right">{{renttotal}}</td>
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{billtotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}0.0</td>
 
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}0.0</td>
 
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">{{billtotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}0.0</td>
 
-                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}0.0</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}0.0</td>
 
-                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}0.0</td>
                       <td class="font-weight-bold text-right">-</td>
 
                     </tr>

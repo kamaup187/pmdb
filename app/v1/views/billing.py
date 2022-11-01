@@ -1202,7 +1202,10 @@ class EditBill(Resource):
 
                 if bill.paid_amount != update_payments and bill.paid_amount != 0.0:
                     print("MASTER PAYMENT IS NOT TALLYING WITH NEW PAYMENT>>>>","MASTER:",bill.paid_amount,"CHILD:",update_payments)
-                    return None
+                    if current_user.username.startswith("qc"):
+                        MonthlyChargeOp.update_payment(bill,update_payments)
+                    else:
+                        return None
                 if bill.paid_amount != update_payments:
                     pass
                 else:

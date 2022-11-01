@@ -2346,6 +2346,8 @@ class Bills(Resource):
             totalbalance = 0
 
             smsstatus = []
+            inv_arr_status = []
+            inv_paid_status = []
 
             for bill in filtered_bills:
                 renttotal += bill.rent
@@ -2364,6 +2366,16 @@ class Bills(Resource):
                 totalbalance += bill.balance if bill.balance > 0 else 0
 
                 # print("INV STATUS for ",bill.house, prop, "SMS >>>>>",bill.sms_invoice,"Email >>>",bill.email_invoice)
+
+                if "**" in MonthlyChargeOp.calculate_breakdown(bill):
+                    inv_arr_status.append("error")
+                else:
+                    inv_arr_status.append("okay")
+
+                if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
+                    inv_paid_status.append("error")
+                else:
+                    inv_paid_status.append("okay")
 
                 if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
                     smsstatus.append("0")
@@ -2418,6 +2430,8 @@ class Bills(Resource):
             else:
                 invs = len(smsstatus)
 
+            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")})</span'
+
             dict_obj = {
                 'propid':prop.id,
                 'identity':"prp"+str(prop.id),
@@ -2426,7 +2440,7 @@ class Bills(Resource):
                 'name':fname_extracter(prop.name),
                 'tenants':num_units,
                 'ptenants':ptnts,
-                'invs':invs,
+                'invs':invss,
                 'progress':progress,
                 'water':(f"{watertotal:,.1f} "),
                 'deposit':(f"{deptotal:,.1f} "),

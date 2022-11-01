@@ -3272,6 +3272,28 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             return f"{arrears:,.1f} **"
 
+    def calculate_pbreakdown(self):
+        paid = self.paid_amount
+        breaks = 0.0
+
+        breaks += self.booking_paid if self.booking_paid else 0.0
+        breaks += self.instalment_paid if self.instalment_paid else 0.0
+        breaks += self.addfee_paid if self.addfee_paid else 0.0
+        breaks += self.rent_paid if self.rent_paid else 0.0
+        breaks += self.water_paid if self.water_paid else 0.0
+        breaks += self.garbage_paid if self.garbage_paid else 0.0
+        breaks += self.security_paid if self.security_paid else 0.0
+        breaks += self.electricity_paid if self.electricity_paid else 0.0
+        breaks += self.maintenance_paid if self.maintenance_paid else 0.0
+        breaks += self.agreement_paid if self.agreement_paid else 0.0
+        breaks += self.deposit_paid if self.deposit_paid else 0.0
+        breaks += self.penalty_paid if self.penalty_paid else 0.0
+
+        if breaks == paid:
+            return f"{paid:,.1f}"
+        else:
+            return f"{paid:,.1f} **"
+
     def view_detail(self):
         
         return {
@@ -3314,7 +3336,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'arrears':MonthlyChargeOp.calculate_breakdown(self),
             'derrived_arrears':MonthlyChargeOp.derive_arrears(self),
             'total':MonthlyChargeOp.fig_format(self.total_bill),
-            'paid':MonthlyChargeOp.fig_format(self.paid_amount),
+            'paid':MonthlyChargeOp.calculate_pbreakdown(self),
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),

@@ -2348,6 +2348,7 @@ class Bills(Resource):
             smsstatus = []
             inv_arr_status = []
             inv_paid_status = []
+            inv_bal_status = []
 
             for bill in filtered_bills:
                 renttotal += bill.rent
@@ -2376,6 +2377,11 @@ class Bills(Resource):
                     inv_paid_status.append("error")
                 else:
                     inv_paid_status.append("okay")
+
+                if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
+                    inv_bal_status.append("error")
+                else:
+                    inv_bal_status.append("okay")
 
                 if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
                     smsstatus.append("0")
@@ -2430,7 +2436,7 @@ class Bills(Resource):
             else:
                 invs = len(smsstatus)
 
-            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")})</span'
+            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B {inv_bal_status.count("error")})</span'
 
             dict_obj = {
                 'propid':prop.id,

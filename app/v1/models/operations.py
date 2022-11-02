@@ -3269,6 +3269,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == arrears:
             return f"{arrears:,.1f}"
+        elif self.month == 9:
+            return f"{arrears:,.1f}"
         else:
             return f"{arrears:,.1f} **"
 
@@ -3291,8 +3293,34 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == paid:
             return f"{paid:,.1f}"
+        elif self.month == 9:
+            return f"{paid:,.1f}"
         else:
             return f"{paid:,.1f} **"
+
+    def calculate_dbreakdown(self):
+        bal = self.balance
+        breaks = 0.0
+
+        breaks += self.booking_due if self.booking_due else 0.0
+        breaks += self.instalment_due if self.instalment_due else 0.0
+        breaks += self.addfee_due if self.addfee_due else 0.0
+        breaks += self.rent_due if self.rent_due else 0.0
+        breaks += self.water_due if self.water_due else 0.0
+        breaks += self.garbage_due if self.garbage_due else 0.0
+        breaks += self.security_due if self.security_due else 0.0
+        breaks += self.electricity_due if self.electricity_due else 0.0
+        breaks += self.maintenance_due if self.maintenance_due else 0.0
+        breaks += self.agreement_due if self.agreement_due else 0.0
+        breaks += self.deposit_due if self.deposit_due else 0.0
+        breaks += self.penalty_due if self.penalty_due else 0.0
+
+        if breaks == bal:
+            return f"{bal:,.1f}"
+        elif self.month == 9:
+            return f"{bal:,.1f}"
+        else:
+            return f"{bal:,.1f} **"
 
     def view_detail(self):
         
@@ -3340,7 +3368,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),
-            'balance':MonthlyChargeOp.fig_format(self.balance),
+            'balance':MonthlyChargeOp.calculate_dbreakdown(self),
             'date':self.date.date(),
             'date2':MonthlyChargeOp.get_date2(self.month,self.year),
             'smsstatus':MonthlyChargeOp.get_sms_status(self),

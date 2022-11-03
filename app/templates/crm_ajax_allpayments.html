@@ -542,6 +542,20 @@
           <div class="modal-body no-padding">
             <div class="media mb-2">
               <div class="media-body">
+                <div class="row gx-3 mb-3">
+                  <span class="dispnone" id="check_colltype">{{colltype}}</span>
+
+                  <!-- Form Group (organization name)-->
+                  <div class="col-md-6">
+                      <input class="" id="receipttype" name="receipttype" type="radio" value="default" />
+                      <label class="small mb-1" for="receipttype">Default receipt</label>
+                  </div>
+                  <!-- Form Group (location)-->
+                  <div class="col-md-6">
+                      <input class="" id="receipttype2" name="receipttype" type="radio" value="custom" />
+                      <label class="small mb-1" for="receipttype2">Custom receipt</label>
+                  </div>
+              </div>
                 <div id="receipt-bed" class="position-relative"></div>
                 <div class="hide">spacing</div>
               </div>
@@ -1088,12 +1102,14 @@
 <script>
   // This script autopulate house options and displays tenant name
   $("#receiptModal").on('shown.bs.modal', function(){
+
+    $("#receipt-bed").html("Retrieving default receipt..."); 
     // $('#tenantbed').addClass("dispnone");
     $('#mailbtn').removeAttr('disabled');
     $('#mailbtn').html('<i class="fas fa-envelope text-primary"></i>Email');
     $('#smsbtn').removeAttr('disabled');
     $('#smsbtn').html('<i class="fas fa-sms text-primary"></i>Sms');
-    $("#receipt-bed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+    $("#receipt-bed").html('Retrieving default receipt... <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
     $.ajax({
       url: "{{ url_for('api.receipt') }}",
       type: "get",
@@ -1106,6 +1122,48 @@
     });
   });
 
+</script>
+
+<script>
+          $('input[type=radio][name=receipttype]').change(function () {
+            if (this.value == 'default') {
+
+              $("#receipt-bed").html("Retrieving default receipt..."); 
+
+              $('#mailbtn').removeAttr('disabled');
+              $('#mailbtn').html('<i class="fas fa-envelope text-primary"></i>Email');
+              $('#smsbtn').removeAttr('disabled');
+              $('#smsbtn').html('<i class="fas fa-sms text-primary"></i>Sms');
+              $("#receipt-bed").html('Retrieving default receipt...<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+              $.ajax({
+                url: "{{ url_for('api.receipt') }}",
+                type: "get",
+                data: {
+                      payid: $("#payment_identifier").text()
+                    },
+                success: function(response) {
+                  $("#receipt-bed").html(response); 
+                }
+              });
+            }else{
+              $("#receipt-bed").html("Retrieving custom receipt..."); 
+              $('#mailbtn').removeAttr('disabled');
+              $('#mailbtn').html('<i class="fas fa-envelope text-primary"></i>Email');
+              $('#smsbtn').removeAttr('disabled');
+              $('#smsbtn').html('<i class="fas fa-sms text-primary"></i>Sms');
+              $("#receipt-bed").html('Retrieving default receipt... <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+              $.ajax({
+                url: "{{ url_for('api.receipt') }}",
+                type: "get",
+                data: {
+                      payid: $("#payment_identifier").text()
+                    },
+                success: function(response) {
+                  $("#receipt-bedd").html(response); 
+                }
+              });
+            }
+        });
 </script>
 
 <script>

@@ -924,6 +924,15 @@ class EditBill(Resource):
                 return render_template("ajax_dynamic_billpayments.html",bill=bill,warning=warning)
             else:
                 return render_template("ajax_dynamic_billpayments.html",bill=bill,warning=warning)
+
+        elif target == "editbalances":
+            if warning:
+                warning = "CAUTION! This is not the current invoice payments"
+            if current_user.username.startswith('qc') or current_user.usercode =="3551":
+                return render_template("ajax_dynamic_billbalances.html",bill=bill,warning=warning)
+            else:
+                return render_template("ajax_dynamic_billbalances.html",bill=bill,warning=warning)
+
         else:
             return render_template("ajax_dynamic_bill_form_alt.html",waterlock=update[0],waterlock_icon=update[1],bill=bill,warning=warning)
 

@@ -9098,6 +9098,8 @@ def get_obj_ids_alt(arr):
             obj_id_list.append(mailid)
             editid = req["editid"]
             obj_id_list.append(editid)
+            balid = req.get("balid")
+            obj_id_list.append(balid)
             payid = req["payid"]
             obj_id_list.append(payid)
             delid = req["delid"]

@@ -2436,7 +2436,7 @@ class Bills(Resource):
             else:
                 invs = len(smsstatus)
 
-            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B {inv_bal_status.count("error")})</span'
+            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
             dict_obj = {
                 'propid':prop.id,

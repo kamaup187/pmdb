@@ -37,6 +37,9 @@ class Base():
     def generate_payid(self):
         return "pay" + str(self.id)
 
+    def generate_balid(self):
+        return "bal" + str(self.id)
+
     def generate_viewid(self):
         return "view" + str(self.id)
 
@@ -3332,6 +3335,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'mailid':MonthlyChargeOp.generate_mailid(self),
             'editid':MonthlyChargeOp.generate_editid(self),
             'payid':MonthlyChargeOp.generate_payid(self),
+            'balid':MonthlyChargeOp.generate_balid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
             'ptenant':self.ptenant_id if self.ptenant_id else "-",

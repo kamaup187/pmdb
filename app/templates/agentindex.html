@@ -2180,10 +2180,17 @@
 
 
             <button id="togglempesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View report</span></button>
+            
+            <div class="dispnone">
+              <button id="createinvoice" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Create invoice</span></button>
+              <button id="printcinv" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Print invoice</span></button>
+            </div>
+
+
           </div>
 
         </div>
-        <div class="modal-body pt-0">
+        <div id="invoicearea" class="modal-body pt-0">
           <div class="media mb-2">
             <div class="media-body">
               <div class="position-relative">
@@ -3316,6 +3323,22 @@ function animateHH(element) {
         $(".dismissparent").click();
         $('#nextbilling').html('Switch');
 
+      },
+    });
+  });
+  
+  </script>
+
+<script>
+    
+  $("#createinvoice").on('click',function(){   
+    
+    $.ajax({
+      url: "{{ url_for('api.createinvoice') }}",
+      type: "get",
+      data: {},
+      success: function(response) {
+        $('#invoicearea').html(response);
       },
     });
   });

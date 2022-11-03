@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  <!-- <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /> -->
+  <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>KiotaPay</title>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div id="inv" class="justify-content-cente text-black m-2">
+    <div class="divcol-in">
+        
+        <div class="mb-4">
+
+            <div class="card-body no-padding-sm">
+                <div class="row pl-2">
+
+
+                    <div class="col-lg-4">
+                        <div class="mb-4 ">
+                            <div class="text-left">
+                                <h4 class="invoice-color mb-2 mt-md-2">INVOICE</h4>
+                                <ul class="list list-unstyled mb-0">
+                                    <li>Period: <span class="font-weight-semibold">November 1st, 2021</span> - <span class="font-weight-semibold">November 1st, 2022</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="mb-4 text-right">
+
+                                <img class="" src=../{{logo}} alt="{{company.name}}">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="smallify pl-2">
+
+
+                    <div class="divjust-end">
+                        <div class="">
+                            <div class="mb-0 mb-md-2 text-left small"> <span class="text-muted">Bill To:</span>
+                                <ul class="list list-unstyled mb-0">
+                                    <li>
+                                        <h5 class="my-2 font-weight-bold">{{client['name']}}</h5>
+                                    </li>
+                                    <li>{{client['co']}}</li>
+
+                                    <li>{{client['phone']}}</li>
+                                    <li type="email" class="text-primary">{{client['email']}}</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div style="margin-left: auto;" class="mr-2">
+                            <div class="mb-0 mb-md-2 text-right pt-1"> 
+                                <ul class="list list-unstyled ln-14">    
+                                    <li class="font-weight-bold">Invoice date</li>
+                                    <li>{{invdate}}</li>
+
+                                    <li class="mt-2 font-weight-bold">Due date</li>
+                                    <li>{{invdue}}</li>
+
+                                    <li class="mt-2 font-weight-bold">Invoice number</li>
+                                    <li class="text-danger">#{{invnum}}</li>
+                                </ul>
+                            </div>
+    
+                        </div>
+
+                        <div class="pl-2 border-left-semidark">
+                            <div class="mb-0 mb-md-2 text-left">
+                                <ul class="list list-unstyled mb-0">
+                                    <li class="font-weight-bold text-info text-xx">KiotaPay Ltd</li>
+                                    <li>P.O Box 8365-00100 Nairobi, Kenya</li>
+                                    <li>Madonna House Annex, 3rd Floor</li>
+                                    <li>Email: <span class="text-primary">peter@kiotapay.com</span></li>
+                                    <li>Tel: (254) 716 674695</li>
+                                    <!-- <li>Website: <span class="text-primary">website</span></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <table class="table ml-4">
+                    <thead>
+                        <tr>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Bill Item</th>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Description</th>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Rate</th>
+                            <th class="no-wrap pl-0 text-info font-weight-bold text-125">Quantity</th>
+
+                            <th class="no-wrap text-info font-weight-bold text-125">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Software monthly charge(billed annually)</td>
+                            <td class="pl-0">Sms costs, database maintenance, periodic updates and hosting</td>
+                            <td class="pl-0">@1,199 monthly</td>
+                            <td class="pl-0">12 months</td>
+
+
+                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes {:,.1f}".format(bill['total_bill'] | float) }}</span></td>
+                        </tr>
+
+
+
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0">Discount</td>
+                            <td class="pl-0">applied on annual charge</td>
+                            <td class="pl-0">Kes 1,199</td>
+                            <td class="pl-0">1</td>
+
+
+                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes -{:,.1f}".format(1199 | float)}}</span></td>
+                        </tr>
+
+                        <tr class="underline-thin-fade">
+                            <td class="pl-0 text-black">Subtotal</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+
+                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes {:,.1f}".format(bill['total_bill']-1199 | float)}}</span></td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="">
+                <div class="row">
+                    <div class="col-6 hide">hide</div>
+
+                    <div class="col-6">
+                        <div class="">
+                            <table class="table">
+                                <tbody>   
+                                    <tr>
+                                        <td class="text-left text-black">Total:</td>
+                                        <td class="text-right text-info">
+                                            <h5 class="font-weight-bold mr-5">{{ "Kes {:,.1f}".format(bill['total_bill']-1199 | float)}}</h5>
+                                        </td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+      
+            <div class="text-left mt-2">
+              Payment will be done via Bank deposit or Mobile money to:
+            </div>
+
+            <p class="small text-muted text-left">
+                <span>
+                    BANK Mpesa Paybill: 303030<br>
+
+                    ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">2046125269</span><br>
+                </span>
+              </p>
+
+        </div>
+
+
+        <div class="divjust-end">
+            <p class="small text-muted text-center mt-5">
+                powered by <img class="" src=../{{slogo}} alt="KiotaPay">
+            </p>
+
+            <p class="small text-muted text-right">
+                Signed by <img class="" src=../{{sign}} alt="Signature"><br>
+                for KiotaPay
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/html2pdf.js') }}"></script>
+
+<script>
+    $("#printcinv").on("click", function() {
+        $('#printcinv').html('<i class="fas fa-spinner fa-spin mr-1"></i>Printing...');
+  
+        // PrintElem("inv")
+        $('#inv').printThis({});
+  
+        $('#printcinv').html('<i class="fas fa-print mr-2"></i>Print');
+  
+    })
+  </script>
+
+
+</body>

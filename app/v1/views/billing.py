@@ -457,6 +457,50 @@ class CreateWaterCharge(Resource):
                 print("RARE FATAL CASE: Error occured while saving item: ",e)
                 abort(403)
 
+class CreateInvoice(Resource):
+    """class"""
+
+    def get(self):
+
+        client = {
+            "name" : "Jeremy Otieno",
+            "email" : "",
+            "phone" : "(254) 718 987527",
+            "co" : "Goshen Holdings Ltd",
+        }
+
+
+        bill = {
+            "total_bill":14388
+        }
+
+        invnum = 13285
+
+        timenow = datetime.datetime.now()
+        # diff = timenow.day - 2
+        diff = 0
+        invdate = timenow - relativedelta(days = diff)
+
+        inv_date = invdate.strftime("%d/%b/%y")
+        invdue = invdate + relativedelta(days=1)
+        inv_due = invdue.strftime("%d/%b/%y")
+
+        kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")
+        
+        return render_template(
+            "ajax_custom_invoice.html",
+            bill=bill,
+            total=f"{bill['total_bill']:,.2f}",
+            invdate=inv_date,
+            invdue=inv_due,
+            client=client,
+            company=current_user.company,
+            invnum=invnum,
+            logo=logo(current_user.company)[0],
+            slogo=logo(kiotapay)[1],
+            sign=logo(kiotapay)[4]
+            )
+
 class BillInvoice(Resource):
     """class"""
     @login_required

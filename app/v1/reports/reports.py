@@ -2995,6 +2995,8 @@ class DepositStatement(Resource):
 
         company = current_user.company
 
+        CompanyOp.set_rem_quota(company,800)
+
         apartment_list = fetch_all_apartments_by_user(current_user)
 
         if not prop:

@@ -1384,8 +1384,9 @@ class HouseOp(House,Base):
 
 class SalesRepOp(SalesRep,Base):
     """class"""
-    def __init__(self,name,username,phone,company_id):
+    def __init__(self,name,email,username,phone,company_id):
         self.name = name
+        self.email = email
         self.username = username
         self.phone = phone
         self.company_id = company_id
@@ -1397,6 +1398,10 @@ class SalesRepOp(SalesRep,Base):
     @staticmethod
     def fetch_rep_by_name(name):
         return SalesRep.query.filter_by(name=name).first()
+
+    @staticmethod
+    def fetch_rep_by_email(email):
+        return SalesRep.query.filter_by(email=email).first()
 
     @staticmethod
     def fetch_rep_by_username(name):
@@ -1448,7 +1453,7 @@ class SalesRepOp(SalesRep,Base):
             'id':self.id,
             'editid':SalesRepOp.generate_editid(self),
             'delid':SalesRepOp.generate_delid(self),
-            'name':self.name,
+            'name':f"{self.name} ({self.email})" if self.email else self.name,
             'tel':self.phone,
             # 'projects':SalesRepOp.get_projects(self),
             'clients':SalesRepOp.get_clients(self),

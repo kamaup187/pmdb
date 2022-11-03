@@ -375,6 +375,7 @@ class SalesRep(db.Model):
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     name = db.Column(db.VARCHAR,default="Sales Agent")
     phone = db.Column(db.VARCHAR)
+    email = db.Column(db.VARCHAR)
 
     username = db.Column(db.String)
     active = db.Column(db.Boolean,default=True)

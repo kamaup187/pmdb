@@ -1932,6 +1932,10 @@ class AddSalesAgent(Resource):
         prop = request.form.get('prop')
         name = request.form.get('name')
         email = request.form.get('mail')
+        try:
+            email = email.lower()
+        except:
+            email = email
         phone = request.form.get('tel')
         natid = request.form.get('natid')
 
@@ -1995,23 +1999,21 @@ class AddSalesAgent(Resource):
             user_obj = UserOp(name,usercode,username,natid,phone,email,"1234",4,company_usergroup_obj.id,company_obj.id)
             user_obj.save()
 
-            
+        repp = SalesRepOp.fetch_rep_by_email(email)
+        if not repp:
+        
+            rep_obj = SalesRepOp(name,name,email,phone,company_obj.id)
+            rep_obj.save()
 
-            repp = SalesRepOp.fetch_rep_by_name(name.lower())
-            if not repp:
-            
-                rep_obj = SalesRepOp(name,name,phone,company_obj.id)
-                rep_obj.save()
+            if prop:
+                prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+                UserOp.relate(user_obj,prop_obj)
 
-                if prop:
-                    prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-                    UserOp.relate(user_obj,prop_obj)
+            # att_obj = SalesRepOp(name,phone,prop_obj.id)
+            # att_obj.save()
 
-                # att_obj = SalesRepOp(name,phone,prop_obj.id)
-                # att_obj.save()
-
-                msg = "Sales agent added"
-                return proceed + msg
+            msg = "Sales agent added"
+            return proceed + msg
 
 class TenantManagement(Resource):
     """class"""

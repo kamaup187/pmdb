@@ -1977,7 +1977,12 @@ class PermanentTenantOp(PermanentTenant,Base):
         return PermanentTenant.query.filter_by(email=email).first()
 
     def fetch_tenant_by_id(id):
-        return PermanentTenant.query.filter_by(id=id).first()
+        try:
+            return PermanentTenant.query.filter_by(id=id).first()
+        except SQLAlchemyError as e:
+            print("failing db",str(e))
+            db.session.rollback()
+            return None
 
     def fetch_all_tenants():
         return PermanentTenant.query.order_by(PermanentTenant.date.desc()).all()
@@ -2312,7 +2317,12 @@ class TenantOp(Tenant,Base):
         return Tenant.query.filter_by(email=email).first()
 
     def fetch_tenant_by_id(id):
-        return Tenant.query.filter_by(id=id).first()
+        try:
+            return Tenant.query.filter_by(id=id).first()
+        except SQLAlchemyError as e:
+            print("failing db",str(e))
+            db.session.rollback()
+            return None
 
     def fetch_all_tenants():
         return Tenant.query.order_by(Tenant.date.desc()).all()
@@ -2736,7 +2746,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     @staticmethod
     def fetch_specific_bill(id):
-        return MonthlyChargeOp.query.filter_by(id=id).first()
+        # return MonthlyChargeOp.query.filter_by(id=id).first()
+        try:
+            return MonthlyCharge.query.filter_by(id=id).first()
+        except SQLAlchemyError as e:
+            print("failing db",str(e))
+            db.session.rollback()
+            return None
 
     def fetch_all_monthlycharges_by_apartment_id(apartment_id):
         return MonthlyCharge.query.filter(MonthlyCharge.apartment_id==apartment_id).all()

@@ -2752,6 +2752,16 @@ clear: both;
 /* .table-responsive{
     overflow: auto !important;
 } */
+.table-bordered {
+  border: 1px solid #545558;
+  border-collapse: collapse;
+}
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #545558;
+  border-collapse: collapse;
+}
+
 .my-table-cell {
   padding-left: 0px !important;
   padding-right: 10px !important;
@@ -3271,6 +3281,11 @@ input:checked + .slider:before {
 .underline-thin {
   border-bottom: 1px solid black;
 }
+
+.double-underline-thin {
+  border-bottom: 3px double black;
+}
+
 .underline-thin-fade {
   border-bottom: 1px solid #e3e6f0;
 }

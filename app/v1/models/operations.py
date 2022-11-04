@@ -3346,6 +3346,14 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             return f"{bal:,.1f} **"
 
+    def format_num(num):
+        if num < 9:
+            return f"00{num}"
+        elif num < 99:
+            return f"0{num}"
+        else:
+            return f'{num}'
+
     def view_detail(self):
         
         return {
@@ -3422,6 +3430,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'tenant':MonthlyChargeOp.get_tenant_name(self),
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
+            'house-alt':f'{MonthlyChargeOp.format_num(self.apartment.id)}/{self.house}',
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),

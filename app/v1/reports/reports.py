@@ -2169,7 +2169,7 @@ class CustomCombinedReport(Resource):
 
         if apartment_obj.commission:
             commission = netrent * apartment_obj.commission * 0.01
-            commission_percentage = f"({apartment_obj.commission} %)"
+            commission_percentage = f"{apartment_obj.commission:,.0f}%"
 
         else:
             commission = apartment_obj.int_commission
@@ -2995,7 +2995,7 @@ class DepositStatement(Resource):
 
         company = current_user.company
 
-        CompanyOp.set_rem_quota(company,800)
+        # CompanyOp.set_rem_quota(company,800)
 
         apartment_list = fetch_all_apartments_by_user(current_user)
 

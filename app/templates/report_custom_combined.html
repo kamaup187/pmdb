@@ -110,15 +110,11 @@
           </div>
 
           <div class="divjust-end text-black text-uppercase">
-            <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.id}}</div> <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
-              <div>Landlord : {{prop_obj.landlord}}</div>
-            </div>
+            <div>Property code: {{prop_obj.id}}</div> <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
+            <div>Landlord/Landlady : {{prop_obj.landlord}}</div>
             <div class="pr-3 text-uppercase">
               <div>{{reportmonth}} : RENT COLLECTION REPORT</div>
             </div>
-
           </div>
 
           {% endif %}
@@ -151,7 +147,7 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-center">{{ bill['house-alt'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
 
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
@@ -195,183 +191,137 @@
           </div>
 
           <div class="divjust-end ln-16 text-black">
-            {%if not expenselist%}
-            <div class="hid dispnone">space</div>
-            {%endif%}
 
             <div class="divjust-end mr-5">
 
-              <div class="mr-4">SUMMARY</div>
+              <div class="mr-2 hide">SUMMARY</div>
 
               <div class="mr-4 text-black">
+                <div class="mb-3 font-weight-bold">SUMMARY</div>
+
                 <div class="mb-1 ">TOTAL RENT COLLECTION</div>
-                <div class="mb-3 ">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <div class="mb-3 ">{{commission_percentage}} COMMISSION</div>
                 <div class="mb-3 ">GROSS PAY</div>
                 <div class="hide mb-2 ">space</div>
               </div>
 
               <div class="mr-4">
-                <div class="mb-1 underline">Kshs {{formatted_netrent}}</div>
-                <div class="mb-3 underline">Kshs {{commission}}</div>
-                <div class="mb-3 underline">Kshs {{gross}}</div>
+                <div class="hide mb-3">SUMMARY</div>
+
+                <div class="mb-1 underline-thin">KES {{formatted_netrent}}</div>
+                <div class="mb-3 underline-thin">KES {{commission}}</div>
+                <div class="mb-3 double-underline-thin">KES {{gross}}</div>
 
               </div>
 
               <div class="mr-4 text-black">
+                <div class="hide mb-3">SUMMARY</div>
+
+                <div class="mb-1 ">GROSS PAY</div>
                 <div class="mb-1 ">UTILITIES</div>
-                <div class="mb-3 ">DEPOSITS</div>
-                <div class="mb-3 ">EXPENSES</div>
+                <div class="mb-1 ">DEPOSITS</div>
+                <div class="mb-3 ">BALANCE B/F</div>
+
                 <div class="hide mb-2 ">space</div>
 
               </div>
 
               <div class="text-black">
-                <div class="mb-1 underline">Kshs {{utilitiestotal}}</div>
-                <div class="mb-3 underline">Kshs {{deposittotal}}</div>
-                <!-- <div class="mb-3 hide">Kshs {{remits}}</div> -->
+                <div class="hide mb-3">SUMMARY</div>
+                <div class="mb-1 underline-thin">KES {{gross}}</div>
+                <div class="mb-1 underline-thin">KES {{utilitiestotal}}</div>
+                <div class="mb-1 underline-thin">KES {{deposittotal}}</div>
+                <div class="mb-3 underline-thin">KES 0.0</div>
 
-                <div class="mb-3 underline">Kshs {{expenses}}</div>
-
-                <div class="hide mb-2">space</div>
-
-                <!-- <div class="underline mb-3">Kshs {{netpay}}</div> -->
-              
+                <div class="hide mb-2">space</div>             
             </div>
 
             <div class="ml-4">
-              <!-- <div class="mb-1 hide">UTILITIES</div> -->
-              <div class="mb-3 hide">DEPOSITS</div>
-              <!-- <div class="mb-3 hide">Kshs {{remits}}</div> -->
+              <div class="mb-3 hide">SUMMARY</div>
               <div class="mb-3 ">NET PAYABLE</div>
             </div>
 
             <div>
-              <!-- <div class="mb-1 hide">Kshs {{utilitiestotal}}</div> -->
-              <div class="mb-3 hide">Kshs {{deposittotal}}</div>
-
-              <div class="underline mb-3 ml-4">Kshs {{netpay}}</div>
+              <div class="mb-3 hide">SUMMARY</div>
+              <div class="double-underline-thin mb-3 ml-4">KES {{netpay}}</div>
             </div>
 
           </div>
-
-
-
-
-
-          <!-- <div class="divjust-end dispnone">
-
-            <div>
-              <div class="">
-                Prepared By:
-              </div>
-              <div>
-                <div class="ln-10 font-weight-bold ">{{name}}</div>
-                <div class="ln-10">__________</div>
-              </div>
-            </div>
-
-            <div>
-              <div class="">
-                Checked By:
-              </div>
-              <div>
-                <div class="ln-10 font-weight-bold ">{{name}}</div>
-                <div class="ln-10">__________</div>
-              </div>
-            </div>
-
-            <div>
-              <div class="">
-                Approved By:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-            <div>
-              <div class="">
-                Cheque No:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-            <div>
-              <div class="">
-                Date:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-
-          </div> -->
 
         </div>
 
-        <div class="row text-black">
-          <div class="ide mr-4 ml-3">SUMMARY</div>
+        <div class="row text-black mb-4">
+          <div class="hide mr-2 ml-3">SUMMARY</div>
 
-          <div class="col-5 row">
+          <div class="col-10 row">
             <div class="table-responsive">
-              <table class="table-bordered" width="100%" cellspacing="0">
+              <table class="table-bordered " width="100%" cellspacing="0">
                 <thead class="text-black">
-                  <th>ITEM</th>
-                  <th>AMOUNT</th>
-
+                  <tr>
+                    <th rowspan="2">ITEM</th>
+                    <th rowspan="2">AMOUNT</th>
+                    <th colspan="2" class="text-center">OTHERS <span class="hide">SPACE</span></th>
+                  </tr>
+                  <tr>
+                    <td>ITEM <span class="hide">SPACE</span></td>
+                    <td>AMOUNT</td>
+                  </tr>
                 </thead>
                 <tbody>
-                  <td>0.0</td>
-                  <td>0.0</td>
-                  <td>0.0</td>
-
-
-
+                  <tr>
+                    <td>Balance B/F</td>
+                    <td>0.0</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Banked on</td>
+                    <td>-</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
                 </tbody>
-            
-              </table>
-            </div>
-            <!-- <div class="col-6">
-              ITEM
-            </div>
-
-            <div class="col-5">
-              AMOUNT
-            </div> -->
-
-
-            <!-- <div class="col-6">
-
-              TOTAL PAYMENTS
-            </div>
-
-            <div class="col-5">
-              OTHERS (TOTAL)
-            </div> -->
-          </div>
-
-
-          <div class="col-5 row">
-            <div class="table-responsive">
-              <table class="table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead class="text-black">
-                  <th colspan="2" class="text-center">OTHERS</th>
-                </thead>
-                <tbody>
-                  <td>0.0</td>
-                  <td>0.0</td>
-                </tbody>
+                <tfoot>
+                  <tr>
+                    <td>OTHERS (Total)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>TOTAL PAYMENTS</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
             
               </table>
             </div>
 
           </div>
-
-
         </div>
+
+        <div class="mt-4 divjust-end">
+          <div class="divjust-end">
+            <div class="hide mr-2">SUMMARY</div>
+            <div>
+              <div class="text-black mb-4">BALANCE C/F:</div>
+
+              <div class="text-black double-underline-thin">NOTES:</div>
+              <svg width="1300" height="110">
+                <rect width="1300" height="100" style="fill:rgb(255, 255, 255);stroke-width:3;stroke:rgb(0,0,0)" />
+              </svg>
+              <div>
+                xxxxx KEY: Balance BF or CF when in bracket mean the landlord recieved an overpayment, otherwise it is an underpayment.
+              </div>
+              <div>
+                XXXXX KEY : PLL mean the landlord took the money.
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -505,19 +455,19 @@
                 </div>
   
                 <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
+                  <div class="mb-1 text-gray-900">KES {{formatted_netrent}}</div>
   
-                  <div class="mb-1 text-gray-900 underline ">Kshs {{formatted_netrent}}</div>
+                  <div class="mb-1 text-gray-900 underline ">KES {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   
-                  <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">KES {{commission}} (<span class="text-danger">debit</span>)</div>
   
-                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">KES {{expenses}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">KES {{debits}} (<span class="text-danger">debit</span>)</div>
   
                   <div class="hide mb-2">space</div>
   
-                  <div class="text-gray-900 mb-3 text-125  underline">Kshs {{netpay}}</div>
+                  <div class="text-gray-900 mb-3 text-125  underline">KES {{netpay}}</div>
                 </div>
               </div>
             </div>

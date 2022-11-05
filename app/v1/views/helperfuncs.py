@@ -9402,6 +9402,20 @@ def permission(user,param):
         else:
             return True
 
+def permission_alt(user,param):
+    if user.username.startswith('qc'):
+        return True
+    else:
+        if user.roles:
+            # print("roles length",len(user.roles),"param",param)
+            roles = user.roles.split(",")
+            if "admin" in roles:
+                return True
+            else:
+                return False
+        else:
+            return False
+
 def run_props(prop,user):
 
     apartment_list = fetch_all_apartments_by_user(user)

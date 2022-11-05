@@ -471,7 +471,7 @@ class CreateInvoice(Resource):
 
 
         bill = {
-            "total_bill":14388
+            "total_bill":4608
         }
 
         invnum = 13285
@@ -482,7 +482,7 @@ class CreateInvoice(Resource):
         invdate = timenow - relativedelta(days = diff)
 
         inv_date = invdate.strftime("%d/%b/%y")
-        invdue = invdate + relativedelta(days=1)
+        invdue = invdate + relativedelta(days=0)
         inv_due = invdue.strftime("%d/%b/%y")
 
         kiotapay = CompanyOp.fetch_company_by_name("KiotaPay")

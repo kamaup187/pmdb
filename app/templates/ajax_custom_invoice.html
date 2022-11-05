@@ -118,9 +118,9 @@
 
 
                         <tr class="underline-thin-fade">
-                            <td class="pl-0">Software monthly charge(billed annually)</td>
-                            <td class="pl-0">Sms costs, database maintenance, periodic updates and hosting</td>
-                            <td class="pl-0">@1,199 monthly</td>
+                            <td class="pl-0">Software hosting</td>
+                            <td class="pl-0">Database & software online storage</td>
+                            <td class="pl-0">@384</td>
                             <td class="pl-0">12 months</td>
 
 
@@ -132,11 +132,11 @@
                         <tr class="underline-thin-fade">
                             <td class="pl-0">Discount</td>
                             <td class="pl-0">applied on annual charge</td>
-                            <td class="pl-0">Kes 1,199</td>
+                            <td class="pl-0">Kes 0.0</td>
                             <td class="pl-0">1</td>
 
 
-                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes -{:,.1f}".format(1199 | float)}}</span></td>
+                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes {:,.1f}".format(0 | float)}}</span></td>
                         </tr>
 
                         <tr class="underline-thin-fade">
@@ -146,7 +146,7 @@
                             <td></td>
 
 
-                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes {:,.1f}".format(bill['total_bill']-1199 | float)}}</span></td>
+                            <td><span class="font-weight-bold mr-4 text-black">{{ "Kes {:,.1f}".format(bill['total_bill'] | float)}}</span></td>
                         </tr>
                        
                     </tbody>
@@ -165,7 +165,7 @@
                                     <tr>
                                         <td class="text-left text-black">Total:</td>
                                         <td class="text-right text-info">
-                                            <h5 class="font-weight-bold mr-5">{{ "Kes {:,.1f}".format(bill['total_bill']-1199 | float)}}</h5>
+                                            <h5 class="font-weight-bold mr-5">{{ "Kes {:,.1f}".format(bill['total_bill'] | float)}}</h5>
                                         </td>
                                     </tr>
                                     

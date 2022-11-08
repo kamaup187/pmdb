@@ -68,14 +68,26 @@
 
             <div class="pb-2 bg-white divjust-end">
 
-              <div class="hide">
+              <!-- <div class="hide">
                 hide
-              </div>
+              </div> -->
               
               <nav class="nav nav-borders">
-                <a id="previous-period" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}</a>
+                <!-- <a id="previous-period" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}</a>
                 <a id="current-period" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
-                <a id="next-period" class="nav-link pb-0 pt-1 text-black ms-0" href="#">{{next_month}}</a>
+                <a id="next-period" class="nav-link pb-0 pt-1 text-black ms-0" href="#">{{next_month}}</a> -->
+
+                <div class="mb-1 smallify">
+                  <input id="billmonthpicker" class="ph" type="text" placeholder="choose month to view..." readonly />
+                </div>
+
+                <div id="pickmonth" class="ml-3">
+                  <span class="btn btn-sm btn-success text-white">
+                    <i class="me-1" data-feather="user-plus"></i>
+                    view
+                  </span>
+                </div>
+
               </nav>
               
             </div>
@@ -462,6 +474,16 @@
 </script>
 
 <script>
+  $("#billmonthpicker").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+<script>
 
   $("#generateInvoiceModal").on('shown.bs.modal', function(){
     $.ajax({
@@ -730,6 +752,25 @@
       });
   })
 
+  $("#pickmonth").on('click',function(){
+
+    $("#barloader").removeClass("dispnone")
+    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    url = "{{ url_for('api.bills') }}"
+    $.ajax({
+          type: "get",
+          url: url,
+          data: {target_period:$("#billmonthpicker").val()},
+          success: function(response) {
+
+            $("#barloader").addClass("dispnone")
+            $('.modal-backdrop').removeClass('modal-backdrop');
+            $('body').removeClass('modal-open');
+            $("#propdisp").html(response);
+          }
+      });
+  })
 
 </script>
 

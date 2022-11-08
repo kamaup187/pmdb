@@ -2271,10 +2271,21 @@ class Bills(Resource):
     def get(self):
 
         target = request.args.get('target')
-        period_target = request.args.get('target_period')
+
+        # period_target = request.args.get('target_period')
+
+        period_target = request.args.get("target_period")
+
+        # import pdb; pdb.set_trace()
+
+        if period_target:
+            datestring = date_formatter_alt(period_target)
+            target_period = parse(datestring)
+        else:
+            target_period = current_user.company.billing_period
 
         if not period_target:
-            period_target = "current"
+            period_target = f"{format_month(current_user.company.billing_period.month)}-{current_user.company.billing_period.year}"
 
         if target == "houses":
             propid = request.args.get('propid')
@@ -2325,12 +2336,14 @@ class Bills(Resource):
             # sms = "0/0"
             monthlybills = prop.monthlybills
 
-            if period_target == "current":
-                filtered_bills = fetch_current_billing_period_bills(period,monthlybills)
-            elif period_target == "previous":
-                filtered_bills = fetch_prev_billing_period_bills(period,monthlybills)
-            else:
-                filtered_bills = fetch_next_billing_period_bills(period,monthlybills)
+            # if period_target == "current":
+            #     filtered_bills = fetch_current_billing_period_bills(period,monthlybills)
+            # elif period_target == "previous":
+            #     filtered_bills = fetch_prev_billing_period_bills(period,monthlybills)
+            # else:
+            #     filtered_bills = fetch_next_billing_period_bills(period,monthlybills)
+
+            filtered_bills = fetch_current_billing_period_bills(target_period,monthlybills)
 
             renttotal = 0
             watertotal = 0
@@ -7503,12 +7516,18 @@ class Results(Resource):
 
             bills = prop_obj.monthlybills
 
-            if period_target == "current":
-                current_bills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
-            elif period_target == "previous":
-                current_bills = fetch_prev_billing_period_bills(prop_obj.billing_period,bills)
+            period_target = request.args.get("target_period")
+
+            if period_target:
+                datestring = date_formatter_alt(period_target)
+                target_period = parse(datestring)
             else:
-                current_bills = fetch_next_billing_period_bills(prop_obj.billing_period,bills)
+                target_period = current_user.company.billing_period
+
+            if not period_target:
+                period_target = f"{format_month(current_user.company.billing_period.month)}-{current_user.company.billing_period.year}"
+            
+            current_bills = fetch_current_billing_period_bills(target_period,bills)
 
             detailed_bills = []
 

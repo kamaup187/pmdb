@@ -8,7 +8,7 @@ from sqlalchemy import extract,or_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 
-ROWS_PER_PAGE = 10
+ROWS_PER_PAGE = 2
 
 class Base():
     """base class"""
@@ -1308,11 +1308,11 @@ class HouseOp(House,Base):
     def get_status(self):
         # print(">>>>>>>",self.status)
         if self.status == "available":
-            return '<span class="badge bg-success badge-counter">Available</span>'
+            return '<span class="badge font-weight-bold bg-success-alt text-success">Available</span>'
         elif self.status == "booked":
-            return '<span class="badge bg-warning badge-counter">Booked</span>'
+            return '<span class="badge font-weight-bold bg-warning-alt text-warning">Booked</span>'
         else:
-            return '<span class="badge bg-info badge-counter">Sold</span>'
+            return '<span class="badge font-weight-bold bg-info-alt text-info">Sold</span>'
 
     def get_agentname(self):
         """method to get tenant name from tenant alloc id"""
@@ -2178,15 +2178,15 @@ class PermanentTenantOp(PermanentTenant,Base):
 
     def get_status(self):
         if self.status == "proposal":
-            return '<span class="badge bg-warning badge-counter">Proposal</span>'
+            return '<span class="badge font-weight-bold bg-warning">Proposal</span>'
         elif self.status == "prospective":
-            return '<span class="badge bg-success badge-counter">Prospective</span>'
+            return '<span class="badge font-weight-bold bg-success">Prospective</span>'
         elif self.status == "invoiced and missing contracts":
-            return '<span class="badge bg-danger badge-counter">Missing contracts</span> <i class="fas fa-times text-danger"></i>'
+            return '<span class="badge font-weight-bold bg-danger-alt text-danger">Missing contracts</span>'
         elif self.status == "invoiced and contracts":
-            return '<span class="badge bg-success badge-counter">Invoiced</span>'
+            return '<span class="badge font-weight-bold bg-success-alt text-success">Invoiced</span>'
         else:
-            return '<span class="badge bg-dark badge-counter">Closed</span>'
+            return '<span class="badge font-weight-bold bg-dark">Closed</span>'
 
     def get_price(alloc):
         # import pdb;

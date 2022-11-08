@@ -582,7 +582,9 @@ class AllProperties(Resource):
             except:
                 nartype = ""
 
-            return render_template("ajax_prop_form.html",prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
+            template = "ajax_prop_form2.html" if crm(current_user) else "ajax_prop_form.html"
+
+            return render_template(template,prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
 
         if current_user.username.startswith("qc") or localenv:
             raw_props = ApartmentOp.fetch_all_unlinked_apartments()
@@ -639,6 +641,27 @@ class AllProperties(Resource):
                     'prospective':len(get_clients_by_status(prop.ptenants,"negotiated")),
                     'invoiced':len(get_clients_by_status(prop.ptenants,"invoiced and contracts") + get_clients_by_status(prop.ptenants,"invoiced and missing contracts")),
                     'closed':len(get_clients_by_status(prop.ptenants,"closed")),
+                    'vacant':houses - tenants,
+                    'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
+                    'occupancy':occ,
+                    'createdby':prop.user_id,
+                }
+
+            elif target == "units":
+                template = "ajax_prop_units2.html"
+
+                dict_obj = {
+                    'id':prop.id,
+                    'identity':"prp"+str(prop.id),
+                    'editid':"edit"+str(prop.id),
+                    'delid':"del"+str(prop.id),
+                    'name':prop.name,
+                    'houses':houses,
+                    'tenants':tenants,
+                    'ptenants':ptnts,
+                    'available':len(get_units_by_status(prop.houses,"available")),
+                    'booked':len(get_units_by_status(prop.houses,"booked")),
+                    'sold':len(get_units_by_status(prop.houses,"sold")),
                     'vacant':houses - tenants,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,
@@ -971,6 +994,12 @@ class AddProp(Resource):
                         apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
                         apartment_obj.save()
 
+                        ApartmentOp.update_company(prop,current_user.company.id)
+                        company_users = current_user.company.users
+                        for i in company_users:
+                            ApartmentOp.relate(prop,i)
+                            print(i,"user added to ",str(prop))
+
 
                 return '<span class="text-success">Upload successful</span>'
 
@@ -1043,6 +1072,13 @@ class AddProp(Resource):
         
         apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
         apartment_obj.save()
+
+        company = current_user.company.id
+        ApartmentOp.update_company(prop,company.id)
+        company_users = company.users
+        for i in company_users:
+            ApartmentOp.relate(prop,i)
+            print(i,"user added to ",str(prop))
 
         # owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
         # # OwnerOp.update_natid(owner_obj,"33150408") 

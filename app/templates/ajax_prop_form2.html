@@ -1,0 +1,570 @@
+<!-- Account page navigation-->
+
+
+<nav class="nav nav-borders">
+    <a id="profile" class="nav-link pl-0 pb-0 text-info underline active ms-0" href="#">Profile</a>
+    <a id="billing" class="nav-link pb-0 text-info" href="#">Client payment info</a>
+    <a id="notifications" class="nav-link pb-0 text-info" href="#">Project owner & Region</a>
+</nav>
+
+<div class="" id="profile-area">
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0 mt-1">
+                <div class="card-header">Property Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="" alt="" />
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4 mt-1">
+                <div class="card-header">Property Details ({{prop.name}})</div>
+                <div class="card-body">
+                    <form>
+                        <!-- Form Group (username)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="propName">Property name</label>
+                            <input class="form-control" id="propName" type="text" value="{{prop.name}}"
+                                placeholder="edit property name" />
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3 dispnone">
+                            <span class="dispnone" id="check_colltype">{{colltype}}</span>
+
+                            <!-- Form Group (organization name)-->
+                            <div class="col-md-6">
+                                <input class="" id="colltype" name="colltype" type="radio" value="collected" />
+                                <label class="small mb-1" for="colltype">Actual collections</label>
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <input class="" id="colltype2" name="colltype" type="radio" value="projected" />
+                                <label class="small mb-1" for="colltype2">Projected collections</label>
+                            </div>
+                        </div>
+                        <!-- Form Row        -->
+                        <div class="row dispnone">
+                            <!-- Form Group (organization name)-->
+                            <span class="dispnone" id="check_commtype">{{commtype}}</span>
+                            <div class="col-md-6 form-group">
+                                <input class="" id="commtype" name="commtype" type="radio" value="percent" />
+                                <label class="small mb-1" for="commtype">% Percentage value</label>
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <input class="" id="commtype2" name="commtype" type="radio" value="static" />
+                                <label class="small mb-1" for="commtype2">Static value</label>
+                            </div>
+                        </div>
+
+                        <!-- Form Group (email address)-->
+                        <div class="mb-3 dispnone">
+                            <label class="small mb-1" for="inputEmailAddress">Commision value</label>
+                            <input class="form-control" id="commission" type="email"
+                                placeholder="Enter commision value/percentage" value="{{commission}}" />
+                        </div>
+
+                        <!-- Save changes button-->
+                        <button id="saveprofile" class="btn btn-primary" type="button">Save changes</button>
+                        <button class="reset dispnone" type="reset">reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dispnone" id="billing-area">
+    <div class="row">
+        <div class="col-xl-12">
+            <!-- Account details card-->
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Property tenant payment details ({{prop.name}})</div>
+                <div class="card-body">
+                    <form>
+
+                        <div class="row form-group">
+                            <span class="dispnone" id="check_paytype">{{prop.paymentdetails.paytype}}</span>
+                            <span class="dispnone" id="check_nartype">{{prop.paymentdetails.nartype}}</span>
+                            <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankaccountnumber}}</span>
+
+
+                            <div class="kiota-borde col-md-6 pt-1">
+                                <div class="">
+                                    <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
+                                    <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
+                                </div>
+                            
+                                <div class="">
+                                    <input class="" id="paytype2" name="paytype" type="radio" value="bankpay" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank payment</label>
+                                </div>
+
+                                <div class="">
+                                    <input class="" id="paytype3" name="paytype" type="radio" value="" />
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype3">None</label>
+                                </div>
+                            </div>
+                            
+                            <div class="kiota-borde col-md-6 pt-1 no-wrap hide">
+                                <div class="">
+                                    <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
+                                    <label class="mb-1 small font-weight-bold" for="nartype">TNT(#TNT123)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype2" name="nartype" type="radio" value="hsenum" />
+                                    <label class="small font-weight-bold mb-1" for="nartype2">House No.(#H1)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype3" name="nartype" type="radio" value="" />
+                                    <label class="small font-weight-bold mb-1" for="nartype3">None</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="mpesacorner" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label class="small mb-0" for="bank">Paybill</label>
+                        
+                                    <input class="form-control" type="text" id="mpesapaybill" value="{{prop.paymentdetails.mpesapaybill}}">
+                                </div>
+                        
+                                <div class="col-sm-6">
+                                    <label class="small mb-0" for="bank">Account</label>
+                        
+                                    <input class="form-control" type="text" id="mpesaacc" value="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="bankcorner" class="dispnone">
+                        
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bank">Bank name</label>
+                        
+                                    <input class="form-control" type="text" id="bankname" value="{{prop.paymentdetails.bankname}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accname">Account name</label>
+                        
+                                    <input class="form-control" type="text" id="bankaccountname" value="{{prop.paymentdetails.bankaccountname}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank Paybill</label>
+                        
+                                    <input class="form-control" type="text" id="bankpaybill" value="{{prop.paymentdetails.bankpaybill}}">
+                                </div>
+                            </div>
+                        
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bank">Bank branch</label>
+                        
+                                    <input class="form-control" type="text" id="bankbranch" value="{{prop.paymentdetails.bankbranch}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accname">Bank Account no</label>
+                        
+                                    <input class="form-control" type="text" id="bankaccountnumber" value="{{prop.paymentdetails.bankaccountnumber}}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank mpesa accno no</label>
+                        
+                                    <input class="form-control" type="text" id="bankacc" value="{{prop.paymentdetails.bankaccountnumber}}{{nartype}}">
+                                </div>
+                            </div>
+                        
+                        </div>
+
+
+
+                        <!-- Save changes button-->
+                        <div class="text-right">
+                            <button id="savebilling" class="btn btn-primary" type="button">Save changes</button>
+                            <button class="reset dispnone" type="reset">reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dispnone" id="notifications-area">
+    <div class="row">
+        <div class="col-xl-12">
+            <!-- Account details card-->
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Project owner details (for use in reports engine)</div>
+                <div class="card-body">
+                    <form>
+                        <div id="" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-0" for="landlordname">Owner name</label>
+                        
+                                    <input class="form-control" type="text" id="landlordname" value="{{prop.landlord}}">
+                                </div>
+
+                                <div class="col-sm-4 hide">
+                                    <label class="small mb-0" for="landlordtel">Landlord tel (optional)</label>
+                        
+                                    <input class="form-control" type="text" id="landlordtel" value="">
+                                </div>
+                        
+                                <div class="col-sm-4">
+                                    <label class="small mb-0" for="estatename">Region</label>
+
+                                    <input id="estatename" list="region_list2"
+                                    class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
+                                    placeholder="{{prop.location}}" required>
+                                    <datalist id="region_list2">
+
+                                        {% for o in regions %}
+                                        <option value="{{ o }}">
+                                          {% endfor %}
+              
+                                      </datalist>                        
+                                </div>
+
+
+                                <div class="col-sm-4 mt-3 dispnone">
+                                    <label class="small mb-0" for="landlordbankname">Landlord Bank name</label>
+                        
+                                    <input class="form-control" type="text" id="landlordbankname" value="{{prop.landlord_bank}}">
+                                </div>
+
+                                <div class="col-sm-4 mt-3 dispnone">
+                                    <label class="small mb-0" for="landlordaccname">Landlord Bank acc name</label>
+                        
+                                    <input class="form-control" type="text" id="landlordaccname" value="{{prop.landlord_bankaccname}}">
+                                </div>
+                        
+                                <div class="col-sm-4 mt-3 dispnone">
+                                    <label class="small mb-0" for="landlordaccno">Landlord Bank acc no.</label>
+                        
+                                    <input class="form-control" type="text" id="landlordaccno" value="{{prop.landlord_bankacc}}">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Save changes button-->
+                        <div class="text-right">
+                            <button id="savelandlord" class="btn btn-primary" type="button">Save changes</button>
+                            <button class="reset dispnone" type="reset">reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $("#profile").click(function(){
+        $(this).addClass("underline")
+        $("#notifications").removeClass("underline")
+        $("#billing").removeClass("underline")
+
+        $("#profile-area").removeClass("dispnone")
+        $("#billing-area").addClass("dispnone")
+        $("#notifications-area").addClass("dispnone")
+    })
+
+    $("#billing").click(function(){
+        $(this).addClass("underline")
+        $("#profile").removeClass("underline")
+        $("#notifications").removeClass("underline")
+
+        $("#billing-area").removeClass("dispnone")
+        $("#profile-area").addClass("dispnone")
+        $("#notifications-area").addClass("dispnone")
+    })
+
+    $("#notifications").click(function(){
+        $(this).addClass("underline")
+        $("#profile").removeClass("underline")
+        $("#billing").removeClass("underline")
+
+        $("#notifications-area").removeClass("dispnone")
+        $("#billing-area").addClass("dispnone")
+        $("#profile-area").addClass("dispnone")
+
+        $.ajax({
+            url: "{{ url_for('api.addprop') }}",
+            type: "get",
+            data: {
+              target: "regions"
+            },
+            success: function (response) {
+              $("#region_list2").html(response);
+              
+            }
+          });
+    })
+
+
+        $('input[type=radio][name=paytype]').change(function () {
+            if (this.value == 'mpesapay') {
+                $("#mpesacorner").removeClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }else if (this.value == 'bankpay') {
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").removeClass("dispnone")
+            }else{
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }
+        });
+
+
+        $('input[type=radio][name=nartype]').change(function () {
+            if (this.value == 'hsenum') {
+                $("#mpesaacc").val("#H1 format")
+                $("#bankacc").val($("#check_accno").text()+"#H1 format")
+            }else if (this.value == 'tntnum') {
+                $("#mpesaacc").val("#TNT format")
+                $("#bankacc").val($("#check_accno").text()+"#TNT format")
+            }else{
+                $("#mpesaacc").val("")
+                $("#bankacc").val($("#check_accno").text()+"")
+            }
+        });
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        let checkCommtype = $("#check_commtype").text()
+
+        if (checkCommtype == "percent") {
+
+            $("input[id=commtype]").attr("checked", "checked");
+
+        } else {
+
+            $("input[id=commtype2]").attr("checked", "checked");
+
+        }
+
+        let checkColltype = $("#check_colltype").text()
+
+        if (checkColltype == "collected") {
+
+            $("input[id=colltype]").attr("checked", "checked");
+
+        } else if (checkColltype == "projected") {
+
+            $("input[id=colltype2]").attr("checked", "checked");
+
+        } else { }
+
+
+            let checkPaytype = $("#check_paytype").text()
+            if (checkPaytype == "mpesapay") {
+                $("input[id=paytype]").attr("checked", "checked");
+                $("#mpesacorner").removeClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            } else if (checkPaytype == "bankpay") {
+                $("input[id=paytype2]").attr("checked", "checked");
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").removeClass("dispnone")
+            } else { 
+                $("input[id=paytype3]").attr("checked", "checked");
+                $("#mpesacorner").addClass("dispnone")
+                $("#bankcorner").addClass("dispnone")
+            }
+
+            let checkNartype = $("#check_nartype").text()
+            if (checkNartype == "tntnum") {
+                $("input[id=nartype]").attr("checked", "checked");
+                $("#mpesaacc").val("#TNT format")
+
+            } else if (checkNartype == "hsenum") {
+                $("#mpesaacc").val("#H1 format")
+                $("input[id=nartype2]").attr("checked", "checked");
+            } else {
+                $("#mpesaacc").val("")
+                $("input[id=nartype3]").attr("checked", "checked");
+             }
+
+        })
+
+
+
+        
+</script>
+
+<script>
+    $("#saveprofile").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                name: $("#propName").val(),
+                colltype: $("input[name=colltype]:checked").val(),
+                commtype: $("input[name=commtype]:checked").val(),
+                commission: $("#commission").val(),
+                target: "update prop"
+            },
+            success: function (response) {
+                $("#profile-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+    });
+</script>
+
+
+<script>
+    $("#savebilling").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                bankname: $("#bankname").val(),
+                bankbranch: $("#bankbranch").val(),
+                bankaccountname: $("#bankaccountname").val(),
+                bankaccountnumber:$("#bankaccountnumber").val(),
+                bankpaybill: $("#bankpaybill").val(),
+                mpesapaybill: $("#mpesapaybill").val(),
+                paytype: $("input[name=paytype]:checked").val(),
+                nartype: $("input[name=nartype]:checked").val(),
+                target: "update prop billing info"
+            },
+            success: function (response) {
+                $("#billing-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+    });
+</script>
+
+
+<script>
+    $("#savelandlord").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                landlord: $("#landlordname").val(),
+                landlordtel: $("#landlordtel").val(),
+                region: $("#estatename").val(),
+                landlordbank: $("#landlordbankname").val(),
+                landlordaccname: $("#landlordaccname").val(),
+                landlordaccno: $("#landlordaccno").val(),
+
+                target: "update prop landlord info"
+            },
+            success: function (response) {
+                $("#notifications-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+    });
+</script>

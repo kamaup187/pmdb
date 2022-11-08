@@ -1,0 +1,221 @@
+<!--================Contact Area =================-->
+<section class="contact_area section_gap">
+    <span id="prop_identifier" class="dispnone"></span>
+    <span id="prop_id_identifier" class="dispnone"></span>
+    <span id="edit_prop_identifier" class="dispnone"></span>
+
+  <!-- <a id="download_units" href="/download/template/units" class="dispnone">download</a> -->
+
+   
+    <div class="card mb-2 mt-1">
+  
+      <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+        <span class="smallify text-black font-weight-bold text-uppercase text-110">Units listing <span id="activeprop" class="text-primary ml-3"></span></span>
+        <div>
+          <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+            type="button">X</button>
+        </div>
+      </div>
+  
+      <div class="card-body flowing-body pt-2 pl-2">
+  
+        <!-- <div class="pb-1 bg-white">
+          <div class="mb-1">
+            <span class="text-black">
+             Total Leads: <span id="total_leads" class="text-primary">{{leads}}</span>
+            </span>
+          </div>
+        </div> -->
+  
+  
+        <div id="result-view" class="">
+          <div id="props" class="table-responsive">
+            <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="text-black font-weight-bold pl-0">Property</th>
+                        <th class="text-black font-weight-bold">Units</th>
+                        <th class="text-black font-weight-bold">Clients</th>
+
+                        <th class="text-black font-weight-bold ">Available</th>
+                        <th class="text-black font-weight-bold ">Booked</th>
+                        <th class="text-black font-weight-bold ">Sold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items%}
+                    <tr>
+
+
+                        <td class="data-cell">
+                            <div>
+                                <span id="{{item['id']}}" type="button" class="btn btn-sm text-primary text-left no-wrap">{{item['name']}}</span>
+                            </div>
+                        </td>
+            
+                        <td class="data-cell">{{ item['houses'] }}</td>
+                        <td class="data-cell">{{ item['ptenants'] }}</td> 
+
+                        <td class="data-cell">{{ item['available'] }}</td>
+                        <td class="data-cell">{{ item['booked'] }}</td>
+                        <td class="data-cell">{{ item['sold'] }}</td>
+
+            
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+  
+        </div>
+
+        <div id="child-view" class="dispnone"></div>
+        
+      </div>
+    </div>
+  </section>
+  
+  
+
+
+
+
+
+  
+ 
+  
+  
+
+
+  
+
+
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+  <script>
+    var url = "{{ url_for('static', filename='upload.js') }}";
+    $.getScript(url);
+  </script>
+  
+  
+  <script>
+    $("#close-propdisp").on('click', function () {
+      $('#body-block').removeClass('dispnone')
+      $('#propdisp').addClass('dispnone');
+      // $('#content-area').removeClass("isopen text-danger");
+      // $('#list-area').removeClass("isopen text-danger");
+      // $('#sidebarToggle').click();
+      // $('#smaccordionSidebar').removeClass("toggled");
+      $(".fixloader").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
+            );
+            $(".fixloader2").html(
+                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
+            );
+      setTimeout(getPropStats, 10);
+
+    });
+  </script>
+  
+  <script>
+  
+    $("#uploadPropModal").on('shown.bs.modal', function () {
+      $(".dismissparent").click();
+    });
+  
+  </script>
+  
+  <script>
+    var rawIds = "{{ propids|safe }}";
+    // var props = "{{ propnames|safe }}";
+    // var propnames= props.replace(/'/g,'"');
+    // propObjs = JSON.parse(propnames)
+
+    var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function (i, item) {
+  
+      $("#" + item).on('click', function () {
+        console.log("clicked", item)
+        if (isNaN(parseInt(item))) {
+          if (item.startsWith("del")) {
+            $("#del_prop_identifier").html(item)
+          }
+          else if (item.startsWith("prp")) {
+            console.log("working here>>>>>>>>>>>>>>>>>>>>>>>>")
+
+            $("#prop_id_identifier").html(item)
+
+
+          } else {
+            $("#edit_prop_identifier").html(item)
+          }
+  
+        } else {
+          console.log("working >>>>>>>>>>>>>>>>>>>>>>>>")
+
+          $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+          
+            $("#activeprop-child").text($(this).text())
+
+            $("#barloader").removeClass("dispnone")
+
+            $.ajax({
+                type: "get",
+                url: "{{ url_for('api.propertymanagement') }}",
+                data: {
+                    propid:item
+                },
+                success: function(response) {
+                  $("#barloader").addClass("dispnone")
+                  $("#result-view").addClass("dispnone");
+                  $("#child-view").removeClass("dispnone")
+
+                  $("#child-view").html(response);
+                }
+            });
+
+          $("#prop_identifier").html(item)
+          var linkTarget = $("#" + item).children("span").text()
+          $("#link_identifier").html(linkTarget)
+  
+        }
+      });
+    });
+  </script>
+  
+  
+  
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        "order": [[0, "asc"]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>
+
+
+
+<script>
+    $(document).ready(function(){
+      $("#addTenantModal").on('shown.bs.modal', function(){
+        $(this).find('#select_house2').focus();
+      });
+    });
+  </script>
+    

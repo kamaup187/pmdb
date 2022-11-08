@@ -3600,3 +3600,19 @@ select {
   background: transparent;
   color: #0e2353;
 }
+
+.bg-danger-alt {
+  background-color: #edbee2 !important;
+}
+
+.bg-success-alt {
+  background-color: #cce2cc !important;
+}
+
+.bg-warning-alt {
+  background-color: #f1ebd3e0 !important;
+}
+
+.bg-info-alt {
+  background-color: #d8f2f6aa !important;
+}

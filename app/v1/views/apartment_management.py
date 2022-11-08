@@ -3966,7 +3966,7 @@ class CreateHouseCode(Resource):
                     HouseCodeOp.update_listprice(new_code_obj,valid_inputs[0])
                     HouseCodeOp.update_rentrate(new_code_obj,0.0)
 
-                msg = "House code added"
+                msg = "Group added"
                 return render_template('ajaxproceed.html',alert=msg)
 
 class EditHouseCode(Resource):
@@ -4277,7 +4277,7 @@ class CreateHouse(Resource):
             house_obj = HouseOp(house_name,apartment_id,code_id,created_by,desc)
             house_obj.save()
 
-            msg = f"House {house_obj.name} added successfully"
+            msg = f"Unit {house_obj.name} added successfully"
             return proceed + msg
 class EditHouse(Resource):
     """class"""
@@ -5384,7 +5384,7 @@ class AddTenant(Resource):
                     else:
                         TenantOp.update_residency(tenant_obj,"New")
             
-                msg = "Tenant added successfully"
+                msg = "Client added successfully"
             return msg + proceed
 
 class AddLead(Resource):

@@ -257,8 +257,8 @@
             $("#workarea").addClass("dispnone")
             $(".alert-msgs").html(response);
             $("#submitgroup").html(successResponse)
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-            
             setTimeout(function(){
             $("#workarea").removeClass("dispnone")
             $(".alert-msgs").empty();            
@@ -273,15 +273,15 @@
             //   $('#submitgroup').addClass('btn-secondary')
             }, 2500);
             
-            $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
+            // $.ajax({
+            //   url: "{{ url_for('api.fetchrates') }}",
+            //   type: "get",
+            //   data: {propid:  $("#prop_identifier").text()},
+            //   success: function(response) {
                 
-                $("#result-view").html(response);
-              }
-            });
+            //     $("#result-view").html(response);
+            //   }
+            // });
         }
         });
         

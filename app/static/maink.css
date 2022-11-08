@@ -2761,7 +2761,9 @@ clear: both;
   border: 1px solid #545558;
   border-collapse: collapse;
 }
-
+.bg-danger-alt {
+  background-color: #ea88d5 !important;
+}
 .my-table-cell {
   padding-left: 0px !important;
   padding-right: 10px !important;

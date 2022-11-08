@@ -2219,6 +2219,13 @@ def get_clients_by_status(arr,status):
             client_list.append(client)
     return client_list
 
+def get_units_by_status(arr,status):
+    client_list = []
+    for client in arr:
+        if client.status == status:
+            client_list.append(client)
+    return client_list
+
 def xtenantauto(apartment_id):
     x_tenants = []
 

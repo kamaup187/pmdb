@@ -1170,7 +1170,7 @@
 
                           <span class="text-danger small">Reminder message format:</span>
                           <div>
-                            Dear [<span class="text-black">Tenant/Resident/client</span>] name, [your custom message goes here] [ <span class="text-black">balance as of [date] is Kes [amount]</span>]
+                            Dear [<span class="text-black">Client</span>] name, [your custom message goes here] [ <span class="text-black">balance as of [date] is Kes [amount]</span>]
                           </div>
     
                           <div class="form-group dispnon mt-2">                        
@@ -1670,7 +1670,7 @@
         });
     </script>
     <script type="text/javascript">
-        $(".housebtn").on('click', function () {
+        $(".housebtnn").on('click', function () {
             $("#barloader").removeClass("dispnone")
             setTimeout(function () {
                 $("#barloader").addClass("dispnone")
@@ -1824,6 +1824,39 @@
             // $("#sidebarToggle").click();
         });
     </script>
+
+<script>
+    $(".housebtn").on('click',function(){
+        // $("#body-block").addClass("dispnone")
+        // $("#preloader-btn").click();
+        $("#barloader").removeClass("dispnone")
+  
+        url = "{{ url_for('api.allproperties') }}"
+  
+        $.ajax({
+            type: "get",
+            url: url,
+            data: {
+              target:"units"
+            },
+            success: function(response) {
+                // if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+                //     $('#sidebarToggle').click();
+                //     $('#smaccordionSidebar').removeClass("toggled");
+                //   }
+                // $('#content-area').addClass("isopen text-danger");
+                // $("#postloader-btn").click();
+                $("#barloader").addClass("dispnone")
+                $("#body-block").addClass("dispnone")
+                $("#propdisp").removeClass("dispnone")
+                $("#proplist").addClass("dispnone")
+                $("#searchresults").html("empty")
+                $("#searchresults").addClass("dispnone")
+                $("#propdisp").html(response);
+            }
+        });
+    });
+  </script>
 
 <script>
     $(".tenantbtn").on('click',function(){

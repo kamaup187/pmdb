@@ -52,7 +52,7 @@
 
                 <th class="text-darkfont-weight-bold {{access['client-disp']}}">Company</th>
                 <th class="text-darktrack-title-cell">Status</th>
-                <th class="text-darktrack-title-cell">Link</th>
+                <th class="text-darktrack-title-cell dispnone">Link</th>
                 <th class="text-darktrack-title-cell">Edit</th>
                 <th class="text-darktrack-title-cell">Del</th>
                 <th class="text-darktrack-title-cell">By</th>
@@ -72,7 +72,7 @@
 
                 <td class="data-cell">{{ item['status']|safe }}</td>
 
-                <td class="data-cell">
+                <td class="data-cell dispnone">
                   <div>
                     <span id="{{item['id']}}" type="button"
                       class="{{item['link-target']}} ellipsis borderless modalTrigger text-gray-700 "
@@ -235,13 +235,13 @@
                   <div class="row underline-thin">
 
                     <div class="form-group col-md-6 no-paddin input-icons">
-                      <span>Landlord <span class="text-primary small">(optional)</span></span>
+                      <span>Property/project owner <span class="text-primary small">(optional)</span></span>
                       <input id="cname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
                         placeholder="Jonh Warui" />
                       <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                     </div>
 
-                    <div class="form-group col-md-6 no-paddin input-icons">
+                    <div class="form-group col-md-6 no-paddin input-icons dispnone">
                       <span>Mobile number <span class="text-primary small">(optional)</span></span>
                       <input id="ctel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
                         placeholder="0712345678" />

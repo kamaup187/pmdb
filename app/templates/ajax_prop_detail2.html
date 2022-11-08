@@ -16,7 +16,87 @@
       <a id="download_units" href="/download/template/units" class="dispnone">download</a>
 
 
-        <div class="container no-padding">
+      <div class="pb-2 bg-white divjust-end">
+        <span id="backbtn" class="btn btn-sm btn-light text-primary">
+          <!-- <i class="me-1" data-feather="user-plus"></i> -->
+          <i class="fas fa-long-arrow-alt-left me-2 font-size-bold"></i>
+          Go back
+        </span>
+
+        <div class="dispnon">
+          <nav class="nav nav-borders">
+            <!-- <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+            <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+            <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a> -->
+            <div>
+              <label class="me-2"><input type="checkbox" value="cb1" class="chb" checked/> Plots / units</label>
+              <label class="me-2"><input type="checkbox" value="cb2" class="chb"/> Sizes / rates</label>
+            </div>
+          </nav>
+        </div>
+
+        <div class="">
+
+          <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseCodeModal">
+            <i class="me-1" data-feather="user-plus"></i>
+            Add sizes
+          </span>
+
+          <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseModal">
+            <i class="me-1" data-feather="user-plus"></i>
+            Add units
+          </span>
+
+          <!-- <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
+            <i class="me-1" data-feather="user-plus"></i>
+            Import data
+          </span> -->
+
+          <!-- <span class="navbar-drr d-inline-block">
+            <span class="dropdown-dr">
+              <span class="dropbtn text-black mt-2">Reports
+                <i class="fa fa-caret-down"></i>
+              </span>
+              <span class="dropdown-content">
+                <a href="/tenant/listing?target=direct&propid={{prop.id}}" target="_blank">Tenants listings</a>
+                <a href="/deposit/statement?target=direct&propid={{prop.id}}" target="_blank">Tenants deposits</a>
+              </span>
+            </span>               
+          </span> -->
+
+          <div class="dropdown d-inline dropstart">
+            <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Reports
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <!-- <li><a class="dropdown-item" href="/tenant/listing?target=direct&propid={{prop.id}}">Client listing</a></li>
+              <li><a class="dropdown-item" href="/deposit/statement?target=direct&propid={{prop.id}}">Client performance</a></li> -->
+
+              <li><a class="dropdown-item" href="#">Units listing</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+
+
+      </div>
+    
+
+    <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+      <div class="bar-alt"></div>
+      <div class="bar-alt"></div>
+      <div class="bar-alt"></div>
+    </div>
+    
+    <div id="child-result-view" class="row">
+
+    </div>
+    </div>
+</section>
+
+
+        <!-- <div class="container no-padding">
             <div class="divjust-end mb-2">
               
               <i class="fa fa-building fa-2x text-info"></i>
@@ -63,7 +143,7 @@
                       <i class="fas fa-calendar"></i>
                       <span class="text-info">
                         <span>Current Bills: {{period}}</span><br>
-                      <!-- <button type="button" class="borderless btn-light modalTrigger text-info" data-toggle="modal" data-target="#paymentDetailModal"><i class="fas fa-edit text-danger"></i>Property details</button> -->
+               
                       </span>
                       <i class="fas fa-house-user"></i>
                       <span>Number of units:</span>
@@ -173,14 +253,11 @@
                   </tbody>
                   </table>
 
-                <!-- Pagination Links-->
                 <div class="text-right">
                   <button id="prev{{pg.prev_num}}" class="btn btn-outline-dark 
                   {% if pg.page == 1 %}disabled{% endif %}">&laquo;</button>
-                  <!-- Loop through the number of pages to display a link for each-->
                   {% for page_num in pg.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                       {% if page_num %}
-                        <!-- Check for the active page and set the link to "Active"-->
                         {% if pg.page == page_num %}
                             <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
                         {% else %}
@@ -201,7 +278,7 @@
               </div>
           </div>
         </div>
-    </section>
+    </section> -->
     <!--================Contact Area =================-->
 
     <div class="text-center">
@@ -750,20 +827,19 @@
 
 
 
-
-
   <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
   <script>
     var url = "{{ url_for('static', filename='upload.js') }}";
     $.getScript(url);
   </script>
 
-<script>
-  $("#close-propdisp").on('click',function(){
-    $('#proplist').removeClass('dispnone')
-    $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-  });
+
+<script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
 </script>
 
 <script>
@@ -782,14 +858,34 @@
            },
           success: function (response) {
 
-            $("#result-view").html(response);
+            $("#child-result-view").html(response);
+          }
+        });
+      }
+
+      function getRates(propid, target, page) {
+        showSpin();
+
+        // $("#current-reloader").html(target);
+
+        $.ajax({
+          url: "{{ url_for('api.fetchrates') }}",
+          type: "get",
+          data: { 
+            propid:propid,
+            target:target,
+            page:page
+           },
+          success: function (response) {
+
+            $("#child-result-view").html(response);
           }
         });
       }
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $('#tenantData').DataTable({
       "processing": true,
@@ -804,10 +900,10 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
-<script>
+<!-- <script>
   var rawIds = "{{ houseids|safe }}";
   var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
   console.log(ids)
@@ -827,9 +923,9 @@
       }
     });
   });
-</script>
+</script> -->
 
-<script>
+<!-- <script>
   var pages = range(1, $("#pages").text())
 
   function loader(item) {
@@ -852,7 +948,30 @@
       loader(item)
     })
   })
-</script> 
+</script>  -->
+
+
+<script type="text/javascript">
+
+  function refresh() {
+    $.ajax({
+          url: "{{ url_for('api.fetchhouses') }}",
+          type: "get",
+          data: {
+            propid:  $("#prop_identifier").text(),
+          },
+          success: function(response) {
+            $("#barloader-alt").addClass("dispnone")
+            $("#child-result-view").html(response);
+          }
+        });
+  }
+  
+  $(document).ready(function() {
+    $("#barloader-alt").removeClass("dispnone")
+      setTimeout(refresh,10);
+  });
+  </script>
 
 
 
@@ -880,6 +999,30 @@
   
   });
   
+
+  $(".chb").change(function (e) {
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "cb1"){
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+          }else{
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+          }
+        }
+
+      });
+
+
   $("#reporttoggle2").on('change',function(){
     $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
     var cb2 = document.getElementById("reporttoggle2");
@@ -904,28 +1047,7 @@
   
   });
 
-  
-  $("#reporttoggle3").on('change',function(){
-    $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-    var cb3 = document.getElementById("reporttoggle3");
-    if (cb3.checked){
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
 
-      $.ajax({
-                url: "{{ url_for('api.fetchrates') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-
-  });
 
 </script>
 
@@ -1013,16 +1135,17 @@
         success: function(response) {
           $(".alert-msgs").html(response);
 
+          getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
+          // $.ajax({
+          //     url: "{{ url_for('api.fetchrates') }}",
+          //     type: "get",
+          //     data: {propid:  $("#prop_identifier").text()},
+          //     success: function(response) {
                 
-                $("#result-view").html(response);
-              }
-            });
+          //       $("#result-view").html(response);
+          //     }
+          //   });
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1080,15 +1203,17 @@
               },3000)
 
               setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchrates') }}",
-                  type: "get",
-                  data: {propid:  $("#prop_identifier").text()},
-                  success: function(response) {
+                getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+                // $.ajax({
+                //   url: "{{ url_for('api.fetchrates') }}",
+                //   type: "get",
+                //   data: {propid:  $("#prop_identifier").text()},
+                //   success: function(response) {
                     
-                    $("#result-view").html(response);
-                  }
-                });
+                //     $("#result-view").html(response);
+                //   }
+                // });
               },5000);
 
           },
@@ -1188,16 +1313,17 @@
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+          getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
+          // $.ajax({
+          //     url: "{{ url_for('api.fetchrates') }}",
+          //     type: "get",
+          //     data: {propid:  $("#prop_identifier").text()},
+          //     success: function(response) {
                 
-                $("#result-view").html(response);
-              }
-            });
+          //       $("#result-view").html(response);
+          //     }
+          //   });
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1268,16 +1394,17 @@
           $(".closemodal").click();
             }, 1500);
         setTimeout(function(){
+          getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
+          // $.ajax({
+          //     url: "{{ url_for('api.fetchrates') }}",
+          //     type: "get",
+          //     data: {propid:  $("#prop_identifier").text()},
+          //     success: function(response) {
                 
-                $("#result-view").html(response);
-              }
-            });
+          //       $("#result-view").html(response);
+          //     }
+          //   });
 
             }, 3000);  
         

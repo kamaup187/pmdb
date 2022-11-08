@@ -39,6 +39,18 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
 
+  <style type="text/css" media="print">
+
+
+    .noprint {
+      display: none;
+    }
+
+    .printdisplay{
+      display: block !important;
+    }
+  </style>
+
   <style>
     /* body {
       font-family: Arial, Helvetica, sans-serif;
@@ -140,7 +152,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
     <!-- Sidebar -->
-    <ul class="navbar-nav {{sidebar_theme}} sidebar sidebar-dark shadow-alt accordion mobile-malaysian dispnone" id="accordionSidebar">
+    <ul class="navbar-nav {{sidebar_theme}} sidebar sidebar-dark shadow-alt accordion mobile-malaysian dispnone noprint" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
       <!-- <a class="sidebar-brand {{logobg}} d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
@@ -306,7 +318,7 @@
     </ul>
     <!-- End of Sidebar -->
 
-    <ul class="navbar-nav {{sidebar_theme}} sidebar sidebar-dark shadow-alt accordion mobile-toggle desktop-malaysian" id="smaccordionSidebar">
+    <ul class="navbar-nav {{sidebar_theme}} sidebar sidebar-dark shadow-alt accordion mobile-toggle desktop-malaysian noprint" id="smaccordionSidebar">
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand bg-white d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
@@ -489,7 +501,7 @@
 
 
         <!-- Topbar -->
-        <nav class="navbar fixed-nav navbar-expand navbar-info {{topbar_theme}} topbar mb-2 static-top mobile-malaysian">
+        <nav class="navbar fixed-nav navbar-expand navbar-info {{topbar_theme}} topbar mb-2 static-top mobile-malaysian noprint">
           <a class="sidebar-brand {{logobg}} d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
             <div class="sidebar-brand-icon rotate-n-0">
               <img id="logol" class="mobile-malaysian" src={{logopath}} alt="">
@@ -742,7 +754,7 @@
           
         </nav>
 
-        <div class="row mobile-malaysian fixed-bar">
+        <div class="row mobile-malaysian fixed-bar noprint">
 
           <div class="col-xl-12 p-0 mobile-malaysian">
             <div class="card shadow h-0 py-0">
@@ -871,7 +883,7 @@
 
 
         <!-- Topbar -->
-        <nav class="navbar fixed-nav navbar-expand navbar-light bg-white topbar mb-0 static-top shadow desktop-malaysian">
+        <nav class="navbar fixed-nav navbar-expand navbar-light bg-white topbar mb-0 static-top shadow desktop-malaysian noprint">
           <span class="desktop-malaysian floating-apartment-mobile text-xs mb-0 text-info">{{companyname}}</span>
           <!-- Sidebar Toggle (Topbar) -->
 
@@ -1067,7 +1079,7 @@
           </div>
 
         <div class="container-fluid">
-          <div class="row no-padding">
+          <div class="row no-padding noprint">
             <div class="col-12 desktop-malaysian no-padding">
               <form class="d-non d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-searc" autocomplete="off"> 
                 <div class="input-group">

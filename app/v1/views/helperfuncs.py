@@ -363,6 +363,12 @@ def send_internal_email_notifications(company,param):
         func=send_mail_notifications, args=(company,param,), result_ttl=5000
     )
 
+def format_month(num):
+    if num < 9:
+        return f"0{num}"
+    else:
+        return f'{num}'
+
 def send_mail_notifications(company,param):
 
     from app import create_app

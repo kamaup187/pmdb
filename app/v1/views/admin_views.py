@@ -1233,7 +1233,7 @@ class EditProp(Resource):
             raw_propid = request.form.get("editid")
             propid = get_identifier(raw_propid)
 
-        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv or permission_alt(current_user):
+        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv or permission_alt(current_user,""):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             if prop.company_id:
                 return "You are not allowed to perform this operation"

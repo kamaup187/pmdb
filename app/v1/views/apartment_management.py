@@ -5264,28 +5264,50 @@ class AddTenant(Resource):
                     abort(403)
 
         else:
+            lead = request.form.get("lead")
+            print("leaaads",lead)
+            lead_obj = None
+            if lead:
+                valid_lead = lead.lstrip()
+                print("LEAD",valid_lead)
+                email = valid_lead.split(" ")[1]
+                print("leaaads email",email)
 
-            name = request.form.get('name')
-            if not name:
-                fname = request.form.get('fname')
-                oname = request.form.get('oname')
-                sname = request.form.get('sname')
+                lead_obj = LeadOp.fetch_lead_by_email(email)
 
-                try:
-                    name = fname + oname + sname
-                except:
-                    name = fname
 
-            phone = request.form.get('tel')
-            national_id = request.form.get('national_id')
-            email = request.form.get('email')
-            existing_arrears = request.form.get('arr')
+            if lead_obj:
+                name = lead_obj.name
+                phone = lead_obj.phone
+                email = lead_obj.email
+                national_id = lead_obj.national_id
+            else:
+                name = request.form.get('name')
+                if not name:
+                    fname = request.form.get('fname')
+                    oname = request.form.get('oname')
+                    sname = request.form.get('sname')
+
+                    try:
+                        name = fname + oname + sname
+                    except:
+                        name = fname
+
+                phone = request.form.get('tel')
+                national_id = request.form.get('national_id')
+                email = request.form.get('email')
+                existing_arrears = request.form.get('arr')
+
+            # import pdb; pdb.set_trace()
+
             house_num = request.form.get('house')#auto populated dropdown
 
             migrate = request.form.get('migrate')#checkbox
+
             ttype = request.form.get('ttype')
             target = request.form.get('target')
             classtype=request.form.get('classtype')
+
             rep = request.form.get("rep")
 
             if rep:

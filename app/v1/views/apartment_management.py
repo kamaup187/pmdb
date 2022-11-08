@@ -5300,6 +5300,9 @@ class AddTenant(Resource):
 
             # import pdb; pdb.set_trace()
 
+            if not name:
+                return "Failed to convert lead" + proceed
+
             house_num = request.form.get('house')#auto populated dropdown
 
             migrate = request.form.get('migrate')#checkbox

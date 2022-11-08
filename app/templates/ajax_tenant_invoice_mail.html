@@ -8,6 +8,31 @@
   <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
   <title>KiotaPay</title>
 
+  <style type="text/css" media="print">
+
+        .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0.3rem;
+        outline: 0;
+        }
+      
+      .noprint {
+          display: none;
+        }
+        .printdisplay{
+          display: block !important;
+        }
+        
+
+  </style>
+
   <script>
   window.console = window.console || function(t) {};
 </script>
@@ -23,7 +48,7 @@
 
 </head>
 
-<body translate="no" >
+<body translate="no" class="printdisplay">
   <div id="inv" class="justify-content-cente text-black m-2">
     <div class="divcol-in">
         
@@ -445,5 +470,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    button = document.getElementById('printinv');
+
+button.addEventListener('click', () => {
+  document.title=$("#filename").text(); 
+  window.print()
+});
+</script>
 
 </body>

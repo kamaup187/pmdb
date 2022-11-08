@@ -994,11 +994,11 @@ class AddProp(Resource):
                         apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
                         apartment_obj.save()
 
-                        ApartmentOp.update_company(prop,current_user.company.id)
+                        ApartmentOp.update_company(apartment_obj,current_user.company.id)
                         company_users = current_user.company.users
                         for i in company_users:
-                            ApartmentOp.relate(prop,i)
-                            print(i,"user added to ",str(prop))
+                            ApartmentOp.relate(apartment_obj,i)
+                            print(i,"user added to ",str(apartment_obj))
 
 
                 return '<span class="text-success">Upload successful</span>'
@@ -1067,18 +1067,18 @@ class AddProp(Resource):
         bool_value = return_bool(agency)
 
         if not prop:
-            return f'<span class="text-danger">Proprty name missing</span>'
+            return f'<span class="text-danger">Property name missing</span>'
     
         
         apartment_obj = ApartmentOp(prop.title(),None,location.id,landlord.id,bool_value,current_user.id)
         apartment_obj.save()
 
-        company = current_user.company.id
-        ApartmentOp.update_company(prop,company.id)
+        company = current_user.company
+        ApartmentOp.update_company(apartment_obj,company.id)
         company_users = company.users
         for i in company_users:
-            ApartmentOp.relate(prop,i)
-            print(i,"user added to ",str(prop))
+            ApartmentOp.relate(apartment_obj,i)
+            print(i,"user added to ",str(apartment_obj))
 
         # owner_obj = OwnerOp.fetch_owner_by_uniquename(owner)
         # # OwnerOp.update_natid(owner_obj,"33150408") 
@@ -1233,7 +1233,7 @@ class EditProp(Resource):
             raw_propid = request.form.get("editid")
             propid = get_identifier(raw_propid)
 
-        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv:
+        if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv or permission_alt(current_user):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             if prop.company_id:
                 return "You are not allowed to perform this operation"

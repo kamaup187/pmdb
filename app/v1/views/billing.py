@@ -3353,8 +3353,13 @@ class Receipt(Resource):
         else:
             tenant = payment_obj.tenant
 
+        if request.args.get("target") == "custom":
+            template = "ajax_custom_receiptpay.html"
+        else:
+            template = "ajax_receiptpay.html"
+
         return render_template(
-            'ajax_receiptpay.html',
+            template,
             voided = disp,
             tenant = tenant.name,
             house= payment_obj.house.name,

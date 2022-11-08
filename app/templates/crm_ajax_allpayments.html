@@ -547,13 +547,13 @@
 
                   <!-- Form Group (organization name)-->
                   <div class="col-md-6">
-                      <input class="" id="receipttype" name="receipttype" type="radio" value="default" />
-                      <label class="small mb-1" for="receipttype">Default receipt</label>
+                      <input class="" id="receipttype" name="receipttype" type="radio" value="default" checked/>
+                      <label class="small mb-1" for="receipttype">Receipt template 1</label>
                   </div>
                   <!-- Form Group (location)-->
                   <div class="col-md-6">
-                      <input class="" id="receipttype2" name="receipttype" type="radio" value="custom" />
-                      <label class="small mb-1" for="receipttype2">Custom receipt</label>
+                      <input class="" id="receipttype2" name="receipttype" type="radio" value="custom"/>
+                      <label class="small mb-1" for="receipttype2">Recept template 2</label>
                   </div>
               </div>
                 <div id="receipt-bed" class="position-relative"></div>
@@ -1139,7 +1139,8 @@
                 url: "{{ url_for('api.receipt') }}",
                 type: "get",
                 data: {
-                      payid: $("#payment_identifier").text()
+                      payid: $("#payment_identifier").text(),
+                      target:"default"
                     },
                 success: function(response) {
                   $("#receipt-bed").html(response); 
@@ -1151,15 +1152,16 @@
               $('#mailbtn').html('<i class="fas fa-envelope text-primary"></i>Email');
               $('#smsbtn').removeAttr('disabled');
               $('#smsbtn').html('<i class="fas fa-sms text-primary"></i>Sms');
-              $("#receipt-bed").html('Retrieving default receipt... <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
+              $("#receipt-bed").html('Retrieving custom receipt... <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>')
               $.ajax({
                 url: "{{ url_for('api.receipt') }}",
                 type: "get",
                 data: {
-                      payid: $("#payment_identifier").text()
+                      payid: $("#payment_identifier").text(),
+                      target:"custom"
                     },
                 success: function(response) {
-                  $("#receipt-bedd").html(response); 
+                  $("#receipt-bed").html(response); 
                 }
               });
             }

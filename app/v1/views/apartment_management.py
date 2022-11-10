@@ -4291,7 +4291,9 @@ class CreateHouse(Resource):
             house_obj.save()
 
             msg = f"Unit {house_obj.name} added successfully"
-            return proceed + msg
+            # return proceed + msg
+            return success
+            
 class EditHouse(Resource):
     """class"""
     def get(self):

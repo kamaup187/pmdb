@@ -8,12 +8,12 @@
     
 # from ast import Pass
 # from mimetypes import init
-from multiprocessing import allow_connection_pickling
+# from multiprocessing import allow_connection_pickling
 import os
 # from pickle import TRUE
 # from africastalking import initialize
 
-import sys
+# import sys
 import datetime
 
 import re
@@ -107,6 +107,22 @@ failure = '<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed!
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
+
+from functools import wraps
+from timeit import default_timer
+
+
+def timer(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        start_time = default_timer()
+        response = f(*args, **kwargs)
+        total_elapsed_time = default_timer() - start_time
+        response += f"<h6>Results in: {(total_elapsed_time*1000):,.1f} milliseconds</h6>"
+        # print(response)
+        return response
+
+    return wrapper
 
 def crm(user):
     if user.company.ctype == "crm":

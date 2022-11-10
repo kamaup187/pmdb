@@ -6661,6 +6661,7 @@ class FetchReadings(Resource):
 
 
 class FetchHouses(Resource):
+    @timer
     @login_required
     def get(self):
         prop_id = request.args.get('propid')
@@ -6670,7 +6671,7 @@ class FetchHouses(Resource):
 
         if crm(current_user):
             page = request.args.get('page', 1, type=int)
-            pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
+            pg = House.query.filter_by(apartment_id=propid).order_by(House.id.asc()).paginate(page=page, per_page=ROWS_PER_PAGE)
             houselist = house_details(pg.items)
         else:
             prop_obj = ApartmentOp.fetch_apartment_by_id(propid)

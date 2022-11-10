@@ -17,9 +17,9 @@
 
 
       <div class="pb-2 bg-white divjust-end">
-        <span id="backbtn" class="btn btn-sm btn-light text-primary">
+        <span id="backbtn" class="btn btn-sm btn-light text-primary font-weight-bold">
           <!-- <i class="me-1" data-feather="user-plus"></i> -->
-          <i class="fas fa-long-arrow-alt-left me-2 font-size-bold"></i>
+          <i class="fas fa-long-arrow-alt-left me-2 font-weight-bold"></i>
           Go back
         </span>
 
@@ -1619,7 +1619,8 @@
                 desc: $("#desc").val()
             },
         success: function(response) {
-          $(".alert-msgs").html(response);
+          // $(".alert-msgs").html(response);
+          snack(response);
           getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
 
           // $.ajax({

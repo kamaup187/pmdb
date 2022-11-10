@@ -118,7 +118,7 @@ def timer(f):
         start_time = default_timer()
         response = f(*args, **kwargs)
         total_elapsed_time = default_timer() - start_time
-        response += f"<h6>Results in: {(total_elapsed_time*1000):,.1f} milliseconds</h6>"
+        response += f'<h6>Results in: Database:{(total_elapsed_time*1000):,.1f}, Overall: <span id ="domtimeload"></span> milliseconds</h6>'
         # print(response)
         return response
 

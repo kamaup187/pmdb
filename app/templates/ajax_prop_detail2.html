@@ -845,29 +845,30 @@
 <script>
       function getUnits(propid, target, page) {
         showSpin();
-
+        $("#barloader-alt").removeClass("dispnone")
         // $("#current-reloader").html(target);
-
         $.ajax({
           url: "{{ url_for('api.fetchhouses') }}",
           type: "get",
+          start_time: new Date().getTime(),
           data: { 
             propid:propid,
             target:target,
             page:page
            },
           success: function (response) {
-
+            $("#barloader-alt").addClass("dispnone")
             $("#child-result-view").html(response);
+          },
+          complete: function(data) {
+            $("#domtimeload").text((new Date().getTime() - this.start_time));
           }
         });
       }
 
       function getRates(propid, target, page) {
         showSpin();
-
         // $("#current-reloader").html(target);
-
         $.ajax({
           url: "{{ url_for('api.fetchrates') }}",
           type: "get",
@@ -952,25 +953,25 @@
 
 
 <script type="text/javascript">
-
-  function refresh() {
-    $.ajax({
-          url: "{{ url_for('api.fetchhouses') }}",
-          type: "get",
-          data: {
-            propid:  $("#prop_identifier").text(),
-          },
-          success: function(response) {
-            $("#barloader-alt").addClass("dispnone")
-            $("#child-result-view").html(response);
-          }
-        });
-  }
+    getUnits($("#prop_identifier").text(), "", 1)
+  // function refresh() {
+  //   $.ajax({
+  //         url: "{{ url_for('api.fetchhouses') }}",
+  //         type: "get",
+  //         data: {
+  //           propid:  $("#prop_identifier").text(),
+  //         },
+  //         success: function(response) {
+  //           $("#barloader-alt").addClass("dispnone")
+  //           $("#child-result-view").html(response);
+  //         }
+  //       });
+  // }
   
-  $(document).ready(function() {
-    $("#barloader-alt").removeClass("dispnone")
-      setTimeout(refresh,10);
-  });
+  // $(document).ready(function() {
+  //   $("#barloader-alt").removeClass("dispnone")
+  //     setTimeout(refresh,10);
+  // });
   </script>
 
 

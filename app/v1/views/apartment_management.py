@@ -2372,7 +2372,7 @@ class Bills(Resource):
                 garbtotal += bill.garbage 
                 sectotal += bill.security
                 sevtotal += bill.maintenance
-                deptotal += bill.deposit
+                deptotal += bill.deposit if bill.deposit else 0
                 argtotal += bill.agreement
                 penalties += bill.penalty
                 arrearstotal += bill.arrears if bill.arrears > 0 else 0

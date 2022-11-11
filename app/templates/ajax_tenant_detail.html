@@ -59,7 +59,7 @@
                           <div class="mb-2 ml-2">Deposit#: <span class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span></div>
                         </div>  
                     </div>
-                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+                    <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
 
                 </div>
 
@@ -73,9 +73,13 @@
                           class="font-weight-bold text-danger">{{tenant.date.strftime("%d/%B/%Y")}}</span></div>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
-                    data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-door-open mr-2"></i>Vacate
-                      resident</span></button>
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-success ml-3" data-toggle="modal"
+                    data-target="#transferHouseModal"><span class="fixed-width-prop"><i class="fas fa-exchange-alt mr-2"></i>Transfer</span>
+                    </button>
+
+                    <button type="button" class="btn btn-sm borderles modalTrigger small btn-danger" data-toggle="modal"
+                    data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-sign-out-alt mr-2"></i>Vacate</span>
+                    </button>
                 
                 </div>
                 
@@ -89,7 +93,7 @@
                           class="font-weight-bold text-danger">{{smsable}}</span></div>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
+                  <button type="button" class="btn btn-sm borderles modalTrigger small btn-success ml-3" data-toggle="modal"
                     data-target="#tenantSmsModal"><span class="fixed-width-prop"><i class="fas fa-sms mr-2"></i>Direct message
                       </span></button>
                 
@@ -104,7 +108,7 @@
                         <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                       </div>  
                   </div>
-                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-light ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Invoice statement</span></button>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement</span></button>
 
               </div>
                 
@@ -382,6 +386,58 @@
                         <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>
                         <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <!-- <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button> -->
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="transferHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Transfer</h5>
+            <span class="text-gray-900">Tenant: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons mt-2">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="usergroup" class="form-control" id ="select_transhouse" >
+                          <option disabled selected value> -- Select new house -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div id="notifications"></div>
+
+                      <!-- <div class="fancy-checkbox-group form-control mb-4 divjust">
+                        <div>
+                          <input type="checkbox" id="migrate"/>
+                          <label for="migrate">Transfer(<span class="small text-danger">check to disable deposit billing</span>)</label>
+                        </div>       
+                      </div> -->
+        
+                    
+                      <div class="divbg center-btn">
+                        <button id="transferbtn" type="button" class="btn-secondary borderless text-white" disabled>Confirm</button>
+                        <button class="btn btn-light dismiss" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
                   </div>
@@ -1151,13 +1207,115 @@
 </script>
 
 
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#transferHouseModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            target:"house options"
+          },
+      success: function(response) {
+        $("#select_transhouse").html(response);
+        // $("#select_house option:eq('1')").attr("selected", "selected");
+        // $("#select_house").change();
+        $.ajax({
+                url: "{{ url_for('api.allocatetenants') }}",
+                type: "POST",
+                data: {
+                  tenant_id:$("#tenant_identifier").text(),
+                  target:"tenant name"
+                },
+                success: function(response) {
+                  
+                  $(".tenantname").html(response);
+                }
+              });   
+      }
+    });
+  });
+
+</script>
+
+<script>
+  // This script shows alerts before allocation is done
+  $("#select_transhouse").on('change',function(){
+
+      $('#transferbtn').removeAttr('disabled');
+      $('#transferbtn').removeClass('btn-secondary');
+      $('#transferbtn').addClass('btn-success');
+
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            house: $("#select_transhouse").val(),
+            ttype:"tenant",
+            target:"alerts"
+          },
+      success: function(response) {
+        $("#notifications").html(response);
+      }
+    });
+  });
+</script>
 
 
+<script>
+  // This script  performs actual allocation
+  $("#transferbtn").click(function(){   
+    $('body').removeClass('modal-open');
 
 
+    $("#transferbtn").html("transferring...")  
+      $.ajax({
+        url: "{{ url_for('api.allocatetenants') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                tenant_id: $("#tenant_identifier").text(),
+                house: $("#select_transhouse").val(),
+                ttype:"tenant",
+                target: "transfer"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $("#notifications").empty();
+            $('#transferbtn').attr('disabled', 'disabled');
+            $('#transferbtn').removeClass('btn-success')
+            $('#transferbtn').addClass('btn-secondary')
+            $("#transferbtn").html("allocate")
+            $(".dismiss").click();
 
+            // $("#close-searchresults").click();
 
+            setTimeout(function(){
+            $("#close-searchresults").click();
+          }, 2000);
 
+          }, 2000);
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchtenants') }}",
+          //       type: "get",
+          //       data: {
+          //         propid:  $("#prop_identifier").text(),
+          //         target:$("#current-reloader").text()                },
+          //       success: function(response) {
+                  
+          //         $("#child-result-view").html(response);
+          //       }
+          //     });
+        }
+      });
+  });
+</script>
 
 
 <script>

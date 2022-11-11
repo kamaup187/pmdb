@@ -4340,6 +4340,8 @@ class EditHouse(Resource):
         name = request.form.get('name')
         watertarget = request.form.get('watertarget')
         servicetarget = request.form.get('servicetarget')
+        acc = request.form.get('acc')
+        bank = request.form.get('bank')
 
         desc = request.form.get('desc')
         group = request.form.get('group')
@@ -4376,7 +4378,11 @@ class EditHouse(Resource):
                 HouseOp.update_details(house_obj,name,desc)
                 HouseOp.update_billing_details(house_obj,watertarget,servicetarget)
 
-                msg = f"House {house_obj.name} updated successfully"
+                if acc:
+                    HouseOp.update_bank(house_obj,bank,acc)
+                    msg = f"House {house_obj.name} payments updated successfully"
+                else:
+                    msg = f"House {house_obj.name} updated successfully"
 
         return render_template('ajaxproceed.html',alert=msg)
 
@@ -5750,33 +5756,67 @@ class AllocateTenants(Resource):
             else:
                 msg = "Ready to allocate"
                 return render_template('ajaxproceed.html',alert=msg)
-        ###################################################################################           
+        ###################################################################################
 
-        else:
-            if ttype == "tenant":
-                allocs = tenant_obj.house_allocated
-                if allocs:
-                    if tenant_obj.multiple_houses:
-                        pass
-                    else:
-                        for i in allocs:
-                            AllocateTenantOp.delete(i)
 
-                house_id = house_obj.id
-                tenant_id = tenant_obj.id
-                user_id = current_user.id
-
-                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
-                allocate_tenant_obj.save()
-                TenantOp.update_status(tenant_obj,"Resident")
-                if bool_migrate:
-                    TenantOp.update_residency(tenant_obj,"Old")
-                else:
-                    TenantOp.update_residency(tenant_obj,"New")
-
-                msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
+        if target == "transfer":
+            if ttype == "owner" or ttype == "resident":
+                return err + "cannot transfer residents"
             else:
-                msg = f"{tenant_obj.name} has been allocated house {house_num} successfully"
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+
+            if not tenant_obj:
+                return err 
+
+            if tenant_obj.multiple_houses:
+                return "Cannot clear, tenant occupies multiple units"
+
+            house_obj = check_house_occupied(tenant_obj)[1]
+
+            if target == "tenant name":
+                return tenant_obj.name
+
+
+            if not house_obj:
+                msg_two = "Tenant has been cleared already"
+                return render_template('ajax_clearance.html',checkbox="checkbox",alert_one="msg_one",alert_two=msg_two,current_bill_month="month")
+
+
+            active_alloc = check_house_occupied(tenant_obj)[2]
+
+            AllocateTenantOp.update_status(active_alloc,False,tenant_obj.balance,tenant_obj.apartment.billing_period,current_user.name)
+            TenantOp.update_status(tenant_obj,"Vacated")
+
+
+        #######################################################################################
+
+        if ttype == "tenant":
+            allocs = tenant_obj.house_allocated
+            if allocs:
+                if tenant_obj.multiple_houses:
+                    pass
+                else:
+                    for i in allocs:
+                        AllocateTenantOp.delete(i)
+
+            house_obj = get_specific_house_obj_alt(house_list,house_num)
+
+            house_id = house_obj.id
+            tenant_id = tenant_obj.id
+            user_id = current_user.id
+
+
+            allocate_tenant_obj = AllocateTenantOp(int(apartment_id),house_id,tenant_id,user_id,description=None)
+            allocate_tenant_obj.save()
+            TenantOp.update_status(tenant_obj,"Resident")
+            if bool_migrate:
+                TenantOp.update_residency(tenant_obj,"Old")
+            else:
+                TenantOp.update_residency(tenant_obj,"New")
+
+            msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
+        else:
+            msg = f"{tenant_obj.name} has been allocated house {house_num} successfully"
 
         return render_template('ajaxproceed.html',alert=msg)
 
@@ -7756,6 +7796,9 @@ class Results(Resource):
                     current_invoice = fetch_current_owner_invoice(house_obj)
                 else:
                     house_obj = check_house_occupied(tenant_obj)[1]
+                    if not house_obj:
+                        return redirect(url_for('api.index'))
+                        # return err + "Tenant cleared"
                     current_invoice = fetch_current_invoice(house_obj)
 
                 if current_invoice:

@@ -549,6 +549,15 @@
                         </select>
                       </div>
 
+                      <div class="form-group mt-2 input-icons">
+                        <span class="text-black">Bank name <span class="text-danger small">*</span></span>
+                        <input id="edit_bank" class="form-control" type="text" placeholder="H1"/>
+                      </div>
+                      <div class="form-group mt-2 input-icons">
+                        <span class="text-black">Acc num <span class="text-danger small">*</span></span>
+                        <input id="edit_accname" class="form-control" type="text" placeholder="H1"/>
+                      </div>
+
                       
                     
                       <div class="divbg center-btn">
@@ -1539,6 +1548,8 @@
                 name: $("#edit_housename").val(),
                 watertarget:$("#edit_watertarget").val(),
                 servicetarget:$("#edit_servicetarget").val(),
+                acc:$("#edit_accname").val(),
+                bank:$("#edit_bank").val(),
                 desc: $("#edit_desc").val(),
                 target:"edit house detail"
             },

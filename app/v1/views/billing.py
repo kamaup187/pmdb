@@ -849,7 +849,10 @@ class BillInvoice(Resource):
             salutation = f'Dear <span class="text-primary">{fname_extracter(tenant.name)}</span>,'
             intro = f'your {str_month} <span class="text-info">invoice </span>is as follows;'
 
+            priority = "low"
+
             if bill.house.payment_bankacc:
+                priority = "high"
                 bankdetails = f'Bank: <span class="text-info">{bill.house.payment_bank} Acc: {bill.house.payment_bankacc}</span>'
             elif prop_obj.payment_bank:
                 bankdetails = f'Bank: <span class="text-info">{prop_obj.payment_bank} Acc: {prop_obj.payment_bankacc}</span>'
@@ -871,16 +874,19 @@ class BillInvoice(Resource):
 
             p = bill.apartment.paymentdetails
             if p:
-                if p.paytype == "mpesapay":
-                    bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
-                elif p.bankpaybill:
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
-                    if p.paytype != "bankpay":
-                        bankdetails = ""
+                if priority == "high":
+                    pass
                 else:
-                    bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
-                    if p.paytype != "bankpay":
-                        bankdetails = ""
+                    if p.paytype == "mpesapay":
+                        bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
+                    elif p.bankpaybill:
+                        bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
+                        if p.paytype != "bankpay":
+                            bankdetails = ""
+                    else:
+                        bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
+                        if p.paytype != "bankpay":
+                            bankdetails = ""
                         
             co = current_user.company
 

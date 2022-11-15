@@ -4219,7 +4219,7 @@ class CallBackUrlLatitude(Resource):
     def post(self):
 
 
-        response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("PROD LATITUDE Equity has sent data", ["+254716674695"],"KIOTAPAY")
 
         #parse for json
         my_data=request.data
@@ -4253,7 +4253,7 @@ class CallBackUrlLatitude(Resource):
                 response =  {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Record with similar bank reference exists"}
             else:
                 data_obj = BankDataOp(username,password,billNumber,billAmount,customerRefNumber,bankReference,transParticular,paymentMode,transDate,phoneNumber,debitAccount,debitCustName,data_type)
-                data_obj.save()
+                # data_obj.save()
                 response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL","Message":f'Record #Ref{bankReference} saved successfully'}
 
 
@@ -4303,7 +4303,7 @@ class CallBackUrlMLatitude(Resource):
         # response = sms.send(message1, ["+254716674695"],sender)
 
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
-        ctob_obj.save()
+        # ctob_obj.save()
 
         # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
         # ctob_obj.save()
@@ -5096,7 +5096,7 @@ class CallBackUrlSentomEquity(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
         ww = f"{my_json},PROD SENTOM Equity has sent data"
-        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         # response2 = sms.send(ww, ["+254725538750"],"KIOTAPAY")
 
 

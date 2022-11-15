@@ -5842,7 +5842,7 @@ class TenantStatementFour(Resource):
                 for x in that_month_payments:
                     paydate = x.pay_date.strftime("%d/%b/%y")
 
-                    ref = x.ref_number
+                    ref = x.ref_number if x.ref_number else x.id
 
                     # if item.month == 8:
                     # import pdb;
@@ -5873,7 +5873,7 @@ class TenantStatementFour(Resource):
                             "month":month,
                             "date":paydate,
                             "desc":f" Rent payment",
-                            "ref":x.ref_number,
+                            "ref":ref,
                             "debit":"",
                             "credit":f'{credit:,.1f}',
                             "balance":cb

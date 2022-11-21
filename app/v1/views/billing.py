@@ -1094,8 +1094,6 @@ class EditBill(Resource):
             
 
         for bill in bills:
-
-
             original_amount = bill.total_bill
 
             if target == "bill discard":
@@ -1126,9 +1124,7 @@ class EditBill(Resource):
             elif target == "editarrears":
                 # if bill.apartment.billing_period.month == bill.month: #DISABLED THIS CHECK TO EDIT PREVIOUS BILL ARREARS
 
-
                 values = validate_float_inputs(rent,water,garbage,security,fine,deposit,"",agreement,electricity,maintenance)
-
 
                 if bill.house.housecode.waterrate or bill.house.housecode.watercharge:
                     # update_water = bill.water

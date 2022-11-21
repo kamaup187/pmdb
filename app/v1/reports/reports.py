@@ -2758,6 +2758,99 @@ class RentStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+class TenantInvoice(Resource):
+    """class"""
+    def get(self,id_number,month,year,tenant_id):
+        curr_user = UserOp.fetch_user_by_national_id(id_number)
+        if not curr_user:
+            return {"message":"User not found"}, 404
+        else:
+            current_user = curr_user
+
+        try:
+            monthyear = month + "-" + year
+        except:
+            return {"message":"Bad url encoding"},404
+
+        selected_month = monthyear
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+        if not tenant_obj:
+            return "Tenant of that id not found", 404
+
+        ###################################################################################################
+        db.session.expire(tenant_obj)
+
+        bill_item = None
+
+        monthlybills = tenant_obj.monthly_charges
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                bill_item = bill
+                break
+
+        if bill_item:
+            return {
+                "success": "true",
+                "message": "success",
+                'tenant_id': tenant_id,
+                "bill_details": {
+                    "rent": bill.rent,
+                    "water": bill.water,
+                    "arrears": bill.arrears,
+                    "total_due": bill.total_bill,
+                    "paid": bill.paid_amount,
+                    "balance": bill.balance,
+                    "date": bill.date.strftime("%m-%d-%Y, %H:%M:%S"),
+                }
+            }, 200
+        else:
+            return {
+                "success": "false",
+                "message": "invoice not found",
+                'tenant_id_id': tenant_id,
+                "bill_details": {}
+            }, 404
+
+        # if bill_item:
+        #     return {
+        #         "success":"true",
+        #         "message":"success",
+        #         'unit_id':unit_number,
+        #         'occupied':"true",
+        #         "tenant_details":{
+        #             "first_name":fname,
+        #             "last_name":lname,
+        #             "unit_number":unit_number,
+        #             "phone_number":tenant_obj.phone,
+        #             "check_in":tenant_obj.date.strftime("%m-%d-%Y, %H:%M:%S"),
+        #             "deposit":deposit,
+        #             "id":tenant_obj.national_id
+        #             }
+        #         },200
+        # else:
+        #     return {
+        #         "success":"true",
+        #         "message":"failed",
+        #         'unit_id':unit_number,
+        #         'occupied':"",
+        #         "tenant_details":{
+        #             "first_name":fname,
+        #             "last_name":lname,
+        #             "unit_number":unit_number,
+        #             "phone_number":tenant_obj.phone,
+        #             "check_in":tenant_obj.date.strftime("%m-%d-%Y, %H:%M:%S"),
+        #             "deposit":deposit,
+        #             "id":tenant_obj.national_id
+        #             }
+        #         },404
+
 
 class RentNaiveraStatement(Resource):
     def get(self,id_number,month,year,prop):

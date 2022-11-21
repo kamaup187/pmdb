@@ -2760,13 +2760,10 @@ class RentStatement(Resource):
 
 class TenantInvoice(Resource):
     """class"""
-    def get(self,id_number,month,year,tenant_id):
+    def get(self,id_number,month,year,unit_number):
         curr_user = UserOp.fetch_user_by_national_id(id_number)
         if not curr_user:
             return {"message":"User not found"}, 404
-        else:
-            current_user = curr_user
-
         try:
             monthyear = month + "-" + year
         except:
@@ -2780,9 +2777,50 @@ class TenantInvoice(Resource):
         else:
             target_period = datetime.datetime.now()
 
-        tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-        if not tenant_obj:
-            return "Tenant of that id not found", 404
+
+        props = curr_user.company.props
+        raw_units = []
+        for prop in props:
+            raw_units.append(prop.houses)
+        units = flatten(raw_units)
+
+        try:
+            house_obj = get_specific_house_obj_alt(units,unit_number)
+            tenant_obj = None
+            if house_obj:
+                check = check_occupancy(house_obj)
+                if check[0] == "occupied":
+                    tenant_obj = check[1]
+
+                if tenant_obj:
+                    try:
+                        fname = tenant_obj.name.split(' ')[0]
+                    except:
+                        fname = "Unnamed"
+
+                    try:
+                        lname = tenant_obj.name.split(' ')[1]
+                    except:
+                        lname = "Unnamed"
+
+            if not tenant_obj:
+                return {
+                    "success":"false",
+                    "message":f"unit number {unit_number} not occupied",
+                    'unit_id':unit_number,
+                    'occupied':"vacant",
+                    "bill_details":{}
+                    },404        
+
+        except:
+            return {
+                "success":"false",
+                "message":f"unit number {unit_number} format error",
+                'unit_id':unit_number,
+                'occupied':"",
+                "bill_details":{}
+                },404
+
 
         ###################################################################################################
         db.session.expire(tenant_obj)
@@ -2799,7 +2837,9 @@ class TenantInvoice(Resource):
             return {
                 "success": "true",
                 "message": "success",
-                'tenant_id': tenant_id,
+                'unit_number': unit_number,
+                'fname':fname,
+                'lname':lname,
                 "bill_details": {
                     "rent": bill.rent,
                     "water": bill.water,
@@ -2814,7 +2854,7 @@ class TenantInvoice(Resource):
             return {
                 "success": "false",
                 "message": "invoice not found",
-                'tenant_id_id': tenant_id,
+                'unit_number': unit_number,
                 "bill_details": {}
             }, 404
 

@@ -2843,6 +2843,9 @@ class TenantInvoice(Resource):
                 "bill_details": {
                     "rent": bill.rent,
                     "water": bill.water,
+                    "electricity":bill.electricity,
+                    "garbage":bill.garbage,
+                    "service":bill.maintenance,
                     "arrears": bill.arrears,
                     "total_due": bill.total_bill,
                     "paid": bill.paid_amount,

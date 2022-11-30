@@ -43,3 +43,14 @@ heroku run python manage.py db stamp head --app kiotapay-prod
 # heroku logs --tail --app eapartment-dev
 
 kill -9 $(ps -A | grep python | awk '{print $1}')
+
+
+IlcPPVkyc0mKe3jeufo9bjII6Mwa
+Def5yXFOSgKNJAzJshxDE8YkvSca
+
+
+8vnRuq9m3OmxliAJn1WfgmogagYa
+CEMIEl7b2IMn8NlTlg7qVcY74Joa
+
+
+SWxjUFBWa3ljMG1LZTNqZXVmbzliaklJNk13YTpEZWY1eVhGT1NnS05KQXpKc2h4REU4WWt2U2Nh

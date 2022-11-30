@@ -2818,9 +2818,12 @@ def generate_house_ownertenants(arr,propid):
     """combine house and tenant"""
     new_arr = []
     for i in arr:
-        hses = get_active_houses(i)[1][0]
-
-        new_arr.append(f'{hses}#{i.name}')
+        if len(get_active_houses(i)[1]) > 1:
+            for item in get_active_houses(i)[1]:
+                new_arr.append(f'{item}#{i.name}')
+        else:
+            hses = get_active_houses(i)[1][0]
+            new_arr.append(f'{hses}#{i.name}')
 
     allhses = houseauto(propid)
     for ii in allhses:

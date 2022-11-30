@@ -2301,6 +2301,8 @@ class ServiceStatement(Resource):
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
 
+        CompanyOp.set_rem_quota(apartment_obj.company,800)
+
         ##################################################################################################
         house_ids = []
         detailed_bills = []

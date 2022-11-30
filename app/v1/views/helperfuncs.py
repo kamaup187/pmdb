@@ -10,6 +10,7 @@
 # from mimetypes import init
 # from multiprocessing import allow_connection_pickling
 import os
+import base64
 # from pickle import TRUE
 # from africastalking import initialize
 
@@ -111,6 +112,39 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 from functools import wraps
 from timeit import default_timer
 
+
+def generate_coop_token(ckey,skey):
+    passphrase = ckey + ':' + skey
+    encoded_p = base64.b64encode(passphrase.encode()).decode()
+    
+    headers = {"Authorization" : "Basic %s" % encoded_p}
+    data = {'grant_type': 'client_credentials'}
+    r=requests.post("https://openapi-sit.co-opbank.co.ke/token",headers=headers,data=data)
+
+    try:
+        token = r.json()["access_token"]
+        print("TOKEN GENERATED SUCCESSFULLY")
+        return token
+    except:
+        print("NOT AUTHORIZED")
+        return ""
+
+
+def account_validation(ckey,skey,account):
+    
+    token = generate_coop_token(ckey,skey)
+
+    if token:
+        headers = {"Authorization" : "Bearer %s" % token}
+
+        data = {'MessageReference': '40ca18c6765086089a1',
+                "AccountNumber": account}
+
+        r=requests.post("https://openapi-sit.co-opbank.co.ke/Enquiry/Validation/Account/1.0.0/",headers=headers,data=data)
+
+        print("RESPONSE:",r.json())
+    else:
+        print("Invalid token passed")
 
 def timer(f):
     @wraps(f)
@@ -6820,7 +6854,12 @@ def penalty_calculator(param):
         tenants = tenantauto(n)
 
         for tenant in tenants:
-            if tenant.balance > 1000:
+            latest_payment = fetch_current_billing_period_payments(billing_period,tenant.payments)
+            qualify = False
+            if latest_payment:
+                if latest_payment[0].pay_date.day > 10:
+                    qualify = True
+            if tenant.balance > 1000 or qualify:
                 print("Qualified")
                 bills = tenant.monthly_charges
                 bill = None
@@ -6864,7 +6903,9 @@ def penalty_calculator(param):
                         MonthlyChargeOp.update_fine_date(bill,1)             
                     
                     if bill.fine_date != datetime.datetime.now().day:
-                        fine_amnt = 0.0033333333 * hse.housecode.rentrate
+                        # fine_amnt = 0.0033333333 * hse.housecode.rentrate
+                        fine_amnt = 0.10 * hse.housecode.rentrate
+
                         fines = round(fine_amnt,0)
                         total_fines += fines
                         printf = f"House {hse} before fining: STATUS>>{bill.fine_status} BILL>>>Kes{bill.total_bill} CALCULATED FINES>>>Kes{fines}"

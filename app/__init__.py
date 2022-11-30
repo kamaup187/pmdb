@@ -202,10 +202,10 @@ from app.v1.views.helperfuncs import penalty_calculator,sendlogs
 def scheduler():
     """ Function for test purposes. """
     print(">>>>>>>>>>>>>>>>>>BILLING PENALTIES HAS STARTED!")
-    # try:
-    #     notify = sms.send("Penalty time", ["+254716674695"],"KIOTAPAY")
-    # except:
-    #     pass
+    try:
+        notify = sms.send("Penalty time", ["+254716674695"],"KIOTAPAY")
+    except:
+        pass
 
     # r =requests.get('http://127.0.0.1:3000/index')
     # print(r)
@@ -215,6 +215,7 @@ def scheduler():
     # props = [1,18,17,11,15,10]
     # # props = [22]
     # props = [1]
+    props = [91,92,484,93]
 
     penjob = q.enqueue_call(
         func=penalty_calculator, args=(props,), result_ttl=5000
@@ -235,7 +236,8 @@ def userlogs():
 # def scheduled_job():
 #     print('This job is run every weekday at 5pm.')
 
-sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='21', minute='01')
+# sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='21', minute='01')
+sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='6', minute='40')
 
 sched.add_job(userlogs,'cron',id="102",replace_existing=True,hour='18', minute='00')
 

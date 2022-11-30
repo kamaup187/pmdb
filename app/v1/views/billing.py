@@ -2197,12 +2197,11 @@ class ReceivePayment(Resource):
                     elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
-                            print("KATA SIM",hh,"MORIO",hh.owner)
+                            print("KATA SIM",hh,hh.owner)
                             bill = fetch_target_period_owner_invoice(hh,pay_period_date)
                             print("LETA BILL BUANA",bill,"YA HII SIKU",pay_period_date)
                             tenant = hh.owner
                         else:
-                            print("HAKUNAAA HIO NI UWONGO")
                             bill = None
                     elif prop.name == "Astrol Ridgeways" and housecheck != "manual":
                         cbid_id = cb.bill_ref_num.replace(" ","")
@@ -2220,7 +2219,7 @@ class ReceivePayment(Resource):
                             bill = fetch_target_period_invoice(hh,pay_period_date)
 
                         else:
-                            print("DID NOT FIND ASTROL GUY KATA SIM")
+                            print("DID NOT FIND ASTROL GUY")
                             bill = None
 
                     else:
@@ -2241,9 +2240,9 @@ class ReceivePayment(Resource):
                 else:
                     tenant_obj = check_occupancy(house_obj[0])[1]
 
-                if tenant_obj.multiple_houses:
-                    houses = get_active_houses(tenant_obj)[1]
-                    return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
+                # if tenant_obj.multiple_houses:
+                #     houses = get_active_houses(tenant_obj)[1]
+                #     return render_template('ajax_target_houses_alt.html',house_list=houses,tenant_obj=tenant_obj)
 
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
 
@@ -2355,7 +2354,7 @@ class ReceivePayment(Resource):
                             bill = fetch_target_period_invoice(hh,pay_period_date)
 
                         else:
-                            print("DID NOT FIND ASTROL GUY KATA SIM")
+                            print("DID NOT FIND ASTROL GUY")
                             bill = None
                     # if cb.bill_ref_num.startswith("TNT"):
                     #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))

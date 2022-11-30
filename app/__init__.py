@@ -237,7 +237,7 @@ def userlogs():
 #     print('This job is run every weekday at 5pm.')
 
 # sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='21', minute='01')
-sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='6', minute='40')
+# sched.add_job(scheduler,'cron',id="101",replace_existing=True,hour='6', minute='40')
 
 sched.add_job(userlogs,'cron',id="102",replace_existing=True,hour='18', minute='00')
 

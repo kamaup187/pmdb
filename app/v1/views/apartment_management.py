@@ -696,7 +696,18 @@ class Index(Resource):
             if not secret_num:
                 secret_num = SECRETNUM
 
+            secret_struc = os.getenv("SECRETNAM")
+            if not secret_struc:
+                secret_struc = SECRETNAM
+
+            secret_nu = os.getenv("SECRETNU")
+            if not secret_nu:
+                secret_nu = SECRETNU
+
             if current_user.company.name == secret_struct and current_user.username != secret_num:
+                return Response(render_template("inactive_company.html"))
+
+            if current_user.company.name == secret_struc and current_user.username == secret_nu:
                 return Response(render_template("inactive_company.html"))
 
 

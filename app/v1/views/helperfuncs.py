@@ -4697,7 +4697,9 @@ def discard_bills(props):
             all_charges = bill.house.charges
 
             for charge in all_charges:
-                if charge.date.month == bill.apartment.billing_period.month and charge.date.year == bill.apartment.billing_period.year and not charge.reading_id:
+                # if charge.date.month == bill.apartment.billing_period.month and charge.date.year == bill.apartment.billing_period.year and not charge.reading_id:
+                if charge.date.month == bill.apartment.billing_period.month and charge.date.year == bill.apartment.billing_period.year:
+
                     ChargeOp.delete(charge)
 
             if bill.apartment.billing_period.month == bill.month:
@@ -7002,7 +7004,7 @@ def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
                 bill_amount = house_obj.housecode.waterrate3 * units
         else:
     
-            if house_obj.housecode.seweragerate:
+            if house_obj.housecode.seweragerate:reading_id
                 bill_amount = (house_obj.housecode.waterrate * units) + (house_obj.housecode.seweragerate * units)
             else:
                 bill_amount = house_obj.housecode.waterrate * units

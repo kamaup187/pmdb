@@ -2776,18 +2776,30 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
 
     def update_balances(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
-        self.booking_balance = booking
-        self.instalment_balance = instalment
-        self.addfee_balance = addfee
-        self.rent_balance = rent
-        self.water_balance = water
-        self.electricity_balance =electricity
-        self.garbage_balance = garbage
-        self.security_balance = security
-        self.maintenance_balance = service
-        self.penalty_balance = penalty
-        self.deposit_balance = deposit
-        self.agreement_balance = agreement
+        if booking != "null":
+            self.booking_balance = booking
+        if instalment != "null":
+            self.instalment_balance = instalment
+        if addfee != "null":
+            self.addfee_balance = addfee
+        if rent != "null":
+            self.rent_balance = rent
+        if water != "null":
+            self.water_balance = water
+        if electricity != "null":
+            self.electricity_balance =electricity
+        if garbage != "null":
+            self.garbage_balance = garbage
+        if security != "null":
+            self.security_balance = security
+        if service != "null":
+            self.maintenance_balance = service
+        if penalty != "null":
+            self.penalty_balance = penalty
+        if deposit != "null":
+            self.deposit_balance = deposit
+        if agreement != "null":
+            self.agreement_balance = agreement
 
         self.updated = True
 
@@ -2826,18 +2838,44 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         db.session.commit()
 
     def update_dues(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
-        self.booking_due = booking
-        self.instalment_due = instalment
-        self.addfee_due = addfee
-        self.rent_due = rent
-        self.water_due = water
-        self.electricity_due =electricity
-        self.garbage_due = garbage
-        self.security_due = security
-        self.maintenance_due = service
-        self.penalty_due = penalty
-        self.deposit_due = deposit
-        self.agreement_due = agreement
+
+        if booking != "null":
+            self.booking_due = booking
+        if instalment != "null":
+            self.instalment_due = instalment
+        if addfee != "null":
+            self.addfee_due = addfee
+        if rent != "null":
+            self.rent_due = rent
+        if water != "null":
+            self.water_due = water
+        if electricity != "null":
+            self.electricity_due =electricity
+        if garbage != "null":
+            self.garbage_due = garbage
+        if security != "null":
+            self.security_due = security
+        if service != "null":
+            self.maintenance_due = service
+        if penalty != "null":
+            self.penalty_due = penalty
+        if deposit != "null":
+            self.deposit_due = deposit
+        if agreement != "null":
+            self.agreement_due = agreement
+
+        # self.booking_due = booking
+        # self.instalment_due = instalment
+        # self.addfee_due = addfee
+        # self.rent_due = rent
+        # self.water_due = water
+        # self.electricity_due =electricity
+        # self.garbage_due = garbage
+        # self.security_due = security
+        # self.maintenance_due = service
+        # self.penalty_due = penalty
+        # self.deposit_due = deposit
+        # self.agreement_due = agreement
 
         self.updated = True
 

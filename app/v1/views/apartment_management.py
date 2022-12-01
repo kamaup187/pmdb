@@ -307,6 +307,73 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
+
+            # propidss = [1]
+            # propidss = [91,92,484,93]
+            propidss = []
+            for n in propidss:
+                prop = ApartmentOp.fetch_apartment_by_id(n)
+                if prop:
+                    tts = prop.tenants
+                    for tt in tts:
+                        lbill = None
+                        cbill = None
+                        bills = tt.monthly_charges
+                        last_bills = fetch_prev_billing_period_bills(prop.billing_period,bills)
+                        if last_bills:
+                            lbill = last_bills[0]
+                        curr_bills = fetch_current_billing_period_bills(prop.billing_period,bills)
+                        if curr_bills:
+                            cbill = curr_bills[0]
+                        if cbill and lbill:
+
+                            print(f"found for {tt.name} of {prop.name}")
+
+                            nfine = 0.0
+                            if lbill.pay_date:
+                                if lbill.pay_date.day > 10:
+                                    nfine = lbill.rent * 0.1
+                            elif not lbill.pay_date:
+                                nfine = lbill.rent * 0.1
+                            elif lbill.balance > 1000:
+                                nfine = lbill.balance * 0.1
+                            else:
+                                nfine = 0.0
+
+                            pfine = lbill.penalty
+                            totalbill = cbill.total_bill
+                            ltotalbill = lbill.total_bill
+                            totalbill -= pfine if pfine else 0
+                            ltotalbill -= pfine if pfine else 0
+                            lbal = lbill.balance
+                            lbal -= pfine
+
+                            cbal = cbill.balance
+                            cbal -= pfine
+                            cbal += nfine
+
+                            totalbill += nfine if nfine else 0
+                            arrs = cbill.arrears
+                            arrs -= pfine if pfine else 0
+
+                            MonthlyChargeOp.update_monthly_charge(cbill,"null","null","null","null","null","null","null","null",nfine,arrs,totalbill,1)
+                            MonthlyChargeOp.update_balances(cbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+                            MonthlyChargeOp.update_dues(cbill,0.0,0.0,0.0,"null","null","null","null","null","null",nfine,"null","null")
+
+                            MonthlyChargeOp.update_balance(cbill,cbal)
+
+                            MonthlyChargeOp.update_monthly_charge(lbill,"null","null","null","null","null","null","null","null",0.0,"null",ltotalbill,1)
+                            MonthlyChargeOp.update_balances(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+                            MonthlyChargeOp.update_dues(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+
+                            MonthlyChargeOp.update_balance(lbill,lbal)
+
+
+                            print(f"finished pfine of {pfine} and new {nfine}")
+
+
+                    
+
             # cocc = CompanyOp.fetch_company_by_name("")
             # if cocc:
             #     CompanyOp.update_sms_provider(cocc,"Advanta")

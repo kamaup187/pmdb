@@ -6196,8 +6196,9 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             continue
 
         if isinstance(amount,str):
-            amount = float(int(valid_amount.replace(",","")))
-            valid_amount = float(int(valid_amount.replace(",","")))
+            invalid_amount = valid_amount.replace(",","")
+            amount = float(int(invalid_amount.split(".")[0]))
+            valid_amount = float(int(invalid_amount.split(".")[0]))
 
         bal = amount
 

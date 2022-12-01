@@ -309,8 +309,8 @@ class Index(Resource):
             print("getting in")
 
             # propidss = [1]
-            # propidss = [91,92,484,93]
-            propidss = []
+
+            propidss = [91,92,484,93]
             for n in propidss:
                 prop = ApartmentOp.fetch_apartment_by_id(n)
                 if prop:
@@ -325,8 +325,8 @@ class Index(Resource):
                         curr_bills = fetch_current_billing_period_bills(prop.billing_period,bills)
                         if curr_bills:
                             cbill = curr_bills[0]
-                        if cbill and lbill:
 
+                        if cbill and lbill:
                             print(f"found for {tt.name} of {prop.name}")
 
                             nfine = 0.0
@@ -340,39 +340,39 @@ class Index(Resource):
                             else:
                                 nfine = 0.0
 
-                            pfine = lbill.penalty
-                            totalbill = cbill.total_bill
-                            ltotalbill = lbill.total_bill
-                            totalbill -= pfine if pfine else 0
-                            ltotalbill -= pfine if pfine else 0
-                            lbal = lbill.balance
-                            lbal -= pfine
+                            if nfine:
 
-                            cbal = cbill.balance
-                            cbal -= pfine
-                            cbal += nfine
+                                if cbill.fine_date != datetime.datetime.now().day:
 
-                            totalbill += nfine if nfine else 0
-                            arrs = cbill.arrears
-                            arrs -= pfine if pfine else 0
+                                    totalbill = cbill.total_bill
 
-                            MonthlyChargeOp.update_monthly_charge(cbill,"null","null","null","null","null","null","null","null",nfine,arrs,totalbill,1)
-                            MonthlyChargeOp.update_balances(cbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
-                            MonthlyChargeOp.update_dues(cbill,0.0,0.0,0.0,"null","null","null","null","null","null",nfine,"null","null")
+                                    cbal = cbill.balance
+                                    cbal += nfine if nfine else 0
 
-                            MonthlyChargeOp.update_balance(cbill,cbal)
+                                    totalbill += nfine if nfine else 0
 
-                            MonthlyChargeOp.update_monthly_charge(lbill,"null","null","null","null","null","null","null","null",0.0,"null",ltotalbill,1)
-                            MonthlyChargeOp.update_balances(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
-                            MonthlyChargeOp.update_dues(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+                                    MonthlyChargeOp.update_monthly_charge(cbill,"null","null","null","null","null","null","null","null",nfine,"null",totalbill,1)
+                                    MonthlyChargeOp.update_dues(cbill,0.0,0.0,0.0,"null","null","null","null","null","null",nfine,"null","null")
 
-                            MonthlyChargeOp.update_balance(lbill,lbal)
+                                    MonthlyChargeOp.update_balance(cbill,cbal)
 
+                                    if tt.tenant_type == "owner" or tt.tenant_type == "resident":
+                                        PermanentTenantOp.update_balance(tt,cbal)
+                                    else:
+                                        TenantOp.update_balance(tt,cbal)
 
-                            print(f"finished pfine of {pfine} and new {nfine}")
+                                    # MonthlyChargeOp.update_monthly_charge(lbill,"null","null","null","null","null","null","null","null",0.0,"null",ltotalbill,1)
+                                    # MonthlyChargeOp.update_balances(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+                                    # MonthlyChargeOp.update_dues(lbill,0.0,0.0,0.0,"null","null","null","null","null","null",0.0,"null","null")
+
+                                    # MonthlyChargeOp.update_balance(lbill,lbal)
+
+                                    MonthlyChargeOp.update_fine_date(cbill,datetime.datetime.now().day)                    
 
 
-                    
+
+                                    print(f"finished fine of {nfine}")
+
 
             # cocc = CompanyOp.fetch_company_by_name("")
             # if cocc:

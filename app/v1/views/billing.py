@@ -1718,7 +1718,7 @@ class DiscardBills(Resource):
         # except:
         #     pass
 
-        if current_user.username.startswith('qc') or current_user.username.startswith('quality') or current_user.usercode == "3551" or current_user.usercode == "9672" or current_user.usercode == 6811:
+        if current_user.username.startswith('qc') or current_user.username.startswith('quality') or current_user.usercode == "3551" or current_user.usercode == "9672" or current_user.usercode == "6811":
             job34 = q.enqueue_call(
                 func=discard_bills, args=(propids,), result_ttl=5000
             )

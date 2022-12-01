@@ -73,6 +73,9 @@ except ImportError:
     SECRETNAME = None
     SECRETNUM = None
 
+    SECRETNAM = None
+    SECRETNU = None
+
 sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
 configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS

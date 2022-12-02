@@ -6536,7 +6536,7 @@ class CaptureReading(Resource):
         if readperiod == "current":
             readdate = billing_period
         else:
-            readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.year))
+            readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
 
         unread_units = len(filtered_house_list(prop_id,readdate))
         metered_units = len(filter_in_metered_houses(prop_obj.name))
@@ -6616,7 +6616,7 @@ class CaptureReading(Resource):
         if readperiod == "current":
             readdate = billing_period
         else:
-            readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.year))
+            readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
 
         #################################################################################################
         if run == "houselist":

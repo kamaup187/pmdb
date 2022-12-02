@@ -3288,6 +3288,15 @@ def validate_input(arg):
         
     return float_amount
 
+def validate_commission_input(arg):
+    amount = arg.replace(',', '')
+    try:
+        float_amount = float(amount)
+    except:
+        float_amount = "null"
+        
+    return float_amount
+
 def validate_tel_input(arg):
     tel = arg.replace(' ', '')       
     return tel

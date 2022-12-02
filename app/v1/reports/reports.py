@@ -1842,32 +1842,36 @@ class CombinedReport(Resource):
         house_ids = []
         detailed_bills = []
 
-        bbftotal_sum_members = []
+        bbftotal = 0.0
 
-        renttotal_sum_members = []
-        watertotal_sum_members = []
-        garbagetotal_sum_members = []
-        securitytotal_sum_members = []
-        servicetotal_sum_members = []
-        penaltytotal_sum_members = []
-        deposittotal_sum_members = []
+        renttotal = 0.0
+        watertotal = 0.0
+        garbagetotal = 0.0
+        securitytotal = 0.0
+        servicetotal = 0.0
+        penaltytotal = 0.0
+        deposittotal = 0.0
 
-        billtotal_sum_members = []
+        billtotal = 0.0
 
-        paidtotal_sum_members = []
-        paid_rent = 0
-        bcftotal_sum_members = []
+        paidtotal = 0.0
+        paid_rent = 0.0
+        bcftotal = 0.0
 
         ###################################################################################################
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         db.session.expire(apartment_obj)
 
-        monthlybills = apartment_obj.monthlybills
-        ###################################################################################################
-        for bill in monthlybills:
-            if bill.month == target_period.month and bill.year == target_period.year:
-                house_ids.append(bill.house_id)
-                current_month_bills.append(bill)
+        # monthlybills = apartment_obj.monthlybills
+        # for bill in monthlybills:
+        #     if bill.month == target_period.month and bill.year == target_period.year:
+        #         house_ids.append(bill.house_id)
+        #         current_month_bills.append(bill)
+
+        propid = apartment_obj.id
+        month = target_period.month
+        year = target_period.year
+        current_month_bills = MonthlyChargeOp.fetch_all_monthlycharges_by_apartment_id_by_period(propid,month,year)
 
         ###################################################################################################
         availables = []
@@ -1877,43 +1881,26 @@ class CombinedReport(Resource):
             bill_item = MonthlyChargeOp.view_detail(bill)
             detailed_bills.append(bill_item)
 
-            bff = bill.arrears
-            rent = bill.rent
-            water = bill.water
-            garbage = bill.garbage
-            security = bill.security
-            service = bill.maintenance
-            deposit = bill.deposit
-            penalty = bill.penalty
+            total = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
 
-            total = bff + rent + water + garbage + security + service + deposit + penalty
+            bbftotal += bill.arrears
 
-            paid = bill.paid_amount
+            renttotal += bill.rent
+            watertotal += bill.water
+            garbagetotal += bill.garbage
+            securitytotal += bill.security
+            servicetotal += bill.maintenance
+            deposittotal += bill.deposit
+            penaltytotal += bill.penalty
+
+            billtotal += total
+            paidtotal += bill.paid_amount
             paid_rent += bill.rent_paid if bill.rent_paid else 0
-            bcf = bill.balance
-            # bbf = 18900 if bill.tenant_id == 86 and bill.month == 4 else 0.0
-
-            bbftotal_sum_members.append(bff)
-
-            renttotal_sum_members.append(rent)
-            watertotal_sum_members.append(water)
-            garbagetotal_sum_members.append(garbage)
-            securitytotal_sum_members.append(security)
-            servicetotal_sum_members.append(service)
-            deposittotal_sum_members.append(deposit)
-            penaltytotal_sum_members.append(penalty)
-
-            billtotal_sum_members.append(total)
-
-            paidtotal_sum_members.append(paid)
-            bcftotal_sum_members.append(bcf)
+            bcftotal += bill.balance
 
             availables.append(bill.house.name)
 
-   
-
         vacants = filter_out_occupied_houses(apartment_obj.name)
-        print("rents",billtotal_sum_members)
 
         for vac in vacants:
             if vac.name in availables:
@@ -1934,39 +1921,20 @@ class CombinedReport(Resource):
             detailed_bills.append(new_item)
 
 
-        totalbbf = sum_positive_values(bbftotal_sum_members)
-        bbftotal = (f"{totalbbf:,}")
+        tbbf = (f"{bbftotal:,}")
 
-        totalrent = sum_values(renttotal_sum_members)
-        renttotal = (f"{totalrent:,}")
-
-        totalwater = sum_values(watertotal_sum_members)
-        watertotal = (f"{totalwater:,}")
-
-        totalgarbage = sum_values(garbagetotal_sum_members)
-        garbagetotal = (f"{totalgarbage:,}")
-
-        totalsecurity = sum_values(securitytotal_sum_members)
-        securitytotal = (f"{totalsecurity:,}")
-
-        totalservice = sum_values(servicetotal_sum_members)
-        servicetotal = (f"{totalservice:,}")
-
-        totaldeposit = sum_values(deposittotal_sum_members)
-        deposittotal = (f"{totaldeposit:,}")
-
-        totalpenalty = sum_values(penaltytotal_sum_members)
-        penaltytotal = (f"{totalpenalty:,}")
+        trent = (f"{renttotal:,}")
+        twater = (f"{watertotal:,}")
+        tgarbage= (f"{garbagetotal:,}")
+        tsecurity = (f"{securitytotal:,}")
+        tservice = (f"{servicetotal:,}")
+        tdeposit = (f"{deposittotal:,}")
+        tpenalty = (f"{penaltytotal:,}")
 
 
-        totalbill = sum_values(billtotal_sum_members)
-        billtotal = (f"{totalbill:,}")
-
-        totalpaid = sum_values(paidtotal_sum_members)
-        paidtotal = (f"{totalpaid:,}")
-
-        totalbcf = sum_positive_values(bcftotal_sum_members)
-        bcftotal = (f"{totalbcf:,}")
+        tbill = (f"{billtotal:,}")
+        tpaid = (f"{paidtotal:,}")
+        tbcf= (f"{bcftotal:,}")
 
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
@@ -1975,26 +1943,19 @@ class CombinedReport(Resource):
             if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
                 expenses_amount += exp.amount
 
-        if apartment_obj.id == 33:
-            loan = 0
-        else:
-            loan = 0
-
-            
+        loan = 0.0
+  
         netrent = paid_rent
 
         formatted_netrent = (f"{netrent:,.1f}")
 
         if apartment_obj.commission:
-        
             commission = netrent * apartment_obj.commission * 0.01
-
             commission_percentage = f"({apartment_obj.commission} %)"
 
         else:
             commission = apartment_obj.int_commission
             commission_percentage = f"{commission} flat rate"
-
 
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
@@ -2010,30 +1971,30 @@ class CombinedReport(Resource):
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
-        
-
         return Response(render_template(
             'report_combined_statement.html',
             prop=selected_apartment,
-            propid=apartment_obj.id,
+            propid=propid,
             prop_obj=apartment_obj,
             
             fieldshow_loan=fieldshow_loan,
             tenantlist=[],
             timeline = timeline,
-            bbftotal=bbftotal,
 
-            renttotal=renttotal,
-            watertotal=watertotal,
-            garbagetotal=garbagetotal,
-            securitytotal=securitytotal,
-            servicetotal=servicetotal,
-            deposittotal=deposittotal,
-            penaltytotal=penaltytotal,
+            bbftotal=tbbf,
 
-            billtotal=billtotal,
-            paidtotal=paidtotal,
-            bcftotal=bcftotal,
+            renttotal=trent,
+            watertotal=twater,
+            garbagetotal=tgarbage,
+            securitytotal=tsecurity,
+            servicetotal=tservice,
+            deposittotal=tdeposit,
+            penaltytotal=tpenalty,
+
+            billtotal=tbill,
+            paidtotal=tpaid,
+            bcftotal=tbcf,
+
             expenses = f"{expenses_amount:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,

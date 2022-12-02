@@ -3074,6 +3074,17 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 tot += 0.0
 
         return (f"{tot:,}")
+
+    def calculate_total_alt_alt(*args):
+        tot=0.0
+        for i in args:
+            try:
+                if i > 0:
+                    tot += i
+            except:
+                tot += 0.0
+
+        return (f"{tot:,}")
     
     #######################TODO TODO############################
     def calculate_bbf(self):
@@ -3438,6 +3449,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'arrears':MonthlyChargeOp.calculate_breakdown(self),
             'derrived_arrears':MonthlyChargeOp.derive_arrears(self),
             'total':MonthlyChargeOp.fig_format(self.total_bill),
+            'totalalt':MonthlyChargeOp.calculate_total_alt_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
+            'amounttotal':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
             'paid':MonthlyChargeOp.calculate_pbreakdown(self),
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),

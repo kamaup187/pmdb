@@ -40,10 +40,10 @@
                             <div class="dropdown-header underline">Group: <span class="text-info font-weight-bold">{{i['housecode']}}</span></div>
                 
                             <div>
-                              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#groupModal">Edit</span>
+                              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="r{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#groupModal">Edit</span>
                             </div>
                             <div>
-                              <i class="fas fa-trash-alt ml-3 mr-2 text-danger"></i><span id="{{i['delid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteGroupModal">Delete</span>
+                              <i class="fas fa-trash-alt ml-3 mr-2 text-danger"></i><span id="r{{i['delid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteGroupModal">Delete</span>
                             </div>
                              
                           </div>
@@ -89,9 +89,9 @@
     var rawIds = "{{ groupids|safe }}";
     var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
     console.log(ids)
+    console.log("kwera")
     $.each(ids, function(i,item) {
-    
-      $("#"+item).on('click',function(){
+      $("#"+"r"+item).on('click',function(){
         console.log("clicked",item)
         if( isNaN(parseInt(item)) ){
           if(item.startsWith("del")){

@@ -5315,18 +5315,19 @@ class TenantStatementThree(Resource):
                         main.append(datadict)
 
                 if item.rent_balance:
-                    if item.rent_due < 0:
-                        cb += item.rent_balance
-                        datadict = {
-                            "month":f"{item.year} {month}",
-                            "date":date,
-                            "desc":f" rent advance payment",
-                            "ref":f'{item.id}',
-                            "debit":"",
-                            "credit":item.rent_balance,
-                            "balance":cb
-                        }
-                        main.append(datadict)
+                    if item.rent_due:
+                        if item.rent_due < 0:
+                            cb += item.rent_balance
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f" rent advance payment",
+                                "ref":f'{item.id}',
+                                "debit":"",
+                                "credit":item.rent_balance,
+                                "balance":cb
+                            }
+                            main.append(datadict)
 
                 if item.water:
                     cb += item.water
@@ -5355,18 +5356,19 @@ class TenantStatementThree(Resource):
                     main.append(datadict)
 
                 if item.water_balance:
-                    if item.water_due < 0:
-                        cb += item.water_balance
-                        datadict = {
-                            "month":f"{item.year} {month}",
-                            "date":date,
-                            "desc":f" water advance payment",
-                            "ref":f'{item.id}',
-                            "debit":item.water_balance,
-                            "credit":"",
-                            "balance":cb
-                        }
-                        main.append(datadict)
+                    if item.water_due:
+                        if item.water_due < 0:
+                            cb += item.water_balance
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f" water advance payment",
+                                "ref":f'{item.id}',
+                                "debit":item.water_balance,
+                                "credit":"",
+                                "balance":cb
+                            }
+                            main.append(datadict)
 
                 if item.garbage:
                     cb += item.garbage

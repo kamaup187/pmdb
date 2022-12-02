@@ -1883,7 +1883,7 @@ class CombinedReport(Resource):
 
             total = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
 
-            bbftotal += bill.arrears
+            bbftotal += bill.arrears if bill.arrears > 0 else 0.0
 
             renttotal += bill.rent
             watertotal += bill.water
@@ -1893,10 +1893,10 @@ class CombinedReport(Resource):
             deposittotal += bill.deposit
             penaltytotal += bill.penalty
 
-            billtotal += total
+            billtotal += total if total > 0 else 0.0
             paidtotal += bill.paid_amount
             paid_rent += bill.rent_paid if bill.rent_paid else 0
-            bcftotal += bill.balance
+            bcftotal += bill.balance if bill.balance > 0 else 0.0
 
             availables.append(bill.house.name)
 

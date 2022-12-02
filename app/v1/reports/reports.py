@@ -1902,8 +1902,15 @@ class CombinedReport(Resource):
 
             paidtotal += bill.paid_amount
             paid_rent += bill.rent_paid if bill.rent_paid else 0
-            bcftotal += bill.balance if bill.balance > 0 else 0.0
-
+            if bill.total_bill < 0:
+                if bill.paid_amount:
+                    bcftotal += bill.balance if bill.balance > 0 else 0.0 #refactor, negative total cannot lead to positive balance
+                    bcftotal -= bill.paid_amount
+                else:
+                    bcftotal += bill.balance if bill.balance > 0 else 0.0
+            else:
+                bcftotal += bill.balance if bill.balance > 0 else 0.0
+                
             availables.append(bill.house.name)
 
         vacants = filter_out_occupied_houses(apartment_obj.name)

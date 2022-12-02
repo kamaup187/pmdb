@@ -190,7 +190,9 @@
                       <th class="service">SERVICE</th>
                       <th class="deposit">DEPOSIT</th>
                       <!-- <th class="penalty">LPF</th> -->
-                      <th class="">TOTAL DUE</th>
+                      <th class="">TOTAL</th>
+                      <th class="">AMOUNT DUE</th>
+
                       <th class="">TOTAL PAID</th>
                       <th class="">BC/F</th>
 
@@ -209,7 +211,9 @@
                       <td class="data-cell text-right service">{{ bill['service'] }}</td>
                       <td class="data-cell text-right deposit">{{ bill['deposit'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
-                      <td class="data-cell text-right">{{bill['total']}}</td>
+                      <td class="data-cell text-right">{{bill['totalalt']}}</td>
+                      <td class="data-cell text-right">{{bill['amounttotal']}}</td>
+
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['balance'] }}</td>
                     </tr>
@@ -228,6 +232,7 @@
                       <td class="font-weight-bold text-right deposit">{{deposittotal}}</td>
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
+                      <td class="font-weight-bold text-right">{{amounttotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
                     </tr>

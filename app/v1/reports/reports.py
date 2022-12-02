@@ -1852,6 +1852,7 @@ class CombinedReport(Resource):
         penaltytotal = 0.0
         deposittotal = 0.0
 
+        amounttotal = 0.0
         billtotal = 0.0
 
         paidtotal = 0.0
@@ -1881,7 +1882,10 @@ class CombinedReport(Resource):
             bill_item = MonthlyChargeOp.view_detail(bill)
             detailed_bills.append(bill_item)
 
-            total = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
+            total = bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
+            total += bill.arrears if bill.arrears > 0 else 0.0
+
+            amountdue = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
 
             bbftotal += bill.arrears if bill.arrears > 0 else 0.0
 
@@ -1894,6 +1898,8 @@ class CombinedReport(Resource):
             penaltytotal += bill.penalty
 
             billtotal += total if total > 0 else 0.0
+            amounttotal += amountdue if amountdue > 0 else 0.0
+
             paidtotal += bill.paid_amount
             paid_rent += bill.rent_paid if bill.rent_paid else 0
             bcftotal += bill.balance if bill.balance > 0 else 0.0
@@ -1933,6 +1939,7 @@ class CombinedReport(Resource):
 
 
         tbill = (f"{billtotal:,}")
+        tamount = f"{amounttotal:,}"
         tpaid = (f"{paidtotal:,}")
         tbcf= (f"{bcftotal:,}")
 
@@ -1992,6 +1999,7 @@ class CombinedReport(Resource):
             penaltytotal=tpenalty,
 
             billtotal=tbill,
+            amounttotal=tamount,
             paidtotal=tpaid,
             bcftotal=tbcf,
 

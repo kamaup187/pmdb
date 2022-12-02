@@ -741,7 +741,7 @@ class AllProperties(Resource):
             commtype = request.form.get("commtype")
             commission = request.form.get("commission")
 
-            valid_commission = validate_input(commission)
+            valid_commission = validate_commission_input(commission)
 
             if propname:
                 prop_name = propname.title()

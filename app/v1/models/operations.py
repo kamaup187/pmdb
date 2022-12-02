@@ -817,13 +817,13 @@ class ApartmentOp(Apartment,Base):
         db.session.commit()
 
     def update_commission(self,commission):
-        if commission:
+        if isinstance(commission,float):
             self.int_commission = 0.0
             self.commission = commission
         db.session.commit()
 
     def update_int_commission(self,commission):
-        if commission:
+        if isinstance(commission,float):
             self.commission = 0.0
             self.int_commission = commission
         db.session.commit()
@@ -2761,6 +2761,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def fetch_all_monthlycharges_by_apartment_id(apartment_id):
         return MonthlyCharge.query.filter(MonthlyCharge.apartment_id==apartment_id).all()
+
+    def fetch_all_monthlycharges_by_apartment_id_by_period(apartment_id,month,year):
+        return MonthlyCharge.query.filter(MonthlyCharge.apartment_id==apartment_id).filter(MonthlyCharge.month==month).filter(MonthlyCharge.year==year).all()
 
     def fetch_monthlycharge_by_tenant_id(tenant_id):
         return MonthlyCharge.query.filter(MonthlyCharge.tenant_id==tenant_id).order_by(MonthlyCharge.date.desc()).first()

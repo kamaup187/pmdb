@@ -308,9 +308,9 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
-            # propidss = [1]
+            propidss = []
 
-            propidss = [91,92,484,93]
+            # propidss = [91,92,484,93]
             for n in propidss:
                 prop = ApartmentOp.fetch_apartment_by_id(n)
                 if prop:

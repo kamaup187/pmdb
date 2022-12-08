@@ -152,6 +152,35 @@ def account_validation(ckey,skey,account):
         print("Invalid token passed")
 
 
+def ins_api_account_subscription(ckey,skey,account,password):
+    
+    token = generate_coop_token(ckey,skey)
+
+    if token:
+        headers = {"Authorization" : "Bearer %s" % token}
+
+        data = {
+            "AccountNumber": account,
+            "EventType": "ALL",
+            "MinimumLimit": "1",
+            "MaximumLimit": "1000000",
+            "NotificationEndpoint": "https://kiotapay.com/les/45",
+            "AuthRequired": "TRUE",
+            "AuthUsername": "Lesamma",
+            "AuthPassword": password
+        }
+
+        r=requests.post("https://openapi-sit.co-opbank.co.ke/Subscription/INS/Transactions/New/1.0.0/",headers=headers,data=data)
+
+        try:
+            print("RESPONSE:",r.json())
+        except:
+            print("ERROR RESPONSE:",r.text)
+
+    else:
+        print("Invalid token passed")
+
+
 def account_pesalink_transfer(ckey,skey,account,account2):
     token = generate_coop_token(ckey,skey)
     if token:

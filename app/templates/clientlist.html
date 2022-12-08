@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>KiotaPay - Property management software</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='ui.css') }}"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery-ui.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+  
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <!-- Custom styles-->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+
+
+  <!-- <link rel="stylesheet" href="../static/style.css"> -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay-alt2.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
+
+  <script src="{{ url_for('static', filename='js/timepicker.js') }}"></script>
+
+</head>
+
+<body id="page-top" class="calibri overflow-x-hidden">
+
+
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+
+
+
+
+
+
+        <!-- Topbar -->
+        <nav class="navbar fixed-na navbar-expand navbar-light bg-white topbar mb-0 static-top shadow">
+          <span class="desktop-malaysian floating-apartment-mobile text-xs mb-0 text-info">{{companyname}}</span>
+          <!-- Sidebar Toggle (Topbar) -->
+
+          <button id="sidebarTogglesm" class="btn btn-link rounded-circle mr-0 text-info">
+            <i id = "hamsm"class="fa fa-bars"></i>
+          </button>
+          
+          <a class="d-flex align-items-center justify-content-center" href="#">
+            <i id = "myii"class="mr-2">
+              <img src="../static/img/logos/kiotapay/s-logo.png">
+            </i>
+          </a>
+          <!-- <i id = "myii"class="collapselogo desktop-malaysian mr-2"></i> -->
+
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="text-black">Todays's </span>
+                <i class="fas fa-user-friends kiota-col ml-2"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter">{{clrs}}</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  <a class="text-white" href="#">Client list</a>
+                </h6>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">CLIENTS</a>
+              </div>
+            </li>
+
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link overide-nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <span class="font-weight-bold mr-2 text-white">-</span> -->
+                <span class="mr-2 d-none d-lg-inline kiota-col font-weight-bold">{{name}}</span>
+                <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                <div class="sidebar-brand-icon rotate-n-0">
+                  <i class="fas fa-clipboard-list kiota-col"></i>
+                </div>
+              </a>
+              <!-- Dropdown - User Information -->
+            </li>
+          </ul>
+        </nav>
+
+        
+        
+         <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+       
+
+          <div id="barloader" class="load-bar mb-lg-2 ml-lg-2 no-padding">
+            <div class="b-loading"></div>
+            <!-- <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div> -->
+            <!-- <div class="bar"></div>
+            <div class="bar"></div> -->
+          </div>
+
+          <div class="divjust-end dispnone">
+            <span id="list-area" class="dispnone">List</span>
+            <span id="content-area" class="dispnone">Content</span>
+            <span id="tenant-area" class="dispnone">Tenant</span>
+            <span id="search-area" class="dispnone">Search</span>
+
+          </div>
+
+
+          <div id="spinner" class="center-btn dispnone mb-1">
+            <span class="spinner-border spinner-border mr-2 fa-2x text-success" role="status" aria-hidden="true"></span>Fetching data...
+          </div>
+
+          <div id="propdisp" class=""></div>
+
+
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; kiotapay 2021</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+  <!-- Logout Modal-->
+
+
+
+
+  <div class="modal center-btn" id="preloaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title text-danger" id="exampleModalLabel">Warning!</h5>
+        </div> -->
+        <div class="text-info pt-3 pb-3">
+          <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+          <span>searching...</span>
+        </div>       
+
+        <div class="dispnone">
+            <button type="button" id="postloader-btn" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal center-btn" id="preloaderModalAlt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- <div class="modal-header">
+          <h5 class="modal-title text-danger" id="exampleModalLabel">Warning!</h5>
+        </div> -->
+        <div class="text-info pt-3 pb-3">
+          <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>
+          <span>please wait...</span>
+        </div>       
+
+        <div class="dispnone">
+            <button type="button" id="postloader-btn-alt" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="preloader-btn" class="dispnone" data-toggle="modal" data-target="#preloaderModal"></button>
+  <button id="preloader-btn-alt" class="dispnone" data-toggle="modal" data-target="#preloaderModalAlt"></button>
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script> -->
+
+  <!-- Custom scripts for all pages-->
+  <script src="{{ url_for('static', filename='eapartment-min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='datatables.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='natural.js') }}"></script>
+
+  
+
+  <script type="text/javascript" src="{{ url_for('static', filename='printThis.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
+  
+  <!-- <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> -->
+  <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $("#barloader").removeClass("dispnone")
+
+      $.ajax({
+      url: "{{ url_for('api.fetchclients') }}",
+      type: "GET",
+      data: {
+          date:"",
+          target:"clients"
+          },
+      success: function(response) {
+        $("#propdisp").html(response)
+
+
+        $("#barloader").addClass("dispnone")
+
+
+      },
+      error: function(xhr) {
+        $("#barloader").addClass("dispnone")
+
+      }
+    });
+
+    });
+  
+  </script>
+
+</body>
+
+</html>

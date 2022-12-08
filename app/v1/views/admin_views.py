@@ -1242,3 +1242,37 @@ class EditProp(Resource):
                 return "Property removed successfully"
         else:
             return "You are not allowed to perform this operation"
+
+class FetchClients(Resource):
+    def get(self):
+        target = request.args.get("target")
+
+        clients = CompanyOp.fetch_all_companies()
+
+        if target == "clients":
+            actual_clients = []
+
+            items = os.getenv('VAR_ITEMS') or VAR_ITEMS
+
+            lst_items = items.split(",")
+
+            print("heeeeeeeeeeeeeeee",lst_items)
+
+            for client in clients:
+                if client.name:
+                    if client.name.lower() in lst_items:
+                        clients.remove(client)
+                    else:
+                        clr = CompanyOp.view(client)
+                        actual_clients.append(clr)
+                else:
+                    # CompanyOp.delete(client)
+                    clr = CompanyOp.view(client)
+                    actual_clients.append(clr)
+
+            return render_template("ajax_clients.html",items=actual_clients,clrs=len(actual_clients))
+
+        return Response(render_template(
+            'clientlist.html',
+            clrs = len(clients)
+        ))

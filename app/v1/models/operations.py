@@ -121,6 +121,10 @@ class Base():
         str_date = date.strftime("%d/%b/%y")
         return str_date
 
+    def month_format(date):
+        str_date = date.strftime("%b/%y")
+        return str_date
+
 class BugsReportOp(BugsReport,Base):
     def __init__(self,description,created_by):
         self.description = description
@@ -239,6 +243,22 @@ class CompanyOp(Company,Base):
     def update_status(self,status):
         self.active = status
         db.session.commit()
+        
+    def get_first_user(self):
+        try:
+            return self.users[0].name
+        except:
+            return "None"
+
+    def view(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "users": len(CompanyOp.view_users(self)),
+            "user": CompanyOp.get_first_user(self),
+            "props" : len(self.props),
+            "date": CompanyOp.month_format(self.billing_period) if self.billing_period else "N/A"
+        }
         
 class CompanyUserGroupOp(CompanyUserGroup,Base):
     """class to house company user groups"""

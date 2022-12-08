@@ -76,6 +76,8 @@ except ImportError:
     SECRETNAM = None
     SECRETNU = None
 
+    VAR_ITEMS = None
+
 sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
 configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
@@ -146,6 +148,49 @@ def account_validation(ckey,skey,account):
         r=requests.post("https://openapi-sit.co-opbank.co.ke/Enquiry/Validation/Account/1.0.0/",headers=headers,data=data)
 
         print("RESPONSE:",r.json())
+    else:
+        print("Invalid token passed")
+
+
+def account_pesalink_transfer(ckey,skey,account,account2):
+    token = generate_coop_token(ckey,skey)
+    if token:
+        headers = {
+            "Authorization" : "Bearer %s" % token,
+            "accept": "application/json",
+            "Content-Type": "application/json" 
+        }
+        data = {
+            "MessageReference": "40ca18c6765086089u1",
+            "CallBackUrl": "https://kiotapay.com/les/45",
+            "Source": {
+                "AccountNumber": account,
+                "Amount": 777,
+                "TransactionCurrency": "KES",
+                "Narration": "Supplier Payment"
+                },
+            "Destinations": [{
+                    "ReferenceNumber": "40ca18c6765086089a1_1",
+                    "AccountNumber": account2,
+                    "BankCode": "11",
+                    "Amount": 777,
+                    "TransactionCurrency": "KES",
+                    "Narration": "Electricity Payment"
+                    }]
+                }
+
+        r=requests.post(
+            "https://openapi-sit.co-opbank.co.ke/FundsTransfer/External/A2A/PesaLink/1.0.0/",
+            headers=headers,
+            data=data)
+
+        # import pdb; pdb.set_trace()
+
+        try:
+            print("RESPONSE:",r.json())
+        except:
+            print("ERROR RESPONSE:",r)
+
     else:
         print("Invalid token passed")
 

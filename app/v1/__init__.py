@@ -34,6 +34,8 @@ api.add_resource(Index,"/index")
 api.add_resource(Dashboard,"/dashboard")
 
 api.add_resource(MonitorActivity,"/monitor/activityy")
+api.add_resource(FetchClients,"/fetch/clientss")
+
 api.add_resource(PropData,"/fetch/propdata")
 api.add_resource(PropSearchData,"/fetch/searchdata")
 api.add_resource(PropStats,"/fetch/propstats")

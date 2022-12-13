@@ -78,6 +78,7 @@ api.add_resource(PropertyAccessTermination,"/property/termination")
 api.add_resource(Expenses,"/expenses")
 api.add_resource(ExpenseManagement,"/expense/management")
 
+api.add_resource(TopUpSms,"/topup/<string:ri>")
 api.add_resource(BulkSms,"/bulk/sms")
 api.add_resource(FetchSentSms,"/fetch/sentsms")
 api.add_resource(SendInvoices,"/send/invoices")

@@ -59,6 +59,43 @@ class QueryResident(Resource):
             logopath=logo(co)[0],
             resident = resident,
         )) 
+
+class TopUpSms(Resource):
+    @login_required
+    def get (self,ri):
+        co = current_user.company
+        if ri:
+
+            tele = current_user.phone
+            phonenum = sms_phone_number_formatter(tele)
+
+            # units = ctob_obj.trans_amnt * 1.25
+            try:
+                units = int(ri) / 0.75
+            except:
+                return None
+
+            old_units = co.remainingsms
+            new_units = int(units) + old_units 
+
+            CompanyOp.set_rem_quota(co,int(new_units))
+
+            if co:
+
+                message = f"Hi {current_user.name}, \n{co.name} has been successfully credited with {int(units)} sms units for payment of KES {ri}. \nAvailable sms units: {new_units}  \n\nThank you."
+                sresponse = sms.send(message, ["+254716674695"], sender)
+
+                if co.sms_provider == "Advanta":
+                    sms_sender(co.name,message,phonenum)
+                else:
+                    try:
+                        recipient = [phonenum]                
+                        response = sms.send(message, recipient, sender)
+                        print(response)
+                    except Exception as e:
+                        print(f"Houston, we have a problem {e}")
+            
+        
   
 class ViewReceipt(Resource):
     def get (self,ri):

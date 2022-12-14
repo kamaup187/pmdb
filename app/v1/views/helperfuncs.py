@@ -117,12 +117,14 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 from functools import wraps
 from timeit import default_timer
 
-
-def generate_coop_token(ckey,skey):
+def generate_hash(ckey,skey):
     passphrase = ckey + ':' + skey
     encoded_p = base64.b64encode(passphrase.encode()).decode()
-    
-    headers = {"Authorization" : "Basic %s" % encoded_p}
+    return encoded_p
+
+def generate_coop_token(ckey,skey):
+    hash = generate_hash(ckey,skey)
+    headers = {"Authorization" : "Basic %s" % hash}
     data = {'grant_type': 'client_credentials'}
     r=requests.post("https://openapi-sit.co-opbank.co.ke/token",headers=headers,data=data)
 
@@ -2910,6 +2912,16 @@ def generate_house_ownertenants(arr,propid):
 
     return new_arr
 
+def generate_house_owners(propid):
+    new_arr = []
+    allhses = houseauto(propid)
+    for ii in allhses:
+        owner = get_owners(ii)[1]
+        if owner:
+            new_arr.append(f'{ii}#{owner}(owner)')
+
+    return new_arr
+    
 def generate_house_tenants_alt(arr,arr2):
     """combine house and tenant"""
     new_arr = []

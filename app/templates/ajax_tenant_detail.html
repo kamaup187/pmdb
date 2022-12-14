@@ -13,7 +13,11 @@
 <span id="del_bill_identifier" class="dispnone"></span>
 <span id="target_payment_id" class="dispnone"></span>
 <a id="download_statement" href="/tenant/statement3?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+<a id="download_statement_alt" href="/tenant/statement2?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+
 <a id="download_statement2" href="/tenant/statement3?target=direct&tenantid=ptnt{{tenant.id}}" target="_blank" class="dispnone"></a>
+<a id="download_statement_alt2" href="/tenant/statement2?target=direct&tenantid=ptnt{{tenant.id}}" target="_blank" class="dispnone"></a>
+
 
 <span class="multisave dispnone"></span>
 <span class="accesssms dispnone"></span>
@@ -108,7 +112,8 @@
                         <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                       </div>  
                   </div>
-                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement</span></button>
+                  <button id="downloadstatementalt" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement</span></button>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement (w/breakdown)</span></button>
 
               </div>
                 
@@ -1730,6 +1735,22 @@
       $("#download_statement2")[0].click();
     }else{
       $("#download_statement")[0].click();
+    }
+
+        // setTimeout(function(){
+        //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
+        // },8000);
+    });
+</script>
+
+<script>
+  $("#downloadstatementalt").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+    if($("#ttype").text() == "owner" || $("#ttype").text() == "resident") {
+      $("#download_statement_alt2")[0].click();
+    }else{
+      $("#download_statement_alt")[0].click();
     }
 
         // setTimeout(function(){

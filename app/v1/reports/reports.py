@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 from flask_restful import Resource
 from flask_mail import Message
 from flask import render_template,Response,request,flash,redirect,url_for,json
-
 # from ..forms.forms import PaymentForm,AmendChargeForm
 
 from app.v1.models.operations import *
@@ -172,6 +171,67 @@ class Reports(Resource):
 #             mobilelogopath=logo(current_user.company)[1],
 #             parent=logo(current_user.company)[5],
 #             name=current_user.name))
+
+
+class ReportsTwo(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        apartment_list = fetch_all_apartments_by_user(current_user)
+        return Response(render_template(
+            'report_empty_account_statement.html',
+            props=apartment_list,
+            name=current_user.name,
+            tenant_obj = None,
+            prop = "",
+            prop_obj = None,
+            co=current_user.company,
+            tenantlist=[],
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1]
+        ))
+
+class SalesStatement(Resource):
+    """report class"""
+    @login_required
+    def get(self):
+        prop = request.args.get('selected_apartment')
+        if not prop:
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_sales.html',
+                props=apartment_list,
+                name=current_user.name,
+                tenant_obj = None,
+                prop = "",
+                prop_obj = None,
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+        else:
+            bills = []
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            invoices = prop_obj.monthlybills
+            for bill in invoices:
+                bill_item = MonthlyChargeOp.view_crm(bill)
+                bills.append(bill_item)
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_sales.html',
+                props=apartment_list,
+                name=current_user.name,
+                prop = prop,
+                prop_obj = prop_obj,
+                bills=bills,
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
 
 class ReportsThree(Resource):
     """report class"""
@@ -6160,27 +6220,38 @@ class MpesaStatement(Resource):
 class BookingSchedule(Resource):
     @login_required
     def get(self):
-        tenant_id = None
-        target = request.args.get("target")
-        prop = request.args.get("selected_apartment")
-
-        if target == "tenants":
-            prop = request.args.get("apartment")
-            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-            tenants = tenantauto(prop_obj.id)
-            vacated_tenants = tenantauto_reverse(prop_obj.id)
-            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
-            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
-
-        if not prop and target != "direct":
+        prop = request.args.get('selected_apartment')
+        if not prop:
             apartment_list = fetch_all_apartments_by_user(current_user)
             return Response(render_template(
-                'report_booking_schedule.html',
+                'report_booking.html',
                 props=apartment_list,
                 name=current_user.name,
                 tenant_obj = None,
-                prop_obj=None,
                 prop = "",
+                prop_obj = None,
+                co=current_user.company,
+                tenantlist=[],
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+        else:
+            bills = []
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            units = prop_obj.houses
+            for unit in units:
+                unit_item = HouseOp.view(unit)
+                bills.append(unit_item)
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            return Response(render_template(
+                'report_booking.html',
+                props=apartment_list,
+                name=current_user.name,
+                prop = prop,
+                prop_obj = prop_obj,
+                bills=bills,
                 co=current_user.company,
                 tenantlist=[],
                 logopath=logo(current_user.company)[0],
@@ -6422,15 +6493,13 @@ class StatementOfAccounts(Resource):
         if target == "tenants":
             prop = request.args.get("apartment")
             prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-            tenants = tenantauto(prop_obj.id)
-            vacated_tenants = tenantauto_reverse(prop_obj.id)
-            house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
-            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+            owners = generate_house_owners(prop_obj.id)
+            return render_template('ajax_multivariable.html',items=sort_items(owners),placeholder="select client")
 
         if not prop and target != "direct":
             apartment_list = fetch_all_apartments_by_user(current_user)
             return Response(render_template(
-                'report_account_statement.html',
+                'report_empty_account_statement.html',
                 props=apartment_list,
                 name=current_user.name,
                 tenant_obj = None,
@@ -6452,42 +6521,49 @@ class StatementOfAccounts(Resource):
 
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenantid)
 
-            schtotal = 0.0
-            schpaid = 0.0
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            housename = request.args.get("selected_tenant")
+            hse_obj = get_specific_house_obj_from_house_tenant_alt_alt(prop_obj.id, housename)
+            tenant_obj = hse_obj[0].owner
 
-            bills = tenant_obj.schedules
 
-            formatted_bills = []
+        schtotal = 0.0
+        schpaid = 0.0
 
-            for bill in bills:
-                schtotal += bill.schedule_amount
-                schpaid += bill.paid
-                formatted_bills.append(PaymentScheduleOp.view_detail(bill))
+        bills = tenant_obj.schedules
 
-            rbal = f"{tenant_obj.balance:,.1f}"
+        formatted_bills = []
 
-            prop = tenant_obj.apartment
+        for bill in bills:
+            schtotal += bill.schedule_amount
+            schpaid += bill.paid
+            formatted_bills.append(PaymentScheduleOp.view_detail(bill))
 
-            return Response(render_template(
-               'report_account_statement.html',
-               statementdate=datetime.datetime.now().strftime("%d %B %Y"),
-               bills=formatted_bills,
-               paging=page(formatted_bills),
-               schtotal=f"{schtotal:,.1f}",
-               schpaid=f"{schpaid:,.1f}",
-               rbal=rbal,
-               prop_obj=prop,
-               prop = tenant_obj.apartment.name,
-               tenant_obj=tenant_obj,
-               tenant_name=tenant_obj.name,
-               name=prop.name,
-               tenantlist=[],
-               logopath=logo(prop.company)[0],
-               mobilelogopath=logo(prop.company)[1],
-               fulllogopath=logo(prop.company)[2],
-               letterhead=logo(prop.company)[3],
-               co=prop.company
-            ))
+        rbal = f"{tenant_obj.balance:,.1f}"
+
+        prop = tenant_obj.apartment
+
+        return Response(render_template(
+            'report_account_statement.html',
+            statementdate=datetime.datetime.now().strftime("%d %B %Y"),
+            bills=formatted_bills,
+            paging=page(formatted_bills),
+            schtotal=f"{schtotal:,.1f}",
+            schpaid=f"{schpaid:,.1f}",
+            rbal=rbal,
+            prop_obj=prop,
+            prop = tenant_obj.apartment.name,
+            tenant_obj=tenant_obj,
+            tenant_name=tenant_obj.name,
+            name=prop.name,
+            tenantlist=[],
+            logopath=logo(prop.company)[0],
+            mobilelogopath=logo(prop.company)[1],
+            fulllogopath=logo(prop.company)[2],
+            letterhead=logo(prop.company)[3],
+            co=prop.company
+        ))
 
 
 class ExpenseDetail(Resource):
@@ -6672,7 +6748,11 @@ class FetchLeads(Resource):
 
         # Set the pagination configuration
         page = request.args.get('page', 1, type=int)
-        pg = Lead.query.filter_by(company_id=current_user.company.id).paginate(page=page, per_page=ROWS_PER_PAGE)
+        pg = Lead.query.filter_by(company_id=current_user.company.id).filter(or_(Lead.status=="hot",Lead.status=="cold")).paginate(page=page, per_page=ROWS_PER_PAGE)
+        # q1 = Lead.query.filter_by(company_id=current_user.company.id).filter_by(status="hot")
+        # q2 = Lead.query.filter_by(company_id=current_user.company.id).filter_by(status="cold")
+        # pg = q1.or_(q2).paginate(page=page, per_page=ROWS_PER_PAGE)
+
 
         # import pdb; pdb.set_trace()
         tenant_data = lead_details(pg.items)

@@ -88,7 +88,7 @@
                       <th class="text-dark font-weight-bold" data-orderable="true">Project</th>
                       <th class="text-dark font-weight-bold" data-orderable="false">Clients</th>
                       <th class="text-dark font-weight-bold dispnone" data-orderable="false">Create</th>
-                      <th class="text-dark font-weight-bold" data-orderable="false">Invoices</th>
+                      <th class="text-dark font-weight-bold dispnone" data-orderable="false">Invoices</th>
                       <th class="text-dark font-weight-bold" data-orderable="false">Send</th>
                       <th class="text-dark  {{fieldshow_dep}} ">Deposit</th>
                       <th class="text-dark   {{fieldshow_fine}}">Fine</th>
@@ -134,7 +134,7 @@
                         </div>
                     </td>
     
-                      <td class="data-cell text-center text-black">{{item['invs']|safe }}</td>
+                      <td class="data-cell text-center text-black dispnone">{{item['invs']|safe }}</td>
     
     
                       <!-- <td class="font-weight-bold text-s text-center data-cell">
@@ -170,7 +170,7 @@
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colspan="4" class="center-btn font-weight-bold data-cell text-black">Total</td>
+                      <td colspan="3" class="center-btn font-weight-bold data-cell text-black">Total</td>
                       <td class="font-weight-bold data-cell text-dark text-right {{fieldshow_dep}}">{{deptotal}}</td>
                       <!-- 
                             <td class="font-weight-bold data-cell text-dark footer-cell {{fieldshow_elec}}">{{electotal}}</td>

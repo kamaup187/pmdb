@@ -5369,7 +5369,8 @@ class AddTenant(Resource):
             if lead:
                 valid_lead = lead.lstrip()
                 print("LEAD",valid_lead)
-                email = valid_lead.split(" ")[1]
+                # email = valid_lead.split(" ")[1]
+                email = next(reversed(valid_lead.split(" ")))
                 print("leaaads email",email)
 
                 lead_obj = LeadOp.fetch_lead_by_email(email)
@@ -5462,6 +5463,9 @@ class AddTenant(Resource):
 
                 ptenant_obj = PermanentTenantOp(name,phone,nat_id,email,float_arrears,house_obj.id,apartment_id,created_by)
                 ptenant_obj.save()
+
+                if lead_obj:
+                    LeadOp.update_status(lead_obj,"converted")
 
                 if target == "purchasing":
 

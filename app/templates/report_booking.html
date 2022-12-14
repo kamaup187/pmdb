@@ -113,8 +113,8 @@
                   <td class="data-cell text-right">{{ bill['price'] }}</td>
                   <td class="data-cell text-right">{{ bill['status'] | safe }}</td>
                   <td class="data-cell text-right">{{bill['owner']}}</td>
-                  <td class="data-cell text-right">{{ bill['agent'] }}</td>
-                  <td class="data-cell text-right">{{ bill['booking'] }}</td>
+                  <td class="data-cell text-right">{{ bill['agent'] | safe }}</td>
+                  <td class="data-cell text-right">{{ bill['booking'] | safe }}</td>
 
                 </tr>
                 {% endfor %}

@@ -35,7 +35,7 @@
         <!-- Card Content - Collapse -->
         <div class="" id="collapseCardExample">
           <div class="card-body p-0">
-            <form class="row bg-light mt-2" method="GET" action="/sales/statement">
+            <form class="row bg-light mt-2" method="GET" action="/booking/schedule">
 
               <div class="col-lg-3 form-group mb-2">
                 <label class="text-danger font-weight-bold">Select project:</label>
@@ -111,10 +111,10 @@
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['group']}}</td>
                   <td class="data-cell text-right">{{ bill['price'] }}</td>
-                  <td class="data-cell text-right">{{ bill['status'] }}</td>
-                  <td class="data-cell text-right">{{bill['client']}}</td>
+                  <td class="data-cell text-right">{{ bill['status'] | safe }}</td>
+                  <td class="data-cell text-right">{{bill['owner']}}</td>
                   <td class="data-cell text-right">{{ bill['agent'] }}</td>
-                  <td class="data-cell text-right">{{ bill['date'] }}</td>
+                  <td class="data-cell text-right">{{ bill['booking'] }}</td>
 
                 </tr>
                 {% endfor %}

@@ -129,7 +129,7 @@ class Index(Resource):
 
         coss = CompanyOp.fetch_all_companies()
         for t in coss:
-            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Developer":
+            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Demo Company Two":
                 CompanyOp.update_ctype(t,"crm")
             else:
                 CompanyOp.update_ctype(t,"noncrm")

@@ -54,10 +54,57 @@
           </div>
 
           {%endif%}
-
-
         </div>
-     
+
+        <div class="noprint" id="collapseCardExample">
+          <div class="card-body p-0">
+            <form class="bg-light" method="GET" action="/account/statement">
+
+
+              <div class="row">
+                <div class="col-lg-6 form-group mb-2">
+                    <label class="text-danger font-weight-bold">Select project:</label>
+            
+                    <select name="selected_apartment" class="select-css" id="selected_apartment" required>
+                        <option disabled selected value> -- none selected -- </option>
+                        {% for o in props %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            
+                <div class="col-lg-6 form-group mb-2">
+                    <label class="text-danger font-weight-bold">Select client:</label>
+            
+                    <select name="selected_tenant" class="select-css" id="selected_tenant" required>
+                        <option disabled selected value> -- Select client (?) -- </option>
+                        {% for o in houses %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row dispnone">
+                <div class="form-group col-6">
+                    <label class="text-danger">From:</label>
+                    <input class="form-control" type="text" id="from" name="from">
+                </div>
+            
+                <div class="form-group col-6">
+                    <label class="text-danger">To:</label>
+                    <input class="form-control" type="text" id="to" name="to">
+                </div>
+            </div>
+
+              <div class="col-lg-2 form-group mb-2">
+                <button type="submit"
+                  class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Card Content - Collapse -->
 
       </div>
     </div>
@@ -85,17 +132,16 @@
                 <span>Date :</span> <span class="text-black">{{statementdate}}</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Apartment No :</span> <span class="text-black">{{tenant_obj.house.name}}</span>
+                <span>Apartment No :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Unit Type :</span> <span class="text-black">{{tenant_obj.house.description}}</span>
+                <span>Unit Type :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Client Name :</span> <span class="text-black">{{tenant_obj.name}}</span>
+                <span>Client Name :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Purchase Price :</span> <span class="text-black">{{ "Kshs
-                  {:,.2f}".format(tenant_obj.negotiated_price | float) }}</span>
+                <span>Purchase Price :</span> <span class="text-black">-</span>
               </div>
 
 
@@ -230,17 +276,16 @@
                 <span>Date :</span> <span class="text-black">{{statementdate}}</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Apartment No :</span> <span class="text-black">{{tenant_obj.house.name}}</span>
+                <span>Apartment No :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Unit Type :</span> <span class="text-black">{{tenant_obj.house.description}}</span>
+                <span>Unit Type :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Client Name :</span> <span class="text-black">{{tenant_obj.name}}</span>
+                <span>Client Name :</span> <span class="text-black">-</span>
               </div>
               <div class="ln-14 divjust-end">
-                <span>Purchase Price :</span> <span class="text-black">{{ "Kshs
-                  {:,.2f}".format(tenant_obj.negotiated_price | float) }}</span>
+                <span>Purchase Price :</span> <span class="text-black">-</span>
               </div>
 
 
@@ -468,6 +513,24 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script> -->
+
+
+<script>
+  $("#selected_apartment").on('change',function(){
+      
+      $.ajax({
+              type: "get",
+              url: "{{ url_for('api.statementofaccounts') }}",
+              data: {
+                apartment: $("#selected_apartment").val(),
+                target:"tenants"
+              },
+              success: function(response) {
+                  $("#selected_tenant").html(response);
+              }
+          });
+  });
+</script>
 
 
     {% endblock %}

@@ -553,14 +553,15 @@ class BillInvoice(Resource):
         except:
             watertarget = True
 
+        bill_period = generate_date(bill.month,bill.year)
 
-        sibling_water_bill = fetch_current_billing_period_readings(bill.apartment.billing_period,bill.house.meter_readings)
+        sibling_water_bill = fetch_current_billing_period_readings(bill_period,bill.house.meter_readings)
         print("WATER BILLS ARE HERE",sibling_water_bill)
         try:
             print(sibling_water_bill[0].reading_period)
         except:
             pass
-        sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
+        sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill_period,bill.house.meter_readings)
         print("ELECTRICITY BILLS ARE HERE",sibling_electricity_bill)
         try:
             print(sibling_electricity_bill[0].reading_period)
@@ -2036,7 +2037,7 @@ class ReceivePayment(Resource):
                 tenant_list = tenantauto(propid)
                 # house_tenant_list = generate_house_tenants(tenant_list)
                 house_tenant_list = generate_house_ownertenants(tenant_list,propid)
-                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant/resident",access=no_cash)
+                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select client",access=no_cash)
 
         if target == "propname":
             return f'>> {prop.name}'
@@ -5765,7 +5766,22 @@ class CallBackUrlTestMerit(Resource):
     def get(self):
         pass
     def post(self):
-        response = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+
+        ckey="merit"
+        skey="q150c2bf1c4ee7da42yt"
+        # hash = generate_hash(ckey,skey)
+        hash = generate_hash("jasmined","torori")
+
+        print("hashit",hash)
+
+        # import hashlib
+        # result = hashlib.md5(b'GeeksforGeeks')
+        # print(result.hexdigest())
+
+        # import pdb; pdb.set_trace()
+
+        # return "choyot"
 
         #parse for json
         my_data=request.data

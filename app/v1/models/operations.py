@@ -1350,7 +1350,6 @@ class HouseOp(House,Base):
         except:
             return '<span class="text-danger">-n/a-</span>'
 
-
     def view(self):
         if not self.housecode:
             print(self.deposits)
@@ -1958,6 +1957,11 @@ class LeadOp(Lead,Base):
 
     def fetch_all_leads_per_company_id(company_id):
         return Lead.query.filter_by(company_id=company_id).all()
+
+    def update_status(self, status):
+        if status:
+            self.status = status
+        db.session.commit()
 
 
     def view(self):
@@ -3623,6 +3627,19 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'mgt':MonthlyChargeOp.get_management_fees(self),
             'ownerdue':MonthlyChargeOp.calculate_owner_due(self),
             'comment':"-"
+        }
+
+    def view_crm(self):
+        return {
+            'ptenant':self.ptenant.name,
+            'house':self.house,
+            'phone':self.ptenant.phone,
+            'email':self.ptenant.email,
+            'date':self.ptenant.date.strftime("%m-%d-%Y"),
+            'total':MonthlyChargeOp.fig_format(self.total_bill),
+            'paid':MonthlyChargeOp.fig_format(self.paid_amount),
+            'balance':MonthlyChargeOp.fig_format(self.balance),
+            'ratio':f"{(self.paid_amount/self.total_bill*100):,.1f} %" if self.paid_amount else "0 %"
         }
 
 

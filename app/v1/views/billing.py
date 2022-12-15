@@ -5840,7 +5840,7 @@ class CallBackUrlTestMerit(Resource):
 
             except Exception as e:
                 sms.send("TEST MERIT has error data", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
                 print ("It failed, Bank integration has an error")
 
         resp = jsonify(response)

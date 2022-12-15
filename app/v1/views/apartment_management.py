@@ -5469,7 +5469,6 @@ class AddTenant(Resource):
 
                 if target == "purchasing":
 
-
                     PermanentTenantOp.update_classtype(ptenant_obj,classtype)
 
                     if classtype == "shareholder":

@@ -5763,67 +5763,76 @@ class CallBackUrlEquityProd(Resource):
 
 
 class CallBackUrlTestMerit(Resource):
-    def get(self):
-        pass
     def post(self):
-        # response = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+        authenticated = False
+        resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
 
         ckey="merit"
         skey="q150c2bf1c4ee7da42yt"
-        # hash = generate_hash(ckey,skey)
-        hash = generate_hash("jasmined","torori")
 
-        print("hashit",hash)
+        hash = generate_hash(ckey,skey)
 
-        # import hashlib
-        # result = hashlib.md5(b'GeeksforGeeks')
-        # print(result.hexdigest())
-
-        # import pdb; pdb.set_trace()
-
-        # return "choyot"
-
-        #parse for json
-        my_data=request.data
-        my_json = my_data.decode('utf8').replace("'", '"')
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
-        try:
-            data = json.loads(my_json)
-            print("#####################################EQUITY EQUITY EQUITY############################################")
-            print(data)
-            lfile(data)
-            print("#####################################EQUITY EQUITY EQUITY############################################")
-       
-            print("Data will be proccessed here")
-
-            trans_id = data.get('bankreference')
-            trans_time = data.get('transactionDate')
-            trans_amnt = data.get('billAmount')
-            trans_type = data.get('tranParticular')
-            business_shortcode = "000000"
-            bill_ref_num = data.get('CustomerRefNumber')
-            invoice_num = data.get('billNumber')
-            msisdn = data.get('phonenumber')
-            org_acc_bal = 0
-            fname = data.get('debitcustname')
-            lname = "N/A"
-
-            mode = "Bank"
-            company_id = 1
-
-            data_obj = CtoBop.fetch_record_by_ref(trans_id)
-            if data_obj:
-                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+        auth = request.headers.get("Authorization")
+        print("AAAAUUUUTH",auth)
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                authenticated = True
             else:
-                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
-                data_obj.save()
-                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                resp = sms.send("TEST MERIT has sent data with wrong creds", ["+254716674695"],"KIOTAPAY")
+                response = {"responseCode": "OK","responseMessage":"UNAUTHORIZED"}
+        else:
+            resp = sms.send("TEST MERIT has sent data with no creds", ["+254716674695"],"KIOTAPAY")
+            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
+
+        if authenticated:
+            print("Authenticated")
+
+            #parse for json
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+
+            ww = f"{my_json},TEST MERIT IM has sent data"
+            response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+            try:
+                data = json.loads(my_json)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+                print(data)
+                lfile(data)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+        
+                print("Data will be proccessed here")
+
+                trans_id = data.get('transactionref')
+                trans_time = data.get('transactionDate')
+                trans_amnt = data.get('amount')
+                trans_type = data.get('tranParticular')
+                business_shortcode = "000000"
+                bill_ref_num = data.get('description')
+                invoice_num = data.get('billNumber')
+                msisdn = data.get('phonenumber')
+                org_acc_bal = 0
+                fname = data.get('debitcustname')
+                lname = "N/A"
+
+                mode = "Bank"
+                company_id = 1
+
+                data_obj = CtoBop.fetch_record_by_ref(trans_id)
+                if data_obj:
+                    response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+                else:
+                    data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
+                    data_obj.save()
+                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
 
-        except Exception as e:
-            sms.send("TEST MERIT has error data", ["+254716674695"],"KIOTAPAY")
-            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
-            print ("It failed, Bank integration has an error")
+            except Exception as e:
+                sms.send("TEST MERIT has error data", ["+254716674695"],"KIOTAPAY")
+                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
+                print ("It failed, Bank integration has an error")
 
         resp = jsonify(response)
         return make_response(resp)

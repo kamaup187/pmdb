@@ -5765,15 +5765,24 @@ class CallBackUrlEquityProd(Resource):
 class CallBackUrlTestMerit(Resource):
     def post(self):
         authenticated = False
-        resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+
+        auth = request.headers.get("Authorization")
+
+        ww = f"{my_json} auth > {auth},TEST MERIT IM has sent data"
+        resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+        # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
 
         ckey="merit"
         skey="q150c2bf1c4ee7da42yt"
 
         hash = generate_hash(ckey,skey)
 
-        auth = request.headers.get("Authorization")
-        print("AAAAUUUUTH",auth)
+        # auth = request.headers.get("Authorization")
+        # print("AAAAUUUUTH",auth)
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
@@ -5789,11 +5798,11 @@ class CallBackUrlTestMerit(Resource):
             print("Authenticated")
 
             #parse for json
-            my_data=request.data
-            my_json = my_data.decode('utf8').replace("'", '"')
+            # my_data=request.data
+            # my_json = my_data.decode('utf8').replace("'", '"')
 
-            ww = f"{my_json},TEST MERIT IM has sent data"
-            response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+            # ww = f"{my_json},TEST MERIT IM has sent data"
+            # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
 
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
             try:

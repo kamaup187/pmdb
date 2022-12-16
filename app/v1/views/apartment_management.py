@@ -777,13 +777,16 @@ class Index(Resource):
             if current_user.company.name == secret_struc and current_user.username == secret_nu:
                 return Response(render_template("inactive_company.html"))
 
+            card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg",
+            if str(company) == "National Bank":
+                card_theme = "nbk-card-theme"
 
             return Response(render_template(
                 indexpage,
                 clientaccess = "access",
                 sidebar_theme = "premier-sidebar-theme" if str(company) == "Premier Realty" else "sidebar-bg",
                 topbar_theme = "bg-white" if str(company) == "Premier Realty" else "bg-white",
-                card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg",
+                card_theme = card_theme,
                 co=company,
                 companyname = companyname,
                 cbids=cbids,

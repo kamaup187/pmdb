@@ -777,7 +777,7 @@ class Index(Resource):
             if current_user.company.name == secret_struc and current_user.username == secret_nu:
                 return Response(render_template("inactive_company.html"))
 
-            card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg",
+            card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg"
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
 

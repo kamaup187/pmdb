@@ -1197,7 +1197,7 @@ class LinkProperty(Resource):
             if current_user.id == 1 or current_user.username.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
                 for company in companies:
-                    if not company.name:
+                    if not company.name or not company:
                         print(company.users)
                         companies.remove(company)
                         # return None

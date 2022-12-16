@@ -1196,15 +1196,20 @@ class LinkProperty(Resource):
         if target == "link":
             if current_user.id == 1 or current_user.username.startswith("qc"):
                 companies = CompanyOp.fetch_all_companies()
+                data = []
                 for company in companies:
-                    if not company.name or not company:
-                        print(company.users)
-                        companies.remove(company)
+                    if company.name and company:
+                        data.append(company.name)
+                    # if not company.name or not company:
+                    #     print(company.users)
+                    #     companies.remove(company)
                         # return None
                         # CompanyOp.delete(company)
+                return render_template('ajax_multivariable.html',items=data,placeholder="select company")
+
             else:
                 companies = [current_user.company]
-            return render_template('ajax_multivariable.html',items=companies,placeholder="select company")
+                return render_template('ajax_multivariable.html',items=companies,placeholder="select company")
         else:
             companies = []
             return render_template('ajax_multivariable.html',items=companies,placeholder="ready to unlink")

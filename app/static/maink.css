@@ -2646,6 +2646,11 @@ clear: both;
 .premier-card-theme {
   background: #68c20e !important;
 }
+.nbk-card-theme {
+  /* background: #311803 !important; */
+  background: #331802 !important;
+  /* background: #442003 !important; */
+}
 .premier-sidebar-theme {
   background: #134430 !important;
 }

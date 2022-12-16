@@ -869,6 +869,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/litala/full-logo.jpg"
             letterhead = "../static/img/logos/litala/letterhead.jpg"
 
+        elif str_name_company == "National Bank":
+            ##################################################
+            logopath = "../static/img/logos/nbk/l-logo.png"
+            mobilelogopath = "../static/img/logos/nbk/s-logo.png"
+            fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
+            letterhead = "../static/img/logos/nbk/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
                 ##################################################

@@ -39,12 +39,12 @@
 
           <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseCodeModal">
             <i class="me-1" data-feather="user-plus"></i>
-            Add sizes
+            Add sizes/types
           </span>
 
           <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseModal">
             <i class="me-1" data-feather="user-plus"></i>
-            Add units
+            Add units/plots
           </span>
 
           <!-- <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
@@ -320,7 +320,7 @@
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
             <h5 class="modal-title text-info divjust-end">
-              <span class="mr-3 smallify">Define size</span>
+              <span class="mr-3 smallify">Unit type/size</span>
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
             </h5>
             <div class="alert-msgs"></div>
@@ -331,9 +331,8 @@
                 <div class="position-relative">
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="/create/housecode">
-          
                       <div class="row mt-2">
-                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size <span class="text-danger">*</span></span></div>
+                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size/Type <span class="text-danger">*</span></span></div>
                         <div class="form-group col-9 no-paddin input-icons">
                           <input id="enter_house_code" class="form-control ph" type="text">
                           <span class="fa field-icon text-info iconotifications">--</span>
@@ -342,10 +341,10 @@
 
 
                       <div class="row dispnone">
-                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size</span></div>
+                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size/Type</span></div>
                         <div class="form-group col-9 no-paddin input-icons">
                           <select class="select-css" id ="size" required>
-                            <option disabled selected value> Select size </option>
+                            <option disabled selected value> Select size/type </option>
 
                             <option value="ST">Studio</option>
                             <option value="1B">One bedroom</option>
@@ -564,10 +563,10 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size <span class="text-danger">*</span></span></div>
+                        <div class="col-3 no-padding text-right"><span class="form-control border-0">Size/Unit type <span class="text-danger">*</span></span></div>
                         <div class="form-group col-9 no-paddin input-icons">
                           <select class="select-css" id ="select_housecode2" required>
-                            <option disabled selected value> -- Select size -- </option>
+                            <option disabled selected value> -- Select size/type -- </option>
                             {% for o in items %}
                             <option value="{{ o }}">{{ o }}</option>
                             {% endfor %}

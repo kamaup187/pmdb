@@ -876,6 +876,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
             letterhead = "../static/img/logos/nbk/letterhead.jpg"
 
+        elif str_name_company == "Developer":
+            ##################################################
+            logopath = "../static/img/logos/maisha/l-logo.png"
+            mobilelogopath = "../static/img/logos/maisha/l-logo.png"
+            fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
+            letterhead = "../static/img/logos/nbk/letterhead.jpg"
+
         else:
             if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
                 ##################################################
@@ -5039,7 +5046,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
             if own_shortcode:
                 raw_rem_sms = 5000
-                
+
             if tenant:
                 print("OWNER SENDING STARTED......")
 

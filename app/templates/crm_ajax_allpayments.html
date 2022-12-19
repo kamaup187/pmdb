@@ -243,7 +243,7 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
                       <fieldset class="mb-2">
-                        <legend class="legend">Select resident:</legend>
+                        <legend class="legend">Select client:</legend>
 
                         <div id="prop_selector" class="form-group input-icons mt-0 dispnone">
                           <select class="select-css" id ="select_prop" >
@@ -272,10 +272,25 @@
                         <div class="ms-3 ml-3 form-group mb-0">
 
 
-                          <div class="mb-1">
-                            <input type="checkbox" name="" id="diffperiod" checked>
-                            <label class="mr-3 me-3 text-danger" for="diffperiod">{{current_month}} payment</label>
-                            <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose month..." readonly />
+                          <div class="mb-1 row">
+                            <div class="col-5">
+                              <input type="checkbox" name="" id="diffperiod" checked>
+                              <label class="mr-3 me-3 text-danger" for="diffperiod">{{current_month}} payment</label>
+                              <input id="billdatepicker" class="ph dispnone" type="text" placeholder="choose month..." readonly />
+                            </div>
+
+                            <div class="form-grou col-5 no-paddin input-icons">
+                              <span>Payment tag</span>
+                              <select class="select-css" id ="paytag" >
+                                <option disabled selected value> select... </option>
+                                <option  value="Inward telex payment"> Deposit </option>
+                                <option selected value="M-banking transfer"> Instalment 1</option>
+                                <option  value="M-banking transfer"> Instalment 2</option>
+                                <option  value="M-pesa paybill transfer"> Instalment 3</option>
+                                <option  value="Pesalink transfer">Instalment 4</option>
+                                <option  value="WHT payment">Instalment 5</option>
+                              </select>
+                            </div>
                             
                           </div>
 

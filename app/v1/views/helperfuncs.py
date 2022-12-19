@@ -876,7 +876,7 @@ def logo(co):
             fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
             letterhead = "../static/img/logos/nbk/letterhead.jpg"
 
-        elif str_name_company == "Developer":
+        elif str_name_company == "Developer" or str_name_company == "Demo Company Two":
             ##################################################
             logopath = "../static/img/logos/maisha/l-logo.png"
             mobilelogopath = "../static/img/logos/maisha/l-logo.png"

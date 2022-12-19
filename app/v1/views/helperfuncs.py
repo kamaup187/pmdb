@@ -3809,7 +3809,10 @@ def send_bulk_sms(propid,temp_txt):
         if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop.name == "Greatwall Gardens 2":
             own_shortcode = True
 
+
         raw_rem_sms = co.remainingsms
+        if own_shortcode:
+            raw_rem_sms = 5000
         if tenant_obj.sms:
 
             if raw_rem_sms > 0 or own_shortcode:
@@ -3915,6 +3918,10 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
             own_shortcode = True
 
         raw_rem_sms =co.remainingsms
+
+        if own_shortcode:
+            raw_rem_sms = 5000
+
         if tenant_obj.sms:
 
             if raw_rem_sms > 0 or own_shortcode:
@@ -4043,6 +4050,14 @@ def autosend_pending_smsreceipts(payids):
         end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
         raw_rem_sms =co.remainingsms
 
+        own_shortcode = False
+
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
+            own_shortcode = True
+
+        if own_shortcode:
+            raw_rem_sms = 5000
+
         tele = tenant_obj.phone
         # name = tenant_obj.name
         # fname = fname_extracter(name)
@@ -4066,10 +4081,10 @@ def autosend_pending_smsreceipts(payids):
             sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
             sms_obj.save()
             
-            own_shortcode = False
+            # own_shortcode = False
 
-            if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
-                own_shortcode = True
+            # if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
+            #     own_shortcode = True
 
             # if payment_obj.apartment.company.name == "Lesama Ltd":
             #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
@@ -4077,55 +4092,55 @@ def autosend_pending_smsreceipts(payids):
             # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
             #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
             #     PaymentOp.update_sms_status(payment_obj,"sent")
+
+            if raw_rem_sms > 0 or own_shortcode:
+                #Send the SMS
+
+                try:
+                    print("Payment sms sending initiated")
+                    recipient = [phonenum]
+
+                    if co.sms_provider == "Advanta":
+                        smsid = sms_sender(co.name,message,phonenum)
+                        if smsid:
+                            PaymentOp.update_smsid(payment_obj,smsid)
+                    else:
+                        #Once this is done, that's it! We'll handle the rest
+                        response = sms.send(message, recipient,sender)
+                        print(response)
+                        resp = response["SMSMessageData"]["Recipients"][0]
+
+                        code = resp["statusCode"]
+                        smsid = resp["messageId"]
+                        if smsid:
+                            PaymentOp.update_smsid(payment_obj,smsid)
+
+                        if code == 101: # SMS WAS SENT
+
+                            PaymentOp.update_sms_status(payment_obj,"sent")
+                            raw_cost = resp["cost"]
+                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                            CompanyOp.set_rem_quota(co,rem_sms)
+
+                        elif code == 403:
+                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            PaymentOp.update_sms_status(payment_obj,"fail")
+                        elif code == 405:
+                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                            txt = f"{co} has depleted sms"
+                            response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                        elif code == 406:
+                            PaymentOp.update_sms_status(payment_obj,"blocked")
+                            print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
+                            raw_cost = resp["cost"]
+                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                            CompanyOp.set_rem_quota(co,rem_sms)
+                    
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+                    PaymentOp.update_sms_status(payment_obj,"fail")
             else:
-                if raw_rem_sms > 0 or own_shortcode:
-                    #Send the SMS
-
-                    try:
-                        print("Payment sms sending initiated")
-                        recipient = [phonenum]
-
-                        if co.sms_provider == "Advanta":
-                            smsid = sms_sender(co.name,message,phonenum)
-                            if smsid:
-                                PaymentOp.update_smsid(payment_obj,smsid)
-                        else:
-                            #Once this is done, that's it! We'll handle the rest
-                            response = sms.send(message, recipient,sender)
-                            print(response)
-                            resp = response["SMSMessageData"]["Recipients"][0]
-
-                            code = resp["statusCode"]
-                            smsid = resp["messageId"]
-                            if smsid:
-                                PaymentOp.update_smsid(payment_obj,smsid)
-
-                            if code == 101: # SMS WAS SENT
-
-                                PaymentOp.update_sms_status(payment_obj,"sent")
-                                raw_cost = resp["cost"]
-                                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                                CompanyOp.set_rem_quota(co,rem_sms)
-
-                            elif code == 403:
-                                print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                                PaymentOp.update_sms_status(payment_obj,"fail")
-                            elif code == 405:
-                                print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                                txt = f"{co} has depleted sms"
-                                response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                            elif code == 406:
-                                PaymentOp.update_sms_status(payment_obj,"blocked")
-                                print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
-                                raw_cost = resp["cost"]
-                                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                                CompanyOp.set_rem_quota(co,rem_sms)
-                        
-                    except Exception as e:
-                        print(f"Houston, we have a problem {e}")
-                        PaymentOp.update_sms_status(payment_obj,"fail")
-                else:
-                    print("CLIENT HAS DEPLETED SMS",str_co)
+                print("CLIENT HAS DEPLETED SMS",str_co)
         else:
             PaymentOp.update_sms_status(payment_obj,"off")
 
@@ -5022,6 +5037,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or prop_obj.name == "Greatwall Gardens 2":
                 own_shortcode = True
 
+            if own_shortcode:
+                raw_rem_sms = 5000
+                
             if tenant:
                 print("OWNER SENDING STARTED......")
 

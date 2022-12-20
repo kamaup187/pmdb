@@ -322,7 +322,11 @@ class Index(Resource):
             prop = None
             for cb in sifted:
                 if cb.bill_ref_num:
-                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                    if cb.bill_ref_num.startswith("TNT"):
+                        clean_ref = cb.bill_ref_num.replace("TNT", "")
+                        tenant_obj = TenantOp.fetch_tenant_by_id(clean_ref)
+                    else:
+                        tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                 else:
                     tenant_obj = None
 
@@ -345,6 +349,7 @@ class Index(Resource):
                                 break
 
                 if not target_house:
+                    print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
                     return {"message": "House not found"}, 404
 
                 propid = prop.id if prop else None

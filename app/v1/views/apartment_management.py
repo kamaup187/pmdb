@@ -308,6 +308,73 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
+            com = CompanyOp.fetch_company_by_id(85)
+            shortcodes = com.shortcodes
+
+            sifted = []
+            for shortcode in shortcodes:
+                raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+                for r in raw_unclaimed:
+                    if r.status == "unclaimed":
+                        sifted.append(r)
+
+            props = com.props
+            prop = None
+            for cb in sifted:
+                if cb.bill_ref_num:
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
+                else:
+                    tenant_obj = None
+
+                if tenant_obj:
+                    target_house = check_house_occupied(tenant_obj)[1]
+                    if target_house:
+                        prop = target_house.apartment
+                else:
+                    target_house = None
+
+                if not target_house:
+                    unformatted_ref = cb.bill_ref_num.replace(" ","") if cb.bill_ref_num else ""
+                    if unformatted_ref:
+                        formatted_ref = unformatted_ref.upper()
+                    for prp in props:
+                        for house in prp.houses:
+                            if house.name == formatted_ref:
+                                prop = house.apartment
+                                target_house = house
+                                break
+
+                if not target_house:
+                    return {"message": "House not found"}, 404
+
+                propid = prop.id if prop else None
+
+                dict_array = []
+
+                if prop:
+                    payperiod = prop.billing_period
+                else:
+                    payperiod = com.billing_period
+
+                dict_obj = {
+                "housename":target_house.name,
+                "amount":cb.trans_amnt,
+                "date":"",
+                "ref":cb.trans_id,
+                "desc":"",
+                "comment":""
+                }
+
+                dict_array.append(dict_obj)
+
+                uploadsjob2 = q.enqueue_call(
+                    func=read_payments_excel, args=(dict_array,payperiod,propid,1,cb.id,), result_ttl=5000
+                )
+
+                CtoBop.update_status(cb,"claimed")
+
+            ###############################################################
+
             propidss = []
 
             # propidss = [91,92,484,93]

@@ -350,33 +350,32 @@ class Index(Resource):
 
                 if not target_house:
                     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-                    return {"message": "House not found"}, 404
-
-                propid = prop.id if prop else None
-
-                dict_array = []
-
-                if prop:
-                    payperiod = prop.billing_period
                 else:
-                    payperiod = com.billing_period
+                    propid = prop.id if prop else None
 
-                dict_obj = {
-                "housename":target_house.name,
-                "amount":cb.trans_amnt,
-                "date":"",
-                "ref":cb.trans_id,
-                "desc":"",
-                "comment":""
-                }
+                    dict_array = []
 
-                dict_array.append(dict_obj)
+                    if prop:
+                        payperiod = prop.billing_period
+                    else:
+                        payperiod = com.billing_period
 
-                uploadsjob2 = q.enqueue_call(
-                    func=read_payments_excel, args=(dict_array,payperiod,propid,1,cb.id,), result_ttl=5000
-                )
+                    dict_obj = {
+                    "housename":target_house.name,
+                    "amount":cb.trans_amnt,
+                    "date":"",
+                    "ref":cb.trans_id,
+                    "desc":"",
+                    "comment":""
+                    }
 
-                CtoBop.update_status(cb,"claimed")
+                    dict_array.append(dict_obj)
+
+                    uploadsjob2 = q.enqueue_call(
+                        func=read_payments_excel, args=(dict_array,payperiod,propid,1,cb.id,), result_ttl=5000
+                    )
+
+                    CtoBop.update_status(cb,"claimed")
 
             ###############################################################
 

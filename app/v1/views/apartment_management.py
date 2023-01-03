@@ -308,8 +308,14 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
-            com = CompanyOp.fetch_company_by_id(85)
-            shortcodes = com.shortcodes
+            com = CompanyOp.fetch_company_by_id(2344485)
+            if not com:
+                shortcodes = []
+                props = []
+            else:
+                shortcodes = com.shortcodes
+                props = com.props
+
 
             sifted = []
             for shortcode in shortcodes:
@@ -318,7 +324,6 @@ class Index(Resource):
                     if r.status == "unclaimed":
                         sifted.append(r)
 
-            props = com.props
             prop = None
             for cb in sifted:
                 if cb.bill_ref_num:

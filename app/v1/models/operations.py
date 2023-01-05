@@ -2730,7 +2730,7 @@ class ClientBillOp(ClientBill,Base):
             'id':self.id,
             'editid':ClientBillOp.generate_editid(self),
             'delid':ClientBillOp.generate_delid(self),
-            'client':self.company,
+            'client':self.company if self.company else "",
             'sub':ClientBillOp.fig_format(self.subscription),
             'desc':self.description,
             'inst':ClientBillOp.fig_format(self.installation),

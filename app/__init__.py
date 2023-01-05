@@ -99,6 +99,13 @@ def create_app(configuration):
         app.config['MAIL_USE_TLS'] = False
         app.config['MAIL_USE_SSL'] = True
 
+        # app.config['MAIL_SERVER']='smtp.sendgrid.net'
+        # app.config['MAIL_PORT'] = 465
+        # app.config['MAIL_USERNAME'] = 'apikey'
+        # app.config['MAIL_PASSWORD'] = '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'
+        # app.config['MAIL_USE_TLS'] = False
+        # app.config['MAIL_USE_SSL'] = True
+
         mail.init_app(app)
     
     

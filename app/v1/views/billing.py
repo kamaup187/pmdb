@@ -5527,6 +5527,8 @@ class CallBackUrlLes(Resource):
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP TEST DATA>>>>>>>>>",my_json)
+        ww = f"{my_json},PROD LESAMA has sent data"
+        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
             print("#####################################COOP COOP COOP############################################")

@@ -127,13 +127,13 @@
   <div id="snackbed"></div>
 
 
-  <div id="hellobar-bar" class="regular overflow-x-hidde closable dispnone topmost">
-    <div id="banne" class="hb-content-wrapper dispnone">
+  <div id="hellobar-bar" class="regular overflow-x-hidde closable dispnon topmost">
+    <div id="banne" class="hb-content-wrapper dispnon">
         <div class="hb-text-wrapper">
 
             <div class="hb-headline-text">
                 <!-- <p><span id="banne">Monthly subscription: 16 days remaining</span></p> -->
-                <div id="banner" class="mobile-malaysian text-black no-wrap font-weight-bold">Hi, to view pending payments, on dashboard, click on last card below showing non-payments <span class="ml-3"><a href="javascript:void(0);" class="icon-close text-black pb-3" onClick="$('#hellobar-bar').fadeOut()">&#10006;</a></span></div>
+                <div id="banner" class="mobile-malaysian text-black no-wrap font-weight-bold">HAPPY NEW YEAR! You can now search a tenant by phone number <span class="ml-3"><a href="javascript:void(0);" class="icon-close text-black pb-3" onClick="$('#hellobar-bar').fadeOut()">&#10006;</a></span></div>
                 
             </div>
         </div>
@@ -2764,7 +2764,10 @@
 
   const banner = document.getElementById("banner");
   
-  animateHH(banner);
+  // animateHH(banner);
+  animateH(banner);
+  blink(banner);
+
   
 function animateH(element) {
     let elementWidth = element.offsetWidth;
@@ -2799,6 +2802,12 @@ function animateV(element) {
     }, 8);
 }
 
+function blink(blink){
+  setInterval(function () {
+      blink.style.opacity = 
+      (blink.style.opacity == 0 ? 1 : 0);
+  }, 3000); 
+}
 
 
 function animateVV(element) {

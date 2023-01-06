@@ -9589,7 +9589,7 @@ def build_search_phone(tenant_item):
         return None
 
     dict_item = {
-        "name" : remove_special_characters(phone) + "(T)",
+        "name" : remove_special_characters(phone) + "(" + tenant_item.name + ")",
         "id" : "tphone"+str(tenant_item.id),
         "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
         "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'

@@ -1283,7 +1283,6 @@ class PropStats(Resource):
         dashboard_props.append("All properties")
 
         try:
-
             collection_percentage = real_collections / total_bills * 100
         except:
             collection_percentage = 0

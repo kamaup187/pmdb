@@ -2773,6 +2773,7 @@ class RentStatement(Resource):
             billtotal=billtotal,
             paidtotal=paidtotal,
             bcftotal=bcftotal,
+            ratio=ratio,
             expenses = f"{expenses_amount:,.1f}",
             remits = f"{remits:,.1f}",
             loan = formatted_loan,

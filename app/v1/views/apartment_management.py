@@ -7931,6 +7931,10 @@ class Results(Resource):
             if item.startswith("tnt"):
                 print("fetching tenant",item)
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+
+            elif item.startswith("tphone"):
+                print("fetching tenant",item)
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             else:
                 print("fetching resident",item)
                 tenant_obj = PermanentTenantOp.fetch_tenant_by_id(tenant_id)

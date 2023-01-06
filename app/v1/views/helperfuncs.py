@@ -9582,6 +9582,20 @@ def build_search_ptenant(ptenant_item):
     }
     return dict_item
 
+def build_search_phone(tenant_item):
+    house = get_active_houses(tenant_item)[1]
+    phone = tenant_item.phone
+    if not phone:
+        return None
+
+    dict_item = {
+        "name" : remove_special_characters(phone) + "(T)",
+        "id" : "tphone"+str(tenant_item.id),
+        "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
+        "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'
+    }
+    return dict_item
+
 def generate_suggestions_alt(props,houses,tenants,ptenants):
 
     # for prop_item in props:
@@ -9599,6 +9613,7 @@ def generate_suggestions_alt(props,houses,tenants,ptenants):
     suggestions_list1 = [build_search_unit(house) for house in houses]
     suggestions_list2 = [build_search_tenant(tenant) for tenant in tenants]
     suggestions_list3 = [build_search_ptenant(ptenant) for ptenant in ptenants]
+    suggestions_list4 = [build_search_phone(tenant) for tenant in tenants]
 
 
 
@@ -9613,7 +9628,7 @@ def generate_suggestions_alt(props,houses,tenants,ptenants):
     # return listToStr
     
 
-    return suggestions_list1 + suggestions_list2 + suggestions_list3
+    return suggestions_list1 + suggestions_list2 + suggestions_list3 + suggestions_list4
     
 
 def access(current_user):

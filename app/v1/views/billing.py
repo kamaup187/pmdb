@@ -3334,17 +3334,16 @@ class Receipt(Resource):
         address = None
 
         if payment_obj.apartment.company.name == "LaCasa":
-            
+
             if prop.id == 414:
                 address = {
                     "address": "Kitengela",
                     "tel": "0735267087",
                     "email": "lacasaapartments2010@gmail.com"
                 }
-
-            if prop.id == 419:
+            elif prop.id == 419:
                 address = {
-                    "address": "Nairobi",
+                    "address": "Kasarani Nairobi",
                     "tel": "0735267087",
                     "email": "goldlabelservices@gmail.com"
                 }

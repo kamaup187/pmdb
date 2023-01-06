@@ -3886,6 +3886,10 @@ class PaymentOp(Payment,Base):
     def fetch_payment_by_rand_id(rand_id):
         return Payment.query.filter_by(rand_id=rand_id).first()
 
+    @staticmethod
+    def fetch_latest_payment():
+        return Payment.query.order_by(Payment.id.desc()).first()
+
     def fetch_payment_by_id(id):
         try:
             obj = Payment.query.filter_by(id=id).first()

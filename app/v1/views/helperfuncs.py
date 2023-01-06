@@ -9613,10 +9613,7 @@ def generate_suggestions_alt(props,houses,tenants,ptenants):
     suggestions_list1 = [build_search_unit(house) for house in houses]
     suggestions_list2 = [build_search_tenant(tenant) for tenant in tenants]
     suggestions_list3 = [build_search_ptenant(ptenant) for ptenant in ptenants]
-    suggestions_list4 = [build_search_phone(tenant) for tenant in tenants]
-
-
-
+    suggestions_list4 = [build_search_phone(tenant) for tenant in tenants if tenant.phone]
 
     # print("Monster>>>>>>>",len(suggestions_list))
 

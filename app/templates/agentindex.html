@@ -2702,7 +2702,9 @@
             url: "{{ url_for('api.graphstats') }}",
             type: 'get',
             data: {
-                    prop: localStorage.getItem('propvar')
+                    prop: localStorage.getItem('propvar'),
+                    month: localStorage.getItem('monthvar')
+
                   },
             success: function(data) {
                 // $('#dynamic-content').html(data);

@@ -1380,43 +1380,58 @@ class GraphStats(Resource):
     @login_required
     def get(self):
         prop = request.args.get('prop')
-        time = datetime.datetime.now()
-       
-        if current_user.company and current_user.id != 1:
-            present_month = current_user.company.billing_period.month
-            present_year = current_user.company.billing_period.year
-        else:
-            present_month = time.month
-            present_year = time.year
-            
-        if not present_month: # remove this check on april 2021
-            present_month = time.month
-        if not present_year:
-            present_year = time.year
-        
+        month = request.args.get('month')
 
-        apartment_list = fetch_all_apartments_by_user(current_user)
-
-
-        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-
-        props = []
+        props = run_props(prop,current_user)
 
         if prop == "All properties":
-            props = apartment_list
-        elif prop_obj:
-            if prop_obj in apartment_list:
-                props.append(prop_obj)
+            if not month:
+                period = current_user.company.billing_period
             else:
-                try:
-                    props.append(apartment_list[0])
-                except:
-                    pass
+                currmonth = date_formatter_alt(month)
+                period = parse(currmonth)
         else:
-            try:
-                props.append(apartment_list[0])
-            except:
-                pass
+            prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
+            if not month:
+                period = prop_obj.billing_period
+                prop = prop_obj.name
+            else:
+                currmonth = date_formatter_alt(month)
+                period = parse(currmonth)
+
+        # time = datetime.datetime.now()
+       
+        # if current_user.company and current_user.id != 1:
+        #     present_month = current_user.company.billing_period.month
+        #     present_year = current_user.company.billing_period.year
+        # else:
+        #     present_month = time.month
+        #     present_year = time.year
+            
+        # if not present_month: # remove this check on april 2021
+        #     present_month = time.month
+        # if not present_year:
+        #     present_year = time.year
+        
+
+        # apartment_list = fetch_all_apartments_by_user(current_user)
+        # prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        # props = []
+        # if prop == "All properties":
+        #     props = apartment_list
+        # elif prop_obj:
+        #     if prop_obj in apartment_list:
+        #         props.append(prop_obj)
+        #     else:
+        #         try:
+        #             props.append(apartment_list[0])
+        #         except:
+        #             pass
+        # else:
+        #     try:
+        #         props.append(apartment_list[0])
+        #     except:
+        #         pass
         ###############################################################################
 
         collections_per_apartment = []
@@ -1444,7 +1459,7 @@ class GraphStats(Resource):
             annual_month_commissions = []
 
 
-            range_arg = present_month +1 
+            range_arg = period.month +1 
             months = [*range(1, range_arg, 1)]
             
 
@@ -1461,12 +1476,12 @@ class GraphStats(Resource):
 
 
                 for item in apartment.payment_data:
-                    if item.pay_period.month == month and item.pay_period.year == present_year and not item.voided:
+                    if item.pay_period.month == month and item.pay_period.year == period.year and not item.voided:
                         sum_member = item.amount
                         monthly_collection_data.append(sum_member)
 
                 for item in apartment.monthlybills:
-                    if item.month == month and item.year == present_year:
+                    if item.month == month and item.year == period.year:
                         sum_member = item.total_bill
                         rentpaid = item.rent_paid if item.rent_paid else 0.0
                         monthly_bill_data.append(sum_member)
@@ -1474,7 +1489,7 @@ class GraphStats(Resource):
 
                 for item in apartment.meter_readings:
                     if item.reading_period:
-                        if item.reading_period.month == month and item.reading_period.year == present_year:
+                        if item.reading_period.month == month and item.reading_period.year == period.year:
                             sum_member = item.units
                             monthly_reading_data.append(sum_member)
                     
@@ -1495,7 +1510,7 @@ class GraphStats(Resource):
                     commission = apartment.int_commission if apartment.int_commission else 0.0
                     commission_percentage = f"{commission} flat rate"
 
-                if month == present_month:
+                if month == period.month:
                     present_month_income += commission
 
                 annual_month_commissions.append(commission)
@@ -1541,9 +1556,9 @@ class GraphStats(Resource):
             incomestring=commission_string,
             outcomestring = 0,
             netcomestring=commission_string,
-            income = f'{present_month_income} ({get_str_month(present_month)}',
-            outcome = f'0.0 ({get_str_month(present_month)}',
-            netcome = f'{present_month_income} ({get_str_month(present_month)}'
+            income = f'{present_month_income} ({get_str_month(period.month)}',
+            outcome = f'0.0 ({get_str_month(period.month)}',
+            netcome = f'{present_month_income} ({get_str_month(period.month)}'
         ))
 
 

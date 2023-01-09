@@ -884,21 +884,22 @@ def logo(co):
             letterhead = "../static/img/logos/nbk/letterhead.jpg"
 
         else:
-            if os.getenv("TARGET") != "lasshouse" or TARGET != "lasshouse":
+            if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+                print("kkkaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                ##################################################
+                logopath = "../static/img/logos/inva/l-logo.png"
+                mobilelogopath = "../static/img/logos/inva/s-logo.png"
+                fulllogopath = "../static/img/logos/inva/full-logo.jpg"
+                letterhead = "../static/img/logos/inva/letterhead.jpg"
+                sign = ""
+            else:
+                print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
                 letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
                 sign = "../static/img/logos/kiotapay/sign.png"
-
-            else:
-                ##################################################
-                logopath = "../static/img/logos/spry/l-logo.png"
-                mobilelogopath = "../static/img/logos/spry/s-logo.png"
-                fulllogopath = "../static/img/logos/spry/full-logo.jpg"
-                letterhead = "../static/img/logos/spry/letterhead.jpg"
-                sign = ""
 
     except Exception as e:
         print("failing big time",e)

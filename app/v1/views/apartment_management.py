@@ -854,8 +854,11 @@ class Index(Resource):
                 return Response(render_template("inactive_company.html"))
 
             card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg"
+            
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
+            if str(company) == "Inva Properties":
+                card_theme = "premier-card-theme"
 
             return Response(render_template(
                 indexpage,

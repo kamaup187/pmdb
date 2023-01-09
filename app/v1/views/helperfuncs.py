@@ -1977,6 +1977,23 @@ def get_str_month(month):
         }
     return switcher.get(month)
 
+def get_month_year(period):
+    switcher = {
+        1:"January",
+        2:"February",
+        3:"March",
+        4:"April",
+        5:"May",
+        6:"June",
+        7:"July",
+        8:"August",
+        9:"September",
+        10:"October",
+        11:"November",
+        12:"December"
+        }
+    return f"{switcher.get(period.month)}-{period.year}"
+
 def get_str_mnth(month):
     switcher = {
         1:"Jan",

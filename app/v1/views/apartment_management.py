@@ -1180,6 +1180,8 @@ class ComGraphStats(Resource):
 
 
 class PropStats(Resource):
+    """deprecated"""
+    
     @login_required
     def get(self):
 
@@ -1550,13 +1552,30 @@ class Dashboard(Resource):
     def get(self):
 
         prop = request.args.get('prop')
+        month = request.args.get('month')
         target = request.args.get('target')
 
-        if target == "proponfocus":
-            return prop
-
         props = run_props(prop,current_user)
-        period = current_user.company.billing_period
+
+        if prop == "All properties":
+            if not month:
+                period = current_user.company.billing_period
+            else:
+                currmonth = date_formatter_alt(month)
+                period = parse(currmonth)
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
+            if not month:
+                period = prop_obj.billing_period
+                prop = prop_obj.name
+            else:
+                currmonth = date_formatter_alt(month)
+                period = parse(currmonth)
+
+        if target == "proponfocus":
+            if not month:
+                month = get_month_year(period)
+            return [prop,month]
 
         if target == "expectedstats":
 
@@ -1584,7 +1603,7 @@ class Dashboard(Resource):
 
         if target == "collectionstats":
 
-            period = current_user.company.billing_period
+            # period = current_user.company.billing_period
 
             total_bills = 0
             total_collections = 0
@@ -1614,7 +1633,7 @@ class Dashboard(Resource):
 
         if target == "balancestats":
 
-            period = current_user.company.billing_period
+            # period = current_user.company.billing_period
 
             total_balances = 0
             defaulters = 0

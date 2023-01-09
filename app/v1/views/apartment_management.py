@@ -1588,11 +1588,7 @@ class Dashboard(Resource):
                 period = parse(currmonth)
 
         if target == "proponfocus":
-            if not month:
-                month = get_month_year(period)
-            else:
-                currmonth = get_month_year(period)
-
+            currmonth = get_month_year(period)
             return [prop,currmonth]
 
         if target == "expectedstats":

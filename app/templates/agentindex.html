@@ -1189,16 +1189,20 @@
                   <div id="rolling" class="{{smshighlight}} font-weight-bold">
                     <span id="replenish" type="button" class="">
                       <span class="text-black">SMS available: </span>{{numsms}}
+                      <i class="fas fa-fw fa-sms text-info"></i>
+
                     </span>
 
                   </div>
                 </div>
 
-                <div class="col-2 mobile-malaysian">
-                  <span class="text-success small">Billing</span>
-                  <div class="text-black font-weight-bold">{{billingperiod}}</div>
-              </div>
 
+                <div class="col-2 mobile-malaysian center-btn d-sm-flex align-items-center">
+                  <div class="{{smshighlight}} font-weight-bold">
+                    <span class="text-black">Month: </span>{{billingperiod}}
+                    <i class="fas fa-fw fa-calendar-day text-info"></i>
+                  </div>
+                </div>
 
                 <div class="col-2 mobile-malaysian">
                     <span class="text-success font-weight-bold" id="txt"></span>
@@ -1399,26 +1403,46 @@
             <div id="prop-card" class="col-xl-3 col-md-6 mb-1 mobile-malaysian prop-toggler">
               <div class="card border-left-info shadow-alt h-100 py-2 {{card_theme}}">
                   <div class="card-body">
-                      <div class="no-gutters center-btn">
-                          <div class="mr-2">
-                              <div style="width: 50%;" class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i class="fas fa-caret-down mr-2"></i>Select property<i class="fas fa-caret-down ml-2"></i></div>
-      
-                              <div class="">
-                                  <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentprop">
-                                    <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
-                                    <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
-                                  </div>
-      
-                                  <div class="form-group mb-0 dispnone prop-select">
-                                      <select name="property" class="select-css" id ="select_prop" required>
-                                          <option disabled selected value> -- Select property -- </option>
+                      <div class="no-gutters">
+                          <div class="mr-2">     
+                              
+                                  <div class="row">
+                                    <div class="col-auto">
+                                      <div style="width: 50%;"
+                                        class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i
+                                          class="fas fa-caret-down mr-2"></i>Property<i class="fas fa-caret-down ml-2"></i></div>
+                                      <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentprop">
+                                        <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
+                                          aria-hidden="true"></span>
+                                      </div>
+                                    
+                                    
+                                      <div class="form-group mb-0 dispnone prop-select">
+                                        <select name="property" class="select-css" id="select_prop" required>
+                                          <option disabled selected value> Select property ` </option>
                                           {% for o in props%}
                                           <option value="{{ o }}">{{ o }}</option>
                                           {% endfor %}
-                                      </select>
-                                  </div>
-                              </div>
-      
+                                        </select>
+                                      </div>
+                                    
+                                    </div>
+                                    <div class="col">
+                                      <div style="width: 50%;"
+                                        class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i
+                                          class="fas fa-caret-down mr-2"></i>Showing<i class="fas fa-caret-down ml-2"></i></div>
+                                      <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentmonth">
+                                        <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
+                                          aria-hidden="true"></span>
+                                      </div>
+                                    
+                                      <div class="form-group mb-0 dispnone prop-select">
+                                        <input id="viewperiod" class="form-control ph" type="text" placeholder="Select month" readonly />
+                                      </div>
+                                    
+                                    </div>
+                                </div>
+                              
                           </div>
                       </div>
                   </div>
@@ -1426,30 +1450,36 @@
             </div>
       
             <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
-                <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
-                    <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2 border-right-warning">
-                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span class="text-white dispnone">{{month_string}} | </span>Expected collection</div>
-                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
-                          
-                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
-                          <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
-                          <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
-                          <div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div> -->
-                        </div>
-                        </div>
-                        <div class="col-auto billbtn">
-                          <span class="text-gray-300">
-                            <span class="fa-2x text-warning ln-10 addloader-alt" id="expectedstats2">
-                              <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
-                            </span>
-                          </span>
-                          <div class="text-gray-300" id="expectedstats3">invoices</div>
-                        </div>
+              <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2 border-right-warning">
+                      <div class="text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span
+                          class="text-white dispnone">{{month_string}} | </span>Expected collection</div>
+                      <div class="h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
+            
+                        Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
+                          aria-hidden="true"></span>
+                        <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                                      <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
+                                      <div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div> -->
+                      </div>
                     </div>
+                    <div class="col-auto billbtn">
+                      <span class="text-gray-300">
+                        <span class="fa-2x text-warning ln-10 addloader-alt" id="expectedstats2">
+                          <div class="fountainG-small d-inline mr-1">
+                            <div class="fountainG_1s fountainG-s"></div>
+                            <div class="fountainG_2s fountainG-s"></div>
+                            <div class="fountainG_3s fountainG-s"></div>
+                          </div>
+                        </span>
+                      </span>
+                      <div class="text-gray-300" id="expectedstats3">invoices</div>
                     </div>
+                  </div>
                 </div>
+              </div>
             </div>
       
             <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
@@ -3304,6 +3334,42 @@ function animateHH(element) {
 </script>
 
 <script>
+  $("#viewperiod").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+<script>
+  // $('#viewperiod').datepicker({
+  //      onSelect: function(d,i){
+  //           if(d !== i.lastVal){
+  //               $(this).change();
+  //           }
+  //      }
+  // });
+
+  //   $("#viewperiod").on("change", function(){
+  //     console.log("Selected date: " + "; input's current value: " + this.value);
+
+  //   })
+
+  $('#viewperiod').datepicker().on('changeDate', function () {
+    localStorage.setItem('monthvar',this.value);
+
+    $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
+    $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
+    $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+
+    getCurrentProp();
+  });
+
+</script>
+
+<script>
   $("#from").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
@@ -3677,10 +3743,12 @@ function badSnack() {
         type: 'get',
         data: {
                 prop: localStorage.getItem('propvar'),
+                month: localStorage.getItem('monthvar'),
                 target:"proponfocus"
         },
         success: function(data) {
-            $('#currentprop').text(data);
+            $('#currentprop').text(data[0]);
+            $('#currentmonth').text(data[1]); 
         },
     });
 
@@ -3688,12 +3756,14 @@ function badSnack() {
 
   }
 
+
   function getExpectedStats() {
     $.ajax({
         url: "{{ url_for('api.dashboard') }}",
         type: 'get',
         data: {
                 prop: localStorage.getItem('propvar'),
+                month: localStorage.getItem('monthvar'),
                 target:"expectedstats"
         },
         success: function(data) {
@@ -3713,6 +3783,7 @@ function badSnack() {
         type: 'get',
         data: {
                 prop: localStorage.getItem('propvar'),
+                month: localStorage.getItem('monthvar'),
                 target:"collectionstats"
         },
         success: function(data) {
@@ -3731,6 +3802,7 @@ function badSnack() {
         type: 'get',
         data: {
                 prop: localStorage.getItem('propvar'),
+                month: localStorage.getItem('monthvar'),
                 target:"balancestats"
         },
         success: function(data) {

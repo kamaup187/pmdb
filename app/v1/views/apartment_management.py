@@ -1575,7 +1575,10 @@ class Dashboard(Resource):
         if target == "proponfocus":
             if not month:
                 month = get_month_year(period)
-            return [prop,month]
+            else:
+                currmonth = get_month_year(period)
+
+            return [prop,currmonth]
 
         if target == "expectedstats":
 

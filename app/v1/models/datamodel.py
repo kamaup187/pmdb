@@ -1013,14 +1013,6 @@ class PaymentSchedule(db.Model):
     def __repr__(self):
         return self.schedule_name
 
-# class Test(db.Model):
-#     """db model class"""
-
-#     __tablename__ = 'tests'
-#     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-#     rent = db.Column(db.Float,default=0)
-
-
 # class MonthlyChargeHistory(db.Model):
 #     """db model class"""
 

@@ -246,7 +246,7 @@ def crm(user):
 def mbogi():
     print("Hi there")
     # from app import create_app
-    # app = create_app(configuration)
+    # app = create_app()
     # app.app_context().push()
 
     # tenant = TenantOp.fetch_tenant_by_id(1)
@@ -257,7 +257,7 @@ def mbogi():
 def show_me(txt,user_id):
     print(txt)
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     mtu = UserOp.fetch_user_by_id(user_id)
@@ -475,7 +475,7 @@ def run_scripts(user):
     
 def example_func(param):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
     user_obj = UserOp.fetch_user_by_national_id("00000000")
     # UserOp.update_user(user_obj,phone="777666999")
@@ -501,7 +501,7 @@ def format_month(num):
 def send_mail_notifications(company,param):
 
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     try:
@@ -963,7 +963,7 @@ def update_login_history(location,user):
 
 def advanta_sms_delivery(apikey,partnerid,msgid):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     payload = {
@@ -1494,9 +1494,9 @@ class CreateAdmin():
     """Helper class to create object/user"""
     def create_admin_user(self):
 
-        present = CompanyOp.fetch_company_by_name("KiotaPay")
+        present = CompanyOp.fetch_company_by_name("Admin")
         if not present:
-            company_obj = CompanyOp("KiotaPay",None,None,None,None,None)
+            company_obj = CompanyOp("Admin",None,None,None,None,None)
             company_obj.save()
 
             group1 = CompanyUserGroupOp("Administrator","administrator",company_obj.id)
@@ -1609,7 +1609,7 @@ class CreateRoles():
         print("Roles.................................OK")
 
     def auto_assign_admin_roles(self):
-        company = CompanyOp.fetch_company_by_name("KiotaPay")
+        company = CompanyOp.fetch_company_by_name("Admin")
         groups = company.groups
         for group in groups:
             group_id = group.id
@@ -3720,7 +3720,7 @@ def calculate_sms_cost_alt(sms,smstext):
 
 def send_statement(tenantid):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     tid = get_identifier(tenantid)
@@ -3805,7 +3805,7 @@ def send_statement(tenantid):
 
 def send_bulk_sms(propid,temp_txt):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     tenants1 = tenantauto(propid)
@@ -3915,7 +3915,7 @@ def send_bulk_sms(propid,temp_txt):
 
 def send_reminder_sms(propid,temp_txt,rem_bal):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     tenants1 = tenantauto(propid)
@@ -4031,7 +4031,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
 def autosend_pending_smsreceipts(payids):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     for payment_id in payids:
@@ -4169,7 +4169,7 @@ def autosend_pending_smsreceipts(payids):
 
 def send_out_email_invoices(prop,houses,override,charge,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     try:
@@ -4520,7 +4520,7 @@ def send_out_single_email_invoice(billid):
 
     # print("configgggs",configuration)
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     try:
@@ -4718,7 +4718,7 @@ def send_out_single_email_crm_invoice(ptenantid):
 
     # print("configgggs",configuration)
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     try:
@@ -4820,7 +4820,7 @@ def crm_mail_sender(conn,recepient,template_vars,email_addr,co):
 def discard_bills(props):
     # props > array of apartment ids
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     for prop in props:
@@ -4857,7 +4857,7 @@ def discard_bills(props):
 
 def send_out_sms_invoices(prop,houses,billid,charge,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
@@ -5562,7 +5562,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
 def send_activation_mail(email,name,url):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     print("goooiiing")
@@ -5573,7 +5573,7 @@ def send_activation_mail(email,name,url):
 
 def send_demo_mail(email,name,url):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     txt = Message('Welcome! Demo account.', sender = mailsender, recipients = [email])
@@ -5582,7 +5582,7 @@ def send_demo_mail(email,name,url):
 
 def auto_send_mail_receipt(payment_id,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
@@ -5683,7 +5683,7 @@ def auto_send_mail_receipt(payment_id,user_id):
 
 def auto_send_sms_receipt(payment_id,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
@@ -5816,7 +5816,7 @@ def upload_handler(file,current_user):
 
 def read_deposits_excel(dict_array,apartment_id,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -5910,7 +5910,7 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
 def read_excel(dict_array,apartment_id,ttype,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -6118,7 +6118,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
 def read_water_excel(dict_array,apartment_id,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
 
@@ -6254,7 +6254,7 @@ def read_water_excel(dict_array,apartment_id,user_id):
 
 def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     # print(dict_array)
@@ -6703,7 +6703,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
 def run_update(houseids,apartment_id,user_id):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -6838,7 +6838,7 @@ def run_update(houseids,apartment_id,user_id):
 
 def read_arrears_excel(dict_array,option,apartment_id,userid):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
 
@@ -6993,7 +6993,7 @@ def read_arrears_excel(dict_array,option,apartment_id,userid):
 
 def sendlogs(date):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     time = datetime.datetime.now() + relativedelta(hours=3)
@@ -7024,7 +7024,7 @@ def sendlogs(date):
 
 def penalty_calculator(param):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     prop_list = param
@@ -7135,7 +7135,7 @@ def penalty_calculator(param):
 
 def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7214,7 +7214,7 @@ def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7267,7 +7267,7 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7316,7 +7316,7 @@ def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7368,7 +7368,7 @@ def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7429,7 +7429,7 @@ def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7481,7 +7481,7 @@ def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     charge_type_id = get_charge_type_id(chargetype)
@@ -7575,7 +7575,7 @@ def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
 def total_bill(apartment_id,houseids,user_id,month,year):
     from app import create_app
-    app = create_app(configuration)
+    app = create_app()
     app.app_context().push()
 
     user = UserOp.fetch_user_by_id(user_id)

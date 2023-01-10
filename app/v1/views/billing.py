@@ -3127,7 +3127,7 @@ class ReceivePayment(Resource):
                     "email": "lacasaapartments2010@gmail.com"
                 }
 
-            if prop.id == 419:
+            elif prop.id == 419:
                 address = {
                     "address": "Nairobi",
                     "tel": "0735267087",

@@ -58,8 +58,14 @@ class Reports(Resource):
                 if item.month == period.month and item.year == period.year:
                     print(item.month,item.year)
 
-                    total_collections += item.rent_paid if item.rent_paid > 0 else 0
-                    grand_total_collections += item.rent_paid if item.rent_paid > 0 else 0
+                    try:
+                        total_collections += item.rent_paid if item.rent_paid > 0 else 0
+                    except:
+                        pass
+                    try:
+                        grand_total_collections += item.rent_paid if item.rent_paid > 0 else 0
+                    except:
+                        pass
 
             commission = prop.commission if prop.commission else 0.0
         

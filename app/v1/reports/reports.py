@@ -6259,7 +6259,7 @@ class MpesaStatement(Resource):
             begin = date_formatter_alt(start)
             begin_date = parse(begin)
 
-        end_date = begin_date.date() + datetime.timedelta(days=30)
+        end_date = begin_date.date() + datetime.timedelta(days=29)
 
         month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date.date()).days+1)]
         year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date.date()).days+1)]

@@ -854,8 +854,11 @@ class Index(Resource):
                 return Response(render_template("inactive_company.html"))
 
             card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg"
+
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
+            if str(company) == "Inva Properties":
+                card_theme = "premier-card-theme"
 
             return Response(render_template(
                 indexpage,
@@ -1246,8 +1249,9 @@ class PropStats(Resource):
         unpacked_occupancy = flatten(occupancy)
 
         num_of_occ = len(unpacked_occupancy)
-
+        company = None
         for apartment in props:
+            company = apartment.company
 
             monthly_bills = apartment.monthlybills
             for item in monthly_bills:
@@ -1296,10 +1300,20 @@ class PropStats(Resource):
             defaulters = "--"
 
         invss = f"{invs}/{num_of_occ}"
+
+        if company:
+            card_theme = "premier-card-theme" if str(company) == "Premier Realty" else "card-bg"
+            
+            if str(company) == "National Bank":
+                card_theme = "nbk-card-theme"
+            if str(company) == "Inva Properties":
+                card_theme = "premier-card-theme"
+        else:
+            card_theme = "card-bg"
             
         return Response(render_template(
             'ajax_dashboard_refresh.html',
-            card_theme = "premier-card-theme" if str(current_user.company) == "Premier Realty" else "card-bg",
+            card_theme = card_theme,
             month_string=get_str_month(present_month),
             month_str=get_str_mnth(present_month),
             collection_percentage = f"{collection_percentage:,.0f}",

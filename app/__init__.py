@@ -42,7 +42,7 @@ from .v1.models.datamodel import *
 from .v1 import version_one as v1
 # from .v2 import version_two as v2
 
-def create_app():
+def create_app(*args):
 
     try:
         from do_secrets import APP_SETTINGS
@@ -51,6 +51,12 @@ def create_app():
     # from dapp import create_dapp
 
     configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
+
+    if not configuration:
+        if args:
+            for arg in args:
+                configuration = arg
+                break
 
     app = Flask(__name__)
     Talisman(app,content_security_policy=None)    

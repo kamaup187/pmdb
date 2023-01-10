@@ -1433,7 +1433,9 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-        loginpage = "login2.html" if os.getenv("TARGET") == "lasshouse" else "login.html"
+        auth = os.getenv("TARGET") or TARGET
+
+        loginpage = "login2.html" if auth == "lasshouse" else "login.html"
 
         return Response(render_template(loginpage))
 

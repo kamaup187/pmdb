@@ -4993,6 +4993,7 @@ class TenantStatement(Resource):
 class TenantStatementTwo(Resource):
     @login_required
     def get(self):
+        tenant_id = None
         target = request.args.get("target")
         prop = request.args.get("selected_apartment")
 
@@ -5004,7 +5005,7 @@ class TenantStatementTwo(Resource):
             house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
             return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
 
-        if not prop:
+        if not prop and target != "direct":
             apartment_list = fetch_all_apartments_by_user(current_user)
             return Response(render_template(
                 'report_tenant_statement2.html',
@@ -5017,18 +5018,31 @@ class TenantStatementTwo(Resource):
                 mobilelogopath=logo(current_user.company)[1]
             ))
 
-        start = request.args.get("from")
-        stop = request.args.get("to")
+        if target == "direct":
+            tenant_id = request.args.get("tenantid")
+            if tenant_id.startswith("ptnt"):
+                tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
 
-        begin = date_formatter_alt(start)
-        end = date_formatter_alt(stop)
+            begin_date = tenant_obj.date
+            end_date = datetime.datetime.now()
 
-        begin_date = parse(begin)
-        end_date = parse(end)
+        else:
+            start = request.args.get("from")
+            stop = request.args.get("to")
 
-        date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
+            begin = date_formatter_alt(start)
+            end = date_formatter_alt(stop)
 
-        # print("RANGES",date_range)
+            begin_date = parse(begin)
+            end_date = parse(end)
+
+        month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date).days+1)]
+        year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date).days+1)]
+
+        # print("RANGES",month_range)
+        # print("RANGES",year_range)
 
         raw_tenant = request.args.get("selected_tenant")
 
@@ -5043,19 +5057,82 @@ class TenantStatementTwo(Resource):
                 house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
                 tenant_obj = check_occupancy(house_obj)[1]
                 tenant_id = tenant_obj.id
-
-        else:
-            tenant_id = None
+            
 
         if tenant_id:
             
             range_period_data = []
             for i in tenant_obj.monthly_charges:
-                period_of_billing = generate_date(i.month,i.year)
+                period_of_billing = generate_start_date(i.month,i.year)
                 # print("PERIOD",period_of_billing)
-                if period_of_billing.date() in date_range:
-                    print("PERIOD",period_of_billing)
+                if period_of_billing.month in month_range and period_of_billing.year in year_range:
+                    # print("PERIOD",period_of_billing)
                     range_period_data.append(i)
+
+
+        # target = request.args.get("target")
+        # prop = request.args.get("selected_apartment")
+
+        # if target == "tenants":
+        #     prop = request.args.get("apartment")
+        #     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        #     tenants = tenantauto(prop_obj.id)
+        #     vacated_tenants = tenantauto_reverse(prop_obj.id)
+        #     house_tenant_list = generate_house_tenants_alt(tenants,vacated_tenants)
+        #     return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant")
+
+        # if not prop:
+        #     apartment_list = fetch_all_apartments_by_user(current_user)
+        #     return Response(render_template(
+        #         'report_tenant_statement2.html',
+        #         props=apartment_list,
+        #         name=current_user.name,
+        #         tenant_obj = None,
+        #         prop = "",
+        #         tenantlist=[],
+        #         logopath=logo(current_user.company)[0],
+        #         mobilelogopath=logo(current_user.company)[1]
+        #     ))
+
+        # start = request.args.get("from")
+        # stop = request.args.get("to")
+
+        # begin = date_formatter_alt(start)
+        # end = date_formatter_alt(stop)
+
+        # begin_date = parse(begin)
+        # end_date = parse(end)
+
+        # date_range = [begin_date.date() + datetime.timedelta(days=x) for x in range(0, (end_date-begin_date).days+1)]
+
+        # # print("RANGES",date_range)
+
+        # raw_tenant = request.args.get("selected_tenant")
+
+        # apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
+
+        # if raw_tenant:
+        #     if raw_tenant.startswith("Vac"):
+        #         tenant_obj = extract_tenant(raw_tenant)
+        #         print("VACATED TENANT >>>>STATEMENT",tenant_obj.monthly_charges)
+        #         tenant_id = tenant_obj.id
+        #     else:
+        #         house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
+        #         tenant_obj = check_occupancy(house_obj)[1]
+        #         tenant_id = tenant_obj.id
+
+        # else:
+        #     tenant_id = None
+
+        # if tenant_id:
+            
+        #     range_period_data = []
+        #     for i in tenant_obj.monthly_charges:
+        #         period_of_billing = generate_date(i.month,i.year)
+        #         # print("PERIOD",period_of_billing)
+        #         if period_of_billing.date() in date_range:
+        #             print("PERIOD",period_of_billing)
+        #             range_period_data.append(i)
 
 
             main = []

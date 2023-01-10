@@ -885,7 +885,6 @@ def logo(co):
 
         else:
             if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
-                print("kkkaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
                 ##################################################
                 logopath = "../static/img/logos/inva/l-logo.png"
                 mobilelogopath = "../static/img/logos/inva/s-logo.png"
@@ -893,7 +892,6 @@ def logo(co):
                 letterhead = "../static/img/logos/inva/letterhead.jpg"
                 sign = ""
             else:
-                print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
                 ##################################################
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"

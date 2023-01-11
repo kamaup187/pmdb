@@ -5879,9 +5879,10 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
             if house_obj.housecode:
                 rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
-                waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
-                # elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
-                elecdep = 0.0
+                # waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
+                waterdep = 0.0
+                elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
+                # elecdep = 0.0
 
 
                 total = rentdep+waterdep+elecdep+values[3]

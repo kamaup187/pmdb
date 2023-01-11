@@ -785,7 +785,7 @@ class BillInvoice(Resource):
             template = "ajax_tenant_invoice_mail2.html" if crm(current_user) else "ajax_tenant_invoice_mail.html"
 
             if bill.house.housecode.billfrequency == 3:
-                str_month = f"July, August, September"
+                str_month = f"January, February, March"
             else:
                 str_month = get_str_month(bill.month)
 
@@ -843,7 +843,7 @@ class BillInvoice(Resource):
             prop_obj= bill.apartment
 
             if bill.house.housecode.billfrequency == 3:
-                str_month = f"July, August, September"
+                str_month = f"January, February, March"
             else:
                 str_month = get_str_month(prop_obj.billing_period.month)
 

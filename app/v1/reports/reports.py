@@ -3206,6 +3206,8 @@ class DepositStatement(Resource):
         for bill in deps:
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
+            if bill.tenant not in tenants:
+                continue
 
             if reporttype == "unrefunded":
                 if bill.status != "refunded":
@@ -3253,7 +3255,7 @@ class DepositStatement(Resource):
 
 
         ###################################################################################################
-        if reporttype == "unrefunded":reporttype
+        if reporttype == "unrefunded":
             template = "report_unrefunded_deposit_statement.html"
         else:
             template = "report_deposit_statement.html"

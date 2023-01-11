@@ -5833,7 +5833,10 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
         print("RSTATUS",rstatus)
 
-        status = "unrefunded" if rstatus == "" else "refunded"
+        if rstatus == "":
+            status = "unrefunded"
+        else:
+            status = rstatus
 
         print("STATUS",status)
 

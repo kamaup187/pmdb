@@ -3199,15 +3199,18 @@ class DepositStatement(Resource):
         db.session.expire(apartment_obj)
 
         deps = apartment_obj.deposits
+        tenants = tenantauto(apartment_obj.id)
         totaldep = 0.0
 
         ###################################################################################################
         for bill in deps:
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
+            if bill.tenant not in tenants:
+                continue
 
             if reporttype == "unrefunded":
-                if bill.status == "unrefunded":
+                if bill.status != "refunded":
                     pass
                 else:
                     continue

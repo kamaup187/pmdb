@@ -996,7 +996,10 @@ class PropSearchData(Resource):
         houses = flatten(raw_units)
 
 
-        suggestions = generate_suggestions_alt(props,houses,tenancy,residents)  
+        suggestions = generate_suggestions_alt(props,houses,tenancy,residents)
+
+        #print(suggestions) 
+
         return Response(render_template(
             'ajax_load_searchdata.html',
             suggestions=suggestions

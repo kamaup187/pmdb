@@ -3199,6 +3199,7 @@ class DepositStatement(Resource):
         db.session.expire(apartment_obj)
 
         deps = apartment_obj.deposits
+        tenants = tenantauto(apartment_obj.id)
         totaldep = 0.0
 
         ###################################################################################################
@@ -3207,7 +3208,7 @@ class DepositStatement(Resource):
             # bill_item = LandlordSummaryOp.external_view(bill)
 
             if reporttype == "unrefunded":
-                if bill.status == "unrefunded":
+                if bill.status != "refunded":
                     pass
                 else:
                     continue
@@ -3252,7 +3253,7 @@ class DepositStatement(Resource):
 
 
         ###################################################################################################
-        if reporttype == "unrefunded":
+        if reporttype == "unrefunded":reporttype
             template = "report_unrefunded_deposit_statement.html"
         else:
             template = "report_deposit_statement.html"

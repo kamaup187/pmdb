@@ -4255,7 +4255,7 @@ class EditHouseCode(Resource):
                 billfreq = 12
             elif bill_freq == "semi-annually":
                 billfreq = 6
-            elif bill_freq == "quarterly":
+            elif bill_freq == "quaterly":
                 billfreq = 3
             else:
                 billfreq = 1

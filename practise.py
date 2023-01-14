@@ -83,6 +83,47 @@
 
 
 
-print(list(range(1,(5+1))))
+# print(list(range(1,(5+1))))
+
+# import requests
+
+# def inva_send_sms():
+
+#     url = "https://vas.bulk.ke/api/PushSMS"
+
+#     payload = {
+#         "username": "invap_api",
+#         "password": "kX3RXvn5xCdePhKos4ZHYmpdiyXhLqVm",
+#         "shortcode": "INVA_PROPTS",
+#         "mobile": "254716674695",
+#         "message": "Hi Martin, this is message test from Peter"
+#     }
+
+#     try:
+#         response = requests.post(url, json=payload)
+#         print("ADVANTA sms sending successful")
+#     except Exception as e:
+#         response = ""
+#         print("ADVANTA sms sending failed",e)
+
+#     try:
+#         print(response.json())
+#         msgid = response.json()['referenceid']
+#         print("ADVANTA sms response success")
+#     except Exception as e:
+#         print("ADVANTA sms response error",e)
+#         msgid = ""
+
+#     if msgid:
+#         respdict = {
+#         "apikey":"",
+#         "partnerID":"",
+#         "msgid":msgid
+#         }
+#     else:
+#         respdict = None
+
+#     return respdict
+
 
 

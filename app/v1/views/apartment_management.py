@@ -3943,7 +3943,11 @@ class TenantSms(Resource):
                     sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
                     sms_obj.save()
 
-                    if co.sms_provider == "Advanta":
+                    if target == "lasshouse":
+                        report = inva_send_sms(message,phonenum)
+                        return render_template('ajaxproceed.html',alert=msg)            
+
+                    elif co.sms_provider == "Advanta":
                         sms_sender(co.name,sms_text,phonenum)
 
                         msg = "Message sent successfully"

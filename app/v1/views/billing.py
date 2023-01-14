@@ -1797,8 +1797,12 @@ class SendSms(Resource):
                 # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
                 #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                 #     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
+                if target == "lasshouse":
+                    report = inva_send_sms(message,phonenum)
+                    return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 
-                if co.sms_provider == "Advanta":
+
+                elif co.sms_provider == "Advanta":
                     sms_sender(co.name,message,phonenum)
                     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 

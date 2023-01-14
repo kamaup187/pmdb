@@ -3029,7 +3029,7 @@ class ReceivePayment(Resource):
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
         if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
-            receiptlink = f"https://cr.com/r/{rand_id}"
+            receiptlink = f"https://{INV}/r/{rand_id}"
         else:
             receiptlink = f"https://kiotapay.com/r/{rand_id}"
 

@@ -82,6 +82,7 @@ sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
 configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 target = os.getenv("TARGET") or TARGET
+INV = "inva.properties"
 
 
 from .advanta import *

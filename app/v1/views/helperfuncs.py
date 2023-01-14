@@ -4080,7 +4080,14 @@ def autosend_pending_smsreceipts(payids):
 
         amount = f'Kes {payment_obj.amount:,.0f}'
 
-        receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+        # receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+
+        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+            receiptlink = f"https://{INV}/r/{payment_obj.rand_id}"
+        else:
+            receiptlink = f"https://kiotapay.com/r/{payment_obj.rand_id}"
+
+        receipt = f"Receipt: {receiptlink}"
 
         co = payment_obj.apartment.company
         str_co = co.name

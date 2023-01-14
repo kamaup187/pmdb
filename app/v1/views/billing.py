@@ -3028,12 +3028,12 @@ class ReceivePayment(Resource):
             outline = "text-success"
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
-            receiptlink = f"https://{INV}/r/{rand_id}"
-        else:
-            receiptlink = f"https://kiotapay.com/r/{rand_id}"
+        # if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+        #     receiptlink = f"https://{INV}/r/{rand_id}"
+        # else:
+        #     receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
-        receipt = f"Receipt: {receiptlink}"
+        # receipt = f"Receipt: {receiptlink}"
 
         if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
 

@@ -26,7 +26,9 @@ class Config(object):
 class ProductionConfig(Config):
     DEBUG = False
     # SQLALCHEMY_DATABASE_URI = os.environ['HEROKU_POSTGRESQL_AQUA_URL']
-    SQLALCHEMY_DATABASE_URI = os.getenv('HEROKU_POSTGRESQL_AQUA_URL') or HEROKU_POSTGRESQL_AQUA_URL
+    dbconn = os.getenv('HEROKU_POSTGRESQL_AQUA_URL') or HEROKU_POSTGRESQL_AQUA_URL
+    print("::::::::::::::::DATABASE CONNECTED TO: >>>>>>",dbconn)
+    SQLALCHEMY_DATABASE_URI = dbconn
 
 
 class StagingConfig(Config):

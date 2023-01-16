@@ -81,6 +81,9 @@ except ImportError:
 sender = os.getenv("SENDER_ID") or SENDER_ID
 mailsender = os.getenv('G_ACCOUNT') or G_ACCOUNT
 configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
+target = os.getenv("TARGET") or TARGET
+INV = "inva.properties"
+
 
 from .advanta import *
 
@@ -3761,8 +3764,12 @@ def send_statement(tenantid):
         sms_obj = SentMessagesOp(message,char_count,cost,None,ptenant.id,prop.id,co.id)
         sms_obj.save()
 
+        if target == "lasshouse":
+            report = inva_send_sms(message,phonenum)
+            return None
 
-        if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+
+        elif co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
             sms_sender(co.name,message,phonenum)
 
         # if co.name == "Lesama Ltd":
@@ -3867,7 +3874,11 @@ def send_bulk_sms(propid,temp_txt):
 
                     # allowed = True
                     # if allowed:
-                    if co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+                    if target == "lasshouse":
+                        report = inva_send_sms(message,phonenum)
+                        return None
+
+                    elif co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
                         sms_sender(co.name,message,phonenum)
 
                     # if co.name == "Lesama Ltd":
@@ -3979,8 +3990,12 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
+                    if target == "lasshouse":
+                        report = inva_send_sms(message,phonenum)
+                        return None
 
-                    if co.sms_provider == "Advanta":
+
+                    elif co.sms_provider == "Advanta":
                     # allowed = True
                     # if allowed:
                         sms_sender(co.name,message,phonenum)
@@ -4065,7 +4080,14 @@ def autosend_pending_smsreceipts(payids):
 
         amount = f'Kes {payment_obj.amount:,.0f}'
 
-        receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+        # receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+
+        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+            receiptlink = f"https://{INV}/r/{payment_obj.rand_id}"
+        else:
+            receiptlink = f"https://kiotapay.com/r/{payment_obj.rand_id}"
+
+        receipt = f"Receipt: {receiptlink}"
 
         co = payment_obj.apartment.company
         str_co = co.name
@@ -4123,7 +4145,13 @@ def autosend_pending_smsreceipts(payids):
                     print("Payment sms sending initiated")
                     recipient = [phonenum]
 
-                    if co.sms_provider == "Advanta":
+
+                    if target == "lasshouse":
+                        report = inva_send_sms(message,phonenum)
+                        return None
+
+
+                    elif co.sms_provider == "Advanta":
                         smsid = sms_sender(co.name,message,phonenum)
                         if smsid:
                             PaymentOp.update_smsid(payment_obj,smsid)
@@ -5165,7 +5193,12 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,None,tenant.id,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            if co.sms_provider == "Advanta":
+
+                            if target == "lasshouse":
+                                report = inva_send_sms(message,phonenum)
+                                return None
+
+                            elif co.sms_provider == "Advanta":
                             # allowed = True
                             # if allowed:
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -5300,7 +5333,11 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             sms_obj = SentMessagesOp(message,char_count,cost,tenant2.id,None,prop_obj.id,co.id)
                             sms_obj.save()
 
-                            if co.sms_provider == "Advanta":
+                            if target == "lasshouse":
+                                report = inva_send_sms(message,phonenum)
+                                return None
+
+                            elif co.sms_provider == "Advanta":
                             # if co.name.lower() == "rhino park place" or co.name.lower() == "test agencies":
                             #     allowed = False
                             # else:

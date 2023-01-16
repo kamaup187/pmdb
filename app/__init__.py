@@ -48,7 +48,6 @@ def create_app(*args):
         from do_secrets import APP_SETTINGS
     except ImportError:
         APP_SETTINGS = os.getenv('APP_SETTINGS')
-    # from dapp import create_dapp
 
     configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 

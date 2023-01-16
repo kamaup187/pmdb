@@ -1797,8 +1797,12 @@ class SendSms(Resource):
                 # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
                 #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
                 #     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
+                if target == "lasshouse":
+                    report = inva_send_sms(message,phonenum)
+                    return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 
-                if co.sms_provider == "Advanta":
+
+                elif co.sms_provider == "Advanta":
                     sms_sender(co.name,message,phonenum)
                     return f'<span class="text-success smallify ln-10">Sent successfully</span>'
 
@@ -3024,12 +3028,12 @@ class ReceivePayment(Resource):
             outline = "text-success"
             bal = f"KES {payment_obj.balance*-1:,.0f}"
 
-        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
-            receiptlink = f"https://cr.com/r/{rand_id}"
-        else:
-            receiptlink = f"https://kiotapay.com/r/{rand_id}"
+        # if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+        #     receiptlink = f"https://{INV}/r/{rand_id}"
+        # else:
+        #     receiptlink = f"https://kiotapay.com/r/{rand_id}"
 
-        receipt = f"Receipt: {receiptlink}"
+        # receipt = f"Receipt: {receiptlink}"
 
         if sms_bool and current_user.company_user_group.name != "Userrrrrr": #typo intentional
 

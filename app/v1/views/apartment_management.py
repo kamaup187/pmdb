@@ -3324,6 +3324,7 @@ class ExpenseManagement(Resource):
             return render_template('ajax_search_expense.html',bills=approved_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-success",data_group="Approved requests")
 
         if target == "completed":
+            #print("all exxxxxxwsss",all_expenses)
             for i in all_expenses:
                 if i.status == "completed":
                     item = InternalExpenseOp.view(i)
@@ -3481,7 +3482,7 @@ class Expenses(Resource):
         else:
             int_month = get_numeric_month(month)
             # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
-            expense_period = generate_date(int_month,2022)
+            expense_period = generate_date_alt(int_month,2023) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
 
         pending_expenses = []
         completed_expenses = []

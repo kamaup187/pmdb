@@ -3632,6 +3632,15 @@ def generate_date(month,year):
     # .day if month != 2 else datetime.datetime.now().day - 3
     return datetime.datetime(year, month, 15)
 
+def generate_date_alt(month,year):
+    # print("Month",month,"Year",year)
+    # if month == 2:
+    #     day = datetime.datetime.now()
+    
+    day = datetime.datetime.now().day
+    # .day if month != 2 else datetime.datetime.now().day - 3
+    return datetime.datetime(year, month, day)
+
 def generate_exact_date(day,month,year):
     # print("Month",month,"Year",year)
     # if month == 2:

@@ -1,23 +1,8 @@
   
-
-<script>
-  console.log("heeeyyy0")
-  arr_results = "{{ suggestions|safe }}";
-  console.log("heeeyyy2",arr_results)
-
-</script>
-
   <script>
-
-    console.log("heeeyyy1")
-
     arr_results = "{{ suggestions|safe }}";
 
-    console.log("heeeyyy2",arr_results)
-
     var outputstr= arr_results.replace(/'/g,'"');
-
-    console.log("heeeyyy3",outputstr)
  
     if(arr_results) {
       arr_resultsTwo = JSON.parse(outputstr)

@@ -998,7 +998,7 @@ class PropSearchData(Resource):
 
         suggestions = generate_suggestions_alt(props,houses,tenancy,residents)
 
-        #print(suggestions) 
+        # print(suggestions) 
 
         return Response(render_template(
             'ajax_load_searchdata.html',

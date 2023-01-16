@@ -3,6 +3,8 @@
     arr_results = "{{ suggestions|safe }}";
 
     var outputstr= arr_results.replace(/'/g,'"');
+
+    console.log(outputstr);
  
     if(arr_results) {
       arr_resultsTwo = JSON.parse(outputstr)

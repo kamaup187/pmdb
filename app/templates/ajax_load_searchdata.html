@@ -1,6 +1,11 @@
   
   <script>
+    console.log("Before safing >>>>>>>>>");
+
     arr_results = "{{ suggestions|safe }}";
+
+    console.log("Before replace",arr_results);
+
 
     var outputstr= arr_results.replace(/'/g,'"');
 

@@ -127,7 +127,8 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        coss = CompanyOp.fetch_all_companies()
+        # coss = CompanyOp.fetch_all_companies()
+        coss = []
         for t in coss:
             if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Developer" or t.name == "Demo Company Two":
                 CompanyOp.update_ctype(t,"crm")
@@ -737,12 +738,15 @@ class Index(Resource):
             #     print("payment found for ref", ref)
             # else:
             #     print("payment not found for", ref)
-            cbt = CtoBop.fetch_record_by_ref(ref)
-            if cbt:
-                print("cbt found for ref", ref)
-                CtoBop.delete(cbt)
-            else:
-                print("cbt not found for", ref)
+
+
+            # cbt = CtoBop.fetch_record_by_ref(ref)
+            # if cbt:
+            #     print("cbt found for ref", ref)
+            #     CtoBop.delete(cbt)
+            # else:
+            #     print("cbt not found for", ref)
+            
 
             # if company.name == "Latitude Propertiess":
             #     props = company.props

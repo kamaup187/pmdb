@@ -1051,11 +1051,29 @@ def sms_sender(company,sms_text,phonenum):
         print("NO REPORT TO CHECK")
         return None
 
-
-        
-     
+ 
 def remove_dups(x):
     return list(dict.fromkeys(x))
+
+def phone_number_formatter_07xx(phone):
+    """Formats a phone number to 07xx"""
+    str_phone = str(phone)
+    if len(str_phone) > 12:
+        return ""
+    elif len(str_phone) < 9:
+        return ""
+    else:
+        pass
+
+    if str_phone.startswith("254"):
+        formatted_phone = "0" + str_phone.lstrip("254")
+    elif str_phone.startswith("7"):
+        formatted_phone = "0" + str_phone
+    elif str_phone.startswith("+254"):
+        formatted_phone = "0" + str_phone.lstrip("+254")
+    else:
+        formatted_phone = str_phone
+    return formatted_phone
 
 def phone_number_formatter(phone):
     str_phone = str(phone)
@@ -9675,15 +9693,18 @@ def build_search_phone(tenant_item):
     house = get_active_houses(tenant_item)[1]
     phone = tenant_item.phone
     if not phone:
-        return None
+        return ""
+
+    formatted_phone = phone_number_formatter_07xx(phone)
+    if not formatted_phone:
+        return ""
 
     dict_item = {
-        "name" : remove_special_characters(phone) + "(" + tenant_item.name + ")",
+        "name" : remove_special_characters(formatted_phone) + "(" + remove_special_characters(tenant_item.name) + ")",
         "id" : "tphone"+str(tenant_item.id),
         "group" : f"({smart_truncate(remove_special_characters(str(house)),10)})",
         "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'
     }
-    # print(dict_item["name"])
     return dict_item
 
 def generate_suggestions_alt(props,houses,tenants,ptenants):
@@ -9701,12 +9722,12 @@ def generate_suggestions_alt(props,houses,tenants,ptenants):
     # suggestions_list1 = []
     # suggestions_list2 = []
     # suggestions_list3 = []
-    suggestions_list4 = []
+    # suggestions_list4 = []
 
     suggestions_list1 = [build_search_unit(house) for house in houses]
     suggestions_list2 = [build_search_tenant(tenant) for tenant in tenants]
     suggestions_list3 = [build_search_ptenant(ptenant) for ptenant in ptenants]
-    # suggestions_list4 = [build_search_phone(tenant) for tenant in tenants if tenant.phone]
+    suggestions_list4 = [build_search_phone(tenant) for tenant in tenants if tenant.phone]
 
     # print("Monster>>>>>>>",len(suggestions_list))
 

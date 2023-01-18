@@ -522,14 +522,15 @@ class Index(Resource):
         else:
             setreminder = ""
             
-
         unread_messages = []
         prop_ids = []
 
         for prop in apartment_list:
             prop_ids.append(prop.id)
 
+
         apartment_list.append("All properties")
+        # import pdb; pdb.set_trace()
 
         usergroup = current_user.user_group
         user_group = str(usergroup)
@@ -871,6 +872,14 @@ class Index(Resource):
                 card_theme = "premier-card-theme"
                 cpw = "Inva"
 
+            if current_user.company_user_group.name == "Sales":
+                sidebar = "sidebar-toggled sidenav-toggled"
+                toggle= "dispnone"
+
+            else:
+                sidebar = ""
+                toggle = ""
+
             return Response(render_template(
                 indexpage,
                 clientaccess = "access",
@@ -878,6 +887,8 @@ class Index(Resource):
                 topbar_theme = "bg-white" if str(company) == "Premier Realty" else "bg-white",
                 card_theme = card_theme,
                 cpw = cpw,
+                sidebar=sidebar,
+                toggle=toggle,
                 co=company,
                 companyname = companyname,
                 cbids=cbids,
@@ -1420,13 +1431,17 @@ class GraphStats(Resource):
                 currmonth = date_formatter_alt(month)
                 period = parse(currmonth)
         else:
-            prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
-            if not month:
-                period = prop_obj.billing_period
-                prop = prop_obj.name
-            else:
-                currmonth = date_formatter_alt(month)
-                period = parse(currmonth)
+            try:
+                prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
+                if not month:
+                    period = prop_obj.billing_period
+                    prop = prop_obj.name
+                else:
+                    currmonth = date_formatter_alt(month)
+                    period = parse(currmonth)
+
+            except:
+                period = datetime.datetime.now()
 
         # time = datetime.datetime.now()
        
@@ -1608,13 +1623,17 @@ class Dashboard(Resource):
                 currmonth = date_formatter_alt(month)
                 period = parse(currmonth)
         else:
-            prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
-            if not month:
-                period = prop_obj.billing_period
-                prop = prop_obj.name
-            else:
-                currmonth = date_formatter_alt(month)
-                period = parse(currmonth)
+            try:
+                prop_obj = ApartmentOp.fetch_apartment_by_name(props[0].name)
+                if not month:
+                    period = prop_obj.billing_period
+                    prop = prop_obj.name
+                else:
+                    currmonth = date_formatter_alt(month)
+                    period = parse(currmonth)
+            except:
+                period = datetime.datetime.now()
+
 
         if target == "proponfocus":
             currmonth = get_month_year(period)
@@ -2269,9 +2288,14 @@ class TenantManagement(Resource):
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
 
+        if current_user.company_user_group.name == "Sales":
+            access = "dispnone"
+        else:
+            access = ""
+
         template = "ajax_tenants_detail2.html" if crm(current_user) else "ajax_tenants_detail.html"
 
-        return render_template(template,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
+        return render_template(template,access=access,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
 
 class SubmissionsManagement(Resource):
     """class"""
@@ -4999,6 +5023,9 @@ class AddTenant(Resource):
         apartment_id = get_identifier(prop_id)
 
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+        if target == "lead engagement":
+            return success
 
         if target == "excelupload":
             file = request.files.get('file')

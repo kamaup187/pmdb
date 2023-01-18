@@ -60,7 +60,7 @@ def create_app(*args):
     app = Flask(__name__)
     Talisman(app,content_security_policy=None)    
     
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",configuration)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<",configuration)
 
     app.config.from_object(configurations[configuration])
     # app.config.from_object(os.environ['APP_SETTINGS'])

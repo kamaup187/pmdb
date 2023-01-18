@@ -1979,6 +1979,14 @@ class LeadOp(Lead,Base):
             'chats': len(self.conversations)
         }
 
+class ConversationOp(Conversation,Base):
+    def __init__(self,channel,subject,discussion,feedback):
+        self.channel = channel
+        self.subject = subject
+        self.discussion = discussion
+        self.feedback = feedback
+
+
 class PermanentTenantOp(PermanentTenant,Base):
     def __init__(self,name,phone,national_id,email,arrears,house_id,apartment_id,created_by):
         self.name = name

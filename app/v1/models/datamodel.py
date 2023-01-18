@@ -763,8 +763,9 @@ class Conversation(db.Model):
     __tablename__ = 'conversations'
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    action = db.Column(db.String)
-    message = db.Column(db.String)
+    channel = db.Column(db.String)
+    subject = db.Column(db.String)
+    discussion = db.Column(db.String)
     feedback = db.Column(db.VARCHAR)
     date = db.Column(db.DateTime,default=db.func.current_timestamp())
     status = db.Column(db.String,default="pending")

@@ -881,10 +881,10 @@ def logo(co):
 
         elif str_name_company == "Developer" or str_name_company == "Demo Company Two":
             ##################################################
-            logopath = "../static/img/logos/maisha/l-logo.png"
-            mobilelogopath = "../static/img/logos/maisha/l-logo.png"
-            fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
-            letterhead = "../static/img/logos/nbk/letterhead.jpg"
+            logopath = "../static/img/logos/kiotapay/l-logo.png"
+            mobilelogopath = "../static/img/logos/kiotapay/l-logo.png"
+            fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
+            letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
         else:
             if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
@@ -2300,10 +2300,12 @@ def fetch_all_apartments_by_owner(owner_id):
 def fetch_all_apartments_by_user(current_user):
     if current_user.username == "admin":
         apartment_list = ApartmentOp.fetch_all_apartments()
+    elif current_user.company_user_group.name == "Sales":
+        apartment_list = current_user.company.props
     else:
         apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
         
-    return apartment_list
+    return list(apartment_list)
 
 def fetch_all_houses_by_user(current_user):
     if current_user.username == "admin":
@@ -5952,11 +5954,12 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
                 total = rentdep+waterdep+elecdep+values[3]
 
                 if tenant.deposits:
-                    print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
-                    TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
-                    TenantOp.update_deposit(tenant,total)
+                    TenantDepositOp.delete(tenant.deposits)
+                    # print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
+                    # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
+                    # TenantOp.update_deposit(tenant,total)
 
-                else:
+                # else:
                     print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
 
                     dep = TenantDepositOp(rentdep,waterdep,elecdep,values[3],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
@@ -7671,7 +7674,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
     user = UserOp.fetch_user_by_id(user_id)
     apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)
-
+    
     print("BILLING FOR",month,year)
     print("BILLING PROP",apartment_obj.name)
     print("Current billing period is",apartment_obj.billing_period.date())
@@ -7727,10 +7730,10 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
                     sch.save()
 
-                others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+                # others = f"40% Legal fees,Stamp Duty,service charge etc.)"
 
-                legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
-                legal_fee_schedule.save()
+                # legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
+                # legal_fee_schedule.save()
 
             else:
                 booking = 0.0

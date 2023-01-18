@@ -17,7 +17,10 @@
                 <th class="text-black font-weight-bold ">Status</th>
                 <th class="text-black font-weight-bold">Date</th>
                 <th class="text-black font-weight-bold ">Engagements</th>
-                <!-- <th class="text-black font-weight-bold text-primary dispnone" data-orderable="false">Edit</th> -->
+                <!-- <th class="text-black font-weight-bold ">History</th> -->
+                <th class="text-black font-weight-bold ">Convert</th>
+
+                <!-- <th class="text-black font-weight-bold text-primary" data-orderable="false">Edit</th> -->
                 <th class="text-black font-weight-bold  text-danger" data-orderable="false">Remove</th>
 
                 </tr>
@@ -25,7 +28,7 @@
             <tbody>
                 {% for i in items%}
                 <tr>
-                <td id="{{i['identity']}}" class="data-cell font-weight-bold mt-1 text-primary no-wrap">{{ i['name'] }}</td>
+                <td id="" class="data-cell font-weight-bold mt-1 text-primary no-wrap">{{ i['name'] }}</td>
                 <td class="data-cell">{{ i['tel'] }}</td>
                 <td class="data-cell ">{{ i['email'] }}</td>
 
@@ -34,10 +37,21 @@
 
                 <td class="data-cell">
                   <div>
-                    <span id="{{i['editid']}}" type="button" class="text-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#chatModal">Engagements {{i['conversations']}} <i class="fas fa-angle-double-right ml-1"></i></span>
+                    <span id="{{i['id']}}" type="button" class="text-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#chatModal">Engagements {{i['conversations']}} <i class="fas fa-angle-double-right ml-1"></i></span>
                   </div>
                 </td>
 
+                <!-- <td class="data-cell">
+                  <div>
+                    <span id="{{i['editid']}}" type="button" class="text-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#chatModal">History {{i['conversations']}} <i class="fas fa-angle-double-right ml-1"></i></span>
+                  </div>
+                </td> -->
+
+                <td class="data-cell">
+                  <div>
+                    <span id="{{i['identity']}}" type="button" class="text-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#addTenantModal">Convert {{i['conversations']}} <i class="fas fa-angle-double-right ml-1"></i></span>
+                  </div>
+                </td>
                 <!-- <td class="text-s data-cell dispnone">
                   <div>
                     <button id="{{i['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>

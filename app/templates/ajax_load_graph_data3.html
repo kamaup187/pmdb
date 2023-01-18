@@ -39,7 +39,7 @@
         <div class="card shadow mb-1 bg-white">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <div class="m-0 font-weight-bold smallify targetprop"><i class="fas fa-chart-line me-2"></i>Expected vs Actual Collections <span>(<span class="text-black targetprop">{{targetprop}}</span>)</span></div>
+                <div class="m-0 font-weight-bold smallify targetprop"><i class="fas fa-chart-line me-2"></i>Leads vs Conversions <span>(<span class="text-black targetprop">{{targetprop}}</span>)</span></div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -82,24 +82,35 @@
         var stringData = document.getElementById("theInput").innerText;
         var app_data = stringData.split`,`.map(x=>+x);
 
+
+        var app_datah = app_data.map(function (element) {
+            return element * 0.000001;
+        });
+
+
+
         var stringData2 = document.getElementById("theInput2").innerText;
         var app_data2 = stringData2.split`,`.map(x=>+x);
+
+        var app_data2h = app_data2.map(function (element) {
+            return element * 0.000001;
+        });
 
         var myLineChart = new Chart(ctxL, {
         type: 'line',
         data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
         datasets: [{
-        label: "Expected collection",
-        data: app_data,
+        label: "Actual leads (Millions)",
+        data: app_datah,
         backgroundColor: [
         'rgb(135,206,250',
         ],
         borderWidth: 2
         },
         {
-        label: "Actual collection",
-        data: app_data2,
+        label: "Converted leads (Millions)",
+        data: app_data2h,
         backgroundColor: [
         'rgb(136, 240, 147)',
         ],

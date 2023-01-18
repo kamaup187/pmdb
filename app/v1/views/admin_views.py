@@ -630,7 +630,10 @@ class AllProperties(Resource):
 
         # raw_props2 = current_user.company.props
 
-        raw_props2 = fetch_all_apartments_by_user(current_user)
+        if target == "tenants" or target == "units" and current_user.company_user_group.name == "Sales":
+            raw_props2 = current_user.company.props
+        else:
+            raw_props2 = fetch_all_apartments_by_user(current_user)
 
         if localenv:
             # raw_props3 = ApartmentOp.fetch_all_apartments()

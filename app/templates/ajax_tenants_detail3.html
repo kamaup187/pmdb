@@ -1,6 +1,5 @@
 
     <section class="contact_area section_gap">
-      <span id="access" class="dispnone">{{access}}</span>
       <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
       <span id="tenant_identifier" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnone"></span>
@@ -38,8 +37,8 @@
                 <div>
                   <label class="me-2"><input type="checkbox" value="cb1" class="chb"/> Hot/cold leads</label>
                   <label class="me-2"><input type="checkbox" value="cb2" class="chb" /> Booked clients</label>
-                  <label class="me-2 {{access}}"><input type="checkbox" value="cb3" class="chb" checked/> Current sales</label>
-                  <label class="me-2 {{access}}"><input type="checkbox" value="cb4" class="chb"/> Closed sales</label>
+                  <!-- <label class="me-2"><input type="checkbox" value="cb3" class="chb" checked/> Current sales</label> -->
+                  <!-- <label class="me-2"><input type="checkbox" value="cb4" class="chb"/> Closed sales</label> -->
                 </div>
               </nav>
             </div>
@@ -161,72 +160,45 @@
      
                       <div class="mt-2 mb-3">
 
-                        <div class="row mb-5">
-                          <div class="form-group col-md-4">
+                        <div class="row underline-thin">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>Surname? <span class="text-danger">*</span></span>
                               <input id="l-sname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Wanjiku"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
                           </div>
 
-                          <div class="form-group col-md-4">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>First name? <span class="text-danger">*</span></span>
                               <input id="l-fname" class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" placeholder="John"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
                           </div>
 
-                          <div class="form-group col-md-4">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>Other?</span>
                               <input id="l-oname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Kipchoge"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-address-card text-info"></i></span>
                           </div>
                         </div>
 
-                        <div class="row mt-1 mb-5">
-                          <div class="form-group col-md-4">
+                        <div class="row mt-1 underline-thin">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>National id <span class="text-danger">*</span></span>
                               <input id="l-natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="123456**"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                           </div>
 
-                          <div class="form-group col-md-4">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>Mobile number <span class="text-danger">*</span></span>
                               <input id="l-tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07123456**"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-phone text-info"></i></span>
                           </div>
 
-                          <div class="form-group col-md-4">
+                          <div class="form-group col-md-4 no-paddin input-icons">
                             <span>Email</span>
                               <input id="l-email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
                               <span class="input-group-addon field-icon"><i class="fas fa-fw fa-envelope text-info"></i></span>
                           </div>
                         </div>
-
-                        <div class="row mb-5">
-                          <div class="form-group col-md-6  ">
-                            <span>Source</span>
-                            <select class="select-css" id ="leadsource" >
-                              <option disabled selected value> select... </option>
-                              <option value="Social media">Social media</option>
-                              <option value="Referrals">Referrals </option>
-                              <option value="search">Google search</option>
-                              <option value="Events">Events</option>
-                              <option value="Advertisements">Advertisements</option>
-                            </select>
-                          </div>
-                          
-                          <div class="form-group col-md-6  ">
-                            <span>Project of interest</span>
-                            <select class="select-css" id ="select_project" >
-                              <option disabled selected value>Project 1</option>
-                            </select>
-                          </div>
-                        </div>
-
-                          <div class="form-group">
-                            <span>Notes</span>
-                              <textarea class="form-control" placeholder="Notes" rows="2"></textarea>
-                          </div>
-                        
 
                       </div>
                     
@@ -338,8 +310,8 @@
                             <span>Type</span>
                             <select class="select-css" id ="classtype" >
                               <option disabled selected value> select... </option>
-                              <option value="other">Normal</option>
-                              <option value="shareholder">Mortgage</option>
+                              <option value="other">Other</option>
+                              <option value="shareholder"> Shareholder </option>
 
                             </select>
                           </div>
@@ -586,18 +558,13 @@
                         <div class="row mb-3">
                           <div class="col-5 no-padding text-right"><span class="form-control smallify border-0">Subject</span></div>
                           <div class="form-group col-7 no-paddin input-icons">
-                            <input id="subject" class="form-control ph pl-5" type="text" placeholder="{{plot}}">
+                            <input id="subject_input" class="form-control ph pl-5" type="text" placeholder="{{plot}}">
                           </div>
-                        </div>
-
-                        <div class="form-group dispnon mt-2 mb-3">
-                          <label>Discussion</label>                     
-                          <textarea rows="4" id="discussion" class="form-control ph" rows="2" placeholder="Write lead responses here"></textarea>
                         </div>
   
                         <div class="form-group dispnon mt-2 mb-3">
                           <label>Feedback</label>                     
-                          <textarea rows="4" id="feedback" class="form-control ph" rows="1" placeholder="Write feedback here"></textarea>
+                          <textarea rows="4" id="remindertext" class="form-control ph" rows="1" placeholder="Write lead responses here"></textarea>
                         </div>
                       </div>
         
@@ -1565,35 +1532,6 @@
 </script>
 
 <script>
-  $("#chatbtn").click(function(){   
-    $("#chatbtn").html("Submitting...")  
-      $.ajax({
-        url: "{{ url_for('api.addtenant') }}",
-        type: "POST",
-        data: {
-                lead:$("#lead_identifier").text(),
-                channel: $("#channel").val(),
-                subject: $("#subject").val(),
-                discussion: $("#discussion").val(),
-                feedback: $("#feedback").val(),
-                target: "lead engagement"
-            },
-        success: function(response) {
-          snack(response);
-          
-          setTimeout(function(){
-            $(".reset").click();
-            // $('#chatbtn').attr('disabled', 'disabled');
-            $('#chatbtn').removeClass('btn-success')
-            $('#chatbtn').addClass('btn-secondary')
-            $("#chatbtn").html("Submit")
-          }, 2000);
-        }
-      });
-  });
-</script>
-
-<script>
       
   $("#del_lead").on('click',function(){   
     $('#del_lead').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
@@ -2146,13 +2084,13 @@ $('#expand').click(function(){
 
 <script type="text/javascript">
 
-  function refresh(param,url) {
+  function refresh() {
     $.ajax({
-          url: url,
+          url: "{{ url_for('api.fetchtenants') }}",
           type: "get",
           data: {
             propid:  $("#prop_identifier").text(),
-            target:param
+            target:"contracts"
           },
           success: function(response) {
             $("#barloader-alt").addClass("dispnone")
@@ -2163,11 +2101,7 @@ $('#expand').click(function(){
   
   $(document).ready(function() {
     $("#barloader-alt").removeClass("dispnone")
-    if ($("#access").text() == "dispnone") {
-      setTimeout(refresh("leads","{{ url_for('api.fetchleads') }}"),10);
-    }else {
-      setTimeout(refresh("contracts","{{ url_for('api.fetchtenants') }}"),10);
-    }
+      setTimeout(refresh,10);
   });
   </script>
 

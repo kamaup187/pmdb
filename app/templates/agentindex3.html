@@ -38,13 +38,13 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed {{sidebar}}">
     <div id="snackbed"></div>
 
     <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white"
         id="sidenavAccordion">
         <!-- Sidenav Toggle Button-->
-        <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0" id="sidebarToggle"><i
+        <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0 {{toggle}}" id="sidebarToggle"><i
                 data-feather="menu"></i></button>
         <!-- Navbar Brand-->
         <!-- * * Tip * * You can use text or an image for your navbar brand.-->
@@ -202,7 +202,7 @@
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
-            <nav class="sidenav shadow-right sidenav-light">
+            <nav class="sidenav shadow-right sidenav-light {{toggle}}">
                 <div class="sidenav-menu">
                     <div class="nav accordion" id="accordionSidenav">
                         <!-- Sidenav Menu Heading (Account)-->
@@ -480,7 +480,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link propbtn" href="#!">View</a>
+                                    <a class="text-primary stretched-link {{pbtn}}" href="#!">View</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -546,14 +546,14 @@
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link tenantbtn" href="#!">Open</a>
+                                    <a class="text-primary stretched-link housebtn" href="#!">Open</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row {{toggle}}">
                         <div class="col-xl-3 col-md-6 mb-4">
                             <!-- Dashboard info widget 1-->
                             <div class="card border-start-lg border-start-primary h-100">
@@ -1890,6 +1890,8 @@
         });
     });
   </script>
+  
+
 
 <script>
     $(".userbtn").on('click',function(){

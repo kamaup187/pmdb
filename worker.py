@@ -12,8 +12,6 @@ listen = ['default']
 
 redis_url = os.getenv('REDIS_URL') or REDIS_URL
 
-print("THIS IS REDIS_URL >>>>",redis_url)
-
 if not redis_url:
     redis_url = "redis://localhost:6379"
 

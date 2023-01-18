@@ -3201,7 +3201,7 @@ class DepositStatement(Resource):
         deps = apartment_obj.deposits
         tenants = tenantauto(apartment_obj.id)
         totaldep = 0.0
-
+        
         ###################################################################################################
         for bill in deps:
             """compute subtotals"""
@@ -3210,44 +3210,80 @@ class DepositStatement(Resource):
                 continue
 
             if reporttype == "unrefunded":
-                if bill.status != "refunded":
-                    pass
+                if bill.status == "refunded":
+                    if bill.rentdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'DEP',
+                            "status":bill.status,
+                            "amount":f'0.0'
+                        }
+                        
+                        detailed_bills.append(datadict)
+                    if bill.waterdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'WDP',
+                            "status":bill.status,
+                            "amount":f'0.0'
+                        }
+                        totaldep += bill.waterdep
+
+                        detailed_bills.append(datadict)
+                    if bill.elecdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'EDP',
+                            "status":bill.status,
+                            "amount":f'0.0'
+                        }
+
+                        detailed_bills.append(datadict)
+
                 else:
-                    continue
-                # print("kerrrrrooooon" ,bill.waterdep)
-                if bill.rentdep:
-                    datadict = {
-                        "house":bill.house,
-                        "tenant":bill.tenant,
-                        "datepaid":bill.date.strftime("%d/%b/%y"),
-                        "paycode":'DEP',
-                        "amount":f'{bill.rentdep:,.1f}'
-                    }
-                    totaldep += bill.rentdep
+                    if bill.rentdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'DEP',
+                            "status":bill.status,
+                            "amount":f'{bill.rentdep:,.1f}'
+                        }
+                        totaldep += bill.rentdep
 
-                    detailed_bills.append(datadict)
-                if bill.waterdep:
-                    datadict = {
-                        "house":bill.house,
-                        "tenant":bill.tenant,
-                        "datepaid":bill.date.strftime("%d/%b/%y"),
-                        "paycode":'WDP',
-                        "amount":f'{bill.waterdep:,.1f}'
-                    }
-                    totaldep += bill.waterdep
+                        detailed_bills.append(datadict)
+                    if bill.waterdep:
+                        print("yeuuuuu",bill.waterdep)
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'WDP',
+                            "status":bill.status,
+                            "amount":f'{bill.waterdep:,.1f}'
+                        }
+                        totaldep += bill.waterdep
 
-                    detailed_bills.append(datadict)
-                if bill.elecdep:
-                    datadict = {
-                        "house":bill.house,
-                        "tenant":bill.tenant,
-                        "datepaid":bill.date.strftime("%d/%b/%y"),
-                        "paycode":'EDP',
-                        "amount":f'{bill.elecdep:,.1f}'
-                    }
-                    totaldep += bill.elecdep
+                        detailed_bills.append(datadict)
+                    if bill.elecdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'EDP',
+                            "status":bill.status,
+                            "amount":f'{bill.elecdep:,.1f}'
+                        }
+                        totaldep += bill.elecdep
 
-                    detailed_bills.append(datadict)
+                        detailed_bills.append(datadict)
             else:
                 bill_item = TenantDepositOp.view(bill)
                 detailed_bills.append(bill_item)
@@ -6877,7 +6913,11 @@ class FetchTenants(Resource):
             tenantids = get_obj_ids(tenantlist)
             moreids = inject_tenants_ids(tenantlist) 
             full_ids = tenantids + "," + moreids
-            return render_template("ajax_newtenantlist2.html",items=tenantlist,tenantids=full_ids)
+            if current_user.company_user_group.name == "Sales":
+                access = "dispnone"
+            else:
+                access = ""
+            return render_template("ajax_newtenantlist2.html",access=access,items=tenantlist,tenantids=full_ids)
 
         elif target == "contracts":
             # tenancy = tenantauto_alt(propid,"invoiced and missing contracts") + tenantauto_alt(propid,"invoiced and contracts")

@@ -436,7 +436,7 @@ class Users(Resource):
 
             all_users = current_user.company.users
             users = [user for user in all_users if not user.delete]
-            
+
             allowed_categories = ["Admin","Manager","Director","Office Admin","Sales Supervisor"]
 
             if current_user.username == "admin":
@@ -519,7 +519,7 @@ class Users(Resource):
             del_user = UserOp.fetch_user_by_id(user_id)
 
             if del_user:
-                if localenv or  current_user.username.startswith("qc"):
+                if localenv or current_user.username.startswith("qc") or current_user.company_user_group.name == "Director":
                     current_props = fetch_all_apartments_by_user(del_user)
                     for i in current_props:
                         print("removing apartment",i)
@@ -1464,6 +1464,10 @@ class UserLogin(Resource):
             downtime = True
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
 
+        if user:
+            if user.delete:
+                flash('Account does not exist!','fail')
+                return redirect(url_for('api.userlogin'))
         
         if runcode:
             if user:

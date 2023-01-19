@@ -3218,7 +3218,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'DEP',
                             "status":bill.status,
-                            "amount":0.0
+                            "amount":f'0.0'
                         }
                         
                         detailed_bills.append(datadict)
@@ -3229,7 +3229,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'WDP',
                             "status":bill.status,
-                            "amount":0.0
+                            "amount":f'0.0'
                         }
 
                         detailed_bills.append(datadict)
@@ -3240,7 +3240,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'EDP',
                             "status":bill.status,
-                            "amount":0.0
+                            "amount":f'0.0'
                         }
 
                         detailed_bills.append(datadict)
@@ -3253,9 +3253,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'DEP',
                             "status":bill.status,
-                            # "amount":f'{bill.rentdep:,.1f}'
-                            "amount":bill.rentdep
-
+                            "amount":f'{bill.rentdep:,.1f}'
                         }
                         totaldep += bill.rentdep
 
@@ -3268,9 +3266,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'WDP',
                             "status":bill.status,
-                            # "amount":f'{bill.waterdep:,.1f}'
-                            "amount":bill.waterdep
-
+                            "amount":f'{bill.waterdep:,.1f}'
                         }
                         totaldep += bill.waterdep
 
@@ -3282,9 +3278,7 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'EDP',
                             "status":bill.status,
-                            # "amount":f'{bill.elecdep:,.1f}'
-                            "amount":bill.elecdep
-
+                            "amount":f'{bill.elecdep:,.1f}'
                         }
                         totaldep += bill.elecdep
 

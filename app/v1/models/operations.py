@@ -402,6 +402,10 @@ class UserOp(User,Base):
         return User.query.filter_by(active=False).order_by(User.id.desc()).all()
 
     @staticmethod
+    def fetch_all_deleted_users():
+        return User.query.filter_by(delete=True).order_by(User.id.desc()).all()
+
+    @staticmethod
     def fetch_all_users_per_prop(prop_id):
         return User.query.join(Apartment.users).filter(Apartment.id == prop_id).order_by(User.name.asc()).all()#many to many relationship
 
@@ -452,6 +456,10 @@ class UserOp(User,Base):
 
     def update_status(self,status):
         self.active = status
+        db.session.commit()
+
+    def delete_user(self,status):
+        self.delete = status
         db.session.commit()
 
     def update_roles(self,roles):

@@ -7070,7 +7070,11 @@ class FetchUsers(Resource):
 
         # subids = get_obj_ids(userlist_alt)
 
-        users = current_user.company.users
+        # users = current_user.company.users
+
+        all_users = current_user.company.users
+        users = [user for user in all_users if not user.delete]
+
         allowed_categories = ["Manager","Director"]
 
         if current_user.username == "admin":

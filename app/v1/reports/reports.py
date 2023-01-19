@@ -3231,7 +3231,7 @@ class DepositStatement(Resource):
                             "status":bill.status,
                             "amount":f'0.0'
                         }
-                        totaldep += bill.waterdep
+                        # totaldep += bill.waterdep
 
                         detailed_bills.append(datadict)
                     if bill.elecdep:

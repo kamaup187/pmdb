@@ -140,6 +140,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String)
     password = db.Column(db.VARCHAR,nullable=False)
     active = db.Column(db.Boolean,default=True)
+    delete = db.Column(db.Boolean,default=False)
     roles = db.Column(db.VARCHAR,default="none")
 
     bank = db.Column(db.VARCHAR)
@@ -160,6 +161,8 @@ class User(db.Model,UserMixin):
 
     expenses = db.relationship('InternalExpense', backref='user', cascade="all, delete-orphan")
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
+    leads = db.relationship('Lead',backref='user',order_by='Lead.date', cascade="all, delete-orphan")
+
 
     def __repr__(self):
         return self.username

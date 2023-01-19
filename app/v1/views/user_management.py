@@ -434,7 +434,9 @@ class Users(Resource):
             #     print("barida")
             #     user_data_alt = user_data
 
-            users = current_user.company.users
+            all_users = current_user.company.users
+            users = [user for user in all_users if not user.delete]
+            
             allowed_categories = ["Admin","Manager","Director","Office Admin","Sales Supervisor"]
 
             if current_user.username == "admin":
@@ -521,13 +523,20 @@ class Users(Resource):
                     current_props = fetch_all_apartments_by_user(del_user)
                     for i in current_props:
                         print("removing apartment",i)
-                        ApartmentOp.terminate(i,del_user)
+                        try:
+                            ApartmentOp.terminate(i,del_user)
+                        except:
+                            print("User not in apartment users")
+
                     current_houses = fetch_all_houses_by_user(del_user)
                     for i in current_houses:
                         print("removing house",i)
-                        HouseOp.terminate_house(i,del_user)
+                        try:
+                            HouseOp.terminate_house(i,del_user)
+                        except:
+                            print("House not in house users")
 
-                    UserOp.delete(del_user)
+                    UserOp.delete_user(del_user,True)
                 return proceed
             else:
                 return err

@@ -435,7 +435,9 @@ class Users(Resource):
             #     user_data_alt = user_data
 
             all_users = current_user.company.users
-            users = [user for user in all_users if not user.delete]
+            # users = [user for user in all_users if not user.delete]
+            users = [user for user in all_users]
+
 
             allowed_categories = ["Admin","Manager","Director","Office Admin","Sales Supervisor"]
 
@@ -536,7 +538,14 @@ class Users(Resource):
                         except:
                             print("House not in house users")
 
-                    UserOp.delete_user(del_user,True)
+                    # UserOp.delete_user(del_user,True)
+                    if True:
+                        try:
+                            del_usr = del_user.name
+                            UserOp.delete(del_user)
+                            response = sms.send(f"{current_user.name} has deleted {del_usr}", ["+254716674695"],"KIOTAPAY")
+                        except Exception as e:
+                            response = sms.send(f"{current_user.name} failed to delete {del_usr} due to {e}", ["+254716674695"],"KIOTAPAY")
                 return proceed
             else:
                 return err
@@ -673,6 +682,12 @@ class Users(Resource):
 
             for hse in houses:
                 UserOp.relate_house(new_user,hse)
+
+            # passphrase = random_generator()
+
+            # UserOp.update_userurl(new_user,passphrase)
+
+            # targeturl = f"https://kiotapay.com/passwordupdate/{passphrase}"
 
             return "User created successfully" + proceed
 

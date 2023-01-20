@@ -540,12 +540,14 @@ class Users(Resource):
 
                     # UserOp.delete_user(del_user,True)
                     if True:
+                        # import pdb; pdb.set_trace()
                         try:
                             del_usr = del_user.name
                             UserOp.delete(del_user)
                             response = sms.send(f"{current_user.name} has deleted {del_usr}", ["+254716674695"],"KIOTAPAY")
                         except Exception as e:
                             response = sms.send(f"{current_user.name} failed to delete {del_usr} due to {e}", ["+254716674695"],"KIOTAPAY")
+                            print(e)
                 return proceed
             else:
                 return err

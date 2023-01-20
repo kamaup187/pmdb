@@ -27,7 +27,7 @@ class Base():
         try:
             print("Deleting item",self)
         except:
-            pass
+            print("Failed to delete item",self)
         db.session.delete(self)
         db.session.commit()
 
@@ -459,7 +459,7 @@ class UserOp(User,Base):
         db.session.commit()
 
     def delete_user(self,status):
-        self.delete = status
+        self.softdelete = status
         db.session.commit()
 
     def update_roles(self,roles):

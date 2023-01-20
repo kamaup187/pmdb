@@ -238,7 +238,57 @@
           </div>
 
           <div class="divjust-end ln-16 mobile-malaysian">
-            <div class="">Remarks:</div>
+            <div class="mt-4">
+
+              <div class="mb-2">
+                <div class="text-black-bold">
+                  Prepared By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Checked By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Approved By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Cheque No:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Date:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+  
+            </div>
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
@@ -256,7 +306,9 @@
                 <div class="mb-1 text-black-bold">LETTING FEE</div>
                 <!-- <div class="mb-1 text-gray-900">LETTING FEE VAT</div> -->
 
-                <div class="mb-1 text-black-bold">OTHER DEDUCTIONS</div>
+                <div class="mb-1 text-black-bold">DISBURSEMENTS</div>
+                <div class="mb-1 text-black-bold">PAID TO L.LORD</div>
+
                 <div class="mb-1 text-black-bold">TOTAL DEDUCTIONS</div>
                 <div class="mb-1 text-black-bold">LANDLORD BALANCE</div>
 
@@ -265,8 +317,8 @@
               </div>
 
               <div class="text-black">
-                <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
-                <div class="mb-1 text-gray-900">0.0</div>
+                <div class="mb-1 text-gray-900">Kshs {{paidtotal_alt}}</div>
+                <div class="mb-1 text-gray-900">Kshs {{paidll}}</div>
                 <!-- <div class="mb-1 text-gray-900">Kshs {{remits}}</div> -->
                 <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                 <div class="hide mb-2">space</div>
@@ -277,7 +329,8 @@
                 <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
 
                 <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1">Kshs {{paidll}} (<span class="text-danger">debit</span>)</div>
+                <div class="mb-1 overline underline">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
                 <div class="mb-1">Kshs {{remits}} (<span class="text-success">credit</span>)</div>
 
 
@@ -288,57 +341,6 @@
             </div>
           </div>
 
-          <div class="divjust-end">
-
-            <div>
-              <div class="text-black-bold">
-                Prepared By:
-              </div>
-              <div>
-                <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
-                <div class="ln-10">__________</div>
-              </div>
-            </div>
-
-            <div>
-              <div class="text-black-bold">
-                Checked By:
-              </div>
-              <div>
-                <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
-                <div class="ln-10">__________</div>
-              </div>
-            </div>
-
-            <div>
-              <div class="text-black-bold">
-                Approved By:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-            <div>
-              <div class="text-black-bold">
-                Cheque No:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-            <div>
-              <div class="text-black-bold">
-                Date:
-              </div>
-              <div>
-                _____________________
-              </div>
-            </div>
-
-
-          </div>
         </div>
         
       </div>
@@ -346,7 +348,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone printdisplay">
+  <div id="invoice" class="col-lg-12  dispnon printdisplay">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -469,8 +471,56 @@
             </div>
             {%endif%}
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
-              <div class="hide">
-                hide
+              <div class="mt-4">
+
+                <div class="mb-2">
+                  <div class="text-black-bold">
+                    Prepared By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                    <div class="ln-10">__________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Checked By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                    <div class="ln-10">__________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Approved By:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Cheque No:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Date:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+    
               </div>
   
               <div class="divjust-end mr-5">
@@ -489,7 +539,9 @@
                   <div class="mb-1">LETTING FEE</div>
                   <!-- <div class="mb-1">LETTING FEE VAT</div> -->
   
-                  <div class="mb-1">OTHER DEDUCTIONS</div>
+                  <div class="mb-1 text-black-bold">DISBURSEMENTS</div>
+                  <div class="mb-1 text-black-bold">PAID TO L.LORD</div>
+
                   <div class="mb-1">TOTAL DEDUCTIONS</div>
                   <div class="mb-1">LANDLORD BALANCE</div>
 
@@ -498,8 +550,8 @@
                 </div>
   
                 <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{paidtotal}}</div>
-                  <div class="mb-1 text-gray-900">0.0</div>
+                  <div class="mb-1 text-gray-900">Kshs {{paidtotal_alt}}</div>
+                  <div class="mb-1 text-gray-900">Kshs {{paidll}}</div>
                   <!-- <div class="mb-1 text-gray-900">Kshs. {{remits}}</div> -->
                   <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
@@ -510,7 +562,8 @@
                   <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
   
                   <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{paidll}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1 overline underline">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
                   <div class="mb-1">Kshs {{remits}} (<span class="text-primary">credit</span>)</div>
   
                   <div class="hide mb-2">space</div>
@@ -518,59 +571,7 @@
                   <div class="text-gray-900 mb-3 text-110 overline underline">Kshs {{netpay}}</div>
                 </div>
               </div>
-            </div>
-            <div class="divjust-end">
-
-              <div>
-                <div>
-                  Prepared By:
-                </div>
-                <div>
-                  <div class="ln-10 font-weight-bold">{{name}}</div>
-                  <div class="ln-10">__________</div>
-                </div>
-              </div>
-  
-              <div>
-                <div>
-                  Checked By:
-                </div>
-                <div>
-                  <div class="ln-10 font-weight-bold">{{name}}</div>
-                  <div class="ln-10">__________</div>
-                </div>
-              </div>
-  
-              <div>
-                <div>
-                  Approved By:
-                </div>
-                <div>
-                  _____________________
-                </div>
-              </div>
-  
-              <div>
-                <div>
-                  Cheque No:
-                </div>
-                <div>
-                  _____________________
-                </div>
-              </div>
-  
-              <div>
-                <div>
-                  Date:
-                </div>
-                <div>
-                  _____________________
-                </div>
-              </div>
-  
-  
-            </div>
-          
+            </div>          
         </div>
       </div>
     </div>

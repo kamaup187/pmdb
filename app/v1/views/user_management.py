@@ -1482,7 +1482,7 @@ class UserLogin(Resource):
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
 
         if user:
-            if user.delete:
+            if user.softdelete:
                 flash('Account does not exist!','fail')
                 return redirect(url_for('api.userlogin'))
         

@@ -2641,6 +2641,10 @@ class RentStatement(Resource):
             }
             detailed_bills.append(new_item)
 
+        if apartment_obj.id == 148: #VERY URGENT
+            paidll = 20000.0
+        else:
+            paidll = 0.0
 
         bbftotal = (f"{totalbbf:,}")
 
@@ -2648,9 +2652,7 @@ class RentStatement(Resource):
 
         totalbill = totalbbf + totalrent
         billtotal = (f"{totalbill:,}")
-
         paidtotal = (f"{totalpaid:,}")
-
         bcftotal = (f"{totalbcf:,}")
 
         expense_list = []
@@ -2658,6 +2660,7 @@ class RentStatement(Resource):
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
         remittances = 0.0
+        
 
         exceptions = ["deposit refund", "remittance"]
 
@@ -2702,7 +2705,7 @@ class RentStatement(Resource):
             commission = apartment_obj.int_commission
             commission_percentage = f"{commission} flat rate"
 
-        debits = commission + expenses_amount
+        debits = commission + expenses_amount + paidll
 
         formatted_debits = f"{debits:,.1f}"
 
@@ -2711,7 +2714,7 @@ class RentStatement(Resource):
 
         llp_arr = llp.arrears if llp else 0.0 
             
-        raw_netpay = netrent - commission - expenses_amount - loan + remittances + llp_arr
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances + llp_arr - paidll
 
         netpay = (f"{raw_netpay:,.1f}")
 
@@ -2731,6 +2734,8 @@ class RentStatement(Resource):
         else:
             llbal = "0.0"
 
+        totalpaid -= paidll
+        paidtotal_alt = (f"{totalpaid:,}")
         
         template_vars = {
             "code":apartment_obj.id,
@@ -2778,10 +2783,12 @@ class RentStatement(Resource):
             renttotal=renttotal,
             billtotal=billtotal,
             paidtotal=paidtotal,
+            paidtotal_alt=paidtotal_alt,
             bcftotal=bcftotal,
             ratio=ratio,
             expenses = f"{expenses_amount:,.1f}",
             remits = f"{remits:,.1f}",
+            paidll = f"{paidll:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             commission=formatted_commision,

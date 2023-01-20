@@ -140,7 +140,7 @@ class User(db.Model,UserMixin):
     username = db.Column(db.String)
     password = db.Column(db.VARCHAR,nullable=False)
     active = db.Column(db.Boolean,default=True)
-    delete = db.Column(db.Boolean,default=False)
+    softdelete = db.Column(db.Boolean,default=False)
     roles = db.Column(db.VARCHAR,default="none")
 
     bank = db.Column(db.VARCHAR)

@@ -7073,7 +7073,9 @@ class FetchUsers(Resource):
         # users = current_user.company.users
 
         all_users = current_user.company.users
-        users = [user for user in all_users if not user.delete]
+        # users = [user for user in all_users if not user.delete]
+        users = [user for user in all_users]
+
 
         allowed_categories = ["Manager","Director"]
 

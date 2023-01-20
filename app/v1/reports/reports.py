@@ -3225,8 +3225,11 @@ class DepositStatement(Resource):
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'DEP',
                             "status":bill.status,
-                            "amount":f'0.0'
+                            "amount":f'{bill.rentdep:,.1f}' if bill.house.name == "B9" else f'0.0'
                         }
+
+                        if bill.house.name == "B9":
+                            totaldep += bill.rentdep 
                         
                         detailed_bills.append(datadict)
                     if bill.waterdep:

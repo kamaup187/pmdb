@@ -1281,10 +1281,17 @@ class EditProp(Resource):
 
         if current_user.username.startswith("qc") or current_user.name == "Test Agent" or current_user.username.startswith("quality") or localenv or permission_alt(current_user,""):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
-            if prop.company_id:
-                return "You are not allowed to perform this operation"
-            else:
-                ApartmentOp.delete(prop)
+            # if prop.company_id:
+            #     return "You are not allowed to perform this operation"
+            # else:
+            if True:
+                try:
+                    prp = prop.name
+                    ApartmentOp.delete(prop)
+                    response = sms.send(f"{current_user.name} has deleted {prp}", ["+254716674695"],"KIOTAPAY")
+                except Exception as e:
+                    response = sms.send(f"{current_user.name} failed to delete {prp} due to {e}", ["+254716674695"],"KIOTAPAY")
+
                 return "Property removed successfully"
         else:
             return "You are not allowed to perform this operation"

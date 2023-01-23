@@ -127,10 +127,10 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        # coss = CompanyOp.fetch_all_companies()
-        coss = []
+        coss = CompanyOp.fetch_all_companies()
+        # coss = []
         for t in coss:
-            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Developer" or t.name == "Demo Company Two":
+            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Developer" or t.name == "Demo Company Two" or t.name == "Zima Homes":
                 CompanyOp.update_ctype(t,"crm")
             else:
                 CompanyOp.update_ctype(t,"noncrm")

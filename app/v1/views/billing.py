@@ -6084,7 +6084,14 @@ class CallBackUrlMerit(Resource):
         resp = jsonify(response)
         return make_response(resp)
             
+class SendGridInbound(Resource):
+    def post(self):
 
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+
+        ww = f"{my_json}, Sendgrid has sent data"
+        resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
 
 class ResultUrl(Resource):
     """transaction status api, not in use"""

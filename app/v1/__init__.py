@@ -211,6 +211,8 @@ api.add_resource(CallBackUrlTestMerit,"/v1/merit/test/collection")
 api.add_resource(CallBackUrlLes,"/les/45")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 
+api.add_resource(SendGridInbound,"/sendgrid/mail")
+
 api.add_resource(ViewHouses, "/view/houses")
 api.add_resource(ViewMeters, "/view/meters")
 

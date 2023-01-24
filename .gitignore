@@ -133,3 +133,4 @@ logfiletwo.txt
 do_secrets.py
 app/temp
 
+sendgrid.env

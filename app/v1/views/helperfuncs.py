@@ -46,6 +46,9 @@ from werkzeug.utils import secure_filename
 
 import random
 from flask_mail import Message
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 # from flask import render_template,Response,request,flash,redirect,url_for,json
 from app.v1.models.operations import *
 from global_functions import *
@@ -63,6 +66,7 @@ try:
 except ImportError:
     APP_SETTINGS = None
     SENDER_ID = None
+    SENDGRID_KEY = None
     TARGET = None
     G_ACCOUNT = None
     HOMEPAGE = None
@@ -185,6 +189,39 @@ def ins_api_account_subscription(ckey,skey,account,password):
     else:
         print("Invalid token passed")
 
+
+def sendgrid_mail_sender(from_email, to_email, subject,txt,filename=None):
+    message = Mail(
+        from_email=from_email,
+        to_emails=to_email,
+        subject=subject,
+        html_content=txt)
+
+    if filename:
+        path = "app/temp/"+filename+".pdf"
+
+        with open(path, 'rb') as f:
+            data = f.read()
+            f.close()
+        encoded_file = base64.b64encode(data).decode()
+
+        attachedFile = Attachment(
+            FileContent(encoded_file),
+            FileName(filename),
+            FileType('application/pdf'),
+            Disposition('attachment')
+        )
+        message.attachment = attachedFile
+
+    try:
+        api_key = os.getenv("SENDGRID_KEY") or SENDGRID_KEY
+        sg = SendGridAPIClient(api_key)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print("Exception >>",e.message)
 
 def account_pesalink_transfer(ckey,skey,account,account2):
     token = generate_coop_token(ckey,skey)
@@ -4737,33 +4774,41 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
     ###################################################################################
     # LETS SEND EMAIL
     mail_filename = f"inv_{bill.id}"
-    with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
-        # print (fh)
-        try:
+    subject = co.name
+
+    try:
+        tname = recepient.name.split('and')[0]
+    except:
+        tname = recepient.name
+
+    if bill.house.housecode.billfrequency == 3:
+        billfrequency = "quarterly"
+        period = f"January, February, March service charge"
+    else:
+        period = f"{co.name.title()}: {get_str_month(bill.month)} invoice"
+        billfrequency = "monthly"
+
+    filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
+
+    mail_body = f"Dear {tname}  \nyour {billfrequency} invoice is now available. Kindly find the attached invoice below."
+
+    sendgrid = True
+
+    if sendgrid:
+        print("Sending via sendgrid >>>>>>>")
+        sendgrid_mail_sender("notifications@kiotapay.com",email_addr,subject,mail_body,mail_filename)
+        MonthlyChargeOp.update_email_status(bill,"sent")
+    else:
+        with open("app/temp/"+mail_filename+".pdf",'rb') as fh:
             try:
-                tname = recepient.name.split('and')[0]
-            except:
-                tname = recepient.name
+                txt = Message(period, sender = mailsender, recipients = [email_addr])
+                txt.body = mail_body
+                txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
+                conn.send(txt)
+                MonthlyChargeOp.update_email_status(bill,"sent")
+            except Exception as e:
+                print(str(e))
 
-            if bill.house.housecode.billfrequency == 3:
-                billfrequency = "quarterly"
-                period = f"January, February, March service charge"
-            else:
-                period = f"{co.name.title()}: {get_str_month(bill.month)} invoice"
-                billfrequency = "monthly"
-
-            filename_ext = f"{get_str_month(bill.month)}invoice.pdf"
-
-            txt = Message(period, sender = mailsender, recipients = [email_addr])
-            txt.body = f"Dear {tname}  \nyour {billfrequency} invoice is now available. Kindly find the attached invoice below. \n\n{co.name}"
-            # txt.html = render_template('ajax_payment_receipt.html',tenant=tenant_name,house=house,amount=paid,bill=bill,balance=running_bal,chargetype=chargetype_string,receiptno=receiptno,prop=stored_apartment)
-            txt.attach(filename=filename_ext,disposition="attachment",content_type="application/pdf",data=fh.read())
-            # mail.send(txt)
-            conn.send(txt)
-            MonthlyChargeOp.update_email_status(bill,"sent")
-
-        except Exception as e:
-            print(str(e))
     #########################################################################################
     os.remove(filename)
     #########################################################################################

@@ -324,13 +324,14 @@ class ForgotPassword(Resource):
 
 class SelfPasswordUpdate(Resource):
     def get(self,ri):
-        tel = request.args.get(ri)
-        existing_user = UserOp.fetch_user_by_phone(tel)
-
-        name = existing_user.name
-        userphone = existing_user.phone
-        return Response(render_template('setpassword.html',name=name,tel=userphone))                               
-                
+        existing_user = UserOp.fetch_user_by_phone(ri)
+        if existing_user:
+            name = existing_user.name
+            userphone = existing_user.phone
+            return Response(render_template('setpassword.html',name=name,tel=userphone))
+        else:                             
+            return Response(render_template('selfsignup.html'))
+   
 class Users(Resource):
     """class"""
     @login_required

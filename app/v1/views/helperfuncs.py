@@ -2335,14 +2335,16 @@ def fetch_all_apartments_by_owner(owner_id):
     return apartment_list
 
 def fetch_all_apartments_by_user(current_user):
-    if current_user.username == "admin":
-        apartment_list = ApartmentOp.fetch_all_apartments()
-    elif current_user.company_user_group.name == "Sales":
-        apartment_list = current_user.company.props
+    if current_user.company_user_group:
+        if current_user.username == "admin":
+            apartment_list = ApartmentOp.fetch_all_apartments()
+        elif current_user.company_user_group.name == "Sales":
+            apartment_list = current_user.company.props
+        else:
+            apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
+        return list(apartment_list)
     else:
-        apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
-        
-    return list(apartment_list)
+        return []
 
 def fetch_all_houses_by_user(current_user):
     if current_user.username == "admin":

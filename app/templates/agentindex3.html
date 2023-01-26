@@ -939,9 +939,13 @@
                     <h5 class="modal-title text-info divjust-end underline-thin-fade">
                         <span class="mr-3 smallify font-weight-bold">My profile</span>
                         <div>
-                            <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger"
-                                type="button" data-dismiss="modal">X</button>
-                        </div>
+                            <div class="d-inline">
+                              <button id="send-creds" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-success" type="button">send creds</button>
+                            </div>
+                            <div class="d-inline">
+                              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
+                            </div>
+                          </div>
                     </h5>
                     <div class="alert-msgs font-weight-bold"></div>
                 </div>
@@ -2085,7 +2089,9 @@
 
 <script>
     $("#profileModal").on('shown.bs.modal', function(){
-  
+
+        $("#send-creds").text("send creds")
+
       $.ajax({
         url: "{{ url_for('api.updateuser') }}",
         type: "get",
@@ -2108,6 +2114,24 @@
       $("#profileModalBed").html("loading"); 
   
     });
+
+
+    $("#send-creds").on('click', function(){
+    $("#send-creds").text("sending...")
+
+    $.ajax({
+      url: "{{ url_for('api.users') }}",
+      type: "POST",
+      data: {
+        userid:  $("#edit_user_identifier").text(),
+        target:"send creds"
+      },
+      success: function(response) {
+        $("#send-creds").text("sent")
+      }
+    });
+
+  })
   
    </script>
 

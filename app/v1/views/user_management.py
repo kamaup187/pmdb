@@ -317,7 +317,19 @@ class CompanyGroup(Resource):
                         groupids=get_obj_ids(groupitems),
                         groupitems=groupitems
                         ), err + "group does not exist"]
-                                        
+
+class ForgotPassword(Resource):
+    def get(self):
+        return Response(render_template('selfsignup.html'))
+
+class SelfPasswordUpdate(Resource):
+    def get(self,ri):
+        tel = request.args.get(ri)
+        existing_user = UserOp.fetch_user_by_phone(tel)
+
+        name = existing_user.name
+        userphone = existing_user.phone
+        return Response(render_template('setpassword.html',name=name,tel=userphone))                               
                 
 class Users(Resource):
     """class"""
@@ -326,6 +338,9 @@ class Users(Resource):
 
         update_login_history("users",current_user)
         target = request.args.get('target')
+
+        # if target == "self signup":
+        #     return Response(render_template('selfsignup.html'))
 
         if target == "add user":
 
@@ -492,7 +507,11 @@ class Users(Resource):
 
     def post(self):
         #GLOBAL
-        company = current_user.company
+
+        if len(vars(current_user)):
+            company = current_user.company
+        else:
+            company = None
 
         name = request.form.get('name')
         phone = request.form.get('phone')
@@ -514,6 +533,46 @@ class Users(Resource):
         allocation = request.form.get('allocation')
 
         alloc = get_bool(allocation)
+
+        if target == "self signup":
+            tel = request.form.get("tel")
+            existing_user = UserOp.fetch_user_by_phone(tel)
+            if not existing_user:
+                flash("Account not set up, please contact your company admin","fail")
+                return redirect(url_for("api.forgotpassword"))
+            else:
+                name = existing_user.name
+                userphone = existing_user.phone
+                return Response(render_template('setpassword.html',name=name,tel=userphone))
+
+        if target == "self set password":
+            tel = request.form.get("tel")
+            existing_user = UserOp.fetch_user_by_phone(tel) 
+
+            if pass1:
+                print("passsssssssss>>>>>",pass1)
+                validate_pass = ValidatePass.validate_password(pass1,pass2)
+                if  validate_pass=="no match":
+                    flash("Passwords do not match","fail")
+                    return Response(render_template('setpassword.html',name=existing_user.name,tel=existing_user.phone))
+                else:
+                    UserOp.update_user(existing_user,name=None,phone=None,national_id=None,email=None,password=pass1,user_group_id=None,company_id=None,modified_by=None)
+                    return redirect(url_for('api.userlogin'))
+            else:
+                flash("Passwords not set","fail")
+                return Response(render_template('setpassword.html',name=existing_user.name,tel=existing_user.phone))
+
+        if target == "send creds":
+            userid = request.form.get("userid")
+            user_id = get_identifier(userid)
+            del_user = UserOp.fetch_user_by_id(user_id)
+            if del_user.phone:
+                targeturl = f"https://kiotapay.com/passwordupdate?tel={del_user.phone}"
+                message1 = f"Greetings {del_user.name}. \nKindly click on the link below to reset your password. \n\n{targeturl}"
+                response = sms.send(message1, ["+254716674695"],sender)
+            else:
+                response = sms.send("no phone", ["+254716674695"],sender)
+
 
         if target == "delete user":
             userid = request.form.get("userid")

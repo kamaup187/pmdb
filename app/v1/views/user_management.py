@@ -579,6 +579,10 @@ class Users(Resource):
 
 
         if target == "delete user":
+
+            if not permission(current_user,"edit"):
+                return err + "insufficient permissions to edit" 
+
             userid = request.form.get("userid")
             user_id = get_identifier(userid)
             del_user = UserOp.fetch_user_by_id(user_id)
@@ -609,7 +613,9 @@ class Users(Resource):
                             UserOp.delete(del_user)
                             response = sms.send(f"{current_user.name} has deleted {del_usr}", ["+254716674695"],"KIOTAPAY")
                         except Exception as e:
+                            db.session.rollback()
                             response = sms.send(f"{current_user.name} failed to delete {del_usr} due to {e}", ["+254716674695"],"KIOTAPAY")
+                            # UserOp.delete_user(del_user,True)
                             print(e)
                 return proceed
             else:

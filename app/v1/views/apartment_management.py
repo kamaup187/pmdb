@@ -4107,7 +4107,7 @@ class CreateHouseCode(Resource):
 
     def post(self):
 
-        if not permission(current_user, 'add'):
+        if not permission(current_user, 'write'):
             return err + "Insufficient permissions to add sizes/rates"
 
         target = request.form.get('target')
@@ -4380,7 +4380,7 @@ class CreateHouse(Resource):
     @login_required
     def post(self):
 
-        if not permission(current_user, 'add'):
+        if not permission(current_user, 'write'):
             return err + "Insufficient permissions to add units/plots"
 
         target = request.form.get('target')

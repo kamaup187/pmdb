@@ -4107,6 +4107,9 @@ class CreateHouseCode(Resource):
 
     def post(self):
 
+        if not permission(current_user, 'add'):
+            return err + "Insufficient permissions to add sizes/rates"
+
         target = request.form.get('target')
         apartment_id = request.form.get('propid')
 
@@ -4247,6 +4250,9 @@ class EditHouseCode(Resource):
     @login_required
     def post(self):
 
+        if not permission(current_user, 'edit'):
+            return err + "Insufficient permissions to edit sizes/rates"
+
         target = request.form.get("target")
 
         if target == "delete":
@@ -4373,6 +4379,9 @@ class CreateHouse(Resource):
 
     @login_required
     def post(self):
+
+        if not permission(current_user, 'add'):
+            return err + "Insufficient permissions to add units/plots"
 
         target = request.form.get('target')
         apartment_id = request.form.get('propid')
@@ -4582,6 +4591,10 @@ class EditHouse(Resource):
             return render_template('ajaxproceed.html',alert=msg)
 
     def post(self):
+
+        if not permission(current_user, 'edit'):
+            return err + "Insufficient permissions to edit units/plots"
+
         propid = request.form.get('propid')
         houseid = request.form.get('houseid')
         name = request.form.get('name')

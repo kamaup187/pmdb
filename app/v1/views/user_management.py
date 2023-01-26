@@ -570,9 +570,12 @@ class Users(Resource):
             if del_user.phone:
                 targeturl = f"https://kiotapay.com/passwordupdate/{del_user.phone}"
                 message1 = f"Greetings {del_user.name}. \nKindly click on the link below to reset your password. \n\n{targeturl}"
-                response = sms.send(message1, ["+254716674695"],sender)
+
+                tele = sms_phone_number_formatter(del_user.phone)
+
+                response = sms.send(message1, [tele],sender)
             else:
-                response = sms.send("no phone", ["+254716674695"],sender)
+                response = sms.send(f"{del_user} has no phone", ["+254716674695"],sender)
 
 
         if target == "delete user":
@@ -745,11 +748,16 @@ class Users(Resource):
             for hse in houses:
                 UserOp.relate_house(new_user,hse)
 
-            # passphrase = random_generator()
 
-            # UserOp.update_userurl(new_user,passphrase)
+            if new_user.phone:
+                targeturl = f"https://kiotapay.com/passwordupdate/{new_user.phone}"
+                message1 = f"Greetings {new_user.name}. \nKindly click on the link below to set your password and proceed to login. \n\n{targeturl}"
 
-            # targeturl = f"https://kiotapay.com/passwordupdate/{passphrase}"
+                tele = sms_phone_number_formatter(new_user.phone)
+
+                response = sms.send(message1, [tele],sender)
+            else:
+                response = sms.send(f"{new_user} has no phone", ["+254716674695"],sender)
 
             return "User created successfully" + proceed
 

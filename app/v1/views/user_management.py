@@ -567,7 +567,7 @@ class Users(Resource):
             user_id = get_identifier(userid)
             del_user = UserOp.fetch_user_by_id(user_id)
             if del_user.phone:
-                targeturl = f"https://kiotapay.com/passwordupdate/tel={del_user.phone}"
+                targeturl = f"https://kiotapay.com/passwordupdate/{del_user.phone}"
                 message1 = f"Greetings {del_user.name}. \nKindly click on the link below to reset your password. \n\n{targeturl}"
                 response = sms.send(message1, ["+254716674695"],sender)
             else:

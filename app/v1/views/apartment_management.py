@@ -6809,10 +6809,10 @@ class CaptureReading(Resource):
         #################################################################################################
         if run == "houselist":
             house_list = filtered_house_list(apartment_id,readdate)
-            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select w meter")
         elif run == "houselist-alt":
             house_list = filtered_house_list_alt(apartment_id,readdate)
-            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select e meter")
         ##################################################################################################
         if not house:
             return '<div class="text-success center-btn"><i class="fas fa-info-circle mr-1 text-warning"></i>"Reading complete</div>'

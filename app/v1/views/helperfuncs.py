@@ -5937,9 +5937,9 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
     for item in dict_array:
 
         unit = item["unit"]
-        rentdep = item["rentdep"]
-        waterdep = item["waterdep"]
-        elecdep = item["elecdep"]
+        rentdep_str = item["rentdep"]
+        waterdep_str = item["waterdep"]
+        elecdep_str = item["elecdep"]
         otherdep = item["otherdep"]
         datepaid = item["datepaid"]
         rstatus = item["status"]

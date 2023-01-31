@@ -154,6 +154,8 @@
                   <th class="">TENANT NAME</th>
                   <th class="">DATE PAID</th>
                   <th class="">PAY CODE</th>
+                  <th class="">DEPOSIT</th>
+
                   <th class="">STATUS</th>
                   <th class="">AMOUNT</th>
 
@@ -167,6 +169,8 @@
                   <td class="data-cell text-left">{{ bill['tenant']}}</td>
                   <td class="data-cell text-left">{{ bill['datepaid'] }}</td>
                   <td class="data-cell text-center">{{ bill['paycode'] }}</td>
+                  <td class="data-cell text-center">{{ bill['deposit'] }}</td>
+
                   <td class="data-cell text-center">{{ bill['status'] }}</td>
                   <td class="data-cell text-right">{{bill['amount']}}</td>
    
@@ -177,7 +181,7 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="5" class="font-weight-bold">GRAND TOTAL ...</td>
+                  <td colspan="6" class="font-weight-bold">GRAND TOTAL ...</td>
                   <td class="font-weight-bold text-right">{{deptotal}}</td>
 
                 </tr>
@@ -255,6 +259,8 @@
                   <th class="">TENANT NAME</th>
                   <th class="">DATE PAID</th>
                   <th class="">PAY CODE</th>
+                  <th class="">DEPOSIT</th>
+
                   <th class="">STATUS</th>
                   <th class="">AMOUNT</th>
 
@@ -268,6 +274,8 @@
                   <td class="data-cell text-left">{{ bill['tenant']}}</td>
                   <td class="data-cell text-left">{{ bill['datepaid'] }}</td>
                   <td class="data-cell text-center">{{ bill['paycode'] }}</td>
+                  <td class="data-cell text-center">{{ bill['deposit'] }}</td>
+
                   <td class="data-cell text-center">{{ bill['status'] }}</td>
                   <td class="data-cell text-right">{{bill['amount']}}</td>
    
@@ -278,7 +286,7 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="5" class="font-weight-bold">GRAND TOTAL ...</td>
+                  <td colspan="6" class="font-weight-bold">GRAND TOTAL ...</td>
                   <td class="font-weight-bold text-right">{{deptotal}}</td>
 
                 </tr>

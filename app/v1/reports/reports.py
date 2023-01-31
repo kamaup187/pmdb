@@ -3224,35 +3224,46 @@ class DepositStatement(Resource):
                             "tenant":bill.tenant,
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'DEP',
+                            "deposit":f'{bill.rentdep:,.1f}',
                             "status":bill.status,
-                            "amount":f'{bill.rentdep:,.1f}' if bill.house.name == "B9" else f'0.0'
+                            "amount":f'0.0'
                         }
-
-                        if bill.house.name == "B9":
-                            totaldep += bill.rentdep 
-                        
                         detailed_bills.append(datadict)
+
                     if bill.waterdep:
                         datadict = {
                             "house":bill.house,
                             "tenant":bill.tenant,
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'WDP',
+                            "deposit":f'{bill.waterdep:,.1f}',
                             "status":bill.status,
                             "amount":f'0.0'
                         }
-
                         detailed_bills.append(datadict)
+
                     if bill.elecdep:
                         datadict = {
                             "house":bill.house,
                             "tenant":bill.tenant,
                             "datepaid":bill.date.strftime("%d/%b/%y"),
                             "paycode":'EDP',
+                            "deposit":f'{bill.elecdep:,.1f}',
                             "status":bill.status,
                             "amount":f'0.0'
                         }
+                        detailed_bills.append(datadict)
 
+                    if bill.otherdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'OTD',
+                            "deposit":f'{bill.otherdep:,.1f}',
+                            "status":bill.status,
+                            "amount":f'0.0'
+                        }
                         detailed_bills.append(datadict)
 
                 else:
@@ -3268,8 +3279,8 @@ class DepositStatement(Resource):
                         totaldep += bill.rentdep
 
                         detailed_bills.append(datadict)
+
                     if bill.waterdep:
-                        print("yeuuuuu",bill.waterdep)
                         datadict = {
                             "house":bill.house,
                             "tenant":bill.tenant,
@@ -3281,6 +3292,7 @@ class DepositStatement(Resource):
                         totaldep += bill.waterdep
 
                         detailed_bills.append(datadict)
+
                     if bill.elecdep:
                         datadict = {
                             "house":bill.house,
@@ -3291,6 +3303,19 @@ class DepositStatement(Resource):
                             "amount":f'{bill.elecdep:,.1f}'
                         }
                         totaldep += bill.elecdep
+
+                        detailed_bills.append(datadict)
+
+                    if bill.elecdep:
+                        datadict = {
+                            "house":bill.house,
+                            "tenant":bill.tenant,
+                            "datepaid":bill.date.strftime("%d/%b/%y"),
+                            "paycode":'EDP',
+                            "status":bill.status,
+                            "amount":f'{bill.otherdep:,.1f}'
+                        }
+                        totaldep += bill.otherdep
 
                         detailed_bills.append(datadict)
             else:

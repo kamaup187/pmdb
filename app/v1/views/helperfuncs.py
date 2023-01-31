@@ -6019,12 +6019,12 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
                     # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
                     # TenantOp.update_deposit(tenant,total)
 
-                    # else:
-                    print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
 
-                    dep = TenantDepositOp(rentdep,waterdep,elecdep,values[0],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
-                    dep.save()
-                    TenantOp.update_deposit(tenant,total)
+                print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+                dep = TenantDepositOp(rentdep,waterdep,elecdep,values[0],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
+                dep.save()
+                TenantOp.update_deposit(tenant,total)
+
             else:
                 # total = values[0]+values[1]+values[2]+values[3]
 

@@ -5989,18 +5989,29 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             except:
                 dt = tenant.date
 
-            values = validate_float_inputs_to_exclude_zeros_alt(rentdep,waterdep,elecdep,otherdep)
+            values = validate_float_inputs_to_exclude_zeros_alt(otherdep)
+            
             if house_obj.housecode:
-                rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
+                acceptables = ["yes","Yes","YES"]
+                if rentdep_str in acceptables:
+                    rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
+                else:
+                    rentdep = 0.0
                 # if house_obj.name == "B9":
                 #     rentdep = rentdep * -1
-                # elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
-                waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
-                # waterdep = 0.0
-                elecdep = 0.0
+                if waterdep_str in acceptables:
+                    waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
+                else:
+                    waterdep = 0.0
+
+                if elecdep_str in acceptables:
+                    elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
+                else:
+                    elecdep = 0.0
 
 
-                total = rentdep+waterdep+elecdep+values[3]
+
+                total = rentdep+waterdep+elecdep+values[0]
 
                 if tenant.deposits:
                     TenantDepositOp.delete(tenant.deposits)
@@ -6008,25 +6019,26 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
                     # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
                     # TenantOp.update_deposit(tenant,total)
 
-                # else:
+                    # else:
                     print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
 
-                    dep = TenantDepositOp(rentdep,waterdep,elecdep,values[3],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
+                    dep = TenantDepositOp(rentdep,waterdep,elecdep,values[0],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
                     dep.save()
                     TenantOp.update_deposit(tenant,total)
             else:
-                total = values[0]+values[1]+values[2]+values[3]
+                # total = values[0]+values[1]+values[2]+values[3]
 
-                print("Updating tenant deposits...for >>",house_obj)
-                if tenant.deposits:
-                    print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj,"UPDATING....")
-                    TenantDepositOp.update_deposits(tenant.deposits,values[0],values[1],values[2],values[3],total,status)
-                    TenantOp.update_deposit(tenant,total)
+                # print("Updating tenant deposits...for >>",house_obj)
+                # if tenant.deposits:
+                #     print("TENANT DEPOSITS ALREADY UPDATED FOR ....",house_obj,"UPDATING....")
+                #     TenantDepositOp.update_deposits(tenant.deposits,values[0],values[1],values[2],values[3],total,status)
+                #     TenantOp.update_deposit(tenant,total)
 
-                else:
-                    dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,status,tenant.id,None,house_obj.id,apartment_id)
-                    dep.save()
-                    TenantOp.update_deposit(tenant,total)
+                # else:
+                #     dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,status,tenant.id,None,house_obj.id,apartment_id)
+                #     dep.save()
+                #     TenantOp.update_deposit(tenant,total)
+                return "completed"
 
     return "completed"
 

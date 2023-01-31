@@ -1348,7 +1348,8 @@
       success: function(response) {
         $("#select_house").html(response);
         $("#select_house option:eq('1')").attr("selected", "selected");
-        $("#select_house").change();     
+        $("#select_house").change();
+        $("#meterReadingModal").find('#reading').focus();   
       }
     });
   });
@@ -1366,7 +1367,9 @@
       success: function(response) {
         $("#select_house_alt").html(response);
         $("#select_house_alt option:eq('1')").attr("selected", "selected");
-        $("#select_house_alt").change();     
+        $("#select_house_alt").change();
+        $("#elecReadingModal").find('#reading-alt').focus();   
+   
       }
     });
   });
@@ -1541,7 +1544,8 @@ $("#select_house_alt").on('change',function(){
                 success: function(response) {
                   $("#result-view").html(response);
                   // $("#select_house option:eq('1')").attr("selected", "selected");
-                  $("#select_house").change();     
+                  $("#select_house").change(); 
+                  $("#meterReadingModal").find('#reading').focus();    
                 }
                 
               });
@@ -1614,7 +1618,8 @@ $("#select_house_alt").on('change',function(){
                 success: function(response) {
                   $("#result-view").html(response);
                   // $("#select_house option:eq('1')").attr("selected", "selected");
-                  $("#select_house_alt").change();     
+                  $("#select_house_alt").change();
+                  $("#elecReadingModal").find('#reading-alt').focus();    
                 }
                 
               });

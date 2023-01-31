@@ -8519,7 +8519,9 @@ def filtered_house_list(apartment_id,readdate=None):
 
     for house in house_list:
         active_meter = fetch_active_meter(house)
-        prev_reading_obj = fetch_last_reading(active_meter.id)
+        # prev_reading_obj = fetch_last_reading(active_meter.id)
+        prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
+
         # print("Prev reading period",prev_reading_obj.reading_period.month,"")
 
         if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
@@ -8636,11 +8638,15 @@ def filtered_house_list_alt(apartment_id,readdate=None):
                 year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
 
     for house in house_list:
-        active_meter = fetch_active_meter(house)
-        prev_reading_obj = fetch_last_reading(active_meter.id)
+        active_meter = fetch_active_meter_alt(house)
+        # prev_reading_obj = fetch_last_reading(active_meter.id)
+        prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
         # print("Prev reading period",prev_reading_obj.reading_period.month,"")
 
-        if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
+        if not prev_reading_obj:
+            unread_houses.append(house)
+
+        elif prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
             if prev_reading_obj.description == "actual electricity reading":
                 pass
             else:

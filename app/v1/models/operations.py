@@ -1607,7 +1607,7 @@ class MeterReadingOp(MeterReading,Base):
 
     @staticmethod
     def fetch_reading(meter_id):
-        return MeterReading.query.filter_by(meter_id=meter_id).order_by(MeterReading.date.desc()).first()
+        return MeterReading.query.filter_by(meter_id=meter_id).order_by(MeterReading.id.desc()).first()
 
     @staticmethod
     def fetch_specific_reading(id):

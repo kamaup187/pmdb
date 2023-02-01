@@ -8531,6 +8531,7 @@ def filtered_house_list(apartment_id,readdate=None):
 
     for house in house_list:
         active_meter = fetch_active_meter(house)
+        if not active_meter: continue
         # prev_reading_obj = fetch_last_reading(active_meter.id)
         prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
 
@@ -8651,6 +8652,7 @@ def filtered_house_list_alt(apartment_id,readdate=None):
 
     for house in house_list:
         active_meter = fetch_active_meter_alt(house)
+        if not active_meter: continue
         # prev_reading_obj = fetch_last_reading(active_meter.id)
         prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
         # print("Prev reading period",prev_reading_obj.reading_period.month,"")

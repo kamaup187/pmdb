@@ -5,6 +5,7 @@
     <a id="profile" class="nav-link pl-0 pb-0 text-info underline active ms-0" href="#">Profile</a>
     <a id="billing" class="nav-link pb-0 text-info" href="#">Billing</a>
     <a id="notifications" class="nav-link pb-0 text-info" href="#">Landlord & Estate</a>
+    <a id="contactinfo" class="nav-link pb-0 text-info" href="#">Email & Address</a>
 </nav>
 
 <div class="" id="profile-area">
@@ -275,36 +276,93 @@
     </div>
 </div>
 
+<div class="dispnone" id="contactinfo-area">
+    <div class="row">
+        <div class="col-xl-12">
+            <!-- Account details card-->
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Address & Email</div>
+                <div class="card-body">
+                    <form>
+                        <div id="" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-4">
+                                    <label class="small mb-0" for="propmail">Email</label>
+                        
+                                    <input class="form-control" type="text" id="propmail" value="{{prop.email}}">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-0" for="proptel">Property tel (optional)</label>
+                        
+                                    <input class="form-control" type="text" id="proptel" value="{{prop.phone}}">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-0" for="propaddr">Address</label>
+                        
+                                    <input class="form-control" type="text" id="propaddr" value="{{prop.address}}">
+                                </div>
+                        
+                            </div>
+
+                        </div>
+
+                        <!-- Save changes button-->
+                        <div class="text-right">
+                            <button id="savecontactinfo" class="btn btn-primary" type="button">Save changes</button>
+                            <button class="reset dispnone" type="reset">reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     $("#profile").click(function(){
         $(this).addClass("underline")
         $("#notifications").removeClass("underline")
         $("#billing").removeClass("underline")
+        $("#contactinfo").removeClass("underline")
+
 
         $("#profile-area").removeClass("dispnone")
         $("#billing-area").addClass("dispnone")
         $("#notifications-area").addClass("dispnone")
+        $("#contactinfo-area").addClass("dispnone")
+
     })
 
     $("#billing").click(function(){
         $(this).addClass("underline")
         $("#profile").removeClass("underline")
         $("#notifications").removeClass("underline")
+        $("#contactinfo").removeClass("underline")
+
 
         $("#billing-area").removeClass("dispnone")
         $("#profile-area").addClass("dispnone")
         $("#notifications-area").addClass("dispnone")
+        $("#contactinfo-area").addClass("dispnone")
+
     })
 
     $("#notifications").click(function(){
         $(this).addClass("underline")
         $("#profile").removeClass("underline")
         $("#billing").removeClass("underline")
+        $("#contactinfo").removeClass("underline")
+
 
         $("#notifications-area").removeClass("dispnone")
         $("#billing-area").addClass("dispnone")
         $("#profile-area").addClass("dispnone")
+        $("#contactinfo-area").addClass("dispnone")
+
 
         $.ajax({
             url: "{{ url_for('api.addprop') }}",
@@ -317,6 +375,20 @@
               
             }
           });
+    })
+
+    $("#contactinfo").click(function(){
+        $(this).addClass("underline")
+        $("#profile").removeClass("underline")
+        $("#notifications").removeClass("underline")
+        $("#biling").removeClass("underline")
+
+
+        $("#contactinfo-area").removeClass("dispnone")
+        $("#profile-area").addClass("dispnone")
+        $("#notifications-area").addClass("dispnone")
+        $("#billing-area").addClass("dispnone")
+
     })
 
 
@@ -567,4 +639,52 @@
 
 
     });
+
+
+    $("#savecontactinfo").click(function () {
+
+        $.ajax({
+            url: "{{ url_for('api.allproperties') }}",
+            type: "POST",
+            data: {
+                propid: $("#edit_prop_identifier").text(),
+                email: $("#propmail").val(),
+                tel: $("#proptel").val(),
+                address: $("#propaddr").val(),
+
+                target: "update prop contact info"
+            },
+            success: function (response) {
+                $("#contactinfo-area").html('<div class="font-weight-bold center-btn mt-2 mb-2 alert-msgs"></div>')
+                $(".alert-msgs").html(response);
+
+                setTimeout(function () {
+                    // $("#workarea").removeClass("dispnone")
+                    $(".alert-msgs").empty();
+                    // $(".reset").click();
+                    // $("#workarea").html("loading...")
+                    $("#editPropModal").modal("hide")
+                    // $("#"+$("#edit_prop_identifier").text()).click();
+
+                }, 2500);
+
+                // $.ajax({
+                //       url: "{{ url_for('api.fetchtenants') }}",
+                //       type: "get",
+                //       data: {
+                //         propid:  $("#prop_identifier").text(),
+                //         target:$("#current-reloader").text()
+                //       },
+                //       success: function(response) {
+
+                //         $("#result-view").html(response);
+                //       }
+                //     });
+            }
+        });
+
+
+
+
+        });
 </script>

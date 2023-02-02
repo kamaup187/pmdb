@@ -281,6 +281,10 @@ class Apartment(db.Model):
     landlord_bankaccname_two = db.Column(db.VARCHAR)
     landlord_bankacc_two = db.Column(db.VARCHAR)
 
+    email = db.Column(db.VARCHAR)
+    phone = db.Column(db.VARCHAR)
+    address = db.Column(db.VARCHAR)
+
     agency_managed = db.Column(db.Boolean,default=True)
 
     landlord = db.Column(db.String)

@@ -775,6 +775,15 @@ class AllProperties(Resource):
 
         prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
 
+        if target == "update prop contact info":
+            email = request.form.get("email")
+            tel = request.form.get("tel")
+            address = request.form.get("address")
+
+            ApartmentOp.update_contact_info(prop, email, tel, address)
+
+            return "Updated successfully" + proceed         
+
         if target == "update prop":
             propname = request.form.get("name")
             colltype = request.form.get("colltype")

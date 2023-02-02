@@ -4179,7 +4179,11 @@ def autosend_pending_smsreceipts(payids):
         phonenum = sms_phone_number_formatter(tele)
         salutation = "Service Charge & Utility" if serv else "Rental"
 
-        message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
+        # message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
+
+        acc = tenant_obj.uuid if tenant_obj.uuid else f'TNT{tenant_obj.id}'
+        # message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
+        message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref No. {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
 
         if tenant_obj.sms:
 

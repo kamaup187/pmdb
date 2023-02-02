@@ -823,6 +823,15 @@ class ApartmentOp(Apartment,Base):
             self.location_id = location_id
         db.session.commit()
 
+    def update_contact_info(self,email,phone,address):
+        if email:
+            self.email = email
+        if phone:
+            self.phone = phone
+        if address:
+            self.address = address
+        db.session.commit()
+
     def update_agent(self,agent_id):
         self.agent_id = agent_id
         db.session.commit()

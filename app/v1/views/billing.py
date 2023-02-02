@@ -1780,7 +1780,10 @@ class SendSms(Resource):
             str_prop = payment_obj.apartment.name
             end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
             raw_rem_sms =co.remainingsms
-            message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
+
+            acc = tenant_obj.uuid if tenant_obj.uuid else f'TNT{tenant_obj.id}'
+            # message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
+            message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref No. {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
 
             char_count = len(message)
 
@@ -3125,44 +3128,50 @@ class ReceivePayment(Resource):
 
         if current_user.company.name == "LaCasa":
 
-            if prop.id == 414:
-                address = {
-                    "address": "Kitengela",
-                    "tel": "0735267087",
-                    "email": "lacasaapartments2010@gmail.com"
-                }
+            address = {
+                "address":prop.address,
+                "tel":prop.phone,
+                "email":prop.email
+            }
 
-            elif prop.id == 419:
-                address = {
-                    "address": "Nairobi",
-                    "tel": "0735267087",
-                    "email": "goldlabelservices@gmail.com"
-                }
-            elif prop.id == 420:
-                address = {
-                    "address":"Ongata Rongai",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
-            elif prop.id == 421:
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
-            elif prop.name == "Baraka House":
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
+            # if prop.id == 414:
+            #     address = {
+            #         "address": "Kitengela",
+            #         "tel": "0735267087",
+            #         "email": "lacasaapartments2010@gmail.com"
+            #     }
 
-            else:
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
+            # elif prop.id == 419:
+            #     address = {
+            #         "address": "Nairobi",
+            #         "tel": "0735267087",
+            #         "email": "goldlabelservices@gmail.com"
+            #     }
+            # elif prop.id == 420:
+            #     address = {
+            #         "address":"Ongata Rongai",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+            # elif prop.id == 421:
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+            # elif prop.name == "Baraka House":
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+
+            # else:
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
 
 
         return render_template(
@@ -3340,43 +3349,50 @@ class Receipt(Resource):
 
         if payment_obj.apartment.company.name == "LaCasa":
 
-            if prop.id == 414:
-                address = {
-                    "address": "Kitengela",
-                    "tel": "0735267087",
-                    "email": "lacasaapartments2010@gmail.com"
-                }
-            elif prop.id == 419:
-                address = {
-                    "address": "Kasarani Nairobi",
-                    "tel": "0735267087",
-                    "email": "goldlabelservices@gmail.com"
-                }
-            elif prop.id == 420:
-                address = {
-                    "address":"Ongata Rongai",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
-            elif prop.id == 421:
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
-            elif prop.name == "Baraka House":
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
 
-            else:
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
+            address = {
+                "address":prop.address,
+                "tel":prop.phone,
+                "email":prop.email
+            }
+
+            # if prop.id == 414:
+            #     address = {
+            #         "address": "Kitengela",
+            #         "tel": "0735267087",
+            #         "email": "lacasaapartments2010@gmail.com"
+            #     }
+            # elif prop.id == 419:
+            #     address = {
+            #         "address": "Kasarani Nairobi",
+            #         "tel": "0735267087",
+            #         "email": "goldlabelservices@gmail.com"
+            #     }
+            # elif prop.id == 420:
+            #     address = {
+            #         "address":"Ongata Rongai",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+            # elif prop.id == 421:
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+            # elif prop.name == "Baraka House":
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
+
+            # else:
+            #     address = {
+            #         "address":"Mwiki, Kasarani",
+            #         "tel":"0735267087",
+            #         "email":"bizlineinvestment@gmail.com"
+            #     }
 
         if payment_obj.ptenant:
             tenant = payment_obj.ptenant

@@ -3128,11 +3128,13 @@ class ReceivePayment(Resource):
 
         if current_user.company.name == "LaCasa":
 
-            address = {
-                "address":prop.address,
-                "tel":prop.phone,
-                "email":prop.email
-            }
+            if prop.address:
+
+                address = {
+                    "address":prop.address,
+                    "tel":prop.phone,
+                    "email":prop.email
+                }
 
             # if prop.id == 414:
             #     address = {
@@ -3166,12 +3168,12 @@ class ReceivePayment(Resource):
             #         "email":"bizlineinvestment@gmail.com"
             #     }
 
-            # else:
-            #     address = {
-            #         "address":"Mwiki, Kasarani",
-            #         "tel":"0735267087",
-            #         "email":"bizlineinvestment@gmail.com"
-            #     }
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
 
 
         return render_template(
@@ -3349,12 +3351,13 @@ class Receipt(Resource):
 
         if payment_obj.apartment.company.name == "LaCasa":
 
+            if prop.address:
 
-            address = {
-                "address":prop.address,
-                "tel":prop.phone,
-                "email":prop.email
-            }
+                address = {
+                    "address":prop.address,
+                    "tel":prop.phone,
+                    "email":prop.email
+                }
 
             # if prop.id == 414:
             #     address = {
@@ -3387,12 +3390,12 @@ class Receipt(Resource):
             #         "email":"bizlineinvestment@gmail.com"
             #     }
 
-            # else:
-            #     address = {
-            #         "address":"Mwiki, Kasarani",
-            #         "tel":"0735267087",
-            #         "email":"bizlineinvestment@gmail.com"
-            #     }
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
 
         if payment_obj.ptenant:
             tenant = payment_obj.ptenant

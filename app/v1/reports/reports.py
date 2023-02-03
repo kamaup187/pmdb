@@ -2641,8 +2641,8 @@ class RentStatement(Resource):
             }
             detailed_bills.append(new_item)
 
-        if apartment_obj.id == 148: #VERY URGENT
-            paidll = 20000.0
+        if apartment_obj.id == 137: #VERY URGENT
+            paidll = 18500.0
         else:
             paidll = 0.0
 

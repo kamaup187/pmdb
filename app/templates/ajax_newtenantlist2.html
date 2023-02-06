@@ -38,19 +38,19 @@
 
                 <td class="{{access}} data-cell">
                   <div>
-                    <button id="{{i['id']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#negotiationsModal">Negotiate <i class="fas fa-angle-double-right ml-1"></i></button>
+                    <button id="{{i['uid']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#negotiationsModal">Negotiate <i class="fas fa-angle-double-right ml-1"></i></button>
                   </div>
                 </td>
 
                 <td class="{{access}} data-cell">
                   <div>
-                    <button id="{{i['editid']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#invoiceModal">Invoice <i class="fas fa-angle-double-right ml-1"></i></button>
+                    <button id="{{i['id']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#invoiceModal">Invoice <i class="fas fa-angle-double-right ml-1"></i></button>
                   </div>
                 </td>
 
                 <td class=" data-cell dispnon">
                   <div>
-                    <button id="{{i['uid']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                    <button id="{{i['editid']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                   </div>
                 </td>
                 <td class=" data-cell dispnone">
@@ -94,6 +94,9 @@
         }
         else if(item.startsWith("pedit")){
           $("#edit_tenant_identifier").html(item)
+        }
+        else if(item.startsWith("uid")){
+          $("#edit_client_identifier").html(item)
         }
         else if(item.startsWith("p")){
           $("#tenant_identifier").html(item)

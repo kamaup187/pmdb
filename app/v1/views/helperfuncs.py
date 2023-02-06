@@ -9583,9 +9583,9 @@ def get_obj_ids(arr):
             obj_id_list.append(editid)
             delid = req["delid"]
             obj_id_list.append(delid)
-            # uid = req.get("uid")
-            # if uid:
-            #     obj_id_list.append(uid)
+            uid = req.get("uid")
+            if uid:
+                obj_id_list.append(uid)
             allocid=req.get("allocid")
             if allocid:
                 obj_id_list.append(allocid)

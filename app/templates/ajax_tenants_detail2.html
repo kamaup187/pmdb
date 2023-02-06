@@ -4,7 +4,7 @@
       <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
       <span id="tenant_identifier" class="dispnone"></span>
       <span id="edit_tenant_identifier" class="dispnon">wwwwwwwwwwwwwwwwwwwwwww</span>
-      <!-- <span id="edit_client_identifier" class="dispnone"></span> -->
+      <span id="edit_client_identifier" class="dispnone"></span>
 
       <span id="del_tenant_identifier" class="dispnone"></span>
 
@@ -1698,7 +1698,7 @@
       url: "{{ url_for('api.addtenant') }}",
       type: "get",
       data: {
-            tenant_id:$("#tenant_identifier").text(),
+            tenant_id:$("#edit_client_identifier").text(),
             target: "deposit info"
           },
       success: function(response) {
@@ -1708,7 +1708,7 @@
           url: "{{ url_for('api.addtenant') }}",
           type: "get",
           data: {
-            tenant_id: $("#tenant_identifier").text(),
+            tenant_id: $("#edit_client_identifier").text(),
             target:"client details"
           },
           success: function (response) {
@@ -1732,7 +1732,7 @@
 </script>
 
 
-
+<!-- 
 <script>
   // This script autopulate house options and displays tenant name
   $("#rundate").on('click', function(){
@@ -1753,7 +1753,7 @@
     });
   });
 
-</script>
+</script> -->
 
 <!-- <script>
   // This script shows alerts before allocation is done
@@ -1807,7 +1807,7 @@
         url: "{{ url_for('api.deal') }}",
         type: "POST",
         data: {
-                tenant_id: $("#tenant_identifier").text(),
+                tenant_id: $("#edit_client_identifier").text(),
 
                 negprice: $("#neg_price").val(),
                 deposit: $("#deposit").val(),

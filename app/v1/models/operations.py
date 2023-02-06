@@ -2324,7 +2324,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'status':PermanentTenantOp.get_status(self),
             'stage':PermanentTenantOp.get_stage_percentage(self),
             'booking':PermanentTenantOp.booking_date(self),
-            'rep':self.rep,
+            'rep':self.rep.name if self.rep else "-n/a-",
             'ctype':self.classtype.lower() if self.classtype else "-",
             'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),

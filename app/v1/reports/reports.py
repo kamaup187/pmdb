@@ -7249,7 +7249,11 @@ class FetchPayments(Resource):
 
             period = get_billing_period(prop)
 
-            filtered_payments = fetch_current_billing_period_payments(period,payments)
+            if crm(current_user):
+                filtered_payments = payments
+            else:
+                filtered_payments = fetch_current_billing_period_payments(period,payments)
+
             dict_item = ""
             if filtered_payments:
                 latest_set = max(filtered_payments, key=lambda x: x.id)
@@ -7311,7 +7315,11 @@ class FetchPayments(Resource):
 
             period = get_billing_period(prop)
 
-            filtered_payments = fetch_current_billing_period_payments(period,payments)
+            if crm(current_user):
+                filtered_payments = payments
+            else:
+                filtered_payments = fetch_current_billing_period_payments(period,payments)
+
             dict_item = ""
             if filtered_payments:
                 latest_set = max(filtered_payments, key=lambda x: x.id)

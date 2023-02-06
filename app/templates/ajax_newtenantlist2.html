@@ -14,7 +14,7 @@
                 <th class="font-weight-bold text-black {{access}}" data-orderable="false">Make offer</th>
                 <th class="font-weight-bold text-black {{access}}" data-orderable="false">Sign contracts</th>
                 
-                <th class="font-weight-bold text-black dispnone" data-orderable="false">Edit</th>
+                <th class="font-weight-bold text-black dispnon" data-orderable="false">Edit</th>
                 <th class="font-weight-bold text-black dispnone" data-orderable="false">Remove</th>
 
 
@@ -48,9 +48,9 @@
                   </div>
                 </td>
 
-                <td class=" data-cell dispnone">
+                <td class=" data-cell dispnon">
                   <div>
-                    <button id="" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                    <button id="{{i['uid']}}" type="button" class="font-weight-bold btn btn-sm text-primary no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                   </div>
                 </td>
                 <td class=" data-cell dispnone">
@@ -91,6 +91,9 @@
       if( isNaN(parseInt(item)) ){
         if(item.startsWith("del")){
           $("#del_tenant_identifier").html(item)
+        }
+        else if(item.startsWith("pedit")){
+          $("#edit_tenant_identifier").html(item)
         }
         else if(item.startsWith("p")){
           $("#tenant_identifier").html(item)

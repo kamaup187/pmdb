@@ -2305,7 +2305,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'identity':PermanentTenantOp.generate_identity(self),
             'editid':PermanentTenantOp.generate_editid(self),
             'delid':PermanentTenantOp.generate_delid(self),
-            'uid':TenantOp.get_uid(self),
+            'uid':PermanentTenantOp.get_uid(self),
             'name':PermanentTenantOp.generate_name(self),
             'fullname':self.name,
             'hst':PermanentTenantOp.combine_house_tenant(self),

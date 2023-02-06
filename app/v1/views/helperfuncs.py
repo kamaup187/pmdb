@@ -96,7 +96,7 @@ else:
 if localenv:
     q = Queue(connection=conn,default_timeout=10800)
 else:
-    q = Queue(connection=conn,default_timeout=10800,name="rqworker1")
+    q = Queue(connection=conn,default_timeout=10800,name="a01d4fccca0a4fb0b0961cdd9482a65c")
 
 
 from .advanta import *

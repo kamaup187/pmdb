@@ -106,3 +106,6 @@ curl_close($curl);
 echo $response;
 
 
+@miguel: I managed to setup an app and workers running. However I have three separate apps which I would like to assign workers. 
+The workers are configured with different working directories to reflect each app working directory. I noted the apps send jobs to any available worker and not to any specific worker. This messes the jobs in queue since they may be executed by a wrong app.
+How can I ensure the apps will send jobs to the specific worker with its working directory configured within it.

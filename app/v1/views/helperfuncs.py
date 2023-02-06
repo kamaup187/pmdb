@@ -59,7 +59,6 @@ from app import sms
 from rq import Queue
 from rq.job import Job
 from worker import conn
-q = Queue(connection=conn,default_timeout=10800)
 
 try:
     from do_secrets import *
@@ -89,6 +88,17 @@ target = os.getenv("TARGET") or TARGET
 INV = "inva.properties"
 
 
+if configuration == "development":
+    localenv = True
+else:
+    localenv = False
+
+if localenv:
+    q = Queue(connection=conn,default_timeout=10800)
+else:
+    q = Queue(connection=conn,default_timeout=10800,name="rqworker1")
+
+
 from .advanta import *
 
 
@@ -106,11 +116,6 @@ greatwall_partner_id = 321
 
 kiotanum = "+254716674695"
 
-
-if configuration == "development":
-    localenv = True
-else:
-    localenv = False
 
 typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'

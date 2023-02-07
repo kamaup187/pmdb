@@ -3306,7 +3306,6 @@ class Receipt(Resource):
     @login_required
     def get(self):
 
-        import pdb; pdb.set_trace()
 
         pay_id = request.args.get("payid")
 

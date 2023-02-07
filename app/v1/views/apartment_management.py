@@ -127,10 +127,13 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        # coss = CompanyOp.fetch_all_companies()
-        coss = []
+        # import pdb; pdb.set_trace()
+
+        coss = CompanyOp.fetch_all_companies()
+        # coss = []
         for t in coss:
-            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Developer" or t.name == "Demo Company Two" or t.name == "Zima Homes":
+            print("Comm >>",t)
+            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Devco" or t.name == "Demo Company Two" or t.name == "Zima Homes":
                 CompanyOp.update_ctype(t,"crm")
             else:
                 CompanyOp.update_ctype(t,"noncrm")
@@ -5889,7 +5892,6 @@ class UpdateTenant(Resource):
 
         target = request.form.get('target')
 
-
         modified_by = current_user.id
 
         if not multi:
@@ -5917,6 +5919,9 @@ class UpdateTenant(Resource):
             else:
                 TenantOp.delete(update_tenant)
 
+        if target == "delete resident": 
+            if update_tenant.status == "Booked" or update_tenant.status == "prospective" or update_tenant.status == "proposal":
+                PermanentTenantOp.delete(update_tenant)
         ###########################################################
         
         if email:

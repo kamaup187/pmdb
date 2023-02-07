@@ -515,6 +515,7 @@
                     
                       <div class="divbg center-btn">
                         <button id="edittenant" type="button" class="btn-secondary borderless text-white">Update</button>
+                        <button id="deltenant" type="button" class="btn-danger borderless text-white">Delete</button>
                         <button class="btn btn-light" id="closeeditTenantModal" type="button" data-dismiss="modal">Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset">Dismiss</button>
                       </div>
@@ -1622,6 +1623,8 @@
   $("#editTenantModal").on('shown.bs.modal', function(){
     $(".multisave").empty();
     $("#edittenant").removeClass("dispnone");
+    $("#deltenant").removeClass("dispnone");
+
     $("#edittenantbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
     $.ajax({
       url: "{{ url_for('api.updatetenant') }}",
@@ -1636,6 +1639,8 @@
       error: function(xhr) {
         $("#billeditbed").html('<div class="center-btn text-danger mb-3">Error occured, it is being resolved</div>');
         $("#editbill").addClass("dispnone");
+        $("#deltenant").addClass("dispnone");
+
         }
     });
   });
@@ -1672,6 +1677,50 @@
             $('#edittenant').removeClass('btn-success')
             $('#edittenant').addClass('btn-secondary')
             $("#edittenant").html("submit")
+          }, 1500);
+          $.ajax({
+                url: "{{ url_for('api.fetchtenants') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:$("#current-reloader").text()
+                },
+                success: function(response) {
+                  
+                  $("#child-result-view").html(response);
+                }
+              });
+        }
+      });
+  });
+</script>
+
+
+<script>
+  $("#deltenant").click(function(){  
+    $("#deltenant").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatetenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier").text(),
+                tenant_id: $("#edit_tenant_identifier").text(),
+                target: "delete resident"
+
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $(".multisave").empty();
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            
+            $(".reset").click();
+            // $('#deltenant').attr('disabled', 'disabled');
+            $('#closedeltenantModal').click();
+            $('#deltenant').removeClass('btn-success')
+            $('#deltenant').addClass('btn-secondary')
+            $("#deltenant").html("Delete")
           }, 1500);
           $.ajax({
                 url: "{{ url_for('api.fetchtenants') }}",

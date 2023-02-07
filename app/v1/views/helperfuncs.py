@@ -4836,6 +4836,8 @@ def send_out_single_email_crm_invoice(ptenantid):
     app = create_app()
     app.app_context().push()
 
+    return "failed" # REFACTOR URGENT
+
     try:
         tenant_obj = PermanentTenantOp.fetch_tenant_by_id(ptenantid)
         with mail.connect() as conn:
@@ -4843,7 +4845,7 @@ def send_out_single_email_crm_invoice(ptenantid):
                 schtotal = 0.0
                 schpaid = 0.0
 
-                bills = tenant_obj.schedules
+                bills = house_obj.schedules
 
                 formatted_bills = []
 
@@ -6743,7 +6745,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
         if co.ctype == "crm":
             print("GONE TO PAY AVIV")
-            schedule_objs = tenant_obj.schedules
+            schedule_objs = house_obj.schedules
             for sch in schedule_objs:
                 if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
                     schedule_obj = sch
@@ -6757,7 +6759,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             print("SCHEDULE OBJ",schedule_obj.schedule_date.month,schedule_obj.schedule_date.year)
             print("#################################")
             sch_arrears = 0.0
-            prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+            prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
             if prev_sch:
                 print("FOUND Previous scheduled of month",prev_sch[0].schedule_date.month, "and year", prev_sch[0].schedule_date.year)
                 sch_arr = prev_sch[0].balance
@@ -7792,20 +7794,22 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 months = house.owner.num_instalment
                 negprice = house.owner.negotiated_price
 
-                instalment_schedules = list(range(1,(months+1)))
+                if not house.schedules:
 
-                initial_deposit_schedule = PaymentScheduleOp("Deposit",0.0,deposit1,deposit1,negprice,checkin,apartment_id,house.id,house.owner.id)
-                initial_deposit_schedule.save()
+                    instalment_schedules = list(range(1,(months+1)))
 
-                for sch in instalment_schedules:
-                    sch_date = checkin + relativedelta(months=sch)
-                    sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
-                    sch.save()
+                    initial_deposit_schedule = PaymentScheduleOp("Deposit",0.0,deposit1,deposit1,negprice,checkin,apartment_id,house.id,house.owner.id)
+                    initial_deposit_schedule.save()
 
-                # others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+                    for sch in instalment_schedules:
+                        sch_date = checkin + relativedelta(months=sch)
+                        sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
+                        sch.save()
 
-                # legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
-                # legal_fee_schedule.save()
+                    # others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+
+                    # legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
+                    # legal_fee_schedule.save()
 
             else:
                 booking = 0.0
@@ -9030,7 +9034,7 @@ def filtered_house_list_alt(apartment_id,readdate=None):
 
 #     if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
 #         print("GONE TO PAY AVIV")
-#         schedule_objs = tenant_obj.schedules
+#         schedule_objs = house_obj.schedules
 #         for sch in schedule_objs:
 #             if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
 #                 schedule_obj = sch
@@ -9152,7 +9156,7 @@ def filtered_house_list_alt(apartment_id,readdate=None):
 #         if schedule_obj:
 #             print("SCHEDULE OBJI FOUND")
 #             sch_arrears = 0.0
-#             prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+#             prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
 #             if prev_sch:
 #                 print("FOUND Previous scheduled")
 #                 sch_arr = prev_sch[0].balance

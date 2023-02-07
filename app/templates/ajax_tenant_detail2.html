@@ -64,7 +64,7 @@
                     </div>
                   </div>
                   <button type="button" class="btn btn-sm borderles modalTrigger small btn-light ml-3" data-toggle="modal"
-                    data-target="#addInvoiceModal"><span class="fixed-width-pro"><i class="fas fa-plus mr-2"></i>Create invoice
+                    data-target="#createinvoiceModal2"><span class="fixed-width-pro"><i class="fas fa-plus mr-2"></i>Create invoice
                       </span></button>
                 
                 </div>
@@ -227,6 +227,61 @@
         </div>
       </div>
     </div> -->
+
+    <div class="modal fade" id="createinvoiceModal2" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Create invoice</span>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            </h5>
+            <!-- <span class="text-gray-900">Client: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span> -->
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+
+
+                        <div class="form-group mb-3 input-icons">
+                          <span class="text-danger font-weight-bold">Choose starting date</span>
+                          <div id="datepicker77" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate2" class="form-control ph" type="text" placeholder="Select date" readonly />
+                            <label for="checkindate2" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
+                          </div>
+                        </div>
+
+                      <div class="row mb-3 underline-thin-fade">
+                        <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
+                        <div class="form-group no-paddin input-icons"> Contracts <span class="text-info">optional</span>
+                          <input class="ph" id="contractsfile2" type = "file" name = "filename" />
+                          <span class="fa field-icon text-info iconotifications">--</span>
+                        </div>
+                      </div>
+        
+                    
+                      <div class="divbg center-btn">
+                        <button id="invoicebtn2" type="button" class="btn-secondary borderless text-white">Submit</button>
+                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="text-center">
       <div class="modal fade" id="receiveSmsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -964,7 +1019,83 @@
 </script>
 
 
+
+
+
 <script>
+
+
+$("#checkindate2").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+
+
+  $("#invoicebtn2").on('click',function(){
+      $("#invoicebtn2").html("Invoicing...") 
+
+      url = "{{ url_for('api.deal') }}"
+
+      var fd = new FormData();
+      var files = $('#contractsfile1')[0].files;
+      fd.append('file',files[0]);
+
+      fd.append('target',"invoice");
+      fd.append('date',$("#checkindate2").val());
+      fd.append('tenant_id',$("#tenant_identifier").text());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#invoicebtn2").html("Invoiced") 
+
+              setTimeout(function(){
+                $("#invoicebtn2").html("Invoice") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+              $.ajax({
+                      url: "/billing",
+                      type: "POST",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        tenantid:$("#tenant_identifier").text(),
+                        target:"single",
+                        date:$("#checkindate2").val()
+
+                      },
+                      success: function (response) { }
+                    });
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload/invoicing unsuccessful</span>');
+            $("#invoicebtn2").html("Retry") 
+
+            setTimeout(function(){
+              $("#invoicebtn2").html("Invoice") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
+
+
+<script>
+
   $("#editTenantModal").on('shown.bs.modal', function(){
     $(".multisave").empty();
     $(".accesssms").empty();

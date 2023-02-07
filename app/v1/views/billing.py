@@ -1115,12 +1115,16 @@ class EditBill(Resource):
                     if bill.ptenant_id:
                         tenant_obj = PermanentTenantOp.fetch_tenant_by_id(bill.ptenant_id)
                         running_bal = tenant_obj.balance
-                        running_bal = running_bal + diff
+                        running_bal = running_bal + original_amount
                         PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
                     MonthlyChargeOp.delete(bill)
                 else:
                     MonthlyChargeOp.delete(bill)
+
+                if bill.house.schedules:
+                    for schedule in bill.house.schedules:
+                        PaymentScheduleOp.delete(schedule)
 
             elif target == "editarrears":
                 # if bill.apartment.billing_period.month == bill.month: #DISABLED THIS CHECK TO EDIT PREVIOUS BILL ARREARS
@@ -2658,7 +2662,7 @@ class ReceivePayment(Resource):
                 if house_name2:
 
                     if house_name2 == "none selected":
-                        return "<span class='text-danger text-xx'>Payment failed, please specify house!</span>"
+                        return "<span class='text-danger text-xx'>Payment failed, please specify client</span>"
 
                     str_houses = house_name2.replace(","," ")
                     houselist = list(str_houses.split(" "))
@@ -2688,16 +2692,16 @@ class ReceivePayment(Resource):
                         tenant_id = tenant_obj.id
 
                 except:
-                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    print("FORGOT TO SELECT UNIT WHILE MAKING PAYMENT")
                     abort(404) 
 
 
                 if not tenant_obj:
-                    print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                    print("FORGOT TO SELECT UNIT WHILE MAKING PAYMENT")
                     abort(404)
 
             else:
-                print("FORGOT TO SELECT HOUSE WHILE MAKING PAYMENT")
+                print("FORGOT TO SELECT UNIT WHILE MAKING PAYMENT")
                 abort(404)
 
         tenant_name = tenant_obj.name
@@ -2717,7 +2721,7 @@ class ReceivePayment(Resource):
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
             if crm(current_user):
-                specific_charge_obj = tenant_obj.monthly_charges[0]
+                specific_charge_obj = house_obj.monthly_charges[0]
             else:
                 specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
@@ -2728,7 +2732,7 @@ class ReceivePayment(Resource):
         # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
         if crm(current_user):
             print("GONE TO PAY AVIV")
-            schedule_objs = tenant_obj.schedules
+            schedule_objs = house_obj.schedules
             for sch in schedule_objs:
                 if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
                     schedule_obj = sch
@@ -2859,7 +2863,7 @@ class ReceivePayment(Resource):
             if schedule_obj:
                 print("SCHEDULE OBJI FOUND")
                 sch_arrears = 0.0
-                prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,tenant_obj.schedules,tenant_obj.id)
+                prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
                 if prev_sch:
                     print("FOUND Previous scheduled")
                     sch_arr = prev_sch[0].balance

@@ -722,7 +722,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createinvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -800,8 +800,8 @@
                         <div class="form-group mb-3 input-icons">
                           <span class="text-danger font-weight-bold">Date contracts signed</span>
                           <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="checkindate2" class="form-control ph" type="text" placeholder="Select date" readonly />
-                            <label for="checkindate2" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
+                            <input id="checkindate3" class="form-control ph" type="text" placeholder="Select date" readonly />
+                            <label for="checkindate3" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
                           </div>
                         </div>
 
@@ -1098,7 +1098,7 @@
     minViewMode: "months"
   });
 
-  $("#checkindate2").datepicker({ 
+  $("#checkindate3").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
     format: "mm-yyyy",
@@ -1221,6 +1221,12 @@
   });
 
 </script>
+
+<!-- <script>
+  $("#createinvoiceModal").on('shown.bs.modal', function(){
+    $("#billmodal").show();
+  })
+</script> -->
 
 
   <script>
@@ -1944,7 +1950,7 @@
                         propid: $("#prop_identifier").text(),
                         tenantid:$("#tenant_identifier").text(),
                         target:"single",
-                        date:$("#checkindate").val()
+                        date:$("#checkindate1").val()
 
                       },
                       success: function (response) { }
@@ -1968,6 +1974,8 @@
       });
   });
 </script>
+
+
 
 <script>
   $("#contractsbtn").on('click',function(){

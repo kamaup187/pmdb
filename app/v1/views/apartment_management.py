@@ -129,8 +129,8 @@ class Index(Resource):
 
         # import pdb; pdb.set_trace()
 
-        coss = CompanyOp.fetch_all_companies()
-        # coss = []
+        # coss = CompanyOp.fetch_all_companies()
+        coss = []
         for t in coss:
             print("Comm >>",t)
             if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Devco" or t.name == "Demo Company Two" or t.name == "Zima Homes":

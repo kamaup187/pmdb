@@ -3526,16 +3526,23 @@ class EditPayment(Resource):
         if not tenant_obj:
             tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
 
-        tenant_bills = tenant_obj.monthly_charges
+        if crm(current_user):
+            try:
+                target_bill = payment_obj.house.monthlybills[0]
+            except:
+                target_bill = None
 
-        target_bills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,tenant_bills)
+        else:
+            tenant_bills = tenant_obj.monthly_charges
 
-        target_bill = None
+            target_bills = fetch_current_billing_period_bills(tenant_obj.apartment.billing_period,tenant_bills)
 
-        for tbill in target_bills:
-            if tbill.house_id == payment_obj.house_id:
-                target_bill = tbill
-                break
+            target_bill = None
+
+            for tbill in target_bills:
+                if tbill.house_id == payment_obj.house_id:
+                    target_bill = tbill
+                    break
         # target_bill = get_specific_monthly_charge_obj(tenant_bills,period.month)
 
 

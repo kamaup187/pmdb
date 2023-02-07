@@ -7250,7 +7250,7 @@ class FetchPayments(Resource):
             period = get_billing_period(prop)
 
             if crm(current_user):
-                filtered_payments = [x for x in payments]
+                filtered_payments = [x for x in payments if not x.voided]
             else:
                 filtered_payments = fetch_current_billing_period_payments(period,payments)
 
@@ -7316,7 +7316,7 @@ class FetchPayments(Resource):
             period = get_billing_period(prop)
 
             if crm(current_user):
-                filtered_payments = [x for x in payments]
+                filtered_payments = [x for x in payments if not x.voided]
             else:
                 filtered_payments = fetch_current_billing_period_payments(period,payments)
 

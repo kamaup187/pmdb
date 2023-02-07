@@ -3625,6 +3625,7 @@ class EditPayment(Resource):
                     PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
             else:
+
                 print("Payment voided, no target bill")
                 PaymentOp.void(payment_obj,True,current_user.id)
 

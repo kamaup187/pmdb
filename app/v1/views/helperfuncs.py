@@ -6506,7 +6506,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             user_obj = UserOp.fetch_user_by_id(userid)
             if crm(user_obj):
                 try:
-                    bill = tenant_obj.monthly_charges[0]
+                    bill = house_obj.monthlybills[0]
                 except:
                     print("BILLS FOR TENANT ",tenant_obj,"are not available")
                     continue

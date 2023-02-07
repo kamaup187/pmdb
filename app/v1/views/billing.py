@@ -2721,7 +2721,7 @@ class ReceivePayment(Resource):
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
             if crm(current_user):
-                specific_charge_obj = house_obj.monthly_charges[0]
+                specific_charge_obj = house_obj.monthlybills[0]
             else:
                 specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:

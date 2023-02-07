@@ -7384,7 +7384,10 @@ class FetchPayments(Resource):
 
             period = get_billing_period(prop)
 
-            filtered_payments = fetch_current_billing_period_voided_payments(period,payments)
+            if crm(current_user):
+                filtered_payments = [x for x in payments if x.voided]
+            else:
+                filtered_payments = fetch_current_billing_period_voided_payments(period,payments)
 
             detailed_payments_list = payment_details(filtered_payments)
 

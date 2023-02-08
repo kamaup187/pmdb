@@ -10,13 +10,14 @@
                 <th class="text-black font-weight-bold ">Email</th>
                 <!-- <th class="text-black font-weight-bold ">Rep</th> -->
                 <th class="text-black font-weight-bold ">Status</th>
-
-                <th class="text-black font-weight-bold ">Price</th>
-                <th class="text-black font-weight-bold ">Plan</th>
-                <th class="text-black font-weight-bold ">Progress</th>
+                
+                <!-- <th class="text-black font-weight-bold ">Price</th> -->
+                <!-- <th class="text-black font-weight-bold ">Plan</th> -->
+                <th class="text-black font-weight-bold ">Amount</th>
                 <th class="text-black font-weight-bold ">Paid</th>
                 <th class="text-black font-weight-bold ">Balance</th>
-                <th class="text-black font-weight-bold" data-orderable="false">Contracts</th>
+                <th class="text-black font-weight-bold ">Progress</th>
+                <!-- <th class="text-black font-weight-bold" data-orderable="false">Contracts</th> -->
           
                 <!-- <th class="text-black font-weight-bold text-success" data-orderable="false">Contracts</th> -->
                 <!-- <th class="text-black font-weight-bold text-primary dispnone" data-orderable="false">Edit</th> -->
@@ -35,9 +36,12 @@
                 <!-- <td class="data-cell ">{{ i['rep'] }}</td> -->
                 <td class="data-cell no-wrap">{{ i['status']|safe }}</td>
 
+                <!-- <td class="data-cell">{{ i['price'] }}</td> -->
+                <!-- <td class="data-cell">{{ i['plan'] }}</td> -->
+                <td class="data-cell">{{ i['amount'] }}</td>
+                <td class="data-cell">{{ i['paid'] }}</td>
+                <td class="data-cell">{{ i['balance'] }}</td>
 
-                <td class="data-cell">{{ i['price'] }}</td>
-                <td class="data-cell">{{ i['plan'] }}</td>
                 <td class="data-cell">
                   <div class="progress">
                     <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{i['stage']}}">{{i['stage']}}</div>
@@ -45,15 +49,11 @@
                   <!-- <label for="prog" class="text-success">5/8</label>
                   <progress class="text-succes" id = "prog" value="30" max="100" >50%</progress> -->
                 </td>
-
-                <td class="data-cell">{{ i['paid'] }}</td>
-                <td class="data-cell">{{ i['balance'] }}</td>
-
-                <td class="text-s data-cell">
+                <!-- <td class="text-s data-cell">
                   <div>
                     <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  no-wrap" data-toggle="modal" data-target="#receiptModal"><i class="fas fa-eye mr-1"></i>View</button>
                   </div>
-                </td>
+                </td> -->
 
                 <!-- <td class="text-s data-cell">
                   <div>

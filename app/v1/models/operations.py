@@ -10,6 +10,11 @@ from dateutil.relativedelta import relativedelta
 
 ROWS_PER_PAGE = 10
 
+def smart_truncate(content, length=20, suffix='...'):
+    if len(content) <= length:
+        return content
+    else:
+        return ' '.join(content[:length+1].split(' ')[0:-1]) + suffix
 class Base():
     """base class"""
     def save(self):
@@ -2095,13 +2100,16 @@ class PermanentTenantOp(PermanentTenant,Base):
             fname = self.name.split()[0] if self.name else "Tenant"
         except:
             fname = "Tenant"
+
+        truncated_name = smart_truncate(fname,20)
         house =  PermanentTenantOp.get_houseno(self)
-        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{fname}</span>' 
+        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{truncated_name}</span>' 
 
     def combine_house_tenant_alt(self):
         fname = self.name if self.name else "Tenant"
+        truncated_name = smart_truncate(fname,20)
         house =  PermanentTenantOp.get_houseno(self)
-        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{fname}</span>' 
+        return f'<span class="text-gray-900">({house})</span> <span class="text-primary font-weight-bold">{truncated_name}</span>' 
 
     def format_balance(self):
         bal = self.balance
@@ -2276,15 +2284,21 @@ class PermanentTenantOp(PermanentTenant,Base):
             return "n/a"
 
     def get_stage_percentage(self):
-        
-        try:
-            quotient = self.bill[0].cpaid / self.bill[0].total_amount
-        except:
-            quotient = 0
+        unit = self.house
+        if unit.monthlybills:
+            bill = unit.monthlybills[0]
+        else:
+            bill = None
 
+        if bill:
+            quotient = bill.paid_amount / bill.total_bill
+        else:
+            quotient = 0
+        
         percentage = quotient * 100
 
         return f"{percentage:,.0f}%"
+
 
     def generate_editid(self):
         return "pedit" + str(self.id)
@@ -2297,6 +2311,39 @@ class PermanentTenantOp(PermanentTenant,Base):
             return f"WN{self.id}"
         else:
             return self.uid
+
+    def get_amount(self):
+        unit = self.house
+        if unit.monthlybills:
+            bill = unit.monthlybills[0]
+        else:
+            bill = None
+        if bill:
+            return f'{bill.total_bill:,.1f}'
+        else:
+            return 0.0
+
+    def get_paid(self):
+        unit = self.house
+        if unit.monthlybills:
+            bill = unit.monthlybills[0]
+        else:
+            bill = None
+        if bill:
+            return f'{bill.paid_amount:,.1f}'
+        else:
+            return 0.0
+
+    def get_balance(self):
+        unit = self.house
+        if unit.monthlybills:
+            bill = unit.monthlybills[0]
+        else:
+            bill = None
+        if bill:
+            return f'{bill.balance:,.1f}'
+        else:
+            return 0.0
 
     def view(self):
         # print("NAME >>>>",self.name)
@@ -2312,7 +2359,7 @@ class PermanentTenantOp(PermanentTenant,Base):
             'hstalt':PermanentTenantOp.combine_house_tenant_alt(self),
             'idno':self.national_id,
             'tel':PermanentTenantOp.get_contact(self),
-            'email':PermanentTenantOp.get_email(self),
+            'email':smart_truncate(PermanentTenantOp.get_email(self),28),
             'sms':PermanentTenantOp.billable(self),
             'housenum':PermanentTenantOp.get_houseno(self),
             'price':PermanentTenantOp.get_price(self),
@@ -2328,7 +2375,9 @@ class PermanentTenantOp(PermanentTenant,Base):
             'ctype':self.classtype.lower() if self.classtype else "-",
             'badge':'<span class="badge bg-warning badge-warning badge-counter">owner</span>',
             'checkin':PermanentTenantOp.checkin_date(self),
-            'balance':PermanentTenantOp.format_balance(self),
+            'amount':PermanentTenantOp.get_amount(self),
+            'paid':PermanentTenantOp.get_paid(self),
+            'balance':PermanentTenantOp.get_balance(self),
             'highlight':PermanentTenantOp.highlight(self),
             'viewable':"danger" if self.multiple_houses else "",
             'active':"" if self.multiple_houses else "disabled",

@@ -6924,6 +6924,14 @@ class FetchTenants(Resource):
 
         propid = get_identifier(prop_id)
 
+        # prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        # ptenants = prop_obj.ptenants
+
+        # for p in ptenants:
+        #     print(p.status)
+        #     # PermanentTenantOp.update_status(p,"invoiced and contracts")
+
+
         if target == "tenant details":
             tenantid = request.args.get('tenantid')
             tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)

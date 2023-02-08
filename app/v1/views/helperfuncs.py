@@ -1448,6 +1448,79 @@ def fetch_prev_schedule(month,year,arr,ptid):
             prev_billling_period_data.append(i)
     return prev_billling_period_data
 
+def fetch_prev_schedule_alt(arr,curr_arr):
+    arr_pool = []
+    for i in arr:
+        if i.id < curr_arr.id:
+            arr_pool.append(i)
+
+    return max(arr_pool, key=lambda x: x.id) if arr_pool else None
+
+def fetch_next_schedule_alt(arr,curr_arr):
+    arr_pool = []
+    for i in arr:
+        if i.id > curr_arr.id:
+            arr_pool.append(i)
+
+    return min(arr_pool, key=lambda x: x.id) if arr_pool else None
+
+
+def schedule_worker(house_obj,valid_amount,bill_ref,paytype,pay_date,sch_obj):
+
+    print("WAAAAAAAAAAAAAAUSSSS THIS WAS CALLED >>>>>>>>>>>")
+    spill = 0
+    goto_next = False
+
+    schedule_obj = sch_obj
+    print("SCHEDULE OBJI FOUND")
+    sch_arrears = 0.0
+    # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+    prev_sch = fetch_prev_schedule_alt(house_obj.schedules,schedule_obj)
+    next_sch = fetch_next_schedule_alt(house_obj.schedules,schedule_obj)
+
+
+    if prev_sch:
+        print("FOUND Previous scheduled")
+        sch_arr = prev_sch.balance
+        sch_rbal = prev_sch.rbalance if prev_sch.rbalance is not None else 0.0
+        if sch_arr:
+            sch_arrears = sch_arr
+    else:
+        sch_rbal = house_obj.owner.negotiated_price
+
+    if sch_arrears:
+        sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+    else:
+        sch_total_amount = schedule_obj.schedule_amount
+
+    schpaid = schedule_obj.paid + valid_amount
+
+    if schpaid > sch_total_amount:
+        goto_next = True
+        spill += (schpaid - sch_total_amount)
+
+    schpaid -= spill
+    
+    sch_bal = sch_total_amount - schpaid
+
+    if sch_rbal < 0:
+        sch_rbal = 0.0
+    else:
+        sch_rbal -= schpaid
+
+
+    print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+
+    PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
+
+    if goto_next:
+        if next_sch:
+            schedule_worker(house_obj,spill,bill_ref,paytype,pay_date,next_sch)
+        else:
+            return None
+    else:
+        return None
+
 def fetch_actual_payments(arr):
     actual_payment_data = []
     for i in arr:
@@ -6408,6 +6481,8 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
     # return ""
 
+    curr_user = UserOp.fetch_user_by_id(userid)
+
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
     co = prop.company
 
@@ -6463,38 +6538,40 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
                 pay_period = date_formatter_alt(payperiod)
                 pay_period_date = parse(pay_period)
         
-        elif r_comment:
-            rr_comment = r_comment.replace("Installment","Instalment")
-            comment = rr_comment.replace("  "," ")
-            if "Deposit" in comment:
-                print("30%")
-                pay_period_date = tenant_obj.checkin
-            elif "Instalment 1" in comment:
-                print("Inst 1")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=1)
-            elif "Instalment 2" in comment:
-                print("Inst 2")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=2)
-            elif "Instalment 3" in comment:
-                print("Inst 3")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=3)
-            elif "Instalment 4" in comment:
-                print("Inst 4")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=4)
-            elif "Instalment 5" in comment:
-                print("Inst 5")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=5)
-            elif "Instalment 6" in comment:
-                print("Inst 6")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=6)
-            elif "Instalment 7" in comment:
-                print("Inst 7")
-                pay_period_date = tenant_obj.checkin + relativedelta(months=7)
-            else:
-                print("Inst 8",comment)
-                pay_period_date = tenant_obj.checkin + relativedelta(months=8)
+        elif crm(curr_user):
+            pay_period_date = datetime.datetime.now()
 
-                #TODO FINISH ALL INSTALMENTS
+
+
+            # if "Deposit" in comment:
+            #     print("30%")
+            #     pay_period_date = tenant_obj.checkin
+            # elif "Instalment 1" in comment:
+            #     print("Inst 1")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=1)
+            # elif "Instalment 2" in comment:
+            #     print("Inst 2")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=2)
+            # elif "Instalment 3" in comment:
+            #     print("Inst 3")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=3)
+            # elif "Instalment 4" in comment:
+            #     print("Inst 4")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=4)
+            # elif "Instalment 5" in comment:
+            #     print("Inst 5")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=5)
+            # elif "Instalment 6" in comment:
+            #     print("Inst 6")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=6)
+            # elif "Instalment 7" in comment:
+            #     print("Inst 7")
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=7)
+            # else:
+            #     print("Inst 8",comment)
+            #     pay_period_date = tenant_obj.checkin + relativedelta(months=8)
+
+            #     #TODO FINISH ALL INSTALMENTS
             
         else:
             print("Instalment type or deposit not specified !!")
@@ -6743,40 +6820,98 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
         schedule_obj = None
 
-        if co.ctype == "crm":
+        # if co.ctype == "crm":
+        #     print("GONE TO PAY AVIV")
+        #     schedule_objs = house_obj.schedules
+        #     for sch in schedule_objs:
+        #         if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+        #             schedule_obj = sch
+        #             break
+
+
+
+        if crm(curr_user):
             print("GONE TO PAY AVIV")
             schedule_objs = house_obj.schedules
             for sch in schedule_objs:
-                if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
-                    schedule_obj = sch
-                    break
+                # if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+                if r_comment:
+                    rr_comment = r_comment.replace("Installment","Instalment")
+                    rcomment = rr_comment.replace("  ","")
+                    comment = rcomment.lower()
+
+                    if sch.schedule_name.lower() == comment:
+                        schedule_obj = sch
+                        break
+                else:
+                    diff = sch.total_amount - sch.paid
+                    if diff > 0.0:
+                        schedule_obj = sch
+                    else:
+                        continue
+        else:
+            schedule_obj = None
 
         if schedule_obj:
-            print("SCHEDULE OBJI FOUND FOR UNIT",unit, "of month",schedule_obj.schedule_date.month, "and year",schedule_obj.schedule_date.year)
+            # print("SCHEDULE OBJI FOUND FOR UNIT",unit, "of month",schedule_obj.schedule_date.month, "and year",schedule_obj.schedule_date.year)
 
-            print("#################################")
-            print("DATE PASSED",pay_period_date.month,pay_period_date.year)
-            print("SCHEDULE OBJ",schedule_obj.schedule_date.month,schedule_obj.schedule_date.year)
-            print("#################################")
-            sch_arrears = 0.0
-            prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
-            if prev_sch:
-                print("FOUND Previous scheduled of month",prev_sch[0].schedule_date.month, "and year", prev_sch[0].schedule_date.year)
-                sch_arr = prev_sch[0].balance
-                if sch_arr:
-                    sch_arrears = sch_arr
-            if sch_arrears:
-                sch_total_amount = schedule_obj.schedule_amount + sch_arrears
-            else:
-                sch_total_amount = schedule_obj.schedule_amount
+            # print("#################################")
+            # print("DATE PASSED",pay_period_date.month,pay_period_date.year)
+            # print("SCHEDULE OBJ",schedule_obj.schedule_date.month,schedule_obj.schedule_date.year)
+            # print("#################################")
+            # sch_arrears = 0.0
+            # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+            # if prev_sch:
+            #     print("FOUND Previous scheduled of month",prev_sch.schedule_date.month, "and year", prev_sch.schedule_date.year)
+            #     sch_arr = prev_sch.balance
+            #     if sch_arr:
+            #         sch_arrears = sch_arr
+            # if sch_arrears:
+            #     sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+            # else:
+            #     sch_total_amount = schedule_obj.schedule_amount
 
-            schpaid = schedule_obj.paid + valid_amount
+            # schpaid = schedule_obj.paid + valid_amount
             
-            sch_bal = sch_total_amount - schpaid
+            # sch_bal = sch_total_amount - schpaid
 
-            print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
+            # print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal)
 
-            PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+            # PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,bill_ref,paytype,pay_date)
+
+
+            # print("SCHEDULE OBJI FOUND")
+            # sch_arrears = 0.0
+            # # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+            # prev_sch = fetch_prev_schedule_alt(house_obj.schedules,schedule_obj)
+            # if prev_sch:
+            #     print("FOUND Previous scheduled")
+            #     sch_arr = prev_sch.balance
+            #     sch_rbal = prev_sch.rbalance if prev_sch.rbalance is not None else 0.0
+            #     if sch_arr:
+            #         sch_arrears = sch_arr
+            # else:
+            #     sch_rbal = house_obj.owner.negotiated_price
+
+            # if sch_arrears:
+            #     sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+            # else:
+            #     sch_total_amount = schedule_obj.schedule_amount
+
+            # schpaid = schedule_obj.paid + valid_amount
+            
+            # sch_bal = sch_total_amount - schpaid
+
+            # if sch_rbal < 0:
+            #     sch_rbal = 0.0
+            # else:
+            #     sch_rbal -= schpaid
+
+            # print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+
+            # PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
+
+            schedule_worker(house_obj,valid_amount,bill_ref,paytype,pay_date,schedule_obj)
         
         specific_charge_obj = bill
 
@@ -9159,7 +9294,7 @@ def filtered_house_list_alt(apartment_id,readdate=None):
 #             prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
 #             if prev_sch:
 #                 print("FOUND Previous scheduled")
-#                 sch_arr = prev_sch[0].balance
+#                 sch_arr = prev_sch.balance
 #                 if sch_arr:
 #                     sch_arrears = sch_arr
 #             if sch_arrears:

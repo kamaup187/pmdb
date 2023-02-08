@@ -1944,9 +1944,12 @@ class UploadPayments(Resource):
 
                 from datetime import datetime
 
-                dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
-                hour, minute, second = floatHourToTime(datepaid % 1)
-                dt = dt.replace(hour=hour, minute=minute, second=second)
+                try:
+                    dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
+                    hour, minute, second = floatHourToTime(datepaid % 1)
+                    dt = dt.replace(hour=hour, minute=minute, second=second)
+                except:
+                    dt = datetime.now()
 
                 print("DAAATEEEEEE >>",dt)
                 payref = sheet.row_values(row)[2] if sheet.row_values(row)[2] else ""
@@ -2304,6 +2307,21 @@ class ReceivePayment(Resource):
             
             return render_template('ajax_tenant_balance.html',totaldue=f'{latest_bill_balance:,.1f}')
 
+        if target == "schedules":
+            house_obj = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)[0]
+            if not house_obj.schedules:
+                return render_template('ajax_multivariable.html',items=[],placeholder="client not invoiced yet",access="")
+
+            scheds = []
+            # schedules = house_obj.schedules
+            # for sched in schedules:
+            #     scheds.append(sched.schedule_name)
+
+            [scheds.append(sched.schedule_name) for sched in house_obj.schedules]
+
+            return render_template('ajax_multivariable.html',items=scheds,placeholder="select schedule",access="")
+
+
         if target == "breakdown":
 
             skip = False
@@ -2424,7 +2442,12 @@ class ReceivePayment(Resource):
                 # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
                 # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
 
-                return render_template('ajax_bill_breakdown.html',bill=bill)
+                if crm(current_user):
+                    edit = "dispnone"
+                else:
+                    edit = ""
+
+                return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
 
@@ -2495,7 +2518,10 @@ class ReceivePayment(Resource):
             current_period_payment = False
         else:
             current_period_payment = True
-            pay_period_date = get_billing_period(prop)
+            if crm(current_user):
+                pay_period_date = datetime.datetime.now()
+            else:
+                pay_period_date = get_billing_period(prop)
 
         print("PAYPERIOOOOOOOD",pay_period_date)
 
@@ -2517,6 +2543,9 @@ class ReceivePayment(Resource):
         paytype = request.form.get('paytype')#typed
         amount = request.form.get('paidamount')#typed
         housecheck = request.form.get("housecheck")
+
+        sched_select = request.form.get("sched")
+
 
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
 
@@ -2734,9 +2763,21 @@ class ReceivePayment(Resource):
             print("GONE TO PAY AVIV")
             schedule_objs = house_obj.schedules
             for sch in schedule_objs:
-                if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
-                    schedule_obj = sch
-                    break
+
+                # if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
+
+                if sched_select:
+                    if sch.schedule_name == sched_select:
+                        schedule_obj = sch
+                        break
+                else:
+                    diff = sch.total_amount - sch.paid
+                    if diff > 0.0:
+                        schedule_obj = sch
+                        break
+                    else:
+                        continue
+
 
         
         # if tenant_obj.tenant_type == "owner":
@@ -2753,10 +2794,10 @@ class ReceivePayment(Resource):
         if tenant_obj.multiple_houses:
             pass
         else:
+            remove_penalties = False
             # monthly_charges = house_obj.monthlybills
             # specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,period.month)
-
-            if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES":
+            if specific_charge_obj and current_period_payment and current_user.company.name != "MULTIDIME AGENCIES" and remove_penalties:
                 if specific_charge_obj.penalty:
                     standard_pen = house_obj.housecode.rentrate*0.1
                     accepted_balance = bal - 1000 - standard_pen
@@ -2861,17 +2902,24 @@ class ReceivePayment(Resource):
         for h in target_houses:
 
             if schedule_obj:
+
+                spill = 0
+                goto_next = False
+
                 print("SCHEDULE OBJI FOUND")
                 sch_arrears = 0.0
-                prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+                # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+                prev_sch = fetch_prev_schedule_alt(house_obj.schedules,schedule_obj)
+                next_sch = fetch_next_schedule_alt(house_obj.schedules,schedule_obj)
+
                 if prev_sch:
                     print("FOUND Previous scheduled")
-                    sch_arr = prev_sch[0].balance
-                    sch_rbal = prev_sch[0].rbalance if prev_sch[0].rbalance is not None else 0.0
+                    sch_arr = prev_sch.balance
+                    sch_rbal = prev_sch.rbalance if prev_sch.rbalance is not None else 0.0
                     if sch_arr:
                         sch_arrears = sch_arr
                 else:
-                    sch_rbal = h.owner.negotiated_price
+                    sch_rbal = house_obj.owner.negotiated_price
 
                 if sch_arrears:
                     sch_total_amount = schedule_obj.schedule_amount + sch_arrears
@@ -2879,17 +2927,71 @@ class ReceivePayment(Resource):
                     sch_total_amount = schedule_obj.schedule_amount
 
                 schpaid = schedule_obj.paid + valid_amount
+
+                if schpaid > sch_total_amount:
+                    goto_next = True
+                    spill += (schpaid - sch_total_amount)
+
+                schpaid -= spill
                 
                 sch_bal = sch_total_amount - schpaid
 
                 if sch_rbal < 0:
                     sch_rbal = 0.0
                 else:
-                    sch_rbal -= valid_amount
+                    sch_rbal -= schpaid
+
 
                 print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
 
                 PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
+
+                # spill = 0
+                # goto_next = False
+                # print("SCHEDULE OBJI FOUND")
+                # sch_arrears = 0.0
+                # # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
+                # prev_sch = fetch_prev_schedule_alt(house_obj.schedules,schedule_obj)
+                # next_sch = fetch_next_schedule_alt(house_obj.schedules,schedule_obj)
+
+
+                # if prev_sch:
+                #     print("FOUND Previous scheduled")
+                #     sch_arr = prev_sch.balance
+                #     sch_rbal = prev_sch.rbalance if prev_sch.rbalance is not None else 0.0
+                #     if sch_arr:
+                #         sch_arrears = sch_arr
+                # else:
+                #     sch_rbal = h.owner.negotiated_price
+
+                # if sch_arrears:
+                #     sch_total_amount = schedule_obj.schedule_amount + sch_arrears
+                # else:
+                #     sch_total_amount = schedule_obj.schedule_amount
+
+                # schpaid = schedule_obj.paid + valid_amount
+
+                # if schpaid > sch_total_amount:
+                #     goto_next = True
+                #     spill += schpaid - sch_total_amount
+                
+                # sch_bal = sch_total_amount - schpaid
+
+                # if sch_rbal < 0:
+                #     sch_rbal = 0.0
+                # else:
+                #     sch_rbal -= schpaid
+
+                # print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+
+                # PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
+
+                if goto_next:
+                    if next_sch:
+                        schedule_worker(house_obj,spill,bill_ref,paytype,pay_date,next_sch)
+
+
+
             
 
             if specific_charge_obj:

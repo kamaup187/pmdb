@@ -245,50 +245,42 @@
                       <fieldset class="mb-2">
                         <legend class="legend">Select client:</legend>
 
-                        <div id="prop_selector" class="form-group input-icons mt-0 dispnone">
-                          <select class="select-css" id ="select_prop" >
-                            <option disabled selected value> -- property? -- </option>
-                            {% for o in proplist %}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
+                        <div class="ms-3 ml-3 form-group mb-0 mt-2">
 
-                        <div id="house_selector" class="form-group input-icons mt-0">
-                          <select class="select-css" id ="select_house" >
-                            <option disabled selected value> -- loading -- </option>
-                            {% for o in houselist %}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
+                          <div id="prop_selector" class="form-group mt-0 dispnone">
+                            <select class="select-css" id ="select_prop" >
+                              <option disabled selected value> -- property? -- </option>
+                              {% for o in proplist %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
 
-                        <div id="confirm_details" class="text-black ms-3 ml-3 form-group mb-0 dispnone">
-                          loading...
-                        </div>
+                          <div id="house_selector" class="form-group mt-2">
+                            <select class="select-css" id ="select_house" >
+                              <option disabled selected value> -- loading -- </option>
+                              {% for o in houselist %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
 
-                        <div id="tenantbed" class="center-btn mb-2 text-info"></div>
+                          <div id="confirm_details" class="text-black ms-3 ml-3 form-group mb-0 dispnone">
+                            loading...
+                          </div>
 
-                        <div class="ms-3 ml-3 form-group mb-0">
+                          <div id="tenantbed" class="center-btn mb-2 text-info"></div>
 
-
+                        
                           <div class="mb-1 row">
-                            <div class="col-5">
-                              <!-- <input type="checkbox" name="" id="diffperiod">
-                              <label class="mr-3 me-3 text-danger" for="diffperiod">Select period</label> -->
+                            <div class="col-5 dispnone">
                               <input id="billdatepicker" class="ph dispno" type="text" placeholder="choose month..." readonly />
                             </div>
 
-                            <div class="form-grou col-5 no-paddin input-icons">
+                            <div id="schedule_selector" class="form-grou col-5 no-paddin input-icons dispnone">
                               <span>Payment tag</span>
-                              <select class="select-css" id ="paytag" >
-                                <option disabled selected value> select... </option>
-                                <option  value="Inward telex payment"> Deposit </option>
-                                <option selected value="M-banking transfer"> Instalment 1</option>
-                                <option  value="M-banking transfer"> Instalment 2</option>
-                                <option  value="M-pesa paybill transfer"> Instalment 3</option>
-                                <option  value="Pesalink transfer">Instalment 4</option>
-                                <option  value="WHT payment">Instalment 5</option>
+                              <select class="select-css" id ="select_schedule" >
+                                <option disabled selected value> ...loading... </option>
                               </select>
                             </div>
                             
@@ -334,32 +326,34 @@
                       </fieldset>
 
                       <fieldset id="fieldset2" class="mb-2 dispnone">
-                        <legend class="legend smallify">Bill breakdown(inclusive of respective arrears)</legend>
+                        <legend class="legend smallify">Invoice line items(inclusive arrears)</legend>
+
+                        <div class="container mb-3">
+                          <div id="totalbed" class="row">
+                            <div class="form-group col-6">
+                                <span class="text-danger">TOTAL DUE</span>
+                                <div id="totaldue">
+                                  <div class="fountainG-small d-inline ml-3">
+                                    <div class="fountainG_1s fountainG-s"></div>
+                                    <div class="fountainG_2s fountainG-s"></div>
+                                    <div class="fountainG_3s fountainG-s"></div>
+                                  </div>
+                                </div>
+                                <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+                            </div>
+                            <div class="form-group col-6">
+                              <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
+                                <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
+                                <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+                            </div>
+                          </div>
+                        </div>
 
                         <div id="billbreakdown">
                           <div class="fountainG-small d-inline ml-3">
                             <div class="fountainG_1s fountainG-s"></div>
                             <div class="fountainG_2s fountainG-s"></div>
                             <div class="fountainG_3s fountainG-s"></div>
-                          </div>
-                        </div>
-
-                        <div id="totalbed" class="row">
-                          <div class="form-group col-6 no-paddin input-icons">
-                              <span class="text-danger">TOTAL DUE</span>
-                              <div id="totaldue">
-                                <div class="fountainG-small d-inline ml-3">
-                                  <div class="fountainG_1s fountainG-s"></div>
-                                  <div class="fountainG_2s fountainG-s"></div>
-                                  <div class="fountainG_3s fountainG-s"></div>
-                                </div>
-                              </div>
-                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
-                          </div>
-                          <div class="form-group col-6 no-paddin input-icons">
-                            <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
-                              <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
-                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
                           </div>
                         </div>
     
@@ -1219,111 +1213,124 @@
 
 <script>
   // This script displays alerts and tenant name before clearance
-  $("#select_house").on('change',function(){
-    $("#housecheck").text("manual")
-    if ($("#ctb_item_name").text()) {
-      //do nothing
-    }else{
-        $("#tname").text(" >> "+$("#select_house").val())
+    $("#select_house").on('change', function () {
+      $("#schedule_selector").removeClass("dispnone")
+      $("#housecheck").text("manual")
+      if ($("#ctb_item_name").text()) {
+        //do nothing
+      } else {
+        $("#tname").text(" >> " + $("#select_house").val())
       }
 
-    $("#fieldset2").removeClass("dispnone")
-    $("#billbreakdown").html(
-          '<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>'
-          );
-    $.ajax({
-      url: "{{ url_for('api.receivepayment') }}",
-      type: "get",
-      data: {
-            propid: $("#prop_identifier_main").text(),
-            propname:$("#select_prop").val(),
-            house: $("#select_house").val(),
-            cbid:$("#c2bitem_id").text(),
-            payperiod:$("#billdatepicker").val(),
-            housecheck:"manual",
-            target:"amount due"
-          },
-      success: function(response) {
+      $("#fieldset2").removeClass("dispnone")
+      $("#billbreakdown").html(
+        '<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>'
+      );
+      $.ajax({
+        url: "{{ url_for('api.receivepayment') }}",
+        type: "get",
+        data: {
+          propid: $("#prop_identifier_main").text(),
+          propname: $("#select_prop").val(),
+          house: $("#select_house").val(),
+          cbid: $("#c2bitem_id").text(),
+          payperiod: $("#billdatepicker").val(),
+          housecheck: "manual",
+          target: "amount due"
+        },
+        success: function (response) {
 
-        if (response.split(" ")[0] == "<input") {
-          $("#totaldue").html(response);
-          $("#tenantbed").empty();
+          if (response.split(" ")[0] == "<input") {
+            $("#totaldue").html(response);
+            $("#tenantbed").empty();
 
-          $.ajax({
-            url: "{{ url_for('api.receivepayment') }}",
-            type: "get",
-            data: {
-              propid: $("#prop_identifier_main").text(),
-              propname: $("#select_prop").val(),
-              house: $("#select_house").val(),
-              cbid:$("#c2bitem_id").text(),
-              payperiod:$("#billdatepicker").val(),
-              paidamount: $("#paidamount").val(),
-              housecheck:"manual",
-              target: "breakdown"
-            },
-            success: function (response) {
-              $("#billbreakdown").html(response);
+            $.ajax({
+              url: "{{ url_for('api.receivepayment') }}",
+              type: "get",
+              data: {
+                propid: $("#prop_identifier_main").text(),
+                propname: $("#select_prop").val(),
+                house: $("#select_house").val(),
+                cbid: $("#c2bitem_id").text(),
+                payperiod: $("#billdatepicker").val(),
+                paidamount: $("#paidamount").val(),
+                housecheck: "manual",
+                target: "breakdown"
+              },
+              success: function (response) {
+                $("#billbreakdown").html(response);
 
-              $.ajax({
-                url: "{{ url_for('api.receivepayment') }}",
-                type: "get",
-                data: {
-                  propid: $("#prop_identifier_main").text(),
-                  propname: $("#select_prop").val(),
-                  house: $("#select_house").val(),
-                  house2: $("#house-holder").text(),
-                  cbid:$("#c2bitem_id").text(),
-                  payperiod:$("#billdatepicker").val(),
-                  housecheck:"manual",
-                  target: "amount due"
-                },
-                success: function (response) {
-                  $("#totaldue").html(response);
+                $.ajax({
+                  url: "{{ url_for('api.receivepayment') }}",
+                  type: "get",
+                  data: {
+                    propid: $("#prop_identifier_main").text(),
+                    propname: $("#select_prop").val(),
+                    house: $("#select_house").val(),
+                    house2: $("#house-holder").text(),
+                    cbid: $("#c2bitem_id").text(),
+                    payperiod: $("#billdatepicker").val(),
+                    housecheck: "manual",
+                    target: "amount due"
+                  },
+                  success: function (response) {
+                    $("#totaldue").html(response);
 
-                  if ($("#ctb_item_amount").text()) {
-                    $("#paidamount").val($("#ctb_item_amount").text())
-                    $('#paidamount').keyup();
-                    $("#bill_ref").val($("#ctb_item_ref").text())
-                  }
-
-
-                  if ($("#ctb_item_ref").text()) {
-                    var paymodeRadio = $('input:radio[name=paymode]');
-                    if (paymodeRadio.is(':checked') === false) {
-                      console.log("working yeeee")
-                      paymodeRadio.prop('checked', true);
-                      paymodeRadio.change();
-                    } else {
-                      console.log("not workin ffffff")
-                      // do nothing
+                    if ($("#ctb_item_amount").text()) {
+                      $("#paidamount").val($("#ctb_item_amount").text())
+                      $('#paidamount').keyup();
+                      $("#bill_ref").val($("#ctb_item_ref").text())
                     }
-                  } else {
-                    console.log("kubaad")
+
+                    if ($("#ctb_item_ref").text()) {
+                      var paymodeRadio = $('input:radio[name=paymode]');
+                      if (paymodeRadio.is(':checked') === false) {
+                        console.log("working yeeee")
+                        paymodeRadio.prop('checked', true);
+                        paymodeRadio.change();
+                      } else {
+                        console.log("not workin ffffff")
+                      }
+                    }else{
+                      console.log("kubaad")}
+
+                    $.ajax({
+                      url: "{{ url_for('api.receivepayment') }}",
+                      type: "get",
+                      data: {
+                        propid: $("#prop_identifier_main").text(),
+                        propname: $("#select_prop").val(),
+                        house: $("#select_house").val(),
+                        house2: $("#house-holder").text(),
+                        housecheck: "manual",
+                        target: "schedules"
+                      }, success: function (response) {
+                        $("#select_schedule").html(response);
+                      }
+                    })
+
                   }
+                });
 
-                }
-              });
+              }
+            });
 
-            }
-          });
-            
-          
 
-        }else{
-          $("#tenantbed").html(response);
-          // $("#totaldue").html('fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>');
-          $("#total_due").val('0.0');
 
-        }
-        // $("#fieldset2").removeClass("dispnone")
+          } else {
+            $("#tenantbed").html(response);
+            // $("#totaldue").html('fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>');
+            $("#total_due").val('0.0');
 
-      },
-      error: function(xhr) {
-          $("#tenantbed").html('<div class="center-btn text-danger mb-3">House not available in the selected apartment</div>');
           }
+          // $("#fieldset2").removeClass("dispnone")
+
+        },
+        error: function (xhr) {
+          $("#tenantbed").html('<div class="center-btn text-danger mb-3">House not available in the selected apartment</div>');
+        }
+      });
     });
-  });
 </script>
 
 
@@ -1401,6 +1408,8 @@
     $("#housecheck").empty();
     $("#thouse").addClass("dispnone");
     $("#thouse").text("loading...")
+
+    $("#schedule_selector").addClass("dispnone")
 
     $("#house_selector").removeClass("dispnone")
     $("#confirm_details").addClass("dispnone")
@@ -1620,12 +1629,15 @@
                 agreementpaid :($("#agreementpaid").val()),
                 paidamount:$("#paidamount").val(),
                 overpayment:$("#advance_pay").val(),
+                sched:$("#select_schedule").val(),
                 housecheck:$("#housecheck").text()
             },
             success: function(response) {
                 // $('#paybtn_alt').off('click');
                 $('#paybtn_alt').html('Submit');
                 $('#paybtn_alt').addClass("dispnone")
+                $("#schedule_selector").addClass("dispnone")
+
                 // $('#pay-date').attr("type","text")
                 $(".reset").click();
                 $('#billdatepicker').addClass("dispnone")

@@ -7917,13 +7917,14 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 booking = house.owner.deposit
                 checkin = house.owner.checkin
                 instalment = house.owner.instalment * house.owner.num_instalment
-
-                # if house.description.upper() == "STUDIO":
-                #     addfee = 123380.0
-                # else:
-                #     addfee = 192380.0
-
-                addfee = 0.0
+                
+                if user.company.name == "REVER MWIMUTO LIMITED":
+                    if house.description.upper() == "STUDIO":
+                        addfee = 123380.0
+                    else:
+                        addfee = 192380.0
+                else:
+                    addfee = 0.0
 
                 mi = house.owner.instalment
                 months = house.owner.num_instalment
@@ -7941,10 +7942,12 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
                         sch.save()
 
-                    # others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+                    if user.company.name == "REVER MWIMUTO LIMITED":
 
-                    # legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
-                    # legal_fee_schedule.save()
+                        others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+
+                        legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
+                        legal_fee_schedule.save()
 
             else:
                 booking = 0.0

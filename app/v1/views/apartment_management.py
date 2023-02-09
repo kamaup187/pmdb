@@ -4958,10 +4958,18 @@ class AddTenant(Resource):
 
             print(ptenant_obj.classtype,"<<<<<<<<<<<<<<<<<<<<<<")
 
-            # if ptenant_obj.classtype.lower() == "shareholder":
-            #     ng = house_obj.housecode.listprice * 0.95
-            # else:
-            ng = house_obj.housecode.listprice
+            lp = house_obj.housecode.listprice
+
+            if ptenant_obj.classtype:
+                if ptenant_obj.classtype.lower() == "shareholder":
+                    if house_obj.housecode.percentage_discount:
+                        ng = lp- (house_obj.housecode.percentage_discount / 100 * lp)
+                    elif house_obj.housecode.discount:
+                        ng = lp - house_obj.housecode.discount
+                else:
+                    ng = lp
+            else:
+                ng = lp
 
             return render_template('ajax_client_details.html',client=ptenant_obj.name,plot=house_obj,mp=f'{ng:,.1f}')
 
@@ -5058,7 +5066,7 @@ class AddTenant(Resource):
 
             if sheet:
                 if ttype == 'clients':
-                    if len(sheet.row_values(1)) != 8:
+                    if len(sheet.row_values(1)) != 6:
                         data_format_error = True
                 else:
                     if len(sheet.row_values(1)) != 5:
@@ -5151,7 +5159,8 @@ class AddTenant(Resource):
                         tenantnatid = ""
 
                     classtype = sheet.row_values(row)[5]
-                    rep = sheet.row_values(row)[6]
+                    # rep = sheet.row_values(row)[6]
+                    rep = None
 
                         
                     migrate = "True"
@@ -5261,9 +5270,8 @@ class AddTenant(Resource):
 
                             if classtype:
 
-                                PermanentTenantOp.update_classtype(ptenant_obj,classtype)
                                 if classtype.lower() == "shareholder":
-                                    pass
+                                    PermanentTenantOp.update_classtype(ptenant_obj,classtype)
                                 else:
                                     PermanentTenantOp.update_rep_id(ptenant_obj,rep_id)
 
@@ -5776,8 +5784,25 @@ class Deal(Resource):
 
             PermanentTenantOp.update_status(alloc,"prospective")
 
+
+            """
+            discounted already calculated prenegotiations for shareholders. Needs refactoring. URGENT REFACTOR
+            """
+            # if alloc.classtype:
+            #     if alloc.classtype.lower() == "shareholder":
+            #         if alloc.house.housecode.percentage_discount:
+            #             discounted_negprice = negprice - (alloc.house.housecode.percentage_discount / 100 * negprice)
+            #         elif alloc.house.housecode.discount:
+            #             discounted_negprice = negprice - alloc.house.housecode.discount
+            #         else:
+            #             discounted_negprice = negprice
+            #     else:
+            #         discounted_negprice = negprice
+            # else:
+            discounted_negprice = negprice
+
             # PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,0,0,"","")
-            PermanentTenantOp.update_payment_plan(alloc,negprice,"partial",deposit,0.0,mi,num_mi,"","")
+            PermanentTenantOp.update_payment_plan(alloc,discounted_negprice,"partial",deposit,0.0,mi,num_mi,"","")
 
             msg = "Client details updated"
             return msg + proceed

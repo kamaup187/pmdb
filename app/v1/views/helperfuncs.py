@@ -1467,7 +1467,8 @@ def fetch_next_schedule_alt(arr,curr_arr):
 
 def schedule_worker(house_obj,valid_amount,bill_ref,paytype,pay_date,sch_obj):
 
-    print("WAAAAAAAAAAAAAAUSSSS THIS WAS CALLED >>>>>>>>>>>")
+    print("WAAAAAAAAAAAAAAUSSSS THIS WAS CALLED >>>>>>>>>>> SCHEDULE:",sch_obj)
+
     spill = 0
     goto_next = False
 
@@ -1509,7 +1510,7 @@ def schedule_worker(house_obj,valid_amount,bill_ref,paytype,pay_date,sch_obj):
         sch_rbal -= schpaid
 
 
-    print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+    print("values","ARR",sch_arrears,"TOTAL:",sch_total_amount,"PASSED AS PAID:",valid_amount,"BALANCE:",sch_bal,"RUNNING BAL",sch_rbal)
 
     PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
 
@@ -6770,7 +6771,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
                     pass
                 else:
                     print("REFERENCE (",raw_bill_ref,")EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.ptenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
-                    continue
+                    # continue
 
         tenant_id = None
 
@@ -6834,6 +6835,8 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             print("GONE TO PAY AVIV")
             schedule_objs = house_obj.schedules
             for sch in schedule_objs:
+                print("ITERATING >>",sch)
+                # import pdb; pdb.set_trace()
                 # if sch.schedule_date.month == pay_period_date.month and sch.schedule_date.year == pay_period_date.year:
                 if r_comment:
                     rr_comment = r_comment.replace("Installment","Instalment")
@@ -6847,10 +6850,13 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
                     diff = sch.total_amount - sch.paid
                     if diff > 0.0:
                         schedule_obj = sch
+                        break
                     else:
                         continue
         else:
             schedule_obj = None
+
+        print("FFFFFFFIIIIIIIIRRRTS SCH FOUND >>>>>>>>>", schedule_obj)
 
         if schedule_obj:
             # print("SCHEDULE OBJI FOUND FOR UNIT",unit, "of month",schedule_obj.schedule_date.month, "and year",schedule_obj.schedule_date.year)
@@ -7918,7 +7924,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                 checkin = house.owner.checkin
                 instalment = house.owner.instalment * house.owner.num_instalment
                 
-                if user.company.name == "REVER MWIMUTO LIMITED":
+                if user.company.name == "REVER MWIMUTO LIMITEDD":
                     if house.description.upper() == "STUDIO":
                         addfee = 123380.0
                     else:
@@ -7942,12 +7948,12 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
                         sch.save()
 
-                    if user.company.name == "REVER MWIMUTO LIMITED":
+                    # if user.company.name == "REVER MWIMUTO LIMITED":
 
-                        others = f"40% Legal fees,Stamp Duty,service charge etc.)"
+                    #     others = f"40% Legal fees,Stamp Duty,service charge etc.)"
 
-                        legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
-                        legal_fee_schedule.save()
+                    #     legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
+                    #     legal_fee_schedule.save()
 
             else:
                 booking = 0.0

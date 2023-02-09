@@ -2906,7 +2906,7 @@ class ReceivePayment(Resource):
                 spill = 0
                 goto_next = False
 
-                print("SCHEDULE OBJI FOUND")
+                print("SCHEDULE OBJI FOUND SCHEDULE:",schedule_obj)
                 sch_arrears = 0.0
                 # prev_sch = fetch_prev_schedule(pay_period_date.month,pay_period_date.year,house_obj.schedules,tenant_obj.id)
                 prev_sch = fetch_prev_schedule_alt(house_obj.schedules,schedule_obj)
@@ -2942,7 +2942,9 @@ class ReceivePayment(Resource):
                     sch_rbal -= schpaid
 
 
-                print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+                # print("values",sch_arrears,sch_total_amount,valid_amount,sch_bal,sch_rbal)
+                print("values","ARR",sch_arrears,"TOTAL:",sch_total_amount,"PASSED AS PAID:",valid_amount,"BALANCE:",sch_bal,"RUNNING BAL",sch_rbal)
+
 
                 PaymentScheduleOp.update_details(schedule_obj,sch_arrears,sch_total_amount,schpaid,sch_bal,sch_rbal,bill_ref,paytype,pay_date)
 

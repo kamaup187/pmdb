@@ -6697,7 +6697,13 @@ class StatementOfAccounts(Resource):
             schpaid += bill.paid
             formatted_bills.append(PaymentScheduleOp.view_detail(bill))
 
-        rbal = f"{tenant_obj.balance:,.1f}"
+        # rbal = f"{tenant_obj.balance:,.1f}"
+        if tenant_obj.house.monthlybills:
+            # print(tenant_obj.house.monthlybills[0])
+            # import pdb; pdb.set_trace()
+            rbal = f"{tenant_obj.house.monthlybills[0].balance:,.1f}"
+        else:
+            rbal = 0.0
 
         prop = tenant_obj.apartment
 

@@ -6771,7 +6771,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
                     pass
                 else:
                     print("REFERENCE (",raw_bill_ref,")EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.ptenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
-                    # continue
+                    continue
 
         tenant_id = None
 

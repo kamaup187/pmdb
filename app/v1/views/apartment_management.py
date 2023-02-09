@@ -4966,6 +4966,8 @@ class AddTenant(Resource):
                         ng = lp- (house_obj.housecode.percentage_discount / 100 * lp)
                     elif house_obj.housecode.discount:
                         ng = lp - house_obj.housecode.discount
+                    else:
+                        ng = lp
                 else:
                     ng = lp
             else:

@@ -9685,7 +9685,14 @@ def auto_consume_ctob2(ctob_obj):
             except Exception as e:
                 print(f"Houston, we have a problem {e}")
 
-
+def name_standard(name):
+    try:
+        n1 = name.replace(" ","")
+        n2 = name.upper()
+    except:
+        n2 = name
+    return n2
+    
 def mpesa_response(ctob_obj):
 
     if "***" in ctob_obj.msisdn:

@@ -132,11 +132,19 @@ class Index(Resource):
         # coss = CompanyOp.fetch_all_companies()
         coss = []
         for t in coss:
-            print("Comm >>",t)
-            if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Devco" or t.name == "Demo Company Two" or t.name == "Zima Homes":
-                CompanyOp.update_ctype(t,"crm")
-            else:
-                CompanyOp.update_ctype(t,"noncrm")
+            # if t.id == 106:
+            #     continue
+            # print("Comm >>",t,"ID",t.id)
+
+            try:
+                print("Comm >>",t.id)
+                print("Comm >>",t,"ID",t.id)
+            except:
+                print("errret")
+            # if t.name == "Litala" or t.name == "REVER MWIMUTO LIMITED" or t.name == "Devco" or t.name == "Demo Company Two" or t.name == "Zima Homes":
+            #     CompanyOp.update_ctype(t,"crm")
+            # else:
+            #     CompanyOp.update_ctype(t,"noncrm")
 
 
         print(len(coss)," companies found")
@@ -780,8 +788,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "ASTROL":
-                shorts = ["4091383"]
+            if company.name== "Adorable Properties":
+                shorts = ["4107209"]
             else:
                 shorts = []
 

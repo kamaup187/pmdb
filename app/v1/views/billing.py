@@ -4593,7 +4593,8 @@ class CallBackUrlAstrol(Resource):
 
             for prp in props:
                 for house in prp.houses:
-                    if house.name == formatted_ref:
+                    n = name_standard(house.name)
+                    if n == formatted_ref:
                         prop = house.apartment
                         target_house = house
                         break
@@ -4692,7 +4693,8 @@ class CallBackUrlAstrolRuiru(Resource):
 
             for prp in props:
                 for house in prp.houses:
-                    if house.name == formatted_ref:
+                    n = name_standard(house.name)
+                    if n == formatted_ref:
                         prop = house.apartment
                         target_house = house
                         break
@@ -4790,7 +4792,8 @@ class CallBackUrlSkyview(Resource):
 
             for prp in props:
                 for house in prp.houses:
-                    if house.name == formatted_ref:
+                    n = name_standard(house.name)
+                    if n == formatted_ref:
                         prop = house.apartment
                         target_house = house
                         break
@@ -5211,16 +5214,49 @@ class CallBackUrlAssetisha(Resource):
             props = com.props
 
             prop = None
-            target_house = None
+            
+            if bill_ref_num:
 
-            print("PROPS: ",bill_ref_num)
+                if bill_ref_num.startswith("TNT"):
+                    clean_ref = bill_ref_num.replace("TNT", "")
+                    tenant_obj = TenantOp.fetch_tenant_by_id(clean_ref)
+                else:
+                    tenant_obj = TenantOp.fetch_tenant_by_uid(bill_ref_num)
+            else:
+                tenant_obj = None
 
-            for prp in props:
-                for house in prp.houses:
-                    if house.name == bill_ref_num:
-                        prop = house.apartment
-                        target_house = house
-                        break
+            if tenant_obj:
+                target_house = check_house_occupied(tenant_obj)[1]
+                if target_house:
+                    prop = target_house.apartment
+            else:
+                target_house = None
+
+            if not target_house:
+                unformatted_ref = bill_ref_num.replace(" ","") if bill_ref_num else ""
+                if unformatted_ref:
+                    formatted_ref = bill_ref_num.upper()
+
+                for prp in props:
+                    for house in prp.houses:
+                        n = name_standard(house.name)
+                        if n == formatted_ref:
+                            prop = house.apartment
+                            target_house = house
+                            break
+
+            # prop = None
+            # target_house = None
+
+            # print("PROPS: ",bill_ref_num)
+
+            # for prp in props:
+            #     for house in prp.houses:
+            #         n = name_standard(house.name)
+            #         if n == formatted_ref:
+            #             prop = house.apartment
+            #             target_house = house
+            #             break
 
             if not target_house:
                 return {"message": "House not found"}, 404

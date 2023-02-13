@@ -138,7 +138,6 @@ class Billing(Resource):
             residents.append(resident)
             houseids = [resident.house.id for resident in residents]
 
-
         if not apartment_name:
             propid = request.form.get("propid")
             print("APARTMENT ID TO BILL IS>>>>",propid)
@@ -149,6 +148,11 @@ class Billing(Resource):
         else:
             apartment_id = get_apartment_id(apartment_name)
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+        if target == "all":
+            residents = []
+            [residents.append(p) for p in prop.ptenants if p.status == "prospective"]
+            houseids = [resident.house.id for resident in residents]
 
         ApartmentOp.update_billing_progress(prop,"billing")
             

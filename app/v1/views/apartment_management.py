@@ -5818,10 +5818,103 @@ class Deal(Resource):
             return msg + proceed
         else:
             raw_checkin = request.form.get('date')
+            file2 = request.files.get('file2')
+
+            if file2:
+                processed_data = upload_handler(file2,current_user)
+            else:
+                processed_data = None
+
+            if processed_data:
+
+                rows,sheet = processed_data[0],processed_data[1]
+
+                data_format_error = False
+
+                if sheet:
+                    if len(sheet.row_values(1)) != 2:
+                        data_format_error = True
+
+                try:
+                    if data_format_error:
+                        #Throw error
+                        nonexistent_item = sheet.row_values(1)[1000000]
+
+                    dict_array = []
+
+                    for row in rows:
+                        print("Starting.........................................")
+                        try:
+                            housename = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
+                            print("Working as expected extracted>>",housename)
+                        except:
+                            housename = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
+                            print("house exception handled extracted>>",housename)
+
+                        datepaid = sheet.row_values(row)[1] if sheet.row_values(row)[1] else ""
+
+                        from datetime import datetime
+
+                        try:
+                            dt = datetime.fromordinal(datetime(1900, 1, 1).toordinal() + int(datepaid) - 2)
+                            hour, minute, second = floatHourToTime(datepaid % 1)
+                            dt = dt.replace(hour=hour, minute=minute, second=second)
+                        except:
+                            dt = datetime.now()
+
+                        dict_obj = {
+                        "housename":housename,
+                        "dt":dt
+                        }
+
+                        dict_array.append(dict_obj)
+
+                except Exception as e:
+                    if not sheet:
+                        print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                    elif type(e) == IndexError:
+                        print("FILE DATA FIELDS INCORRECT")
+                    else:
+                        print("RARE FATAL CASE: Error occured while saving item: ",e)
+
 
             if not raw_checkin:
-                # return "date not specified"
-                abort(403)
+                if not processed_data:
+                    # return "date not specified"
+                    abort(403)
+                else:
+                    for n in dict_array:
+                        try:
+                            house_name = n["housename"].upper()
+                        except:
+                            house_name = n["housename"]
+
+                        dt = n["dt"]
+
+                        import datetime as dtime
+
+                        if not isinstance(dt,dtime.date):
+                            print("Invalid date")
+                            continue
+
+                        house_obj = get_specific_house_obj(alloc.apartment_id,house_name)
+                        if house_obj:
+                            pass
+                        else:
+                            print("specified house does not exist")
+                            continue
+
+                        if house_obj.status == "sold":
+                            continue
+
+                        alloc2 = house_obj.owner
+                        PermanentTenantOp.update_status(alloc2,"invoiced and contracts")
+                        PermanentTenantOp.update_payment_plan(alloc2,0.0,"partial",0.0,0.0,0.0,0.0,dt,dt)
+                        # PermanentTenantOp.upload_contracts(alloc2,img,"")
+                        HouseOp.update_status(house_obj,"sold")
+
+                    return None
+                    
             else:
                 str_checkin = date_formatter_alt(raw_checkin)
                 bookedon = parse(str_checkin)

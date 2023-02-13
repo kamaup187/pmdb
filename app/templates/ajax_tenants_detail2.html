@@ -753,6 +753,13 @@
                         </div>
 
                       <div class="row mb-3 underline-thin-fade">
+                        <div class="form-group no-paddin input-icons"> Upload dates instead
+                          <input class="ph" id="datesfile1" type = "file" name = "filename" />
+                          <span class="fa field-icon text-info iconotifications">--</span>
+                        </div>
+                      </div>
+
+                      <div class="row mb-3 underline-thin-fade">
                         <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
                         <div class="form-group no-paddin input-icons"> Contracts <span class="text-info">optional</span>
                           <input class="ph" id="contractsfile1" type = "file" name = "filename" />
@@ -760,7 +767,6 @@
                         </div>
                       </div>
         
-                    
                       <div class="divbg center-btn">
                         <button id="invoicebtn" type="button" class="btn-secondary borderless text-white">Submit</button>
                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
@@ -1908,7 +1914,10 @@
 
       var fd = new FormData();
       var files = $('#contractsfile1')[0].files;
+      var files2 = $('#datesfile1')[0].files;
       fd.append('file',files[0]);
+      fd.append('file2',files2[0]);
+
 
       fd.append('target',"invoice");
       fd.append('date',$("#checkindate1").val());
@@ -1949,7 +1958,7 @@
                       data: {
                         propid: $("#prop_identifier").text(),
                         tenantid:$("#tenant_identifier").text(),
-                        target:"single",
+                        target:"all",
                         date:$("#checkindate1").val()
 
                       },

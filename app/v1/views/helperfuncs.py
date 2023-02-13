@@ -2478,7 +2478,7 @@ def readingsauto_new(period,prop):
     else:
         month_period = 1
         # year = datetime.datetime.now().year + 1
-        year = 2022 #URGENT TODO
+        year = 2023 #URGENT TODO
   
     for reading in readings:
         if reading.reading_period:

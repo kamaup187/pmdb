@@ -7554,7 +7554,27 @@ class FetchBills(Resource):
                     )
  
             else:
-                return "Unavailable"
+                detailed_bills = []
+
+                billids = get_obj_ids_alt(detailed_bills)
+
+                template = "ajax_tenantbill2.html" if crm(current_user) else "ajax_tenantbill.html"
+
+                return render_template(
+                    template,
+                    fieldshow_sec = "dispnone",
+                    fieldshow_sev = "dispnone",
+                    fieldshow_elec = "dispnone",
+                    fieldshow_garb = "dispnone",
+                    fieldshow_water = "dispnone",
+                    fieldshow_rent = "dispnone",
+                    fieldshow_dep = "dispnone",
+                    fieldshow_arg = "dispnone",
+                    fieldshow_fine = "dispnone",
+                    fieldshow_arr = "dispnone",
+                    items=detailed_bills,
+                    billids=billids
+                    )
         
         else:
             prop_obj = ApartmentOp.fetch_apartment_by_id(propid)

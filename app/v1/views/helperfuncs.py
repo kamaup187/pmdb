@@ -9981,17 +9981,71 @@ def generate_suggestions(props):
 def build_search_unit(house_item):
 
     tenancy = check_occupancy(house_item)
-    tenant = remove_special_characters(str(tenancy[1]))
+    tenant = remove_special_characters(str(tenancy[1])) # will return either "vacant" or tenant object
+    owner = house_item.owner
 
-    vacancy = " (vacant)" if tenancy[1] == "vacant" else ""
-    dict_item = {
-        "name" : remove_special_characters(house_item.name) + vacancy,
-        "id" : "hse"+str(house_item.id),
-        "group" : f"({smart_truncate(tenant)})",
-        "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
-    }
+    if tenancy[1] != "vacant" and owner:
 
-    return dict_item
+        ptnt = smart_truncate(remove_special_characters(owner.name))
+        tnt =  smart_truncate(remove_special_characters(tenant))
+
+        dict_item = {
+            "name" : remove_special_characters(house_item.name),
+            "id" : "hse"+str(house_item.id),
+            "group" : f"({ptnt}/{tnt})",
+            "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
+        }
+        return dict_item
+
+    elif owner and tenancy[1] == "vacant":
+        ptnt = smart_truncate(remove_special_characters(owner.name))
+        dict_item = {
+            "name" : smart_truncate(remove_special_characters(house_item.name)),
+            "id" : "hse"+str(house_item.id),
+            "group" : f"({ptnt})",
+            "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
+        }
+        return dict_item
+
+    elif not owner and tenancy[1] != "vacant":            
+        dict_item = {
+            "name" : smart_truncate(remove_special_characters(house_item.name)),
+            "id" : "hse"+str(house_item.id),
+            "group" : f"({smart_truncate(tenant)})",
+            "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
+        }
+        return dict_item
+
+    else:           
+        dict_item = {
+            "name" : remove_special_characters(house_item.name) + " (available)",
+            "id" : "hse"+str(house_item.id),
+            "group" : f"({smart_truncate(tenant)})",
+            "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
+        }
+        return dict_item
+
+
+# def build_search_unit2(house_item):
+
+#     tenancy = house_item.owner
+#     if tenancy:
+#         tenant = remove_special_characters(str(tenancy))
+#     else:
+#         return None
+
+#     if house_item.owner:
+#         vacancy = ""
+#     else:
+#         vacancy = " (vacant)" if tenancy[1] == "vacant" else ""
+        
+#     dict_item = {
+#         "name" : remove_special_characters(house_item.name) + vacancy,
+#         "id" : "hse"+str(house_item.id),
+#         "group" : f"({smart_truncate(tenant)})",
+#         "prop" : f'-{ smart_truncate(house_item.apartment.name)}'
+#     }
+#     return dict_item
 
 def build_search_tenant(tenant_item):
     house = get_active_houses(tenant_item)[1]

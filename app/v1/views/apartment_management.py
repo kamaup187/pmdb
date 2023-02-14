@@ -2278,6 +2278,17 @@ class TenantManagement(Resource):
         propid = get_identifier(prop_id)
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
         db.session.expire(prop_obj)
+
+        if current_user.company_user_group.name == "Sales":
+            access = "dispnone"
+        else:
+            access = ""
+
+        if crm(current_user):
+            template = "ajax_tenants_detail2.html" 
+            return render_template(template,access=access,prop=prop_obj,bills=[])
+
+
         house_list = prop_obj.houses
         houses = len(house_list)
         tenancy = tenantauto(prop_obj.id)
@@ -2299,12 +2310,7 @@ class TenantManagement(Resource):
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
 
-        if current_user.company_user_group.name == "Sales":
-            access = "dispnone"
-        else:
-            access = ""
-
-        template = "ajax_tenants_detail2.html" if crm(current_user) else "ajax_tenants_detail.html"
+        template = "ajax_tenants_detail.html"
 
         return render_template(template,access=access,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
 
@@ -5816,6 +5822,16 @@ class Deal(Resource):
 
             msg = "Client details updated"
             return msg + proceed
+
+        elif target == "terminate":
+            for n in alloc.monthly_charges:
+                MonthlyChargeOp.delete(n)
+
+            # PermanentTenantOp.remove_house(alloc)
+            PermanentTenantOp.update_status(alloc,"booked")
+            HouseOp.update_status(alloc.house,"available")
+            return proceed
+
         else:
             raw_checkin = request.form.get('date')
             file2 = request.files.get('file2')
@@ -7885,6 +7901,84 @@ class Results(Resource):
 
             prop_obj = house_obj.apartment
             month = get_str_month(prop_obj.billing_period.month)
+
+            if house_obj.owner:
+
+                print("fetching resident")
+                tenant_obj = house_obj.owner
+
+                update_login_history("search",current_user)
+
+                db.session.expire(tenant_obj)
+                prop_obj = tenant_obj.apartment
+
+                month = get_str_month(prop_obj.billing_period.month)
+
+                if tenant_obj.multiple_houses:
+                    paid_status = "-"
+                    badge_status = ""
+                else:
+                    # print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
+                    # print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
+
+                    # PermanentTenantOp.update_resident_type(tenant_obj,"investor")
+
+                    if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                        house_obj = tenant_obj.house
+                        current_invoice = fetch_current_owner_invoice(house_obj)
+                    else:
+                        house_obj = check_house_occupied(tenant_obj)[1]
+                        if not house_obj:
+                            return redirect(url_for('api.index'))
+                            # return err + "Tenant cleared"
+                        current_invoice = fetch_current_invoice(house_obj)
+
+                    if current_invoice:
+                        if current_invoice.paid_amount:
+                            paid_status = "paid"
+                            badge_status = "badge badge-success badge-counter"
+
+                            if current_invoice.balance > 0.0:
+                                paid_status = "partialy paid"
+                                badge_status = "badge badge-warning badge-counter"
+                        else:
+                            paid_status = "unpaid"
+                            badge_status = "badge badge-danger badge-counter"
+                    else:
+                        paid_status = 'not invoiced'
+                        badge_status = "badge badge-danger badge-counter"
+
+
+                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                    houses = tenant_obj.house
+                else:
+                    if get_active_houses(tenant_obj)[0] == "Resident":
+                        print(get_active_houses(tenant_obj)[0])
+                        houses = get_active_houses(tenant_obj)[1]
+                    elif get_active_houses(tenant_obj)[0] == "Vacated":
+                        print(get_active_houses(tenant_obj)[0])
+                        houses = get_active_houses(tenant_obj)[1].house
+                    else:
+                        houses = None
+
+                if tenant_obj.sms:
+                    smsable = "Yes"
+                else:
+                    smsable = "No"
+
+                tenant_payments = []
+
+                filtered_payments = filter_in_recent_data(tenant_payments)
+
+                actual_payments = fetch_actual_payments(filtered_payments)
+
+                detailed_payments_list = payment_details(actual_payments)
+
+                payids = get_obj_ids(detailed_payments_list)
+
+                template = "ajax_tenant_detail2.html" if crm(current_user) else "ajax_tenant_detail.html"
+
+                return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
             if check_occupancy(house_obj)[0]=="occupied":

@@ -50,6 +50,7 @@
                         </div>  
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-pro"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+                    <button type="button" class="btn btn-sm borderles small btn-light ml-3" data-toggle="modal" data-target="#removeClientModal"><span class="fixed-width-pro text-danger"><i class="fas fa-user-times mr-2"></i> remove client</span></button>
 
                 </div>
 
@@ -269,6 +270,41 @@
                     
                       <div class="divbg center-btn">
                         <button id="invoicebtn2" type="button" class="btn-secondary borderless text-white">Submit</button>
+                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="removeClientModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Terminate client contract</span>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+            </h5>
+            <!-- <span class="text-gray-900">Client: <span class="tenantname" class="text-info"></span></span>
+            <span id="allocate-reloader" class="dispnone">update</span> -->
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+                           Confirm termination
+                      <div class="divbg center-btn">
+                        <button id="removeclient" type="button" class="btn-secondary borderless text-white">terminate</button>
                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                     </form>
@@ -1208,6 +1244,28 @@ $("#checkindate2").datepicker({
   </script>
 
 
+
+<script>
+  $("#removeclient").click(function(){   
+    $("#removeclient").html("removing...")  
+      $.ajax({
+        url: "{{ url_for('api.deal') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                target: "terminate"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $("#removeclient").html("terminate")
+          }, 2000);
+        }
+      });
+  });
+</script>
 
 <script>
   $("#sendsms").click(function(){   

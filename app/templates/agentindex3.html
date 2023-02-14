@@ -1378,7 +1378,9 @@
     <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
 
 
-    <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='js/autocomplete-v6.js') }}"></script>
+
     <script src="{{ url_for('static', filename='range.js') }}"></script>
 
 
@@ -1614,10 +1616,13 @@
         });
     }
 
-        $(document).ready(function() {
-            setTimeout(getFeed,1);
-            setTimeout(getPropData,10);
-        });
+        // $(document).ready(function() {
+        //     setTimeout(getFeed,1);
+        //     setTimeout(getPropData,10);
+        // });
+
+    setTimeout(getFeed,1);
+    setTimeout(getPropData,10);
 
     </script>
 

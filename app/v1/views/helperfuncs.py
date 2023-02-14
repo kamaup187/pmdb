@@ -7948,6 +7948,9 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         sch = PaymentScheduleOp("Instalment" + str(sch),0.0,mi,mi,0.0,sch_date,apartment_id,house.id,house.owner.id)
                         sch.save()
 
+                        PermanentTenantOp.update_status(house.owner,"invoiced and contracts")
+                        HouseOp.update_status(house,"sold")
+
                     # if user.company.name == "REVER MWIMUTO LIMITED":
 
                     #     others = f"40% Legal fees,Stamp Duty,service charge etc.)"

@@ -5924,10 +5924,10 @@ class Deal(Resource):
                             continue
 
                         alloc2 = house_obj.owner
-                        PermanentTenantOp.update_status(alloc2,"invoiced and contracts")
-                        PermanentTenantOp.update_payment_plan(alloc2,0.0,"partial",0.0,0.0,0.0,0.0,dt,dt)
+                        # PermanentTenantOp.update_status(alloc2,"invoiced and contracts")
+                        # HouseOp.update_status(house_obj,"sold")
                         # PermanentTenantOp.upload_contracts(alloc2,img,"")
-                        HouseOp.update_status(house_obj,"sold")
+                        PermanentTenantOp.update_payment_plan(alloc2,0.0,"partial",0.0,0.0,0.0,0.0,dt,dt)
 
                     return None
                     
@@ -5949,13 +5949,13 @@ class Deal(Resource):
                 pdf2img = res['secure_url'][:-4]
                 img = pdf2img + ".png"
 
-                PermanentTenantOp.update_status(alloc,"invoiced and contracts")
+                # PermanentTenantOp.update_status(alloc,"invoiced and contracts")
 
                 os.remove(filename)
             else:
                 img = ""
                 # PermanentTenantOp.update_status(alloc,"invoiced and missing contracts")
-                PermanentTenantOp.update_status(alloc,"invoiced and contracts")
+                # PermanentTenantOp.update_status(alloc,"invoiced and contracts")
 
 
 

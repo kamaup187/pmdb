@@ -11,6 +11,12 @@
                 <th class="font-weight-bold text-black ">Type</th>
                 <th class="font-weight-bold text-black ">Agent</th>
                 <th class="font-weight-bold text-black ">Status</th>
+
+                <th class="font-weight-bold text-black ">Price</th>
+                <th class="font-weight-bold text-black ">Deposit</th>
+                <th class="font-weight-bold text-black ">Instalment</th>
+                <th class="font-weight-bold text-black ">Number</th>
+
                 <th class="font-weight-bold text-black {{access}}" data-orderable="false">Make offer</th>
                 <th class="font-weight-bold text-black {{access}}" data-orderable="false">Sign contracts</th>
                 
@@ -35,6 +41,12 @@
                 <td class="data-cell ">{{ i['rep'] }}</td>
                 
                 <td class="data-cell ">{{ i['status']|safe }}</td>
+
+                <td class="data-cell ">{{ i['price'] }}</td>
+                <td class="data-cell ">{{ i['deposit'] }}</td>
+                <td class="data-cell ">{{ i['num_mi'] }}</td>
+                <td class="data-cell ">{{ i['mi'] }}</td>
+
 
                 <td class="{{access}} data-cell">
                   <div>

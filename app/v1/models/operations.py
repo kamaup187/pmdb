@@ -2243,7 +2243,7 @@ class PermanentTenantOp(PermanentTenant,Base):
         elif self.status == "invoiced and contracts":
             return '<span class="badge font-weight-bold bg-success-alt text-success">Invoiced</span>'
         else:
-            return '<span class="badge font-weight-bold bg-dark">Closed</span>'
+            return f'<span class="badge font-weight-bold bg-dark">{self.status}</span>'
 
     def get_price(alloc):
         # import pdb;

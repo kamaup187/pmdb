@@ -5828,7 +5828,7 @@ class Deal(Resource):
                 MonthlyChargeOp.delete(n)
 
             # PermanentTenantOp.remove_house(alloc)
-            PermanentTenantOp.update_status(alloc,"booked")
+            PermanentTenantOp.update_status(alloc,"proposal")
             HouseOp.update_status(alloc.house,"available")
             return proceed
 

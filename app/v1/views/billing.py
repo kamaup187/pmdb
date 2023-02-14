@@ -152,6 +152,8 @@ class Billing(Resource):
         if target == "all":
             residents = []
             [residents.append(p) for p in prop.ptenants if p.status == "prospective"]
+            [residents.remove(p) for p in prop.ptenants if p.status == "prospective"]
+
             houseids = [resident.house.id for resident in residents]
 
         ApartmentOp.update_billing_progress(prop,"billing")
@@ -3737,17 +3739,17 @@ class EditPayment(Resource):
                 print("Payment voided, no target bill")
                 PaymentOp.void(payment_obj,True,current_user.id)
 
-                if payment_obj.tenant_id:
-                    tenant_obj = TenantOp.fetch_tenant_by_id(payment_obj.tenant_id)
-                    running_bal = tenant_obj.balance
-                    running_bal += payment_obj.amount
-                    TenantOp.update_balance(tenant_obj,running_bal)
+                # if payment_obj.tenant_id:
+                #     tenant_obj = TenantOp.fetch_tenant_by_id(payment_obj.tenant_id)
+                #     running_bal = tenant_obj.balance
+                #     running_bal += payment_obj.amount
+                #     TenantOp.update_balance(tenant_obj,running_bal)
 
-                if payment_obj.ptenant_id:
-                    tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
-                    running_bal = tenant_obj.balance
-                    running_bal += payment_obj.amount
-                    PermanentTenantOp.update_balance(tenant_obj,running_bal)
+                # if payment_obj.ptenant_id:
+                #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(payment_obj.ptenant_id)
+                #     running_bal = tenant_obj.balance
+                #     running_bal += payment_obj.amount
+                #     PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
             prop = payment_obj.apartment
             co = prop.company

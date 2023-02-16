@@ -4086,12 +4086,14 @@ class PaymentOp(Payment,Base):
         return fname
 
     def highlight(self):
-        if self.balance > 0.0:
-            return "text-danger"
-        elif self.balance < 0.0:
-            return "text-success"
-        else:
-            return "text-dark"
+        if self.balance:
+            if self.balance > 0.0:
+                return "text-danger"
+            elif self.balance < 0.0:
+                return "text-success"
+            else:
+                return "text-dark"
+        return "text-primary"
 
     def get_date_time(self):
         paydate = self.pay_date if self.pay_date else self.date

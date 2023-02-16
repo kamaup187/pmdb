@@ -5826,10 +5826,12 @@ class Deal(Resource):
         elif target == "terminate":
             for n in alloc.monthly_charges:
                 MonthlyChargeOp.delete(n)
+            for n in alloc.schedules:
+                PaymentScheduleOp.delete(n)
 
             # PermanentTenantOp.remove_house(alloc)
             PermanentTenantOp.update_status(alloc,"proposal")
-            HouseOp.update_status(alloc.house,"available")
+            HouseOp.update_status(alloc.house,"booked")
             return proceed
 
         else:

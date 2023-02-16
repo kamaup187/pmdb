@@ -235,6 +235,8 @@ class Billing(Resource):
 
             if crm(current_user):
 
+                print("hey check this out",houseids)
+
                 job7 = q.enqueue_call(
                     func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
                 )

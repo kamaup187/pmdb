@@ -235,6 +235,7 @@ class Billing(Resource):
 
             if crm(current_user):
 
+
                 print("hey check this out",houseids)
 
                 job7 = q.enqueue_call(

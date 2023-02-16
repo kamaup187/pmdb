@@ -5963,7 +5963,7 @@ class Deal(Resource):
 
             plot = alloc.house
             PermanentTenantOp.upload_contracts(alloc,img,"")
-            HouseOp.update_status(plot,"sold")
+            # HouseOp.update_status(plot,"sold")
 
             # if alloc.plan == "partial":
             #     PermanentTenantOp.update_balance(alloc,alloc.negotiated_price)

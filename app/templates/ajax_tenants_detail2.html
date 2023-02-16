@@ -744,22 +744,32 @@
 
 
 
-                        <div class="form-group mb-3 input-icons">
-                          <span class="text-danger font-weight-bold">Choose starting date</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                        <div class="row form-group mb-3 divjust-end">
+                          <div id="datepicker7" class="date col-md-5" data-date-format="dd-mm-yyyy">
+                            <span class="font-weight-bold">Choose invoicing date</span>
                             <input id="checkindate1" class="form-control ph" type="text" placeholder="Select date" readonly />
                             <label for="checkindate1" class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></label>
                           </div>
+
+                          <div class="mt-3 col-md-5">
+                            <input class="check-btn ml-md-3" id="billsingle" name="billtype" type="radio" value="single" />
+                            <label class="small mb-1" for="billsingle">Single invoice</label>
+                          </div>
                         </div>
 
-                      <div class="row mb-3 underline-thin-fade">
-                        <div class="form-group no-paddin input-icons"> Upload dates instead
+                        <div class="center-btn font-weight-bold text-danger">or</div>
+
+                      <div class="row form-group mb-3 underline-thin-fade divjust-end">
+                        <div class="font-weight-bold col-md-5"> Upload dates
                           <input class="ph" id="datesfile1" type = "file" name = "filename" />
-                          <span class="fa field-icon text-info iconotifications">--</span>
                         </div>
+                        <div class="mt-3 col-md-5">
+                          <input class="check-btn ml-md-3" id="billall" name="billtype" type="radio" value="all" />
+                          <label class="small mb-1" for="billall">Bulk invoice</label>
+                        </div>              
                       </div>
 
-                      <div class="row mb-3 underline-thin-fade">
+                      <div class="row mb-3 underline-thin-fade dispnone">
                         <!-- <div class="col-3 no-padding text-right"><span class="form-control smallify border-0">Contracts</span></div> -->
                         <div class="form-group no-paddin input-icons"> Contracts <span class="text-info">optional</span>
                           <input class="ph" id="contractsfile1" type = "file" name = "filename" />
@@ -1952,18 +1962,27 @@
                     
                     $("#child-result-view").html(response);
 
-                    // $.ajax({
-                    //   url: "/billing",
-                    //   type: "POST",
-                    //   data: {
-                    //     propid: $("#prop_identifier").text(),
-                    //     tenantid:$("#tenant_identifier").text(),
-                    //     target:"all",
-                    //     date:$("#checkindate1").val()
+                    var billcheck = $("input[name=billtype]:checked").val()
 
-                    //   },
-                    //   success: function (response) { }
-                    // });
+                    if (billcheck === undefined){
+                      billing = "false";
+                    }else{
+                      billing = "true";
+                    }
+
+                    $.ajax({
+                      url: "/billing",
+                      type: "POST",
+                      data: {
+                        propid: $("#prop_identifier").text(),
+                        tenantid:$("#tenant_identifier").text(),
+                        target:$("input[name=billtype]:checked").val(),
+                        billing:billing,
+                        date:$("#checkindate1").val()
+
+                      },
+                      success: function (response) { }
+                    });
                   }
                 });
               },10);

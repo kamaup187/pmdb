@@ -1951,13 +1951,14 @@
                 billing = "true";
               }
 
+
               $.ajax({
                 url: "/billing",
                 type: "POST",
                 data: {
                   propid: $("#prop_identifier").text(),
                   tenantid:$("#tenant_identifier").text(),
-                  target:$("input[name=billtype]:checked").val(),
+                  target:billcheck,
                   billing:billing,
                   date:$("#checkindate1").val()
 

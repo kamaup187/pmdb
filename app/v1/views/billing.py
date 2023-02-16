@@ -3462,14 +3462,20 @@ class Receipt(Resource):
 
         paid = f'Kes {payment_obj.amount:,.0f}'
 
-        if payment_obj.balance > -1:
-            baltitle = "Balance"
-            outline = "text-danger"
-            bal = f"Kes {payment_obj.balance:,.0f}"
+        if payment_obj.balance:
+            if payment_obj.balance > -1:
+                baltitle = "Balance"
+                outline = "text-danger"
+                bal = f"Kes {payment_obj.balance:,.0f}"
+            else:
+                baltitle = "Advance"
+                outline = "text-success"
+                bal = f"Kes {payment_obj.balance*-1:,.0f}"
+
         else:
-            baltitle = "Advance"
-            outline = "text-success"
-            bal = f"Kes {payment_obj.balance*-1:,.0f}"
+            baltitle = "Balance"
+            outline = "text-black"
+            bal = f"Kes 0.0"
 
         server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 

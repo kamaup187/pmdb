@@ -7958,6 +7958,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                     #     legal_fee_schedule = PaymentScheduleOp(others,0.0,addfee,addfee,0.0,project_end_date,apartment_id,house.id,house.owner.id)
                     #     legal_fee_schedule.save()
+                PermanentTenantOp.update_status(house.owner,"invoiced and contracts")
+                HouseOp.update_status(house,"sold")
 
             else:
                 booking = 0.0

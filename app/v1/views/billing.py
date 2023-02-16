@@ -113,6 +113,12 @@ class Billing(Resource):
         date = request.form.get("date")
 
         target = request.form.get("target")
+        billing = request.form.get("billing")
+
+        to_bill = True
+
+        if billing == "false":
+            to_bill = False
 
         try:
             billdate = date_formatter(date)
@@ -152,9 +158,12 @@ class Billing(Resource):
         if target == "all":
             residents = []
             [residents.append(p) for p in prop.ptenants if p.status == "prospective"]
-            [residents.remove(p) for p in prop.ptenants if p.status == "prospective"]
+            # [residents.remove(p) for p in prop.ptenants if p.status == "prospective"]
 
             houseids = [resident.house.id for resident in residents]
+        
+        if not to_bill:
+            houseids = [9999999999999999999]
 
         ApartmentOp.update_billing_progress(prop,"billing")
             
@@ -224,30 +233,38 @@ class Billing(Resource):
 
         else:
 
-            job = q.enqueue_call(
-                func=water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
-            )
-            jobfixedwater = q.enqueue_call(
-                func=fixed_water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
-            )
-            job2 = q.enqueue_call(
-                func=rent_bill, args=(apartment_id,houseids,"Rent",user_id,month,year,), result_ttl=5000
-            )
-            job3 = q.enqueue_call(
-                func=garbage_bill, args=(apartment_id,houseids,"Garbage",user_id,month,year,), result_ttl=5000
-            )
-            job4 = q.enqueue_call(
-                func=electricity_bill, args=(apartment_id,houseids,"Electricity",user_id,month,year,), result_ttl=5000
-            )
-            job5 = q.enqueue_call(
-                func=security_bill, args=(apartment_id,houseids,"Security",user_id,month,year,), result_ttl=5000
-            )
-            job6 = q.enqueue_call(
-                func=maintenance_bill, args=(apartment_id,houseids,"Maintenance",user_id,month,year,), result_ttl=5000
-            )
-            job7 = q.enqueue_call(
-                func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
-            )
+            if crm(current_user):
+
+                job7 = q.enqueue_call(
+                    func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
+                )
+
+            else:
+
+                job = q.enqueue_call(
+                    func=water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
+                )
+                jobfixedwater = q.enqueue_call(
+                    func=fixed_water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000
+                )
+                job2 = q.enqueue_call(
+                    func=rent_bill, args=(apartment_id,houseids,"Rent",user_id,month,year,), result_ttl=5000
+                )
+                job3 = q.enqueue_call(
+                    func=garbage_bill, args=(apartment_id,houseids,"Garbage",user_id,month,year,), result_ttl=5000
+                )
+                job4 = q.enqueue_call(
+                    func=electricity_bill, args=(apartment_id,houseids,"Electricity",user_id,month,year,), result_ttl=5000
+                )
+                job5 = q.enqueue_call(
+                    func=security_bill, args=(apartment_id,houseids,"Security",user_id,month,year,), result_ttl=5000
+                )
+                job6 = q.enqueue_call(
+                    func=maintenance_bill, args=(apartment_id,houseids,"Maintenance",user_id,month,year,), result_ttl=5000
+                )
+                job7 = q.enqueue_call(
+                    func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
+                )
             
             str_month = get_str_month(month)
 

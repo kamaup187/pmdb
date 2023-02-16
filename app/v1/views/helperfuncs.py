@@ -7908,7 +7908,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            houses.append(hse)
+            if hse:
+                houses.append(hse)
     else:
         houses = apartment_obj.houses
 

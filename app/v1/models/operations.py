@@ -3956,6 +3956,9 @@ class PaymentOp(Payment,Base):
 
     def fetch_payment_by_ref(ref):
         return Payment.query.filter_by(ref_number=ref).first()
+    
+    def fetch_all_payments_by_ref(ref):
+        return Payment.query.filter_by(ref_number=ref).all()
 
     def fetch_payment_by_rand_id(rand_id):
         return Payment.query.filter_by(rand_id=rand_id).first()

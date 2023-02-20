@@ -6489,6 +6489,8 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
     for item in dict_array:
 
+        exit_loop = False
+
         unit = item["housename"]
         amount = item["amount"]
         datepaid = item["date"]
@@ -6768,12 +6770,22 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             payob = PaymentOp.fetch_payment_by_ref(raw_bill_ref)
             if payob:
                 if payob.voided:
-                    pass
+                    print("Ref",ref,"not found in existing payments")
+
+                    all_jdddkdm = PaymentOp.fetch_all_payments_by_ref(raw_bill_ref)
+                    for j in all_jdddkdm:
+                        if not j.voided:
+                            print("REFERENCE (",raw_bill_ref,")EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.ptenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
+                            exit_loop = True
                 else:
                     print("REFERENCE (",raw_bill_ref,")EXISTS >>","MONTH:",payob.pay_period.month,"PROP:",payob.apartment,"TENANT & HOUSE:",payob.tenant,payob.ptenant,payob.house,"ID:",payob.id,"VOID:",payob.voided)
                     continue
 
+
         tenant_id = None
+
+        if exit_loop:
+            continue
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)

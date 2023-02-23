@@ -5557,7 +5557,8 @@ class AddTenant(Resource):
                             tenant_id = tenant_obj.id
                             user_id = current_user.id
 
-                            checkin,checkout = datetime.datetime.now()
+                            checkin = datetime.datetime.now()
+                            checkout = datetime.datetime.now()
 
                             allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
                             allocate_tenant_obj.save()
@@ -5953,7 +5954,8 @@ class AddTenant(Resource):
                     house_id = house_obj.id
                     tenant_id = tenant_obj.id
 
-                    checkin,checkout = datetime.datetime.now()
+                    checkin = datetime.datetime.now()
+                    checkout = datetime.datetime.now()
 
                     allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,created_by,description=None)
                     allocate_tenant_obj.save()
@@ -6462,7 +6464,8 @@ class AllocateTenants(Resource):
             tenant_id = tenant_obj.id
             user_id = current_user.id
 
-            checkin,checkout = datetime.datetime.now()
+            checkin = datetime.datetime.now()
+            checkout = datetime.datetime.now()
 
             allocate_tenant_obj = AllocateTenantOp(int(apartment_id),house_id,tenant_id,checkin,checkout,user_id,description=None)
             allocate_tenant_obj.save()

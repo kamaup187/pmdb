@@ -6351,7 +6351,8 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                         house_id = house_obj.id
                         tenant_id = tenant_obj.id
 
-                        checkin,checkout = datetime.datetime.now()
+                        checkin = datetime.datetime.now()
+                        checkout = datetime.datetime.now()
 
                         allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
                         allocate_tenant_obj.save()

@@ -684,6 +684,8 @@ class PermanentTenant(db.Model):
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     uid = db.Column(db.VARCHAR)
+    randid = db.Column(db.VARCHAR)
+
     name = db.Column(db.String,nullable=False)
     phone = db.Column(db.VARCHAR)
     email = db.Column(db.VARCHAR)
@@ -790,6 +792,8 @@ class Tenant(db.Model):
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     uid = db.Column(db.VARCHAR)
+    randid = db.Column(db.VARCHAR)
+
     name = db.Column(db.String,nullable=False)
     phone = db.Column(db.VARCHAR)
     email = db.Column(db.VARCHAR)
@@ -799,6 +803,11 @@ class Tenant(db.Model):
     deposit = db.Column(db.Float,default=0)
     accumulated_fine = db.Column(db.Float,default=0)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    invoiced = db.Column(db.Boolean,default=False)
+    agreed_rates = db.Column(db.Float,default=0)
+
+    accepted_terms = db.Column(db.Boolean,default=False)
     status = db.Column(db.String,default="Booked")
     residency = db.Column(db.String,default="N/A")
     initial_arrears = db.Column(db.Float,default=0)
@@ -876,6 +885,11 @@ class Occupancy(db.Model):
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     description = db.Column(db.String)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    checkin_date = db.Column(db.DateTime)
+    checkout_date = db.Column(db.DateTime)
+    days_extended = db.Column(db.Integer,default=0)
+
     vacate_date = db.Column(db.DateTime)
     vacate_period = db.Column(db.DateTime)
     active = db.Column(db.Boolean,default=True)

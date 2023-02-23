@@ -443,6 +443,12 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_group(self, group_id):
+        print("uppppppdddddaaaaating",self,"group",group_id)
+        self.company_usergroup_id = group_id
+        
+        db.session.commit()
+
     def update_bankdetails(self,bank,bankacc):
         if bank:
             self.bank = bank
@@ -2388,12 +2394,13 @@ class PermanentTenantOp(PermanentTenant,Base):
 
 
 class TenantOp(Tenant,Base):
-    def __init__(self,name,phone,national_id,email,arrears,apartment_id,created_by):
+    def __init__(self,name,phone,national_id,email,arrears,randid,apartment_id,created_by):
         self.name = name
         self.phone = phone
         self.national_id = national_id
         self.email = email
         self.initial_arrears = arrears
+        self.randid = randid
         self.apartment_id = apartment_id
         self.user_id = created_by
 
@@ -2681,10 +2688,12 @@ class TenantDepositOp(TenantDeposit,Base):
         }
 
 class AllocateTenantOp(Occupancy,Base):
-    def __init__(self,apartment_id,house_id,tenant_id,user_id,description=None):
+    def __init__(self,apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None):
         self.apartment_id=apartment_id
         self.house_id=house_id
         self.tenant_id=tenant_id
+        self.checkin_date = checkin
+        self.checkout_date = checkout
         self.user_id=user_id
         self.description=description
 

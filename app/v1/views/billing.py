@@ -106,14 +106,26 @@ class Billing(Resource):
         msg = None
         user_id = current_user.id
 
-
         apartment_name = request.form.get("apartment")
         houses = request.form.get("houses")
         tenantid = request.form.get("tenantid")
+        house = request.form.get("house")
+
         date = request.form.get("date")
 
         target = request.form.get("target")
         billing = request.form.get("billing")
+
+        if not apartment_name:
+            propid = request.form.get("propid")
+            print("APARTMENT ID TO BILL IS>>>>",propid)
+            # apartment_id = propid[4:]
+            apartment_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
+            apartment_name = prop.name
+        else:
+            apartment_id = get_apartment_id(apartment_name)
+            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
 
         to_bill = True
 
@@ -132,7 +144,7 @@ class Billing(Resource):
         except:
             houseids = []
 
-        if target == "single":
+        if target == "single" and tenantid:
             try:
                 billdate = date_formatter_weekday(date)
                 bill_date = parse(billdate)
@@ -143,17 +155,11 @@ class Billing(Resource):
             resident = PermanentTenantOp.fetch_tenant_by_id(get_identifier(tenantid))
             residents.append(resident)
             houseids = [resident.house.id for resident in residents]
+        
+        elif target == 'single' and house:
+            house_id = get_specific_house_obj(apartment_id,house).id
+            houseids.append(house_id)
 
-        if not apartment_name:
-            propid = request.form.get("propid")
-            print("APARTMENT ID TO BILL IS>>>>",propid)
-            # apartment_id = propid[4:]
-            apartment_id = get_identifier(propid)
-            prop = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
-            apartment_name = prop.name
-        else:
-            apartment_id = get_apartment_id(apartment_name)
-            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
 
         if target == "all":
             residents = []
@@ -241,6 +247,10 @@ class Billing(Resource):
                 job7 = q.enqueue_call(
                     func=total_bill, args=(apartment_id,houseids,user_id,month,year,), result_ttl=5000
                 )
+
+            elif erp(current_user):
+                rent_bill_alt(apartment_id,houseids,"Rent",user_id,month,year)
+                total_bill_alt(apartment_id,houseids,user_id,month,year)
 
             else:
 

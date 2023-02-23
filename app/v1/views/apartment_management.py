@@ -724,10 +724,18 @@ class Index(Resource):
                 else:
                     shortcode2= f"Paybill: 4081687 Acc: {companyname2}#{company.id}"
 
+            full_access = ""
+
             if crm(current_user):
                 indexpage = "agentindex3.html"
             else:
-                indexpage = os.getenv("INDEX") or INDEX
+                if erp_index(current_user):
+                    indexpage = erp_index(current_user)[0]
+                    if erp_index(current_user)[1]:
+                        full_access = ""
+                else:
+                    indexpage = os.getenv("INDEX") or INDEX
+                    full_access = "dispnone"
 
 
             ############################################################################################################
@@ -894,6 +902,7 @@ class Index(Resource):
             return Response(render_template(
                 indexpage,
                 clientaccess = "access",
+                erp_access = full_access,
                 sidebar_theme = "premier-sidebar-theme" if str(company) == "Premier Realty" else "sidebar-bg",
                 topbar_theme = "bg-white" if str(company) == "Premier Realty" else "bg-white",
                 card_theme = card_theme,
@@ -1228,20 +1237,43 @@ class PropStats(Resource):
         prop = request.args.get('prop')
 
         time = datetime.datetime.now()
-       
-        if current_user.company and current_user.id != 1:
-            period = current_user.company.billing_period
-            present_month = current_user.company.billing_period.month
-            present_year = current_user.company.billing_period.year
+
+
+        datevar = request.args.get('selected_date')
+
+        if not datevar:
+            dateph = "Calendar"
+
+            time = datetime.datetime.now()
+
+            present_day = time.day
+            present_month = time.month
+            present_year = time.year
+
         else:
-            present_month = time.month
-            present_year = time.year
-            period = time
+            dateph = datevar
+
+            raw_date = date_formatter_weekday(datevar)
+
+            obj_date = parse(raw_date)
+
+            present_month = obj_date.month
+            present_year = obj_date.year
+            present_day = obj_date.day
+       
+        # if current_user.company and current_user.id != 1:
+        #     period = current_user.company.billing_period
+        #     present_month = current_user.company.billing_period.month
+        #     present_year = current_user.company.billing_period.year
+        # else:
+        #     present_month = time.month
+        #     present_year = time.year
+        #     period = time
             
-        if not present_month: # remove this check on april 2021
-            present_month = time.month
-        if not present_year:
-            present_year = time.year
+        # if not present_month: # remove this check on april 2021
+        #     present_month = time.month
+        # if not present_year:
+        #     present_year = time.year
             
         total_collections = 0
         real_collections = 0
@@ -1255,6 +1287,9 @@ class PropStats(Resource):
         prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
 
         props = []
+
+        if erp(current_user):
+            prop = "All properties"
 
         if prop == "All properties":
             proponfocus = "All properties"
@@ -1292,7 +1327,9 @@ class PropStats(Resource):
 
             monthly_bills = apartment.monthlybills
             for item in monthly_bills:
-                if item.month == present_month and item.year == present_year:
+                # import pdb; pdb.set_trace()
+                # print(item,"date",item.date,"day",item.date.day,"period",item.month,item.year)
+                if item.month == present_month and item.year == present_year and item.date.day == present_day:
                     invs += 1
                     # boolie = False
                     # if not boolie:
@@ -1330,11 +1367,11 @@ class PropStats(Resource):
         except:
             collection_percentage = 0
 
-        if period.day > 5:
-            # defaulters will not be overwritten
-            pass
-        else:
-            defaulters = "--"
+        # if period.day > 5:
+        #     # defaulters will not be overwritten
+        #     pass
+        # else:
+        defaulters = "--"
 
         invss = f"{invs}/{num_of_occ}"
 
@@ -1347,10 +1384,13 @@ class PropStats(Resource):
                 card_theme = "premier-card-theme"
         else:
             card_theme = "card-bg"
-            
+        
+        template = "ajax_dashboard_refresh-crm.html" if erp(current_user) else "ajax_dashboard_refresh.html"
+                  
         return Response(render_template(
-            'ajax_dashboard_refresh.html',
+            template,
             card_theme = card_theme,
+            dateph=dateph,
             month_string=get_str_month(present_month),
             month_str=get_str_mnth(present_month),
             collection_percentage = f"{collection_percentage:,.0f}",
@@ -1367,6 +1407,30 @@ class HouseStats(Resource):
     @login_required
     def get(self):
         prop = request.args.get('prop')
+
+
+        datevar = request.args.get('selected_date')
+
+
+        if not datevar:
+            dateph = "Calendar"
+
+            time = datetime.datetime.now()
+            
+            present_day = time.day
+            present_month = time.month
+            present_year = time.year
+
+        else:
+            dateph = datevar
+
+            raw_date = date_formatter_weekday(datevar)
+
+            obj_date = parse(raw_date)
+
+            present_day = obj_date.day
+            present_month = obj_date.month
+            present_year = obj_date.year
     
         occupancy=[]
         houses_list=[]
@@ -1376,6 +1440,9 @@ class HouseStats(Resource):
         prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
 
         props = []
+
+        if erp(current_user):
+            prop = "All properties"
 
         if prop == "All properties":
             props = apartment_list
@@ -1415,10 +1482,15 @@ class HouseStats(Resource):
             vacfrac = 0.0
 
         occupancy_rate = f'{(occfrac * 100):,.0f} %'
-        vacancy_rate = f'{(vacfrac * 100):,.0f} %'     
-            
+        vacancy_rate = f'{(vacfrac * 100):,.0f} %'
+
+        str_date = f"{present_day}{generate_datesuffix(present_day)} {get_str_mnth(present_month)}"    
+
+        template = 'ajax_load_house_data_erp.html' if erp(current_user) else 'ajax_load_house_data.html'
+               
         return Response(render_template(
-            'ajax_load_house_data.html',
+            template,
+            str_date = str_date,
             targetprop = prop,
             occupancy_rate = occupancy_rate,
             vacancy_rate = vacancy_rate,
@@ -1934,6 +2006,23 @@ class CollectionOverview(Resource):
 
         return occupancy_rate
 
+class SwitchCompany(Resource):
+    """switch company class"""
+    @login_required
+    def get(self):
+        if current_user.company_user_group.name == "Director":
+            user_group_id = get_company_usergroup_id("Director Rooms",current_user.company)
+        elif current_user.company_user_group.name == "Director Rooms":
+            user_group_id = get_company_usergroup_id("Director",current_user.company)
+        else:
+            user_group_id = None
+            pass
+
+        if user_group_id:
+            UserOp.update_group(current_user,user_group_id)
+
+        return redirect(url_for('api.index'))
+
 class CreateLocation(Resource):
     @login_required
     def get(self):
@@ -2140,7 +2229,12 @@ class PropertyManagement(Resource):
 
         houseids = get_obj_ids(houselist)
 
-        template = "ajax_prop_detail2.html" if crm(current_user) else "ajax_prop_detail.html"
+        if crm(current_user):
+            template = "ajax_prop_detail2.html"
+        elif erp(current_user):
+            template = "ajax_prop_detail_erp.html"
+        else:
+            template = "ajax_prop_detail.html"
 
         return render_template(
             template,
@@ -2288,12 +2382,6 @@ class TenantManagement(Resource):
             template = "ajax_tenants_detail2.html" 
             return render_template(template,access=access,prop=prop_obj,bills=[])
 
-
-        house_list = prop_obj.houses
-        houses = len(house_list)
-        tenancy = tenantauto(prop_obj.id)
-        tenants = len(tenancy)
-
         tenantlist = []
 
         all_tenants = tenantauto(propid)
@@ -2310,9 +2398,19 @@ class TenantManagement(Resource):
         moreids = inject_tenants_ids(tenantlist) 
         full_ids = tenantids + "," + moreids
 
-        template = "ajax_tenants_detail.html"
+        if erp(current_user):
+            return render_template("ajax_tenants_detail_erp.html",prop=prop_obj,tenantids=full_ids,bills=tenantlist)
 
+
+        house_list = prop_obj.houses
+        houses = len(house_list)
+        tenancy = tenantauto(prop_obj.id)
+        tenants = len(tenancy)
+
+        template = "ajax_tenants_detail.html"
         return render_template(template,access=access,prop=prop_obj,num_units=houses,num_tenants=tenants,tenantids=full_ids,bills=tenantlist)
+
+        
 
 class SubmissionsManagement(Resource):
     """class"""
@@ -4392,7 +4490,16 @@ class CreateHouse(Resource):
     """class"""
     @login_required
     def get(self):
-        pass
+        apartment_id = request.args.get('propid')
+        target = request.args.get('target')
+        housename = request.args.get('unit')
+
+        if target == "rates":
+            house_name = housename.upper()
+            house_obj = get_specific_house_obj(apartment_id,house_name)
+            
+            rates = house_obj.housecode.rentrate
+            return render_template("ajax_unit_rate.html",rates=rates)
 
     @login_required
     def post(self):
@@ -5056,6 +5163,134 @@ class AddTenant(Resource):
                 mi=instalment)  
 
     def post(self):
+
+        if erp(current_user):
+
+            target = request.form.get('target')
+            propid = request.form.get('propid')
+
+            apartment_id = get_identifier(propid)
+
+            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+
+            name = request.form.get('name')
+            phone = request.form.get('tel')
+            national_id = request.form.get('national_id')
+            email = request.form.get('email')
+            existing_arrears = request.form.get('arr')
+            new_rates = request.form.get('rates')
+            house_num = request.form.get('house')#auto populated dropdown
+
+            raw_checkin = request.form.get('checkin')
+            raw_checkout = request.form.get('checkout')
+
+            migrate = request.form.get('migrate')#checkbox
+
+            created_by =current_user.id
+
+            if not raw_checkin and not raw_checkout:
+                return "dates not specified"
+            else:
+                str_checkin = date_formatter_weekday(raw_checkin)
+                checkin = parse(str_checkin)
+
+                str_checkout = date_formatter_weekday(raw_checkout)
+                checkout = parse(str_checkout)
+
+
+            try:
+                float_arrears=float(existing_arrears)
+            except:
+                float_arrears=0.0
+
+            try:
+                float_rates=float(new_rates)
+            except:
+                float_rates=0.0
+
+            print(float_rates,"hey rates")
+
+            if not migrate:
+                migrate = "False"
+            bool_migrate = return_bool(migrate)
+
+            if not national_id:
+                natid = nationalid_generator()
+                check_dup = TenantOp.fetch_tenant_by_nat_id(natid)
+                nat_id = nationalid_generator() if check_dup else natid
+            else:
+                nat_id = national_id
+
+
+            # if email:
+            #     present2 = TenantOp.fetch_tenant_by_email(email)
+            #     present3 = UserOp.fetch_user_by_email(email)
+            #     if present2 or present3:
+            #         msg="Email taken, use another email or leave blank"
+            #         return render_template('ajaxghosthouse.html',alert=msg)
+
+            # present = TenantOp.fetch_tenant_by_nat_id(national_id)
+            # if present:
+            #     msg = "Tenant of similar national id exists"
+            #     return render_template('ajaxghosthouse.html',alert=msg)
+
+            randid = random_generator()
+
+            tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,randid,apartment_id,created_by)
+            tenant_obj.save()
+
+            if float_rates:
+                TenantOp.update_rates(tenant_obj,float_rates)
+
+            if house_num:
+                house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
+
+                house_obj = get_specific_house_obj_alt(house_list,house_num)
+                
+                allocs = tenant_obj.house_allocated
+                if allocs:
+                    if tenant_obj.multiple_houses:
+                        pass
+                    else:
+                        for i in allocs:
+                            AllocateTenantOp.delete(i)
+
+                house_id = house_obj.id
+                tenant_id = tenant_obj.id
+                user_id = current_user.id
+
+                allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
+                allocate_tenant_obj.save()
+                TenantOp.update_status(tenant_obj,"Resident")
+                if bool_migrate:
+                    TenantOp.update_residency(tenant_obj,"Old")
+                else:
+                    TenantOp.update_residency(tenant_obj,"Old")
+
+                tele = tenant_obj.phone
+                phonenum = sms_phone_number_formatter(tele)
+                try:
+                    recipient = [phonenum]
+
+                    message = f"Welcome {tenant_obj.name}, \nkindly accept our terms and condtions below: \nhttps://kiotapay.com/guest/agreement/{tenant_obj.randid}. \n\n~Villa Park"
+
+
+                    present = TenantOp.fetch_tenant_by_nat_id(national_id)
+                    if present:
+                        pass
+                        msg = "Tenant of similar national id exists"
+                    else:
+                        response = sms.send(message, recipient, "KIOTAPAY")
+                        # response = sms.send(message, ["+254716674695","+254717121612"], "KIOTAPAY")
+                        print(response)
+
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+            
+            msg = "Guest added successfully"
+            return render_template('ajaxproceed.html',alert=msg)        
+
+
         target = request.form.get('target')
         prop_id = request.form.get('propid')
 
@@ -5298,7 +5533,7 @@ class AddTenant(Resource):
 
                     else:
 
-                        tenant_obj = TenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,apartment_id,created_by)
+                        tenant_obj = TenantOp(tenantname,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,created_by)
                         tenant_obj.save()
 
                     # tenant_house = tenanthouse.upper()
@@ -5320,6 +5555,8 @@ class AddTenant(Resource):
                             house_id = house_obj.id
                             tenant_id = tenant_obj.id
                             user_id = current_user.id
+
+                            checkin,checkout = datetime.datetime.now()
 
                             allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
                             allocate_tenant_obj.save()
@@ -5696,7 +5933,7 @@ class AddTenant(Resource):
 
             else:
 
-                tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,apartment_id,created_by)
+                tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,"",apartment_id,created_by)
                 tenant_obj.save()
 
                 if house_num:
@@ -5715,7 +5952,9 @@ class AddTenant(Resource):
                     house_id = house_obj.id
                     tenant_id = tenant_obj.id
 
-                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,created_by,description=None)
+                    checkin,checkout = datetime.datetime.now()
+
+                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,created_by,description=None)
                     allocate_tenant_obj.save()
                     TenantOp.update_status(tenant_obj,"Resident")
                     if bool_migrate:
@@ -6222,8 +6461,9 @@ class AllocateTenants(Resource):
             tenant_id = tenant_obj.id
             user_id = current_user.id
 
+            checkin,checkout = datetime.datetime.now()
 
-            allocate_tenant_obj = AllocateTenantOp(int(apartment_id),house_id,tenant_id,user_id,description=None)
+            allocate_tenant_obj = AllocateTenantOp(int(apartment_id),house_id,tenant_id,checkin,checkout,user_id,description=None)
             allocate_tenant_obj.save()
             TenantOp.update_status(tenant_obj,"Resident")
             if bool_migrate:

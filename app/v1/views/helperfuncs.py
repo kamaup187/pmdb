@@ -2447,7 +2447,16 @@ def fetch_all_apartments_by_user(current_user):
             apartment_list = current_user.company.props
         else:
             apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
-        return list(apartment_list)
+
+        props = list(apartment_list)
+        actual_props = []
+        if erp(current_user):
+            [actual_props.append(prop) for prop in props if prop.property_type == "Guest"]
+        else:
+            [actual_props.append(prop) for prop in props if prop.property_type != "Guest"]
+            print("nichuuuuuuu korotwek",actual_props)
+
+        return actual_props
     else:
         return []
 

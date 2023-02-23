@@ -61,7 +61,7 @@
 
                 <th class="text-info font-weight-bold {{access['client-disp']}}">Landlord</th>
                 <th class="text-info font-weight-bold {{access['client-disp']}}">Company</th>
-                <th class="text-info track-title-cell">Status</th>
+                <th class="text-info track-title-cell">Type</th>
                 <th class="text-info track-title-cell">Link</th>
                 <!-- <th class="text-info track-title-cell">Edit</th> -->
                 <th class="text-info track-title-cell">Del</th>
@@ -84,15 +84,8 @@
                 <td class="data-cell text-gray-700 small {{access['client-disp']}}">{{ item['owner'] }}</td>
                 <td class="data-cell text-gray-900 small {{access['client-disp']}}">{{ item['company'] }}</td>
 
-                <td class="data-cell">
-                  <div>
-                    <span id="{{item['identity']}}" type="button"
-                      class="btn-outline-info ellipsis borderless modalTrigger text-gray-700 {{item['status-disp']}}"
-                      data-toggle="modal" data-bs-toggle="modal" data-target="#editMeterModal"
-                      data-bs-target="#editMeterModal"><i class="fas fa-info-circle mr-1 text-primary"></i><span
-                        class="text-success">active</span></span>
-                  </div>
-                </td>
+                <td class="data-cell">{{item['status']}}</td>
+
                 <td class="data-cell">
                   <div>
                     <span id="{{item['id']}}" type="button"

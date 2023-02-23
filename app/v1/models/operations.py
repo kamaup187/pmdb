@@ -880,6 +880,10 @@ class ApartmentOp(Apartment,Base):
         self.commission_type = commtype
         db.session.commit()
 
+    def update_proptype(self,proptype):
+        self.property_type = proptype
+        db.session.commit()
+
     def update_details(self,name,colltype):
         if name:
             self.name = name

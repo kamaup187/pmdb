@@ -5162,6 +5162,7 @@ class AddTenant(Resource):
                 num_mi=months,
                 mi=instalment)  
 
+    @login_required
     def post(self):
 
         if erp(current_user):

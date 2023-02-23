@@ -6787,11 +6787,16 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
         if exit_loop:
             continue
 
+        try:
+            invoice_bal = bill.balance
+        except:
+            invoice_bal = 0.0
+
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)
+            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,invoice_bal,valid_amount,apartment_id, house_obj.id,tenant_id,tenant_obj.id,userid)
             payment_obj.save()
         else:
-            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,bal,valid_amount,apartment_id, house_obj.id,tenant_obj.id,tenant_id,userid)
+            payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,invoice_bal,valid_amount,apartment_id, house_obj.id,tenant_obj.id,tenant_id,userid)
             payment_obj.save()
 
 
@@ -6824,7 +6829,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
         else:
             TenantOp.update_balance(tenant_obj,tenant_bal)
 
-        running_balance = bal
+        running_balance = invoice_bal
         running_balance-= valid_amount
 
         PaymentOp.update_balance(payment_obj,running_balance)

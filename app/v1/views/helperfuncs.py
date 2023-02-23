@@ -7006,6 +7006,10 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             except:
                 print("PAID TO LEGACY BILL")
 
+        job101 = q.enqueue_call(
+            func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
+        )
+
 def run_update(houseids,apartment_id,user_id):
     from app import create_app
     app = create_app()

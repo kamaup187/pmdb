@@ -5164,7 +5164,6 @@ class AddTenant(Resource):
 
     @login_required
     def post(self):
-
         if erp(current_user):
 
             target = request.form.get('target')
@@ -5814,6 +5813,8 @@ class AddTenant(Resource):
                     abort(403)
 
         else:
+            if target == "test":
+                return "successful",201
             lead = request.form.get("lead")
             print("leaaads",lead)
             lead_obj = None

@@ -51,11 +51,18 @@ def create_app(*args):
 
     configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS
 
-    if not configuration:
-        if args:
-            for arg in args:
-                configuration = arg
-                break
+    print("EARLY CONFIG >>>",configuration)
+
+    if args:
+        print("EARLY CONFIG >>>",configuration)
+        for arg in args:
+            configuration = arg
+            break
+    else:
+        print("USING ENV CONFIG >>>",configuration)
+
+
+    print("NOW CONFIG >>>",configuration)
 
     app = Flask(__name__)
     Talisman(app,content_security_policy=None)    

@@ -30,7 +30,7 @@ class SomeTest(BaseTest):
         result = response.data
         self.assertEqual(response.status_code, 200)
 
-    def no_test_add_tenant(self):
+    def test_that_something_works(self):
 
         usergroup = UserGroupOp("Manager","desc")
         usergroup.save()
@@ -41,32 +41,49 @@ class SomeTest(BaseTest):
         group1 = CompanyUserGroupOp("Manager","administrator","1")
         group1.save()
 
-        user = UserOp("John Doe","00","testuser","00","00","e@mail.com","1234","1","1","1")
+        user = UserOp("John Doe","00","testuser","00","00","james@mail.com","1234","1","1","1")
         user.save()
 
-        login_user(user, remember=True)
+        with self.client:
+            response = self.client.post('/signin', data = { "identifier": '00', "password": '1234' })
+            self.assertEquals(current_user.username, 'testuser')
 
-        print("this is logeed in",current_user)
+    def test_add_tenant(self):
+        usergroup = UserGroupOp("Manager","desc")
+        usergroup.save()
 
-        region = LocationOp("Tumoi","Home")
-        region.save()
+        company = CompanyOp("Test Co","","","","","")
+        company.save()
 
-        landlord = OwnerOp("Owner",None,None,"N/A","1")
-        landlord.save()
+        group1 = CompanyUserGroupOp("Manager","administrator","1")
+        group1.save()
 
-        prop = ApartmentOp("Test Apartment","",region.id,landlord.id,True,"1")
-        prop.save()
+        user = UserOp("John Doe","00","testuser","00","00","james@mail.com","1234","1","1","1")
+        user.save()
 
-        datum = {
-        "propid" : "1",
-        "name" :"Test Tenant",
-        "current_user":current_user.id
-        }
+        with self.client:
+            self.client.post('/signin', data = { "identifier": '00', "password": '1234' })
 
-        response = self.client.post("/add/tenant", data=datum)
-        result = response.data
-        # self.assertEqual(result.status_code, 201)
-        self.assertEqual(response.status_code, 200)
+
+            region = LocationOp("Tumoi","Home")
+            region.save()
+
+            landlord = OwnerOp("Owner",None,None,"N/A","1")
+            landlord.save()
+
+            prop = ApartmentOp("Test Apartment","",region.id,landlord.id,True,"1")
+            prop.save()
+
+            datum = {
+            "propid" : "1",
+            "name" :"Test Tenant",
+            "target" :"test",
+            "current_user":current_user.id
+            }
+
+            response = self.client.post("/add/tenant", data=datum)
+            result = response.data
+            self.assertEqual(response.status_code, 201)
 
 # class TestEditIncident(BaseCase):
 #     """class to test EDIT functionality"""

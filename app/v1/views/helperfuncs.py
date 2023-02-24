@@ -2447,7 +2447,16 @@ def fetch_all_apartments_by_user(current_user):
             apartment_list = current_user.company.props
         else:
             apartment_list = ApartmentOp.fetch_all_apartments_by_user(current_user.id)
-        return list(apartment_list)
+
+        props = list(apartment_list)
+        actual_props = []
+        if erp(current_user):
+            [actual_props.append(prop) for prop in props if prop.property_type == "Guest"]
+        else:
+            [actual_props.append(prop) for prop in props if prop.property_type != "Guest"]
+            print("nichuuuuuuu korotwek",actual_props)
+
+        return actual_props
     else:
         return []
 
@@ -4265,7 +4274,9 @@ def autosend_pending_smsreceipts(payids):
         co = payment_obj.apartment.company
         str_co = co.name
         str_prop = payment_obj.apartment.name
-        end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
+        # end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
+        end = str_prop 
+
         raw_rem_sms =co.remainingsms
 
         own_shortcode = False
@@ -10656,6 +10667,20 @@ def fetch_expenses(current_user):
         raw_expenses.append(exp)
     
     return flatten(raw_expenses)
+
+def get_obj_ids_grid(arr):
+    obj_id_list = []
+    for req in arr:
+        if req:
+            vac = req.get("id")
+            if vac:
+                obj_id_list.append(vac)
+
+    if not obj_id_list:
+        obj_id_list.append("empty")
+
+    str_ids = ','.join(map(str, obj_id_list))
+    return str_ids
 
 def get_obj_ids(arr):
     obj_id_list = []

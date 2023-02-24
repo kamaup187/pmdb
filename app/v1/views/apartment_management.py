@@ -6386,6 +6386,31 @@ class AllocateTenants(Resource):
 
         if target == "house options":
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+        if target == "house grid options":
+            house_list = houseauto(apartment_id)
+            houses = []
+            for item in house_list:
+                result = check_occupancy(item)
+                if result[0] == "empty":
+                    color = "btn-success"
+                    itemid = "vac"+ str(item.id)
+                else:
+                    color = "btn-warning"
+                    itemid = "hse"+ str(item.id)
+                    result2 = check_house_occupied(result[1])
+                    if result2[2].checkout_date < datetime.datetime.now():
+                        color = "btn-danger"
+
+                dict_obj = {
+                    "name": item.name,
+                    "color":color,
+                    "id":itemid
+                }
+                houses.append(dict_obj)
+                obj_ids = get_obj_ids_grid(houses)
+                
+            return render_template("ajax_grid_houses.html",houses=houses,houseids=obj_ids)
+        
         if target == "house options2":
             if ttype == "tenant":
                 return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
@@ -8223,7 +8248,14 @@ class Results(Resource):
 
                 payids = get_obj_ids(detailed_payments_list)
 
-                template = "ajax_tenant_detail2.html" if crm(current_user) else "ajax_tenant_detail.html"
+                # template = "ajax_tenant_detail2.html" if crm(current_user) else "ajax_tenant_detail.html"
+
+                if crm(current_user):
+                    template = "ajax_tenant_detail2.html"
+                elif erp(current_user):
+                    template = "ajax_tenant_detail_erp.html"
+                else:
+                    template = "ajax_tenant_detail.html"
 
                 return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
@@ -8588,7 +8620,12 @@ class Results(Resource):
 
             payids = get_obj_ids(detailed_payments_list)
 
-            template = "ajax_tenant_detail2.html" if crm(current_user) else "ajax_tenant_detail.html"
+            if crm(current_user):
+                template = "ajax_tenant_detail2.html"
+            elif erp(current_user):
+                template = "ajax_tenant_detail_erp.html"
+            else:
+                template = "ajax_tenant_detail.html"
 
             return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 

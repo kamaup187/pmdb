@@ -1,6 +1,9 @@
 
 <section class="contact_area section_gap">
     <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+
+    <span id="vac_house_identifier" class="dispnone"></span>
+
     <span id="tenant_identifier" class="dispnone"></span>
     <span id="edit_tenant_identifier" class="dispnone"></span>
     <span id="del_tenant_identifier" class="dispnone"></span>
@@ -26,7 +29,7 @@
         <div class="row mb-3">
             <div class="col-lg-12 center-btn">
               <div class="info_item">
-                <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add guest</span></button>
+                <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addGuestModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add guest</span></button>
                 <!-- <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadPhoneExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Phone numbers</span></span>
                 <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadArrearsExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Arrears bulk upload</span></span> -->
 
@@ -175,6 +178,46 @@
     </div>
   </div>
 
+  <div class="modal fade" id="addGuestModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa-sana" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify">Rooms</span>
+            <div>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <form autocomplete="off" method="POST" action="">
+   
+                    <div class="mt-2 row" id="roomsbed">
+
+                      loading rooms ...
+
+                    </div>
+                  
+                    <div class="divbg center-btn">
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -204,7 +247,7 @@
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>
 
-                      <div class="form-group no-paddin input-icons">
+                      <div class="form-group no-paddin input-icons dispnone">
                         <span>Select unit to allocate <span class="text-primary small">(recommended)</span></span>
                         <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
                           <option disabled selected value> loading... </option>
@@ -1043,7 +1086,7 @@ $("#newtenant").click(function(){
       type: "POST",
       data: {
               propid: $("#prop_identifier").text(),
-              house: $("#select_house2").val(),
+              house: $("#vac_house_identifier").text(),
               name: $("#new_name").val(),
               national_id: $("#new_natid").val(),
               tel: $("#new_tel").val(),
@@ -1056,7 +1099,8 @@ $("#newtenant").click(function(){
           },
       success: function(response) {
         $(".alert-msgs").html(response);
-        
+        $(".dismissparent").click();
+
         setTimeout(function(){
           $(".alert-msgs").empty();
           $(".reset").click();
@@ -1081,7 +1125,7 @@ $("#newtenant").click(function(){
                   type: "POST",
                   data: { 
                     propid: $("#prop_identifier").text(),
-                    house:$("#select_house2").val(),
+                    house:$("#vac_house_identifier").text(),
                     target:"single",
                     billing:"true",
                   },
@@ -1169,31 +1213,44 @@ $("#edittenant").click(function(){
 
 <script>
 // This script autopulate house options and displays tenant name
-$("#addTenantModal").on('shown.bs.modal', function(){
+
+$("#addGuestModal").on('shown.bs.modal', function(){
   $.ajax({
     url: "{{ url_for('api.allocatetenants') }}",
     type: "POST",
     data: {
           propid: $("#prop_identifier").text(),
-          target:"house options"
+          target:"house grid options"
         },
     success: function(response) {
-      $("#select_house2").html(response);
+      $("#roomsbed").html(response);
     }
   });
 });
 
 
-  $("#select_house2").on('change', function () {
+$("#addTenantModal").on('shown.bs.modal', function(){
+  // $.ajax({
+  //   url: "{{ url_for('api.allocatetenants') }}",
+  //   type: "POST",
+  //   data: {
+  //         propid: $("#prop_identifier").text(),
+  //         target:"house options"
+  //       },
+  //   success: function(response) {
+  //     $("#select_house2").html(response);
+  //   }
+  // });
 
-    $("#dynamic_rate").text("fetching...");
+
+  $("#dynamic_rate").text("fetching...");
 
     $.ajax({
       url: "{{ url_for('api.createhouse') }}",
       type: "get",
       data: {
         propid: $("#prop_identifier").text(),
-        unit:$("#select_house2").val(),
+        unit:$("#vac_house_identifier").text(),
         target: "rates"
       },
       success: function (response) {
@@ -1201,9 +1258,29 @@ $("#addTenantModal").on('shown.bs.modal', function(){
         $("#dynamic_rate").html(response);
       }
     });
+});
 
 
-  });
+  // $("#select_house2").on('change', function () {
+
+  //   $("#dynamic_rate").text("fetching...");
+
+  //   $.ajax({
+  //     url: "{{ url_for('api.createhouse') }}",
+  //     type: "get",
+  //     data: {
+  //       propid: $("#prop_identifier").text(),
+  //       unit:$("#select_house2").val(),
+  //       target: "rates"
+  //     },
+  //     success: function (response) {
+
+  //       $("#dynamic_rate").html(response);
+  //     }
+  //   });
+
+
+  // });
 
 </script>
 

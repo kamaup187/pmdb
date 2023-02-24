@@ -1,0 +1,202 @@
+
+<!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Tenant bill (current billing period):</div> -->
+<!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-0 mt-2 desktop-malaysian">Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div> -->
+
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                <th class="text-info font-weight-bold">Unit</th>
+                <th class="text-primary track-title-cell">Invoice</th>
+                <th class="text-info track-title-cell">Period</th>
+                <th class="text-info track-title-cell expand dispnone-alt">Charge</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_water}}">Water</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_elec}}">Electricity</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_garb}}">Garbage</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_sec}}">Security</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_sev}}">Service</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_dep}}">Deposit</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_arg}}">Agreement</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_fine}}">Fine</th>
+                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_arr}}">Arr</th>
+                <th class="text-info track-title-cell ">Total</th>
+                <th class="text-info track-title-cell">Paid</th>
+                <th class="text-info track-title-cell expand dispnone-alt">Date</th>
+                <th class="text-info track-title-cell expand dispnone-alt">BCF</th>
+                <!-- <th class="text-info track-title-cell">Action</th> -->
+                <th class="text-primary track-title-cell">SMS</th>
+                <th class="text-primary track-title-cell expand dispnone-alt">Action</th>
+                <th class="text-danger track-title-cell expand dispnone-alt">Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items%}
+                <tr>
+                <td class="first-data-cell text-dark font-weight-bold">{{ i['house'] }}</td>
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{i['id']}}" type="button" class="btn action-btn btn-outline-success font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#invoiceModal"><i class="fas fa-eye mr-1"></i>View</button>
+                  </div>
+                </td>
+                <td class="data-cell">{{ i['month'] }} <span class="badge badge-success badge-counter">{{ i['new'] }}</span></td>
+                <td class="data-cell expand dispnone-alt">{{ i['rent'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_water}}">{{ i['water'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_elec}}">{{ i['electricity'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_garb}}">{{ i['garbage'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_sec}}">{{ i['security'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_sev}}">{{ i['service'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_dep}}">{{ i['deposit'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_arg}}">{{ i['agreement'] }}</td>
+                <td class="data-cell expand dispnone-alt {{fieldshow_fine}}">{{ i['fine'] }}</td>
+                <td class="data-cell {{fieldshow_arr}} expand dispnone-alt text-danger">{{ i['arrears'] }}</td>
+                <td class="data-cell ">{{ i['total'] }}</td>
+                <td class="data-cell">{{ i['paid'] }}</td>
+                <td class="data-cell expand dispnone-alt">{{ i['payment_date'] }}</td>
+                <td class="data-cell {{i['highlight']}} expand dispnone-alt">{{ i['balance'] }}</td>
+
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{i['viewid']}}" type="button" class="btn action-btn {{i['smsoutline']}} font-weight-bold  modalTrigger no-wrap" {{i['smsactive']}} data-toggle="modal" data-target="">{{ i['smsstatus']|safe }}</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell expand dispnone-alt">
+                  <div>
+                    <button id="{{i['editid']}}" type="button" class="btn action-btn {{i['editoutline']}} font-weight-bold  modalTrigger no-wrap" {{i['active']}} data-toggle="modal" data-target="#editBillModal"><i class="fas fa-cog mr-1"></i>Edit</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell expand dispnone-alt">
+                  <div>
+                    <button id="{{i['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#discardBillModal"><i class="fas fa-trash-alt mr-1"></i>Discard</button>
+                  </div>
+                </td>
+                <!-- <td class="data-cell">
+                    <div class="dropdown no-arrow">
+                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger font-weight-bold ellipsis-btn"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                    
+                        <div>
+                          <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{i['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editBillModal">Edit</span>
+                        </div>
+
+                        <div>
+                          <i class="fas fa-envelope ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#billInvoiceModall">Invoice</span>
+                        </div>
+                         
+                      </div>
+                    </div>
+                  </td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade center-btn" id="discardBillModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+      </div>
+      <div class="text-info payment-info"></div>
+
+      <div id="confirmation" class="dispnone">
+        <div class="modal-body text-danger">Confirm delete</div>
+        <span class="text-gray-700 small mb-2 mr-2 ml-2">This action cannot be <span class="text-danger">REVERSED</span> Continue?</span>
+      </div>
+
+      <div class="has-margin-bottom divbg mt-2">
+          <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Discard !</button>
+          <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    var rawIds = "{{ billids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_bill_identifier").html(item)
+          }else{
+            $("#edit_bill_identifier").html(item)
+          }
+          
+        }else{
+          $("#bill_identifier").html(item)
+        }
+      });
+    });
+  </script>
+
+<script>
+  $("#discardBillModal").on('shown.bs.modal', function(){
+    $("#confirmation").removeClass("dispnone");
+    $(".payment-info").empty();
+  });
+
+</script>
+
+<script>
+    
+  $("#delete_payment").on('click',function(){   
+    
+    $('#delete_payment').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            billid:$("#del_bill_identifier").text(),
+            target:"bill discard"
+          },
+      success: function(response) {
+        $(".closemodal").click();
+        $(".payment-info").html("<span class='text-success'>Bill deleted successfully</span>");  
+        $('#delete_payment').html('Discard !');
+        $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target:"sometarget"
+                },
+                success: function(response) {
+                  
+                  $("#result-view2").html(response);
+                }
+            });
+        
+      },
+      error: function(xhr) {
+        $("#confirmation").addClass("dispnone");
+        $('#delete_payment').html('Discard !');
+        $(".payment-info").html('<span class="text-danger font-weight-bold">Error deleting the bill');
+        }
+    });
+  });
+  
+  </script>
+
+<!-- <script>
+  $("#expand").click();
+</script> -->
+
+<!-- <script>
+  tabletoggler();
+</script> -->
+<script>
+  var x = document.getElementById("expandtoggler");
+  x.innerHTML = "expand";
+</script>

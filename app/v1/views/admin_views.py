@@ -632,8 +632,14 @@ class AllProperties(Resource):
 
         # raw_props2 = current_user.company.props
 
-        if target == "tenants" or target == "units" and current_user.company_user_group.name == "Sales":
-            raw_props2 = current_user.company.props
+        if target != "tenants" and target != "units" and target != "tenant_list":
+            raw_props = current_user.company.props
+        
+        if current_user.company_user_group.name == "Sales":
+            if target == "tenants" or target == "units":
+                raw_props2 = current_user.company.props
+            else:
+                raw_props2 = []
         else:
             raw_props2 = fetch_all_apartments_by_user(current_user)
 
@@ -644,8 +650,7 @@ class AllProperties(Resource):
         else:
             raw_props4 = raw_props + raw_props2
 
-        props = remove_dups(raw_props4)
-        
+        props = remove_dups(raw_props4)       
         
         items = []
         prop_ids = []
@@ -743,7 +748,7 @@ class AllProperties(Resource):
                     'ptenants':ptnts,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
                     'occupancy':occ,
-                    'status':"active",
+                    'status':prop.property_type,
                     'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
                     'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",
                     # 'unlink-disp':"dispnone" if not prop.company_id else "",
@@ -791,6 +796,7 @@ class AllProperties(Resource):
             colltype = request.form.get("colltype")
             commtype = request.form.get("commtype")
             commission = request.form.get("commission")
+            proptype = request.form.get("proptype")
 
             valid_commission = validate_commission_input(commission)
 
@@ -806,6 +812,8 @@ class AllProperties(Resource):
                 ApartmentOp.update_int_commission(prop,valid_commission)
 
             ApartmentOp.update_details(prop,prop_name,colltype)
+            if proptype:
+                ApartmentOp.update_proptype(prop,proptype)
 
             return "Updated successfully" + proceed
 

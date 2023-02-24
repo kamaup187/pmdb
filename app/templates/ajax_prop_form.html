@@ -31,10 +31,23 @@
                 <div class="card-body">
                     <form>
                         <!-- Form Group (username)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="propName">Property name</label>
-                            <input class="form-control" id="propName" type="text" value="{{prop.name}}"
-                                placeholder="edit property name" />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="propName">Property name</label>
+                                <input class="form-control" id="propName" type="text" value="{{prop.name}}"
+                                    placeholder="edit property name" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="proptype">Property type</label>
+                                <div class="form-group mb-3">
+                                    <select class="select-css" id ="proptype" >
+                                      <option disabled selected value> -- Select type -- </option>
+                                      <option value="Rental">Rental</option>
+                                      <option value="Guest">Guest</option>                    
+                                    </select>
+                                  </div>
+                            </div>
                         </div>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
@@ -494,6 +507,7 @@
             data: {
                 propid: $("#edit_prop_identifier").text(),
                 name: $("#propName").val(),
+                proptype: $("#proptype").val(),
                 colltype: $("input[name=colltype]:checked").val(),
                 commtype: $("input[name=commtype]:checked").val(),
                 commission: $("#commission").val(),

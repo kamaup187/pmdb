@@ -1,0 +1,130 @@
+
+<!-- <div class="col-lg-12 font-weight-bold text-danger center-btn mb-1 smallify">Tenants<span class="desktop-malaysian text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div> -->
+
+
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+            <thead class="border-top-info">
+                <tr>
+                <th class="text-info font-weight-bold">GuestName</th>
+                <th class="text-info track-title-cell" data-orderable="false">Phone</th>
+                <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
+                <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Terms</th>
+                <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
+                <th class="text-info track-title-cell expand dispnone-alt">CheckOut</th>
+                <th class="text-info track-title-cell text-success">Bal</th>
+                <!-- <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add room</th> -->
+                <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
+                <th class="text-info track-title-cell text-primary expand dispnone-alt" data-orderable="false">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for bill in items%}
+              <tr>
+                <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"><span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                <td class="data-cell">{{ bill['tel'] }}</td>
+                <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
+                <td class="data-cell expand dispnone-alt">{{ bill['terms']|safe }}</td>
+                <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
+                <td class="data-cell expand dispnone-alt">{{ bill['checkout'] }}</td>
+
+                <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
+
+                <!-- <td class="text-s data-cell">
+                  <div>
+                    <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
+                  </div>
+                </td> -->
+
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Checkout</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell expand dispnone-alt">
+                  <div>
+                    <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                  </div>
+                </td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+  
+
+<script>
+  var rawIds = "{{ tenantids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_tenant_identifier").html(item)
+        }
+        else if(item.startsWith("tnt")){
+          $("#barloader").removeClass("dispnone")
+          $.ajax({
+            url: "/results",
+            type: "get",
+            data: {id: item},
+            success: function(response) {
+              $("#barloader").addClass("dispnone")
+              $("#propdisp").addClass("dispnone")
+              $("#searchresults").removeClass("dispnone")
+              $("#searchresults").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.fetchbills') }}",
+                type: "get",
+                data: {
+                  tenantid: item,
+                  target:"tenant bill"
+                },
+                success: function(response) {
+                  
+                  $("#search-result-view").html(response);
+                }
+              });
+            }
+          });
+        }else{
+          $("#edit_tenant_identifier").html(item)
+        }
+        
+      }else{
+        $("#tenant_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
+<!-- <script>
+  $("#expand").click();
+</script> -->
+
+<!-- <script>
+  tabletoggler();
+</script> -->

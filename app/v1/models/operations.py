@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy import extract,or_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
+from flask_login import current_user
 
 ROWS_PER_PAGE = 10
 
@@ -878,6 +879,10 @@ class ApartmentOp(Apartment,Base):
 
     def update_commtype(self,commtype):
         self.commission_type = commtype
+        db.session.commit()
+
+    def update_proptype(self,proptype):
+        self.property_type = proptype
         db.session.commit()
 
     def update_details(self,name,colltype):
@@ -2560,6 +2565,20 @@ class TenantOp(Tenant,Base):
 
     def billable(self):
         return "Yes" if self.sms else "No"
+    
+    def check_in_date(self):
+        if self.house_allocated:
+            date = self.house_allocated[0].checkin_date if self.house_allocated[0].checkin_date else self.date
+        else:
+            date = self.date
+
+        return date.strftime("%d/%b/%y")
+
+    def check_out_date(self):
+        if self.house_allocated:
+            return self.house_allocated[0].checkout_date.strftime("%d/%b/%y") if self.house_allocated[0].checkout_date else "-"
+        else:
+            return "-"
 
     def checkin_date(self):
         if self.house_allocated:
@@ -2571,6 +2590,13 @@ class TenantOp(Tenant,Base):
             date = self.date.date()
 
         return date
+    
+    def get_status(self):
+        print(">>>>>>>",self.accepted_terms)
+        if self.accepted_terms:
+            return '<span class="badge badge-success badge-counter">Accepted</span>'
+        else:
+            return '<span class="badge badge-danger badge-counter">Not yet</span>'
 
     def generate_editid(self):
         return "tedit" + str(self.id)
@@ -2618,6 +2644,7 @@ class TenantOp(Tenant,Base):
             'uid':TenantOp.get_uid(self),
             'name':TenantOp.generate_name(self),
             'fullname':self.name,
+            'terms':TenantOp.get_status(self),
             'hst':TenantOp.combine_house_tenant(self),
             'hstalt':TenantOp.combine_house_tenant_alt(self),
             'idno':self.national_id,
@@ -2628,7 +2655,8 @@ class TenantOp(Tenant,Base):
             'housenum':TenantOp.get_houseno(self),
             'status':self.status,
             'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
-            'checkin':TenantOp.checkin_date(self),
+            'checkin':TenantOp.check_in_date(self),
+            'checkout':TenantOp.check_out_date(self),
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),
             'viewable':"danger" if self.multiple_houses else "",
@@ -3096,11 +3124,28 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             return "text-dark"
 
     def year_month(self):
-        charge_year = self.year
-        # charge_month = self.month
-        charge_month = MonthlyChargeOp.get_str_month(self.month)
-        year_month = f'{charge_year}/{charge_month}'
-        return year_month
+
+        allowed_categories = ["Director Rooms", "Manager Rooms","Reception Rooms"]
+        if current_user.company_user_group.name in allowed_categories:
+            tenant_alloc_objs = self.tenant.house_allocated
+            found = False
+            if tenant_alloc_objs:
+                for tenant_alloc in tenant_alloc_objs:
+                    if tenant_alloc.active == True:
+                        target = tenant_alloc
+                        found = True
+                        break
+            if found:
+                days = (target.checkout_date - target.checkin_date).days
+                return f"{days} days"
+            else:
+                return "-"
+        else:
+            charge_year = self.year
+            # charge_month = self.month
+            charge_month = MonthlyChargeOp.get_str_month(self.month)
+            year_month = f'{charge_year}/{charge_month}'
+            return year_month
 
     def combine_house_tenant(self):
         if self.tenant:

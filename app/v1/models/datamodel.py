@@ -254,6 +254,8 @@ class Apartment(db.Model):
     uniqueid = db.Column(db.String)
     image_url = db.Column(db.VARCHAR)
     agreement_fee = db.Column(db.Float,default=0)
+    property_type = db.Column(db.String,default="Rental")
+
 
     commission_type = db.Column(db.String, default="collected")
     commission = db.Column(db.Float,default=0)

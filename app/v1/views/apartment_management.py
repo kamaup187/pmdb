@@ -796,8 +796,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.name== "Adorable Properties":
-                shorts = ["4107209"]
+            if company.name== "LaCasa":
+                shorts = ["4107495"]
             else:
                 shorts = []
 
@@ -6394,9 +6394,11 @@ class AllocateTenants(Resource):
                 if result[0] == "empty":
                     color = "btn-success"
                     itemid = "vac"+ str(item.id)
+                    icon = "fas fa-store-alt"
                 else:
                     color = "btn-warning"
                     itemid = "hse"+ str(item.id)
+                    icon = "fas fa-house-user"
                     result2 = check_house_occupied(result[1])
                     if result2[2].checkout_date < datetime.datetime.now():
                         color = "btn-danger"
@@ -6404,6 +6406,7 @@ class AllocateTenants(Resource):
                 dict_obj = {
                     "name": item.name,
                     "color":color,
+                    "icon":icon,
                     "id":itemid
                 }
                 houses.append(dict_obj)

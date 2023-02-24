@@ -1,6 +1,6 @@
 {% for house in houses %}
-<div class="col-md-2 mb-2 smallify">
-  <button class="btn {{house.color}}" type="button" id="{{house.id}}">{{house.name}}</button>
+<div class="col-md-2 mb-2">
+  <button class="btn {{house.color}} texc-white font-weight-bold" type="button" id="{{house.id}}"><i class="{{house.icon}} mr-2"></i><span class="">{{house.name}}</span></button>
 </div>
 {% endfor %}
 

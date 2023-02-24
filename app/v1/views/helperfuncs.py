@@ -10629,7 +10629,10 @@ def name_standard(name):
 def mpesa_response(ctob_obj):
 
     if "***" in ctob_obj.msisdn:
-        tel = ""
+        if ctob_obj.company.name == "LaCasa":
+            tel = "254722267087"
+        else:
+            tel = ""
     elif ctob_obj.company.name == "LaCasa" and ctob_obj.msisdn.endswith("087"):
         tel = "254722267087"
     else:

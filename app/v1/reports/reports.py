@@ -6945,7 +6945,9 @@ class FetchTenants(Resource):
             tenant_info = [tenant_obj]
             tenant_data = tenant_details(tenant_info)
             tenantids = get_obj_ids(tenant_data)
-            return render_template("ajax_tenant_info.html",tenantids=tenantids,items=tenant_data)
+            template = "ajax_tenant_info_erp.html" if erp(current_user) else "ajax_tenant_info.html"
+
+            return render_template(template,tenantids=tenantids,items=tenant_data)
         
         elif target == "closed":
             tenancy = tenantauto_alt(propid,"closed")
@@ -7004,6 +7006,10 @@ class FetchTenants(Resource):
 
             moreids = inject_tenants_ids(tenantlist) 
             full_ids = tenantids + "," + moreids
+
+
+            if erp(current_user):
+                return render_template("ajax_tenantlist_erp.html",tenantids=full_ids,items=tenantlist)
 
             return render_template("ajax_tenantlist.html",items=tenantlist,tenantids=full_ids)
 
@@ -7539,6 +7545,14 @@ class FetchBills(Resource):
             # recent_bills = fetch_recent_bills(period,tenant_bills)
             recent_bills = tenant_obj.monthly_charges
 
+            if crm(current_user):
+                template = "ajax_tenantbill2.html"
+            if erp(current_user):
+                template = "ajax_tenantbill_erp.html"
+            else:
+                template = "ajax_tenantbill.html"
+
+
             if recent_bills:
                 detailed_bills = bill_details(recent_bills)
 
@@ -7546,7 +7560,6 @@ class FetchBills(Resource):
 
                 # billids = get_obj_ids(detailed_bills)
 
-                template = "ajax_tenantbill2.html" if crm(current_user) else "ajax_tenantbill.html"
 
                 return render_template(
                     template,
@@ -7569,7 +7582,6 @@ class FetchBills(Resource):
 
                 billids = get_obj_ids_alt(detailed_bills)
 
-                template = "ajax_tenantbill2.html" if crm(current_user) else "ajax_tenantbill.html"
 
                 return render_template(
                     template,

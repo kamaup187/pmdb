@@ -4274,7 +4274,9 @@ def autosend_pending_smsreceipts(payids):
         co = payment_obj.apartment.company
         str_co = co.name
         str_prop = payment_obj.apartment.name
-        end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
+        # end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
+        end = str_prop 
+
         raw_rem_sms =co.remainingsms
 
         own_shortcode = False
@@ -10665,6 +10667,20 @@ def fetch_expenses(current_user):
         raw_expenses.append(exp)
     
     return flatten(raw_expenses)
+
+def get_obj_ids_grid(arr):
+    obj_id_list = []
+    for req in arr:
+        if req:
+            vac = req.get("id")
+            if vac:
+                obj_id_list.append(vac)
+
+    if not obj_id_list:
+        obj_id_list.append("empty")
+
+    str_ids = ','.join(map(str, obj_id_list))
+    return str_ids
 
 def get_obj_ids(arr):
     obj_id_list = []

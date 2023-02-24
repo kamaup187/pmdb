@@ -1855,6 +1855,13 @@ table.dataTable thead th {
           width: 160px; */
       width: 12% !important;
     }
+
+    .modal-kubwa {
+      max-width: 1100px !important;
+    }
+    .modal-kubwa-sana {
+      max-width: 1300px !important;
+    }
   
     .fixed-width-modal-btn {
       width: 80% !important;

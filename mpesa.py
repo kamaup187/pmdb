@@ -13,8 +13,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "sYzDeYzh297RDrfbaOFcK6dN6O8Q7Sh1"
-    consumer_secret = "CRVLGDdAongGD0YR"
+    consumer_key = "c22uU6lscZxMm2JWV7k5CLsGXzUZ60Bk"
+    consumer_secret = "YrQIbEItYguwWHWp"
 
     api_URL = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
@@ -38,10 +38,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4107209",
+        "ShortCode": "4107495",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://kiotapay.com/m/skyview/ins/payment",
-        "ValidationURL":   "https://kiotapay.com/m/skyview/validate",
+        "ConfirmationURL": "https://kiotapay.com/m/gad/ins/payment",
+        "ValidationURL":   "https://kiotapay.com/m/gad/validate",
     }
 
     try:

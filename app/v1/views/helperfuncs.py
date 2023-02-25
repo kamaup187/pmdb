@@ -6792,6 +6792,9 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
 
         print("NARRATION: ",narration)
 
+        if erp(curr_user):
+            narration = "Bed only"
+
         paymode = "mpesa" if "mpesa" in desc else "Bank"
         raw_bill_ref = ref
         paytype = desc

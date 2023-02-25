@@ -104,6 +104,26 @@ table.dataTable thead th {
   .text-kodi-alt{
     color: #ffa600 !important;
   }
+
+  .bg-danger-alt {
+    background-color: #edbebe !important;
+    border-color: red !important;
+  }
+  
+  .bg-success-alt {
+    background-color: #e7f5e7 !important;
+    border-color: rgb(23, 253, 23) !important;
+  }
+  
+  .bg-warning-alt {
+    background-color: #f1ebd3e0 !important;
+    border-color: #ffee00 !important;
+  }
+  
+  .bg-info-alt {
+    background-color: #d8f2f6aa !important;
+    border-color: rgb(0, 255, 242) !important;
+  }
   
   #hellobar-bar {
     font-family: "Open Sans", sans-serif;

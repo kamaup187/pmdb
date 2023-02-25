@@ -4873,6 +4873,46 @@ class CallBackUrlSkyview(Resource):
 
         # auto_consume_ctob2(ctob_obj)
 
+
+
+
+class AutoPayment(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+
+        prop_id = request.form.get('propid')
+        house = request.form.get('house')
+        amount = request.form.get('amount')
+        transid = request.form.get('transid')
+        usercode = request.form.get('usercode')
+
+        response = sms.send("AUTO GST DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
+        userid = UserOp.fetch_user_by_usercode(usercode).id
+
+        propid = get_identifier(prop_id)
+
+        payperiod = datetime.datetime.now()
+
+        dict_array = []
+
+        dict_obj = {
+        "housename":house,
+        "amount":amount,
+        "date":"",
+        "ref":transid,
+        "desc":"",
+        "comment":""
+        }
+
+        dict_array.append(dict_obj)
+
+        uploadsjob2 = q.enqueue_call(
+            func=read_payments_excel, args=(dict_array,payperiod,propid,userid,None,), result_ttl=5000
+        )
+
 class CallBackUrlDenvic(Resource):
     def get(self):
         pass

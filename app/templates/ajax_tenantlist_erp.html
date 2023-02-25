@@ -80,7 +80,7 @@
     $("#"+item).on('click',function(){
       console.log("clicked",item)
       if( isNaN(parseInt(item)) ){
-        if(item.startsWith("del")){
+        if(item.startsWith("tdel")){
           $("#del_tenant_identifier").html(item)
         }
         else if(item.startsWith("tnt")){

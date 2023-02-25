@@ -181,6 +181,7 @@ api.add_resource(CallBackUrlGadi,"/m/gad/ins/payment")
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")
 
+api.add_resource(AutoPayment, "/autopayment")
 
 api.add_resource(CallBackUrlAssetisha,"/api/ins/confirm")
 api.add_resource(RentNaiveraStatement,"/report/fetch/<string:id_number>/<string:month>/-/<string:year>/<string:prop>")

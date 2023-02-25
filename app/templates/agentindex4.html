@@ -67,6 +67,8 @@
     </div>
 </div>
 
+<span id="dashboardaccess">{{dashboardaccess}}</span>
+
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -317,7 +319,7 @@
               <div class="dropdown-menu visible dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ url_for('api.updateuser') }}">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-900"></i>
-                  Profile ({{name}} - [{{code}}])
+                  Profile ({{name}} - [<span id="curr_usercode">{{code}}</span>])
                 </a>
                 <div class="dropdown-item">
                   <i class="fas fa-sync-alt fa-sm fa-fw mr-2 text-gray-900"></i>
@@ -371,7 +373,7 @@
                         <i class="fas fa-fw fa-users text-white"></i>
                         <button class="tenantbtn btn btn-outline-light borderless p-0 m-0  font-weight-bold btn-sm">Guests</button>
                       </div>
-                      <div class="">
+                      <div class="dispnone">
                         <i class="fas fa-fw fa-receipt text-white"></i>
                         <button class="billbtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Invoices</button>
                       </div>
@@ -383,7 +385,7 @@
                         <i class="fas fa-fw fa-coins text-white"></i>
                         <button class="paybtn2 btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
                       </div>
-                      <div class="mobile-malaysian">
+                      <div class="mobile-malaysian dispnone">
                         <i class="fas fa-fw fa-clipboard text-white"></i>
                         <button class="expensebtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Expenses</button>
                       </div>
@@ -1657,7 +1659,10 @@
 
   <script type="text/javascript" src="{{ url_for('static', filename='printThis.js') }}"></script>
 
-  <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/autocomplete-v1.js') }}"></script> -->
+
+  <script src="{{ url_for('static', filename='js/autocomplete-v6.js') }}"></script>
+
   
   <!-- <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> -->
   <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
@@ -2135,6 +2140,13 @@ function animateHH(element) {
   $(document).ready(function() {
       setTimeout(getFeed,1);
       setTimeout(getPropData,10);
+
+      if ($('#dashboardaccess').text() != 'dispnone'){
+        //pass
+      }else{
+        $(".tenantbtn").click();
+      }
+
   });
   // $(document).ready(function() {
   //     setTimeout(getPropStats,50);
@@ -2522,6 +2534,7 @@ $(".tenantbtn").on('click',function(){
     setTimeout(function(){
       $("#barloader").addClass("dispnone")
     }, 600);
+    
   if (!$('#content-area').hasClass("isopen") && !$('#list-area').hasClass("isopen") && !$('#search-area').hasClass("isopen")){
           $('#sidebarToggle').click();
           $('#smaccordionSidebar').removeClass("toggled");

@@ -1,148 +1,154 @@
 
 <section class="contact_area section_gap">
-    <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+  <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
 
-    <span id="vac_house_identifier" class="dispnone"></span>
+  <span id="vac_house_identifier" class="dispnone"></span>
 
-    <span id="tenant_identifier" class="dispnone"></span>
-    <span id="edit_tenant_identifier" class="dispnone"></span>
-    <span id="del_tenant_identifier" class="dispnone"></span>
-    <span id="current-reloader" class="dispnone">current</span>
-    <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
+  <span id="tenant_identifier" class="dispnone"></span>
+  <span id="edit_tenant_identifier" class="dispnone"></span>
+  <span id="del_tenant_identifier" class="dispnone"></span>
+  <span id="current-reloader" class="dispnone">current</span>
+  <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
 
-    <span class="multisave dispnone"></span>
+  <span class="multisave dispnone"></span>
 
-      <div id="parent-section">
-        <div class="col-12 no-padding mb-1">
-          <div class="card-header py-1 card-bg-alt divjust-end" >
-              <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>Guests & Room allocation</div>
-              <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
+  <div class="card mb-2 mt-1">
+    <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
+      <span class="smallify text-black font-weight-bold text-uppercase text-110">Guests & Room allocation <span
+          id="activeprop" class="text-primary ml-3"></span></span>
+      <div>
+        <button id="close-propdisp"
+          class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+          type="button">X</button>
+      </div>
+    </div>
+
+      <div class="card-body flowing-body pt-2 pl-2">
+
+        <div class="mb-3 mt-3">
+          <div class="center-btn">
+            <div class="info_item">
+              <button type="button" class="btn bg-success-alt text-success" data-toggle="modal"
+                data-target="#addGuestModal"><i class="fas fa-plus mr-1"></i><span class="font-weight-bold">add
+                  guest</span></button>
+            </div>
           </div>
         </div>
 
 
+        <!-- <div class="toggleswitch text-info font-weight-bold divbg mb-3">
+          <span>
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
+            <span class="small desktop-malaysian">Pending</span>
+            <label class="switch">
+              <input id="reporttoggle" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
 
-        <div class="col-lg-12 center-btn mb-3">
-          <span class="text-black text-xx smallify underline shadow-alt">{{prop.name}}</span>
+          <span class="">
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Guests</span>
+            <span class="small desktop-malaysian">Residents</span>
+            <label class="switch">
+              <input id="reporttoggle2" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+          <span class="">
+            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Cleared</span>
+            <span class="small desktop-malaysian">Vacated</span>
+            <label class="switch">
+              <input id="reporttoggle3" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </span>
+
+        </div> -->
+
+        <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand"
+              class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span>
         </div>
-        
-        <div class="row mb-3">
-            <div class="col-lg-12 center-btn">
-              <div class="info_item">
-                <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addGuestModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add guest</span></button>
-                <!-- <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadPhoneExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Phone numbers</span></span>
-                <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadArrearsExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Arrears bulk upload</span></span> -->
 
-              </div>
+        <div id="result-view">
 
-            </div>
-
-        </div>
-      
-
-      <div class="toggleswitch text-info font-weight-bold divbg mb-3">
-        <span>
-          <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
-          <span class="small desktop-malaysian">Pending</span>
-          <label class="switch">
-            <input id="reporttoggle" type="checkbox">
-            <span class="slider round"></span>
-          </label>
-        </span>
-      
-        <span class="">
-          <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Guests</span>
-          <span class="small desktop-malaysian">Residents</span>
-          <label class="switch">
-            <input id="reporttoggle2" type="checkbox" checked>
-            <span class="slider round"></span>
-          </label>
-        </span>
-
-        <span class="">
-          <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Cleared</span>
-          <span class="small desktop-malaysian">Vacated</span>
-          <label class="switch">
-            <input id="reporttoggle3" type="checkbox">
-            <span class="slider round"></span>
-          </label>
-        </span>
-
-      </div>
-
-      <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
-      
-      <div id="result-view" class="row">
-      
-        <div class="col-lg-12 no-padding">
             <div id="reqdata" class="table-responsive">
-                <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
-                    <thead class="border-top-info">
-                      <tr>
-                        <th class="text-info font-weight-bold">Guest Name</th>
-                        <th class="text-info track-title-cell" data-orderable="false">Phone</th>
-                        <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
-                        <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Terms</th>
-                        <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
-                        <th class="text-info track-title-cell expand dispnone-alt">CheckOut</th>
-                        <th class="text-info track-title-cell text-success">Bal</th>
-                        <!-- <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add room</th> -->
-                        <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
-                        <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th>
+              <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+                <thead class="border-top-info">
+                  <tr>
+                    <th class="text-info font-weight-bold">Guest Name</th>
+                    <th class="text-info track-title-cell" data-orderable="false">Phone</th>
+                    <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
+                    <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Terms</th>
+                    <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
+                    <th class="text-info track-title-cell expand dispnone-alt">CheckOut</th>
+                    <th class="text-info track-title-cell text-success">Bal</th>
+                    <!-- <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add room</th> -->
+                    <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
+                    <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th>
 
 
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for bill in bills%}
-                      <tr>
-                        <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
-                        <td class="data-cell">{{ bill['tel'] }}</td>
-                        <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
-                        <td class="data-cell expand dispnone-alt">{{ bill['terms']|safe }}</td>
-                        <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
-                        <td class="data-cell expand dispnone-alt">{{ bill['checkout'] }}</td>
-                        <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for bill in bills%}
+                  <tr>
+                    <td id="{{bill['identity']}}"
+                      class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap">
+                      <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span
+                        class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
+                    <td class="data-cell">{{ bill['tel'] }}</td>
+                    <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
+                    <td class="data-cell expand dispnone-alt">{{ bill['terms']|safe }}</td>
+                    <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
+                    <td class="data-cell expand dispnone-alt">{{ bill['checkout'] }}</td>
+                    <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
 
 
-                        <!-- <td class="text-s data-cell">
+                    <!-- <td class="text-s data-cell">
                           <div>
                             <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
                           </div>
                         </td> -->
 
-                        <!-- <td class="text-s data-cell">
+                    <!-- <td class="text-s data-cell">
                           <div class="toolti">
                             <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap tooltip" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add <span class="tooltiptext">{{bill['tooltip']}}</span></button>
                           </div>
                         </td> -->
 
-                        <!-- <td class="text-s data-cell">
+                    <!-- <td class="text-s data-cell">
                           <div>
                             <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
                           </div>
                         </td> -->
 
-                        <td class="text-s data-cell">
-                          <div>
-                            <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Checkout</button>
-                          </div>
-                        </td>
-                        <td class="text-s data-cell">
-                          <div>
-                            <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
-                          </div>
-                        </td>
+                    <td class="text-s data-cell">
+                      <div>
+                        <button id="{{bill['delid']}}" type="button"
+                          class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal"
+                          data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Checkout</button>
+                      </div>
+                    </td>
+                    <td class="text-s data-cell">
+                      <div>
+                        <button id="{{bill['editid']}}" type="button"
+                          class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal"
+                          data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                      </div>
+                    </td>
 
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
+          
         </div>
       </div>
-      </div>
-  </section>
+    <!-- </div> -->
+  </div>
+</section>
 
 
   <div class="text-center">
@@ -219,14 +225,14 @@
   </div>
 
   <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-kubwa" role="document">
       <div class="modal-content">
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
             <span class="mr-3 smallify">Guest onboarding form </span>
             <div>
-              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button>
+              <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
             </div>
           </h5>
@@ -308,6 +314,23 @@
                             <input id="checkoutdate" class="form-control ph" type="text" placeholder="Select date" readonly />
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                           </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-4 form-group input-icons" id="dynamic_rate">
+                          <span class="text-black">Total (shs)</span>
+                            <input id="total_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black font-weight-bold">Paid (shs)</span>
+                            <input id="paid_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                        </div>
+
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black font-weight-bold">Ref No.</span>
+                            <input id="transid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                         </div>
                       </div>
 
@@ -660,7 +683,7 @@ $.each(ids, function(i,item) {
   $("#"+item).on('click',function(){
     console.log("clicked",item)
     if( isNaN(parseInt(item)) ){
-      if(item.startsWith("del")){
+      if(item.startsWith("tdel")){
         $("#del_tenant_identifier").html(item)
       }
       else if(item.startsWith("tnt")){
@@ -1073,69 +1096,90 @@ $("#uploadarrears").on('click',function(){
 </script>
 
 <script>
-$("#newtenant").click(function(){   
-  var cb2 = document.getElementById("migrate2");
-  if (cb2.checked){
-    var migrate2 = "True";
-  }else{
-    var migrate2 = "False";
-  }
-  $("#newtenant").html("saving...")  
+  $("#newtenant").click(function () {
+    var cb2 = document.getElementById("migrate2");
+    if (cb2.checked) {
+      var migrate2 = "True";
+    } else {
+      var migrate2 = "False";
+    }
+    $("#newtenant").html("saving...")
     $.ajax({
       url: "{{ url_for('api.addtenant') }}",
       type: "POST",
       data: {
-              propid: $("#prop_identifier").text(),
-              house: $("#vac_house_identifier").text(),
-              name: $("#new_name").val(),
-              national_id: $("#new_natid").val(),
-              tel: $("#new_tel").val(),
-              email: $("#new_email").val(),
-              rates: $("#new_rate").val(),
-              migrate: migrate2,
-              arr: $("#new_arr").val(),
-              checkin: $("#checkindate").val(),
-              checkout: $("#checkoutdate").val()
-          },
-      success: function(response) {
+        propid: $("#prop_identifier").text(),
+        house: $("#vac_house_identifier").text(),
+        name: $("#new_name").val(),
+        national_id: $("#new_natid").val(),
+        tel: $("#new_tel").val(),
+        email: $("#new_email").val(),
+        rates: $("#new_rate").val(),
+        migrate: migrate2,
+        arr: $("#new_arr").val(),
+        checkin: $("#checkindate").val(),
+        checkout: $("#checkoutdate").val()
+      },
+      success: function (response) {
         $(".alert-msgs").html(response);
-        $(".dismissparent").click();
 
-        setTimeout(function(){
-          $(".alert-msgs").empty();
-          $(".reset").click();
-          // $('#newtenant').attr('disabled', 'disabled');
-          $('#newtenant').removeClass('btn-success')
-          $('#newtenant').addClass('btn-secondary')
-          $("#newtenant").html("submit")
-        }, 2000);
+        // alert("starting")
+        $("#newtenant").html("invoicing...")
         $.ajax({
-              url: "{{ url_for('api.fetchtenants') }}",
-              type: "get",
+          url: "/billing",
+          type: "POST",
+          data: {
+            propid: $("#prop_identifier").text(),
+            house: $("#vac_house_identifier").text(),
+            target: "single",
+            billing: "true",
+          },
+          success: function (response) {
+            $("#newtenant").html("finishing")
+            $.ajax({
+              url: "/autopayment",
+              type: "POST",
               data: {
-                propid:  $("#prop_identifier").text(),
-                target: "current"
+                propid: $("#prop_identifier").text(),
+                house: $("#vac_house_identifier").text(),
+                amount: $("#paid_rate").val(),
+                transid: $("#transid").val(),
+                usercode: $("#curr_usercode").text()
               },
-              success: function(response) {
-                
-                $("#result-view").html(response);
-                alert("starting")
+              success: function (response) {
+                $("#newtenant").html("Completed")
+
+                setTimeout(function () {
+                  $(".dismissparent").click();
+
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  // $('#newtenant').attr('disabled', 'disabled');
+                  $('#newtenant').removeClass('btn-success')
+                  $('#newtenant').addClass('btn-secondary')
+                  $("#newtenant").html("submit")
+                }, 1000);
+
                 $.ajax({
-                  url: "/billing",
-                  type: "POST",
-                  data: { 
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {
                     propid: $("#prop_identifier").text(),
-                    house:$("#vac_house_identifier").text(),
-                    target:"single",
-                    billing:"true",
+                    target: "current"
                   },
-                  success: function(response) {}
+                  success: function (response) {
+                    $("#result-view").html(response);
+
+                  }
                 });
               }
             });
+          }
+        });
+
       }
     });
-});
+  });
 </script>
 
 <script>
@@ -1420,32 +1464,34 @@ $("#allocatebtn").click(function(){
 </script>
 
 <script>
-// This script displays alerts and tenant name before clearance
-$("#tenantClearanceModal").on('shown.bs.modal', function(){
-  $.ajax({
-    url: "{{ url_for('api.tenantclearance') }}",
-    type: "POST",
-    data: {
-          tenant_id: $("#del_tenant_identifier").text(),
-          runalert:"somestring"
-        },
-    success: function(response) {
-      $("#clearance_notifications").html(response);
-      $.ajax({
-              url: "{{ url_for('api.tenantclearance') }}",
-              type: "POST",
-              data: {
-                tenant_id:$("#del_tenant_identifier").text(),
-                target:"tenant name"
-              },
-              success: function(response) {
-                
-                $(".tenantname").html(response);
-              }
-            });   
-    }
+  // This script displays alerts and tenant name before clearance
+  $("#tenantClearanceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.tenantclearance') }}",
+      type: "POST",
+      data: {
+            tenant_id: $("#del_tenant_identifier").text(),
+            ttype:$("#ttype3").text(),
+            runalert:"somestring"
+          },
+      success: function(response) {
+        $("#clearance_notifications").html(response);
+        $.ajax({
+                url: "{{ url_for('api.tenantclearance') }}",
+                type: "POST",
+                data: {
+                  tenant_id:$("#del_tenant_identifier").text(),
+                  ttype:$("#ttype3").text(),
+                  target:"tenant name"
+                },
+                success: function(response) {
+                  
+                  $(".tenantname").html(response);
+                }
+              });   
+      }
+    });
   });
-});
 </script>
 
 

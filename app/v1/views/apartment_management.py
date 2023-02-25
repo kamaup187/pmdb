@@ -127,7 +127,7 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        # import pdb; pdb.set_trace()
+        
 
         # coss = CompanyOp.fetch_all_companies()
         coss = []
@@ -541,7 +541,7 @@ class Index(Resource):
 
 
         apartment_list.append("All properties")
-        # import pdb; pdb.set_trace()
+        
 
         usergroup = current_user.user_group
         user_group = str(usergroup)
@@ -732,10 +732,10 @@ class Index(Resource):
                 if erp_index(current_user):
                     indexpage = erp_index(current_user)[0]
                     if erp_index(current_user)[1]:
-                        full_access = ""
+                        full_access = "dispnone"
                 else:
                     indexpage = os.getenv("INDEX") or INDEX
-                    full_access = "dispnone"
+                    full_access = ""
 
 
             ############################################################################################################
@@ -1327,7 +1327,7 @@ class PropStats(Resource):
 
             monthly_bills = apartment.monthlybills
             for item in monthly_bills:
-                # import pdb; pdb.set_trace()
+                
                 # print(item,"date",item.date,"day",item.date.day,"period",item.month,item.year)
                 if item.month == present_month and item.year == present_year and item.date.day == present_day:
                     invs += 1
@@ -2633,7 +2633,7 @@ class Bills(Resource):
 
         period_target = request.args.get("target_period")
 
-        # import pdb; pdb.set_trace()
+        
 
         if period_target:
             datestring = date_formatter_alt(period_target)
@@ -4461,7 +4461,7 @@ class EditHouseCode(Resource):
 
 
             valid_inputs3 = validate_float_inputs_to_include_percent(listprice,deposit,commission,discount,instalments)
-            # import pdb; pdb.set_trace()
+            
 
             if "%" in commission:
                 HouseCodeOp.update_commission(group_obj,valid_inputs3[2])
@@ -5280,9 +5280,10 @@ class AddTenant(Resource):
                         pass
                         msg = "Tenant of similar national id exists"
                     else:
-                        response = sms.send(message, recipient, "KIOTAPAY")
-                        # response = sms.send(message, ["+254716674695","+254717121612"], "KIOTAPAY")
-                        print(response)
+                        # response = sms.send(message, recipient, "KIOTAPAY")
+                        # # response = sms.send(message, ["+254716674695","+254717121612"], "KIOTAPAY")
+                        # print(response)
+                        pass
 
                 except Exception as e:
                     print(f"Houston, we have a problem {e}")
@@ -5851,7 +5852,7 @@ class AddTenant(Resource):
                 email = request.form.get('email')
                 existing_arrears = request.form.get('arr')
 
-            # import pdb; pdb.set_trace()
+            
 
             if not name:
                 return "Failed to convert lead" + proceed
@@ -6393,20 +6394,24 @@ class AllocateTenants(Resource):
             for item in house_list:
                 result = check_occupancy(item)
                 if result[0] == "empty":
-                    color = "btn-success"
+                    color = "bg-success-alt"
+                    textcolor = "text-success"
                     itemid = "vac"+ str(item.id)
-                    icon = "fas fa-store-alt"
-                else:
-                    color = "btn-warning"
-                    itemid = "hse"+ str(item.id)
                     icon = "fas fa-house-user"
+                else:
+                    color = "bg-warning-alt"
+                    textcolor = "text-kodi-alt"
+                    itemid = "hse"+ str(item.id)
+                    icon = "fas fa-user-tie"
                     result2 = check_house_occupied(result[1])
                     if result2[2].checkout_date < datetime.datetime.now():
-                        color = "btn-danger"
+                        color = "bg-danger-alt"
+                        textcolor = "text-danger"
 
                 dict_obj = {
                     "name": item.name,
                     "color":color,
+                    "textcolor":textcolor,
                     "icon":icon,
                     "id":itemid
                 }
@@ -6430,7 +6435,7 @@ class AllocateTenants(Resource):
         house_obj = get_specific_house_obj_alt(house_list,house_num)
 
         ######################### PERFORM VALIDATIONS ###################################
-        # import pdb; pdb.set_trace()
+        
         occupancy = check_occupancy(house_obj)
         metered = fetch_active_meter(house_obj)
         ##################################################################################
@@ -6572,115 +6577,115 @@ class TenantClearance(Resource):
         present_month_period = datetime.datetime.now().month
         bills = tenant_obj.monthly_charges
 
-        balance = tenant_obj.balance
-        if balance > 0.0:
-            checkboxtwo = True
-            msg_three = ""
-            month = get_str_month(billing_period.month)
-            msg_two = f"arrears of Kshs {balance}"
+        # balance = tenant_obj.balance
+        # if balance > 0.0:
+        #     checkboxtwo = True
+        #     msg_three = ""
+        #     month = get_str_month(billing_period.month)
+        #     msg_two = f"arrears of Kshs {balance}"
 
-        for bill in bills:
-            if bill.month == billing_period.month and bill.year == billing_period.year:
-                target_bill = bill
-                if present_day_period < 30 and present_month_period == billing_period.month:
-                    month = get_str_month(billing_period.month)
-                    checkbox = True
-                    msg_three = ""
-                    msg_one = f"{tenant_obj}'s {month} rent bill?,"
+        # for bill in bills:
+        #     if bill.month == billing_period.month and bill.year == billing_period.year:
+        #         target_bill = bill
+        #         if present_day_period < 30 and present_month_period == billing_period.month:
+        #             month = get_str_month(billing_period.month)
+        #             checkbox = True
+        #             msg_three = ""
+        #             msg_one = f"{tenant_obj}'s {month} rent bill?,"
 
         
         if runalert:
             if msg_three:
                 return render_template("ajaxproceed.html",alert=msg_three)
-            return render_template('ajax_clearance.html',checkbox=checkbox,checkboxtwo=checkboxtwo,alert_one=msg_one,alert_two=msg_two,current_bill_month=month)
+            # return render_template('ajax_clearance.html',checkbox=checkbox,checkboxtwo=checkboxtwo,alert_one=msg_one,alert_two=msg_two,current_bill_month=month)
        
-        bill_discard = get_bool(discard_bill)
-        pay_off_balance_with_deposit = get_bool(pay_off_balance)
-        vacate_period = billing_period
+        # bill_discard = get_bool(discard_bill)
+        # pay_off_balance_with_deposit = get_bool(pay_off_balance)
+        # vacate_period = billing_period
         
-        if bill_discard:
-            vacate_period = billing_period - relativedelta(months=1)
+        # if bill_discard:
+        #     vacate_period = billing_period - relativedelta(months=1)
             
-            deductions = house_obj.housecode.rentrate + house_obj.housecode.garbagerate + house_obj.housecode.securityrate
+        #     deductions = house_obj.housecode.rentrate + house_obj.housecode.garbagerate + house_obj.housecode.securityrate
 
-            # update_water = target_bill.water
+        #     # update_water = target_bill.water
 
-            # update_rent = 0.0
+        #     # update_rent = 0.0
 
-            # update_garbage = 0.0
+        #     # update_garbage = 0.0
 
-            # update_electricity = target_bill.electricity
+        #     # update_electricity = target_bill.electricity
 
-            # update_security = 0.0
+        #     # update_security = 0.0
 
-            # update_maintenance = target_bill.maintenance
+        #     # update_maintenance = target_bill.maintenance
 
-            # update_penalty = target_bill.penalty
+        #     # update_penalty = target_bill.penalty
 
-            # const_arrears = target_bill.arrears
-            # const_deposit = target_bill.deposit if target_bill.deposit else 0.0
-            # const_agreement = target_bill.agreement if target_bill.agreement else 0.0
+        #     # const_arrears = target_bill.arrears
+        #     # const_deposit = target_bill.deposit if target_bill.deposit else 0.0
+        #     # const_agreement = target_bill.agreement if target_bill.agreement else 0.0
 
-            # total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears+const_deposit+const_agreement #total amount is incremented only by updates
-            # MonthlyChargeOp.update_monthly_charge(target_bill,update_water,update_rent,update_garbage,update_electricity,update_security,"null","null",update_maintenance,update_penalty,"null",total_amount,current_user.id)
+        #     # total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears+const_deposit+const_agreement #total amount is incremented only by updates
+        #     # MonthlyChargeOp.update_monthly_charge(target_bill,update_water,update_rent,update_garbage,update_electricity,update_security,"null","null",update_maintenance,update_penalty,"null",total_amount,current_user.id)
 
-            # bal = target_bill.balance
-            # bal = bal - deductions #these are updates, if one has update, the rest are zeros
-            # MonthlyChargeOp.update_balance(target_bill,bal)
-            MonthlyChargeOp.delete(target_bill)
+        #     # bal = target_bill.balance
+        #     # bal = bal - deductions #these are updates, if one has update, the rest are zeros
+        #     # MonthlyChargeOp.update_balance(target_bill,bal)
+        #     MonthlyChargeOp.delete(target_bill)
 
-            all_charges = house_obj.charges
+        #     all_charges = house_obj.charges
 
-            for charge in all_charges:
-                if charge.date.month == billing_period.month and charge.date.year == billing_period.year and not charge.reading_id:
-                    ChargeOp.delete(charge)
+        #     for charge in all_charges:
+        #         if charge.date.month == billing_period.month and charge.date.year == billing_period.year and not charge.reading_id:
+        #             ChargeOp.delete(charge)
 
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-            running_bal = tenant_obj.balance
-            running_bal -= deductions
-            TenantOp.update_balance(tenant_obj,running_bal)
+        #     tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+        #     running_bal = tenant_obj.balance
+        #     running_bal -= deductions
+        #     TenantOp.update_balance(tenant_obj,running_bal)
 
 
-        # pay off the balances using deposit
-        deposit = house_obj.housecode.rentrate + house_obj.housecode.waterdep
-        db.session.expire(tenant_obj)
-        new_balance = tenant_obj.balance
+        # # pay off the balances using deposit
+        # deposit = house_obj.housecode.rentrate + house_obj.housecode.waterdep
+        # db.session.expire(tenant_obj)
+        # new_balance = tenant_obj.balance
 
-        if pay_off_balance_with_deposit:
+        # if pay_off_balance_with_deposit:
 
-            if new_balance > 0.0:
-                if new_balance < deposit:
-                    amount_paid = new_balance
-                    print("GREAAAAAAAAAAAAAAT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-                else:
-                    print("NOMAAAAAAAAAAAAAAA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-                    amount_paid = deposit
-                    rem_dep_balance = new_balance - deposit # TO DO save the remaining balance for reference
+        #     if new_balance > 0.0:
+        #         if new_balance < deposit:
+        #             amount_paid = new_balance
+        #             print("GREAAAAAAAAAAAAAAT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        #         else:
+        #             print("NOMAAAAAAAAAAAAAAA>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        #             amount_paid = deposit
+        #             rem_dep_balance = new_balance - deposit # TO DO save the remaining balance for reference
 
-                # payment_obj = PaymentOp("deposit deduction","N/A","N/A","Arrears",None,billing_period,new_balance,amount_paid,tenant_obj.apartment_id,house_obj.id,tenant_id,current_user.id)
-                # payment_obj.save()
-                #################################################################################################
+        #         # payment_obj = PaymentOp("deposit deduction","N/A","N/A","Arrears",None,billing_period,new_balance,amount_paid,tenant_obj.apartment_id,house_obj.id,tenant_id,current_user.id)
+        #         # payment_obj.save()
+        #         #################################################################################################
 
-                running_balance = tenant_obj.balance
-                running_balance-=float(amount_paid)
-                TenantOp.update_balance(tenant_obj,running_balance)
-                # PaymentOp.update_balance(payment_obj,running_balance)
+        #         running_balance = tenant_obj.balance
+        #         running_balance-=float(amount_paid)
+        #         TenantOp.update_balance(tenant_obj,running_balance)
+        #         # PaymentOp.update_balance(payment_obj,running_balance)
 
-                monthly_charges = tenant_obj.monthly_charges
-                specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
-                if specific_charge_obj:
-                    bala = specific_charge_obj.balance
-                    bala-=float(amount_paid)
-                    MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+        #         monthly_charges = tenant_obj.monthly_charges
+        #         specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
+        #         if specific_charge_obj:
+        #             bala = specific_charge_obj.balance
+        #             bala-=float(amount_paid)
+        #             MonthlyChargeOp.update_balance(specific_charge_obj,bala)
 
-                    paid_amount = specific_charge_obj.paid_amount
-                    cumulative_pay = paid_amount + float(amount_paid)
-                    MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
-                    MonthlyChargeOp.update_payment_date(specific_charge_obj,datetime.datetime.now())
+        #             paid_amount = specific_charge_obj.paid_amount
+        #             cumulative_pay = paid_amount + float(amount_paid)
+        #             MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
+        #             MonthlyChargeOp.update_payment_date(specific_charge_obj,datetime.datetime.now())
 
         active_alloc = check_house_occupied(tenant_obj)[2]
 
-        AllocateTenantOp.update_status(active_alloc,False,tenant_obj.balance,vacate_period,current_user.name)
+        AllocateTenantOp.update_status(active_alloc,False,tenant_obj.balance,datetime.datetime.now(),current_user.name)
         TenantOp.update_status(tenant_obj,"Vacated")
 
         msg = f"{tenant_obj} cleared successfully"
@@ -8309,9 +8314,14 @@ class Results(Resource):
 
                 payids = get_obj_ids(detailed_payments_list)
 
-                
+                if crm(current_user):
+                    template = "ajax_tenant_detail2.html"
+                elif erp(current_user):
+                    template = "ajax_tenant_detail_erp.html"
+                else:
+                    template = "ajax_tenant_detail.html"
 
-                return render_template("ajax_tenant_detail.html",prop=prop_obj,houses=house_obj,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
             else:
                 tenant_obj = f'<span class="text-danger">Vacant</span>'

@@ -5560,7 +5560,7 @@ class AddTenant(Resource):
                             checkin = datetime.datetime.now()
                             checkout = datetime.datetime.now()
 
-                            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,user_id,description=None)
+                            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
                             allocate_tenant_obj.save()
                             TenantOp.update_status(tenant_obj,"Resident")
                             if bool_migrate:

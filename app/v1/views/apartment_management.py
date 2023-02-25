@@ -5408,11 +5408,12 @@ class AddTenant(Resource):
                         tenantnatid = str(int(sheet.row_values(row)[4]) if sheet.row_values(row)[4] else "" )
                     except:
                         tenantnatid = ""
-
-                    classtype = sheet.row_values(row)[5]
+                    try:
+                        classtype = sheet.row_values(row)[5]
+                    except:
+                        classtype = ""
                     # rep = sheet.row_values(row)[6]
                     rep = None
-
                         
                     migrate = "True"
 

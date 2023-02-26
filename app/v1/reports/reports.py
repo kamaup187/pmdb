@@ -2818,6 +2818,8 @@ class GuestStatement(Resource):
         selected_month = request.args.get("month")
         target = request.args.get("target")
 
+        shiftstart = request.args.get("shiftstart")
+        shiftend = request.args.get("shiftend")
 
         if not selected_apartment:
 
@@ -2834,15 +2836,22 @@ class GuestStatement(Resource):
                 name=current_user.name))
 
 
-
-        if selected_month:
-            datestring = date_formatter_alt(selected_month)
-            target_period = parse(datestring)
+        if not shiftstart:
+            return "shift not specified"
         else:
-            target_period = datetime.datetime.now()
+            str_start = date_formatter_weekday(shiftstart)
+            timestring = str_start + " " + '10:00'
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_weekday(shiftend)
+            timestring = str_end + " " + '10:00'
+            end = parse(timestring)
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
-        llp = LandlordPaymentOp.fetch_current_llp(apartment_obj.id, target_period.month, target_period.year)
+        llp = None
+
+        # import pdb; pdb.set_trace()
 
         ##################################################################################################
         house_ids = []
@@ -2858,34 +2867,29 @@ class GuestStatement(Resource):
         db.session.expire(apartment_obj)
 
         monthlybills = apartment_obj.monthlybills
+
+        # import pdb; pdb.set_trace()
+        
         ###################################################################################################
         for bill in monthlybills:
-            if bill.month == target_period.month and bill.year == target_period.year:
-                house_ids.append(bill.house_id)
-                """compute subtotals"""
-                # bill_item = LandlordSummaryOp.external_view(bill)
-                bill_item = MonthlyChargeOp.view_erp(bill)
-                detailed_bills.append(bill_item)
+            if bill.invoice_date:
+                if bill.invoice_date > start and bill.invoice_date < end:
+                    house_ids.append(bill.house_id)
+                    """compute subtotals"""
+                    bill_item = MonthlyChargeOp.view_erp(bill)
+                    detailed_bills.append(bill_item)
 
-                if bill.rent_balance:
-                    totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
+                    if bill.rent_balance:
+                        totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
 
-                totalrent += bill.rent if bill.rent else 0.0
-                totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+                    totalrent += bill.rent if bill.rent else 0.0
+                    totalpaid += bill.rent_paid if bill.rent_paid else 0.0
 
-                if bill.rent_due:
-                    totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
+                    if bill.rent_due:
+                        totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
         ###################################################################################################
    
-
-        # vacants = filter_out_occupied_houses(apartment_obj.name)
-        vacants = []
-
-        if apartment_obj.id == 137: #VERY URGENT
-            # paidll = 18500.0
-            paidll = 0.0
-        else:
-            paidll = 0.0
+        paidll = 0.0
 
         bbftotal = (f"{totalbbf:,}")
 
@@ -2898,45 +2902,17 @@ class GuestStatement(Resource):
 
         expense_list = []
 
-        expenses = apartment_obj.expenses
         expenses_amount = 0.0
         remittances = 0.0
         
-
-        exceptions = ["deposit refund", "remittance"]
-
-        for exp in expenses:
-            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
-                expenses_amount += exp.amount
-
-                if exp.expense_type == "deposit_refund":
-                    ename = exp.name + "(Refund)"
-                else:
-                    ename = exp.name
-
-                exp_dict = {
-                    "house":exp.house,
-                    "name":ename,
-                    "amount":exp.amount,
-                }
-                expense_list.append(exp_dict)
-
-            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
-                remittances += exp.amount
-
-
-
-            
         netrent = totalpaid
 
         formatted_netrent = (f"{netrent:,.1f}")
         
-        commission = netrent * apartment_obj.commission * 0.01
+        commission = 0.0
 
-        if apartment_obj.id == 33:
-            loan = 0
-        else:
-            loan = 0
+        loan = 0
+
 
         if apartment_obj.commission:
             commission = netrent * apartment_obj.commission * 0.01
@@ -2946,24 +2922,27 @@ class GuestStatement(Resource):
             commission = apartment_obj.int_commission
             commission_percentage = f"{commission} flat rate"
 
-        debits = commission + expenses_amount + paidll
+        debits = 0.0
 
         formatted_debits = f"{debits:,.1f}"
 
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
 
-        llp_arr = llp.arrears if llp else 0.0 
+        llp_arr =  0.0 
             
-        raw_netpay = netrent - commission - expenses_amount - loan + remittances + llp_arr - paidll
+        raw_netpay = 0.0
 
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)
-        str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} / {target_period.year}"
+        str_day = start.day
+        str_month = get_str_month(start.month)
+        str_year = start.year
 
-        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+        timeline = f"{str_day} / {str_month.upper()} / {str_year}"
+
+        fieldshow_loan = "dispnone"
 
         try:
             ratio = (f"{(totalpaid/totalbill)*100:,.1f} %")
@@ -2978,38 +2957,12 @@ class GuestStatement(Resource):
         totalpaid -= paidll
         paidtotal_alt = (f"{totalpaid:,}")
         
-        template_vars = {
-            "code":apartment_obj.id,
-            "name":selected_apartment,
-            "landlord":"",
-            "ll_bbf":llbal,
-
-            "tnt_bbf":totalbbf,
-            "rent":totalrent,
-            "expected":totalbill,
-            "actual":totalpaid,
-            "tnt_bcf":totalbcf,
-
-            "utilities":0.0,
-            "deposit":0.0,
-
-            "expenses":expenses_amount,
-
-            "commission":commission,
-            "netpay":raw_netpay,
-
-            "remitted":raw_netpay,
-            "ratio":ratio,
-
-            "ll_bcf":0.0,
-            "agent":current_user.name,
-        }
+        template_vars = {}
 
         if target == "remit_data":
             return render_template('ajax_remit_template.html',vars=template_vars)
 
         remits = remittances if remittances else llp_arr
-
 
         return Response(render_template(
             'report_guest_statement.html',
@@ -7227,6 +7180,7 @@ class FetchTenants(Resource):
             tenantlist = tenant_details(tenancy)
             tenantids = get_obj_ids(tenantlist)
             return render_template("ajax_oldtenantlist.html",items=tenantlist,tenantids=tenantids)
+        
         elif target == "new":
             tenancy = newtenantsauto(propid)
             tenantlist = tenant_details(tenancy)

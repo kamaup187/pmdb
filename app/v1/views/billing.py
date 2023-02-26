@@ -1154,13 +1154,19 @@ class EditBill(Resource):
                         running_bal = running_bal + original_amount
                         PermanentTenantOp.update_balance(tenant_obj,running_bal)
 
+                    if bill.house.schedules:
+                        for schedule in bill.house.schedules:
+                            PaymentScheduleOp.delete(schedule)
+
                     MonthlyChargeOp.delete(bill)
                 else:
+
+                    if bill.house.schedules:
+                        for schedule in bill.house.schedules:
+                            PaymentScheduleOp.delete(schedule)
+
                     MonthlyChargeOp.delete(bill)
 
-                if bill.house.schedules:
-                    for schedule in bill.house.schedules:
-                        PaymentScheduleOp.delete(schedule)
 
             elif target == "editarrears":
                 # if bill.apartment.billing_period.month == bill.month: #DISABLED THIS CHECK TO EDIT PREVIOUS BILL ARREARS
@@ -4888,7 +4894,7 @@ class AutoPayment(Resource):
         transid = request.form.get('transid')
         usercode = request.form.get('usercode')
 
-        response = sms.send("AUTO GST DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("AUTO GST DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         userid = UserOp.fetch_user_by_usercode(usercode).id
 
@@ -4909,9 +4915,11 @@ class AutoPayment(Resource):
 
         dict_array.append(dict_obj)
 
-        uploadsjob2 = q.enqueue_call(
-            func=read_payments_excel, args=(dict_array,payperiod,propid,userid,None,), result_ttl=5000
-        )
+        read_payments_excel_alt(dict_array,payperiod,propid,userid,None)
+
+        # uploadsjob2 = q.enqueue_call(
+        #     func=read_payments_excel, args=(dict_array,payperiod,propid,userid,None,), result_ttl=5000
+        # )
 
 class CallBackUrlDenvic(Resource):
     def get(self):

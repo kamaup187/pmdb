@@ -105,6 +105,14 @@ table.dataTable thead th {
     color: #ffa600 !important;
   }
 
+  .text-kodi-faint{
+    color: #014527 !important;
+  }
+
+  .text-red{
+    color: red !important;
+  }  
+
   .bg-danger-alt {
     background-color: #edbebe !important;
     border-color: red !important;
@@ -121,9 +129,15 @@ table.dataTable thead th {
   }
   
   .bg-info-alt {
-    background-color: #d8f2f6aa !important;
-    border-color: rgb(0, 255, 242) !important;
+    background-color: #f0eae5 !important;
+    border-color: rgb(38, 38, 38) !important;
   }
+
+  .bg-white-alt {
+    background-color: #ffffff !important;
+    border-color: rgb(113, 240, 130) !important;
+  }
+  
   
   #hellobar-bar {
     font-family: "Open Sans", sans-serif;

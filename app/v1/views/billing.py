@@ -4924,6 +4924,7 @@ class AutoPayment(Resource):
         # uploadsjob2 = q.enqueue_call(
         #     func=read_payments_excel, args=(dict_array,payperiod,propid,userid,None,), result_ttl=5000
         # )
+        return "/serve/receipt"
 
 class CallBackUrlDenvic(Resource):
     def get(self):

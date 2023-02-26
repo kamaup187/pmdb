@@ -172,6 +172,7 @@
         <section>
             <p style="text-align:center">VILLA PARK GUEST HOUSE</p>
             <p style="text-align:center">BAR & RESTAURANT</p>
+            <p style="text-align:center">Reception: 0791364262</p>
             <table class="bill-details">
                 <tbody>
                     <tr>
@@ -198,22 +199,22 @@
                     <tr>
                         <td>Guest Name</td>
 
-                        <td class="highlight line-dotted">TEST GUEST</td>
+                        <td class="highlight line-dotted">{{guestname}}</td>
                     </tr>
                     <tr>
                         <td>Check In Date:</td>
 
-                        <td class="highlight line-dotted">26-Feb-2023 13:13</td>
+                        <td class="highlight line-dotted">{{checkin}}</td>
                     </tr>
                     <tr>
                         <td>Check Out Date</td>
 
-                        <td class="highlight line-dotted">27-Feb-2023 10:10</td>
+                        <td class="highlight line-dotted">{{checkout}}</td>
                     </tr>
                     <tr>
                         <td>Room Name</td>
 
-                        <td class="highlight line-dotted">F2-27</td>
+                        <td class="highlight line-dotted">{{room}}</td>
                     </tr>
                     <tr>
                         <td>Room Type</td>
@@ -223,12 +224,12 @@
                     <tr>
                         <td>ID NO</td>
 
-                        <td class="highlight line-dotted">23787512</td>
+                        <td class="highlight line-dotted">{{natid}}</td>
                     </tr>
                     <tr>
                         <td>Telephone No</td>
 
-                        <td class="highlight line-dotted">0716674695</td>
+                        <td class="highlight line-dotted">{{tel}}</td>
                     </tr>
                     <tr>
                         <td>Companion</td>
@@ -237,17 +238,17 @@
                     </tr>
                     <tr>
                         <td colspan="1" class="sum-up line">Charged</td>
-                        <td class="line price">1200.00</td>
+                        <td class="line price">{{total}}</td>
                     </tr>
 
                     <tr>
                         <td colspan="1" class="sum-up">Paid</td>
-                        <td class="price">1200.0</td>
+                        <td class="price">{{paid}}</td>
                     </tr>
 
                     <tr>
                         <td colspan="1" class="sum-up">Balance</td>
-                        <td class="total price">0.00</td>
+                        <td class="total price">{{bal}}</td>
                     </tr>
 
                 </tbody>
@@ -255,11 +256,12 @@
         </section>
         <section>
             <p>
-                Checked in by : <span>RUTH</span>
+                Checked in by : <span>{{curr_user}}</span>
             </p>
         </section>
         <footer style="text-align:center" class="line">
             <p>MPESA PAYBILL No: 7180375</p>
+            <span>ACC: Room No.</span>
 
             <p style="text-align:center">
                 Thank you for your visit!

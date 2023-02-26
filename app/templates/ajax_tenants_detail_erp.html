@@ -10,6 +10,9 @@
   <span id="current-reloader" class="dispnone">current</span>
   <a id="download_tenants" href="/download/template/tenant_data" class="dispnone">download</a>
 
+  <a id="receiptpagelink" href="" target="_blank" class="dispnon">Print Receipt</a>
+
+
   <span class="multisave dispnone"></span>
 
   <div class="card mb-2 mt-1">
@@ -939,6 +942,14 @@ $("#downloadtenants").click(function(){
   });
 </script>
 
+<script>
+  $("#activatereceipt").click(function(){ 
+      
+      $("#receiptpagelink")[0].click();
+  
+    });
+</script>
+
 
 <script>
   $("#uploadtenant").on('click',function(){
@@ -1120,6 +1131,8 @@ $("#uploadarrears").on('click',function(){
 });
 </script>
 
+
+
 <script>
   $("#newtenant").click(function () {
     var cb2 = document.getElementById("migrate2");
@@ -1174,6 +1187,9 @@ $("#uploadarrears").on('click',function(){
               },
               success: function (response) {
                 $("#newtenant").html("Completed")
+
+                $("#receiptpagelink").attr('href',response)
+                $("#activatereceipt").click()
 
                 setTimeout(function () {
                   $(".dismissparent").click();

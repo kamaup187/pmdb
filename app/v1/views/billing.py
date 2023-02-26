@@ -3353,6 +3353,10 @@ class ReceivePayment(Resource):
         )
 
 
+class ServeReceipt(Resource):
+    def get(self):
+        return Response(render_template("pos_receipt.html"))
+
 class UpdateBalance(Resource):
     def get(self):
         tenant_id = request.args.get("tenantid")

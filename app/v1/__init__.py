@@ -266,6 +266,7 @@ api.add_resource(CustomCombinedReport,"/customcombined/report")
 
 api.add_resource(RentStatement,"/rent/statement")
 api.add_resource(GuestStatement,"/guest/statement")
+api.add_resource(ServeReceipt,"/serve/receipt")
 
 api.add_resource(DepositStatement,"/deposit/statement")
 api.add_resource(ServiceStatement,"/service/statement")

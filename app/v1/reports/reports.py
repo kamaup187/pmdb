@@ -2868,12 +2868,15 @@ class GuestStatement(Resource):
 
         monthlybills = apartment_obj.monthlybills
 
+        num_rooms = 0
+
         # import pdb; pdb.set_trace()
         
         ###################################################################################################
         for bill in monthlybills:
             if bill.invoice_date:
                 if bill.invoice_date > start and bill.invoice_date < end:
+                    num_rooms += 1
                     house_ids.append(bill.house_id)
                     """compute subtotals"""
                     bill_item = MonthlyChargeOp.view_erp(bill)
@@ -2993,6 +2996,7 @@ class GuestStatement(Resource):
             expenselist=expense_list,
             llbal=llbal,
             paging="portrait",
+            num_rooms = num_rooms,
             props=props,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],

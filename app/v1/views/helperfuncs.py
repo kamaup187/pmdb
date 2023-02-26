@@ -9403,10 +9403,12 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
             house_id = house.id
             result = check_occupancy(house)
             tenant = None
+            tenant_alloc = None
 
 
             if result[0] == "occupied":
                 tenant = result[1]
+                tenant_alloc = check_house_occupied(tenant)[2]
 
             if tenant or house.owner:
                 print("OWNER:",house.owner)
@@ -9422,7 +9424,9 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
                 ptenant_id = None
                 tenant_id = tenant.id
 
-                prev_bill = fetch_tnt_prev_billing_period_bills_alt(month,year,bills,tenant.id)
+                # prev_bill = fetch_tnt_prev_billing_period_bills_alt(month,year,bills,tenant.id)
+
+                prev_bill = None
 
                 if prev_bill:
                     arrears = prev_bill[0].balance
@@ -9584,6 +9588,8 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
                     if bill.month == month and bill.year == year and bill.tenant_id == tenant.id:
                         print("Retrieving current bill for month of :",bill.month,"/",bill.year)
                         c_charge = bill
+
+                c_charge = None
                 
                 if c_charge:
                     print("specific charge found for HOUSE",house)
@@ -9675,6 +9681,7 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
+                    MonthlyChargeOp.update_invoice_date(monthly_charge_obj,tenant_alloc.checkin_date)
 
                     # MonthlyChargeHistoryOp.update_balances(monthly_charge_obj_alt,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     # MonthlyChargeHistoryOp.update_dues(monthly_charge_obj_alt,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)

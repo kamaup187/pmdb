@@ -3094,6 +3094,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.fine_date = date
         db.session.commit()
 
+    def update_invoice_date(self,date):
+        self.invoice_date = date
+        db.session.commit()
+
     def update_payment(self,paid_amount):
         self.paid_amount = paid_amount
         db.session.commit()

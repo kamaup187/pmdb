@@ -980,6 +980,8 @@ class MonthlyCharge(db.Model):
 
     pay_date = db.Column(db.DateTime)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    invoice_date = db.Column(db.DateTime)
+
     fine_status = db.Column(db.String,default="nil")
     fine_date = db.Column(db.Integer)
 

@@ -50,10 +50,26 @@
                         </select>
                       </div>
                     
-                      <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                      <!-- <div class="col-lg-3 form-group mb-2 mr-lg-5">
                         <label class="mb-0">Select month:</label>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div> -->
+
+                      <div class="col-lg-3 form-group input-icons">
+                        <span class="text-danger font-weight-bold">Start shift</span>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-3 form-group input-icons">
+                        <span class="text-danger font-weight-bold">Shift end</span>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                         </div>
                       </div>
@@ -492,13 +508,64 @@
 </script> -->
 
 <script>
-  $("#month").datepicker({ 
+  // $("#month").datepicker({ 
+  //   autoclose: true, 
+  //   todayHighlight: true,
+  //   format: "mm-yyyy",
+  //   startView: "months", 
+  //   minViewMode: "months"
+  // });
+
+
+  var date = new Date();
+
+
+date.setDate(date.getDate());
+
+$("#checkindate").datepicker({
     autoclose: true, 
     todayHighlight: true,
-    format: "mm-yyyy",
-    startView: "months", 
-    minViewMode: "months"
-  });
+    format: "DD, dd-mm-yyyy",
+
+    defaultDate: date,
+    onSelect: function () {
+        selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+    }
+});
+
+$("#checkindate").datepicker("setDate", date);
+
+date.setDate(date.getDate() + 1);
+
+$("#checkoutdate").datepicker({
+    autoclose: true, 
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy",
+
+    defaultDate: date,
+    onSelect: function () {
+        selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+    }
+});
+
+$("#checkoutdate").datepicker("setDate", date);
+
+
+// function checkTimeAlt(i) {
+//   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+//   return i;
+// }
+// function appendTime(){
+//   var now = new Date();
+//   var hr = now.getHours();
+//   var mm = now.getMinutes();
+
+//   hr = checkTimeAlt(hr);
+//   mn = checkTimeAlt(mm);
+
+//   $("#checkintime").val(hr + ":" + mm)
+// }
+// appendTime()
 </script>
 
 

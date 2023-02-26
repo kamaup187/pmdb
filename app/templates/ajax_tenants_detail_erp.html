@@ -36,7 +36,7 @@
         </div>
 
 
-        <!-- <div class="toggleswitch text-info font-weight-bold divbg mb-3">
+        <div class="toggleswitch text-info font-weight-bold divbg mb-3">
           <span>
             <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
             <span class="small desktop-malaysian">Pending</span>
@@ -64,7 +64,7 @@
             </label>
           </span>
 
-        </div> -->
+        </div>
 
         <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand"
               class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span>
@@ -204,7 +204,7 @@
                 <div class="card-body modal-forms">
                   <form autocomplete="off" method="POST" action="">
    
-                    <div class="mt-2 row" id="roomsbed">
+                    <div class="mt-2 pt-5 pb-5 row bg-info-alt center-btn" id="roomsbed">
 
                       loading rooms ...
 
@@ -301,21 +301,45 @@
                       </div>
 
                       <div class="row">
-                        <div class="col-6 form-group input-icons">
+                        <div class="col-4 form-group input-icons">
                           <span class="text-danger font-weight-bold">Check-in</span>
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                           </div>
                         </div>
-                        <div class="col-6 form-group input-icons">
+
+                        <!-- <div class="form-group col-md-6 no-paddin input-icons">
+                          <span class="text-danger">TIME? (optional)</span>
+                          <input class="form-control ph" type="time" id="pay-time" min="00:00" max="24:00">
+                        </div> -->
+
+                        <div class="col-2 form-group input-icons">
+                          <span class="text-danger font-weight-bold hide">time</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input class="form-control ph" type="time" id="checkintime" min="00:00" max="24:00" value="10:00">
+                          </div>
+                        </div>
+
+                        <div class="col-4 form-group input-icons">
                           <span class="text-danger font-weight-bold">Check-out</span>
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkoutdate" class="form-control ph" type="text" placeholder="Select date" readonly />
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                           </div>
                         </div>
+
+                        <div class="col-2 form-group input-icons">
+                          <span class="text-black">Duration</span>
+                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
                       </div>
+
+
+
+
+
+
 
                       <div class="row">
                         <div class="col-4 form-group input-icons" id="dynamic_rate">
@@ -842,7 +866,7 @@ $("#reporttoggle3").on('change',function(){
 
 </script>
 
-<script>
+<!-- <script>
 $("#checkindate").datepicker({ 
   autoclose: true, 
   todayHighlight: true,
@@ -850,7 +874,8 @@ $("#checkindate").datepicker({
 //   startView: "months", 
 //   minViewMode: "months"
 });
-</script>
+
+</script> -->
 
 <script>
 $("#checkindate_alt").datepicker({ 
@@ -1118,6 +1143,7 @@ $("#uploadarrears").on('click',function(){
         migrate: migrate2,
         arr: $("#new_arr").val(),
         checkin: $("#checkindate").val(),
+        checkin_time:$("#checkintime").val(),
         checkout: $("#checkoutdate").val()
       },
       success: function (response) {
@@ -1285,6 +1311,63 @@ $("#addTenantModal").on('shown.bs.modal', function(){
   //     $("#select_house2").html(response);
   //   }
   // });
+
+
+  // $("#checkindate").datepicker( "setDate" , "7/11/2011" );
+  // $("#checkindate").datepicker({dateFormat: "DD, mm-dd-yyyy", defaultDate: new Date() });
+  // $("#checkindate").datepicker("setDate", "-0d");
+
+
+    var date = new Date();
+
+
+    date.setDate(date.getDate());
+
+    $("#checkindate").datepicker({
+        autoclose: true, 
+        todayHighlight: true,
+        format: "DD, dd-mm-yyyy",
+
+        defaultDate: date,
+        onSelect: function () {
+            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+        }
+    });
+
+    $("#checkindate").datepicker("setDate", date);
+    
+    date.setDate(date.getDate() + 1);
+
+    $("#checkoutdate").datepicker({
+        autoclose: true, 
+        todayHighlight: true,
+        format: "DD, dd-mm-yyyy",
+
+        defaultDate: date,
+        onSelect: function () {
+            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
+        }
+    });
+
+    $("#checkoutdate").datepicker("setDate", date);
+
+
+    function checkTimeAlt(i) {
+      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+      return i;
+    }
+    function appendTime(){
+      var now = new Date();
+      var hr = now.getHours();
+      var mm = now.getMinutes();
+
+      hr = checkTimeAlt(hr);
+      mn = checkTimeAlt(mm);
+
+      $("#checkintime").val(hr + ":" + mm)
+    }
+    appendTime()
+                              
 
 
   $("#dynamic_rate").text("fetching...");

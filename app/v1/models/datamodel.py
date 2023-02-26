@@ -806,9 +806,6 @@ class Tenant(db.Model):
     accumulated_fine = db.Column(db.Float,default=0)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    invoiced = db.Column(db.Boolean,default=False)
-    agreed_rates = db.Column(db.Float,default=0)
-
     accepted_terms = db.Column(db.Boolean,default=False)
     status = db.Column(db.String,default="Booked")
     residency = db.Column(db.String,default="N/A")
@@ -891,6 +888,10 @@ class Occupancy(db.Model):
     checkin_date = db.Column(db.DateTime)
     checkout_date = db.Column(db.DateTime)
     days_extended = db.Column(db.Integer,default=0)
+
+    invoiced = db.Column(db.Boolean,default=False)
+
+    agreed_rates = db.Column(db.Float,default=0)
 
     vacate_date = db.Column(db.DateTime)
     vacate_period = db.Column(db.DateTime)

@@ -1,7 +1,19 @@
 {% for house in houses %}
+
 <div class="col-md-2 mb-2">
-  <button class="btn {{house.color}} {{house.textcolor}} font-weight-bold" type="button" id="{{house.id}}"><i class="{{house.icon}} mr-2"></i><span class="">{{house.name}}</span></button>
+  <button class="btn bg-white-alt text-black font-weight-bold" type="button" id="{{house.id}}">
+    <div>
+      <i class="fa-2x {{house.textcolor}} {{house.icon}} mr-2"></i>
+    </div>
+    <div>
+      {{house.name}}
+    </div>
+    <div>
+      <input type="text" id="vac{{house.id}}" class="dispnone" value="{{house.name}}">
+    </div>
+  </button>
 </div>
+
 {% endfor %}
 
 <button type="button" class="dispnone" id="raiseAllocModal" data-toggle="modal" data-target="#addTenantModal"></button>
@@ -17,7 +29,7 @@
 
       if( isNaN(parseInt(item)) ){
         if(item.startsWith("vac")){
-          $("#vac_house_identifier").html($(this).text())
+          $("#vac_house_identifier").text($("#vac"+item).val())
           $("#raiseAllocModal").click()
         }
         else if(item.startsWith("hse")){

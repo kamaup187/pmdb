@@ -5182,20 +5182,37 @@ class AddTenant(Resource):
             house_num = request.form.get('house')#auto populated dropdown
 
             raw_checkin = request.form.get('checkin')
+            raw_checkin_time = request.form.get('checkin_time')
             raw_checkout = request.form.get('checkout')
 
             migrate = request.form.get('migrate')#checkbox
 
             created_by =current_user.id
 
+
             if not raw_checkin and not raw_checkout:
                 return "dates not specified"
             else:
                 str_checkin = date_formatter_weekday(raw_checkin)
-                checkin = parse(str_checkin)
 
+                if raw_checkin_time:
+                    timestring = str_checkin + " " + raw_checkin_time
+                    checkin = parse(timestring)
+                else:
+                    checkin = parse(str_checkin)
+                                
                 str_checkout = date_formatter_weekday(raw_checkout)
-                checkout = parse(str_checkout)
+                timestring = str_checkout + " " + '10:00'
+                checkout = parse(timestring)
+
+            # if not raw_checkin and not raw_checkout:
+            #     return "dates not specified"
+            # else:
+            #     str_checkin = date_formatter_weekday(raw_checkin)
+            #     checkin = parse(str_checkin)
+
+            #     str_checkout = date_formatter_weekday(raw_checkout)
+            #     checkout = parse(str_checkout)
 
 
             try:
@@ -5239,9 +5256,6 @@ class AddTenant(Resource):
             tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,randid,apartment_id,created_by)
             tenant_obj.save()
 
-            if float_rates:
-                TenantOp.update_rates(tenant_obj,float_rates)
-
             if house_num:
                 house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
 
@@ -5261,9 +5275,14 @@ class AddTenant(Resource):
 
                 allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
                 allocate_tenant_obj.save()
+
+
+                if float_rates:
+                    AllocateTenantOp.update_agreed_rates(allocate_tenant_obj,float_rates)
+
                 TenantOp.update_status(tenant_obj,"Resident")
                 if bool_migrate:
-                    TenantOp.update_residency(tenant_obj,"Old")
+                    TenantOp.update_residency(tenant_obj,"New")
                 else:
                     TenantOp.update_residency(tenant_obj,"Old")
 
@@ -6394,23 +6413,25 @@ class AllocateTenants(Resource):
             for item in house_list:
                 result = check_occupancy(item)
                 if result[0] == "empty":
-                    color = "bg-success-alt"
-                    textcolor = "text-success"
+                    # color = "bg-success-alt"
+                    textcolor = "text-warning"
                     itemid = "vac"+ str(item.id)
                     icon = "fas fa-house-user"
                 else:
-                    color = "bg-warning-alt"
-                    textcolor = "text-kodi-alt"
+                    # color = "bg-warning-alt"
+                    textcolor = "text-brown-alt"
                     itemid = "hse"+ str(item.id)
                     icon = "fas fa-user-tie"
+
                     result2 = check_house_occupied(result[1])
                     if result2[2].checkout_date < datetime.datetime.now():
-                        color = "bg-danger-alt"
-                        textcolor = "text-danger"
+                        # color = "bg-danger-alt"
+                        icon = "fas fa-walking"
+                        textcolor = "text-red"
 
                 dict_obj = {
                     "name": item.name,
-                    "color":color,
+                    # "color":color,
                     "textcolor":textcolor,
                     "icon":icon,
                     "id":itemid
@@ -6429,6 +6450,26 @@ class AllocateTenants(Resource):
 
         if target == "tenant name":
             return tenant_obj.name
+
+
+        if target == "extend":
+            pass
+
+            # print("heeeeeeyyyyyytttttt",raw_checkout)
+
+            # if not raw_checkout:
+            #     return "dates not specified"
+            # else:
+            #     str_checkout = date_formatter_slash(raw_checkout)
+            #     checkout = parse(str_checkout)
+
+            # alloc = check_house_occupied(tenant_obj)[2]
+
+            # days = (checkout - alloc.checkout_date).days
+
+            # AllocateTenantOp.update_checkout(alloc,checkout,days)
+
+            # return '<span class="text-success">success</span>'
 
         #################################################################################
 

@@ -2572,13 +2572,24 @@ class TenantOp(Tenant,Base):
         else:
             date = self.date
 
-        return date.strftime("%d/%b/%y")
+        time_with_s =  f'{date.strftime("%d/%b/%y")} {date.strftime("%X")}'
+
+        print("check this out",datetime.datetime.now())
+
+        return time_with_s
 
     def check_out_date(self):
         if self.house_allocated:
-            return self.house_allocated[0].checkout_date.strftime("%d/%b/%y") if self.house_allocated[0].checkout_date else "-"
+            date = self.house_allocated[0].checkout_date if self.house_allocated[0].checkout_date else ""
         else:
-            return "-"
+            date = ""
+        
+        if date:
+            time_with_s = f'{date.strftime("%d/%b/%y")} {date.strftime("%X")}'
+        else:
+            time_with_s = "--"
+
+        return time_with_s
 
     def checkin_date(self):
         if self.house_allocated:
@@ -2774,6 +2785,20 @@ class AllocateTenantOp(Occupancy,Base):
         self.vacate_period = period
         self.checkout_balance = balance
         self.cleared_by = cleared_by
+        db.session.commit()
+
+    def update_agreed_rates(self, agreed_rates):
+        self.agreed_rates = agreed_rates
+
+        db.session.commit()
+
+    def update_days(self,days):
+        self.days_extended = days
+
+        db.session.commit()
+
+    def update_invoice_status(self,status):
+        self.invoiced = status
         db.session.commit()
 
     def view(self):
@@ -3770,6 +3795,16 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'ratio':f"{(self.paid_amount/self.total_bill*100):,.1f} %" if self.paid_amount else "0 %"
         }
 
+    def view_erp(self):
+        return {
+            'id':self.id,
+            'house':self.house.name,
+            'tenant':self.tenant.name,
+            'checkin':TenantOp.check_in_date(self.tenant),
+            'checkout':TenantOp.check_out_date(self.tenant),
+            'price':MonthlyChargeOp.fig_format(self.total_bill),
+            'paid':MonthlyChargeOp.fig_format(self.paid_amount),
+        }
 
 class PaymentScheduleOp(PaymentSchedule,Base):
     def __init__(self,name,arrears,amount,total,rbal,date,apartment_id,house_id,ptenant_id):

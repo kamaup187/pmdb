@@ -199,22 +199,22 @@
                     <tr>
                         <td>Guest Name</td>
 
-                        <td class="highlight line-dotted">{{guestname}}</td>
+                        <td class="highlight line-dotted">{{bill.tenant.name}}</td>
                     </tr>
                     <tr>
                         <td>Check In Date:</td>
 
-                        <td class="highlight line-dotted">{{checkin}}</td>
+                        <td class="highlight line-dotted">{{alloc.checkin_date}}</td>
                     </tr>
                     <tr>
                         <td>Check Out Date</td>
 
-                        <td class="highlight line-dotted">{{checkout}}</td>
+                        <td class="highlight line-dotted">{{alloc.checkout_date}}</td>
                     </tr>
                     <tr>
                         <td>Room Name</td>
 
-                        <td class="highlight line-dotted">{{room}}</td>
+                        <td class="highlight line-dotted">{{bill.house.name}}</td>
                     </tr>
                     <tr>
                         <td>Room Type</td>
@@ -224,12 +224,12 @@
                     <tr>
                         <td>ID NO</td>
 
-                        <td class="highlight line-dotted">{{natid}}</td>
+                        <td class="highlight line-dotted">{{bill.tenant.national_id}}</td>
                     </tr>
                     <tr>
                         <td>Telephone No</td>
 
-                        <td class="highlight line-dotted">{{tel}}</td>
+                        <td class="highlight line-dotted">{{bill.tenant.phone}}</td>
                     </tr>
                     <tr>
                         <td>Companion</td>
@@ -238,17 +238,17 @@
                     </tr>
                     <tr>
                         <td colspan="1" class="sum-up line">Charged</td>
-                        <td class="line price">{{total}}</td>
+                        <td class="line price">{{bill.total_bill}}</td>
                     </tr>
 
                     <tr>
                         <td colspan="1" class="sum-up">Paid</td>
-                        <td class="price">{{paid}}</td>
+                        <td class="price">{{bill.paid_amount}}</td>
                     </tr>
 
                     <tr>
                         <td colspan="1" class="sum-up">Balance</td>
-                        <td class="total price">{{bal}}</td>
+                        <td class="total price">{{bill.balance}}</td>
                     </tr>
 
                 </tbody>
@@ -270,5 +270,9 @@
 
     </div>
 </body>
+
+<script type="text/javascript">
+    window.onload = function() { window.print(); }
+</script>
 
 </html>

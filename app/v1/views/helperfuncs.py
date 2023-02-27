@@ -7454,6 +7454,11 @@ def read_payments_excel_alt(dict_array,payperiod,apartment_id,userid,cbid):
             func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
         )
 
+        if bill:
+            return bill.id
+        else:
+            return None
+
 def run_update(houseids,apartment_id,user_id):
     from app import create_app
     app = create_app()

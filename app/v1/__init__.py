@@ -266,7 +266,6 @@ api.add_resource(CustomCombinedReport,"/customcombined/report")
 
 api.add_resource(RentStatement,"/rent/statement")
 api.add_resource(GuestStatement,"/guest/statement")
-api.add_resource(ServeReceipt,"/serve/receipt")
 
 api.add_resource(DepositStatement,"/deposit/statement")
 api.add_resource(ServiceStatement,"/service/statement")
@@ -341,6 +340,10 @@ api.add_resource(UserActivation,"/user/<string:ri>")
 api.add_resource(SelfPasswordUpdate,"/passwordupdate/<string:ri>")
 
 api.add_resource(DownloadReceipt,"/download/receipt/<string:ri>")
+api.add_resource(ServeReceipt,"/serve/receipt")
+
+api.add_resource(PrintReceipt,"/print/receipt/<string:ri>")
+
 api.add_resource(DownloadInvoice,"/download/invoice/<string:ri>")
 api.add_resource(DeleteReceipt,"/del/r/prop/<string:propid>")
 

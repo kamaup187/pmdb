@@ -3356,6 +3356,26 @@ class ReceivePayment(Resource):
 class ServeReceipt(Resource):
     def get(self):
         return Response(render_template("pos_receipt.html"))
+    
+class PrintReceipt(Resource):
+    def get(self,ri):
+        # ri = request.args.get('ri')
+
+        bill_id = get_identifier(ri)
+
+        bill = MonthlyChargeOp.fetch_specific_bill(bill_id)
+
+        # import pdb; pdb.set_trace()
+
+        if bill:
+            tenant_obj = bill.tenant
+            result = check_house_occupied(tenant_obj)
+            if result[0] == "Resident":
+                alloc = result[2]
+                return Response(render_template("pos_receipt.html",bill=bill,alloc=alloc,curr_user=current_user))
+            return ""
+        else:
+            return ""
 
 class UpdateBalance(Resource):
     def get(self):
@@ -4890,7 +4910,6 @@ class AutoPayment(Resource):
     def get(self):
         pass
     def post(self):
-        #parse for json
 
         prop_id = request.form.get('propid')
         house = request.form.get('house')
@@ -4919,12 +4938,9 @@ class AutoPayment(Resource):
 
         dict_array.append(dict_obj)
 
-        read_payments_excel_alt(dict_array,payperiod,propid,userid,None)
+        bill_id = read_payments_excel_alt(dict_array,payperiod,propid,userid,None)
 
-        # uploadsjob2 = q.enqueue_call(
-        #     func=read_payments_excel, args=(dict_array,payperiod,propid,userid,None,), result_ttl=5000
-        # )
-        return "/serve/receipt"
+        return f"/print/receipt/{bill_id}"
 
 class CallBackUrlDenvic(Resource):
     def get(self):

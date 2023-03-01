@@ -2454,7 +2454,7 @@ def fetch_all_apartments_by_user(current_user):
             [actual_props.append(prop) for prop in props if prop.property_type == "Guest"]
         else:
             [actual_props.append(prop) for prop in props if prop.property_type != "Guest"]
-            print("nichuuuuuuu korotwek",actual_props)
+            # print("nichuuuuuuu korotwek",actual_props)
 
         return actual_props
     else:

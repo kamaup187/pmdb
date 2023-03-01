@@ -976,6 +976,7 @@ class MonthlyCharge(db.Model):
     arrears = db.Column(db.Float,default=0)
     total_bill = db.Column(db.Float,default=0)
     paid_amount = db.Column(db.Float,default=0)
+    paidll = db.Column(db.Float,default=0)
     balance = db.Column(db.Float,default=0)
 
     pay_date = db.Column(db.DateTime)

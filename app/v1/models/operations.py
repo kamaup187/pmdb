@@ -3090,6 +3090,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.fine_status = status
         db.session.commit()
 
+    def update_paidll(self,amount):
+        self.paidll = amount
+        db.session.commit()
+
     def update_fine_date(self,date):
         self.fine_date = date
         db.session.commit()

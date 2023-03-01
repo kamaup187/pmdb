@@ -1531,6 +1531,13 @@
     // $('#paybtn_alt').attr('disabled', 'disabled')
     $('#paybtn_alt').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
 
+    var cbx = document.getElementById("paidll");
+    if (cbx.checked){
+      var paidll = "True";
+    }else{
+      var paidll = "False";
+    }
+
     var cb = document.getElementById("notifysms");
     if (cb.checked){
       var notifysms = "True";
@@ -1558,6 +1565,7 @@
                 bank:$("input[name=bank]:checked").val(),
                 sms:notifysms,
                 email:notifyemail,
+                paidll:paidll,
                 // month:$("input[name=paytype]:checked").val(),
                 payperiod:$("#billdatepicker").val(),
                 date:$("#pay-date").val(),

@@ -2550,9 +2550,11 @@ class ReceivePayment(Resource):
 
         textsms = request.form.get("sms")
         email = request.form.get("email")
+        paidll = request.form.get("paidll")
 
         sms_bool = get_bool(textsms)
         email_bool = get_bool(email)
+        paidll_bool = get_bool(paidll)
 
         if payperiod:
             pay_period = date_formatter_alt(payperiod)
@@ -3039,6 +3041,11 @@ class ReceivePayment(Resource):
             
 
             if specific_charge_obj:
+
+                if paidll_bool:
+                    curr_paidll = specific_charge_obj.paidll if specific_charge_obj.paidll else 0.0
+                    update_paidll = curr_paidll + valid_amount
+                    MonthlyChargeOp.update_paidll(specific_charge_obj,update_paidll)
 
                 db.session.expire(specific_charge_obj)
                 bala = specific_charge_obj.balance

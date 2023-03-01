@@ -2596,6 +2596,8 @@ class RentStatement(Resource):
         totalpaid = 0.0
         totalbcf = 0.0
 
+        paidll = 0.0
+
         ###################################################################################################
         db.session.expire(apartment_obj)
 
@@ -2608,6 +2610,9 @@ class RentStatement(Resource):
                 # bill_item = LandlordSummaryOp.external_view(bill)
                 bill_item = MonthlyChargeOp.external_view(bill)
                 detailed_bills.append(bill_item)
+
+                if bill.paidll:
+                    paidll += bill.paidll
 
                 if bill.rent_balance:
                     totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
@@ -2641,11 +2646,6 @@ class RentStatement(Resource):
             }
             detailed_bills.append(new_item)
 
-        if apartment_obj.id == 137: #VERY URGENT
-            # paidll = 18500.0
-            paidll = 0.0
-        else:
-            paidll = 0.0
 
         bbftotal = (f"{totalbbf:,}")
 

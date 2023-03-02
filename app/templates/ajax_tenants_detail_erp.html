@@ -233,7 +233,7 @@
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify">Guest onboarding form </span>
+            <span class="mr-3 smallify">Guest onboarding form >> <span id="target_house_identifier"></span> @ <span id="curr_rate"></span> </span>
             <div>
               <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
@@ -249,6 +249,38 @@
                   <form autocomplete="off" method="POST" action="">
    
                     <div class="mt-2">
+
+
+                      <div class="row">
+                        <div class="col-4 form-group">
+                          <span class="text-danger font-weight-bold">Check-in</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
+                          </div>
+                        </div>
+
+                        <div class="col-2 form-group">
+                          <span class="text-danger font-weight-bold hide">time</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input class="form-control ph" type="time" id="checkintime" min="00:00" max="24:00" value="10:00">
+                          </div>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-danger font-weight-bold">Check-out</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkoutdate" class="form-control ph" type="text" placeholder="Select date" readonly />
+                          </div>
+                        </div>
+
+                        <div class="col-2 form-group">
+                          <span class="text-danger font-weight-bold hide">time</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input class="form-control ph" type="time" id="checkouttime" min="00:00" max="24:00" value="10:00" readonly>
+                          </div>
+                        </div>
+                      </div>
+
 
                       <div class="row">
                         <div class="col-4 form-group">
@@ -266,15 +298,6 @@
                             <input id="oname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
                       </div>
-
-                      <div class="form-group no-paddin input-icons dispnone">
-                        <span>Select unit to allocate <span class="text-primary small">(recommended)</span></span>
-                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
-                          <option disabled selected value> loading... </option>
-                        </select>
-                        <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
-                      </div>
-
 
                       <div class="row">
                         <div class="col-4 form-group">
@@ -298,21 +321,28 @@
 
                       <div class="row">
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Nationality</span>
-                            <input id="new_nat" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                          <span>Nationality</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_nat" >
+                            <option selected value="natid"> Kenyan </option>
+                            <option value="somali">Somali</option>
+                            <option value="ethiopian">Ethiopian</option>
+                            <option value="ugandan">Ugandan</option>
+                            <option value="tanzanian">Tanzanian</option>
+                            <option value="nigerian">Nigerian</option>
+                            <option value="indian">Indian</option>
+                          </select>
                         </div>
 
                         <div class="col-4 form-group">
                           <span>Identification document</span>
                           <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_idtype" >
-                            <option disabled selected value> --select-- </option>
-                            <option value="natid"> National Id card </option>
+                            <option selected value="natid"> National Id card </option>
                             <option value="passport"> Passport card</option>
                           </select>
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black">Id number</span>
+                          <span class="text-black font-weight-bold">Card number</span>
                             <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
                       </div>
@@ -345,43 +375,30 @@
 
 
                       <div class="row">
-                        <div class="col-4 form-group">
-                          <span class="text-danger font-weight-bold">Check-in</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                          </div>
-                        </div>
-
-                        <div class="col-2 form-group">
-                          <span class="text-danger font-weight-bold hide">time</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input class="form-control ph" type="time" id="checkintime" min="00:00" max="24:00" value="10:00">
-                          </div>
-                        </div>
-
-                        <div class="col-4 form-group">
-                          <span class="text-danger font-weight-bold">Check-out</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="checkoutdate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                          </div>
-                        </div>
-
-                        <div class="col-2 form-group">
-                          <span class="text-danger font-weight-bold hide">time</span>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input class="form-control ph" type="time" id="checkouttime" min="00:00" max="24:00" value="10:00" readonly>
-                          </div>
-                        </div>
-
-                        <!-- <div class="col-2 form-group input-icons">
-                          <span class="text-black">Duration</span>
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black">Days</span>
                             <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                        </div> -->
+                        </div>
+                        
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black">Total amount</span>
 
+                          <input type="checkbox" id="adjust_total"/>
+                          <label for="adjust_total">Adjust?</label>
+
+                            <input id="default_total" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black font-weight-bold">Paid amount</span>
+                            <input id="default_paid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
                       </div>
 
 
-                      <div class="row">
+                      <!-- <div class="row">
                         <div class="col-4 form-group input-icons">
                           <span class="text-black">Days</span>
                             <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
@@ -398,7 +415,7 @@
                             <input id="new_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
-                      </div>
+                      </div> -->
 
 
 
@@ -413,12 +430,14 @@
                         </div>
 
                         <div class="col-4 form-group input-icons" id="">
-                          <span class="text-black">Total (shs)</span>
+                          <span class="text-black">New Total (shs)</span>
+                          <input type="checkbox" id="rever_total"/>
+                          <label for="revert_total">Revert?</label>
                             <input id="total_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
                         <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">Paid (shs)</span>
+                          <span class="text-black font-weight-bold">New Paid (shs)</span>
                             <input id="paid_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                         </div>
                       </div>
@@ -427,7 +446,7 @@
                     </div>
                   
                     <div class="divbg center-btn">
-                      <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                      <button id="newtenant" type="button" class="btn-secondary borderless text-white">Submit and invoice</button>
                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                     </div>
                     

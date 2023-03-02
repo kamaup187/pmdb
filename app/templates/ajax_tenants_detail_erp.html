@@ -250,10 +250,21 @@
    
                     <div class="mt-2">
 
-                      <div class="form-group input-icons">
-                        <span>Guest name<span class="text-danger small">(mandatory)</span></span>
-                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      <div class="row">
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">First name</span>
+                            <input id="fname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">Last name</span>
+                            <input id="lname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black">Other</span>
+                            <input id="oname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
                       </div>
 
                       <div class="form-group no-paddin input-icons dispnone">
@@ -264,7 +275,50 @@
                         <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
                       </div>
 
-                      <div class="form-group input-icons">
+
+                      <div class="row">
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">Mobile</span>
+                            <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">Email</span>
+                            <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 fancy-checkbox-group form-contro mb- divjust">
+                          <div>
+                            <input type="checkbox" id="companion"/>
+                            <label for="companion">Companion?</label>
+                          </div>       
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">Nationality</span>
+                            <input id="new_nat" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span>Identification document</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_idtype" >
+                            <option disabled selected value> --select-- </option>
+                            <option value="natid"> National Id card </option>
+                            <option value="passport"> Passport card</option>
+                          </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black">Id number</span>
+                            <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+                      </div>
+
+
+                      <!-- <div class="form-group input-icons">
                         <span>Guest mobile number <span class="text-primary small">(recommended)</span></span>
                           <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
@@ -280,7 +334,7 @@
                         <span>National id number <span class="text-primary small">(optional)</span></span>
                           <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                      </div>
+                      </div> -->
 
                       <div class="fancy-checkbox-group form-control mb-4 divjust dispnone">
                         <div>
@@ -289,52 +343,60 @@
                         </div>       
                       </div>
 
-                      <div class="row">
-                        <div class="col-6 form-group input-icons" id="dynamic_rate">
-                          <span class="text-black">Current rates</span>
-                            <input id="curr_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                        </div>
-
-                        <div class="col-6 form-group input-icons">
-                          <span class="text-black font-weight-bold">Agreed rate</span>
-                            <input id="new_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                        </div>
-                      </div>
 
                       <div class="row">
-                        <div class="col-4 form-group input-icons">
+                        <div class="col-4 form-group">
                           <span class="text-danger font-weight-bold">Check-in</span>
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkindate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                           </div>
                         </div>
 
-                        <!-- <div class="form-group col-md-6 no-paddin input-icons">
-                          <span class="text-danger">TIME? (optional)</span>
-                          <input class="form-control ph" type="time" id="pay-time" min="00:00" max="24:00">
-                        </div> -->
-
-                        <div class="col-2 form-group input-icons">
+                        <div class="col-2 form-group">
                           <span class="text-danger font-weight-bold hide">time</span>
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input class="form-control ph" type="time" id="checkintime" min="00:00" max="24:00" value="10:00">
                           </div>
                         </div>
 
-                        <div class="col-4 form-group input-icons">
+                        <div class="col-4 form-group">
                           <span class="text-danger font-weight-bold">Check-out</span>
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkoutdate" class="form-control ph" type="text" placeholder="Select date" readonly />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                           </div>
                         </div>
 
-                        <div class="col-2 form-group input-icons">
+                        <div class="col-2 form-group">
+                          <span class="text-danger font-weight-bold hide">time</span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input class="form-control ph" type="time" id="checkouttime" min="00:00" max="24:00" value="10:00" readonly>
+                          </div>
+                        </div>
+
+                        <!-- <div class="col-2 form-group input-icons">
                           <span class="text-black">Duration</span>
                             <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div> -->
+
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black">Days</span>
+                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+                        
+                        <div class="col-4 form-group input-icons" id="dynamic_rate">
+                          <span class="text-black">Current rates</span>
+                            <input id="curr_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black font-weight-bold">Agreed rate</span>
+                            <input id="new_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
                       </div>
 
@@ -345,7 +407,12 @@
 
 
                       <div class="row">
-                        <div class="col-4 form-group input-icons" id="dynamic_rate">
+                        <div class="col-4 form-group input-icons">
+                          <span class="text-black font-weight-bold">Authorised by</span>
+                            <input id="transid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                        </div>
+
+                        <div class="col-4 form-group input-icons" id="">
                           <span class="text-black">Total (shs)</span>
                             <input id="total_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
@@ -353,11 +420,6 @@
                         <div class="col-4 form-group input-icons">
                           <span class="text-black font-weight-bold">Paid (shs)</span>
                             <input id="paid_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
-                        </div>
-
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">Ref No.</span>
-                            <input id="transid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                         </div>
                       </div>
 
@@ -914,7 +976,7 @@ $("#checkoutdate_alt").datepicker({
 <script>
   $(document).ready(function(){
     $("#addTenantModal").on('shown.bs.modal', function(){
-      $(this).find('#new_name').focus();
+      $(this).find('#fname_erp').focus();
     });
   });
 </script>

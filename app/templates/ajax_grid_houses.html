@@ -30,6 +30,8 @@
       if( isNaN(parseInt(item)) ){
         if(item.startsWith("vac")){
           $("#vac_house_identifier").text($("#vac"+item).val())
+          $("#target_house_identifier").text($("#vac"+item).val())
+
           $("#raiseAllocModal").click()
         }
         else if(item.startsWith("hse")){

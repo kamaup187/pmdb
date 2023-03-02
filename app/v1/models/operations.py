@@ -2302,7 +2302,10 @@ class PermanentTenantOp(PermanentTenant,Base):
             bill = None
 
         if bill:
-            quotient = bill.paid_amount / bill.total_bill
+            try:
+                quotient = bill.paid_amount / bill.total_bill
+            except:
+                quotient = 0
         else:
             quotient = 0
         

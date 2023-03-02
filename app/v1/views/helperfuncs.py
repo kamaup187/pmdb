@@ -8089,12 +8089,14 @@ def rent_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
                     import math
                     days = math.ceil(hours / 24)
 
+                    days = tenant_alloc.days
+
                     print(days)
                     print("#############################################")
                     # import pdb; pdb.set_trace()
                     # rent_charge = tenant_alloc.agreed_rates * (tenant_alloc.checkout_date - tenant_alloc.checkin_date).days
-                    if tenant_alloc.agreed_rates:
-                        rent_charge =tenant_alloc.agreed_rates * days
+                    if tenant_alloc.agreed_rates != None:
+                        rent_charge = tenant_alloc.agreed_rates
                     else:
                         rent_charge = house.housecode.rentrate * days
 

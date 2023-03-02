@@ -4921,6 +4921,8 @@ class AutoPayment(Resource):
         prop_id = request.form.get('propid')
         house = request.form.get('house')
         amount = request.form.get('amount')
+        amount2 = request.form.get('amount2')
+
         transid = request.form.get('transid')
         usercode = request.form.get('usercode')
 
@@ -4934,11 +4936,16 @@ class AutoPayment(Resource):
 
         dict_array = []
 
+        if amount2 == "none" or amount2 == None or amount2 == "":
+            amnt = amount
+        else:
+            amnt = amount
+
         dict_obj = {
         "housename":house,
         "amount":amount,
         "date":"",
-        "ref":transid,
+        "ref":"",
         "desc":"",
         "comment":""
         }

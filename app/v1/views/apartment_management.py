@@ -4499,7 +4499,8 @@ class CreateHouse(Resource):
             house_obj = get_specific_house_obj(apartment_id,house_name)
             
             rates = house_obj.housecode.rentrate
-            return render_template("ajax_unit_rate.html",rates=rates)
+            # return render_template("ajax_unit_rate.html",rates=rates)
+            return rates
 
     @login_required
     def post(self):
@@ -5179,6 +5180,7 @@ class AddTenant(Resource):
             email = request.form.get('email')
             existing_arrears = request.form.get('arr')
             new_rates = request.form.get('rates')
+            days = request.form.get('days')
             house_num = request.form.get('house')#auto populated dropdown
 
             raw_checkin = request.form.get('checkin')
@@ -5225,6 +5227,11 @@ class AddTenant(Resource):
             except:
                 float_rates=0.0
 
+            try:
+                int_days = int(days)
+            except:
+                int_days = 0
+
             print(float_rates,"hey rates")
 
             if not migrate:
@@ -5253,6 +5260,15 @@ class AddTenant(Resource):
 
             randid = random_generator()
 
+            if not name:
+                fname = request.form.get('fname')
+                lname = request.form.get('lname')
+
+                try:
+                    name = fname + lname
+                except:
+                    name = fname
+
             tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,randid,apartment_id,created_by)
             tenant_obj.save()
 
@@ -5279,6 +5295,9 @@ class AddTenant(Resource):
 
                 if float_rates:
                     AllocateTenantOp.update_agreed_rates(allocate_tenant_obj,float_rates)
+
+                if int_days:
+                    AllocateTenantOp.update_accomodation_days(allocate_tenant_obj,int_days)
 
                 TenantOp.update_status(tenant_obj,"Resident")
                 if bool_migrate:

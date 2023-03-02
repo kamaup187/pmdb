@@ -891,7 +891,8 @@ class Occupancy(db.Model):
 
     invoiced = db.Column(db.Boolean,default=False)
 
-    agreed_rates = db.Column(db.Float,default=0)
+    agreed_rates = db.Column(db.Float)
+    days = db.Column(db.Float,default=0)
 
     vacate_date = db.Column(db.DateTime)
     vacate_period = db.Column(db.DateTime)

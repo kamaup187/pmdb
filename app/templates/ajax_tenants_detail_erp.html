@@ -233,7 +233,7 @@
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify">Guest onboarding form >> <span id="target_house_identifier"></span> @ <span id="curr_rate"></span> </span>
+            <span class="mr-3 smallify">Guest onboarding form >> <span class=text-black><span id="target_house_identifier"></span> @ Kshs<span id="curr_rate"></span></span></span>
             <div>
               <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
               <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
@@ -284,37 +284,41 @@
 
                       <div class="row">
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">First name</span>
+                          <span class="text-black font-weight-bold">First name <span class="text-danger">*</span></span>
                             <input id="fname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Last name</span>
+                          <span class="text-black">Last name</span>
                             <input id="lname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black">Other</span>
-                            <input id="oname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                          <span>Gender:</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_gender" >
+                            <option selected value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Mobile</span>
+                          <span class="text-black font-weight-bold">Mobile <span class="text-danger">*</span></span>
                             <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Email</span>
+                          <span class="text-black">Email</span>
                             <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
-                        <div class="col-4 fancy-checkbox-group form-contro mb- divjust">
-                          <div>
-                            <input type="checkbox" id="companion"/>
-                            <label for="companion">Companion?</label>
-                          </div>       
+                        <div class="col-4 form-group">
+                          <span>Number of guests:</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_numguest" >
+                            <option selected value="1">One</option>
+                            <option value="2">Two</option>
+                          </select>
                         </div>
                       </div>
 
@@ -342,103 +346,54 @@
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Card number</span>
+                          <span class="text-black font-weight-bold">Card number <span class="text-danger">*</span></span>
                             <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
                       </div>
 
 
-                      <!-- <div class="form-group input-icons">
-                        <span>Guest mobile number <span class="text-primary small">(recommended)</span></span>
-                          <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <span>Guest Email<span class="text-primary small">(optional)</span></span>
-                          <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                      </div>
-
-                      <div class="form-group input-icons">
-                        <span>National id number <span class="text-primary small">(optional)</span></span>
-                          <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                      </div> -->
-
-                      <div class="fancy-checkbox-group form-control mb-4 divjust dispnone">
-                        <div>
-                          <input type="checkbox" id="migrate2" checked/>
-                          <label for="migrate2">Existing tenant?(<span class="small text-danger">check to disable deposit billing</span>)</label>
-                        </div>       
-                      </div>
-
-
                       <div class="row">
-                        <div class="col-4 form-group input-icons">
+                        <div class="col-4 form-group">
                           <span class="text-black">Days</span>
-                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
                         
-                        <div class="col-4 form-group input-icons">
+                        <div class="col-4 form-group">
                           <span class="text-black">Total amount</span>
+                          <label for="cbx">
+                            <input type="checkbox" class="adjust_check" id="cbx"/>Adjust?
+                          </label>
 
-                          <input type="checkbox" id="adjust_total"/>
-                          <label for="adjust_total">Adjust?</label>
-
-                            <input id="default_total" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                            <input id="default_total" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
 
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">Paid amount</span>
-                            <input id="default_paid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        <div class="col-4 form-group">
+                          <span class="text-black">Amount paid</span>
+                            <input id="default_paid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
                       </div>
 
 
-                      <!-- <div class="row">
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black">Days</span>
-                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                        </div>
-                        
-                        <div class="col-4 form-group input-icons" id="dynamic_rate">
-                          <span class="text-black">Current rates</span>
-                            <input id="curr_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                        </div>
+                      <div class="row dispnone" id="adjust_amount">
+                        <div class="col-4 form-group">
+                          <span>Authorized by:</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_author" >
+                            <option selected disabled value> --select-- </option>
 
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">Agreed rate</span>
-                            <input id="new_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                        </div>
-                      </div> -->
-
-
-
-
-
-
-
-                      <div class="row">
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">Authorised by</span>
-                            <input id="transid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                            <option value="Stephen Mutie"> Stephen Mutie </option>
+                            <option value="Mercy Manager">Mercy Manager</option>
+                            <option value="David Mutie">David Mutie</option>
+                          </select>
                         </div>
 
-                        <div class="col-4 form-group input-icons" id="">
+                        <div class="col-4 form-group" id="">
                           <span class="text-black">New Total (shs)</span>
-                          <input type="checkbox" id="rever_total"/>
-                          <label for="revert_total">Revert?</label>
-                            <input id="total_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <input id="adjust_total" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
 
-                        <div class="col-4 form-group input-icons">
-                          <span class="text-black font-weight-bold">New Paid (shs)</span>
-                            <input id="paid_rate" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                        <div class="col-4 form-group">
+                          <span class="text-black">New Paid (shs)</span>
+                            <input id="adjust_paid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
                       </div>
 
@@ -1216,12 +1171,14 @@ $("#uploadarrears").on('click',function(){
 
 <script>
   $("#newtenant").click(function () {
-    var cb2 = document.getElementById("migrate2");
-    if (cb2.checked) {
-      var migrate2 = "True";
-    } else {
-      var migrate2 = "False";
-    }
+    // var cb2 = document.getElementById("migrate2");
+    // if (cb2.checked) {
+    //   var migrate2 = "True";
+    // } else {
+    //   var migrate2 = "False";
+    // }
+    var migrate2 = "True";
+
     $("#newtenant").html("saving...")
     $.ajax({
       url: "{{ url_for('api.addtenant') }}",
@@ -1229,11 +1186,13 @@ $("#uploadarrears").on('click',function(){
       data: {
         propid: $("#prop_identifier").text(),
         house: $("#vac_house_identifier").text(),
-        name: $("#new_name").val(),
+        fname: $("#fname_erp").val(),
+        lname: $("#lname_erp").val(),
         national_id: $("#new_natid").val(),
         tel: $("#new_tel").val(),
         email: $("#new_email").val(),
-        rates: $("#new_rate").val(),
+        days:$("#total_time").val(),
+        rates: $("#adjust_paid").val(),
         migrate: migrate2,
         arr: $("#new_arr").val(),
         checkin: $("#checkindate").val(),
@@ -1262,7 +1221,8 @@ $("#uploadarrears").on('click',function(){
               data: {
                 propid: $("#prop_identifier").text(),
                 house: $("#vac_house_identifier").text(),
-                amount: $("#paid_rate").val(),
+                amount: $("#default_paid").val(),
+                amount2: $("#adjust_paid").val(),
                 transid: $("#transid").val(),
                 usercode: $("#curr_usercode").text()
               },
@@ -1395,79 +1355,40 @@ $("#addGuestModal").on('shown.bs.modal', function(){
   });
 });
 
+$("#adjust_total").on('keyup',function(){
+  $("#adjust_paid").val($(this).val());
+})
+
+$("#adjust_paid").on('keyup',function(){
+  $("#adjust_total").val($(this).val());
+})
+
+
+$(".adjust_check").change(function (e) {
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".adjust_check").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+          $("#adjust_amount").addClass("dispnone");
+          $("#adjust_total").val("none");
+          $("#adjust_paid").val("none");
+
+        }else{
+          $("#adjust_amount").removeClass("dispnone");
+        }
+
+      });
+
 
 $("#addTenantModal").on('shown.bs.modal', function(){
-  // $.ajax({
-  //   url: "{{ url_for('api.allocatetenants') }}",
-  //   type: "POST",
-  //   data: {
-  //         propid: $("#prop_identifier").text(),
-  //         target:"house options"
-  //       },
-  //   success: function(response) {
-  //     $("#select_house2").html(response);
-  //   }
-  // });
 
-
-  // $("#checkindate").datepicker( "setDate" , "7/11/2011" );
-  // $("#checkindate").datepicker({dateFormat: "DD, mm-dd-yyyy", defaultDate: new Date() });
-  // $("#checkindate").datepicker("setDate", "-0d");
-
-
-    var date = new Date();
-
-
-    date.setDate(date.getDate());
-
-    $("#checkindate").datepicker({
-        autoclose: true, 
-        todayHighlight: true,
-        format: "DD, dd-mm-yyyy",
-
-        defaultDate: date,
-        onSelect: function () {
-            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-        }
-    });
-
-    $("#checkindate").datepicker("setDate", date);
-    
-    date.setDate(date.getDate() + 1);
-
-    $("#checkoutdate").datepicker({
-        autoclose: true, 
-        todayHighlight: true,
-        format: "DD, dd-mm-yyyy",
-
-        defaultDate: date,
-        onSelect: function () {
-            selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-        }
-    });
-
-    $("#checkoutdate").datepicker("setDate", date);
-
-
-    function checkTimeAlt(i) {
-      if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-      return i;
-    }
-    function appendTime(){
-      var now = new Date();
-      var hr = now.getHours();
-      var mm = now.getMinutes();
-
-      hr = checkTimeAlt(hr);
-      mn = checkTimeAlt(mm);
-
-      $("#checkintime").val(hr + ":" + mm)
-    }
-    appendTime()
-                              
-
-
-  $("#dynamic_rate").text("fetching...");
+  $("#curr_rate").text("fetching...");
 
     $.ajax({
       url: "{{ url_for('api.createhouse') }}",
@@ -1479,7 +1400,97 @@ $("#addTenantModal").on('shown.bs.modal', function(){
       },
       success: function (response) {
 
-        $("#dynamic_rate").html(response);
+        $("#curr_rate").html(response);
+
+
+        $("#checkindate").datepicker({
+      autoclose: true,
+      todayHighlight: true,
+      format: "DD, dd-mm-yyyy",
+
+    })
+    .on('changeDate', function (e) {
+      var checkin = $(this).datepicker('getDate')
+      checkin.setHours(10)
+      checkin.setMinutes(00)
+      checkin.setSeconds(00)
+      var checkout = $("#checkoutdate").datepicker('getDate')
+
+      var dayDiff = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+
+      $("#total_time").val(dayDiff);
+
+      var total = dayDiff * $("#curr_rate").text()
+      console.log("daydiff1",dayDiff,"curr",$("#curr_rate").text());
+
+      console.log("tot1",total)
+
+
+      $("#default_total").val(total);
+      $("#default_paid").val(total);
+
+
+      console.log("netaa",dayDiff)
+
+    });
+
+    $("#checkoutdate").datepicker({
+      autoclose: true,
+      format: "DD, dd-mm-yyyy",
+    })
+    .on('changeDate', function (e) {
+      var checkout = $(this).datepicker('getDate')
+      checkout.setHours(10)
+      checkout.setMinutes(00)
+      checkout.setSeconds(00)
+
+      var checkin = $("#checkindate").datepicker('getDate')
+
+      var dayDiff = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+
+      $("#total_time").val(dayDiff);
+      var total = dayDiff * $("#curr_rate").text()
+
+      console.log("daydiff2",dayDiff,"curr",$("#curr_rate").text());
+      console.log("tot2",total)
+
+      $("#default_total").val(total);
+      $("#default_paid").val(total);
+
+      console.log("nebo bili",dayDiff)
+
+    });
+
+
+  
+    var date = new Date();
+    $("#checkindate").datepicker("setDate", date); //set default checkindate
+
+    date.setDate(date.getDate() + 1);
+    $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
+
+
+    function checkTimeAlt(i) {
+      if (i < 10) {
+        i = "0" + i
+      }; 
+      return i;
+    }
+    function appendTime(){
+      var now = new Date();
+      var hr = now.getHours();
+      var mm = now.getMinutes();
+
+      hr = checkTimeAlt(hr);
+      mm = checkTimeAlt(mm);
+
+      $("#checkintime").val(hr + ":" + mm)
+    }
+    appendTime()
+
+
+
+
       }
     });
 });

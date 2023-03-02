@@ -2795,6 +2795,10 @@ class AllocateTenantOp(Occupancy,Base):
 
         db.session.commit()
 
+    def update_accomodation_days(self,days):
+        self.days = days
+        db.session.commit()
+
     def update_days(self,days):
         self.days_extended = days
 

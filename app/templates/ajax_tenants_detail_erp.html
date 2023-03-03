@@ -295,63 +295,6 @@
 
                       <div class="row">
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">First name <span class="text-danger">*</span></span>
-                            <input id="fname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                        </div>
-
-                        <div class="col-4 form-group">
-                          <span class="text-black">Last name</span>
-                            <input id="lname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                        </div>
-
-                        <div class="col-4 form-group">
-                          <span>Gender:</span>
-                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_gender" >
-                            <option selected value="male">Male</option>
-                            <option value="female">Female</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-4 form-group">
-
-
-
-                          <input id="new_tel" list="mobilenum_list"
-                          class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
-                          placeholder="07xx" required>
-                        <datalist id="mobilenum_list">
-
-                          {% for o in mobile_nums %}
-                          <option value="{{ o }}">
-                            {% endfor %}
-
-                        </datalist>
-
-
-
-                          <!-- <span class="text-black font-weight-bold">Mobile <span class="text-danger">*</span></span>
-                            <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/> -->
-                        </div>
-
-                        <div class="col-4 form-group">
-                          <span class="text-black">Email</span>
-                            <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                        </div>
-
-                        <div class="col-4 form-group">
-                          <span>Number of guests:</span>
-                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_numguest" >
-                            <option selected value="1">One</option>
-                            <option value="2">Two</option>
-                          </select>
-                        </div>
-                      </div>
-
-
-                      <div class="row">
-                        <div class="col-4 form-group">
                           <span>Nationality</span>
                           <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_nat" >
                             <option selected value="natid"> Kenyan </option>
@@ -374,10 +317,69 @@
 
                         <div class="col-4 form-group">
                           <span class="text-black font-weight-bold">Card number <span class="text-danger">*</span></span>
-                            <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <input id="new_natid" list="natid_list" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+
+                            <datalist id="natid_list">
+                              {% for o in mobile_nums %}
+                              <option value="{{ o }}">
+                                {% endfor %}
+                            </datalist>
+
                         </div>
                       </div>
 
+
+                      <div class="row">
+                        <div class="col-4 form-group">
+                          <span class="text-black font-weight-bold">First name <span class="text-danger">*</span></span>
+                            <input id="fname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black">Last name</span>
+                            <input id="lname_erp" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+
+                        <div class="col-4 form-group">   
+                          <span class="text-black font-weight-bold">Mobile number  <span class="text-danger">*</span></span>
+                     
+                          <input id="new_tel" list="mobilenum_list" class="form-control border-top-0 border-right-0 border-left-0 ph"
+                            type="text" name="title" placeholder="07xx">
+                          <datalist id="mobilenum_list">
+                            {% for o in mobile_nums %}
+                            <option value="{{ o }}">
+                              {% endfor %}
+                          </datalist>
+                        </div>
+
+                      </div>
+
+                      <div class="row">
+
+                        <div class="col-4 form-group">
+                          <span>Gender:</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id="select_gender">
+                            <option selected value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        </div>
+
+
+                        <div class="col-4 form-group">
+                          <span>Number of guests:</span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_numguest" >
+                            <option selected value="1">One</option>
+                            <option value="2">Two</option>
+                          </select>
+                        </div>
+
+                        <div class="col-4 form-group">
+                          <span class="text-black">Email</span>
+                            <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                      </div>
 
                       <div class="row">
                         <div class="col-4 form-group">
@@ -1400,7 +1402,47 @@ $("#total_time").on('keyup',function(){
 })
 
 
+$("#new_natid").on("change", function(){
+  console.log("New natid change", $(this).val());
 
+
+  $.ajax({
+    url: "{{ url_for('api.addtenant') }}",
+    type: "get",
+    data: {
+      propid: $("#prop_identifier").text(),
+      natid : $(this).val(),
+      target: "fetch guest by natid"
+    },
+    success: function (response) {
+      $("#fname_erp").val(response.fname);
+      $("#lname_erp").val(response.lname);
+      $("#new_tel").val(response.tel);
+      
+    }
+  });
+})
+
+
+$("#new_tel").on("change", function(){
+
+  $.ajax({
+    url: "{{ url_for('api.addtenant') }}",
+    type: "get",
+    data: {
+      propid: $("#prop_identifier").text(),
+      tel : $(this).val(),
+      target: "fetch guest by tel"
+    },
+    success: function (response) {
+      // $("#natid_list").html(response);
+      $("#fname_erp").val(response.fname);
+      $("#lname_erp").val(response.lname);
+      $("#new_natid").val(response.natid);
+      
+    }
+  });
+})
 
 
 $(".adjust_check").change(function (e) {
@@ -1537,11 +1579,24 @@ $("#addTenantModal").on('shown.bs.modal', function(){
           url: "{{ url_for('api.addtenant') }}",
           type: "get",
           data: {
+            propid: $("#prop_identifier").text(),
             target: "mobile nums"
           },
           success: function (response) {
             $("#mobilenum_list").html(response);
             
+            $.ajax({
+              url: "{{ url_for('api.addtenant') }}",
+              type: "get",
+              data: {
+                propid: $("#prop_identifier").text(),
+                target: "natids"
+              },
+              success: function (response) {
+                $("#natid_list").html(response);
+                
+              }
+            });
           }
         });
 });

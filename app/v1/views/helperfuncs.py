@@ -4011,7 +4011,7 @@ def send_bulk_sms(propid,temp_txt):
         prop = tenant_obj.apartment
         co = prop.company
         # str_co = co.name
-        str_co = ""
+        str_co = f"UID{co.id}"
 
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
@@ -4124,7 +4124,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
         prop = tenant_obj.apartment
         co = prop.company
-        str_co = co.name
+        str_co = f"UID{co.id}"
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             ptenant_id = tenant_obj.id
@@ -5318,7 +5318,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             if co.name == "LaCasa":
                 str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0735267087)"
             else:
-                str_co = f"\n\n ~ {bill.apartment.name} ({str(co)})"
+                str_co = f"\n\n ~ {bill.apartment.name} (UID{str(co.id)})"
 
             raw_rem_sms =co.remainingsms
 

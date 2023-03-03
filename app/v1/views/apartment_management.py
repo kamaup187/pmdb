@@ -5062,6 +5062,11 @@ class AddTenant(Resource):
         prop_id = get_identifier(propid)
 
         prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+
+        if target == "mobile nums":
+            tenants = tenantauto(prop_id)
+            nums = [t.phone for t in tenants if t.phone]
+            return render_template('ajax_datalist.html',items=nums,placeholder="07**")
         
         if target == "reps":
             co_users = prop.company.reps
@@ -8700,12 +8705,19 @@ class Results(Resource):
 
             if crm(current_user):
                 template = "ajax_tenant_detail2.html"
+                rlink = "/"
             elif erp(current_user):
+                if tenant_obj.monthly_charges:
+                    bill = tenant_obj.monthly_charges[0]
+                    rlink = f"/print/receipt/{bill.id}"
+                else:
+                    rlink = "/"
                 template = "ajax_tenant_detail_erp.html"
             else:
                 template = "ajax_tenant_detail.html"
+                rlink = "/"
 
-            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
 class ContactManagement(Resource):

@@ -81,14 +81,19 @@
                   <tr>
                     <th class="text-info font-weight-bold">Guest Name</th>
                     <th class="text-info track-title-cell" data-orderable="false">Phone</th>
-                    <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
-                    <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Terms</th>
-                    <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
-                    <th class="text-info track-title-cell expand dispnone-alt">CheckOut</th>
-                    <th class="text-info track-title-cell text-success">Bal</th>
+                    <th class="text-info track-title-cell" data-orderable="false">Email</th>
+                    <!-- <th class="text-info track-title-cell" data-orderable="false">Terms</th> -->
+                    <th class="text-info track-title-cell">CheckIn</th>
+                    <th class="text-info track-title-cell">CheckOut</th>
+                    <th class="text-info track-title-cell text-success">Days</th>
+                    <th class="text-info track-title-cell text-success">Rate</th>
+
+                    <th class="text-info track-title-cell text-success">Amount</th>
+                    <th class="text-info track-title-cell text-success">Paid</th>
+                    <!-- <th class="text-info track-title-cell text-success">Bal</th> -->
                     <!-- <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add room</th> -->
                     <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
-                    <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th>
+                    <!-- <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th> -->
 
 
                   </tr>
@@ -101,11 +106,17 @@
                       <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span
                         class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
                     <td class="data-cell">{{ bill['tel'] }}</td>
-                    <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
-                    <td class="data-cell expand dispnone-alt">{{ bill['terms']|safe }}</td>
-                    <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
-                    <td class="data-cell expand dispnone-alt">{{ bill['checkout'] }}</td>
-                    <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
+                    <td class="data-cell">{{ bill['email'] }}</td>
+                    <!-- <td class="data-cell">{{ bill['terms']|safe }}</td> -->
+                    <td class="data-cell">{{ bill['checkin'] }}</td>
+                    <td class="data-cell">{{ bill['checkout'] }}</td>
+
+                    <td class="data-cell text-black">{{ bill['days'] }}</td>
+                    <td class="data-cell text-black">@ {{ bill['rate'] }}</td>
+
+                    <td class="data-cell text-black">{{ bill['bill'] }}</td>
+                    <td class="data-cell text-black">{{ bill['paid'] }}</td>
+                    <!-- <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td> -->
 
 
                     <!-- <td class="text-s data-cell">
@@ -133,13 +144,13 @@
                           data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Checkout</button>
                       </div>
                     </td>
-                    <td class="text-s data-cell">
+                    <!-- <td class="text-s data-cell">
                       <div>
                         <button id="{{bill['editid']}}" type="button"
                           class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal"
                           data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                       </div>
-                    </td>
+                    </td> -->
 
                   </tr>
                   {% endfor %}
@@ -307,10 +318,10 @@
 
 
 
-                          <input id="new_tel" list="tel_list"
+                          <input id="new_tel" list="mobilenum_list"
                           class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
                           placeholder="07xx" required>
-                        <datalist id="tel_list">
+                        <datalist id="mobilenum_list">
 
                           {% for o in mobile_nums %}
                           <option value="{{ o }}">
@@ -371,7 +382,7 @@
                       <div class="row">
                         <div class="col-4 form-group">
                           <span class="text-black">Days</span>
-                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                         </div>
                         
                         <div class="col-4 form-group">
@@ -1380,6 +1391,18 @@ $("#adjust_paid").on('keyup',function(){
 })
 
 
+$("#total_time").on('keyup',function(){
+
+  var dayDiff = $("#total_time").val();
+  var total = dayDiff * $("#curr_rate").text()
+  $("#default_total").val(total);
+  $("#default_paid").val(total);
+})
+
+
+
+
+
 $(".adjust_check").change(function (e) {
         //Getting status before unchecking all
         var status = $(this).prop("checked");
@@ -1514,7 +1537,7 @@ $("#addTenantModal").on('shown.bs.modal', function(){
           url: "{{ url_for('api.addtenant') }}",
           type: "get",
           data: {
-            target: "mobile_nums"
+            target: "mobile nums"
           },
           success: function (response) {
             $("#mobilenum_list").html(response);

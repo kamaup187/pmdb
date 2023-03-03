@@ -5063,10 +5063,63 @@ class AddTenant(Resource):
 
         prop = ApartmentOp.fetch_apartment_by_id(prop_id)
 
+        if target == "fetch guest by natid":
+            natid = request.args.get('natid')
+            t = TenantOp.fetch_tenant_by_nat_id(natid)
+            if t:
+                try:
+                    fname =t.name.split(" ")[0]
+                except:
+                    fname = "Unnamed"
+
+                try:
+                    lname =t.name.split(" ")[1]
+                except:
+                    lname = ""
+
+                tel = t.phone if t.phone else "07**"
+
+                t_obj = {
+                    "fname":fname,
+                    "lname":lname,
+                    "tel":tel,
+                }
+                return t_obj
+            return ""
+        
+        if target == "fetch guest by phone":
+            tel = request.args.get('tel')
+            t = TenantOp.fetch_tenant_by_tel(tel)
+            if t:
+                try:
+                    fname =t.name.split(" ")[0]
+                except:
+                    fname = "Unnamed"
+
+                try:
+                    lname =t.name.split(" ")[1]
+                except:
+                    lname = ""
+
+                natid = t.national_id if t.national_id else "xxxxxxxx"
+
+                t_obj = {
+                    "fname":fname,
+                    "lname":lname,
+                    "natid":natid,
+                }
+                return t_obj
+            return ""
+
         if target == "mobile nums":
             tenants = tenantauto(prop_id)
             nums = [t.phone for t in tenants if t.phone]
             return render_template('ajax_datalist.html',items=nums,placeholder="07**")
+
+        if target == "natids":
+            tenants = tenantauto(prop_id)
+            nums = [t.national_id for t in tenants if t.national_id]
+            return render_template('ajax_datalist.html',items=nums,placeholder="xxxxxxxx")
         
         if target == "reps":
             co_users = prop.company.reps

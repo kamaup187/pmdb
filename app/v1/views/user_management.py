@@ -1557,7 +1557,7 @@ class UserLogin(Resource):
 
         if user:
             if user.softdelete:
-                flash('Account does not exist!','fail')
+                flash('Account suspended!','fail')
                 return redirect(url_for('api.userlogin'))
         
         if runcode:

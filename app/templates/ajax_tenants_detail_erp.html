@@ -304,8 +304,24 @@
 
                       <div class="row">
                         <div class="col-4 form-group">
-                          <span class="text-black font-weight-bold">Mobile <span class="text-danger">*</span></span>
-                            <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+
+
+
+                          <input id="new_tel" list="tel_list"
+                          class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
+                          placeholder="07xx" required>
+                        <datalist id="tel_list">
+
+                          {% for o in mobile_nums %}
+                          <option value="{{ o }}">
+                            {% endfor %}
+
+                        </datalist>
+
+
+
+                          <!-- <span class="text-black font-weight-bold">Mobile <span class="text-danger">*</span></span>
+                            <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/> -->
                         </div>
 
                         <div class="col-4 form-group">
@@ -1493,6 +1509,18 @@ $("#addTenantModal").on('shown.bs.modal', function(){
 
       }
     });
+
+    $.ajax({
+          url: "{{ url_for('api.addtenant') }}",
+          type: "get",
+          data: {
+            target: "mobile_nums"
+          },
+          success: function (response) {
+            $("#mobilenum_list").html(response);
+            
+          }
+        });
 });
 
 

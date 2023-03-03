@@ -2575,7 +2575,7 @@ class TenantOp(Tenant,Base):
         else:
             date = self.date
 
-        time_with_s =  f'{date.strftime("%d/%b/%y")} {date.strftime("%X")}'
+        time_with_s =  f'{date.strftime("%d/%b/%y")} {date.strftime("%H:%M")}'
 
         print("check this out",datetime.datetime.now())
 
@@ -2588,7 +2588,7 @@ class TenantOp(Tenant,Base):
             date = ""
         
         if date:
-            time_with_s = f'{date.strftime("%d/%b/%y")} {date.strftime("%X")}'
+            time_with_s = f'{date.strftime("%d/%b/%y")} {date.strftime("%H:%M")}'
         else:
             time_with_s = "--"
 
@@ -2647,6 +2647,35 @@ class TenantOp(Tenant,Base):
         except:
             return 0.0
 
+    def get_acc_days(self):
+        if self.house_allocated:
+            days = self.house_allocated[0].days if self.house_allocated[0].days else 0
+        else:
+            days = 0
+
+        try:
+            int_days = int(days)
+        except:
+            int_days = 0
+
+        return int_days
+    
+    def get_invoice(self):
+        if self.monthly_charges:
+            bill = self.monthly_charges[0].total_bill if self.monthly_charges[0].total_bill else 0.0
+            paid = self.monthly_charges[0].paid_amount if self.monthly_charges[0].paid_amount else 0.0
+        else:
+            bill = 0.0
+            paid = 0.0
+        if self.house_allocated:
+            rentrate = self.house_allocated[0].house.housecode.rentrate
+            rate = self.house_allocated[0].agreed_rates if self.house_allocated[0].agreed_rates != None else rentrate
+        else:
+            rate = 0.0
+
+        return [bill,paid,rate]
+
+
     def view(self):
         # print("NAME >>>>",self.name)
         return {
@@ -2671,6 +2700,10 @@ class TenantOp(Tenant,Base):
             'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
             'checkin':TenantOp.check_in_date(self),
             'checkout':TenantOp.check_out_date(self),
+            'days':TenantOp.get_acc_days(self),
+            'bill':TenantOp.get_invoice(self)[0],
+            'paid':TenantOp.get_invoice(self)[1],
+            'rate':TenantOp.get_invoice(self)[2],
             'balance':TenantOp.format_balance(self),
             'highlight':TenantOp.highlight(self),
             'viewable':"danger" if self.multiple_houses else "",

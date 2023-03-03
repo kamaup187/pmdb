@@ -4939,11 +4939,11 @@ class AutoPayment(Resource):
         if amount2 == "none" or amount2 == None or amount2 == "":
             amnt = amount
         else:
-            amnt = amount
+            amnt = amount2
 
         dict_obj = {
         "housename":house,
-        "amount":amount,
+        "amount":amnt,
         "date":"",
         "ref":"",
         "desc":"",

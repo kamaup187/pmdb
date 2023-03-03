@@ -5222,10 +5222,14 @@ class AddTenant(Resource):
             except:
                 float_arrears=0.0
 
-            try:
-                float_rates=float(new_rates)
-            except:
-                float_rates=0.0
+
+            if new_rates == "" or new_rates == "none" or new_rates == None:
+                float_rates = None
+            else:
+                try:
+                    float_rates=float(new_rates)
+                except:
+                    float_rates=0.0
 
             try:
                 int_days = int(days)
@@ -5293,7 +5297,7 @@ class AddTenant(Resource):
                 allocate_tenant_obj.save()
 
 
-                if float_rates:
+                if float_rates != None:
                     AllocateTenantOp.update_agreed_rates(allocate_tenant_obj,float_rates)
 
                 if int_days:

@@ -6409,10 +6409,20 @@ class CallBackUrlTestMerit(Resource):
                 authenticated = True
             else:
                 resp = sms.send("TEST MERIT has sent data with wrong creds", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage":"UNAUTHORIZED"}
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+
         else:
             resp = sms.send("TEST MERIT has sent data with no creds", ["+254716674695"],"KIOTAPAY")
-            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
+
+            response = {
+                "resultCode":1,
+                "resultDesc":"Failed Authorization"
+            }
+            # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
 
         if authenticated:
             print("Authenticated")
@@ -6449,18 +6459,45 @@ class CallBackUrlTestMerit(Resource):
                 mode = "Bank"
                 company_id = 1
 
-                data_obj = CtoBop.fetch_record_by_ref(trans_id)
-                if data_obj:
-                    response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+                if trans_id:
+
+                    data_obj = CtoBop.fetch_record_by_ref(trans_id)
+                    if data_obj:
+                        # response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+                        response = {
+                            "resultCode":1,
+                            "resultDesc":"Duplicate Transaction"
+                        }
+
+                    else:
+                        data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
+                        data_obj.save()
+
+                        curr_time = datetime.datetime.now()
+                        # response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                        erpRefId = f"0{data_obj.id}00{company_id}{curr_time.month}{curr_time.year}"
+                        response = {
+                            "resultCode": 0,
+                            "resultDesc": "Successful",
+                            "erpRefId": erpRefId
+                        }
+
                 else:
-                    data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
-                    data_obj.save()
-                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Invalid payload"
+                    }
 
 
             except Exception as e:
                 sms.send("TEST MERIT has error data", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
+                # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid payload"
+                }
+
                 print ("It failed, Bank integration has an error")
 
         resp = jsonify(response)
@@ -6493,11 +6530,16 @@ class CallBackUrlMerit(Resource):
                 authenticated = True
             else:
                 resp = sms.send("PROD MERIT has sent data with wrong creds", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage":"UNAUTHORIZED"}
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }        
         else:
             resp = sms.send("PROD MERIT has sent data with no creds", ["+254716674695"],"KIOTAPAY")
-            response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
-
+            response = {
+                "resultCode":1,
+                "resultDesc":"Failed Authorization"
+            }
         if authenticated:
             print("Authenticated")
 
@@ -6533,18 +6575,41 @@ class CallBackUrlMerit(Resource):
                 mode = "Bank"
                 company_id = 1
 
-                data_obj = CtoBop.fetch_record_by_ref(trans_id)
-                if data_obj:
-                    response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
-                else:
-                    data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
-                    data_obj.save()
-                    response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                if trans_id:
 
+                    data_obj = CtoBop.fetch_record_by_ref(trans_id)
+                    if data_obj:
+                        # response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+                        response = {
+                            "resultCode":1,
+                            "resultDesc":"Duplicate Transaction"
+                        }
+
+                    else:
+                        data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+                        data_obj.save()
+
+                        curr_time = datetime.datetime.now()
+                        # response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                        erpRefId = f"0{data_obj.id}00{company_id}{curr_time.month}{curr_time.year}"
+                        response = {
+                            "resultCode": 0,
+                            "resultDesc": "Successful",
+                            "erpRefId": erpRefId
+                        }
+
+                else:
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Invalid payload"
+                    }
 
             except Exception as e:
                 sms.send(f"PROD MERIT has error data Error >> {e}", ["+254716674695"],"KIOTAPAY")
-                response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid payload"
+                }                
                 print ("It failed, Bank integration has an error")
 
         resp = jsonify(response)

@@ -6015,39 +6015,80 @@ class CallBackUrlLes(Resource):
     def get(self):
         pass
     def post(self):
-        response = sms.send("Lesama prod has sent data", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("Lesama prod has sent data", ["+254716674695"],"KIOTAPAY")
 
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP TEST DATA>>>>>>>>>",my_json)
-        ww = f"{my_json},PROD LESAMA has sent data"
-        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
+        # ww = f"{my_json},PROD LESAMA has sent data"
+        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
-            print("#####################################COOP COOP COOP############################################")
-            print(data)
-            print("#####################################COOP COOP COOP############################################")
+            # print("#####################################COOP COOP COOP############################################")
+            # print(data)
+            # print("#####################################COOP COOP COOP############################################")
+
+            # {
+            # "MessageReference":"F5FF3715DA15219DE05400144FF8392F",
+            # "MessageDateTime":"2023-03-03T15:39:57.097+03:00",
+            # "PaymentRef": "RC36WOI5YS",
+            # "AccountNumber": "01148173864900",
+            # "Amount": "9000.0",
+            # "TransactionDate": "2023-03-03T15:39:31.112+03:00",
+            # "EventType": "CREDIT",
+            # "Currency": "KES",
+            # "ExchangeRate": "",
+            # "Narration": "RC36WOI5YS 432942#GJ70J 2",
+            # "CustMemo": {
+            # "CustMemoLine1": "RC36WOI5YS 432942#GJ70J 2",
+            # "CustMemoLine2": "54714921138 MPESAC2B_4002",
+            # "CustMemoLine3": "22 JOEL ONDARI"
+            # },
+            # "ValueDate": "20230303",
+            # "EntryDate": "20230303",
+            # "TransactionId": "6186a77c0fffE0iY"
+            # }
+
+            custmemo = data.get("CustMemo")
+            narration = data.get("Narration")
+            try:
+                refnum1 = narration.split(" ")[1]
+                refnum2 = refnum1.split("#")[1]
+            except:
+                refnum1 = narration
+                refnum2 = narration
        
             print("Data will be proccessed here")
-            # trans_id = data['TransID']
-            # trans_time = data['TransTime']
-            # trans_amnt = data['TransAmount']
-            # trans_type = data['TransactionType']
-            # business_shortcode = data['BusinessShortCode']
-            # bill_ref_num = data['BillRefNumber']
-            # invoice_num = data['InvoiceNumber']
-            # msisdn = data['MSISDN']
-            # org_acc_bal = data['OrgAccountBalance']
-            # fname = data['FirstName']
-            # lname = data['LastName']
 
-            # ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname)
-            # ctob_obj.save()
+            trans_id = data.get('PaymentRef')
+            trans_time = data.get('TransactionDate')
+            trans_amnt = data.get('Amount')
+            trans_type = custmemo.get('CustMemoLine2')
+            business_shortcode = "000000"
+            bill_ref_num = refnum2
+            invoice_num = data.get('InvoiceNumber')
+            msisdn = custmemo.get('CustMemoLine2')
+            org_acc_bal = data.get('OrgAccountBalance')
+            fname = custmemo.get('CustMemoLine3')
+            lname = "N/A"
+
+            mode = "Bank"
+            company_id = 45
+
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+            else:
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
             # auto_consume_ctob(ctob_obj)
-        except:
-            print ("It failed, Bank integration has an error")
+        except Exception as e:
+            sms.send(f"PROD LESAMA COOP has error data >>> {e}", ["+254716674695"],"KIOTAPAY")
+
+            print ("It failed, Bank integration has an error",e)
 
         response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
         resp = jsonify(response)

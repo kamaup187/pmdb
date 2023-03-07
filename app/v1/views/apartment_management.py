@@ -5066,7 +5066,7 @@ class AddTenant(Resource):
         if target == "fetch guest by natid":
             natid = request.args.get('natid')
             t = TenantOp.fetch_tenant_by_nat_id(natid)
-            if t:
+            if t in prop.tenants:
                 try:
                     fname =t.name.split(" ")[0]
                 except:
@@ -5090,7 +5090,7 @@ class AddTenant(Resource):
         if target == "fetch guest by tel":
             tel = request.args.get('tel')
             t = TenantOp.fetch_tenant_by_tel(tel)
-            if t:
+            if t in prop.tenants:
                 try:
                     fname =t.name.split(" ")[0]
                 except:

@@ -1426,9 +1426,14 @@ $("#new_natid").on("change", function(){
       target: "fetch guest by natid"
     },
     success: function (response) {
-      $("#fname_erp").val(response.fname);
-      $("#lname_erp").val(response.lname);
-      $("#new_tel").val(response.tel);
+      if (Object.keys(response).length === 0){
+        //pass
+      }else{
+        $("#fname_erp").val(response.fname);
+        $("#lname_erp").val(response.lname);
+        $("#new_tel").val(response.tel);
+      }
+
       
     }
   });
@@ -1447,9 +1452,14 @@ $("#new_tel").on("change", function(){
     },
     success: function (response) {
       // $("#natid_list").html(response);
-      $("#fname_erp").val(response.fname);
-      $("#lname_erp").val(response.lname);
-      $("#new_natid").val(response.natid);
+
+      if (Object.keys(response).length === 0){
+        //pass
+      }else{
+        $("#fname_erp").val(response.fname);
+        $("#lname_erp").val(response.lname);
+        $("#new_natid").val(response.natid);
+      }
       
     }
   });

@@ -59,18 +59,24 @@
                       </div> -->
 
                       <div class="col-lg-3 form-group input-icons">
-                        <span class="text-danger font-weight-bold">Start shift</span>
+                        <span class="divjust-end">
+                          <span class="text-danger font-weight-bold">Start shift</span>
+                          <span class="text-black font-weight-bold dispnone">(10 AM)</span>
+                        </span>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          <span class="input-group-addon field-icon">(10 AM)</span>
                         </div>
                       </div>
 
                       <div class="col-lg-3 form-group input-icons">
-                        <span class="text-danger font-weight-bold">Shift end</span>
+                        <span class="divjust-end">
+                          <span class="text-danger font-weight-bold">Shift end</span>
+                          <span class="text-black font-weight-bold dispnone">(10 AM)</span>
+                        </span>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
-                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          <span class="input-group-addon field-icon">(10 AM)</span>
                         </div>
                       </div>
                     
@@ -104,7 +110,6 @@
                 <img class="" src="{{logopath}}" alt={{co.name}} />
               </div>
               <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
-              <div class="ln-16">Email: {{co.mail}}</div>
             </div>
           </div>
 
@@ -132,13 +137,6 @@
                   <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
                 </div>
 
-                <div class="ln-16">
-                  {% if prop_obj.location_id%}
-                  <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
-                  {%else%}
-                  <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
-                  {% endif %}
-                </div>
               </div>
             </div>
           
@@ -165,6 +163,7 @@
                       <th class="">CHECKOUT</th>
                       <th class="">RATE</th>
                       <th class="">PAID</th>
+                      <th class="">MODE</th>
 
                     </tr>
                   </thead>
@@ -178,6 +177,8 @@
                       <td class="data-cell text-center">{{bill['checkout']}}</td>
                       <td class="data-cell text-right">{{ bill['price'] }}</td>
                       <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['mode'] }}</td>
+
                     </tr>
                   {% endfor %}
 
@@ -189,6 +190,8 @@
 
                       <td class="font-weight-bold text-right">{{pricetotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right"></td>
+
                     </tr>
                   </tfoot>
                 </table>
@@ -296,7 +299,6 @@
                 <img class="" src="{{logopath}}" alt={{co.name}} />
               </div>
               <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
-              <div class="ln-16">Email: {{co.mail}}</div>
             </div>
           </div>
 
@@ -319,13 +321,7 @@
               <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
             </div>
 
-            <div class="ln-16">
-              {% if prop_obj.location_id%}
-              <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
-              {%else%}
-              <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
-              {% endif %}
-            </div>
+
           </div>
           {%endif%}
 
@@ -340,6 +336,8 @@
                   <th class="">CHECKOUT</th>
                   <th class="">RATE</th>
                   <th class="">PAID</th>
+                  <th class="">MODE</th>
+
 
                 </tr>
               </thead>
@@ -353,6 +351,8 @@
                   <td class="data-cell text-center">{{bill['checkout']}}</td>
                   <td class="data-cell text-right">{{ bill['price'] }}</td>
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['mode'] }}</td>
+
                 </tr>
               {% endfor %}
 
@@ -364,6 +364,9 @@
                   
                   <td class="font-weight-bold text-right">{{pricetotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right"></td>
+
+
                 </tr>
               </tfoot>
             </table>
@@ -519,38 +522,36 @@
   // });
 
 
+
+
+
+
+
+
+
+  $("#checkindate").datepicker({
+    autoclose: true,
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy"
+  }).on('changeDate', function (e) {
+    var checkin = $(this).datepicker('getDate')
+    checkin.setDate(checkin.getDate() + 1);
+    $("#checkoutdate").datepicker("setDate", checkin); //set default checkoutdate
+  });
+
+  $("#checkoutdate").datepicker({
+    autoclose: true,
+    format: "DD, dd-mm-yyyy"
+  });
+
+
   var date = new Date();
+  date.setDate(date.getDate() -1);
+  $("#checkindate").datepicker("setDate", date); //set default checkindate
 
+  date.setDate(date.getDate() + 1);
+  $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
 
-date.setDate(date.getDate());
-
-$("#checkindate").datepicker({
-    autoclose: true, 
-    todayHighlight: true,
-    format: "DD, dd-mm-yyyy",
-
-    defaultDate: date,
-    onSelect: function () {
-        selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-    }
-});
-
-$("#checkindate").datepicker("setDate", date);
-
-date.setDate(date.getDate() + 1);
-
-$("#checkoutdate").datepicker({
-    autoclose: true, 
-    todayHighlight: true,
-    format: "DD, dd-mm-yyyy",
-
-    defaultDate: date,
-    onSelect: function () {
-        selectedDate = $.datepicker.formatDate("yy-mm-dd", $(this).datepicker('getDate'));
-    }
-});
-
-$("#checkoutdate").datepicker("setDate", date);
 
 
 // function checkTimeAlt(i) {

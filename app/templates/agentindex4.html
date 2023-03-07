@@ -365,15 +365,15 @@
                         <i class="fas fa-fw fa-city text-white ml-2"></i>
                         <button class="propbtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Properties</button>
                       </div>
-                      <div class="">
+                      <div class="{{erp_access}}">
                         <i class="fas fa-fw fa-home text-white"></i>
                         <button class="housebtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Units</button>
                       </div>
-                      <div class="">
+                      <div class="ml-3">
                         <i class="fas fa-fw fa-users text-white"></i>
-                        <button class="tenantbtn btn btn-outline-light borderless p-0 m-0  font-weight-bold btn-sm">Guests</button>
+                        <button class="tenantbtn btn btn-outline-light borderless p-0 m-0  font-weight-bold btn-sm">Room Booking</button>
                       </div>
-                      <div class="dispnon">
+                      <div class="{{erp_access}}">
                         <i class="fas fa-fw fa-receipt text-white"></i>
                         <button class="billbtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Invoices</button>
                       </div>
@@ -381,7 +381,7 @@
                         <i class="fas fa-fw fa-coins text-white"></i>
                         <button class="paybtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
                       </div>
-                      <div class="">
+                      <div class="dispnone">
                         <i class="fas fa-fw fa-coins text-white"></i>
                         <button class="paybtn2 btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Payments</button>
                       </div>
@@ -397,7 +397,7 @@
                         <i class="fas fa-fw fa-comments text-white"></i>
                         <button class="reqsbtn btn btn-outline-light borderless p-0 m-0 font-weight-bold btn-sm">Requests</button>
                       </div>
-                      <div class="mr-2 mobile-malaysian">
+                      <div class="mr-2 mobile-malaysian {{erp_access}}">
                         <i class="fas fa-fw fa-file text-white"></i>
                         <a class="text-white" href="/reports">Reports</a>
                       </div>
@@ -704,7 +704,7 @@
 
             <!-- Content Row -->
 
-            <div id="dynamic-stats" class="row">
+            <div id="dynamic-stats" class="row {{erp_access}}">
 
                 <div class="col-xl-3 col-md-6 mb-1 desktop-malaysian no-padding">
                   <div class="card shadow h-100 py-0 bg-white">
@@ -1141,7 +1141,7 @@
               </div>
             </div>
 
-            <div id="graph-area" class="row">
+            <div id="graph-area" class="row {{erp_access}}">
 
                 <!-- Area Chart -->
               <div class="col-lg-6 no-padding">

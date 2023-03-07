@@ -5087,7 +5087,7 @@ class AddTenant(Resource):
                 return t_obj
             return ""
         
-        if target == "fetch guest by phone":
+        if target == "fetch guest by tel":
             tel = request.args.get('tel')
             t = TenantOp.fetch_tenant_by_tel(tel)
             if t:
@@ -5327,7 +5327,7 @@ class AddTenant(Resource):
                 lname = request.form.get('lname')
 
                 try:
-                    name = fname + lname
+                    name = fname + " " + lname
                 except:
                     name = fname
 

@@ -2943,7 +2943,7 @@ class GuestStatement(Resource):
         str_month = get_str_month(start.month)
         str_year = start.year
 
-        timeline = f"{str_day} / {str_month.upper()} / {str_year}"
+        timeline = f"{str_day}/{start.month}/{str_year} 10AM to {end.day}/{end.month}/{end.year} 10AM"
 
         fieldshow_loan = "dispnone"
 

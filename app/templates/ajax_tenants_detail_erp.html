@@ -388,16 +388,26 @@
                         </div>
                         
                         <div class="col-4 form-group">
-                          <span class="text-black">Total amount</span>
-                          <label for="cbx">
-                            <input type="checkbox" class="adjust_check" id="cbx"/>Adjust?
-                          </label>
+                          <span class="divjust-end">
+                            <span class="text-black">Total amount</span>
+                            <label class="text-danger" for="cbx">
+                              <input type="checkbox" class="adjust_check" id="cbx"/>Adjust?
+                            </label>
+                          </span>
 
                             <input id="default_total" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
 
                         <div class="col-4 form-group">
-                          <span class="text-black">Amount paid</span>
+                          <span class="divjust-end">
+                            <span class="text-black">Amount paid</span>
+                            <label for="cbx2">
+                              <input type="radio" name="pmode" id="cbx2" value="Mpesa"/>Mpesa?
+                            </label>
+                            <label for="cbx3">
+                              <input type="radio" name="pmode" id="cbx3" value="Cash" checked/>Cash?
+                            </label>
+                          </span>
                             <input id="default_paid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                         </div>
                       </div>
@@ -1253,6 +1263,7 @@ $("#uploadarrears").on('click',function(){
                 amount: $("#default_paid").val(),
                 amount2: $("#adjust_paid").val(),
                 transid: $("#transid").val(),
+                mode:$("input[name=pmode]:checked").val(),
                 usercode: $("#curr_usercode").text()
               },
               success: function (response) {

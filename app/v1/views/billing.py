@@ -4924,6 +4924,7 @@ class AutoPayment(Resource):
         amount2 = request.form.get('amount2')
 
         transid = request.form.get('transid')
+        mode = request.form.get('mode')
         usercode = request.form.get('usercode')
 
         # response = sms.send("AUTO GST DATA JUST IN", ["+254716674695"],"KIOTAPAY")
@@ -4946,7 +4947,7 @@ class AutoPayment(Resource):
         "amount":amnt,
         "date":"",
         "ref":"",
-        "desc":"",
+        "desc":mode,
         "comment":""
         }
 

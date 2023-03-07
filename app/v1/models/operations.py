@@ -2675,6 +2675,17 @@ class TenantOp(Tenant,Base):
 
         return [bill,paid,rate]
 
+    def fetch_payment_mode(self):
+        if self.payments:
+            paymode = self.payments[0].paymode if self.payments[0].paymode else "N/A"
+        else:
+            paymode = "N/A"
+
+        if paymode == "Bank":
+            paymode = "N/A"
+
+        return paymode
+
 
     def view(self):
         # print("NAME >>>>",self.name)
@@ -3852,6 +3863,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'checkout':TenantOp.check_out_date(self.tenant),
             'price':MonthlyChargeOp.fig_format(self.total_bill),
             'paid':MonthlyChargeOp.fig_format(self.paid_amount),
+            'mode':TenantOp.fetch_payment_mode(self.tenant)
         }
 
 class PaymentScheduleOp(PaymentSchedule,Base):

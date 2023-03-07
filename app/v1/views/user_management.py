@@ -1548,12 +1548,16 @@ class UserLogin(Resource):
 
         print("Supplied logins >>>> ", "IDENTITY:",identity,"PASSW:",password)
         ### remember = True if request.form.get('remember') else False
-        try:
-            user = fetch_user(identity)
-        except Exception as e:
+
+        if identity:
+            try:
+                user = fetch_user(identity)
+            except Exception as e:
+                user = None
+                downtime = True
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
+        else:
             user = None
-            downtime = True
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
 
         if user:
             if user.softdelete:

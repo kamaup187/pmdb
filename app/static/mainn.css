@@ -20,7 +20,10 @@
 }
 
 .text-kodi{
-  color: #0e2353
+  color: #0e2353 !important;
+}
+.text-kodi-alt{
+  color: #f5ac24 !important;
 }
 .bg-aviv{
   background-color: #4a0544d4;
@@ -3220,7 +3223,7 @@ input:checked + .slider:before {
 }
 
 .underline {
-  border-bottom: 3px solid currentColor;
+  border-bottom: 3px solid currentColor !important;
 }
 
 .underline-thin {

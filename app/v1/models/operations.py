@@ -1507,7 +1507,7 @@ class SalesRepOp(SalesRep,Base):
             'delid':SalesRepOp.generate_delid(self),
             'name':f"{self.name} ({self.email})" if self.email else self.name,
             'tel':self.phone,
-            # 'projects':SalesRepOp.get_projects(self),
+            'leads':len(self.leads),
             'clients':SalesRepOp.get_clients(self),
             'proposals':SalesRepOp.fetch_proposals(self),
             'closed':SalesRepOp.fetch_closed(self),
@@ -1994,6 +1994,10 @@ class LeadOp(Lead,Base):
     def update_status(self, status):
         if status:
             self.status = status
+        db.session.commit()
+
+    def update_sales_rep(self, rep_id):
+        self.rep_id = rep_id
         db.session.commit()
 
 

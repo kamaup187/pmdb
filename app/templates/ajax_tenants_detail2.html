@@ -53,11 +53,6 @@
                 Lead generation
               </span>
 
-              <span id="leadassignbtn" class="btn btn-sm btn-primary text-black dispnone" data-toggle="modal" data-target="#addLeadModa">
-                <i class="me-1" data-feather="user-plus"></i>
-                Lead assignment
-              </span>
-
               <span id="addclientbtn" class="btn btn-sm btn-primary text-black" data-toggle="modal" data-target="#addTenantModal">
                 <i class="me-1" data-feather="user-plus"></i>
                 Client onboarding
@@ -1468,22 +1463,18 @@
           if ($(this).val() == "cb1"){
             getLeads($("#prop_identifier").text(),"leads",$("#currentleadpage").text())
             $("#addleadbtn").removeClass("dispnone")
-            $("#leadassignbtn").removeClass("dispnone")
             $("#addclientbtn").addClass("dispnone")
           }else if ($(this).val() == "cb2") {
             getClients($("#prop_identifier").text(),"proposals",$("#currentproposalpage").text())
             $("#addleadbtn").addClass("dispnone")
-            $("#leadassignbtn").addClass("dispnone")
             $("#addclientbtn").removeClass("dispnone")
           } else if ($(this).val() == "cb3"){
             getClients($("#prop_identifier").text(),"contracts",$("#currentcontractpage").text())
             $("#addleadbtn").addClass("dispnone")
-            $("#leadassignbtn").addClass("dispnone")
             $("#addclientbtn").removeClass("dispnone")
           }else{
             getClients($("#prop_identifier").text(),"closed",$("#currentclosedpage").text())
             $("#addleadbtn").addClass("dispnone")
-            $("#leadassignbtn").addClass("dispnone")
             $("#addclientbtn").removeClass("dispnone")
           }
         }

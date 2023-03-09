@@ -886,7 +886,6 @@ class AllProperties(Resource):
 class AllOwners(Resource):
     def get(self):
         # propa = ApartmentOp.fetch_apartment_by_id(3)
-        # print(propa)
         # print(propa.company)
         # print(propa.company_id)
         # com = CompanyOp.fetch_company_by_id(4)

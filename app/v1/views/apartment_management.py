@@ -2266,8 +2266,28 @@ class SalesRepsManagement(Resource):
 class AddSalesAgent(Resource):
     @login_required
     def get(self):
-        pass
-        # return Response(render_template('regions.html',name=current_user.name))
+        target = request.args.get("target")
+        if target == "leads":
+            lead_list = current_user.company.leads
+
+            leads = []
+            for item in lead_list:
+                if item.status == "converted":
+                    continue
+                dict_obj = {
+                    "name": item.name,
+                    "id":item.id
+                }
+                leads.append(dict_obj)
+            return render_template("ajax_bill_houses.html",houses=leads)
+
+        if target == "reps":
+            reps = []
+            for l in current_user.company.reps:
+                reps.append(f'{str(l)} {l.email}')
+            return render_template('ajax_multivariable.html',items=reps,placeholder="select agent")
+
+
     def post(self):
         company_obj = current_user.company
 
@@ -2282,6 +2302,29 @@ class AddSalesAgent(Resource):
         natid = request.form.get('natid')
 
         target = request.form.get('target')
+
+        if target == "assign leads":
+            sales_rep = request.form.get("agent")
+
+            print("repsss",sales_rep)
+            rep_obj = None
+            if sales_rep:
+                valid_lead = sales_rep.lstrip()
+                print("REPIT",valid_lead)
+                # email = valid_lead.split(" ")[1]
+                email = next(reversed(valid_lead.split(" ")))
+                print("leaaads email",email)
+
+                rep_obj = SalesRepOp.fetch_rep_by_email(email)
+            if rep_obj:
+                print("leads in rep",rep_obj.leads)
+                leads = request.form.get('leads')
+                for l in leads:
+                    identifier = get_identifier(l)
+                    lead_obj = LeadOp.fetch_lead_by_id(identifier)
+                    LeadOp.update_sales_rep(lead_obj,rep_obj.id)
+
+            return "Updated"
 
 
 

@@ -20,13 +20,19 @@
     
         <div class="card-body flowing-body pt-2 pl-2">
           <div class="mb-4">
-            <span id="backbtn" class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#addRepModal">
+            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#addRepModal">
               <!-- <i class="me-1" data-feather="user-plus"></i> -->
               <i class="fas fa-add-user me-2"></i>
               add agent
             </span>
-          </div>
 
+            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#assignLeadModal">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-add-user me-2"></i>
+              assign leads
+            </span>
+            
+          </div>
 
           <div id="result-view" class="row">
             <div class="col-lg-12 no-padding">
@@ -37,14 +43,12 @@
                       <th class="text-black">Name</th>
                       <th class="text-black " data-orderable="false">Contact</th>
                       <th class="text-black " data-orderable="false">Leads</th>
-                      <th class="text-black " data-orderable="false">Proposals</th>
-                      <th class="text-black " data-orderable="false">Closed deals</th>
-                      <th class="text-black " data-orderable="false">Conversion rate</th>
-    
+                      <th class="text-black " data-orderable="false">Sales</th>
+                      <th class="text-black " data-orderable="false">%Conversion</th>
                       <th class="text-black " data-orderable="false">Commission</th>
     
                       <!-- <th class="text-black text-primary " data-orderable="false">Edit</th> -->
-                      <th class="text-black text-danger" data-orderable="false">Remove</th>
+                      <!-- <th class="text-black text-danger" data-orderable="false">Remove</th> -->
     
                     </tr>
                   </thead>
@@ -54,12 +58,8 @@
                       <td class="data-cell">{{ item['name'] }}</td>
                       <td class="data-cell text-end ">{{ item['tel'] }}</td>
                       <td class="data-cell text-end">{{ item['leads'] }}</td>
-                      <td class="data-cell text-end">{{ item['proposals'] }}</td>
                       <td class="data-cell text-end">{{ item['closed'] }}</td>
-    
                       <td class="data-cell text-end">{{ item['crate'] }}</td>
-    
-    
                       <td class="data-cell text-end"><span class="font-weight-bold">{{ item['comm'] }}</span></td>
     
     
@@ -68,13 +68,14 @@
                                 <button id="{{item['editid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap" data-toggle="modal" data-target="#"><i class="fas fa-edit mr-1"></i></button>
                               </div>
                             </td> -->
-                      <td class="text-s data-cell text-center">
+
+                      <!-- <td class="text-s data-cell text-center">
                         <div>
                           <button id="{{item['delid']}}" type="button" class="btn action-btn font-weight-bold  no-wrap"
                             data-toggle="modal" data-target="#deleteAttendantModal"><i
                               class="fas fa-trash-alt mr-1"></i></button>
                         </div>
-                      </td>
+                      </td> -->
     
                     </tr>
                     {% endfor %}
@@ -176,6 +177,54 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="assignLeadModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info h4 text-uppercase" id="paymentDetailModalLabel">Assign leads</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+
+                    <div class="form-group mb-3">
+                      <legend class="legend mb-1">Select Agent:</legend>
+                      <select class="select-css" id ="select_agent" >
+                        <option disabled selected value> select... </option>
+                      </select>
+                    </div>
+
+
+                    <fieldset id="housefield" class="mt-2">
+                      <legend class="legend">Select leads to assign:</legend>
+                      <div id="leadbed" class="mt-"></div>
+                    </fieldset>
+
+    
+                    <div class="mt-2 divbg">
+                      <div>
+                        <span id="assignbtn" type="button" class="btn btn-sm btn-success text-white">Assign</span>
+                      </div>
+  
+                      <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+  
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div class="modal fade center-btn" id="deleteAttendantModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -495,6 +544,98 @@
 
 
 
+
+<script>
+
+  $("#assignLeadModal").on('shown.bs.modal', function(){
+
+
+    $.ajax({
+      url: "{{ url_for('api.addsalesagent') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier").text(),
+            target:"reps"
+          },
+      success: function(response) {
+        $("#select_agent").html(response);
+
+
+
+        $.ajax({
+          url: "{{ url_for('api.addsalesagent') }}",
+          type: "get",
+          data: {
+                propid: $("#prop_identifier").text(),
+                target:"leads"
+              },
+          success: function(response) {
+            $("#leadbed").html(response);
+          },
+          error: function(xhr) {
+            alert("Error")
+            }
+        });
+
+
+
+      },
+      error: function(xhr) {
+        alert("Error")
+        }
+    });
+
+
+  });
+</script>
+
+
+
+<script>
+  $("#assignbtn").click(function () {
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>assigning');
+
+    $("#barloader").removeClass("dispnone")
+
+    var houselist = [];
+
+
+    $.each($("input[name='billhouse']:checked"), function () {
+      houselist.push($(this).val());
+    });
+
+    $.ajax({
+      url: "/sales/agent",
+      type: "POST",
+      data: {
+        agent: $("#select_agent").val(),
+        leads:houselist.join(", "),
+        target:"assign leads"
+      },
+      success: function (response) {
+        $("#barloader").addClass("dispnone")
+        $("#assignbtn").html('Assign');
+
+
+
+        $.ajax({
+                url: "/fetch/agents",
+                type: "get",
+                data: {
+                  propid:  $("#prop_identifier").text(),
+                  target: "new"
+                },
+                success: function(response) {
+                  
+                  $("#result-view").html(response);
+                }
+              });
+
+      }
+    });
+  })
+
+</script>
 
 
 

@@ -1513,10 +1513,23 @@ $("#addTenantModal").on('shown.bs.modal', function(){
     })
     .on('changeDate', function (e) {
       var checkin = $(this).datepicker('getDate')
-      checkin.setHours(10)
-      checkin.setMinutes(00)
+      // checkin.setHours(10)
+      // checkin.setMinutes(00)
+      // checkin.setSeconds(00)
+
+      let timein = new Date();
+      checkin.setHours(timein.getHours())
+      checkin.setMinutes(timein.getMinutes())
       checkin.setSeconds(00)
+
+
+      console.log("1KUINGIA",checkin)
       var checkout = $("#checkoutdate").datepicker('getDate')
+      checkout.setHours(10)
+      checkout.setMinutes(00)
+      checkout.setSeconds(00)
+
+      console.log("1KUDHOKA",checkout)
 
       var dayDiff = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
 
@@ -1546,9 +1559,14 @@ $("#addTenantModal").on('shown.bs.modal', function(){
       checkout.setMinutes(00)
       checkout.setSeconds(00)
 
+      console.log("2KUDHOKA",checkout)
       var checkin = $("#checkindate").datepicker('getDate')
+      console.log("2KUINGIA",checkin)
+
 
       var dayDiff = Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24));
+      var timeDiff = Math.ceil((checkout - checkin) / (1000 * 60 * 60));
+      console.log("saaaisiek",timeDiff)
 
       $("#total_time").val(dayDiff);
       var total = dayDiff * $("#curr_rate").text()
@@ -1568,8 +1586,14 @@ $("#addTenantModal").on('shown.bs.modal', function(){
     var date = new Date();
     $("#checkindate").datepicker("setDate", date); //set default checkindate
 
-    date.setDate(date.getDate() + 1);
+    if(date.getHours() < 10){
+      // pass
+    }else{
+      date.setDate(date.getDate() + 1);
+    }
     $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
+
+
 
 
     function checkTimeAlt(i) {

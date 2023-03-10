@@ -149,6 +149,33 @@ class Index(Resource):
 
         print(len(coss)," companies found")
 
+
+
+
+
+
+        # propu = ApartmentOp.fetch_apartment_by_name("Villa House")
+
+        # huse = ["F4-05","F4-26","F4-24","F4-19","F4-10"]
+
+        # for sisi in huse:
+
+        #     nyut = get_specific_house_obj(propu.id, sisi)
+
+        #     bill = fetch_target_period_erp_invoice(nyut)
+
+        #     if bill:
+        #         old_t = bill.invoice_date
+        #         new_t = old_t + datetime.timedelta(days=1)
+        #         # MonthlyChargeOp.update_invoice_date(bill, new_t)
+        #         print("old",old_t,"new",new_t)
+
+        #         tt = bill.tenant.house_allocated[0]
+        #         print("old checkin_date",tt.checkin_date)
+        #         # AllocateTenantOp.update_checkin_date(tt,new_t)
+            
+            
+
         # job8 = q.enqueue_call(
         #     func=send_out_single_email_crm_invoice, args=(3504,), result_ttl=5000
         # )

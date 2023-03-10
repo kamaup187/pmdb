@@ -2852,6 +2852,10 @@ class AllocateTenantOp(Occupancy,Base):
 
         db.session.commit()
 
+    def update_checkin_date(self, checkin_date):
+        self.checkin_date = checkin_date
+        db.session.commit()
+
     def update_invoice_status(self,status):
         self.invoiced = status
         db.session.commit()

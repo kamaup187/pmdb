@@ -179,6 +179,7 @@ api.add_resource(CallBackUrlBizlineNeema,"/m/bizlineneema/ins/payment")
 api.add_resource(CallBackUrlLagad,"/m/lagad/ins/payment")
 api.add_resource(CallBackUrlGadi,"/m/gad/ins/payment")
 api.add_resource(CallBackUrlLacasa,"/m/lacasa/ins/payment")
+api.add_resource(CallBackUrlGassa,"/m/gassa/ins/payment")
 
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")

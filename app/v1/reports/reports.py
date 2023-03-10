@@ -2875,8 +2875,7 @@ class GuestStatement(Resource):
         ###################################################################################################
         for bill in monthlybills:
             if bill.invoice_date:
-                # if bill.invoice_date > start and bill.invoice_date < end:
-                if bill.invoice_date > start:
+                if bill.invoice_date > start and bill.invoice_date < end:
                     num_rooms += 1
                     house_ids.append(bill.house_id)
                     """compute subtotals"""

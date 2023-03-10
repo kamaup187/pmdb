@@ -5748,7 +5748,7 @@ class CallBackUrlSentomEquity(Resource):
         my_json = my_data.decode('utf8').replace("'", '"')
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
         # ww = f"{my_json},PROD SENTOM Equity has sent data"
-        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         # response2 = sms.send(ww, ["+254725538750"],"KIOTAPAY")
 
 

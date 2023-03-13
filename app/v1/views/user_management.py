@@ -253,7 +253,12 @@ class CompanyGroup(Resource):
             target_group = request.form.get('group')
             if target_group:
                 group = target_group.title()
-                existing_group = CompanyUserGroupOp.fetch_usergroup_by_name(group)
+                curr_groups = current_user.company.groups
+                existing_group = None
+                for cg in curr_groups:
+                    if cg.name.title() == group:
+                        existing_group = cg
+
                 if existing_group:
 
                     for g in co.groups:

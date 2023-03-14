@@ -4098,7 +4098,7 @@ class BulkSms(Resource):
                 send_internal_email_notifications(prop_obj.company.name,text)
                 # response = sms.send(text, ["+254716674695"],sender)
 
-                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551" or permission_alt(current_user, 'edit'):
+                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551" or permission(current_user, 'sendsms'):
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
                         func=send_reminder_sms, args=(propid,rem_txt,channel,), result_ttl=5000

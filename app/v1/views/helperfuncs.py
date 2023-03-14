@@ -4911,6 +4911,9 @@ def mail_sender(conn,recepient,bill,template_vars,email_addr,co):
     if bill.house.housecode.billfrequency == 3:
         billfrequency = "quarterly"
         period = f"January, February, March service charge"
+    elif bill.house.housecode.billfrequency == 6:
+        billfrequency = "semi-annually"
+        period = "Semi-annually"
     else:
         period = f"{co.name.title()}: {get_str_month(bill.month)} invoice"
         billfrequency = "monthly"
@@ -5341,6 +5344,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                         if bill.house.housecode.billfrequency == 3:
                             str_month = f"January, February, March"
+                        elif bill.house.housecode.billfrequency == 6:
+                            str_month = f"Semi-annually"
                         else:
                             str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                             str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
@@ -5475,6 +5480,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                         if bill.house.housecode.billfrequency == 3:
                             str_month = f"January, February, March"
+                        elif bill.house.housecode.billfrequency == 6:
+                            str_month = f"Semi-annually"
                         else:
                             str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
                             str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
@@ -8028,7 +8035,10 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
                     months_to_bill = [1,2,3,4,5,6,7,8,9,10,11,12]
 
                 if month in months_to_bill:
-                    rent_charge = raw_rent_charge * billfreq
+                    if billfreq == 3:
+                        rent_charge = raw_rent_charge * billfreq
+                    else:
+                        rent_charge = raw_rent_charge * 1
                 else:
                     rent_charge = 0.0
 

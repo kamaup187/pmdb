@@ -624,8 +624,8 @@ class AllProperties(Resource):
             return render_template(template,prop=prop,commission=commission,commtype=commtype,colltype=colltype,nartype=nartype)
 
         if current_user.username.startswith("qc") or localenv:
-            # raw_props = ApartmentOp.fetch_all_unlinked_apartments()
-            raw_props = []
+            raw_props = ApartmentOp.fetch_all_unlinked_apartments()
+            # raw_props = []
         else:
             # raw_props = ApartmentOp.fetch_all_apartments_createdby_user_id(current_user.id)
             raw_props = []

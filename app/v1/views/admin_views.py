@@ -632,8 +632,8 @@ class AllProperties(Resource):
 
         # raw_props2 = current_user.company.props
 
-        if target != "tenants" and target != "units" and target != "tenant_list":
-            raw_props = current_user.company.props
+            if target != "tenants" and target != "units" and target != "tenant_list": #TODO push back this block
+                raw_props = current_user.company.props
         
         if current_user.company_user_group.name == "Sales":
             if target == "tenants" or target == "units":

@@ -939,6 +939,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/nbk/full-logo.jpg"
             letterhead = "../static/img/logos/nbk/letterhead.jpg"
 
+        elif str_name_company == "GreatHomes Consultants":
+            ##################################################
+            logopath = "../static/img/logos/greathomes/l-logo.png"
+            mobilelogopath = "../static/img/logos/greathomes/s-logo.png"
+            fulllogopath = "../static/img/logos/greathomes/full-logo.jpg"
+            letterhead = "../static/img/logos/greathomes/letterhead.jpg"
+
         elif str_name_company == "Developer" or str_name_company == "Demo Company Two":
             ##################################################
             logopath = "../static/img/logos/kiotapay/l-logo.png"

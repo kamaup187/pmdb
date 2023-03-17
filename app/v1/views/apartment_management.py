@@ -5766,7 +5766,7 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 3:
+                if len(sheet.row_values(1)) != 4:
                     data_format_error = True
 
             try:
@@ -5782,6 +5782,20 @@ class AddTenant(Resource):
                         tenanthouse = sheet.row_values(row)[0] if sheet.row_values(row)[0] else ""
 
                     raw_mobile = sheet.row_values(row)[1]
+
+                    email = sheet.row_values(row)[2]
+                    print("emaaaaiiiro",email)
+
+                    checkin = sheet.row_values(row)[3] if sheet.row_values(row)[3] else ""
+
+                    # from datetime import datetime
+
+                    try:
+                        dt = datetime.datetime.fromordinal(datetime.datetime(1900, 1, 1).toordinal() + int(checkin) - 2)
+                        hour, minute, second = floatHourToTime(checkin % 1)
+                        dt = dt.replace(hour=hour, minute=minute, second=second)
+                    except:
+                        dt = datetime.datetime.now()
 
                     print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
@@ -5852,6 +5866,10 @@ class AddTenant(Resource):
                         tenant = None
                         continue
 
+                    alloc = check_house_occupied(tenant)
+
+                    if dt:
+                        AllocateTenantOp.update_checkin_date(alloc[2], dt)
                     
                     if tenantphone and tenantphone != "0":
                         present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
@@ -5867,7 +5885,12 @@ class AddTenant(Resource):
                             if len(tenant.phone)<2:
                                 print("Updating...",tenant)
                                 TenantOp.update_phone(tenant,tenantphone)
- 
+
+                            tenantemail = email.lower() if email else ""
+                            if len(tenantemail) > 3:
+                                TenantOp.update_email(tenant,tenantemail)
+
+
                 return '<span class="text-success">Upload successful</span>'
 
             except Exception as e:
@@ -8424,6 +8447,8 @@ class Results(Resource):
 
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                     houses = tenant_obj.house
+
+
                 else:
                     if get_active_houses(tenant_obj)[0] == "Resident":
                         print(get_active_houses(tenant_obj)[0])
@@ -8433,6 +8458,8 @@ class Results(Resource):
                         houses = get_active_houses(tenant_obj)[1].house
                     else:
                         houses = None
+
+                alloc = check_house_occupied(tenant_obj)[2]
 
                 if tenant_obj.sms:
                     smsable = "Yes"
@@ -8458,7 +8485,7 @@ class Results(Resource):
                 else:
                     template = "ajax_tenant_detail.html"
 
-                return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
             if check_occupancy(house_obj)[0]=="occupied":
@@ -8811,6 +8838,8 @@ class Results(Resource):
                 else:
                     houses = None
 
+            alloc = check_house_occupied(tenant_obj)[2]
+
             if tenant_obj.sms:
                 smsable = "Yes"
             else:
@@ -8840,7 +8869,7 @@ class Results(Resource):
                 template = "ajax_tenant_detail.html"
                 rlink = "/"
 
-            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
 class ContactManagement(Resource):

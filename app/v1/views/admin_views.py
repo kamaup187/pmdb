@@ -659,14 +659,20 @@ class AllProperties(Resource):
         template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
         
         for prop in props:
+            houses = len(prop.houses)
             tenants = len(tenantauto(prop.id))
             ptnts =len(prop.ptenants)
 
+            occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+            occupancy_num = len(flatten(occupancy))
+
+            vacants = houses - occupancy_num
+
             if tenants:
                 tnt_disp = ""
-            houses = len(prop.houses)
+
             try:
-                occupancy = tenants/houses * 100
+                occupancy = occupancy_num/houses * 100
             except:
                 occupancy = 0
                 
@@ -688,7 +694,7 @@ class AllProperties(Resource):
                     'prospective':len(get_clients_by_status(prop.ptenants,"negotiated")),
                     'invoiced':len(get_clients_by_status(prop.ptenants,"invoiced and contracts") + get_clients_by_status(prop.ptenants,"invoiced and missing contracts")),
                     'closed':len(get_clients_by_status(prop.ptenants,"closed")),
-                    'vacant':houses - tenants,
+                    'vacant':vacants,
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':occ,
                     'createdby':prop.user_id,

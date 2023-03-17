@@ -2494,6 +2494,10 @@ class TenantOp(Tenant,Base):
         self.phone = phone
         db.session.commit()
 
+    def update_email(self,mail):
+        self.email = mail
+        db.session.commit()
+
     def get_houseno(self):
         """method to get tenant name from tenant alloc id"""
         house_alloc_objs = self.house_allocated

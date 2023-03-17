@@ -663,7 +663,7 @@ class AllProperties(Resource):
             tenants = len(tenantauto(prop.id))
             ptnts =len(prop.ptenants)
 
-            occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+            occupancy = filter_in_occupied_houses(prop.name)
             occupancy_num = len(flatten(occupancy))
 
             vacants = houses - occupancy_num

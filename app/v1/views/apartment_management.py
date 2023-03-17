@@ -5766,7 +5766,7 @@ class AddTenant(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 4:
+                if len(sheet.row_values(1)) != 5:
                     data_format_error = True
 
             try:
@@ -5784,9 +5784,13 @@ class AddTenant(Resource):
                     raw_mobile = sheet.row_values(row)[1]
 
                     email = sheet.row_values(row)[2]
-                    print("emaaaaiiiro",email)
 
-                    checkin = sheet.row_values(row)[3] if sheet.row_values(row)[3] else ""
+                    try:
+                        natid = str(int(sheet.row_values(row)[3]) if sheet.row_values(row)[3] else "" )
+                    except:
+                        natid = sheet.row_values(row)[3] if sheet.row_values(row)[3] else ""
+
+                    checkin = sheet.row_values(row)[4] if sheet.row_values(row)[4] else ""
 
                     # from datetime import datetime
 
@@ -5870,25 +5874,30 @@ class AddTenant(Resource):
 
                     if dt:
                         AllocateTenantOp.update_checkin_date(alloc[2], dt)
-                    
-                    if tenantphone and tenantphone != "0":
-                        present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
-                        if present4:
-                            print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone)
-                            # TenantOp.delete(present4)
-                            continue
-                        
-                        created_by = current_user.id
 
-                        if tenant:
+                    if tenant:
+                        # created_by = current_user.id
+                        if tenantphone and tenantphone != "0":
+                            present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
+                            if present4:
+                                print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone)
+                                # TenantOp.delete(present4)
+                                continue
+                            
                             print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
                             if len(tenant.phone)<2:
                                 print("Updating...",tenant)
                                 TenantOp.update_phone(tenant,tenantphone)
 
-                            tenantemail = email.lower() if email else ""
-                            if len(tenantemail) > 3:
-                                TenantOp.update_email(tenant,tenantemail)
+                        tenantemail = email.lower() if email else ""
+                        if len(tenantemail) > 3:
+                            TenantOp.update_email(tenant,tenantemail)
+
+                        if len(natid) > 6:
+                            TenantOp.update_national_id(tenant,natid)
+
+
+                # import pdb; pdb.set_trace()
 
 
                 return '<span class="text-success">Upload successful</span>'

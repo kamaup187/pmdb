@@ -6019,6 +6019,7 @@ class AddTenant(Resource):
         else:
             if target == "test":
                 return "successful",201
+            
             lead = request.form.get("lead")
             print("leaaads",lead)
             lead_obj = None
@@ -6038,6 +6039,7 @@ class AddTenant(Resource):
                 email = lead_obj.email
                 national_id = lead_obj.national_id
             else:
+
                 name = request.form.get('name')
                 if not name:
                     fname = request.form.get('fname')
@@ -6166,9 +6168,9 @@ class AddTenant(Resource):
                     allocate_tenant_obj.save()
                     TenantOp.update_status(tenant_obj,"Resident")
                     if bool_migrate:
-                        TenantOp.update_residency(tenant_obj,"Old")
-                    else:
                         TenantOp.update_residency(tenant_obj,"New")
+                    else:
+                        TenantOp.update_residency(tenant_obj,"Old")
             
                 msg = "Client added successfully"
             return msg + proceed

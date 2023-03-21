@@ -6451,6 +6451,20 @@ class UpdateTenant(Resource):
                     TenantOp.update_tenant(tenant,"","","","","","","",False,"")
             return render_template('ajax_dynamic_tenant_form.html',tenant=tenant)
 
+        if target == "editdeposit":
+            tenantid = request.args.get("tenantid")
+            identity = get_identifier(tenantid)
+
+            tenant = TenantOp.fetch_tenant_by_id(identity)
+            db.session.expire(tenant)
+
+            if tenant.deposits:
+                dep = tenant.deposits
+            else:
+                dep = None
+
+            return render_template('ajax_dynamic_deposit_form.html',tenant=tenant,dep=dep)
+
         if target == "tenant sms":
 
             tenantid = request.args.get("tenantid")

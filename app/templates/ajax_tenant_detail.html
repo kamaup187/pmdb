@@ -63,7 +63,7 @@
                             {% endif %}
                           </span></div>
 
-                          <div class="mb-2 ml-2">Deposit#: <span class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span><span class="update-deposit"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
+                          <div class="mb-2 ml-2">Deposit#: <span id="tenant-deposit" class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span><span class="update-deposit"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                         </div>  
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
@@ -622,6 +622,62 @@
     </div>
 
 
+    <div class="modal fade" id="editDepositModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update deposits</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div id="editdepositbed" class="mt-2">
+                        <!-- <div class="form-group input-icons">
+                          <input id="edit_name" class="form-control pl-5" type="text" placeholder="Tenant name">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_natid" class="form-control pl-5" type="text" placeholder="National ID">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_tel" class="form-control pl-5" type="tel" placeholder="Mobile number">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div>
+
+                        <div class="form-group input-icons">
+                          <input id="edit_email" class="form-control pl-5" type="email" placeholder="Email address">
+                          <span class="fa fa-fw fa-hashtag field-icon-two text-info"></span>
+                        </div> -->
+ 
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editdeposit" type="button" class="btn-secondary borderless text-white">Update</button>
+                        <!-- <button class="btn btn-light" id="closeeditTenantModal" type="button" data-dismiss="modal"></i>Dismiss</button> -->
+                        <button class="btn btn-light reset dispnon" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1103,6 +1159,28 @@
       error: function(xhr) {
         $("#billeditbed").html('<div class="center-btn text-danger mb-3">Error occured, it is being resolved</div>');
         $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+
+<script>
+  $("#editDepositModal").on('shown.bs.modal', function(){
+    $("#editdepositbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.updatetenant') }}",
+      type: "get",
+      data: {
+            tenantid: $("#edit_tenant_identifier").text(),
+            target: "editdeposit"
+          },
+      success: function(response) {
+        $("#editdepositbed").html(response);
+      },
+      error: function(xhr) {
+        alert("Error: " + xhr.responseText);
         }
     });
   });
@@ -1607,6 +1685,23 @@
                   $("#search-result-view").html(response);
                 }
               });
+        }
+      });
+  });
+
+
+  $(".update-deposit").click(function(){   
+    $(".update-deposit").html('<i class="fas fa-sync-alt fa-spin ml-2"></i>')
+      $.ajax({
+        url: "{{ url_for('api.updatedeposit') }}",
+        type: "get",
+        data: {
+                tenantid: $("#tenant_identifier").text(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $(".update-deposit").html('<i class="fas fa-sync-alt text-success ml-2"></i>')
+          $("#tenant-deposit").html(response)
         }
       });
   });

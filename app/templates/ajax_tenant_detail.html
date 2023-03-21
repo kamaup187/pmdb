@@ -15,6 +15,8 @@
 
 <a id="download_statement" href="/tenant/statement3?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
 <a id="download_statement_alt" href="/tenant/statement2?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+<a id="download_statement_4" href="/tenant/statement4?target=direct&tenantid={{tenant.id}}" target="_blank" class="dispnone"></a>
+
 
 <a id="download_statement2" href="/tenant/statement3?target=direct&tenantid=ptnt{{tenant.id}}" target="_blank" class="dispnone"></a>
 <a id="download_statement_alt2" href="/tenant/statement2?target=direct&tenantid=ptnt{{tenant.id}}" target="_blank" class="dispnone"></a>
@@ -61,10 +63,13 @@
                             {% endif %}
                           </span></div>
 
-                          <div class="mb-2 ml-2">Deposit#: <span class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span></div>
+                          <div class="mb-2 ml-2">Deposit#: <span class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span><span class="update-deposit"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                         </div>  
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
+
+                    <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editDepositModal"><span class="fixed-width-prop"><i class="fas fa-edit mr-2"></i> deposits </span></button>
+
 
                 </div>
 
@@ -76,9 +81,9 @@
                       <div class="mb-2 ml-2">House: <span class="font-weight-bold text-black">{{prop.name}}, {{houses}}</span></div>
                       <div class="mb-2 ml-2">Moved in#: 
                         {% if alloc.checkin_date %}
-                        <span class="font-weight-bold text-danger">{{alloc.checkin_date.strftime("%d/%B/%Y")}}</span>
+                        <span class="font-weight-bold text-danger checkindatevalue">{{alloc.checkin_date.strftime("%d/%B/%Y")}}</span>
                         {% else %}
-                        <span class="font-weight-bold text-danger">{{tenant.date.strftime("%d/%B/%Y")}}</span>
+                        <span class="font-weight-bold text-danger checkindatevalue">{{tenant.date.strftime("%d/%B/%Y")}}</span>
                         {% endif %}
                       </div>
                     </div>
@@ -118,8 +123,10 @@
                         <div class="mb-2 ml-2">Balance #: <span id="tenant-balance" class="text-danger font-weight-bold">{{'%0.1f'| format(tenant.balance|float)}} </span> <span class="update-balance"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                       </div>  
                   </div>
-                  <button id="downloadstatementalt" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement</span></button>
-                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Statement (w/breakdown)</span></button>
+                  <button id="downloadstatementalt" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class=""><i class="fas fa-print mr-2"></i>S1</span></button>
+                  <button id="downloadstatement" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class=""><i class="fas fa-print mr-2"></i>S2</span></button>
+                  <button id="downloadstatement4" type="button" class="btn btn-sm borderles small btn-success ml-3"><span class=""><i class="fas fa-print mr-2"></i>S3</span></button>
+
 
               </div>
                 
@@ -1118,6 +1125,7 @@
                 tel: $("#edit_tel").val(),
                 email: $("#edit_email").val(),
                 multi:$(".multisave").text(),
+                checkin:$("#checkin_date").val(),
                 sms:$(".accesssms").text()
             },
         success: function(response) {
@@ -1742,10 +1750,6 @@
     }else{
       $("#download_statement")[0].click();
     }
-
-        // setTimeout(function(){
-        //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
-        // },8000);
     });
 </script>
 
@@ -1758,10 +1762,18 @@
     }else{
       $("#download_statement_alt")[0].click();
     }
+    });
+</script>
 
-        // setTimeout(function(){
-        //     $('#downloadcontacts').html("<i class='fas fa-file-download mr-2'></i>Template")
-        // },8000);
+<script>
+  $("#downloadstatement4").click(function(){ 
+      // $('#downloadcontacts').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+
+    if($("#ttype").text() == "owner" || $("#ttype").text() == "resident") {
+      // $("#download_statement_alt2")[0].click();
+    }else{
+      $("#download_statement_4")[0].click();
+    }
     });
 </script>
 

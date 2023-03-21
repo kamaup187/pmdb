@@ -6480,6 +6480,7 @@ class UpdateTenant(Resource):
         fine = request.form.get('fine')
         multi = request.form.get('multi')
         smsaccess = request.form.get('sms')
+        checkin = request.form.get('checkin')
 
 
         pass1 = request.form.get('pass1')
@@ -6538,7 +6539,12 @@ class UpdateTenant(Resource):
         else:
             TenantOp.update_tenant(update_tenant,uid,name,phone,email,national_id,arr,fine,bool_multi,modified_by)
             TenantOp.update_can_receive_sms(update_tenant,bool_sms)
-
+            if checkin:
+                actual_checkin = parse(date_formatter(checkin))
+                alloc = check_house_occupied(update_tenant)[2]
+                if alloc:
+                    AllocateTenantOp.update_checkin_date(alloc,actual_checkin)
+                
             tenant_user = UserOp.fetch_user_by_national_id(update_tenant.national_id)
 
             if tenant_user:

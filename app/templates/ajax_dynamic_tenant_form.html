@@ -56,6 +56,28 @@
   </div>
 </div>
 
+<div class="row mb-3">
+  <div class="col-3 no-padding text-right"><span class="form-control border-0 semi-small">CheckIn date</span></div>
+  <div class="col-9 input-icons">
+      <label class="mb-0">Select date:(<span class="checkindatelabel text-danger small"></span>)</label>
+      <div class="date" data-date-format="dd-mm-yyyy">
+        <input id="checkin_date" name="checkindate" class="form-control ph" type="text" placeholder="-none set-" />
+      </div>
+  </div>
+</div>
+
+
+
+<script>
+  $(".checkindatelabel").text($(".checkindatevalue").text());
+
+  $("#checkin_date").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "dd-mm-yyyy",
+  });
+</script>
+
 
 <script type="text/javascript">
 

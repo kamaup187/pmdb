@@ -2967,7 +2967,7 @@ def check_house_occupied(tenant_obj):
         else:
             return "Vacated",None,next(reversed(house_allocs))
 
-    return "booked",None,"bar"
+    return "booked",None,None
 
 def get_active_houses(tenant_obj):
     """check whether tenant is a resident or alien""" 

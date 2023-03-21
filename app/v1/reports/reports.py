@@ -6058,7 +6058,6 @@ class TenantStatementFour(Resource):
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
 
-
         if raw_tenant:
             if raw_tenant.startswith("Vac"):
                 tenant_obj = extract_tenant(raw_tenant)
@@ -6074,7 +6073,6 @@ class TenantStatementFour(Resource):
         # if tenant_id:
         if house_obj:
 
-            
             range_period_data = []
             for i in house_obj.monthlybills:
                 period_of_billing = generate_start_date(i.month,i.year)
@@ -6113,7 +6111,18 @@ class TenantStatementFour(Resource):
                 date = rdate.strftime("%d/%b/%y")
 
                 # print(tenant_obj.date.month, tenant_obj.date.year, "vs", item.month, item.year)
-                if item.month == tenant_obj.date.month and item.year == tenant_obj.date.year:
+                alloc = check_house_occupied(tenant_obj)[2]
+
+                if alloc:
+                    if alloc.checkin_date:
+                        checkidate = alloc.checkin_date
+                    else:
+                        checkidate = tenant_obj.date
+                else:
+                    checkidate = tenant_obj.date
+
+
+                if item.month == checkidate.month and item.year == checkidate.year:
                     if house_obj.deposits:
                         if house_obj.deposits.rentdep:
                             cb += house_obj.deposits.rentdep

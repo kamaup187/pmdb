@@ -8536,6 +8536,8 @@ class Results(Resource):
                 # tenant_payments = tenant_obj.payments
                 tenant_payments = []
 
+                alloc = check_house_occupied(tenant_obj)[2]
+
                 filtered_payments = filter_in_recent_data(tenant_payments)
 
                 actual_payments = fetch_actual_payments(filtered_payments)
@@ -8551,7 +8553,7 @@ class Results(Resource):
                 else:
                     template = "ajax_tenant_detail.html"
 
-                return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,alloc=alloc,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
             else:
                 tenant_obj = f'<span class="text-danger">Vacant</span>'

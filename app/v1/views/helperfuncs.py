@@ -946,6 +946,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/greathomes/full-logo.jpg"
             letterhead = "../static/img/logos/greathomes/letterhead.jpg"
 
+        elif str_name_company == "Sirenga Investments Ltd":
+            ##################################################
+            logopath = "../static/img/logos/sirenga/l-logo.png"
+            mobilelogopath = "../static/img/logos/sirenga/s-logo.png"
+            fulllogopath = "../static/img/logos/sirenga/full-logo.jpg"
+            letterhead = "../static/img/logos/sirenga/letterhead.jpg"
+
         elif str_name_company == "Malibu Pharmacy":
             ##################################################
             logopath = "../static/img/logos/malibu/l-logo.png"

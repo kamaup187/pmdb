@@ -2748,14 +2748,20 @@ class TenantDepositOp(TenantDeposit,Base):
 
 
     def update_deposits(self,rentdep,waterdep,elecdep,otherdep,total,date,status):
-        self.rentdep = rentdep
-        self.waterdep = waterdep
-        self.elecdep = elecdep
-        self.otherdep = otherdep
-        self.total = total
-        self.date = date
-        self.status = status
-
+        if rentdep != "null":
+            self.rentdep = rentdep
+        if waterdep != "null":
+            self.waterdep = waterdep
+        if elecdep != "null":
+            self.elecdep = elecdep
+        if otherdep != "null":
+            self.otherdep = otherdep
+        if date:
+            self.date = date
+        if status:
+            self.status = status
+        if total:
+            self.total = total
         db.session.commit()
 
 

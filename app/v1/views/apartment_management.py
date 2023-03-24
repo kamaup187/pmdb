@@ -69,11 +69,11 @@ Cloud.config.update = ({
 
 # print(response.text)
 
-# telll = sms_phone_number_formatter("0722801433")
+# telll = sms_phone_number_formatter("0714370597")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
-# advanta_send_sms("Greetings Michael 🙂, \nLymax sms sender Id is ready ~ KiotaPay Team",telll,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
+# advanta_send_sms("Greetings PAUL 🙂, \MALIBU sms sender Id is ready ~ KiotaPay Team",telll,kiotapay_api_key,kiotapay_partner_id,"MALIBU PHAR")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 

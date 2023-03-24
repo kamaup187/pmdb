@@ -1707,6 +1707,32 @@
   });
 </script>
 
+
+
+<script>
+  $("#editdeposit").click(function(){   
+    $("#editdeposit").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatedeposit') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                rent: $("#edit_rentdep").val(),
+                water: $("#edit_waterdep").val(),
+                electricity: $("#edit_elecdep").val(),
+                other:$("#edit_otherdep").val(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $("#tenant-deposit").html(response)
+          $("#editdeposit").html("Update")  
+
+        }
+      });
+  });
+</script>
+
+
 <script>
   $('#expand').click(function(){
     $('.expand').toggleClass("dispnone-alt")

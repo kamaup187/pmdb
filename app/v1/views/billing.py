@@ -3511,7 +3511,35 @@ class UpdateDeposit(Resource):
                 dep.save()
                 TenantOp.update_deposit(tenant_obj,total)
 
-        return tenant_obj.deposit
+        return f"KES {tenant_obj.deposit:,.2f}"
+
+    def post(self):
+        tenantid = request.form.get("tenant_id")
+        ttype = request.form.get("ttype")
+
+        rentdep = request.form.get("rent")
+        waterdep = request.form.get("water")
+        elecdep = request.form.get("electricity")
+        otherdep = request.form.get("other")
+
+        values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
+
+        if ttype == "owner" or ttype == "resident":
+            return ""
+        else:
+            tenant_id = get_identifier(tenantid)
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            house_obj = check_house_occupied(tenant_obj)[1]
+
+        dep = tenant_obj.deposits
+        if dep:
+            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
+            total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+            TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+            TenantOp.update_deposit(tenant_obj,total)
+
+        return f"KES {tenant_obj.deposit:,.2f}"
 
 class Receipt(Resource):
     @login_required

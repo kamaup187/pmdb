@@ -8861,6 +8861,7 @@ class Results(Resource):
 
             if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 houses = tenant_obj.house
+                alloc = None
             else:
                 if get_active_houses(tenant_obj)[0] == "Resident":
                     print(get_active_houses(tenant_obj)[0])
@@ -8871,7 +8872,8 @@ class Results(Resource):
                 else:
                     houses = None
 
-            alloc = check_house_occupied(tenant_obj)[2]
+                alloc = check_house_occupied(tenant_obj)[2]
+
 
             if tenant_obj.sms:
                 smsable = "Yes"

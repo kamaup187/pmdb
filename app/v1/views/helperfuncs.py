@@ -873,8 +873,8 @@ def logo(co):
             letterhead = "../static/img/logos/cherah/letterhead.jpg"
 
         elif str_name_company == "LaCasa":
-            coc = CompanyOp.fetch_company_by_name("LaCasa")
-            CompanyOp.update_sms_provider(coc,"Advanta")
+            # coc = CompanyOp.fetch_company_by_name("LaCasa")
+            # CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/lacasa/l-logo.png"
             mobilelogopath = "../static/img/logos/lacasa/s-logo.png"

@@ -150,10 +150,6 @@ class Index(Resource):
         print(len(coss)," companies found")
 
 
-
-
-
-
         # propu = ApartmentOp.fetch_apartment_by_name("Villa House")
 
         # huse = ["F4-05","F4-26","F4-24","F4-19","F4-10"]
@@ -346,6 +342,19 @@ class Index(Resource):
         # if current_user.username.startswith('qc') or current_user.usercode =="3551" or current_user.username.startswith('quality'):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
+
+
+            
+
+
+            appa = ApartmentOp.fetch_apartment_by_name("Shalom Complex")
+            if appa:
+                print("APPPA",appa)
+                for tn in appa.tenants:
+                    TenantOp.delete(tn)
+
+                for hs in appa.house:
+                    HouseOp.delete(hs)
 
             com = CompanyOp.fetch_company_by_id(2344485)
             if not com:

@@ -345,16 +345,16 @@ class Index(Resource):
 
 
             
+            pa_list = ["Subdue Suites", "Maiyanat House","Baykon Apartments","Kit-Valley"]
+            for pa in pa_list:
+                appa = ApartmentOp.fetch_apartment_by_name(pa)
+                if appa:
+                    print("APPPA",appa)
+                    for tn in appa.tenants:
+                        TenantOp.delete(tn)
 
-
-            appa = ApartmentOp.fetch_apartment_by_name("Shalom Complex")
-            if appa:
-                print("APPPA",appa)
-                for tn in appa.tenants:
-                    TenantOp.delete(tn)
-
-                for hs in appa.houses:
-                    HouseOp.delete(hs)
+                    for hs in appa.houses:
+                        HouseOp.delete(hs)
 
             com = CompanyOp.fetch_company_by_id(2344485)
             if not com:

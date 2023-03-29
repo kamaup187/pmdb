@@ -953,8 +953,8 @@ def logo(co):
             fulllogopath = "../static/img/logos/sirenga/full-logo.jpg"
             letterhead = "../static/img/logos/sirenga/letterhead.jpg"
 
-        elif str_name_company == "Malibu Pharmacy":
-            coc = CompanyOp.fetch_company_by_name("Malibu Pharmacy")
+        elif str_name_company == "Malibu Pharmacy Ltd":
+            coc = CompanyOp.fetch_company_by_name("Malibu Pharmacy Ltd")
             CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/malibu/l-logo.png"
@@ -1109,7 +1109,7 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Lacasa":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
-    elif company.title() == "Malibu Pharmacy":
+    elif company.title() == "Malibu Pharmacy Ltd":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"MALIBU PHAR")
 
     elif company.title() == "Lymax Properties":

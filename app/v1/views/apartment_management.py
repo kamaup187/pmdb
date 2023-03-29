@@ -353,7 +353,7 @@ class Index(Resource):
                 for tn in appa.tenants:
                     TenantOp.delete(tn)
 
-                for hs in appa.house:
+                for hs in appa.houses:
                     HouseOp.delete(hs)
 
             com = CompanyOp.fetch_company_by_id(2344485)

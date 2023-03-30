@@ -8310,6 +8310,21 @@ def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
 
             all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
 
+            reading_obj = None
+
+            if house.apartment_id == 765:
+                meter_readings = house.meter_readings
+
+                for item in meter_readings:
+                    if item.reading_period:
+                        if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual water reading":
+                            reading_obj = item
+                            # target_readings.append(item)
+
+            if reading_obj:
+                if reading_obj.units > 1:
+                    return None
+
             for charge in all_charges:
                 if str(charge) == "Water" and charge.date.month == month and charge.date.year == year and not charge.reading_id:
                     if charge.amount == 0.0:

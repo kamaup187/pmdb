@@ -343,18 +343,21 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
+            # pa_list = [766,767]
+            # for pa in pa_list:
+            #     ppa = ApartmentOp.fetch_apartment_by_id(pa)
+            #     if ppa:
+            #         codes = ppa.housecodes
+            #         print("CODES", codes)
+            #         for cd in codes:
+            #             HouseCodeOp.update_water_garbage(cd,None,None,100)
+ 
+            #         print("APPPA",appa)
+            #         for tn in appa.tenants:
+            #             TenantOp.delete(tn)
 
-            
-            pa_list = ["Subdue Suites", "Maiyanat House","Baykon Apartments","Kit-Valley"]
-            for pa in pa_list:
-                appa = ApartmentOp.fetch_apartment_by_name(pa)
-                if appa:
-                    print("APPPA",appa)
-                    for tn in appa.tenants:
-                        TenantOp.delete(tn)
-
-                    for hs in appa.houses:
-                        HouseOp.delete(hs)
+            #         for hs in appa.houses:
+            #             HouseOp.delete(hs)
 
             com = CompanyOp.fetch_company_by_id(2344485)
             if not com:
@@ -7548,7 +7551,14 @@ class CaptureReading(Resource):
                 disp_units = f"{units_consumed}"
             else:
                 disp_units = "0.0"
-            return render_template('ajaxunitsdata.html',units=disp_units)
+            if units_consumed < 6:
+                gradient = "bg-gradient-info"
+            elif units_consumed < 9:
+                gradient = "bg-gradient-warning"
+            else:
+                gradient = "bg-gradient-danger"
+                
+            return render_template('ajaxunitsdata.html',gradient=gradient,units=disp_units)
 
         ###################################################################################################
         if last_reading > int(reading):

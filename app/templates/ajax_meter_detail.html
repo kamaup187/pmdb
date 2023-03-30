@@ -165,7 +165,7 @@
                           <td class="data-cell">{{ bill['house'] }}</td>
                           <td class="data-cell">{{ bill['last_reading'] }}</td>
                           <td class="data-cell">{{ bill['reading'] }}</td>
-                          <td class="data-cell">{{ bill['units'] }}</td>
+                          <td class="data-cell">{{ bill['units'] |safe}}</td>
                           <td class="data-cell">{{ bill['rate'] }}</td>
                           <td class="data-cell {{bill['highlight']}}">{{ bill['charged'] }}</td>
                           <td class="data-cell">{{ bill['period'] }}</td>

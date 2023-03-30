@@ -1045,6 +1045,18 @@ class HouseCodeOp(HouseCode,Base):
         self.user_id = modified_by
         db.session.commit()
 
+    def update_water_garbage(self,water,fwater,garbage):
+        if water:
+            self.waterrate = water
+        if fwater:
+            self.watercharge = fwater
+        if garbage:
+            self.garbagerate = garbage
+
+        print("water,garbage updated")
+
+        db.session.commit()
+
     def update_commission(self,commission):
         if commission != "null":
             self.int_commission = 0.0
@@ -1761,6 +1773,11 @@ class MeterReadingOp(MeterReading,Base):
             status = '<span class="text-danger"><i class="fas fa-ban mr-1"></i>Null</span>'
 
         return status
+    
+    def get_units(units):
+        if units > 8:
+            return f'<span class="text-danger">{units}</span>'
+        return f'<span class="text-black">{units}</span>'
 
     def view(self):
         return {
@@ -1775,7 +1792,7 @@ class MeterReadingOp(MeterReading,Base):
             'period':MeterReadingOp.get_str_month(self.reading_period.month),
             'reading':self.reading,
             'last_reading':self.last_reading,
-            'units':self.units,
+            'units':MeterReadingOp.get_units(self.units),
             'rate':MeterReadingOp.get_rates(self),
             'charged':MeterReadingOp.charge_status(self),
             'amount':MeterReadingOp.view_amount(self),

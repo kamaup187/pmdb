@@ -343,21 +343,26 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
-            # pa_list = [766,767]
+            # pa_list = [773]
             # for pa in pa_list:
             #     ppa = ApartmentOp.fetch_apartment_by_id(pa)
             #     if ppa:
-            #         codes = ppa.housecodes
-            #         print("CODES", codes)
-            #         for cd in codes:
-            #             HouseCodeOp.update_water_garbage(cd,None,None,100)
- 
-            #         print("APPPA",appa)
-            #         for tn in appa.tenants:
-            #             TenantOp.delete(tn)
+            #         import pdb; pdb.set_trace()
+                    # codes = ppa.housecodes
+                    # for cs in codes:
+                    #     HouseCodeOp.update_water_garbage(cs,150,None,200)
 
-            #         for hs in appa.houses:
-            #             HouseOp.delete(hs)
+                    # codes = ppa.housecodes
+                    # print("CODES", codes)
+                    # for cd in codes:
+                    #     HouseCodeOp.update_water_garbage(cd,None,None,100)
+ 
+                    # print("APPPA",appa)
+                    # for tn in appa.tenants:
+                    #     TenantOp.delete(tn)
+
+                    # for hs in appa.houses:
+                    #     HouseOp.delete(hs)
 
             com = CompanyOp.fetch_company_by_id(2344485)
             if not com:

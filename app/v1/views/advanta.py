@@ -254,7 +254,7 @@ def inva_send_sms(text,tel):
     payload = {
         "username": "invap_api",
         "password": "kX3RXvn5xCdePhKos4ZHYmpdiyXhLqVm",
-        "shortcode": "INVA_PROPTS",
+        "shortcode": "INVA_PAY",
         "mobile": tel,
         "message": text
     }

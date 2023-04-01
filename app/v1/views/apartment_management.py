@@ -343,7 +343,7 @@ class Index(Resource):
         if current_user.username == "kiotapay" or localenv:
             print("getting in")
 
-            # pa_list = [773]
+            # pa_list = [762]
             # for pa in pa_list:
             #     ppa = ApartmentOp.fetch_apartment_by_id(pa)
             #     if ppa:

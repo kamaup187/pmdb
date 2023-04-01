@@ -947,6 +947,8 @@ def logo(co):
             letterhead = "../static/img/logos/greathomes/letterhead.jpg"
 
         elif str_name_company == "Sirenga Investments Ltd":
+            coc = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
+            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/sirenga/l-logo.png"
             mobilelogopath = "../static/img/logos/sirenga/s-logo.png"
@@ -1111,6 +1113,9 @@ def sms_sender(company,sms_text,phonenum):
 
     elif company.title() == "Malibu Pharmacy Ltd":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"MALIBU PHAR")
+
+    elif company.title() == "Sirenga Investments Ltd":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"SirengaRent")
 
     elif company.title() == "Lymax Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
@@ -5195,7 +5200,12 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                 smslastreading = (f"{wbill.last_reading} ")
                 smscurrentreading = (f"{wbill.reading} ")
                 smsunits = (f"{wbill.units} ")
-                smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
+                smsstd = ""
+                if bill.apartment_id == 765:
+                    if bill.water < 200:
+                        smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
+                else:
+                    smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
                 smsbill = (f"Kes {amount:,.2f} ")
 
                 wmessage = f"\n\nWater, \nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"

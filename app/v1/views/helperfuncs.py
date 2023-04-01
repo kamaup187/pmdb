@@ -11183,6 +11183,28 @@ def mpesa_response(ctob_obj):
     except Exception as e:
         print("ERROR",e)
 
+    if ctob_obj.company_id == 121:
+        try:
+            phonenum = sms_phone_number_formatter_mpesa("0711896925")
+
+            message = f"{ctob_obj.fname} has transacted KES {ctob_obj.trans_amnt} in favour of {ctob_obj.bill_ref_num} REFERENCE {ctob_obj.trans_id}"
+
+            co = ctob_obj.company
+
+            if co:
+                if co.sms_provider == "Advanta":
+                    sms_sender(co.name,message,phonenum)
+                else:
+                    try:
+                        recipient = [phonenum]                
+                        response = sms.send(message, recipient, sender)
+                        print(response)
+                    except Exception as e:
+                        print(f"Houston, we have a problem {e}")
+
+        except Exception as e:
+            print("ERROR",e)
+
 
 def fetch_expenses(current_user):
     """will be deprecated in march 2021"""

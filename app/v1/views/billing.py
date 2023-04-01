@@ -4972,7 +4972,133 @@ class CallBackUrlSkyview(Resource):
 
         # auto_consume_ctob2(ctob_obj)
 
+class ValidateSirenga(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
 
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        try:
+            lname = data.get('LastName')
+        except:
+            lname = ""
+
+        response = sms.send(f"SIRENGA VALIDATION MPESA DATA JUST IN FROM {fname}", ["+254716674695"],"KIOTAPAY")
+
+class CallBackUrlSirenga(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        try:
+            lname = data.get('LastName')
+        except:
+            lname = ""
+
+        mode = "Mpesa"
+        company_id = 121
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        response = sms.send("SIRENGA MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+
+        com = CompanyOp.fetch_company_by_id(company_id)
+        props = com.props
+
+        prop = None
+        if bill_ref_num:
+
+            if bill_ref_num.startswith("TNT"):
+                clean_ref = bill_ref_num.replace("TNT", "")
+                tenant_obj = TenantOp.fetch_tenant_by_id(clean_ref)
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_uid(bill_ref_num)
+        else:
+            tenant_obj = None
+
+        if tenant_obj:
+            target_house = check_house_occupied(tenant_obj)[1]
+            if target_house:
+                prop = target_house.apartment
+        else:
+            target_house = None
+
+        if not target_house:
+            unformatted_ref = bill_ref_num.replace(" ","") if bill_ref_num else ""
+            if unformatted_ref:
+                formatted_ref = bill_ref_num.upper()
+
+            for prp in props:
+                for house in prp.houses:
+                    n = name_standard(house.name)
+                    if n == formatted_ref:
+                        prop = house.apartment
+                        target_house = house
+                        break
+
+        if not target_house:
+            print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+            return {"message": "House not found"}, 404
+
+        propid = prop.id if prop else None
+
+        dict_array = []
+
+        if prop:
+            payperiod = prop.billing_period
+        else:
+            payperiod = com.billing_period
+
+        dict_obj = {
+        "housename":target_house.name,
+        "amount":trans_amnt,
+        "date":"",
+        "ref":trans_id,
+        "desc":"",
+        "comment":""
+        }
+
+        dict_array.append(dict_obj)
+
+        uploadsjob2 = q.enqueue_call(
+            func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+        )
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+
+        # auto_consume_ctob2(ctob_obj)
+        mpesa_response(ctob_obj)
 
 
 class AutoPayment(Resource):

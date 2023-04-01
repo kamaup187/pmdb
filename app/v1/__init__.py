@@ -182,8 +182,7 @@ api.add_resource(CallBackUrlLacasa,"/m/lacasa/ins/payment")
 api.add_resource(CallBackUrlGassa,"/m/gassa/ins/payment")
 api.add_resource(CallBackUrlGrace,"/m/grace/ins/payment")
 api.add_resource(CallBackUrlSirenga,"/m/sirenga/ins/payment")
-api.add_resource(ValidateSirenga,"/m/sirenga/validate")
-
+# api.add_resource(ValidateSirenga,"/m/sirenga/validate")
 
 
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")

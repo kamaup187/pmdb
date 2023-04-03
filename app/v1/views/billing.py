@@ -3521,6 +3521,7 @@ class UpdateDeposit(Resource):
         waterdep = request.form.get("water")
         elecdep = request.form.get("electricity")
         otherdep = request.form.get("other")
+        status = request.form.get("status")
 
         values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
 
@@ -3532,8 +3533,9 @@ class UpdateDeposit(Resource):
             house_obj = check_house_occupied(tenant_obj)[1]
 
         dep = tenant_obj.deposits
+
         if dep:
-            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
+            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
             total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 

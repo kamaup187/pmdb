@@ -1721,6 +1721,7 @@
                 water: $("#edit_waterdep").val(),
                 electricity: $("#edit_elecdep").val(),
                 other:$("#edit_otherdep").val(),
+                status: $("input[name=depstatus]:checked").val(),
                 ttype: $("#ttype").text()
             },
         success: function(response) {

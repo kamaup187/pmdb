@@ -2,6 +2,24 @@
   Tenant: <span class="text-black font-size-bold">{{tenant.name}}</span>
 </div>
 
+<div class="row pt-1">
+
+  <div class="col-3 no-padding text-right"><span class="form-control border-0 semi-small">Status</span></div>
+  <div class="col-9 form-group row">
+    <div class="col-6">
+      <input class="" id="refundeddep" name="depstatus" type="radio" value="refunded" />
+      <label class="small font-weight-bold mb-1 text-danger" for="refundeddep">Refunded</label>
+  </div>
+
+  <div class="col-6">
+      <input class="" id="unrefundeddep" name="depstatus" type="radio" value="unrefunded" />
+      <label class="mb-1 small font-weight-bold text-danger" for="unrefundeddep">Unrefunded</label>
+  </div>
+  </div>
+
+
+</div>
+
 <div class="row">
   <div class="col-3 no-padding text-right"><span class="form-control border-0 semi-small">Rent</span></div>
   <div class="form-group col-9 no-paddin input-icons">
@@ -32,6 +50,32 @@
     <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
   </div>
 </div>
+
+
+{% if tenant.deposits.status %}
+<span class="dispnone" id="check_deposit_status">{{tenant.deposits.status}}</span>
+{% else %}
+<span class="dispnone" id="check_deposit_status">--not set--</span>
+{% endif %}
+
+
+<script>
+
+  $(document).ready(function () {
+
+  let checkCommtype = $("#check_deposit_status").text()
+
+  if (checkCommtype == "refunded") {
+      $("input[id=refundeddep]").attr("checked", "checked");
+
+  } else {
+      $("input[id=unrefundeddep]").attr("checked", "checked");
+  }
+
+  })
+</script>
+
+
 
 
 

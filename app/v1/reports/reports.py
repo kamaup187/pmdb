@@ -6670,17 +6670,24 @@ class TenantListing(Resource):
             allrent += unit.housecode.rentrate
             check = check_occupancy(unit)
             if check[0] == "occupied":
+                alloc = check_house_occupied(check[1])
+                if alloc[2]:
+                    date = alloc[2].date.date()
+                else:
+                    date = ""
                 tenant = check[1].name
                 contact = check[1].phone
                 alltenants += 1
             else:
                 tenant = "Vacant"
-                contact = ""
+                contact = "-"
+                date = "-"
 
             dict_obj = {
                 "house":unit.name,
                 "tenant":tenant,
                 "contact":contact,
+                "date":date,
                 "schedule": get_schedule(unit.housecode.billfrequency),
                 "rent":f"{unit.housecode.rentrate:,.1f}",
                 "serv":unit.housecode.servicerate,

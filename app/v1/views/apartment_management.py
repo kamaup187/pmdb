@@ -4239,7 +4239,7 @@ class DataUpload(Resource):
             data_format_error = False
 
             if sheet:
-                if len(sheet.row_values(1)) != 7:
+                if len(sheet.row_values(1)) != 8:
                     data_format_error = True
             try:
                 if data_format_error:
@@ -4256,6 +4256,7 @@ class DataUpload(Resource):
                     "mobile":sheet.row_values(row)[4],
                     "email":sheet.row_values(row)[5],
                     "water":sheet.row_values(row)[6],
+                    "garbage":sheet.row_values(row)[7]
                     }
 
                     dict_array.append(dict_obj)

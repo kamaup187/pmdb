@@ -6235,6 +6235,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         raw_mobile = item["mobile"]
         email = item["email"]
         water = item["water"]
+        garbage = item["garbage"]
 
         natid = None
 
@@ -6256,7 +6257,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
             lfile("Skipping ",housecode)
            
         elif group:
-            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
+            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water,garbage)
 
             print("house & amount",housecode,valid_inputs[0])
             lfile("house & amount",housecode,valid_inputs[0])
@@ -6268,12 +6269,12 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
             else:
                 print("creating rent")
                 lfile("creating rent")
-                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
 
 
         elif group == 0.0:
-            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
+            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water,garbage)
 
             print("house & amount",housecode,valid_inputs[0])
             lfile("house & amount",housecode,valid_inputs[0])
@@ -6285,7 +6286,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
             else:
                 print("creating rent")
                 lfile("creating rent")
-                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
 
         else:

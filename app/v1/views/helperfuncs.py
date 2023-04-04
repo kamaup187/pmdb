@@ -6254,7 +6254,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         if code_obj:
             print("Skipping ",housecode)
             lfile("Skipping ",housecode)
-            
+           
         elif group:
             valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
 
@@ -6270,6 +6270,24 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                 lfile("creating rent")
                 code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
+
+
+        elif group == 0.0:
+            valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group,water)
+
+            print("house & amount",housecode,valid_inputs[0])
+            lfile("house & amount",housecode,valid_inputs[0])
+
+            if ttype == "ptenant":
+                print("creating service")
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,apartment_id,user_id)
+                code_obj.save()
+            else:
+                print("creating rent")
+                lfile("creating rent")
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj.save()
+
         else:
             print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
             lfile("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)

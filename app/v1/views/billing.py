@@ -4706,7 +4706,7 @@ class CallBackUrlAstrol(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        response = sms.send("ASTROL MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("ASTROL MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         com = CompanyOp.fetch_company_by_id(company_id)
         props = com.props
@@ -4806,7 +4806,7 @@ class CallBackUrlAstrolRuiru(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         com = CompanyOp.fetch_company_by_id(company_id)
         props = com.props
@@ -5275,7 +5275,7 @@ class CallBackUrlVintage(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        response = sms.send("VINTAGE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("VINTAGE MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
 
         # auto_consume_ctob2(ctob_obj)
@@ -5311,7 +5311,7 @@ class CallBackUrlBizlineBaraka(Resource):
 
         msg = f"Bizline Baraka MPESA DATA JUST IN {trans_amnt} from {fname}"
 
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
 
 class CallBackUrlGoldLabel(Resource):
@@ -5345,7 +5345,7 @@ class CallBackUrlGoldLabel(Resource):
 
         msg = f"Goldlabel MPESA DATA JUST IN {trans_amnt} from {fname}"
 
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5380,7 +5380,7 @@ class CallBackUrlBizlineBestel(Resource):
 
         msg = f"BESTEL MPESA DATA JUST IN {trans_amnt} from {fname}"
 
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5414,7 +5414,7 @@ class CallBackUrlBizlineNeema(Resource):
         ctob_obj.save()
 
         msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5448,7 +5448,7 @@ class CallBackUrlLagad(Resource):
         ctob_obj.save()
 
         msg = f"LAGAD MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5483,7 +5483,7 @@ class CallBackUrlGassa(Resource):
         ctob_obj.save()
 
         msg = f"GASSA MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5517,7 +5517,7 @@ class CallBackUrlGrace(Resource):
         ctob_obj.save()
 
         msg = f"GRACE MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5551,7 +5551,7 @@ class CallBackUrlGadi(Resource):
         ctob_obj.save()
 
         msg = f"GADI MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5586,7 +5586,7 @@ class CallBackUrlLacasa(Resource):
         ctob_obj.save()
 
         msg = f"LACASA MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5621,7 +5621,7 @@ class CallBackUrlImani(Resource):
         ctob_obj.save()
 
         msg = f"IMANI MPESA DATA JUST IN {trans_amnt} from {fname}"
-        response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         mpesa_response(ctob_obj)
 
@@ -5660,7 +5660,7 @@ class CallBackUrlAssetisha(Resource):
             ctob_obj.save()
 
             msg = f"ASSETISHA MPESA DATA JUST IN {trans_amnt} from {fname}"
-            res = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+            # res = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
             # mpesa_response(ctob_obj)
 
@@ -6813,7 +6813,7 @@ class CallBackUrlMerit(Resource):
         auth = request.headers.get("Authorization")
 
         ww = f"{my_json} auth > {auth},PROD MERIT IM has sent data"
-        resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
 
         # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
 

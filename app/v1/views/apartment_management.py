@@ -4951,7 +4951,7 @@ class SmsDelivery(Resource):
                 # txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref-{reference} Confirmed. \nDear {fname}, we have received sum of Kshs. {payment_obj.amount}. \n{running_bal} \n\n~{str_co}."
                 txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref {reference}, sum of {paid} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
-                response = sms.send(txt, recipient ,sender)
+                # response = sms.send(txt, recipient ,sender) #TODO ENABLE THIS PART
 
                 resp = response["SMSMessageData"]["Recipients"][0]
                 raw_cost = resp["cost"]

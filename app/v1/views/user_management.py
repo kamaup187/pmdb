@@ -1538,6 +1538,14 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
+
+        ################################################################################
+
+        # birr = MonthlyChargeOp.fetch_specific_bill(60616)
+        # if birr:
+        #     import pdb; pdb.set_trace()
+        ################################################################################
+
         auth = os.getenv("TARGET") or TARGET
 
         loginpage = "login2.html" if auth == "lasshouse" else "login.html"

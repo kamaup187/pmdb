@@ -2605,6 +2605,7 @@ class RentStatement(Resource):
         ###################################################################################################
         for bill in monthlybills:
             if bill.month == target_period.month and bill.year == target_period.year:
+                # print("AYYYYYYE",bill.paidll,"houseeee",bill.house,"amount paiiideee",bill.paid_amount)
                 house_ids.append(bill.house_id)
                 """compute subtotals"""
                 # bill_item = LandlordSummaryOp.external_view(bill)

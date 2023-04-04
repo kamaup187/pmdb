@@ -795,8 +795,8 @@ def logo(co):
 
         elif str_name_company == "Sentom Investment":
             ##################################################
-            logopath = "../static/img/logos/sentom/l-logo.png"
-            mobilelogopath = "../static/img/logos/sentom/s-logo.png"
+            logopath = "../static/img/logos/sentom/new/l-logo.png"
+            mobilelogopath = "../static/img/logos/new/sentom/s-logo.png"
             fulllogopath = "../static/img/logos/sentom/full-logo.png"
             letterhead = "../static/img/logos/sentom/letterhead.jpg"
 

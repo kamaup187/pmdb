@@ -124,10 +124,8 @@ class MonitorActivity(Resource):
 
 class Scripts(Resource):
     def get(self):
-        # smsid = "938196589"
-        # propids = [765,766,767,768]
         propids = []
-        arr = ["934282378"]
+        arr = []
         for p in propids:
             pa = ApartmentOp.fetch_apartment_by_id(p)
             if pa:
@@ -138,7 +136,14 @@ class Scripts(Resource):
         # jb = q.enqueue_in(timedelta(seconds=3), myprint, args=("running scripts",))
 
         for r in arr:
-            jb = q.enqueue_in(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))
+            # jb = q.enqueue_in(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))
+            
+            # jb = q.enqueue_call(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))
+
+            uploadsjob2 = q.enqueue_call(
+                func=advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,), result_ttl=5000
+                )
+
         return "working..."
 
 class Index(Resource):

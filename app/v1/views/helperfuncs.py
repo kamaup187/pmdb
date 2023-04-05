@@ -1101,12 +1101,12 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
         bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
 
         if payment_obj:
-            print("PAYMENT FOUND, DELIVERY STATUS : ",resp1)
+            print("PAYMENT FOUND: ,HOUSE: ",payment_obj.house," DATE: ",payment_obj.date.date()," DELIVERY STATUS : ",resp1)
             PaymentOp.update_sms_status(payment_obj,resp1)
 
         elif bill_obj:
             MonthlyChargeOp.update_sms_status(bill_obj,resp1)
-            print("INVOICE FOUND, DELIVERY STATUS: ",resp1)
+            print("INVOICE FOUND: ,HOUSE: ",bill_obj.house," DATE: ",bill_obj.month,"/",bill_obj.year," DELIVERY STATUS : ",resp1)
 
         else:
             print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")

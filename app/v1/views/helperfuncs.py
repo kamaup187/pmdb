@@ -131,6 +131,18 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 from functools import wraps
 from timeit import default_timer
 
+def myprint(txt):
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
+
+    phonenum = sms_phone_number_formatter("0716674695")
+
+    # advanta_send_sms(txt,[tel],kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+    sms_sender2(txt,phonenum)
+
+
 def generate_hash(ckey,skey):
     passphrase = ckey + ':' + skey
     encoded_p = base64.b64encode(passphrase.encode()).decode()
@@ -981,6 +993,9 @@ def logo(co):
                 sign = ""
             else:
                 ##################################################
+                # CompanyOp.update_sms_provider(co,"Advanta")
+                ##################################################
+
                 logopath = "../static/img/logos/kiotapay/l-logo.png"
                 mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
                 fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
@@ -1090,6 +1105,44 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
         else:
             print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 
+def advanta_sms_delivery2(apikey,partnerid,msgid):
+
+    payload = {
+    "apikey":apikey,
+    "partnerID":partnerid,
+    "messageID":msgid
+    }
+
+    url = "https://quicksms.advantasms.com/api/services/getdlr/"
+
+    response = requests.get(url, json=payload)
+
+    try:
+        resp = response.json()["delivery-description"]
+        print("DELIVERY REPORT:", resp)
+    except:
+        resp = "unknown error"
+
+    if resp == "DeliveredToTerminal":
+        resp1 = "Success"
+    else:
+        resp1 = "blocked"
+
+    if resp1 == "unknown error":
+        pass
+    else:
+        payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
+        if payment_obj:
+            print("DELIVERY STATUS! PAYMENT FOUND")
+            PaymentOp.update_sms_status(payment_obj,resp1)
+
+        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
+        if bill_obj:
+            MonthlyChargeOp.update_sms_status(bill_obj,resp1)
+            print("DELIVERY STATUS! INVOICE FOUND")
+        else:
+            print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
+
 def sms_sender(company,sms_text,phonenum):
     if company.title() == "Lesama Ltd":
         report = advanta_send_sms(sms_text,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
@@ -1142,7 +1195,9 @@ def sms_sender(company,sms_text,phonenum):
         print("NO REPORT TO CHECK")
         return None
 
- 
+def sms_sender2(sms_text,phonenum):
+    report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
 def remove_dups(x):
     return list(dict.fromkeys(x))
 
@@ -5127,6 +5182,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
     prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
     update = False
+
+    # import pdb; pdb.set_trace()
 
     if prop_obj and charge == "all":
 

@@ -1538,12 +1538,11 @@ class UserLogin(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /signin"""
 
-
         ################################################################################
-
-        # birr = MonthlyChargeOp.fetch_specific_bill(60616)
+        # birr = MonthlyChargeOp.fetch_specific_bill(63597)
         # if birr:
         #     import pdb; pdb.set_trace()
+            # advanta_sms_delivery2(kiotapay_api_key,kiotapay_partner_id,birr.smsid)
         ################################################################################
 
         auth = os.getenv("TARGET") or TARGET

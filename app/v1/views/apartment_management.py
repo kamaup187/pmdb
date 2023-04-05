@@ -122,6 +122,12 @@ class MonitorActivity(Resource):
                 logins = len(UserLoginDataOp.fetch_logins_by_day(time))
             ))
 
+class Scripts(Resource):
+    def get(self):
+        txt = "running..."
+        jb = q.enqueue_in(timedelta(seconds=30), myprint, args=(txt,))
+        return "working..."
+
 class Index(Resource):
     """class"""
     @login_required

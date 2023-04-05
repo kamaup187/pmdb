@@ -1094,22 +1094,27 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
     print("Response fetched: ", resp, "\nProcessed response: ", resp1)
 
+
+    payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
+    bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
+
+    if payment_obj:
+        print("PAYMENT FOUND: ,HOUSE: ",payment_obj.house," DATE: ",payment_obj.date.date()," DELIVERY STATUS : ",resp1)
+    elif bill_obj:
+        print("INVOICE FOUND: ,HOUSE: ",bill_obj.house," DATE: ",bill_obj.month,"/",bill_obj.year," DELIVERY STATUS : ",resp1)
+    else:
+        print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
+
     if resp == "unknown error":
         pass
     else:
-        payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
-        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
-
         if payment_obj:
-            print("PAYMENT FOUND: ,HOUSE: ",payment_obj.house," DATE: ",payment_obj.date.date()," DELIVERY STATUS : ",resp1)
             PaymentOp.update_sms_status(payment_obj,resp1)
-
         elif bill_obj:
             MonthlyChargeOp.update_sms_status(bill_obj,resp1)
-            print("INVOICE FOUND: ,HOUSE: ",bill_obj.house," DATE: ",bill_obj.month,"/",bill_obj.year," DELIVERY STATUS : ",resp1)
-
         else:
-            print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
+            print("CANNOT UPDATE DELIVERY STATUS FOR NON EXISTENT OBJECT")
+
 
 def advanta_sms_delivery2(apikey,partnerid,msgid):
 

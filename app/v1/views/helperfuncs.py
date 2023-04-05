@@ -1094,14 +1094,16 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
     print("Response fetched: ", resp, "\nProcessed response: ", resp1)
 
+    sanity_check = ApartmentOp.fetch_all_apartments()
+    print("DB CONNECTED: ", len(sanity_check))
 
     payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
     bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
 
     if payment_obj:
-        print("PAYMENT FOUND: ,HOUSE: ",payment_obj.house," DATE: ",payment_obj.date.date()," DELIVERY STATUS : ",payment_obj.sms_status)
+        print("PAYMENT FOUND: COMPANY: ",payment_obj.apartment.company,"APARTMENT :",payment_obj.apartment," HOUSE: ",payment_obj.house," DATE: ",payment_obj.date.date()," DELIVERY STATUS : ",payment_obj.sms_status)
     elif bill_obj:
-        print("INVOICE FOUND: ,HOUSE: ",bill_obj.house," DATE: ",bill_obj.month,"/",bill_obj.year," DELIVERY STATUS : ",bill_obj.sms_invoice)
+        print("INVOICE FOUND COMPANY: ",bill_obj.apartment.company,"APARTMENT :",bill_obj.apartment," HOUSE: ",bill_obj.house," DATE: ",bill_obj.month,"/",bill_obj.year," DELIVERY STATUS : ",bill_obj.sms_invoice)
     else:
         print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 

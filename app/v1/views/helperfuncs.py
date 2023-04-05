@@ -1081,15 +1081,18 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
     response = requests.get(url, json=payload)
 
     try:
+        print("Attempting to get delivery REPORT:")
         resp = response.json()["delivery-description"]
-        print("DELIVERY REPORT:", resp)
-    except:
+    except Exception as e:
+        print("Error occured while getting status: ", e)
         resp = "unknown error"
 
     if resp == "DeliveredToTerminal":
         resp1 = "Success"
     else:
         resp1 = "blocked"
+
+    print("Response fetched: ", resp, "\nProcessed response: ", resp1)
 
     if resp1 == "unknown error":
         pass

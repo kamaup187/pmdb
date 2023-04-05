@@ -1539,9 +1539,21 @@ class UserLogin(Resource):
         """Handle GET request for this view. Url ---> /signin"""
 
         ################################################################################
+
         # birr = MonthlyChargeOp.fetch_specific_bill(63597)
         # if birr:
         #     import pdb; pdb.set_trace()
+
+        # inv = MonthlyChargeOp.fetch_monthlycharge_by_smsid("oLJgC7lLgeKy2Jor")
+        # rec = PaymentOp.fetch_payment_by_smsid("oLJgC7lLgeKy2Jor")
+
+        # if inv:
+        #     print("found invoice",inv)
+        #     import pdb; pdb.set_trace()
+        # elif rec:
+        #     print("found receipt",rec)
+        #     import pdb; pdb.set_trace()
+
             # advanta_sms_delivery2(kiotapay_api_key,kiotapay_partner_id,birr.smsid)
         ################################################################################
 

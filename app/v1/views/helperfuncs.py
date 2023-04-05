@@ -131,16 +131,17 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 from functools import wraps
 from timeit import default_timer
 
-def myprint(txt):
-    from app import create_app
-    app = create_app()
-    app.app_context().push()
+def myprint(txt,param3):
+    pass
+    # from app import create_app
+    # app = create_app()
+    # app.app_context().push()
 
-    phonenum = sms_phone_number_formatter("0716674695")
+    # jb = q.enqueue_in(timedelta(seconds=300), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,param3,))
 
-    # advanta_send_sms(txt,[tel],kiotapay_api_key,kiotapay_partner_id,"Bizline")
+    # phonenum = sms_phone_number_formatter("0716674695")
 
-    sms_sender2(txt,phonenum)
+    # sms_sender2(txt,phonenum)
 
 
 def generate_hash(ckey,skey):
@@ -1094,14 +1095,16 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
         pass
     else:
         payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)
+        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
+
         if payment_obj:
-            print("DELIVERY STATUS! PAYMENT FOUND")
+            print("PAYMENT FOUND, DELIVERY STATUS : ",resp1)
             PaymentOp.update_sms_status(payment_obj,resp1)
 
-        bill_obj = MonthlyChargeOp.fetch_monthlycharge_by_smsid(msgid)
-        if bill_obj:
+        elif bill_obj:
             MonthlyChargeOp.update_sms_status(bill_obj,resp1)
-            print("DELIVERY STATUS! INVOICE FOUND")
+            print("INVOICE FOUND, DELIVERY STATUS: ",resp1)
+
         else:
             print("DELIVERY STATUS UNAVAILABLE FOR THAT MESSAGE")
 

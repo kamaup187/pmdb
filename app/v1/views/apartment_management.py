@@ -124,8 +124,19 @@ class MonitorActivity(Resource):
 
 class Scripts(Resource):
     def get(self):
-        txt = "running..."
-        jb = q.enqueue_in(timedelta(seconds=3), myprint, args=(txt,))
+        smsid = "938196589"
+        propids = [765,766,767,768]
+        arr = []
+        for p in propids:
+            pa = ApartmentOp.fetch_apartment_by_id(p)
+            if pa:
+                invoices = pa.monthlybills
+                for vo in invoices:
+                    arr.append(vo.smsid)
+
+        for r in arr:
+            jb = q.enqueue_in(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))
+        # jb = q.enqueue_in(timedelta(seconds=3), myprint, args=(txt,smsid,))
         return "working..."
 
 class Index(Resource):

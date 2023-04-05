@@ -134,9 +134,10 @@ class Scripts(Resource):
                 for vo in invoices:
                     arr.append(vo.smsid)
 
+        jb = q.enqueue_in(timedelta(seconds=3), myprint, args=(txt,))
+
         for r in arr:
             jb = q.enqueue_in(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))
-        # jb = q.enqueue_in(timedelta(seconds=3), myprint, args=(txt,smsid,))
         return "working..."
 
 class Index(Resource):

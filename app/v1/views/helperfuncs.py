@@ -131,17 +131,15 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 from functools import wraps
 from timeit import default_timer
 
-def myprint(txt,param3):
-    pass
-    # from app import create_app
-    # app = create_app()
-    # app.app_context().push()
+def myprint(txt):
+    
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
 
-    # jb = q.enqueue_in(timedelta(seconds=300), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,param3,))
+    phonenum = sms_phone_number_formatter("0716674695")
 
-    # phonenum = sms_phone_number_formatter("0716674695")
-
-    # sms_sender2(txt,phonenum)
+    sms_sender2(txt,phonenum)
 
 
 def generate_hash(ckey,skey):

@@ -125,7 +125,7 @@ class MonitorActivity(Resource):
 class Scripts(Resource):
     def get(self):
         txt = "running..."
-        jb = q.enqueue_in(timedelta(seconds=30), myprint, args=(txt,))
+        jb = q.enqueue_in(timedelta(seconds=3), myprint, args=(txt,))
         return "working..."
 
 class Index(Resource):

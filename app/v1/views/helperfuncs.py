@@ -1077,10 +1077,12 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
     url = "https://quicksms.advantasms.com/api/services/getdlr/"
 
     response = requests.get(url, json=payload)
-
+    # import pdb; pdb.set_trace()
+    res = response.json()
+    print("PAYLOAD: ",res)
     try:
         print("Attempting to get delivery REPORT:")
-        resp = response.json()["delivery-description"]
+        resp = res["delivery-description"]
     except Exception as e:
         print("Error occured while getting status: ", e)
         resp = "unknown error"

@@ -124,9 +124,10 @@ class MonitorActivity(Resource):
 
 class Scripts(Resource):
     def get(self):
-        smsid = "938196589"
-        propids = [765,766,767,768]
-        arr = []
+        # smsid = "938196589"
+        # propids = [765,766,767,768]
+        propids = []
+        arr = ["934282378"]
         for p in propids:
             pa = ApartmentOp.fetch_apartment_by_id(p)
             if pa:
@@ -134,7 +135,7 @@ class Scripts(Resource):
                 for vo in invoices:
                     arr.append(vo.smsid)
 
-        jb = q.enqueue_in(timedelta(seconds=3), myprint, args=("running scripts",))
+        # jb = q.enqueue_in(timedelta(seconds=3), myprint, args=("running scripts",))
 
         for r in arr:
             jb = q.enqueue_in(timedelta(seconds=3), advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,))

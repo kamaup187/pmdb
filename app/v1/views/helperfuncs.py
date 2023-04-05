@@ -1094,7 +1094,7 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
     print("Response fetched: ", resp, "\nProcessed response: ", resp1)
 
-    if resp1 == "unknown error":
+    if resp == "unknown error":
         pass
     else:
         payment_obj = PaymentOp.fetch_payment_by_smsid(msgid)

@@ -352,6 +352,8 @@ api.add_resource(DownloadReceipt,"/download/receipt/<string:ri>")
 api.add_resource(ServeReceipt,"/serve/receipt")
 
 api.add_resource(PrintReceipt,"/print/receipt/<string:ri>")
+api.add_resource(PrintActualReceipt,"/printreceipt/<string:ri>")
+
 
 api.add_resource(DownloadInvoice,"/download/invoice/<string:ri>")
 api.add_resource(DeleteReceipt,"/del/r/prop/<string:propid>")

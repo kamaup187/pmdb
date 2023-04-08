@@ -3384,6 +3384,113 @@ class PrintReceipt(Resource):
         else:
             return ""
 
+class PrintActualReceipt(Resource):
+    @login_required
+    def get(self,ri):
+
+        pay_id = get_identifier(ri)
+
+        payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
+        db.session.expire(payment_obj)
+        if payment_obj.voided:
+            disp = ""
+        else:
+            disp = "dispnone"
+
+        p = inflect.engine()
+        int_amount = int(payment_obj.amount)
+        str_amount = p.number_to_words(int_amount)
+        stramount = str_amount.capitalize()
+
+        paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+        payperiod = payment_obj.pay_period if payment_obj.pay_period else payment_obj.date
+
+
+        if payment_obj.charged_amount < 1:
+            bill = 0.0
+        else:
+            bill = f"{payment_obj.charged_amount:,.0f}"
+
+        paid = f'Kes {payment_obj.amount:,.0f}'
+
+        if payment_obj.balance:
+            if payment_obj.balance > -1:
+                baltitle = "Balance"
+                outline = "text-danger"
+                bal = f"Kes {payment_obj.balance:,.0f}"
+            else:
+                baltitle = "Advance"
+                outline = "text-success"
+                bal = f"Kes {payment_obj.balance*-1:,.0f}"
+
+        else:
+            baltitle = "Balance"
+            outline = "text-black"
+            bal = f"Kes 0.0"
+
+        server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+
+        co = current_user.company
+
+        if payment_obj.receipt_num:
+            receiptno = payment_obj.receipt_num
+        else:
+            receiptno = payment_obj.id
+
+        prop = payment_obj.apartment
+
+        address = None
+
+        if payment_obj.apartment.company.name == "LaCasa":
+
+            if prop.address:
+
+                address = {
+                    "address":prop.address,
+                    "tel":prop.phone,
+                    "email":prop.email
+                }
+
+            else:
+                address = {
+                    "address":"Mwiki, Kasarani",
+                    "tel":"0735267087",
+                    "email":"bizlineinvestment@gmail.com"
+                }
+
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+        else:
+            tenant = payment_obj.tenant
+
+        template = "pos_receipt2.html"
+
+        return Response(render_template(
+            template,
+            voided = disp,
+            tenant = tenant.name,
+            house= payment_obj.house.name,
+            amount=paid,
+            str_amount=stramount,
+            str_month=get_str_month(payperiod.month),
+            paydate=paydate.strftime("%d/%b/%y"),
+            paytime=paydate.strftime("%X"),
+            bill=bill,
+            baltitle=baltitle,
+            outline=outline,
+            balance=bal,
+            chargetype=payment_obj.payment_name,
+            receiptno=receiptno,
+            refnum=payment_obj.ref_number,
+            paymode=payment_obj.paymode,
+            logopath=logo(current_user.company)[0],
+            company=current_user.company,
+            address=address,
+            user=current_user.company if current_user.company == "MojaMbili Homes" else server,
+            prop=prop,
+            randid=payment_obj.rand_id if payment_obj.rand_id else "a"
+        ))
+
 class UpdateBalance(Resource):
     def get(self):
         tenant_id = request.args.get("tenantid")

@@ -8951,7 +8951,11 @@ class Results(Resource):
                 template = "ajax_tenant_detail_erp.html"
             else:
                 template = "ajax_tenant_detail.html"
-                rlink = "/"
+                if tenant_obj.payments:
+                    pay_obj = max(tenant_obj.payments, key=lambda x: x.id)
+                    rlink = f"/printreceipt/{pay_obj.id}"
+                else:
+                    rlink = "/"
 
             return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 

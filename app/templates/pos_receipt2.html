@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery-ui.css') }}">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+    
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+  
+    <!-- Custom styles-->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datatables.min.css') }}">
+  
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+  
+  
+  
+    <!-- <link rel="stylesheet" href="../static/style.css"> -->
+    <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink.css') }}"> -->
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'PT Sans', sans-serif;
+        }
+
+        @page {
+            size: 2.8in 11in;
+            margin-top: 0cm;
+            margin-left: 0cm;
+            margin-right: 0cm;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        tr {
+            width: 100%;
+
+        }
+
+        h1 {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #logo {
+            width: 60%;
+            text-align: center;
+            -webkit-align-content: center;
+            align-content: center;
+            padding: 5px;
+            margin: 2px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            -webkit-align-content: center;
+            align-content: center;
+            vertical-align: middle;
+        }
+
+        .items thead {
+            text-align: center;
+        }
+
+        .d-none{
+            display: none;
+        }
+
+        .center-align {
+            text-align: center;
+        }
+
+        .bill-details td {
+            font-size: 12px;
+        }
+
+        .receipt {
+            font-size: medium;
+        }
+
+        .items .heading {
+            font-size: 12.5px;
+            text-transform: uppercase;
+            border-top: 1px solid black;
+            margin-bottom: 4px;
+            border-bottom: 1px solid black;
+            vertical-align: middle;
+        }
+
+        .items thead tr th:first-child,
+        .items tbody tr td:first-child {
+            width: 47%;
+            min-width: 47%;
+            max-width: 47%;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        .items td {
+            font-size: 12px;
+            text-align: right;
+            vertical-align: bottom;
+        }
+
+        .price::before {
+            content: "Kshs ";
+            font-family: Arial;
+            text-align: right;
+        }
+
+        .sum-up {
+            text-align: right !important;
+        }
+
+        .total {
+            font-size: 13px;
+            border-top: 1px dashed black !important;
+            border-bottom: 1px dashed black !important;
+        }
+
+        .highlight {
+            font-size: 13px;
+            white-space: nowrap !important;
+        }
+
+        .total.text,
+        .total.price {
+            text-align: right;
+        }
+
+        .total.price::before {
+            content: "Kshs ";
+        }
+
+        .line {
+            border-top: 1px solid black !important;
+        }
+
+        .line.dotted {
+            border-top: 1px dotted rgb(98, 98, 98) !important;
+        }
+
+        .heading.rate {
+            width: 20%;
+        }
+
+        .heading.amount {
+            width: 25%;
+        }
+
+        .heading.qty {
+            width: 5%
+        }
+
+        p {
+            padding: 1px;
+            margin: 0;
+        }
+
+        section,
+        footer {
+            font-size: 12px;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            page-break-after: always;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="logo" class="media" data-src="logo.png" src="./logo.png"></div>
+
+    </header>
+
+    <div id="invoice">
+        <div id="invoice-POS">
+    
+          <div class="r-border">
+            <div class="center-btn svg underline">
+              <div class="svg-child">
+                <div class="logo">
+                  <span><img src={{logopath}} alt="logo"></span>
+                </div>
+                <!-- <div class="info text-black"> 
+                  <span>{{company}}</span>
+                </div> -->
+    
+                <div class="center-btn"><strong class="text-black">~ {{prop.name.title()}} ~</strong></div>
+    
+                {%if not address%}
+                <div class="center-btn mb-3 ln-14 text-black"> 
+                  <div class="small mt-2">Address : {{company.street_address}}</div>
+                  <div class="small">PO BOX : {{company.mail_box}}</div>
+                  <div class="small">Tel : {{company.phone}}</div>
+                  <div class="small">Email: {{company.email}}</div>
+                </div>
+                {% endif %}
+    
+                {%if address%}
+                <div class="center-btn mb-3 ln-14 text-black"> 
+                  <div class="small mt-2">Address : {{address.address}}</div>
+                  <div class="small">Tel : {{address.tel}}</div>
+                  <div class="small">Email: {{address.email}}</div>
+                </div>
+                {% endif%}
+                
+              </div>
+            </div>
+          
+            <div class="svg">
+              <div class="svg-child text-left">
+                <div class="row">
+                  <span class="col-6 small">Date: <strong class="text-black font-weight-bold">{{paydate}}</strong></span>
+                  <span class="col-6 small text-right">Time: <strong class="text-black font-weight-bold pr-3">{{paytime}}</strong></span>
+                </div>
+                <div class="center-btn underline font-weight-bold text-primary">
+                    OFFICIAL PAYMENT RECEIPT
+                </div>
+            
+                <span class="{{voided}} watermark">VOIDED</span>
+    
+                <div class="row small">
+                    <span class="col-6 text-black">Receipt No. <strong class="text-danger font-weight-bold">{{receiptno}}</strong></span>
+                    <span class="col-6 text-right text-black">Ref: <span class="text-info font-weight-bold pr-3">{{refnum}}</span></span>
+                </div>
+                <span class="text-gray-600 small mb-1">Received from:</span><br>
+                <div class="underline no-padding center-btn">
+                  <div class="ln-10 text-black pb-1">{{tenant}}</div>
+                </div>
+              </div>
+            </div>
+      
+      
+        
+            <div class="svg underline">
+              <div class="svg-child text-left">
+                <div class="row service mb-1 pb-1">
+                  <div class="col-8 itemtext text-black font-weight-bold mt-2"><div class="text-gray-500 center-btn mb-1">(words)</div> {{str_amount}} shillings only.</div>
+                  <div class="col-4 itemtext text-black font-weight-bold mt-2 border-left-semidark"><div class="text-gray-500 mb-1">(figures)</div> {{amount}}</div>
+                </div> 
+                <div class="row service mb-1 pb-1">
+                  <span class="col-8 itemtext mt-0"><div class="text-gray-500 center-btn">Flat/Apartment/Estate:</div><div class="text-black">{{prop}}</div></span>
+                  <span class="col-4 itemtext mt-0 border-left-semidark"><div class="text-gray-500">House</div> <div class="text-black">{{house}}</div></span>
+                </div>
+                <div class="service mb-1 pb-1 itemtext center-btn">Being payment for the month of <strong class="text-black font-weight-bold">{{str_month}}</strong></div>       
+                <div class="service mb-1 pb-1 itemtext center-btn">Paid for; <strong>{{chargetype}}</strong></div>
+              </div>
+            </div>
+      
+            <div class="svg">
+              <div class="svg-child">
+    
+                <div class="row service mb-1 pb-1">
+                  <div class="col-6 itemtext text-black font-weight-bold mt-2 pl-5">Amount due</div>
+                  <div class="col-6 itemtext text-black font-weight-bold mt-2 border-left-semidark text-right pr-5">Kes {{bill}}</div>
+                </div> 
+    
+                <div class="row service mb-1 pb-1">
+                  <div class="col-6 itemtext text-info font-weight-bold mt-2 pl-5">Paid</div>
+                  <div class="col-6 itemtext text-info font-weight-bold mt-2 border-left-semidark text-right pr-5">{{amount}}</div>
+                </div> 
+    
+                <div class="row service mb-1 pb-1">
+                  <div class="col-6 itemtext {{outline}} font-weight-bold mt-2 pl-5">{{baltitle}}</div>
+                  <div class="col-6 itemtext {{outline}} font-weight-bold mt-2 border-left-semidark text-right pr-5">{{balance}}</div>
+                </div> 
+    
+              </div>
+            </div>
+      
+            <div class="svg">
+              <div class="small service mb-1 pb-1 svg-child">
+                  <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
+                  <div class="center-btn"><strong class="small">{{prop.name.title()}}</strong>.</div>
+                  <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
+              </div>
+            </div>
+      
+          </div>
+          </div>
+    
+      </div>
+</body>
+
+<script type="text/javascript">
+    window.onload = function() { window.print(); }
+</script>
+
+</html>

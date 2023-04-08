@@ -957,6 +957,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/greathomes/full-logo.jpg"
             letterhead = "../static/img/logos/greathomes/letterhead.jpg"
 
+        elif str_name_company == "Vista Own Services":
+            ##################################################
+            logopath = "../static/img/logos/vista/l-logo.png"
+            mobilelogopath = "../static/img/logos/vista/s-logo.png"
+            fulllogopath = "../static/img/logos/greathomes/full-logo.jpg"
+            letterhead = "../static/img/logos/greathomes/letterhead.jpg"
+
         elif str_name_company == "Sirenga Investments Ltd":
             coc = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
             CompanyOp.update_sms_provider(coc,"Advanta")

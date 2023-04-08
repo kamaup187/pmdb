@@ -6198,6 +6198,10 @@ button.bg-dark:hover {
   }
 }
 @media print {
+
+  table {border-spacing: 0px 0px !important;}
+  td    {padding: 0px !important;}
+
   .d-print-none {
     display: none !important;
   }

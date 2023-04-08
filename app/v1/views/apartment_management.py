@@ -373,7 +373,7 @@ class Index(Resource):
                 if ppa:
                     codes = ppa.housecodes
                     for cs in codes:
-                        HouseCodeOp.update_water_garbage(cs,None,None,150)
+                        HouseCodeOp.update_water_garbage(cs,None,None,100)
 
  
                     # print("APPPA",appa)

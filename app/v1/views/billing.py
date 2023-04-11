@@ -3407,21 +3407,21 @@ class PrintActualReceipt(Resource):
 
 
         if payment_obj.charged_amount < 1:
-            bill = 0.0
+            bill = "KES 0.0"
         else:
-            bill = f"{payment_obj.charged_amount:,.0f}"
+            bill = f"KES {payment_obj.charged_amount:,.0f}"
 
-        paid = f'Kes {payment_obj.amount:,.0f}'
+        paid = f'KES {payment_obj.amount:,.0f}'
 
         if payment_obj.balance:
             if payment_obj.balance > -1:
                 baltitle = "Balance"
                 outline = "text-danger"
-                bal = f"Kes {payment_obj.balance:,.0f}"
+                bal = f"KES {payment_obj.balance:,.0f}"
             else:
                 baltitle = "Advance"
                 outline = "text-success"
-                bal = f"Kes {payment_obj.balance*-1:,.0f}"
+                bal = f"KES {payment_obj.balance*-1:,.0f}"
 
         else:
             baltitle = "Balance"
@@ -3463,7 +3463,9 @@ class PrintActualReceipt(Resource):
         else:
             tenant = payment_obj.tenant
 
-        template = "pos_receipt2.html"
+        # template = "pos_receipt2.html"
+
+        template = "a4receipt.html"
 
         return Response(render_template(
             template,
@@ -3473,8 +3475,9 @@ class PrintActualReceipt(Resource):
             amount=paid,
             str_amount=stramount,
             str_month=get_str_month(payperiod.month),
-            paydate=paydate.strftime("%d/%b/%y"),
+            paydate=paydate.strftime("%d %B, %Y"),
             paytime=paydate.strftime("%X"),
+            rdate = payment_obj.date.strftime("%d %B, %Y"),
             bill=bill,
             baltitle=baltitle,
             outline=outline,
@@ -3780,6 +3783,7 @@ class Receipt(Resource):
             baltitle=baltitle,
             outline=outline,
             balance=bal,
+            rlink=f"/printreceipt/{payment_obj.id}",
             chargetype=payment_obj.payment_name,
             receiptno=receiptno,
             refnum=payment_obj.ref_number,

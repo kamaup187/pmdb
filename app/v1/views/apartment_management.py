@@ -6093,7 +6093,43 @@ class AddTenant(Resource):
                 email = request.form.get('email')
                 existing_arrears = request.form.get('arr')
 
-            
+                group = request.form.get('group')
+
+                code_obj = None
+
+                if group != "" and group != None:
+                    if isinstance(group,str):
+                        housecode = "G-" + str(int(group))
+                    else:
+                        housecode = group
+
+                    housecode = housecode.upper()
+
+                    code_obj = get_specific_code_obj(apartment_id,housecode)
+                    if not code_obj:
+                        prop_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)
+                        codes = prop_obj.housecodes
+                        for code in codes:
+                            if int(code.rentrate) == int(group):
+                                code_obj = code
+                                break
+
+                    if code_obj:
+                        print("Skipping ",housecode)
+                    
+                    elif group:
+                        valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group)
+
+                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
+                        code_obj.save()
+
+
+                    elif group == 0.0:
+                        valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group)
+
+                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
+                        code_obj.save()
+           
 
             if not name:
                 return "Failed to convert lead" + proceed
@@ -6186,6 +6222,9 @@ class AddTenant(Resource):
                     house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
 
                     house_obj = get_specific_house_obj_alt(house_list,house_num)
+
+                    if code_obj:
+                        HouseOp.update_housecode_id(house_obj,code_obj.id)
                     
                     allocs = tenant_obj.house_allocated
                     if allocs:
@@ -6622,7 +6661,17 @@ class AllocateTenants(Resource):
     """class"""
     @login_required
     def get(self):
-        pass
+        house_num = request.args.get('house')#auto populated dropdown
+        prop_id = request.args.get('propid')
+        target = request.args.get('target')
+
+        if target == "default rates":
+            apartment_id = get_identifier(prop_id)
+
+            specific_house = get_specific_house_obj(apartment_id,house_num)
+            if specific_house:
+                return f"{specific_house.housecode.rentrate:,.1f}" if specific_house.housecode else "none set"
+
     
     @login_required
     def post(self):

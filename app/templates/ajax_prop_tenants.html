@@ -142,6 +142,29 @@
                         <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
                       </div>
 
+
+                      <div class="row">
+                        <!-- <div class="col-4 form-group">
+                          <span class="text-black">Days</span>
+                            <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div> -->
+                        
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Current rates (rent)</span>
+                          </span>
+
+                            <input id="default_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Agreed rates</span>
+                          </span>
+                            <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                        </div>
+                      </div>
+
                       <div class="form-group input-icons">
                         <span>Name<span class="text-danger small">(mandatory)</span></span>
                           <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
@@ -438,6 +461,24 @@
 </script>
 
 <script>
+  // This script autopulate house options and displays tenant name
+  $("#select_house2").on('change', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "get",
+      data: {
+            propid: $("#edit_prop_identifier").text(),
+            house: $("#select_house2").val(),
+            target:"default rates"
+          },
+      success: function(response) {
+        $("#default_rates").val(response);
+      }
+    });
+  });
+</script>
+
+<script>
   $("#downloadtenants").click(function(){ 
       $('#downloadtenants').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
@@ -465,6 +506,7 @@
           data: {
                   propid: $("#edit_prop_identifier").text(),
                   house: $("#select_house2").val(),
+                  group:$("#agreed_rates").val(),
                   name: $("#new_name").val(),
                   national_id: $("#new_natid").val(),
                   tel: $("#new_tel").val(),

@@ -1842,7 +1842,7 @@ class GetStarted(Resource):
 class ViewClients(Resource):
     @login_required
     def get(self):
-        pass
+        return "empty"
     @login_required
     def post(self):
         pass     

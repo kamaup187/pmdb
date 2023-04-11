@@ -1,7 +1,7 @@
 
 
 
-
+<span class="dispnone" id="printr">{{rlink}}</span>
 
   <div id="invoice">
     <div id="invoice-POS">
@@ -157,6 +157,11 @@
 
       $('.printbtn').html('<i class="fas fa-print mr-2"></i>Print');
 
+  })
+
+
+  $(document).ready(function () {
+    $(".printr").attr("href", $("#printr").text());
   })
 </script>
 

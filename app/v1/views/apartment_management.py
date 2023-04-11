@@ -8597,25 +8597,37 @@ class Results(Resource):
                 else:
                     smsable = "No"
 
-                # tenant_payments = tenant_obj.payments
-                tenant_payments = []
+                if get_active_houses(tenant_obj)[0] == "Resident":
+                    print(get_active_houses(tenant_obj)[0])
+                    houses = get_active_houses(tenant_obj)[1]
+                elif get_active_houses(tenant_obj)[0] == "Vacated":
+                    print(get_active_houses(tenant_obj)[0])
+                    houses = get_active_houses(tenant_obj)[1].house
+                else:
+                    houses = None
 
                 alloc = check_house_occupied(tenant_obj)[2]
 
-                filtered_payments = filter_in_recent_data(tenant_payments)
-
-                actual_payments = fetch_actual_payments(filtered_payments)
-
-                detailed_payments_list = payment_details(actual_payments)
-
-                payids = get_obj_ids(detailed_payments_list)
-
                 if crm(current_user):
                     template = "ajax_tenant_detail2.html"
+                    rlink = "/"
                 elif erp(current_user):
+                    if tenant_obj.monthly_charges:
+                        bill = tenant_obj.monthly_charges[0]
+                        rlink = f"/print/receipt/{bill.id}"
+                    else:
+                        rlink = "/"
                     template = "ajax_tenant_detail_erp.html"
                 else:
                     template = "ajax_tenant_detail.html"
+                    if tenant_obj.payments:
+                        pay_obj = max(tenant_obj.payments, key=lambda x: x.id)
+                        rlink = f"/"
+                    else:
+                        rlink = "/"
+
+                return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+
 
                 return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,alloc=alloc,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
@@ -8924,15 +8936,6 @@ class Results(Resource):
             else:
                 smsable = "No"
 
-            tenant_payments = []
-
-            filtered_payments = filter_in_recent_data(tenant_payments)
-
-            actual_payments = fetch_actual_payments(filtered_payments)
-
-            detailed_payments_list = payment_details(actual_payments)
-
-            payids = get_obj_ids(detailed_payments_list)
 
             if crm(current_user):
                 template = "ajax_tenant_detail2.html"
@@ -8948,7 +8951,7 @@ class Results(Resource):
                 template = "ajax_tenant_detail.html"
                 if tenant_obj.payments:
                     pay_obj = max(tenant_obj.payments, key=lambda x: x.id)
-                    rlink = f"/printreceipt/{pay_obj.id}"
+                    rlink = f"/"
                 else:
                     rlink = "/"
 

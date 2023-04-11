@@ -2333,6 +2333,7 @@
             <div>
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
             </div>
+
           </h5>
           <div class="alert-msgs"></div>
         </div>
@@ -2341,14 +2342,37 @@
             <div class="media-body">
               <div class="position-relative">
                 <div class="card-body modal-forms">
+
+                  <div class="divjust-start">
+                    <div>
+                      <div class="divjust-end">
+                        <div class="text-danger small">Sms spent this month:</div>
+                        <span id="monthsmscost" class="small text-black-bold ml-3"> <i class="fas fa-spinner fa-spin"></i> fetching ...</span>
+                      </div>
+
+                      <div class="divjust-end">
+                        <div class="text-danger small">Sms spent overall:</div>
+                        <span id="allsmscost" class="small text-black-bold">fetching ...</span>
+                      </div>
+
+                      <div class="divjust-end">
+                        <div class="text-success font-weight-bold small">Remaining sms: </div>
+                        <span id="allsmscost" class="small text-black-bold">fetching ...</span>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+
                 
                   <div class="text-center text-success font-weight-bold mb-2 underline">
                     <div class="divbg mb-1">
-                      <button id="general_texts" type="button" class="btn btn-outline-success borderless text-dark">General</button>
-                      <button id="balance_texts" type="button" class="btn btn-outline-success borderless text-dark">Balances</button>
-                      <button id="reminder_texts" type="button" class="btn btn-outline-success borderless text-dark">Reminders</button>
-                      <button id="topup_texts" type="button" class="btn btn-outline-info borderless text-dark">Sms top up</button>
-                      <button id="sent_texts" type="button" class="btn btn-outline-info borderless text-dark">Sent messages</button>
+                      <button id="general_texts" type="button" class="btn btn-outline-primary borderless">General</button>
+                      <button id="balance_texts" type="button" class="btn btn-outline-primary borderless">Balances</button>
+                      <button id="reminder_texts" type="button" class="btn btn-outline-primary borderless">Reminders</button>
+                      <button id="topup_texts" type="button" class="btn btn-outline-primary borderless">Sms top up</button>
+                      <button id="sent_texts" type="button" class="btn btn-outline-primary borderless">Sent messages</button>
                     </div>
                   </div>
                 

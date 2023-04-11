@@ -2884,11 +2884,11 @@ class ReceivePayment(Resource):
         latest_payment = PaymentOp.fetch_latest_payment()
         if latest_payment:
             if tenant_id:
-                if latest_payment.tenant_id == tenant_id and latest_payment.amount == valid_amount:
+                if latest_payment.tenant_id == tenant_id and latest_payment.amount == valid_amount and latest_payment.house_id == house_id:
                     return "Submitted successfully"
 
             if ptenant_id:
-                if latest_payment.ptenant_id == tenant_id and latest_payment.amount == valid_amount:
+                if latest_payment.ptenant_id == tenant_id and latest_payment.amount == valid_amount and latest_payment.house_id == house_id:
                     return "Submitted successfully"
         
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)

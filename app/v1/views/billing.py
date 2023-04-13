@@ -5137,7 +5137,7 @@ class CallBackUrlSirenga(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        response = sms.send("SIRENGA MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
+        # response = sms.send("SIRENGA MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         com = CompanyOp.fetch_company_by_id(company_id)
         props = com.props

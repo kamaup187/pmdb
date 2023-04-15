@@ -61,6 +61,14 @@
   </style>
 
 <style>
+
+.table tbody tr:hover {
+  background-color: #ffa;
+}
+ 
+.table tbody tr:hover > .sorting_1 {
+  background-color: #ffa;
+}
   body {
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: 'Times New Roman', serif;
@@ -792,6 +800,24 @@ if ($("#statement").text() == "tenant statement3") {
     });
     $('.dataTables_length').addClass('bs-select');
   }
+
+  // $('tr').hover(function () {
+  //   var thisNode = $( this );
+  //   var rowIdx = thisNode.attr( 'data-dt-row' );
+  //   console.log( rowIdx );
+  //   $( "tr" ).css("background-color", "white");
+  //   $( "tr[data-dt-row='" + rowIdx + "']" ).css("background-color", "yellow");
+  // });
+
+  // $('.table tbody').on( 'hover', 'tr', function () {
+  //       if ( $(this).hasClass('selected') ) {
+  //           $(this).removeClass('selected');
+  //       }
+  //       else {
+  //           table.$('tr.selected').removeClass('selected');
+  //           $(this).addClass('selected');
+  //       }
+  //   } );
 </script>
 
 <script>

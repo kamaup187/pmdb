@@ -190,9 +190,15 @@
                       </div>
 
                       <div class="fancy-checkbox-group form-control mb-4 divjust">
-                        <div>
-                          <input type="checkbox" id="migrate2" checked/>
-                          <label for="migrate2">Bill deposit?</label>
+                        <div class="divjust-end">
+                          
+                          <label class="mr-3" for="createinvoice">Create invoice
+                            <input type="checkbox" id="createinvoice" checked/>
+                          </label>
+
+                          <label class="ml-3" for="migrate2">Charge deposit
+                            <input type="checkbox" id="migrate2" checked/>
+                          </label>
                         </div>       
                       </div>
 
@@ -499,6 +505,25 @@
       }else{
         var migrate2 = "False";
       }
+
+
+      var cb3 = document.getElementById("createinvoice");
+      if (cb3.checked){
+        var migrate3 = "True";
+
+        $.ajax({
+          url: "/billing",
+          type: "POST",
+          data: {
+            propid: $("#edit_prop_identifier").text(),
+            houses:$("#select_house2").val()
+          },
+        success: function (response) {}})
+
+      }else{
+        var migrate3 = "False";
+      }
+
       $("#newtenant").html("saving...")  
         $.ajax({
           url: "{{ url_for('api.addtenant') }}",
@@ -513,6 +538,7 @@
                   email: $("#new_email").val(),
                   ttype:document.querySelector('input[name="ttype"]:checked').value,
                   migrate: migrate2,
+                  invoice: migrate3,
                   arr: $("#new_arr").val()
               },
           success: function(response) {

@@ -1539,11 +1539,13 @@ class UserLogin(Resource):
         """Handle GET request for this view. Url ---> /signin"""
 
         ################################################################################
-        # birr = MonthlyChargeOp.fetch_monthlycharge_by_smsid("773798401")
+        # birr = ApartmentOp.fetch_apartment_by_id(409)
 
         # # birr = MonthlyChargeOp.fetch_specific_bill(63598)
         # if birr:
-        #     import pdb; pdb.set_trace()
+        #     for t in birr.tenants:
+        #         TenantOp.delete(t)
+        # print("not birr")
 
         # inv = MonthlyChargeOp.fetch_monthlycharge_by_smsid("773798839")
         # rec = PaymentOp.fetch_payment_by_smsid("773798839")

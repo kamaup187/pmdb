@@ -3919,6 +3919,7 @@ class WaterStatement(Resource):
                 props=apartment_list,
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
                 name=current_user.name))
 
 
@@ -4066,7 +4067,7 @@ class WaterStatement(Resource):
             mobilelogopath=logo(current_user.company)[1],
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
-            company=current_user.company,
+            co=current_user.company,
             billids = get_obj_ids(detailed_bills),
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))

@@ -1,6 +1,6 @@
-{% extends 'reports.html' %}
+{% extends 'basereport.html' %}
 
-{% block child %}
+{% block content %}
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} garbage statement.pdf</span>
@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-lg-12 ">
         <div class="formwrapper">
-            <div class="card bt-none">
+            <div class="card bt-none noprint">
               <!-- Card Header - Accordion -->
               <div class="divjust-end bg-light underline">
                 
@@ -21,11 +21,17 @@
                 </a>
                 
 {%if prop%}
-                <div class="mr-3 mb-1">
-                  <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#downloadModal">
-                    <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
-                  </button>
-                </div>
+                  <!-- <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div> -->
+
+                  <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
 {%endif%}
               </div>
               <!-- Card Content - Collapse -->
@@ -34,9 +40,8 @@
                     <form class="row bg-light" method="GET" action="/garbage/statement">
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
-                        <select name="reporttype" class="select-css" id="reporttype" required>
-                          <option disabled selected value> type </option>
-                          <option value="uncollected">Based on amount due</option>
+                        <select name="reporttype" class="select-css" id="reporttype">
+                          <option  selected value="uncollected">Based on amount due</option>
                           <option value="collected">Based on collected amount only</option>
                         </select>
                       </div>
@@ -70,35 +75,70 @@
     </div>
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
-  <div class="col-lg-12 ">
+  <div class="col-lg-12 noprint text-uppercase">
     <div class="card shadow mb-0">
 
       <!-- Card Content - Collapse -->
       <div class="collapse show" id="collapseCardExample2">
         <div class="card-body pt-0">
 
-          {% if prop%}
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
 
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR GARBAGE COLLECTION FOR {{timeline}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">STATEMENT FOR GARBAGE FOR {{timeline}}</span></span>
           </div>
 
-          <div class="divjust-end underline text-black font-weight-bold  text-110">
-            <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.name}}</div>
-              <div>Estate : {{prop_obj.location}}</div>
-            </div>
-            <div class="pr-3">
-              <div>Date remitted : {{reportdate}}</div>
-              <div>Pin No : </div>
-            </div>
 
+          {%if prop_obj%}
+          <div class="divjust-end">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.landlord%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+                  {% endif %}
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.location_id%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          
+            <div class="mt-5 mr-2">
+              <span class="font-weight-bold text-dark">Collection: {{ratio}}</span>
+            </div>
+          
           </div>
-
-          {% endif %}
+          {%endif%}
 
 
 
@@ -185,34 +225,57 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoice" class="col-lg-12 dispnone printdisplay text-uppercase">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
         <div class="card-body report-body">
-          {% if bills %}
-          <div class="center-btn mb-4 mt-4">
-            <!-- <span class="text-muted text-125"> [ LETTERHEAD ]</span> -->
-            <img class="" src="{{letterhead}}" alt="--no image--"/>
+   
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
           </div>
 
-          <div class="center-btn mt-2 overline">
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <h5 class="font-weight-bold text-black"><span class="underline mt-3">STATEMENT FOR GARBAGE COLLECTION FOR {{timeline}}</span></h5>
+            <span class="font-weight-bold text-white"><span class="mt-3">STATEMENT FOR GARBAGE FOR {{timeline}}</span></span>
           </div>
 
-          <div class="divjust-end underline mb-3 text-black font-weight-bold  text-110">
-            <div class="">
-              <!-- <div>Landlord : {{prop_obj.owner}}</div> -->
-              <div>Property : {{prop_obj.name}}</div>
-              <div>Estate : {{prop_obj.location}}</div>
+          {%if prop_obj%}
+          <div class="mb-2 mt-1">
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
             </div>
-            <div class="pr-3">
-              <div>Date remitted : {{reportdate}}</div>
-              <div>Pin No : </div>
-              <div>Vat No : </div>
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
             </div>
-
+            <div class="ln-16">
+              {% if prop_obj.landlord%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+              {% endif %}
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.location_id%}
+              <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+              {% endif %}
+            </div>
           </div>
 
           <div class="table-responsive">
@@ -387,7 +450,7 @@
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $("#reportbtns").addClass("dispnone")
 
@@ -407,7 +470,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
 {% endblock %}

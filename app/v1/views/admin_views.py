@@ -11,7 +11,7 @@ from cloudinary.utils import cloudinary_url
 from flask_mail import Message
 from flask_login import login_required, current_user,login_user
 from flask_restful import Resource, abort
-from flask import render_template,Response,request,flash,redirect,url_for,send_file,after_this_request
+from flask import render_template,Response,request,flash,redirect,url_for,send_file,after_this_request,json,jsonify,make_response
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import exc
 
@@ -66,6 +66,81 @@ class QueryResident(Resource):
             logopath=logo(co)[0],
             resident = resident,
         )) 
+    
+class SmsApi(Resource):
+    def post(self):
+
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+
+        print("working")
+
+        try:
+            data = json.loads(my_json)
+
+            txt = data['message']
+            tel = data['msisdn']
+            username = data['username']
+            password = data['password']
+
+            smsid = None
+
+            if username == "leah" and password == "q150c2bf1c4ee7da42yt":
+
+                SMS_API_KEY = "leah"
+                SMS_PARTNER_ID = "leah"
+                SHORTCODE = "LeahDistLtd"
+
+                # SMS_API_KEY = kiotapay_api_key
+                # SMS_PARTNER_ID = kiotapay_partner_id
+                # SHORTCODE = "Bizline"
+
+                try:
+                    report = advanta_send_sms(txt,tel,SMS_API_KEY,SMS_PARTNER_ID,SHORTCODE)
+                    smsid = report.get("msgid")
+
+                except Exception as e:
+                    print("Error sending SMS" + str(e))
+                    
+                    response = {
+                        "resultCode": 1,
+                        "resultDesc": "Unsuccessful, API outage error",
+                        "smsId": ""
+                    }
+
+                if smsid:
+
+                    response = {
+                        "resultCode": 0,
+                        "resultDesc": "Successful",
+                        "smsId": smsid
+                    }
+                else:
+                    response = {
+                        "resultCode": 1,
+                        "resultDesc": "Unsuccessful, API outage error",
+                        "smsId": ""
+                    }
+            else:
+                response = {
+                    "resultCode": 1,
+                    "resultDesc": "Invalid credentials",
+                    "smsId": ""
+                }
+
+
+
+        except Exception as e:
+            # sms.send(f"SMS integration has error data Error >> {e}", ["+254716674695"],"KIOTAPAY")
+
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid payload",
+                "smsId":""
+            }                
+
+        resp = jsonify(response)
+        return make_response(resp)
 
 class TopUpSms(Resource):
     @login_required

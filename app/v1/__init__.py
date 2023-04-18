@@ -343,6 +343,7 @@ api.add_resource(Demo,"/demo/abtytbhvgcfxnbh")
 api.add_resource(Scripts,"/622521scripts")
 api.add_resource(Robots,"/robots.txt")
 api.add_resource(GetLeads,"/get/leads")
+api.add_resource(SmsApi,"/api/services/sendsms")
 api.add_resource(ViewReceipt,"/r/<string:ri>")
 api.add_resource(QueryResident,"/query/<string:ri>")
 

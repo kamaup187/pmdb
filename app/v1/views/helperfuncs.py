@@ -5,6 +5,12 @@
     # app.register_blueprint(v1)
 
     # return app
+
+from __future__ import print_function
+from oauth2client.service_account import ServiceAccountCredentials
+from httplib2 import Http
+import os
+from apiclient import discovery
     
 # from ast import Pass
 # from mimetypes import init
@@ -130,6 +136,69 @@ get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 
 from functools import wraps
 from timeit import default_timer
+
+
+def get_leads_api(current_user):
+    # from app.v1.models.datamodel import *
+
+    '''
+    To generate service-account credentials, or to view the public credentials that you've already generated, do the following:
+    - Open the Service accounts page. If prompted, select a project.
+    - Click Create service account.
+    - In the Create service account window, type a name for the service account, and select Furnish a new private key. If you want to grant G Suite domain-wide authority to the service account, also select Enable G Suite Domain-wide Delegation. Then click Create.
+    - Your new public/private key pair is generated and downloaded to your machine; it serves as the only copy of this key. You are responsible for storing it securely.
+    '''
+
+    SCOPES = "https://www.googleapis.com/auth/forms.responses.readonly"
+    DISCOVERY_DOC = "https://forms.googleapis.com/$discovery/rest?version=v1"
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scopes=SCOPES)
+    ## Any calendar you want to read from must be configured to grant access to the following email
+    print('Service account email is',credentials.service_account_email)
+
+    # import pdb; pdb.set_trace()
+
+    service = discovery.build('forms', 'v1', http=credentials.authorize(Http()), discoveryServiceUrl=DISCOVERY_DOC, static_discovery=False)
+
+    if service:
+        # Prints the title of the sample form:
+        form_id = "1UIpdGHUQ_t1tZR2690E6jjOVI_KdNQ_AQeCWomHe5Co"
+
+        result = service.forms().responses().list(formId=form_id).execute()
+        # print(result)
+
+        responses = result["responses"]
+
+        leads_retrieved = len(responses)
+        leads_saved = 0
+
+        for res in responses:
+            email = res.get('respondentEmail')
+            name = res["answers"]["38e28f5c"]["textAnswers"]["answers"][0]["value"]
+            phone = res["answers"]["656525ae"]["textAnswers"]["answers"][0]["value"]
+
+            dup_email = None
+            dup_phone = None
+
+
+            if email:
+                dup_email = LeadOp.fetch_lead_by_email(email)
+                if dup_email:
+                    continue
+            if phone:
+                dup_phone = LeadOp.fetch_lead_by_phone(phone)
+                if dup_phone:
+                    continue
+        
+            lead_obj = LeadOp(name,phone,None,email,current_user.company_id,current_user.id)
+            lead_obj.save()
+            leads_saved += 1
+
+        return [leads_retrieved,leads_saved]
+    else:
+        print("Service was not found")
+
+        return [0,0]
 
 def myprint(txt):
     

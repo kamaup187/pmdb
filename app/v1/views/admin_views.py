@@ -42,6 +42,13 @@ class Robots(Resource):
         path = "robots.txt"
         return send_file(path, as_attachment=True)
 
+class GetLeads(Resource):
+    @login_required
+    def get (self):
+        leads = get_leads_api(current_user)
+        resp = f"Leads retrieved : {leads[0]}, Leads saved to db : {leads[1]}",
+        return resp
+
 class DownloadTemplate(Resource):
     def get (self,file):
         path = f"files/{file}.xls"

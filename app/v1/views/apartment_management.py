@@ -152,7 +152,6 @@ class Index(Resource):
     def get(self):
 
         
-
         # coss = CompanyOp.fetch_all_companies()
         coss = []
         for t in coss:

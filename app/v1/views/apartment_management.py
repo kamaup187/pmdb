@@ -859,15 +859,21 @@ class Index(Resource):
             #                 print("cbid did not find its sibling payment")
 
             if company.id== 117:
-                shorts = ["7031325,7514112"]
+                shorts = ["7031325","7514112"]
             else:
                 shorts = []
 
             for short in shorts:
+                print("shorts",short)
                 cbid = ShortcodeOp.fetch_shortcode_by_id(short)
                 if not cbid:
                     cbid = ShortcodeOp(short,"",company.id)
                     cbid.save()
+
+            for cil in company.shortcodes:
+                if cil.shortcode == "7031325,7514112":
+                    print("delllllinnnnnnng")
+                    ShortcodeOp.delete(cil)
 
             if company.name == "Latitude Properties":
                 shortcodes = []

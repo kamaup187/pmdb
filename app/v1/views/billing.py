@@ -3374,12 +3374,16 @@ class PrintReceipt(Resource):
 
         # import pdb; pdb.set_trace()
 
+        template = "pos_receipt.html"
+        # template = "pos_receiptt.html"
+
+
         if bill:
             tenant_obj = bill.tenant
             result = check_house_occupied(tenant_obj)
             if result[0] == "Resident":
                 alloc = result[2]
-                return Response(render_template("pos_receipt.html",bill=bill,alloc=alloc,curr_user=current_user))
+                return Response(render_template(template,bill=bill,alloc=alloc,curr_user=current_user))
             return ""
         else:
             return ""

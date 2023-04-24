@@ -72,6 +72,8 @@ class SmsApi(Resource):
 
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
+        ww = f"{my_json},SMS has sent payload"
+        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
 
         print("working")
 
@@ -87,8 +89,8 @@ class SmsApi(Resource):
 
             if username == "leah" and password == "q150c2bf1c4ee7da42yt":
 
-                SMS_API_KEY = "leah"
-                SMS_PARTNER_ID = "leah"
+                SMS_API_KEY = "cb63519051b77da317036fe951db1d48"
+                SMS_PARTNER_ID = 7155
                 SHORTCODE = "LeahDistLtd"
 
                 # SMS_API_KEY = kiotapay_api_key

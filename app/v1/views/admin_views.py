@@ -81,7 +81,7 @@ class SmsApi(Resource):
             data = json.loads(my_json)
 
             txt = data['message']
-            tel = data['msisdn']
+            tel = data['mobile']
             username = data['username']
             password = data['password']
 

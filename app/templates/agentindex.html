@@ -2336,7 +2336,7 @@
       <div class="modal-content">
         <div class="indicator"></div>
         <div class="modal-header pb-0 pt-2 text-center bg-light">
-          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+          <h5 class="modal-title text-black divjust-end underline-thin-fade">
             <span class="mr-3 smallify font-weight-bold">SMS CENTER</span>
             <div>
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
@@ -2351,30 +2351,32 @@
               <div class="position-relative">
                 <div class="card-body modal-forms">
 
-                  <!-- <div class="divjust-start">
-                    <div>
+                    <div class="divjust-end">
                       <div class="divjust-end">
-                        <div class="text-danger small">Sms spent this month:</div>
-                        <span id="monthsmscost" class="small text-black-bold ml-3"> <i class="fas fa-spinner fa-spin"></i> fetching ...</span>
+                        <div class="text-danger small mr-3">All sms sent:</div>
+                        <div id="allsms" class="dot-elastic mt-2"></div>
+
                       </div>
 
                       <div class="divjust-end">
-                        <div class="text-danger small">Sms spent overall:</div>
-                        <span id="allsmscost" class="small text-black-bold">fetching ...</span>
+                        <div class="text-danger small mr-3">Sent this month:</div>
+                        <div id="monthsms" class="dot-elastic mt-2"></div>
+
+
                       </div>
 
                       <div class="divjust-end">
-                        <div class="text-success font-weight-bold small">Remaining sms: </div>
-                        <span id="allsmscost" class="small text-black-bold">fetching ...</span>
+                        <div class="text-success font-weight-bold small mr-3">Available: </div>
+                        <div id="availablesms" class="dot-elastic mt-2"></div>
+
                       </div>
 
                     </div>
-                  </div> -->
 
 
 
                 
-                  <div class="text-center text-success font-weight-bold mb-2 underline">
+                  <div class="text-center text-success font-weight-bold mb-2 underline overline">
                     <div class="divbg mb-1">
                       <button id="general_texts" type="button" class="btn btn-outline-primary borderless">General</button>
                       <button id="balance_texts" type="button" class="btn btn-outline-primary borderless">Balances</button>
@@ -3699,17 +3701,61 @@ function animateHH(element) {
 
   <script>
     $("#messageModal").on('shown.bs.modal', function () {
+
       $.ajax({
-        url: "{{ url_for('api.fetchsentsms') }}",
+        url: "{{ url_for('api.smsstats') }}",
         type: "get",
         data: {
           target: "",
         },
         success: function (response) {
-          $("#senttexts").html(response)
+          $("#allsms").removeClass("dot-elastic mt-2")
+          $("#monthsms").removeClass("dot-elastic mt-2")
+          $("#availablesms").removeClass("dot-elastic mt-2")
+
+          $("#allsms").addClass("small")
+          $("#monthsms").addClass("small")
+          $("#availablesms").addClass("small")
+
+          $("#allsms").text(response[0])
+          $("#monthsms").html(response[1])
+          $("#availablesms").text(response[2])
+
+          $.ajax({
+            url: "{{ url_for('api.fetchsentsms') }}",
+            type: "get",
+            data: {
+              target: "",
+            },
+            success: function (response) {
+              $("#senttexts").html(response)
+            },
+          });
+
+
         },
       });
+
+
     })
+
+
+    $("#messageModal").on('hidden.bs.modal', function () {
+
+
+          $("#allsms").addClass("dot-elastic mt-2")
+          $("#monthsms").addClass("dot-elastic mt-2")
+          $("#availablesms").addClass("dot-elastic mt-2")
+
+          $("#allsms").removeClass("small")
+          $("#monthsms").removeClass("small")
+          $("#availablesms").removeClass("small")
+
+          $("#allsms").text("")
+          $("#monthsms").text("")
+          $("#availablesms").text("")
+
+      })
   </script>
 
 

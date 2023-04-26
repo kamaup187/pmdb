@@ -56,6 +56,8 @@ class Company(db.Model):
     smsquota = db.Column(db.Integer,default=500)
     remainingsms = db.Column(db.Integer,default=500)
     quotamonth = db.Column(db.Integer,default=7)
+    allsmssent = db.Column(db.Integer,default=0)
+    monthsmssent = db.Column(db.Integer,default=0)
     sms_provider = db.Column(db.String,default="AFRICASTALKING")
 
     ctype = db.Column(db.String)

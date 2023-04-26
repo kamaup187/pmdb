@@ -218,6 +218,14 @@ class CompanyOp(Company,Base):
             self.sphone = sphone
         db.session.commit()
 
+    def set_sms_sent(self,num):
+        self.allsmssent = num
+        db.session.commit()
+
+    def set_month_sms_sent(self,num):
+        self.monthsmssent = num
+        db.session.commit()
+
     def set_smsquota(self,quota):
         self.smsquota = quota
         db.session.commit()

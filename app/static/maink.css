@@ -3746,3 +3746,90 @@ span:nth-child(7) {
 	80%		{text-shadow:  0 0 0px #fff;}
 	85%		{opacity: 1;}
 } */
+
+
+.dot-elastic {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: #000000;
+  color: #000000;
+  animation: dot-elastic 0.4s infinite linear;
+}
+.dot-elastic::before, .dot-elastic::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+.dot-elastic::before {
+  left: -7.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: #000000;
+  color: #000000;
+  animation: dot-elastic-before 0.4s infinite linear;
+}
+.dot-elastic::after {
+  left: 7.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: #000000;
+  color: #000000;
+  animation: dot-elastic-after 0.4s infinite linear;
+}
+
+@keyframes dot-elastic-before {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1.5);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes dot-elastic {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 1.5);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes dot-elastic-after {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1.5);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}

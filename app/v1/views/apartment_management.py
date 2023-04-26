@@ -1914,6 +1914,18 @@ class PropOverview(Resource):
 def get_status(arr,status):
     return [x for x in arr if x.status == status]
 
+class SmsStats(Resource):
+    @login_required
+    def get(self):
+        cc = current_user.company
+        sentsms = cc.allsmssent if cc.allsmssent else "-"
+        overallcost = "-"
+        monthsms = cc.monthsmssent if cc.monthsmssent else "-"
+        monthcost = "-"
+        availablesms = cc.remainingsms if cc.remainingsms else "-"
+
+        return [f"{sentsms} (-)",f"{monthsms} (-)",f"{availablesms} UNITS"]
+
 class HouseOverview(Resource):
     @login_required
     def get(self):

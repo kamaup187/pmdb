@@ -1,4 +1,6 @@
 import requests
+from app import sms
+
 # from app.v1.models.operations import *
 # from .helperfuncs import *
 
@@ -284,3 +286,15 @@ def inva_send_sms(text,tel):
         respdict = None
 
     return respdict
+
+
+def africastalking_send_sms(message,recipient,sender):
+
+    try:
+        response = sms.send(message, [recipient], sender)
+        print(response)
+        resp = response["SMSMessageData"]["Recipients"][0]
+    except:
+        resp = None
+                                    
+    return resp

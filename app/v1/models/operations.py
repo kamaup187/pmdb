@@ -234,6 +234,10 @@ class CompanyOp(Company,Base):
         self.remainingsms = quota
         db.session.commit()
 
+    def transfer(self,bal):
+        self.smsbal = bal
+        db.session.commit()
+
     def set_quota_month(self,month):
         self.quotamonth = month
         db.session.commit()

@@ -1068,8 +1068,9 @@ class FetchSentSms(Resource):
         sent_texts = company.sent_messages
         target_texts = []
         items = []
+        time = datetime.datetime.now()
         for m in sent_texts:
-            if m.date.month == company.billing_period.month and m.date.year == company.billing_period.year:
+            if m.date.month == time.month and m.date.year == time.year:
                 # if m.cost == 1.0 and m.date.day == 18 and m.company.name == "ASTROL":
                 #     SentMessagesOp.delete(m)
                 # else:
@@ -1923,6 +1924,10 @@ class SmsStats(Resource):
         monthsms = cc.monthsmssent if cc.monthsmssent else "-"
         monthcost = "-"
         availablesms = cc.remainingsms if cc.remainingsms else "-"
+
+        # import pdb; pdb.set_trace()
+
+        # CompanyOp.transfer(cc,cc.remainingsms)
 
         return [f"{sentsms} (-)",f"{monthsms} (-)",f"{availablesms} UNITS"]
 

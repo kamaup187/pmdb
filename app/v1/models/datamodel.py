@@ -54,7 +54,8 @@ class Company(db.Model):
     billing_period = db.Column(db.DateTime,default=db.func.current_timestamp())
 
     smsquota = db.Column(db.Integer,default=500)
-    remainingsms = db.Column(db.Integer,default=500)
+    remainingsms = db.Column(db.Float,default=500)
+    smsbal = db.Column(db.Float,default=500.0)
     quotamonth = db.Column(db.Integer,default=7)
     allsmssent = db.Column(db.Integer,default=0)
     monthsmssent = db.Column(db.Integer,default=0)

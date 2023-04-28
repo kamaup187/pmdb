@@ -4953,7 +4953,7 @@ class SmsDelivery(Resource):
 
             PaymentOp.update_sms_status(payment_obj,status)
             db.session.expire(payment_obj)
-            if payment_obj.sms_status == "UserInBlackList" or payment_obj.sms_status == "AbsentSubscriber":
+            if payment_obj.sms_status == "UserInBlackList" or payment_obj.sms_status == "UserInBlacklist" or payment_obj.sms_status == "AbsentSubscriber":
                 PaymentOp.update_sms_status(payment_obj,"Success-mb")
 
                 if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
@@ -5009,7 +5009,7 @@ class SmsDelivery(Resource):
             MonthlyChargeOp.update_sms_status(invoice_obj,status)
 
             db.session.expire(invoice_obj)
-            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "AbsentSubscriber":
+            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "UserInBlacklist" or invoice_obj.sms_invoice == "AbsentSubscriber":
                 MonthlyChargeOp.update_sms_status(invoice_obj,"success-alt")
 
                 if invoice_obj.ptenant:

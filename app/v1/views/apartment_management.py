@@ -4953,7 +4953,7 @@ class SmsDelivery(Resource):
 
             PaymentOp.update_sms_status(payment_obj,status)
             db.session.expire(payment_obj)
-            if payment_obj.sms_status == "UserInBlackList" or payment_obj.sms_status == "AbsentSubscriber":
+            if payment_obj.sms_status == "UserInBlackList" or payment_obj.sms_status == "UserInBlacklist" or payment_obj.sms_status == "AbsentSubscriber":
                 PaymentOp.update_sms_status(payment_obj,"Success-mb")
 
                 if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
@@ -4992,7 +4992,7 @@ class SmsDelivery(Resource):
                 # txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref-{reference} Confirmed. \nDear {fname}, we have received sum of Kshs. {payment_obj.amount}. \n{running_bal} \n\n~{str_co}."
                 txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref {reference}, sum of {paid} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
-                response = sms.send(txt, recipient ,sender) #TODO ENABLE THIS PART
+                response = sms.send(txt, recipient ,sender)
 
                 resp = response["SMSMessageData"]["Recipients"][0]
                 raw_cost = resp["cost"]
@@ -5009,7 +5009,7 @@ class SmsDelivery(Resource):
             MonthlyChargeOp.update_sms_status(invoice_obj,status)
 
             db.session.expire(invoice_obj)
-            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "AbsentSubscriber":
+            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "UserInBlacklist" or invoice_obj.sms_invoice == "AbsentSubscriber":
                 MonthlyChargeOp.update_sms_status(invoice_obj,"success-alt")
 
                 if invoice_obj.ptenant:

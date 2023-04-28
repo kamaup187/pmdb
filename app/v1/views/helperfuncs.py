@@ -1272,12 +1272,6 @@ def sms_sender(company,sms_text,phonenum):
         param2 = report["partnerID"]
         param3 = report["msgid"]
 
-        co = CompanyOp.fetch_company_by_name(company)
-        raw_rem_sms =co.remainingsms
-        rem_sms = calculate_sms_cost_alt(raw_rem_sms,sms_text)
-
-        CompanyOp.set_rem_quota(co,rem_sms)
-
         jb = q.enqueue_in(timedelta(seconds=300), advanta_sms_delivery, args=(param1,param2,param3,))
         return param3
     else:
@@ -4035,21 +4029,6 @@ def calculate_sms_cost(sms,cost):
 
     return sms
 
-def calculate_sms_cost_alt(sms,smstext):
-    try:
-        sms_len = len(smstext)
-
-        if sms_len < 140:
-            sms -= 1
-        elif sms_len < 280:
-            sms -= 2
-        else:
-            sms -= 3
-        
-    except Exception as e:
-        print("There was an error",e,"in remaining sms calculation")
-
-    return sms
 
 def calculate_sms_units(smstext):
     units = 1
@@ -4080,8 +4059,14 @@ def update_sms_units(co,smstext):
 
     chars = res[0]
     cost = res[1]
+
+    print("availab...",co.remainingsms)
+    print("costing...",cost)
+
     
     bal = co.remainingsms - cost
+
+    print("balance...",bal)
 
     overall = co.allsmssent + 1 if co.allsmssent else 1
     monthsms = co.monthsmssent + 1 if co.monthsmssent else 1
@@ -4487,7 +4472,7 @@ def autosend_pending_smsreceipts(payids):
             bal = tenant_obj.balance * -1
             running_bal = (f"Advance: KES {bal:,}")
         else:
-            running_bal = (f"Balance: KES {tenant_obj.balance:,}")
+            running_bal = (f"Bal: KES {tenant_obj.balance:,}")
 
         amount = f'Kes {payment_obj.amount:,.0f}'
 
@@ -4522,27 +4507,16 @@ def autosend_pending_smsreceipts(payids):
         # if not fname:
         #     fname = name
         phonenum = sms_phone_number_formatter(tele)
-        salutation = "Service Charge & Utility" if serv else "Rental"
 
+        # salutation = "Service Charge & Utility" if serv else "Rental"
         # message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
 
         acc = tenant_obj.uid if tenant_obj.uid else f'TNT{tenant_obj.id}'
         # message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
-        message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref No. {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
+        message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
 
         if tenant_obj.sms:
 
-            char_count = len(message)
-            if char_count <= 160:
-                cost = 1
-            elif char_count <= 320:
-                cost = 2
-            else:
-                cost = 3
-            
-            sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
-            sms_obj.save()
-            
             # own_shortcode = False
 
             # if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
@@ -4560,49 +4534,75 @@ def autosend_pending_smsreceipts(payids):
 
                 try:
                     print("Payment sms sending initiated")
-                    recipient = [phonenum]
+
+                    # if target == "lasshouse":
+                    #     report = inva_send_sms(message,phonenum)
+                    #     return None
 
 
+                    # elif co.sms_provider == "Advanta":
+                    #     smsid = sms_sender(co.name,message,phonenum)
+                    #     if smsid:
+                    #         PaymentOp.update_smsid(payment_obj,smsid)
+                    # else:
+                    #     #Once this is done, that's it! We'll handle the rest
+                    #     response = sms.send(message, recipient,sender)
+                    #     print(response)
+                    #     resp = response["SMSMessageData"]["Recipients"][0]
+
+                    #     code = resp["statusCode"]
+                    #     smsid = resp["messageId"]
+                    #     if smsid:
+                    #         PaymentOp.update_smsid(payment_obj,smsid)
+
+                    #     if code == 101: # SMS WAS SENT
+
+                    #         PaymentOp.update_sms_status(payment_obj,"sent")
+                    #         raw_cost = resp["cost"]
+                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    #         CompanyOp.set_rem_quota(co,rem_sms)
+
+                    #     elif code == 403:
+                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    #         PaymentOp.update_sms_status(payment_obj,"fail")
+                    #     elif code == 405:
+                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    #         txt = f"{co} has depleted sms"
+                    #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                    #     elif code == 406:
+                    #         PaymentOp.update_sms_status(payment_obj,"blocked")
+                    #         print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
+                    #         raw_cost = resp["cost"]
+                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    #         CompanyOp.set_rem_quota(co,rem_sms)
+
+                    ####################################################################################
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
                         return None
-
 
                     elif co.sms_provider == "Advanta":
                         smsid = sms_sender(co.name,message,phonenum)
                         if smsid:
                             PaymentOp.update_smsid(payment_obj,smsid)
-                    else:
-                        #Once this is done, that's it! We'll handle the rest
-                        response = sms.send(message, recipient,sender)
-                        print(response)
-                        resp = response["SMSMessageData"]["Recipients"][0]
-
-                        code = resp["statusCode"]
-                        smsid = resp["messageId"]
-                        if smsid:
-                            PaymentOp.update_smsid(payment_obj,smsid)
-
-                        if code == 101: # SMS WAS SENT
-
                             PaymentOp.update_sms_status(payment_obj,"sent")
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
+                            res = update_sms_units(co,message)
+                            sms_obj = SentMessagesOp(message,res[0],res[1],tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                            sms_obj.save()
 
-                        elif code == 403:
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                            PaymentOp.update_sms_status(payment_obj,"fail")
-                        elif code == 405:
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                            txt = f"{co} has depleted sms"
-                            response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                        elif code == 406:
-                            PaymentOp.update_sms_status(payment_obj,"blocked")
-                            print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
+                    else:
+                        resp = africastalking_send_sms(message,phonenum,sender)
+                        smsid = resp.get("messageId")
+                        code = resp.get("statusCode")
+                        if code:
+                            PaymentOp.update_smsid(payment_obj,smsid) if smsid else None
+                            stat = get_sms_status(code)
+                            PaymentOp.update_sms_status(payment_obj,stat)
+                            if stat == "sent":
+                                res = update_sms_units(co,message) 
+                                sms_obj = SentMessagesOp(message,res[0],res[1],tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj.save()
+                    #####################################################################################
                     
                 except Exception as e:
                     print(f"Houston, we have a problem {e}")
@@ -5608,7 +5608,6 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             
 
                         try:
-                            recipient = [phonenum]
                             if update:
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
@@ -5630,7 +5629,6 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
 
                             ####################################################################################
-
                             if target == "lasshouse":
                                 report = inva_send_sms(message,phonenum)
                                 return None
@@ -5645,13 +5643,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     sms_obj.save()
 
                             else:
-                                resp = africastalking_send_sms(message,recipient,sender)
+                                resp = africastalking_send_sms(message,phonenum,sender)
                                 smsid = resp.get("messageId")
                                 code = resp.get("statusCode")
                                 if code:
                                     MonthlyChargeOp.update_smsid(bill,smsid) if smsid else None
                                     stat = get_sms_status(code)
-                                    MonthlyChargeOp.update_sms_status(bill,res)
+                                    MonthlyChargeOp.update_sms_status(bill,stat)
                                     if stat == "sent":
                                         res = update_sms_units(co,message) 
                                         sms_obj = SentMessagesOp(message,res[0],res[1],None,tenant.id,prop_obj.id,co.id)
@@ -5720,7 +5718,6 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             
 
                         try:
-                            recipient = [phonenum]
                             if update:
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
@@ -5756,13 +5753,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     sms_obj.save()
 
                             else:
-                                resp = africastalking_send_sms(message,recipient,sender)
+                                resp = africastalking_send_sms(message,phonenum,sender)
                                 smsid = resp.get("messageId")
                                 code = resp.get("statusCode")
                                 if code:
                                     MonthlyChargeOp.update_smsid(bill,smsid) if smsid else None
                                     stat = get_sms_status(code)
-                                    MonthlyChargeOp.update_sms_status(bill,res)
+                                    MonthlyChargeOp.update_sms_status(bill,stat)
                                     if stat == "sent":
                                         res = update_sms_units(co,message) 
                                         sms_obj = SentMessagesOp(message,res[0],res[1],tenant2.id,None,prop_obj.id,co.id)

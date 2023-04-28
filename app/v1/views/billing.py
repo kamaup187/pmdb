@@ -2885,11 +2885,25 @@ class ReceivePayment(Resource):
         if latest_payment:
             if tenant_id:
                 if latest_payment.tenant_id == tenant_id and latest_payment.amount == valid_amount and latest_payment.house_id == house_id:
-                    return "Submitted successfully"
+                    if bill_ref:
+                        if bill_ref == latest_payment.ref_number:
+                            return "Similar transaction received already"
+                    else:
+                        if latest_payment.ref_number:
+                            pass
+                        else:
+                            return "Similar transaction received already"
 
             if ptenant_id:
                 if latest_payment.ptenant_id == tenant_id and latest_payment.amount == valid_amount and latest_payment.house_id == house_id:
-                    return "Submitted successfully"
+                    if bill_ref:
+                        if bill_ref == latest_payment.ref_number:
+                            return "Similar transaction received already"
+                    else:
+                        if latest_payment.ref_number:
+                            pass
+                        else:
+                            return "Similar transaction received already"
         
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()

@@ -1475,3 +1475,74 @@ class FetchClients(Resource):
             'clientlist.html',
             clrs = len(clients)
         ))
+
+class Properties(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class Property(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+    
+
+class UnitData(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class AllVacantUnits(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+    
+class VacantUnits(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class PaymentNarration(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)
+    
+class PaymentInfo(Resource):
+    def get(self):
+        response = {
+            "resultCode":1,
+            "resultDesc":"Failed Authorization"
+        }
+
+        resp = jsonify(response)
+        return make_response(resp)

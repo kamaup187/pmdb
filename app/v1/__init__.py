@@ -195,15 +195,26 @@ api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")
 api.add_resource(AutoPayment, "/autopayment")
 
 api.add_resource(CallBackUrlAssetisha,"/api/ins/confirm")
+
 api.add_resource(RentNaiveraStatement,"/report/fetch/<string:id_number>/<string:month>/-/<string:year>/<string:prop>")
 api.add_resource(TenantInvoice,"/fetch/invoice/<string:id_number>/<string:month>/-/<string:year>/<string:unit_number>")
-api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
+api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>")
 # api.add_resource(Assetisha,"api/landlord/statement/<int:id_number>")
 
+
+api.add_resource(Properties,"/api/info/properties/all")
+api.add_resource(Property,"/api/info/property/<string:property_code>")
+api.add_resource(UnitData,"/api/unit/data/<string:unit_number>")
+api.add_resource(AllVacantUnits,"/api/fetch/available/vacant/units/<string:property_code>")
+api.add_resource(VacantUnits,"/api/fetch/available/vacant/units/")
+api.add_resource(PaymentNarration,"/api/services/payment/narration/<string:tenant_id>")
+api.add_resource(PaymentInfo,"/api/services/ins/payment/<string:tenant_id>")
+
+
+api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")
 api.add_resource(AgentWallet,"/api/agent/account/<int:id_number>")
 api.add_resource(AgentWithdrawal,"/api/agent/withdraw/request")
 api.add_resource(AgentWithdrawalConfirmation,"/api/ins/agent/withdraw/confirm")
-api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>")
 
 #bank urls
 api.add_resource(CallBackUrlEquity,"/nest/payment")

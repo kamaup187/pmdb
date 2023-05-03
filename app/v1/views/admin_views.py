@@ -1476,22 +1476,87 @@ class FetchClients(Resource):
             clrs = len(clients)
         ))
 
+
+
+
+
+
 class Properties(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "properties":[{
+                        "name":"",
+                        "units":[],
+                        "type":"",
+                        "tenants":[]
+                        }
+
+                        ]
+
+                    }
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
 
 class Property(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "name":"",
+                        "units":[],
+                        "type":"",
+                        "tenants":[]
+                    }
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
@@ -1499,50 +1564,171 @@ class Property(Resource):
 
 class UnitData(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "unit":"",
+                        "tenant":""
+                    }
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
 
 class AllVacantUnits(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "units":[]
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
     
 class VacantUnits(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "units":[]
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
 
 class PaymentNarration(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "unit":"",
+                        "tenant":"",
+                        "narration":""
+                    }
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)
     
 class PaymentInfo(Resource):
     def get(self):
-        response = {
-            "resultCode":1,
-            "resultDesc":"Failed Authorization"
-        }
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "unit":"",
+                        "tenant":"",
+                        "receipts":[]
+                    }
+                }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
 
         resp = jsonify(response)
         return make_response(resp)

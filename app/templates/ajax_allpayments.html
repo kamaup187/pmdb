@@ -1382,6 +1382,8 @@
 <script>
   $("#select_paymode").on('change',function(){
 
+    $('#paybtn_alt').removeClass("dispnone")
+
     $('#billref').removeClass('dispnone');
     $('#bill_ref').removeClass('dispnone');
     if ($("#ctb_item_ref").text()){
@@ -1467,9 +1469,9 @@
 
     if (empty) {
         $("#fieldset3").addClass("dispnone")
-        $('#paybtn_alt').addClass("dispnone");
+        // $('#paybtn_alt').addClass("dispnone");
     } else {
-        $('#paybtn_alt').removeClass("dispnone")
+        // $('#paybtn_alt').removeClass("dispnone")
         $("#fieldset3").removeClass("dispnone")
 
     }

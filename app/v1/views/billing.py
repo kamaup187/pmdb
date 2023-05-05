@@ -2603,6 +2603,12 @@ class ReceivePayment(Resource):
             bill_ref = raw_bill_ref
         elif raw_bill_ref.upper() == "NA":
             bill_ref = "N/A"
+        elif raw_bill_ref == "":
+            bill_ref = "N/A"
+        elif raw_bill_ref == "None":
+            bill_ref = "N/A"
+        elif raw_bill_ref == None:
+            bill_ref = "N/A"
         elif len(raw_bill_ref) < 5:
             bill_ref = raw_bill_ref
         else:

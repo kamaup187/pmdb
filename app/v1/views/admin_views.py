@@ -1638,11 +1638,26 @@ class Units(Resource):
 
                     try:
                         for unit in prop.houses:
+                            tenant = check_occupancy(unit)[1]
+                            if tenant == "vacant":
+                                tt = {}
+                            else:
+                                tt = {
+                                    "name": tenant.name,
+                                    "phone": tenant.phone,
+                                    "email": tenant.email,
+                                    "lease_date": "-",
+                                    "balance": tenant.balance
+                                }
+
+                                tenant = tenant.name
+
                             udict = {
                                 "unit_code": unit.id,
                                 "unit":unit.name,
-                                "rent":unit.rentrate,
-                                "tenant":check_occupancy(unit)[1],
+                                "rent":unit.housecode.rentrate,
+                                "tenant":tenant,
+                                "tenant_info":tt
                             }
                             houses.append(udict)
 
@@ -1654,7 +1669,7 @@ class Units(Resource):
                         }
                             
                     except Exception as e:
-                        print("Error processing",e)
+                        print("Error processing all units",e)
                         pdict = {}
 
                     response = {
@@ -1710,11 +1725,26 @@ class UnitData(Resource):
                 else:
 
                     try:
+
+                        tenant = check_occupancy(unit)[1]
+                        if tenant == "vacant":
+                            tt = {}
+                        else:
+                            tt = {
+                                "name": tenant.name,
+                                "phone": tenant.phone,
+                                "email": tenant.email,
+                                "lease_date": "-",
+                                "balance": tenant.balance
+                            }
+                            tenant = tenant.name
+
                         udict = {
                             "unit_code":unit.id,
                             "unit":unit.name,
-                            "rent":unit.rentrate,
-                            "tenant":check_occupancy(unit)[1],
+                            "rent":unit.housecode.rentrate,
+                            "tenant":tenant,
+                            "tenant_info":tt
                         }
 
                         pdict = {

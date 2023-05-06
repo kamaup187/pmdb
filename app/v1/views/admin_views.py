@@ -1834,9 +1834,9 @@ class AllVacantUnits(Resource):
 
                         udict = {
                             "property_code":unit.apartment_id,
-                            "name": unit.apartment.name,
+                            "property_name": unit.apartment.name,
                             "unit_code": unit.id,
-                            "unit":unit.name,
+                            "unit_name":unit.name,
                             "rent":unit.housecode.rentrate,
                             "status":"vacant",
                             "location":unit.apartment.location.name
@@ -1916,9 +1916,9 @@ class VacantUnits(Resource):
 
                                 udict = {
                                     "property_code":unit.apartment_id,
-                                    "name": unit.apartment.name,
+                                    "property_name": unit.apartment.name,
                                     "unit_code": unit.id,
-                                    "unit":unit.name,
+                                    "unit_name":unit.name,
                                     "rent":unit.housecode.rentrate,
                                     "status":"vacant",
                                     "location":unit.apartment.location.name

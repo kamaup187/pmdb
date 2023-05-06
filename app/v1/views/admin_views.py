@@ -2029,3 +2029,142 @@ class PaymentInfo(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
+
+
+class FetchPropertiesByLocation(Resource):
+    def get(self,location_name):
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                pps = []
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+                loc = LocationOp.fetch_location(location_name)
+                try:
+                    if loc:
+                        props = fetch_all_apartments_by_user(curr_user)
+                        pps_num = len(props)
+                        for prop in props:
+                            if prop.location.name == loc.name:
+                                tenants = tenantauto(prop.id)
+                                vacs = filter_out_occupied_houses(prop.name)
+                                vacant_units = [str(u) for u in vacs]
+                                units = [str(u) for u in prop.houses]
+
+                                pdict = {
+                                    "property_code":prop.id,
+                                    "name": prop.name,
+                                    "units_num":len(prop.houses),
+                                    "units":units,
+                                    "tenants":len(tenants),
+                                    "vacant_units":vacant_units,
+                                    "location":prop.location.name
+                                }
+                                pps.append(pdict)
+
+                except Exception as e:
+                    print("Error processing",e)
+                    pps_num = 0
+
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":{
+                        "location":loc.name,
+                        "properties":pps_num,
+                        "property_info":pps
+                    }
+                }
+
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
+
+        resp = jsonify(response)
+        return make_response(resp)
+    
+
+class FetchLocations(Resource):
+    def get(self):
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+
+
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+                locs = LocationOp.fetch_all_locations()
+
+                props = fetch_all_apartments_by_user(curr_user)
+                loca = []
+                for loc in locs:
+                    houses = []
+                    pps_num = 0
+
+                    for prop in loc.apartments:
+                        if prop in props:
+                            pps_num += 1
+                            tenants = tenantauto(prop.id)
+                            vacs = filter_out_occupied_houses(prop.name)
+                            vacant_units = [str(u) for u in vacs]
+                            units = [str(u) for u in prop.houses]
+
+                            udict = {
+                                "property_code":prop.id,
+                                "name": prop.name,
+                                "units_num":len(prop.houses),
+                                "units":units,
+                                "tenants":len(tenants),
+                                "vacant_units":vacant_units,
+                                "location":prop.location.name
+                            }
+
+                            houses.append(udict)
+
+                    pdict = {
+                        "location":loc.name,
+                        "num_properties":pps_num,
+                        "properties":houses
+                    }
+                    loca.append(pdict)
+
+                response = {
+                    "resultCode":0,
+                    "resultDesc":"Success",
+                    "data":loca
+                }
+
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
+
+        resp = jsonify(response)
+        return make_response(resp)

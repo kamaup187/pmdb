@@ -1544,7 +1544,7 @@ class Properties(Resource):
         return make_response(resp)
 
 class Property(Resource):
-    def get(self,ri):
+    def get(self,property_code):
         auth = request.headers.get("Authorization")
 
         ckey="elloelesama"
@@ -1555,7 +1555,7 @@ class Property(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
-                prop = ApartmentOp.fetch_apartment_by_id(ri)
+                prop = ApartmentOp.fetch_apartment_by_id(property_code)
                 try:
                     tenants = tenantauto(prop.id)
                     vacs = filter_out_occupied_houses(prop.name)

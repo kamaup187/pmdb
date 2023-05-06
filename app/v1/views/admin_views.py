@@ -1513,6 +1513,7 @@ class Properties(Resource):
                             "units":units,
                             "tenants":len(tenants),
                             "vacant_units":vacant_units,
+                            "location":prop.location.name
                         }
                         pps.append(pdict)
 
@@ -1591,6 +1592,8 @@ class Property(Resource):
                                 "units":units,
                                 "tenants":len(tenants),
                                 "vacant_units":vacant_units,
+                                "location":prop.location.name
+
                             }
                                 
                         except Exception as e:

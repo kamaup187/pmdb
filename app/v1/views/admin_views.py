@@ -1515,7 +1515,7 @@ class Properties(Resource):
                             "vacant_units":vacant_units,
                         }
                         pps.append(pdict)
-                        
+
                 except Exception as e:
                     print("Error processing",e)
                     pps_num = 0
@@ -1556,17 +1556,31 @@ class Property(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
                 prop = ApartmentOp.fetch_apartment_by_id(ri)
+                try:
+                    tenants = tenantauto(prop.id)
+                    vacs = filter_out_occupied_houses(prop.name)
+                    vacant_units = [str(u) for u in vacs]
+                    units = [str(u) for u in prop.houses]
+
+                    pdict = {
+                        "property_code":prop.id,
+                        "name": prop.name,
+                        "units_num":len(prop.houses),
+                        "units":units,
+                        "tenants":len(tenants),
+                        "vacant_units":vacant_units,
+                    }
+                        
+                except Exception as e:
+                    print("Error processing",e)
+                    pdict = {}
 
                 response = {
                     "resultCode":0,
                     "resultDesc":"Success",
-                    "data":{
-                        "name":"",
-                        "units":[],
-                        "type":"",
-                        "tenants":[]
-                    }
+                    "data":pdict
                 }
+
             else:
 
                 response = {

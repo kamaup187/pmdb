@@ -204,7 +204,8 @@ api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>
 
 api.add_resource(Properties,"/api/info/properties/all")
 api.add_resource(Property,"/api/info/property/<string:property_code>")
-api.add_resource(UnitData,"/api/unit/data/<string:unit_number>")
+api.add_resource(Units,"/api/units/all/<string:property_code>")
+api.add_resource(UnitData,"/api/unit/data/<string:unit_code>")
 api.add_resource(AllVacantUnits,"/api/fetch/available/vacant/units/<string:property_code>")
 api.add_resource(VacantUnits,"/api/fetch/available/vacant/units/")
 api.add_resource(PaymentNarration,"/api/services/payment/narration/<string:tenant_id>")

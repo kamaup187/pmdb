@@ -1556,30 +1556,41 @@ class Property(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
                 prop = ApartmentOp.fetch_apartment_by_id(property_code)
-                try:
-                    tenants = tenantauto(prop.id)
-                    vacs = filter_out_occupied_houses(prop.name)
-                    vacant_units = [str(u) for u in vacs]
-                    units = [str(u) for u in prop.houses]
+                curr_user = UserOp.fetch_user_by_usercode("6753")
 
-                    pdict = {
-                        "property_code":prop.id,
-                        "name": prop.name,
-                        "units_num":len(prop.houses),
-                        "units":units,
-                        "tenants":len(tenants),
-                        "vacant_units":vacant_units,
+                if not prop in curr_user.company.props:
+
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Failed to fetch property",
+                        "error":"property does not exist"
                     }
-                        
-                except Exception as e:
-                    print("Error processing",e)
-                    pdict = {}
 
-                response = {
-                    "resultCode":0,
-                    "resultDesc":"Success",
-                    "data":pdict
-                }
+                else:
+                    try:
+                        tenants = tenantauto(prop.id)
+                        vacs = filter_out_occupied_houses(prop.name)
+                        vacant_units = [str(u) for u in vacs]
+                        units = [str(u) for u in prop.houses]
+
+                        pdict = {
+                            "property_code":prop.id,
+                            "name": prop.name,
+                            "units_num":len(prop.houses),
+                            "units":units,
+                            "tenants":len(tenants),
+                            "vacant_units":vacant_units,
+                        }
+                            
+                    except Exception as e:
+                        print("Error processing",e)
+                        pdict = {}
+
+                    response = {
+                        "resultCode":0,
+                        "resultDesc":"Success",
+                        "data":pdict
+                    }
 
             else:
 
@@ -1597,8 +1608,8 @@ class Property(Resource):
         return make_response(resp)
     
 
-class UnitData(Resource):
-    def get(self):
+class Units(Resource):
+    def get(self,property_code):
         auth = request.headers.get("Authorization")
 
         ckey="elloelesama"
@@ -1609,14 +1620,118 @@ class UnitData(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
-                response = {
-                    "resultCode":0,
-                    "resultDesc":"Success",
-                    "data":{
-                        "unit":"",
-                        "tenant":""
+                prop = ApartmentOp.fetch_apartment_by_id(property_code)
+                houses = []
+
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+
+
+                if not prop in curr_user.company.props:
+
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Failed to fetch property",
+                        "error":"property does not exist"
                     }
+
+                else:
+
+                    try:
+                        for unit in prop.houses:
+                            udict = {
+                                "unit_code": unit.id,
+                                "unit":unit.name,
+                                "rent":unit.rentrate,
+                                "tenant":check_occupancy(unit)[1],
+                            }
+                            houses.append(udict)
+
+                        pdict = {
+                            "property_code":prop.id,
+                            "name": prop.name,
+                            "units_num":len(prop.houses),
+                            "units":houses,
+                        }
+                            
+                    except Exception as e:
+                        print("Error processing",e)
+                        pdict = {}
+
+                    response = {
+                        "resultCode":0,
+                        "resultDesc":"Success",
+                        "data":pdict
+                    }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
                 }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+class UnitData(Resource):
+    def get(self,unit_code):
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                unit = HouseOp.fetch_house_by_id(unit_code)
+
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+
+                props = fetch_all_apartments_by_user(curr_user)
+
+                ca = [uu.houses for uu in props]
+
+                caa = flatten(ca)
+
+                if not unit in caa:
+
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Failed to fetch unit",
+                        "error":"unit does not exist"
+                    }
+
+                else:
+
+                    try:
+                        udict = {
+                            "unit_code":unit.id,
+                            "unit":unit.name,
+                            "rent":unit.rentrate,
+                            "tenant":check_occupancy(unit)[1],
+                        }
+
+                        pdict = {
+                            "property_code":unit.apartment_id,
+                            "name": unit.apartment.name,
+                            "units":udict,
+                        }
+                            
+                    except Exception as e:
+                        print("Error processing",e)
+                        pdict = {}
+
+                    response = {
+                        "resultCode":0,
+                        "resultDesc":"Success",
+                        "data":pdict
+                    }
             else:
 
                 response = {

@@ -1494,19 +1494,38 @@ class Properties(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
+                pps = []
+
+                try:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
+                    props = fetch_all_apartments_by_user(curr_user)
+                    pps_num = len(props)
+                    for prop in props:
+                        tenants = tenantauto(prop.id)
+                        vacs = filter_out_occupied_houses(prop.name)
+                        vacant_units = [str(u) for u in vacs]
+                        units = [str(u) for u in prop.houses]
+
+                        pdict = {
+                            "property_code":prop.id,
+                            "name": prop.name,
+                            "units_num":len(prop.houses),
+                            "units":units,
+                            "tenants":len(tenants),
+                            "vacant_units":vacant_units,
+                        }
+                        pps.append(pdict)
+                        
+                except Exception as e:
+                    print("Error processing",e)
+                    pps_num = 0
+
                 response = {
                     "resultCode":0,
                     "resultDesc":"Success",
                     "data":{
-                        "properties":[{
-                        "name":"",
-                        "units":[],
-                        "type":"",
-                        "tenants":[]
-                        }
-
-                        ]
-
+                        "properties":pps_num,
+                        "property_info":pps
                     }
                 }
             else:
@@ -1525,7 +1544,7 @@ class Properties(Resource):
         return make_response(resp)
 
 class Property(Resource):
-    def get(self):
+    def get(self,ri):
         auth = request.headers.get("Authorization")
 
         ckey="elloelesama"
@@ -1536,6 +1555,8 @@ class Property(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
+                prop = ApartmentOp.fetch_apartment_by_id(ri)
+
                 response = {
                     "resultCode":0,
                     "resultDesc":"Success",

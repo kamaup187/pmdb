@@ -1693,7 +1693,13 @@ class UnitData(Resource):
 
                 curr_user = UserOp.fetch_user_by_usercode("6753")
 
-                if not unit in curr_user.company.houses:
+                props = fetch_all_apartments_by_user(curr_user)
+
+                ca = [uu.houses for uu in props]
+
+                caa = flatten(ca)
+
+                if not unit in caa:
 
                     response = {
                         "resultCode":1,

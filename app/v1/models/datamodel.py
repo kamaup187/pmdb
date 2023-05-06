@@ -70,7 +70,7 @@ class Company(db.Model):
 
     shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
-    houses = db.relationship('House', backref='company', order_by='House.name' ,cascade="all, delete-orphan")
+    # houses = db.relationship('House', backref='company', order_by='House.name' ,cascade="all, delete-orphan")
     groups = db.relationship('CompanyUserGroup', backref='company',order_by='CompanyUserGroup.name', cascade="all, delete-orphan")
 
     bills = db.relationship('ClientBill', backref='company',order_by='ClientBill.id', cascade="all, delete-orphan")

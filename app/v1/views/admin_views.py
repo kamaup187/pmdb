@@ -2046,6 +2046,114 @@ class FetchInvoicesPerProperty(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
+
+
+class FetchInvoicesPerUnit(Resource):
+    def get(self,unit_code):
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+
+                unitid = get_identifier(unit_code)
+                
+                unit = HouseOp.fetch_house_by_id(unitid)
+                if not unit:
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Failed to fetch unit",
+                        "error":"unit does not exist"
+                    }
+
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
+
+                    props = fetch_all_apartments_by_user(curr_user)
+
+                    ca = [uu.houses for uu in props]
+
+                    caa = flatten(ca)
+
+                    if not unit in caa:
+
+                        response = {
+                            "resultCode":1,
+                            "resultDesc":"Failed to fetch unit",
+                            "error":"unit does not exist"
+                        }
+
+                    else:
+
+                        try:
+
+                            tenant = check_occupancy(unit)[1]
+                            if tenant == "vacant":
+                                tt = {
+                                    "invoice_code":"N/A",
+                                    "description":"invoice not available"
+                                }
+                            else:
+                                curr_inv = max(tenant.monthly_charges, key=lambda x: x.id) if tenant.monthly_charges else None
+                                if curr_inv:
+                                    idd = curr_inv.house.name + ""
+                                    date = generate_exact_date(curr_inv.date.day, curr_inv.date.month, curr_inv.year)
+
+                                    tt = {
+                                        "tenant_name":tenant.name,
+                                        "tenant_phone":tenant.phone,
+                                        "invoice_code": curr_inv.id,
+                                        "invoice_period": date,
+                                        "amount_due":curr_inv.total_bill,
+                                        "paid_amount":curr_inv.paid_amount,
+                                        "balance":curr_inv.balance,
+                                        "identifier":idd
+                                    }
+                                    tenant = tenant.name
+
+                                else:
+                                    tt = {
+                                        "invoice_code":"N/A",
+                                        "description":"invoice not available"
+                                    }
+
+                            pdict = {
+                                "property_code":unit.apartment_id,
+                                "property_name": unit.apartment.name,
+                                "unit_code":unit.id,
+                                "unit_name":unit.name,
+                                "tenant_name":tenant,
+                                "tenant_invoice":tt
+                            }
+                                
+                        except Exception as e:
+                            print("Error processing",e)
+                            pdict = {}
+
+                        response = {
+                            "resultCode":0,
+                            "resultDesc":"Success",
+                            "data":pdict
+                        }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
+
+        resp = jsonify(response)
+        return make_response(resp)
     
 class PaymentInfo(Resource):
     def get(self):

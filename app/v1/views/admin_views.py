@@ -2215,9 +2215,10 @@ class FetchPropertiesByLocation(Resource):
                     if loc:
                         region = loc.name
                         props = fetch_all_apartments_by_user(curr_user)
-                        pps_num = len(props)
+                        pps_num = 0
                         for prop in props:
                             if prop.location.name == loc.name:
+                                pps_num += 1
                                 tenants = tenantauto(prop.id)
                                 vacs = filter_out_occupied_houses(prop.name)
                                 vacant_units = [str(u) for u in vacs]

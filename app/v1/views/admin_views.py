@@ -1958,8 +1958,8 @@ class VacantUnits(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
-class PaymentNarration(Resource):
-    def get(self):
+class FetchInvoicesPerProperty(Resource):
+    def get(self,property_code):
         auth = request.headers.get("Authorization")
 
         ckey="elloelesama"
@@ -1970,15 +1970,68 @@ class PaymentNarration(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
-                response = {
-                    "resultCode":0,
-                    "resultDesc":"Success",
-                    "data":{
-                        "unit":"",
-                        "tenant":"",
-                        "narration":""
+                houses = []
+
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+
+                propid = get_identifier(property_code)
+                
+                prop = ApartmentOp.fetch_apartment_by_id(propid)
+                if not prop:
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Failed to fetch property",
+                        "error":"property does not exist"
                     }
-                }
+                else:
+                    if not prop in curr_user.company.props:
+
+                        response = {
+                            "resultCode":1,
+                            "resultDesc":"Failed to fetch property",
+                            "error":"property does not exist"
+                        }
+                    
+                    else:
+
+                        tenants = tenantauto(prop.id)
+
+                        try:
+                            for unit in tenants:
+
+                                curr_inv = max(unit.monthly_charges, key=lambda x: x.id) if unit.monthly_charges else None
+                                if curr_inv:
+                                    idd = curr_inv.house.name + ""
+                                    date = generate_exact_date(curr_inv.date.day, curr_inv.date.month, curr_inv.year)
+                                    udict = {
+                                        "property_code":unit.apartment_id,
+                                        "property_name": unit.apartment.name,
+                                        "unit_name": curr_inv.house.name,
+                                        "tenant_name": unit.name,
+                                        "tenant_phone": unit.phone,
+                                        "invoice_code": curr_inv.id,
+                                        "invoice_period": date,
+                                        "amount_due":curr_inv.total_bill,
+                                        "paid_amount":curr_inv.paid_amount,
+                                        "balance":curr_inv.balance,
+                                        "identifier":idd
+                                    }
+                                    houses.append(udict)
+
+                            pdict = {
+                                "tenants":len(tenants),
+                                "tenant_invoices":houses
+                            }
+                                
+                        except Exception as e:
+                            print("Error processing all units",e)
+                            pdict = {}
+
+                        response = {
+                            "resultCode":0,
+                            "resultDesc":"Success",
+                            "data":pdict
+                        }
             else:
 
                 response = {
@@ -2168,3 +2221,5 @@ class FetchLocations(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
+    
+

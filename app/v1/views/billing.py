@@ -7100,6 +7100,134 @@ class CallBackUrlMerit(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
+
+class CallBackUrlTestFamily(Resource):
+    def post(self):
+        authenticated = False
+
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+
+        auth = request.headers.get("Authorization")
+
+        ww = f"{my_json} auth > {auth},TEST FAMILY has sent data"
+        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+        # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+        # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+
+        ckey="malibu"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        # auth = request.headers.get("Authorization")
+        # print("AAAAUUUUTH",auth)
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                authenticated = True
+            else:
+                # resp = sms.send("TEST FAMILY has sent data with wrong creds", ["+254716674695"],"KIOTAPAY")
+                ww = "TEST FAMILY has sent data with wrong creds"
+                advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+
+        else:
+            # resp = sms.send("TEST FAMILY has sent data with no creds", ["+254716674695"],"KIOTAPAY")
+            advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+            response = {
+                "resultCode":1,
+                "resultDesc":"Failed Authorization"
+            }
+            # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
+
+        if authenticated:
+            print("Authenticated")
+
+            #parse for json
+            # my_data=request.data
+            # my_json = my_data.decode('utf8').replace("'", '"')
+
+            # ww = f"{my_json},TEST MERIT IM has sent data"
+            # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+            try:
+                data = json.loads(my_json)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+                print(data)
+                lfile(data)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+        
+                print("Data will be proccessed here")
+
+                trans_id = data.get('transactionref')
+                trans_time = data.get('transactionDate')
+                trans_amnt = data.get('amount')
+                trans_type = data.get('tranParticular')
+                business_shortcode = "000000"
+                bill_ref_num = data.get('description')
+                invoice_num = data.get('billNumber')
+                msisdn = data.get('phonenumber')
+                org_acc_bal = 0
+                fname = data.get('debitcustname')
+                lname = "N/A"
+
+                mode = "Bank"
+                company_id = 1
+
+                if trans_id:
+
+                    data_obj = CtoBop.fetch_record_by_ref(trans_id)
+                    if data_obj:
+                        # response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+                        response = {
+                            "resultCode":1,
+                            "resultDesc":"Duplicate Transaction"
+                        }
+
+                    else:
+                        data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
+                        data_obj.save()
+
+                        curr_time = datetime.datetime.now()
+                        # response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                        erpRefId = f"0{data_obj.id}00{company_id}{curr_time.month}{curr_time.year}"
+                        response = {
+                            "resultCode": 0,
+                            "resultDesc": "Successful",
+                            "erpRefId": erpRefId
+                        }
+
+                else:
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Invalid payload"
+                    }
+
+
+            except Exception as e:
+                # sms.send("TEST FAMILY has error data", ["+254716674695"],"KIOTAPAY")
+                ww = "TEST FAMILY has error data" + e
+                advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+                # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid payload"
+                }
+
+                print ("It failed, Bank integration has an error")
+
+        resp = jsonify(response)
+        return make_response(resp)
             
 class SendGridInbound(Resource):
     def post(self):

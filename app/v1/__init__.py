@@ -213,6 +213,8 @@ api.add_resource(UnitData,"/api/unit/data/<string:unit_code>")
 api.add_resource(AllVacantUnits,"/api/fetch/available/vacant/units/")
 api.add_resource(VacantUnits,"/api/fetch/available/vacant/units/<string:property_code>")
 api.add_resource(FetchInvoicesPerProperty,"/api/services/fetch/invoices/<string:property_code>")
+api.add_resource(FetchInvoicesPerUnit,"/api/services/fetch/tenant/invoice/<string:unit_code>")
+
 api.add_resource(PaymentInfo,"/api/services/ins/payment/<string:tenant_id>")
 
 

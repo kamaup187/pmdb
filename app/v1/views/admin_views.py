@@ -2206,9 +2206,14 @@ class FetchPropertiesByLocation(Resource):
             if bearer == hash:
                 pps = []
                 curr_user = UserOp.fetch_user_by_usercode("6753")
-                loc = LocationOp.fetch_location(location_name)
+                if location_name:
+                    loca = location_name.title()
+                else:
+                    loca = ""
+                loc = LocationOp.fetch_location(loca)
                 try:
                     if loc:
+                        region = loc.name
                         props = fetch_all_apartments_by_user(curr_user)
                         pps_num = len(props)
                         for prop in props:
@@ -2228,6 +2233,8 @@ class FetchPropertiesByLocation(Resource):
                                     "location":prop.location.name
                                 }
                                 pps.append(pdict)
+                    else:
+                        region = "location not found on the server"
 
                 except Exception as e:
                     print("Error processing",e)
@@ -2237,7 +2244,7 @@ class FetchPropertiesByLocation(Resource):
                     "resultCode":0,
                     "resultDesc":"Success",
                     "data":{
-                        "location":loc.name,
+                        "location":region,
                         "properties":pps_num,
                         "property_info":pps
                     }

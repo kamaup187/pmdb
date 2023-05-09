@@ -1849,7 +1849,7 @@ class AllVacantUnits(Resource):
                         houses.append(udict)
 
 
-                    page_size = 3
+                    page_size = 10
                     pages_data = []
 
                     for i in range(0, len(houses), page_size): 

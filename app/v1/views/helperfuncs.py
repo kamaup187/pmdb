@@ -3566,6 +3566,15 @@ def fetch_current_invoice(house_obj):
         continue
     return None
 
+def fetch_current_tenant_invoice(house_obj,tenant_obj):
+
+    bills = house_obj.monthlybills
+    for item in bills:
+        if item.year == house_obj.apartment.billing_period.year and item.month == house_obj.apartment.billing_period.month and item.tenant_id == tenant_obj.id:
+            return item
+        continue
+    return None
+
 def fetch_target_period_invoice(house_obj,period):
 
     bills = house_obj.monthlybills

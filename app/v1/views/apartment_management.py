@@ -8539,8 +8539,6 @@ class Results(Resource):
 
             update_login_history("search",current_user)
 
-            current_invoice = fetch_current_invoice(house_obj)
-
             prop_obj = house_obj.apartment
             month = get_str_month(prop_obj.billing_period.month)
 
@@ -8573,7 +8571,7 @@ class Results(Resource):
                         if not house_obj:
                             return redirect(url_for('api.index'))
                             # return err + "Tenant cleared"
-                        current_invoice = fetch_current_invoice(house_obj)
+                        current_invoice = fetch_current_tenant_invoice(house_obj,tenant_obj)
 
                     if current_invoice:
                         if current_invoice.paid_amount:
@@ -8641,6 +8639,8 @@ class Results(Resource):
 
             if tenant_obj:
                 db.session.expire(tenant_obj)
+
+                current_invoice = fetch_current_tenant_invoice(house_obj,tenant_obj)
 
                 if current_invoice:
 
@@ -8968,7 +8968,7 @@ class Results(Resource):
                     if not house_obj:
                         return redirect(url_for('api.index'))
                         # return err + "Tenant cleared"
-                    current_invoice = fetch_current_invoice(house_obj)
+                    current_invoice = fetch_current_tenant_invoice(house_obj,tenant_obj)
 
                 if current_invoice:
                     if current_invoice.paid_amount:

@@ -202,20 +202,22 @@ api.add_resource(HouseData,"/api/unit/data/<string:user_id>/<string:unit_number>
 # api.add_resource(Assetisha,"api/landlord/statement/<int:id_number>")
 
 
-api.add_resource(Properties,"/api/info/properties/all")
-api.add_resource(Property,"/api/info/property/<string:property_code>")
-
-api.add_resource(FetchPropertiesByLocation,"/api/info/properties/location/<string:location_name>")
 api.add_resource(FetchLocations,"/api/info/fetch/locations")
 
-api.add_resource(Units,"/api/units/all/<string:property_code>")
-api.add_resource(UnitData,"/api/unit/data/<string:unit_code>")
-api.add_resource(AllVacantUnits,"/api/fetch/available/vacant/units/")
-api.add_resource(VacantUnits,"/api/fetch/available/vacant/units/<string:property_code>")
-api.add_resource(FetchInvoicesPerProperty,"/api/services/fetch/invoices/<string:property_code>")
-api.add_resource(FetchInvoicesPerUnit,"/api/services/fetch/tenant/invoice/<string:unit_code>")
+api.add_resource(Properties,"/api/info/fetch/properties")
+api.add_resource(PropertiesByLocation,"/api/info/fetch/properties/<string:location_name>")
+api.add_resource(Property,"/api/info/fetch/property/<string:property_code>")
 
-api.add_resource(PaymentInfo,"/api/services/ins/payment/<string:tenant_id>")
+
+api.add_resource(Units,"/api/info/fetch/units/<string:property_code>")
+api.add_resource(Unit,"/api/info/fetch/unit/<string:unit_code>")
+
+api.add_resource(VacantUnits,"/api/info/fetch/vacant/units/")
+api.add_resource(VacantUnitsByProperty,"/api/fetch/vacant/units/<string:property_code>")
+
+api.add_resource(FetchInvoicesPerProperty,"/api/info/fetch/invoices/<string:property_code>")
+api.add_resource(FetchInvoicePerUnit,"/api/info/fetch/invoice/<string:unit_code>")
+
 
 
 api.add_resource(LandlordIncomeWallet,"/api/landlord/account/<int:id_number>")

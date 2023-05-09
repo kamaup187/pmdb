@@ -1499,36 +1499,111 @@ class Properties(Resource):
                 try:
                     curr_user = UserOp.fetch_user_by_usercode("6753")
                     props = fetch_all_apartments_by_user(curr_user)
-                    pps_num = len(props)
                     for prop in props:
-                        tenants = tenantauto(prop.id)
                         vacs = filter_out_occupied_houses(prop.name)
-                        vacant_units = [str(u) for u in vacs]
-                        units = [str(u) for u in prop.houses]
 
                         pdict = {
                             "property_code":prop.id,
                             "name": prop.name,
                             "units_num":len(prop.houses),
-                            "units":units,
-                            "tenants":len(tenants),
-                            "vacant_units":vacant_units,
+                            "vacants_num":len(vacs),
                             "location":prop.location.name
                         }
                         pps.append(pdict)
 
                 except Exception as e:
                     print("Error processing",e)
-                    pps_num = 0
+
+                res = paginator(request,pps)
+                num_returned_items = len(res[1])
+                page_range = f"page {res[2]} of {len(res[0])}"
+                paged_items = res[1]
+
+                fdict = {
+                    "total_items":len(pps),
+                    "page_size":num_returned_items,
+                    "page":page_range,
+                    "properties":paged_items
+                }
 
                 response = {
                     "resultCode":0,
                     "resultDesc":"Success",
-                    "data":{
-                        "properties":pps_num,
-                        "property_info":pps
-                    }
+                    "data":fdict
                 }
+            else:
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+        else:
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid request"
+            }
+
+        resp = jsonify(response)
+        return make_response(resp)
+
+
+class PropertiesByLocation(Resource):
+    def get(self,location_name):
+        auth = request.headers.get("Authorization")
+
+        ckey="elloelesama"
+        skey="q150c2bf1c4ee7da42yt"
+
+        hash = generate_hash(ckey,skey)
+
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                pps = []
+                curr_user = UserOp.fetch_user_by_usercode("6753")
+                if location_name:
+                    loca = location_name.title()
+                else:
+                    loca = ""
+                loc = LocationOp.fetch_location(loca)
+                if not loc:
+                    response = {
+                        "resultCode":0,
+                        "resultDesc":"location not found on the server"
+                    }
+                else:
+                    props = fetch_all_apartments_by_user(curr_user)
+                    for prop in props:
+                        if prop.location.name == loc.name:
+                            vacs = filter_out_occupied_houses(prop.name)
+
+                            pdict = {
+                                "property_code":prop.id,
+                                "name": prop.name,
+                                "units_num":len(prop.houses),
+                                "vacants_num":len(vacs),
+                                "location":prop.location.name
+                            }
+                            pps.append(pdict)
+
+                    res = paginator(request,pps)
+                    num_returned_items = len(res[1])
+                    page_range = f"page {res[2]} of {len(res[0])}"
+                    paged_items = res[1]
+
+                    fdict = {
+                        "total_items":len(pps),
+                        "page_size":num_returned_items,
+                        "page":page_range,
+                        "properties":paged_items
+                    }
+
+                    response = {
+                        "resultCode":0,
+                        "resultDesc":"Success",
+                        "data":fdict
+                    }
+
             else:
 
                 response = {
@@ -1580,20 +1655,14 @@ class Property(Resource):
 
                     else:
                         try:
-                            tenants = tenantauto(prop.id)
                             vacs = filter_out_occupied_houses(prop.name)
-                            vacant_units = [str(u) for u in vacs]
-                            units = [str(u) for u in prop.houses]
 
                             pdict = {
                                 "property_code":prop.id,
                                 "name": prop.name,
                                 "units_num":len(prop.houses),
-                                "units":units,
-                                "tenants":len(tenants),
-                                "vacant_units":vacant_units,
+                                "vacants_num":len(vacs),
                                 "location":prop.location.name
-
                             }
                                 
                         except Exception as e:
@@ -1686,11 +1755,17 @@ class Units(Resource):
                                 }
                                 houses.append(udict)
 
+
+                            res = paginator(request,houses)
+                            num_returned_items = len(res[1])
+                            page_range = f"page {res[2]} of {len(res[0])}"
+                            paged_items = res[1]
+
                             pdict = {
-                                "property_code":prop.id,
-                                "name": prop.name,
-                                "units_num":len(prop.houses),
-                                "units":houses,
+                                "total_items":len(houses),
+                                "page_size":num_returned_items,
+                                "page":page_range,
+                                "units":paged_items
                             }
                                 
                         except Exception as e:
@@ -1717,7 +1792,7 @@ class Units(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
-class UnitData(Resource):
+class Unit(Resource):
     def get(self,unit_code):
         auth = request.headers.get("Authorization")
 
@@ -1811,7 +1886,8 @@ class UnitData(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
-class AllVacantUnits(Resource):
+    
+class VacantUnits(Resource):
     def get(self):
         auth = request.headers.get("Authorization")
 
@@ -1849,10 +1925,10 @@ class AllVacantUnits(Resource):
                     paged_items = res[1]
 
                     pdict = {
-                        "total_units":len(vacs),
-                        "num_items":num_returned_items,
-                        "pages_data":page_range,
-                        "units_fetched":paged_items
+                        "total_items":len(vacs),
+                        "page_size":num_returned_items,
+                        "page":page_range,
+                        "vacant_units":paged_items
                     }
                         
                 except Exception as e:
@@ -1879,7 +1955,7 @@ class AllVacantUnits(Resource):
         resp = jsonify(response)
         return make_response(resp)
     
-class VacantUnits(Resource):
+class VacantUnitsByProperty(Resource):
     def get(self,property_code):
         auth = request.headers.get("Authorization")
 
@@ -1932,10 +2008,18 @@ class VacantUnits(Resource):
                                 }
                                 houses.append(udict)
 
+                            res = paginator(request,houses)
+                            num_returned_items = len(res[1])
+                            page_range = f"page {res[2]} of {len(res[0])}"
+                            paged_items = res[1]
+
                             pdict = {
-                                "units_num":len(vacs),
-                                "units":houses
+                                "total_items":len(vacs),
+                                "page_size":num_returned_items,
+                                "page":page_range,
+                                "vacant_units":paged_items
                             }
+
                                 
                         except Exception as e:
                             print("Error processing all units",e)
@@ -2022,9 +2106,16 @@ class FetchInvoicesPerProperty(Resource):
                                     }
                                     houses.append(udict)
 
+                            res = paginator(request,houses)
+                            num_returned_items = len(res[1])
+                            page_range = f"page {res[2]} of {len(res[0])}"
+                            paged_items = res[1]
+
                             pdict = {
-                                "tenants":len(tenants),
-                                "tenant_invoices":houses
+                                "total_items":len(houses),
+                                "page_size":num_returned_items,
+                                "page":page_range,
+                                "invoices":paged_items
                             }
                                 
                         except Exception as e:
@@ -2052,7 +2143,7 @@ class FetchInvoicesPerProperty(Resource):
         return make_response(resp)
 
 
-class FetchInvoicesPerUnit(Resource):
+class FetchInvoicePerUnit(Resource):
     def get(self,unit_code):
         auth = request.headers.get("Authorization")
 
@@ -2159,117 +2250,93 @@ class FetchInvoicesPerUnit(Resource):
         resp = jsonify(response)
         return make_response(resp)
     
-class PaymentInfo(Resource):
-    def get(self):
-        auth = request.headers.get("Authorization")
-
-        ckey="elloelesama"
-        skey="q150c2bf1c4ee7da42yt"
-
-        hash = generate_hash(ckey,skey)
-
-        if auth:
-            bearer = auth.split(" ")[1]
-            if bearer == hash:
-                response = {
-                    "resultCode":0,
-                    "resultDesc":"Success",
-                    "data":{
-                        "unit":"",
-                        "tenant":"",
-                        "receipts":[]
-                    }
-                }
-            else:
-
-                response = {
-                    "resultCode":1,
-                    "resultDesc":"Failed Authorization"
-                }
-        else:
-            response = {
-                "resultCode":1,
-                "resultDesc":"Invalid request"
-            }
-
-        resp = jsonify(response)
-        return make_response(resp)
-
-
-class FetchPropertiesByLocation(Resource):
-    def get(self,location_name):
-        auth = request.headers.get("Authorization")
-
-        ckey="elloelesama"
-        skey="q150c2bf1c4ee7da42yt"
-
-        hash = generate_hash(ckey,skey)
-
-        if auth:
-            bearer = auth.split(" ")[1]
-            if bearer == hash:
-                pps = []
-                curr_user = UserOp.fetch_user_by_usercode("6753")
-                if location_name:
-                    loca = location_name.title()
-                else:
-                    loca = ""
-                loc = LocationOp.fetch_location(loca)
-                try:
-                    pps_num = 0
-                    if loc:
-                        region = loc.name
-                        props = fetch_all_apartments_by_user(curr_user)
-                        for prop in props:
-                            if prop.location.name == loc.name:
-                                pps_num += 1
-                                tenants = tenantauto(prop.id)
-                                vacs = filter_out_occupied_houses(prop.name)
-                                vacant_units = [str(u) for u in vacs]
-                                units = [str(u) for u in prop.houses]
-
-                                pdict = {
-                                    "property_code":prop.id,
-                                    "name": prop.name,
-                                    "units_num":len(prop.houses),
-                                    "units":units,
-                                    "tenants":len(tenants),
-                                    "vacant_units":vacant_units,
-                                    "location":prop.location.name
-                                }
-                                pps.append(pdict)
-                    else:
-                        region = "location not found on the server"
-
-                except Exception as e:
-                    print("Error processing",e)
-                    pps_num = 0
-
-                response = {
-                    "resultCode":0,
-                    "resultDesc":"Success",
-                    "data":{
-                        "location":region,
-                        "properties":pps_num,
-                        "property_info":pps
-                    }
-                }
-
-            else:
-
-                response = {
-                    "resultCode":1,
-                    "resultDesc":"Failed Authorization"
-                }
-        else:
-            response = {
-                "resultCode":1,
-                "resultDesc":"Invalid request"
-            }
-
-        resp = jsonify(response)
-        return make_response(resp)
     
+
+# class FetchLocations(Resource):
+#     def get(self):
+#         auth = request.headers.get("Authorization")
+
+#         ckey="elloelesama"
+#         skey="q150c2bf1c4ee7da42yt"
+
+#         hash = generate_hash(ckey,skey)
+
+#         if auth:
+#             bearer = auth.split(" ")[1]
+#             if bearer == hash:
+
+
+#                 curr_user = UserOp.fetch_user_by_usercode("6753")
+#                 locs = LocationOp.fetch_all_locations()
+
+#                 props = fetch_all_apartments_by_user(curr_user)
+#                 loca = []
+#                 for loc in locs:
+#                     houses = []
+#                     pps_num = 0
+
+#                     for prop in loc.apartments:
+#                         if prop in props:
+#                             pps_num += 1
+#                             tenants = tenantauto(prop.id)
+#                             vacs = filter_out_occupied_houses(prop.name)
+#                             vacant_units = [str(u) for u in vacs]
+#                             units = [str(u) for u in prop.houses]
+
+#                             udict = {
+#                                 "property_code":prop.id,
+#                                 "name": prop.name,
+#                                 "units_num":len(prop.houses),
+#                                 "units":units,
+#                                 "tenants":len(tenants),
+#                                 "vacant_units":vacant_units,
+#                                 "location":prop.location.name
+#                             }
+
+#                             houses.append(udict)
+
+#                     # res = paginator(request,houses)
+#                     # num_returned_items = len(res[1])
+#                     # page_range = f"page {res[2]} of {len(res[0])}"
+#                     # paged_items = res[1]
+
+#                     # pdict = {
+#                     #     "location":loc.name,
+#                     #     "total_properties":len(houses),
+#                     #     "num_items":num_returned_items,
+#                     #     "pages_data":page_range,
+#                     #     "properties":paged_items
+#                     # }
+
+#                     pdict = {
+#                         "location":loc.name,
+#                         "num_properties":pps_num,
+#                         "properties":houses
+#                     }
+
+#                     loca.append(pdict)
+
+#                 response = {
+#                     "resultCode":0,
+#                     "resultDesc":"Success",
+#                     "data":loca
+#                 }
+
+#             else:
+
+#                 response = {
+#                     "resultCode":1,
+#                     "resultDesc":"Failed Authorization"
+#                 }
+#         else:
+#             response = {
+#                 "resultCode":1,
+#                 "resultDesc":"Invalid request"
+#             }
+
+#         resp = jsonify(response)
+#         return make_response(resp)
+
 
 class FetchLocations(Resource):
     def get(self):
@@ -2293,50 +2360,46 @@ class FetchLocations(Resource):
                 for loc in locs:
                     houses = []
                     pps_num = 0
-
+                    
                     for prop in loc.apartments:
                         if prop in props:
                             pps_num += 1
-                            tenants = tenantauto(prop.id)
                             vacs = filter_out_occupied_houses(prop.name)
-                            vacant_units = [str(u) for u in vacs]
-                            units = [str(u) for u in prop.houses]
-
                             udict = {
                                 "property_code":prop.id,
                                 "name": prop.name,
                                 "units_num":len(prop.houses),
-                                "units":units,
-                                "tenants":len(tenants),
-                                "vacant_units":vacant_units,
-                                "location":prop.location.name
+                                "vacants_num":len(vacs),
                             }
 
                             houses.append(udict)
 
-                    # res = paginator(request,houses)
-                    # num_returned_items = len(res[1])
-                    # page_range = f"page {res[2]} of {len(res[0])}"
-                    # paged_items = res[1]
+                    if houses:
 
-                    # pdict = {
-                    #     "total_units":len(locs),
-                    #     "num_items":num_returned_items,
-                    #     "pages_data":page_range,
-                    #     "properties":paged_items
-                    # }
+                        pdict = {
+                            "location":loc.name,
+                            "num_properties":pps_num,
+                            "properties":houses
+                        }
 
-                    pdict = {
-                        "location":loc.name,
-                        "num_properties":pps_num,
-                        "properties":houses
-                    }
-                    loca.append(pdict)
+                        loca.append(pdict)
+
+                res = paginator(request,loca)
+                num_returned_items = len(res[1])
+                page_range = f"page {res[2]} of {len(res[0])}"
+                paged_items = res[1]
+
+                fdict = {
+                    "total_items":len(loca),
+                    "page_size":num_returned_items,
+                    "page":page_range,
+                    "locations":paged_items
+                }
 
                 response = {
                     "resultCode":0,
                     "resultDesc":"Success",
-                    "data":loca
+                    "data":fdict
                 }
 
             else:

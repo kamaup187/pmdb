@@ -1860,11 +1860,7 @@ class AllVacantUnits(Resource):
                     pages_data = []
 
                     for i in range(0, len(houses), page_size):
-                        try:
-                            pages_data.append(houses[i:i+page_size])
-                        except Exception as e:
-                            print("PAGE SIZE ERROR: " + str(e))
-                            break
+                        pages_data.append(houses[i:i+page_size])
 
                     if pg > len(pages_data):
                         pg = len(pages_data)

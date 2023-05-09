@@ -3530,7 +3530,7 @@ class UpdateBalance(Resource):
         else:
             tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
             house_obj = check_house_occupied(tenant_obj)[1]
-            current_invoice = fetch_current_invoice(house_obj)
+            current_invoice = fetch_current_tenant_invoice(house_obj,tenant_obj)
 
             
         print("Updating balance! currently",tenant_obj.balance)

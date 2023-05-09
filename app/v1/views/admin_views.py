@@ -1826,7 +1826,10 @@ class AllVacantUnits(Resource):
             if bearer == hash:
                 houses = []
 
-                pg = request.args.get('page')
+                try:
+                    pg = int(request.args.get('page'))
+                except:
+                    pg = 1
 
                 curr_user = UserOp.fetch_user_by_usercode("6753")
 
@@ -1859,8 +1862,7 @@ class AllVacantUnits(Resource):
                         pg = len(pages_data)
 
                     try:
-                        int_pg = int(pg) - 1
-                        pg_data = pages_data[int_pg]
+                        pg_data = pages_data[(pg-1)]
                     except:
                         pg_data = pages_data[0]
 

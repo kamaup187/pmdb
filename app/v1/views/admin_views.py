@@ -1855,6 +1855,9 @@ class AllVacantUnits(Resource):
                     for i in range(0, len(houses), page_size): 
                         pages_data.append(houses[i:i+page_size])
 
+                    if pg > len(pages_data):
+                        pg = len(pages_data)
+
                     try:
                         int_pg = int(pg) - 1
                         pg_data = pages_data[int_pg]

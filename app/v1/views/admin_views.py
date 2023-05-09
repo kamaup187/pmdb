@@ -1859,7 +1859,7 @@ class AllVacantUnits(Resource):
                     
                     pages_data = []
 
-                    for i in range(0, len(houses), page_size): 
+                    for i in range(0, len(houses), page_size):
                         pages_data.append(houses[i:i+page_size])
 
                     if pg > len(pages_data):
@@ -1874,6 +1874,7 @@ class AllVacantUnits(Resource):
 
                     pdict = {
                         "total_units":len(vacs),
+                        "num_items":len(pg_data),
                         "pages_data":f"page {pg} of {len(pages_data)}",
                         "units_fetched":pg_data
                     }

@@ -2314,6 +2314,18 @@ class FetchLocations(Resource):
 
                             houses.append(udict)
 
+                    # res = paginator(request,houses)
+                    # num_returned_items = len(res[1])
+                    # page_range = f"page {res[2]} of {len(res[0])}"
+                    # paged_items = res[1]
+
+                    # pdict = {
+                    #     "total_units":len(locs),
+                    #     "num_items":num_returned_items,
+                    #     "pages_data":page_range,
+                    #     "properties":paged_items
+                    # }
+
                     pdict = {
                         "location":loc.name,
                         "num_properties":pps_num,

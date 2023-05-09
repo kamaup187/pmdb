@@ -152,7 +152,7 @@
             </div>
           
             <div class="mt-5 mr-2">
-              <span class="font-weight-bold text-dark">Collection: {{ratio}}</span>
+              <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
             </div>
           
           </div>
@@ -378,6 +378,7 @@
           </div>
 
           {%if prop_obj%}
+          <div class="divjust-end">
           <div class="mb-2 mt-1">
             <div class="ln-16">
               <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
@@ -399,6 +400,12 @@
               <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
               {% endif %}
             </div>
+          </div>
+
+          <div class="mt-5 mr-2">
+            <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
+          </div>
+
           </div>
           {%endif%}
 

@@ -11850,11 +11850,20 @@ def get_sum(arr,mykey):
     tot = sum_values(totlist)
     return tot
 
-def paginator(arr,pg,pg_size):
+def paginator(request_obj,arr):
+    try:
+        pg = int(request_obj.args.get('page'))
+    except:
+        pg = 1
+    try:
+        page_size = int(request_obj.args.get('size'))
+    except:
+        page_size = 10
+
     pages_data = []
 
-    for i in range(0, len(arr), pg_size):
-        pages_data.append(arr[i:i+pg_size])
+    for i in range(0, len(arr), page_size):
+        pages_data.append(arr[i:i+page_size])
 
     if pg > len(pages_data):
         pg = len(pages_data)

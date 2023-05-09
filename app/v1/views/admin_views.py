@@ -2225,10 +2225,10 @@ class FetchPropertiesByLocation(Resource):
                     loca = ""
                 loc = LocationOp.fetch_location(loca)
                 try:
+                    pps_num = 0
                     if loc:
                         region = loc.name
                         props = fetch_all_apartments_by_user(curr_user)
-                        pps_num = 0
                         for prop in props:
                             if prop.location.name == loc.name:
                                 pps_num += 1

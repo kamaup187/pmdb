@@ -11840,3 +11840,21 @@ def get_sum(arr,mykey):
     totlist = [i.get(mykey) for i in arr]
     tot = sum_values(totlist)
     return tot
+
+def paginator(arr,pg,pg_size):
+    pages_data = []
+
+    for i in range(0, len(arr), pg_size):
+        pages_data.append(arr[i:i+pg_size])
+
+    if pg > len(pages_data):
+        pg = len(pages_data)
+    elif pg == 0:
+        pg = 1
+
+    try:
+        pg_data = pages_data[(pg-1)]
+    except:
+        pg_data = pages_data[0]
+
+    return pages_data,pg_data,pg

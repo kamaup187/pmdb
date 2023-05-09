@@ -1860,6 +1860,8 @@ class AllVacantUnits(Resource):
 
                     if pg > len(pages_data):
                         pg = len(pages_data)
+                    elif pg == 0:
+                        pg = 1
 
                     try:
                         pg_data = pages_data[(pg-1)]

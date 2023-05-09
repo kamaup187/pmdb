@@ -213,7 +213,7 @@ api.add_resource(Units,"/api/info/fetch/units/<string:property_code>")
 api.add_resource(Unit,"/api/info/fetch/unit/<string:unit_code>")
 
 api.add_resource(VacantUnits,"/api/info/fetch/vacant/units/")
-api.add_resource(VacantUnitsByProperty,"/api/fetch/vacant/units/<string:property_code>")
+api.add_resource(VacantUnitsByProperty,"/api/info/fetch/vacant/units/<string:property_code>")
 
 api.add_resource(FetchInvoicesPerProperty,"/api/info/fetch/invoices/<string:property_code>")
 api.add_resource(FetchInvoicePerUnit,"/api/info/fetch/invoice/<string:unit_code>")

@@ -1826,6 +1826,8 @@ class AllVacantUnits(Resource):
             if bearer == hash:
                 houses = []
 
+                pg = request.args.get('page')
+
                 curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 props = fetch_all_apartments_by_user(curr_user)
@@ -1846,9 +1848,23 @@ class AllVacantUnits(Resource):
                         }
                         houses.append(udict)
 
+
+                    page_size = 3
+                    pages_data = []
+
+                    for i in range(0, len(houses), page_size): 
+                        pages_data.append(houses[i:i+page_size])
+
+                    try:
+                        int_pg = int(pg) - 1
+                        pg_data = pages_data[int_pg]
+                    except:
+                        pg_data = pages_data[0]
+
                     pdict = {
-                        "units_num":len(vacs),
-                        "units":houses
+                        "total_units":len(vacs),
+                        "pages_data":f"page {pg} of {len(pages_data)}",
+                        "units_fetched":pg_data
                     }
                         
                 except Exception as e:

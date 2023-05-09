@@ -1831,6 +1831,11 @@ class AllVacantUnits(Resource):
                 except:
                     pg = 1
 
+                try:
+                    page_size = int(request.args.get('size'))
+                except:
+                    page_size = 10
+
                 curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 props = fetch_all_apartments_by_user(curr_user)
@@ -1851,8 +1856,7 @@ class AllVacantUnits(Resource):
                         }
                         houses.append(udict)
 
-
-                    page_size = 10
+                    
                     pages_data = []
 
                     for i in range(0, len(houses), page_size): 

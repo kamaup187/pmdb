@@ -1811,7 +1811,6 @@ class UnitData(Resource):
 
         resp = jsonify(response)
         return make_response(resp)
-
 class AllVacantUnits(Resource):
     def get(self):
         auth = request.headers.get("Authorization")
@@ -1824,13 +1823,11 @@ class AllVacantUnits(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
-                houses = []
 
                 try:
                     pg = int(request.args.get('page'))
                 except:
                     pg = 1
-
                 try:
                     page_size = int(request.args.get('size'))
                 except:
@@ -1841,10 +1838,9 @@ class AllVacantUnits(Resource):
                 props = fetch_all_apartments_by_user(curr_user)
 
                 vacs = flatten([filter_out_occupied_houses(prop.name) for prop in props])
-
                 try:
+                    houses = []
                     for unit in vacs:
-
                         udict = {
                             "property_code":unit.apartment_id,
                             "property_name": unit.apartment.name,
@@ -1856,21 +1852,10 @@ class AllVacantUnits(Resource):
                         }
                         houses.append(udict)
 
-                    
-                    pages_data = []
-
-                    for i in range(0, len(houses), page_size):
-                        pages_data.append(houses[i:i+page_size])
-
-                    if pg > len(pages_data):
-                        pg = len(pages_data)
-                    elif pg == 0:
-                        pg = 1
-
-                    try:
-                        pg_data = pages_data[(pg-1)]
-                    except:
-                        pg_data = pages_data[0]
+                    res = paginator(houses,pg,page_size)
+                    pages_data = res[0]
+                    pg_data = res[1]
+                    pg = res[2]
 
                     pdict = {
                         "total_units":len(vacs),

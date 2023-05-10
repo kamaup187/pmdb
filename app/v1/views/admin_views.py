@@ -2235,8 +2235,8 @@ class FetchInvoicePerUnit(Resource):
                                         "property_code":unit.apartment_id,
                                         "property_name": unit.apartment.name,
                                         "unit_name": curr_inv.house.name,
-                                        "tenant_name": unit.name,
-                                        "tenant_phone": unit.phone,
+                                        "tenant_name": tenant.name,
+                                        "tenant_phone": tenant.phone,
                                         "invoice_code": curr_inv.id,
                                         "invoice_period": date,
                                         "line_items": line_items,
@@ -2247,7 +2247,6 @@ class FetchInvoicePerUnit(Resource):
                                         "paybill":paybill,
                                         "deposit_account":idd2,
                                     }
-                                    tenant = tenant.name
 
                                 else:
                                     tt = {

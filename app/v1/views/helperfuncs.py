@@ -11858,7 +11858,10 @@ def paginator(request_obj,arr):
     try:
         page_size = int(request_obj.args.get('size'))
     except:
-        page_size = len(arr)
+        if len(arr):
+            page_size = len(arr)
+        else:
+            page_size = 1
 
     pages_data = []
 
@@ -11873,6 +11876,9 @@ def paginator(request_obj,arr):
     try:
         pg_data = pages_data[(pg-1)]
     except:
-        pg_data = pages_data[0]
+        if pages_data:
+            pg_data = pages_data[0]
+        else:
+            pg_data = []
 
     return pages_data,pg_data,pg

@@ -1560,13 +1560,24 @@ class PropertiesByLocation(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
                 pps = []
+                regions = []
                 curr_user = UserOp.fetch_user_by_usercode("6753")
-                if location_name:
-                    loca = location_name.title()
-                else:
-                    loca = ""
-                loc = LocationOp.fetch_location(loca)
-                if not loc:
+                try:
+                    loc_name = location_name.title()
+                except:
+                    loc_name = ""
+                if loc_name:
+                    loc_strict = request.args.get("location_strict").lower() if request.args.get("location_strict") else "false"
+                    if loc_strict == "true":
+                        loc = LocationOp.fetch_location(loc_name)
+                        regions.append(loc)
+                    else:
+                        locs = LocationOp.fetch_all_locations()
+                        for loc in locs:
+                            if loc.name.title().startswith(loc_name):
+                                regions.append(loc)
+               
+                if not regions:
                     response = {
                         "resultCode":0,
                         "resultDesc":"location not found on the server"
@@ -1574,7 +1585,7 @@ class PropertiesByLocation(Resource):
                 else:
                     props = fetch_all_apartments_by_user(curr_user)
                     for prop in props:
-                        if prop.location.name == loc.name:
+                        if prop.location in regions:
                             vacs = filter_out_occupied_houses(prop.name)
 
                             pdict = {

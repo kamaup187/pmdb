@@ -2100,8 +2100,17 @@ class FetchInvoicesPerProperty(Resource):
 
                                 curr_inv = max(unit.monthly_charges, key=lambda x: x.id) if unit.monthly_charges else None
                                 if curr_inv:
-                                    idd = curr_inv.house.name + ""
+                                    paybill = "400222"
+                                    idd = "432942#" + curr_inv.house.name + ""
+                                    idd2 = "434705#" + curr_inv.house.name + "" if curr_inv.deposit else "N/A"
                                     date = generate_exact_date(curr_inv.date.day, curr_inv.date.month, curr_inv.year)
+                                    line_items = {
+                                        "deposit":curr_inv.deposit,
+                                        "rent":curr_inv.rent,
+                                        "water":curr_inv.water,
+                                        "garbage":curr_inv.garbage,
+                                        "agreement":curr_inv.agreement
+                                    }
                                     udict = {
                                         "property_code":unit.apartment_id,
                                         "property_name": unit.apartment.name,
@@ -2110,10 +2119,13 @@ class FetchInvoicesPerProperty(Resource):
                                         "tenant_phone": unit.phone,
                                         "invoice_code": curr_inv.id,
                                         "invoice_period": date,
+                                        "line_items": line_items,
                                         "amount_due":curr_inv.total_bill,
                                         "paid_amount":curr_inv.paid_amount,
                                         "balance":curr_inv.balance,
-                                        "identifier":idd
+                                        "normal_account":idd,
+                                        "deposit_account":idd2,
+                                        "paybill":paybill
                                     }
                                     houses.append(udict)
 
@@ -2207,18 +2219,33 @@ class FetchInvoicePerUnit(Resource):
                             else:
                                 curr_inv = max(tenant.monthly_charges, key=lambda x: x.id) if tenant.monthly_charges else None
                                 if curr_inv:
-                                    idd = curr_inv.house.name + ""
-                                    date = generate_exact_date(curr_inv.date.day, curr_inv.date.month, curr_inv.year)
+                                    paybill = "400222"
+                                    idd = "432942#" + curr_inv.house.name + ""
+                                    idd2 = "434705#" + curr_inv.house.name + "" if curr_inv.deposit else "N/A"
 
+                                    date = generate_exact_date(curr_inv.date.day, curr_inv.date.month, curr_inv.year)
+                                    line_items = {
+                                        "deposit":curr_inv.deposit,
+                                        "rent":curr_inv.rent,
+                                        "water":curr_inv.water,
+                                        "garbage":curr_inv.garbage,
+                                        "agreement":curr_inv.agreement
+                                    }
                                     tt = {
-                                        "tenant_name":tenant.name,
-                                        "tenant_phone":tenant.phone,
+                                        "property_code":unit.apartment_id,
+                                        "property_name": unit.apartment.name,
+                                        "unit_name": curr_inv.house.name,
+                                        "tenant_name": unit.name,
+                                        "tenant_phone": unit.phone,
                                         "invoice_code": curr_inv.id,
                                         "invoice_period": date,
+                                        "line_items": line_items,
                                         "amount_due":curr_inv.total_bill,
                                         "paid_amount":curr_inv.paid_amount,
                                         "balance":curr_inv.balance,
-                                        "identifier":idd
+                                        "normal_account":idd,
+                                        "paybill":paybill,
+                                        "deposit_account":idd2,
                                     }
                                     tenant = tenant.name
 
@@ -2229,12 +2256,10 @@ class FetchInvoicePerUnit(Resource):
                                     }
 
                             pdict = {
-                                "property_code":unit.apartment_id,
-                                "property_name": unit.apartment.name,
-                                "unit_code":unit.id,
-                                "unit_name":unit.name,
-                                "tenant_name":tenant,
-                                "tenant_invoice":tt
+                                "total_items":1,
+                                "page_size":1,
+                                "page": "page 1 of 1",
+                                "invoice":tt
                             }
                                 
                         except Exception as e:

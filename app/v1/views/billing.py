@@ -146,10 +146,13 @@ class Billing(Resource):
             bill_date = None
 
         if level:
-            hse_arr = [s for s in houses.split(',')]
-            hse = hse_arr[0]
-            hse_obj = get_specific_house_obj(apartment_id,hse)
-            houseids.append(hse_obj.id)
+            try:
+                hse_arr = [s for s in houses.split(',')]
+                hse = hse_arr[0]
+                hse_obj = get_specific_house_obj(apartment_id,hse)
+                houseids.append(hse_obj.id)
+            except:
+                pass
 
         else:
             try:

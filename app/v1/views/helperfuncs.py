@@ -129,7 +129,7 @@ typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'
 err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 success = '<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>'
-failure = '<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>'
+failure = '<div id="snackbar" class="error small"><i class="fas fa-exclamation-circle"></i> Failed! operation unsuccessful<div>'
 
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
@@ -2930,6 +2930,14 @@ def att_details(arr):
     houselist = []
     for i in arr:
         new_i = SalesRepOp.view(i)
+        houselist.append(new_i)
+
+    return houselist
+    
+def prop_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = ApartmentOp.view_alt(i)
         houselist.append(new_i)
 
     return houselist

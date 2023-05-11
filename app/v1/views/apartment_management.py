@@ -6154,7 +6154,8 @@ class AddTenant(Resource):
            
 
             if not name:
-                return "Kindly provide a name" + err
+                # return "Kindly provide a name" + err
+                return failure + "Kindly provide a name"
 
             house_num = request.form.get('house')#auto populated dropdown
 
@@ -6270,8 +6271,10 @@ class AddTenant(Resource):
                     else:
                         TenantOp.update_residency(tenant_obj,"Old")
             
-                msg = "Client added successfully"
-            return msg + proceed
+            #     msg = "Client added successfully"
+            # return msg + proceed
+        
+            return success + "Client added successfully"
 
 class AddLead(Resource):
     def post(self):

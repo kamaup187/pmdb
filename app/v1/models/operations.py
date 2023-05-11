@@ -990,6 +990,14 @@ class ApartmentOp(Apartment,Base):
             "owner":ApartmentOp.get_owner_name(self)
         }
 
+    def view_alt(self):
+        return {
+        'id':self.id,
+        'editid':HouseOp.generate_editid(self),
+        'delid':HouseOp.generate_delid(self),
+        "name":self.name,
+        }
+
 
 class HouseCodeOp(HouseCode,Base):
     def __init__(self,codename,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum,apartment_id,user_id):

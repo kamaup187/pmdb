@@ -11882,3 +11882,28 @@ def paginator(request_obj,arr):
             pg_data = []
 
     return pages_data,pg_data,pg
+
+
+def get_tenancy(prop):
+    houses = len(prop.houses)
+    tenants = len(tenantauto(prop.id))
+    ptnts =len(prop.ptenants)
+
+    occupancy = filter_in_occupied_houses(prop.name)
+    occupancy_num = len(occupancy)
+
+    vacants = houses - occupancy_num
+
+    if tenants:
+        tnt_disp = ""
+    else:
+        tnt_disp = "dispnone"
+
+    try:
+        ratio = occupancy_num/houses * 100
+    except:
+        ratio = 0
+        
+    occ = f"{ratio:,.0f}"
+
+    return houses,tenants,ptnts,vacants,occ,tnt_disp

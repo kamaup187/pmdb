@@ -747,8 +747,8 @@ class AllProperties(Resource):
 
                 for prop in props:
 
-                    houses = len(prop.houses)
-                    tenants = len(tenantauto(prop.id))
+                    # houses = len(prop.houses)
+                    # tenants = len(tenantauto(prop.id))
 
                     template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
 
@@ -758,8 +758,8 @@ class AllProperties(Resource):
                         'editid':"edit"+str(prop.id),
                         'delid':"del"+str(prop.id),
                         'name':prop.name,
-                        'houses':houses,
-                        'tenants':tenants,
+                        'houses': "...",
+                        'tenants':"...",
                     }
 
 
@@ -775,8 +775,6 @@ class AllProperties(Resource):
                 access = {
                     'client-disp':"" if current_user.id == 1 else ""
                     }
-
-                print("GEEEERRRRING HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 
 
                 return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)

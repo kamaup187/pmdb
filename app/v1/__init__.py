@@ -51,6 +51,8 @@ api.add_resource(PaidOverview,"/get/paid")
 api.add_resource(BalanceOverview,"/get/balance")
 api.add_resource(CollectionOverview,"/get/collection")
 
+api.add_resource(FetchTenancy,"/fetch/tenancy")
+
 api.add_resource(HouseStats,"/fetch/housestats")
 api.add_resource(GraphStats,"/fetch/graphstats")
 api.add_resource(ComStats,"/fetch/comstats")

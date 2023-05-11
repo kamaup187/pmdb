@@ -121,9 +121,8 @@ table tr.odd {
   min-width: 350px;
   margin-left: -125px;
   background-color: #333;
-  color: #fff;
   text-align: center;
-  border-radius: 2px;
+  border-radius: 6px;
   padding: 16px;
   position: fixed;
   z-index: 9999999999999 !important;
@@ -133,10 +132,12 @@ table tr.odd {
 }
 
 #snackbar.success {
-  background-color: rgb(8, 117, 31);
+  background-color: rgb(219, 239, 223);
+  color: #00c917;
 }
 #snackbar.error {
-  background-color: rgb(165, 12, 12);
+  background-color: rgb(243, 225, 225);
+  color: #c90000;
 }
 
 #snackbar.show {

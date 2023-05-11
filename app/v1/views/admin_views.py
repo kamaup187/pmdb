@@ -744,33 +744,39 @@ class AllProperties(Resource):
 
         if not crm(current_user):
             if target == "tenants" or target == "tenant list":
+                items = prop_details(props)
+                propids = get_obj_ids(items)
 
-                for prop in props:
-
-                    # houses = len(prop.houses)
-                    # tenants = len(tenantauto(prop.id))
-
-                    template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
-
-                    dict_obj = {
-                        'id':prop.id,
-                        'identity':"prp"+str(prop.id),
-                        'editid':"edit"+str(prop.id),
-                        'delid':"del"+str(prop.id),
-                        'name':prop.name,
-                        'houses': "...",
-                        'tenants':"...",
-                    }
+                template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
 
 
-                    items.append(dict_obj)
-                    # prop_names.append(prop_name_dict)
-                    prop_ids.append(prop.id)
-                    prop_ids.append("prp"+str(prop.id))
-                    prop_ids.append("edit"+str(prop.id))
-                    prop_ids.append("del"+str(prop.id))
 
-                propids = ','.join(map(str, prop_ids))
+                # for prop in props:
+
+                #     # houses = len(prop.houses)
+                #     # tenants = len(tenantauto(prop.id))
+
+                #     template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
+
+                #     dict_obj = {
+                #         'id':prop.id,
+                #         'identity':"prp"+str(prop.id),
+                #         'editid':"edit"+str(prop.id),
+                #         'delid':"del"+str(prop.id),
+                #         'name':prop.name,
+                #         'houses': "...",
+                #         'tenants':"...",
+                #     }
+
+
+                #     items.append(dict_obj)
+                #     # prop_names.append(prop_name_dict)
+                #     prop_ids.append(prop.id)
+                #     prop_ids.append("prp"+str(prop.id))
+                #     prop_ids.append("edit"+str(prop.id))
+                #     prop_ids.append("del"+str(prop.id))
+
+                # propids = ','.join(map(str, prop_ids))
 
                 access = {
                     'client-disp':"" if current_user.id == 1 else ""

@@ -57,9 +57,9 @@
                             </div>
                         </td>
             
-                        <td id="tenantinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+                        <td id="houseinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
                         <!-- <td class="data-cell">{{ item['ptenants'] }}</td> -->
-                        <td id="houseinfo-{{item['id']}}" class="data-cell {{tnt_disp}}"><div class="dot-elastic mt-2"></div></td>
+                        <td id="tenantinfo-{{item['id']}}" class="data-cell {{tnt_disp}}"><div class="dot-elastic mt-2"></div></td>
                         <!-- <td class="data-cell {{tnt_disp}}">{{ item['vacant'] }}</td>
                         <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td> -->
                         <!-- <td class="data-cell">{{ item['reminders']|safe }}</td> -->
@@ -158,13 +158,13 @@
                           <span class="divjust-end">
                             <span class="text-black">Agreed rates</span>
                           </span>
-                            <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                         </div>
                       </div>
 
                       <div class="form-group input-icons">
                         <span>Name<span class="text-danger small">(mandatory)</span></span>
-                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Jonh Warui"/>
+                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                       </div>
 
@@ -190,11 +190,11 @@
                         <div class="divjust-end">
                           
                           <label class="mr-3" for="createinvoice">Create invoice
-                            <input type="checkbox" id="createinvoice" checked/>
+                            <input type="checkbox" id="createinvoice"/>
                           </label>
 
                           <label class="ml-3" for="migrate2">Charge deposit
-                            <input type="checkbox" id="migrate2" checked/>
+                            <input type="checkbox" id="migrate2"/>
                           </label>
                         </div>       
                       </div>
@@ -552,7 +552,10 @@
                   arr: $("#new_arr").val()
               },
           success: function(response) {
-            $(".alert-msgs").html(response);
+            // $(".alert-msgs").html(response);
+
+            snack(response);
+
 
             if (migrate3 == "True"){
               $.ajax({
@@ -574,18 +577,48 @@
               $('#newtenant').addClass('btn-secondary')
               $("#newtenant").html("submit")
             }, 2000);
+
+
+            var rawIds = "{{ propids|safe }}";
+            var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+            $.each(ids, function (i, item) {
+          
+              if (isNaN(parseInt(item))){
+                //do nothing
+              }else{
+
+                $("#houseinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+                $("#tenantinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+
+                $.ajax({
+                url: "{{ url_for('api.fetchtenancy') }}",
+                type: "get",
+                data: {
+                      propid: item
+                    },
+                success: function(response) {
+                  $("#houseinfo-" + item ).text(response[0]);
+                  $("#tenantinfo-" + item ).text(response[1]);
+                }
+              });
+              }
+
+            });
+
+
+
             
 
-            $.ajax({
-                type: "get",
-                url: "{{ url_for('api.allproperties') }}",
-                data: {
-                target:"tenant list"
-                },
-                success: function(response) {
-                    $("#result-view").html(response);
-                }
-            });
+            // $.ajax({
+            //     type: "get",
+            //     url: "{{ url_for('api.allproperties') }}",
+            //     data: {
+            //     target:"tenant list"
+            //     },
+            //     success: function(response) {
+            //         $("#result-view").html(response);
+            //     }
+            // });
           }
         });
     });

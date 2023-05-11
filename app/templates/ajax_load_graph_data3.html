@@ -53,18 +53,30 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <!-- <div class="col-lg-6">
         <div class="card shadow mb-1 bg-white">
-            <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <div class="m-0 font-weight-bold smallify targetprop"><i class="fas fa-chart-bar me-2"></i>Perfomance<span>(<span class="text-black">{{targetprop}}</span>)</span></div>
 
             </div>
-            <!-- Card Body -->
             <div class="card-body">
             <div class="chart-are">
                 <p id="theInput3" class="dispnone">{{waterstring}}</p>
                 <canvas id="barChart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="col-lg-6">
+        <div class="card shadow mb-1 bg-white">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold smallify targetprop"><i class="fas fa-chart-bar me-2"></i>Perfomance<span>(<span class="text-black">{{targetprop}}</span>)</span></div>
+
+            </div>
+            <div class="card-body">
+            <div class="chart-are">
+                <canvas id="myPieChart"></canvas>
             </div>
             </div>
         </div>
@@ -97,7 +109,7 @@
         });
 
         var myLineChart = new Chart(ctxL, {
-        type: 'line',
+        type: 'bar',
         data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
         datasets: [{
@@ -125,164 +137,200 @@
     </script>
 
     <script>
-        var ctxB = document.getElementById("barChart").getContext('2d');
+        // var ctxB = document.getElementById("barChart").getContext('2d');
 
 
-        var stringData3 = document.getElementById("theInput3").innerText;
-        var app_data3 = stringData3.split`,`.map(x=>+x);
+        // var stringData3 = document.getElementById("theInput3").innerText;
+        // var app_data3 = stringData3.split`,`.map(x=>+x);
 
-        var myBarChart = new Chart(ctxB, {
-        type: 'bar',
-        data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
-        datasets: [{
-        label: 'perfomance trend',
-        data: app_data3,
-        backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-        }]
-        },
-        options: {
-        scales: {
-        yAxes: [{
-        ticks: {
-        beginAtZero: true
-        }
-        }]
-        }
-        }
-        });
+        // var myBarChart = new Chart(ctxB, {
+        // type: 'bar',
+        // data: {
+        // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+        // datasets: [{
+        // label: 'perfomance trend',
+        // data: app_data3,
+        // backgroundColor: [
+        // 'rgba(255, 99, 132, 0.2)',
+        // 'rgba(54, 162, 235, 0.2)',
+        // 'rgba(255, 206, 86, 0.2)',
+        // 'rgba(75, 192, 192, 0.2)',
+        // 'rgba(153, 102, 255, 0.2)',
+        // 'rgba(255, 159, 64, 0.2)',
+        // 'rgba(255, 99, 132, 0.2)',
+        // 'rgba(54, 162, 235, 0.2)',
+        // 'rgba(255, 206, 86, 0.2)',
+        // 'rgba(75, 192, 192, 0.2)',
+        // 'rgba(153, 102, 255, 0.2)',
+        // 'rgba(255, 159, 64, 0.2)'
+        // ],
+        // borderColor: [
+        // 'rgba(255,99,132,1)',
+        // 'rgba(54, 162, 235, 1)',
+        // 'rgba(255, 206, 86, 1)',
+        // 'rgba(75, 192, 192, 1)',
+        // 'rgba(153, 102, 255, 1)',
+        // 'rgba(255, 159, 64, 1)',
+        // 'rgba(255,99,132,1)',
+        // 'rgba(54, 162, 235, 1)',
+        // 'rgba(255, 206, 86, 1)',
+        // 'rgba(75, 192, 192, 1)',
+        // 'rgba(153, 102, 255, 1)',
+        // 'rgba(255, 159, 64, 1)'
+        // ],
+        // borderWidth: 1
+        // }]
+        // },
+        // options: {
+        // scales: {
+        // yAxes: [{
+        // ticks: {
+        // beginAtZero: true
+        // }
+        // }]
+        // }
+        // }
+        // });
     </script>
 
 
 <script>
-    var ctxL = document.getElementById("lineChart1").getContext('2d');
+    // var ctxL = document.getElementById("lineChart1").getContext('2d');
 
-    var stringData = document.getElementById("theInput4").innerText;
-    var app_data = stringData.split`,`.map(x=>+x);
-    var income = document.getElementById("income").innerText;
-
-
-    var stringData2 = document.getElementById("theInput5").innerText;
-    var app_data2 = stringData2.split`,`.map(x=>+x);
-    var outcome = document.getElementById("outcome").innerText;
+    // var stringData = document.getElementById("theInput4").innerText;
+    // var app_data = stringData.split`,`.map(x=>+x);
+    // var income = document.getElementById("income").innerText;
 
 
-    var myLineChart = new Chart(ctxL, {
-    type: 'line',
-    data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
-    datasets: [{
-    label: "Kshs " + income + ' income)',
-    data: app_data,
-    backgroundColor: [
-    'rgba(18, 216, 124, .9)',
-    ],
-    borderColor: [
-    'rgba(200, 99, 132, .7)',
-    ],
-    borderWidth: 2
-    },
-    {
-    label: "Kshs " + outcome + ' expenses)',
-    data: app_data2,
-    backgroundColor: [
-    'rgba(249, 96, 30, .9)',
-    ],
-    borderColor: [
-    'rgba(0, 10, 130, .7)',
-    ],
-    borderWidth: 2
-    }
-    ]
-    },
-    options: {
-    responsive: true
-    }
-    });
+    // var stringData2 = document.getElementById("theInput5").innerText;
+    // var app_data2 = stringData2.split`,`.map(x=>+x);
+    // var outcome = document.getElementById("outcome").innerText;
+
+
+    // var myLineChart = new Chart(ctxL, {
+    // type: 'line',
+    // data: {
+    // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+    // datasets: [{
+    // label: "Kshs " + income + ' income)',
+    // data: app_data,
+    // backgroundColor: [
+    // 'rgba(18, 216, 124, .9)',
+    // ],
+    // borderColor: [
+    // 'rgba(200, 99, 132, .7)',
+    // ],
+    // borderWidth: 2
+    // },
+    // {
+    // label: "Kshs " + outcome + ' expenses)',
+    // data: app_data2,
+    // backgroundColor: [
+    // 'rgba(249, 96, 30, .9)',
+    // ],
+    // borderColor: [
+    // 'rgba(0, 10, 130, .7)',
+    // ],
+    // borderWidth: 2
+    // }
+    // ]
+    // },
+    // options: {
+    // responsive: true
+    // }
+    // });
 </script>
 
 <script>
-    var ctxB = document.getElementById("barChart1").getContext('2d');
+    // var ctxB = document.getElementById("barChart1").getContext('2d');
 
 
-    var stringData3 = document.getElementById("theInput6").innerText;
-    var app_data3 = stringData3.split`,`.map(x=>+x);
-    var netcome = document.getElementById("netcome").innerText;
+    // var stringData3 = document.getElementById("theInput6").innerText;
+    // var app_data3 = stringData3.split`,`.map(x=>+x);
+    // var netcome = document.getElementById("netcome").innerText;
 
-    var myBarChart = new Chart(ctxB, {
-    type: 'bar',
-    data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+    // var myBarChart = new Chart(ctxB, {
+    // type: 'bar',
+    // data: {
+    // labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+    // datasets: [{
+    // label: "Kshs " + netcome + ' net income)',
+    // data: app_data3,
+    // backgroundColor: [
+    // 'rgba(0, 13, 202, 0.3)',
+    // 'rgba(54, 162, 235, 0.2)',
+    // 'rgba(255, 206, 86, 0.2)',
+    // 'rgba(75, 192, 192, 0.2)',
+    // 'rgba(153, 102, 255, 0.2)',
+    // 'rgba(255, 159, 64, 0.2)',
+    // 'rgba(255, 99, 132, 0.2)',
+    // 'rgba(54, 162, 235, 0.2)',
+    // 'rgba(255, 206, 86, 0.2)',
+    // 'rgba(75, 192, 192, 0.2)',
+    // 'rgba(153, 102, 255, 0.2)',
+    // 'rgba(255, 159, 64, 0.2)'
+    // ],
+    // borderColor: [
+    // 'rgba(255,99,132,1)',
+    // 'rgba(54, 162, 235, 1)',
+    // 'rgba(255, 206, 86, 1)',
+    // 'rgba(75, 192, 192, 1)',
+    // 'rgba(153, 102, 255, 1)',
+    // 'rgba(255, 159, 64, 1)',
+    // 'rgba(255,99,132,1)',
+    // 'rgba(54, 162, 235, 1)',
+    // 'rgba(255, 206, 86, 1)',
+    // 'rgba(75, 192, 192, 1)',
+    // 'rgba(153, 102, 255, 1)',
+    // 'rgba(255, 159, 64, 1)'
+    // ],
+    // borderWidth: 1
+    // }]
+    // },
+    // options: {
+    // scales: {
+    // yAxes: [{
+    // ticks: {
+    // beginAtZero: true
+    // }
+    // }]
+    // }
+    // }
+    // });
+
+
+
+// Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+// Chart.defaults.global.defaultFontColor = '#858796';
+
+var ctxP = document.getElementById("myPieChart");
+var myPieChart = new Chart(ctxP, {
+  type: 'doughnut',
+  data: {
+    labels: ["House rent", "Water"],
     datasets: [{
-    label: "Kshs " + netcome + ' net income)',
-    data: app_data3,
-    backgroundColor: [
-    'rgba(0, 13, 202, 0.3)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)'
-    ],
-    borderColor: [
-    'rgba(255,99,132,1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255,99,132,1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)'
-    ],
-    borderWidth: 1
-    }]
+      data: [80, 20],
+      backgroundColor: ['#4e73df', '#36b9cc'],
+      hoverBackgroundColor: ['#2e59d9', '#2c9faf'],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      caretPadding: 10,
     },
-    options: {
-    scales: {
-    yAxes: [{
-    ticks: {
-    beginAtZero: true
-    }
-    }]
-    }
-    }
-    });
+    legend: {
+      display: false
+    },
+    cutoutPercentage: 80,
+  },
+});
 </script>

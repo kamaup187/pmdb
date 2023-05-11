@@ -6154,7 +6154,7 @@ class AddTenant(Resource):
            
 
             if not name:
-                return "Failed to convert lead" + proceed
+                return "Kindly provide a name" + err
 
             house_num = request.form.get('house')#auto populated dropdown
 

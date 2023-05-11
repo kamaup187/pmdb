@@ -412,7 +412,7 @@
       $('#tenantPaymentData').DataTable({
         "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
         "pageLength": 100,
-        "searching": false,
+        // "searching": false,
         columnDefs: [{ targets: 0, type: 'natural' }],
         "order": [[0, "asc"]],
         "bLengthChange": false
@@ -510,16 +510,6 @@
       var cb3 = document.getElementById("createinvoice");
       if (cb3.checked){
         var migrate3 = "True";
-
-        $.ajax({
-          url: "/billing",
-          type: "POST",
-          data: {
-            propid: $("#edit_prop_identifier").text(),
-            houses:$("#select_house2").val()
-          },
-        success: function (response) {}})
-
       }else{
         var migrate3 = "False";
       }
@@ -543,6 +533,17 @@
               },
           success: function(response) {
             $(".alert-msgs").html(response);
+
+            if (migrate3 == "True"){
+              $.ajax({
+                url: "/billing",
+                type: "POST",
+                data: {
+                  propid: $("#edit_prop_identifier").text(),
+                  houses:$("#select_house2").val()
+                },
+              success: function (response) {}})
+            }
             
             setTimeout(function(){
               $(".alert-msgs").empty();

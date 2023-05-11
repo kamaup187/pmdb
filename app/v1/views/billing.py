@@ -116,6 +116,8 @@ class Billing(Resource):
         target = request.form.get("target")
         billing = request.form.get("billing")
 
+        print("HOUSES LISTED >>>>", houses)
+
         if not apartment_name:
             propid = request.form.get("propid")
             print("APARTMENT ID TO BILL IS>>>>",propid)
@@ -141,7 +143,8 @@ class Billing(Resource):
         try:
             houseids = [int(s) for s in houses.split(',')]
             print("HOUSEIDS",houseids)
-        except:
+        except Exception as e:
+            print("ERROR in generating houseids >>>", str(e))
             houseids = []
 
         if target == "single" and tenantid:
@@ -253,6 +256,7 @@ class Billing(Resource):
                 total_bill_alt(apartment_id,houseids,user_id,month,year)
 
             else:
+                print("Checking for houseids...",houseids)
 
                 job = q.enqueue_call(
                     func=water_bill, args=(apartment_id,houseids,"Water",user_id,month,year,), result_ttl=5000

@@ -103,6 +103,8 @@ class Billing(Resource):
     """class"""
     @login_required
     def post(self):
+
+        # URGENT TODO: Review this whole pre billing process
         msg = None
         user_id = current_user.id
 
@@ -115,8 +117,11 @@ class Billing(Resource):
 
         target = request.form.get("target")
         billing = request.form.get("billing")
+        level = request.form.get("level")
 
         print("HOUSES LISTED >>>>", houses)
+
+        houseids = []
 
         if not apartment_name:
             propid = request.form.get("propid")
@@ -140,12 +145,19 @@ class Billing(Resource):
         except:
             bill_date = None
 
-        try:
-            houseids = [int(s) for s in houses.split(',')]
-            print("HOUSEIDS",houseids)
-        except Exception as e:
-            print("ERROR in generating houseids >>>", str(e))
-            houseids = []
+        if level:
+            hse_arr = [s for s in houses.split(',')]
+            hse = hse_arr[0]
+            hse_obj = get_specific_house_obj(apartment_id,hse)
+            houseids.append(hse_obj.id)
+
+        else:
+            try:
+                houseids = [int(s) for s in houses.split(',')]
+                print("HOUSEIDS",houseids)
+            except Exception as e:
+                print("ERROR in generating houseids >>>", str(e))
+                houseids = []
 
         if target == "single" and tenantid:
             try:

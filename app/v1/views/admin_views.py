@@ -776,32 +776,17 @@ class AllProperties(Resource):
                     'client-disp':"" if current_user.id == 1 else ""
                     }
 
+                print("GEEEERRRRING HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+
 
                 return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)
 
        
         for prop in props:
-            houses = len(prop.houses)
-            tenants = len(tenantauto(prop.id))
-            ptnts =len(prop.ptenants)
-
-            occupancy = filter_in_occupied_houses(prop.name)
-            occupancy_num = len(occupancy)
-
-            vacants = houses - occupancy_num
-
-            if tenants:
-                tnt_disp = ""
-
-            try:
-                occupancy = occupancy_num/houses * 100
-            except:
-                occupancy = 0
-                
-            occ = f"{occupancy:,.0f}"
-
             if target == "tenants":
                 template = "ajax_prop_tenants2.html" if crm(current_user) else "ajax_prop_tenants.html"
+
+                res = get_tenancy(prop)
 
                 dict_obj = {
                     'id':prop.id,
@@ -809,21 +794,22 @@ class AllProperties(Resource):
                     'editid':"edit"+str(prop.id),
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
-                    'houses':houses,
-                    'tenants':tenants,
-                    'ptenants':ptnts,
+                    'houses':res[0],
+                    'tenants':res[1],
+                    'ptenants':res[2],
                     'proposals':len(get_clients_by_status(prop.ptenants,"proposal")),
                     'prospective':len(get_clients_by_status(prop.ptenants,"negotiated")),
                     'invoiced':len(get_clients_by_status(prop.ptenants,"invoiced and contracts") + get_clients_by_status(prop.ptenants,"invoiced and missing contracts")),
                     'closed':len(get_clients_by_status(prop.ptenants,"closed")),
-                    'vacant':vacants,
+                    'vacant':res[3],
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
-                    'occupancy':occ,
+                    'occupancy':res[4],
                     'createdby':prop.user_id,
                 }
 
             elif target == "units":
                 template = "ajax_prop_units2.html"
+                res = get_tenancy(prop)
 
                 dict_obj = {
                     'id':prop.id,
@@ -831,37 +817,40 @@ class AllProperties(Resource):
                     'editid':"edit"+str(prop.id),
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
-                    'houses':houses,
-                    'tenants':tenants,
-                    'ptenants':ptnts,
+                    'houses':res[0],
+                    'tenants':res[1],
+                    'ptenants':res[2],
                     'available':len(get_units_by_status(prop.houses,"available")),
                     'booked':len(get_units_by_status(prop.houses,"booked")),
                     'sold':len(get_units_by_status(prop.houses,"sold")),
-                    'vacant':houses - tenants,
+                    'vacant':res[3],
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
-                    'occupancy':occ,
+                    'occupancy':res[4],
                     'createdby':prop.user_id,
                 }
 
             elif target == "tenant list":
                 template = "ajax_prop_tenant_list.html" 
+                res = get_tenancy(prop)
+
                 dict_obj = {
                     'id':prop.id,
                     'identity':"prp"+str(prop.id),
                     'editid':"edit"+str(prop.id),
                     'delid':"del"+str(prop.id),
                     'name':prop.name,
-                    'houses':houses,
-                    'tenants':tenants,
-                    'ptenants':ptnts,
-                    'vacant':houses - tenants,
+                    'houses':res[0],
+                    'tenants':res[1],
+                    'ptenants':res[2],
+                    'vacant':res[3],
                     'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
-                    'occupancy':occ,
+                    'occupancy':res[4],
                     'createdby':prop.user_id,
                 }
 
             else:
                 template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
+                res = get_tenancy(prop)
 
                 dict_obj = {
                     'id':prop.id,
@@ -871,11 +860,11 @@ class AllProperties(Resource):
                     'name':prop.name,
                     'owner':prop.landlord if prop.landlord else "not set",
                     'company':prop.company.name if prop.company else "N/A",
-                    'houses':houses,
-                    'tenants':tenants,
-                    'ptenants':ptnts,
+                    'houses':res[0],
+                    'tenants':res[1],
+                    'ptenants':res[2],
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">not yet</span>',
-                    'occupancy':occ,
+                    'occupancy':res[4],
                     'status':prop.property_type,
                     'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not prop.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
                     'link-target':"btn-outline-success" if not prop.company_id else "btn-outline-danger",

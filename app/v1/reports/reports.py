@@ -7253,6 +7253,15 @@ class FetchReadings(Resource):
             readingids = get_obj_ids(readinglist)
             return render_template("ajax_currentreadings.html",period=str_month,items=readinglist,readingids=readingids)
 
+class FetchTenancy(Resource):
+    def get(self):
+        prop_id = request.args.get("propid")
+        propid = get_identifier(prop_id)
+        prop = ApartmentOp.fetch_apartment_by_id(propid)
+        houses = len(prop.houses)
+        tenants = len(tenantauto(prop.id))
+
+        return [houses,tenants]
 
 class FetchHouses(Resource):
     @timer

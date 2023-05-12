@@ -11912,6 +11912,6 @@ def get_tenancy(prop):
     except:
         ratio = 0
         
-    occ = f"{ratio:,.0f}"
+    occ = f"{ratio:,.0f}%"
 
-    return houses,tenants,ptnts,vacants,occ,tnt_disp
+    return houses,occupancy_num,ptnts,vacants,occ,tnt_disp

@@ -7258,10 +7258,15 @@ class FetchTenancy(Resource):
         prop_id = request.args.get("propid")
         propid = get_identifier(prop_id)
         prop = ApartmentOp.fetch_apartment_by_id(propid)
-        houses = len(prop.houses)
-        tenants = len(tenantauto(prop.id))
+        
+        # houses = len(prop.houses)
+        # tenants = len(tenantauto(prop.id))
+        # return [houses,tenants]
 
-        return [houses,tenants]
+        res = get_tenancy(prop)
+
+        return [res[0],res[1],res[2],res[3],res[4]]
+
 
 class FetchHouses(Resource):
     @timer

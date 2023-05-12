@@ -53,14 +53,15 @@
                 <th class="text-info font-weight-bold pl-0">Code</th>
 
                 <th class="text-info font-weight-bold">Houses</th>
+                <th class="text-info font-weight-bold">Tenants</th>
+                <th class="text-info font-weight-bold">Vacant</th>
+                <th class="text-info font-weight-bold">Occupancy</th>
 
 
-                <th class="text-info font-weight-bold">Residents</th>
-                <th class="text-info font-weight-bold {{tnt_disp}}">Tenants</th>
-                <th class="text-info font-weight-bold {{tnt_disp}}">Occupancy</th>
+                <th class="text-info font-weight-bold ">Landlord</th>
+                <th class="text-info font-weight-bold ">Location</th>
 
-                <th class="text-info font-weight-bold {{access['client-disp']}}">Landlord</th>
-                <th class="text-info font-weight-bold {{access['client-disp']}}">Company</th>
+                <th class="text-info font-weight-bold ">Company</th>
                 <th class="text-info track-title-cell">Type</th>
                 <th class="text-info track-title-cell">Link</th>
                 <!-- <th class="text-info track-title-cell">Edit</th> -->
@@ -75,14 +76,16 @@
                   data-bs-toggle="modal" data-target="#editPropModal">{{ item['name'] }}
                 </td>
                 <td class="data-cell">{{item['id']}}</td>
-                <td class="data-cell">{{ item['houses'] }}</td>
 
-                <td class="data-cell">{{ item['ptenants'] }}</td>
-                <td class="data-cell {{tnt_disp}}">{{ item['tenants'] }}</td>
-                <td class="data-cell {{tnt_disp}}">{{ item['occupancy'] }} %</td>
+                <td id="houseinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+                <td id="tenantinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
+                <td id="vacantinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
+                <td id="ratioinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
 
-                <td class="data-cell text-gray-700 small {{access['client-disp']}}">{{ item['owner'] }}</td>
-                <td class="data-cell text-gray-900 small {{access['client-disp']}}">{{ item['company'] }}</td>
+
+                <td class="data-cell text-gray-700 small ">{{ item['owner'] }}</td>
+                <td class="data-cell text-gray-700 small ">{{ item['location'] }}</td>
+                <td class="data-cell text-gray-900 small ">{{ item['company'] }}</td>
 
                 <td class="data-cell">{{item['status']}}</td>
 
@@ -94,14 +97,7 @@
                       safe}}</span>
                   </div>
                 </td>
-                <!-- <td class="data-cell">
-                  <div>
-                    <span id="{{item['editid']}}" type="button"
-                      class="btn btn-outline-primary ellipsi borderless modalTrigger p-1" data-toggle="modal"
-                      data-bs-toggle="modal" data-target="#editPropModal"><i
-                        class="fas fa-cog"></i><span class="text-gray-900"></span></span>
-                  </div>
-                </td> -->
+
                 <td class="data-cell">
                   <div>
                     <span id="{{item['delid']}}" type="button"
@@ -647,6 +643,26 @@
 
       }
     });
+
+
+    if (isNaN(parseInt(item))){
+        //do nothing
+      }else{
+        $.ajax({
+        url: "{{ url_for('api.fetchtenancy') }}",
+        type: "get",
+        data: {
+              propid: item
+            },
+        success: function(response) {
+          $("#houseinfo-" + item ).text(response[0]);
+          $("#tenantinfo-" + item ).text(response[1]);
+          $("#vacantinfo-" + item ).text(response[3]);
+          $("#ratioinfo-" + item ).text(response[4]);
+
+        }
+      });
+      }
   });
 </script>
 

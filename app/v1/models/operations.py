@@ -996,6 +996,13 @@ class ApartmentOp(Apartment,Base):
         'editid':HouseOp.generate_editid(self),
         'delid':HouseOp.generate_delid(self),
         "name":self.name,
+        "location":self.location if self.location else "-not set-",
+        'owner':self.landlord if self.landlord else "-not set-",
+        'company':self.company.name if self.company else "N/A",
+        'status':self.property_type,
+        'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not self.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
+        'link-target':"btn-outline-success" if not self.company_id else "btn-outline-danger",
+        'createdby':self.user_id,
         }
 
 

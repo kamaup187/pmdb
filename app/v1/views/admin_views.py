@@ -743,47 +743,15 @@ class AllProperties(Resource):
         template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
 
         if not crm(current_user):
-            if target == "tenants" or target == "tenant list":
-                items = prop_details(props)
-                propids = get_obj_ids(items)
+            items = prop_details(props)
+            propids = get_obj_ids(items)
+            if target == "tenants":
+                template = "ajax_prop_tenants.html"
+                return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
+            else:
+                template = "ajax_allprops_detail.html"
+                return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
 
-                template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
-
-
-
-                # for prop in props:
-
-                #     # houses = len(prop.houses)
-                #     # tenants = len(tenantauto(prop.id))
-
-                #     template = "ajax_prop_tenants.html" if target == "tenants" else "ajax_prop_tenant_list.html"
-
-                #     dict_obj = {
-                #         'id':prop.id,
-                #         'identity':"prp"+str(prop.id),
-                #         'editid':"edit"+str(prop.id),
-                #         'delid':"del"+str(prop.id),
-                #         'name':prop.name,
-                #         'houses': "...",
-                #         'tenants':"...",
-                #     }
-
-
-                #     items.append(dict_obj)
-                #     # prop_names.append(prop_name_dict)
-                #     prop_ids.append(prop.id)
-                #     prop_ids.append("prp"+str(prop.id))
-                #     prop_ids.append("edit"+str(prop.id))
-                #     prop_ids.append("del"+str(prop.id))
-
-                # propids = ','.join(map(str, prop_ids))
-
-                access = {
-                    'client-disp':"" if current_user.id == 1 else ""
-                    }
-
-
-                return render_template(template,propids=propids,props=props,prop=None,items=items,access=access,company=current_user.company)
 
        
         for prop in props:
@@ -833,24 +801,6 @@ class AllProperties(Resource):
                     'createdby':prop.user_id,
                 }
 
-            elif target == "tenant list":
-                template = "ajax_prop_tenant_list.html" 
-                res = get_tenancy(prop)
-
-                dict_obj = {
-                    'id':prop.id,
-                    'identity':"prp"+str(prop.id),
-                    'editid':"edit"+str(prop.id),
-                    'delid':"del"+str(prop.id),
-                    'name':prop.name,
-                    'houses':res[0],
-                    'tenants':res[1],
-                    'ptenants':res[2],
-                    'vacant':res[3],
-                    'reminders':f'<span class="text-success font-weight-bold">Sent</span>' if prop.reminder_status else '<span class="text-danger font-weight-bold">Not yet</span>',
-                    'occupancy':res[4],
-                    'createdby':prop.user_id,
-                }
 
             else:
                 template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"

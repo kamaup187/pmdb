@@ -11439,6 +11439,45 @@ def get_obj_ids(arr):
     # print("IDS ARE HERE",str_ids)
     return str_ids
 
+def get_obj_propids(arr):
+    obj_id_list = []
+    for req in arr:
+        if req:
+            editid = req.get("editid")
+            obj_id_list.append(editid)
+            delid = req["delid"]
+            obj_id_list.append(delid)
+            uid = req.get("uid")
+            if uid:
+                obj_id_list.append(uid)
+            allocid=req.get("allocid")
+            if allocid:
+                obj_id_list.append(allocid)
+
+
+            identity=req.get("identity")
+            if identity:
+                obj_id_list.append(identity)
+
+            billid=req.get("billid")
+            if billid:
+                obj_id_list.append(billid)
+
+            smsid=req.get("smsid")
+            if smsid:
+                obj_id_list.append(smsid)
+
+            propid=req.get("propid")
+            if propid:
+                obj_id_list.append(propid)
+
+    if not obj_id_list:
+        obj_id_list.append("empty")
+
+    str_ids = ','.join(map(str, obj_id_list))
+    # print("IDS ARE HERE",str_ids)
+    return str_ids
+
 def get_obj_ids_alt(arr):
     obj_id_list = []
     for req in arr:

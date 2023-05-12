@@ -90,14 +90,6 @@
                   <tbody>
                     {% for item in items%}
                     <tr>
-                      <!-- <td class="first-data-cell text-dark font-weight-bold"><a href="#" id="{{item['identity']}}"> </a></td> -->
-                      <!-- <td class="font-weight-bold text-s  data-cell">
-                        <div>
-                          <button id="{{item['identity']}}" type="button"
-                            class="btn action-btn btn-outline-primary font-weight-bold namebutton modalTrigger no-wrap"><i
-                              class="fas fa-city mr-1"></i>{{ item['name'] }}</button>
-                        </div>
-                      </td> -->
 
                       <td class="data-cell">
                         <div>
@@ -109,13 +101,6 @@
                       <td id="receivedinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
     
     
-                      <!-- <td class="font-weight-bold text-s text-center data-cell">
-                        <div>
-                          <button id="{{item['propid']}}" type="button"
-                            class="btn btn-primary btn-small action-btn-alt font-weight-bold no-wrap" data-toggle="modal"
-                            data-target="#addPaymentModal2"><span>add payment</span></button>
-                        </div>
-                      </td> -->
 
                       <td class="data-cell text-center">
                         <div>
@@ -134,22 +119,7 @@
                     </tr>
                     {% endfor %}
                   </tbody>
-                  <!-- <tfoot>
-                    <tr>
-                      <td colspan="3" class="center-btn font-weight-bold data-cell text-black">Total</td>
-                      <td class="font-weight-bold data-cell text-info text-right {{fieldshow_dep}}">{{deptotal}}</td>
-                      <td class="font-weight-bold data-cell text-info text-right {{fieldshow_rent}}">{{renttotal}}</td>
-                      <td class="font-weight-bold data-cell text-info text-right {{fieldshow_water}}">{{watertotal}}</td>
-
-                      <td class="font-weight-bold data-cell text-info text-right {{fieldshow_fine}}">{{penalties}}</td>
-                      <td class="font-weight-bold data-cell text-info text-right">{{others}}</td>
-    
-                      <td class="font-weight-bold data-cell text-info text-right">{{totalbills}}</td>
-                      <td class="font-weight-bold data-cell text-info text-right">{{totalpaid}}</td>
-                      <td class="font-weight-bold data-cell text-info text-right">{{totalbalance}}</td>
-    
-                    </tr>
-                  </tfoot> -->
+  
                 </table>
               </div>
             
@@ -1656,54 +1626,6 @@
 
                 });
 
-
-
-                // $('#paybtn-alt').click(rebindfunc());
-                // $.ajax({
-                //     url: "{{ url_for('api.fetchpayments') }}",
-                //     type: "get",
-                //     data: {
-                //           propid: $("#prop_identifier_main").text(),
-                //           target:"new alt"
-                //         },
-                //     success: function(response) {
-                //       // $('#result-view').toggleClass("d-none");
-                //       $('#reportbtns').toggleClass("d-none");
-                //       $('#arr-view').toggleClass("d-none");
-                //       $("#arr-view").html(response);
-
-                //           // $("#body-block").addClass("dispnone")
-                //           // $("#preloader-btn").click();
-                //       // $("#barloader").removeClass("dispnone")
-
-                //       // url = "{{ url_for('api.payments') }}"
-
-                //       // $(".paybtn2").click();
-
-
-
-                //       // $.ajax({
-                //       //       type: "get",
-                //       //       url: url,
-                //       //       success: function(response) {
-                //       //         // $("#postloader-btn").click();
-                //       //         if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                //       //               $('#sidebarToggle').click();
-                //       //               $('#smaccordionSidebar').removeClass("toggled");
-                //       //             }
-                //       //           $('#content-area').addClass("isopen text-danger");
-                //       //         $("#barloader").addClass("dispnone")
-                //       //         $("#body-block").addClass("dispnone")
-                //       //         $("#proplist").addClass("dispnone")
-                //       //         $("#propdisp").removeClass("dispnone")
-                //       //         $("#searchresults").html("empty")
-                //       //         $("#searchresults").addClass("dispnone")
-                //       //         $("#propdisp").html(response);
-                //       //       }
-                //       //   });
-                      
-                //     }
-                //   });
             },
             error: function(xhr) {
               $('#paybtn_alt').html('Submit');
@@ -1713,94 +1635,6 @@
   });
 
 
-  function rebindfunc() {
-    // $('#paybtn_alt').attr('disabled', 'disabled')
-    $('#paybtn-altt').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...');
-
-    var cb = document.getElementById("notifysms");
-    if (cb.checked){
-      var notifysms = "True";
-    }else{
-      var notifysms = "False";
-    }
-
-    var cb = document.getElementById("notifyemail");
-    if (cb.checked){
-      var notifyemail = "True";
-    }else{
-      var notifyemail = "False";
-    }
-  
-    $.ajax({
-            type: "POST",
-            url: "{{ url_for('api.receivepayment') }}",
-            data: {
-                propid: $("#prop_identifier_main").text(),
-                house: $("#select_house").val(),
-                house2: $("#house-holder").text(),
-                cbid: $("#cb2item_id").text(),
-                chargetype1:"rent",
-                bank:$("input[name=bank]:checked").val(),
-                sms:notifysms,
-                email:notifyemail,
-                month:$("input[name=paytype]:checked").val(),
-                date:$("#pay-date").val(),
-                time:$("#pay-time").val(),
-
-                paymode:document.querySelector('input[name="paymode"]:checked').value,
-                bill_ref:$("#bill_ref").val(),
-                rentpaid : ($("#rentpaid").val()),
-                waterpaid : ($("#waterpaid").val()),
-                electricitypaid : ($("#electricitypaid").val()),
-                garbagepaid : ($("#garbagepaid").val()),
-                securitypaid : ($("#securitypaid").val()),
-                servicepaid : ($("#servicepaid").val()),
-                penaltypaid : ($("#penaltypaid").val()),
-                depositpaid : ($("#depositpaid").val()),
-                agreementpaid :($("#agreementpaid").val()),
-                paidamount:$("#paidamount").val()
-            },
-            success: function(response) {
-                $('#paybtn_alt').off('click');
-                $('#paybtn_alt').html('Submit');
-                $('#paybtn_alt').addClass("dispnone")
-                // $('#pay-date').attr("type","text")
-                $(".reset").click();
-                $(".closemodal").click();
-                $('#addPaymentModal2').on('hidden.bs.modal', function (e) {
-                    $('body').addClass('modal-open');
-                });
-                $("#tenantbed").empty();
-                $("#billbreakdown").empty();
-                $("#totaldue").empty();
-                $("#receipt-payment-btn").click();
-                $("#fieldset2").addClass("dispnone")
-                $("#fieldset3").addClass("dispnone")
-                $('#billref').addClass('dispnone');
-                $('#banks').addClass('dispnone');
-                $("#receipt-payment-bed").html(response);
-                $.ajax({
-                    url: "{{ url_for('api.fetchpayments') }}",
-                    type: "get",
-                    data: {
-                          propid: $("#prop_identifier_main").text(),
-                          target:"new alt"
-                        },
-                    success: function(response) {
-                      // $('#result-view').toggleClass("d-none");
-                      $('#reportbtns').toggleClass("d-none");
-                      $('#arr-view').toggleClass("d-none");
-                      $("#arr-view").html(response);
-                      
-                    }
-                  });
-            },
-            error: function(xhr) {
-              $('#paybtn_alt').html('Submit');
-              alert("Please select tenant/resident before proceeding");
-        }
-        });
-  }
 </script>
 
 
@@ -2406,7 +2240,7 @@ $("#void_ctob").on('click',function(){
 
 
 
-<script>
+<!-- <script>
 
   $("#balbtn").on('click',function(){
     if ($("#balbtn").hasClass("closereport")){
@@ -2533,7 +2367,7 @@ $("#void_ctob").on('click',function(){
 
 
   });
-</script>
+</script> -->
 
 
 

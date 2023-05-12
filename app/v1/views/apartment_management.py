@@ -2802,7 +2802,7 @@ class Bills(Resource):
         items = []
         prop_ids = []
 
-        items = prop_details(props)
+        items = prop_inv_details(props)
         propids = get_obj_propids(items)
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
@@ -2996,7 +2996,7 @@ class Payments(Resource):
         prop_ids = []
 
 
-        items = prop_details(props)
+        items = prop_pay_details(props)
         propids = get_obj_propids(items)
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'

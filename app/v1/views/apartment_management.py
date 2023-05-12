@@ -2802,20 +2802,27 @@ class Bills(Resource):
         items = []
         prop_ids = []
 
-        frenttotal = 0
-        fwatertotal = 0
-        felectotal = 0
-        fgarbtotal = 0
-        fsectotal = 0
-        fsevtotal = 0
-        fdeptotal = 0
-        fargtotal = 0
-        fpenalties = 0
-        farrearstotal = 0
-        fothers = 0
-        ftotalbills = 0
-        ftotalpaid = 0
-        ftotalbalance = 0
+        items = prop_details(props)
+        propids = get_obj_ids(items)
+
+        prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
+        nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
+
+        template = 'crm_ajax_bills.html' if crm(current_user) else 'ajax_bills.html'
+
+        return render_template(
+            template,
+            propids=propids,
+            items=items,
+            company=current_user.company,
+            previous_month = prevmonth,
+            next_month = nextmonth,
+            current_month=get_str_month(period.month),
+            period_target=period_target
+            )
+
+
+
         
         for prop in props:
             # sms = "0/0"
@@ -2846,9 +2853,10 @@ class Bills(Resource):
             totalbalance = 0
 
             smsstatus = []
-            inv_arr_status = []
-            inv_paid_status = []
-            inv_bal_status = []
+
+            # inv_arr_status = []
+            # inv_paid_status = []
+            # inv_bal_status = []
 
             for bill in filtered_bills:
                 renttotal += bill.rent
@@ -2868,20 +2876,20 @@ class Bills(Resource):
 
                 # print("INV STATUS for ",bill.house, prop, "SMS >>>>>",bill.sms_invoice,"Email >>>",bill.email_invoice)
 
-                if "**" in MonthlyChargeOp.calculate_breakdown(bill):
-                    inv_arr_status.append("error")
-                else:
-                    inv_arr_status.append("okay")
+                # if "**" in MonthlyChargeOp.calculate_breakdown(bill):
+                #     inv_arr_status.append("error")
+                # else:
+                #     inv_arr_status.append("okay")
 
-                if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
-                    inv_paid_status.append("error")
-                else:
-                    inv_paid_status.append("okay")
+                # if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
+                #     inv_paid_status.append("error")
+                # else:
+                #     inv_paid_status.append("okay")
 
-                if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
-                    inv_bal_status.append("error")
-                else:
-                    inv_bal_status.append("okay")
+                # if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
+                #     inv_bal_status.append("error")
+                # else:
+                #     inv_bal_status.append("okay")
 
                 if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
                     smsstatus.append("0")
@@ -2904,21 +2912,6 @@ class Bills(Resource):
             # num_vacs = len(houseauto(prop.id)) - num_units
 
 
-            frenttotal += renttotal
-            fwatertotal += watertotal
-            felectotal += electotal
-            fgarbtotal += garbtotal
-            fsectotal += sectotal
-            fsevtotal += sevtotal
-            fdeptotal += deptotal
-            fargtotal += argtotal
-            fpenalties += penalties
-            farrearstotal += arrearstotal
-            fothers += others
-            ftotalbills += totalbills
-            ftotalpaid += totalpaid
-            ftotalbalance += totalbalance
-
             if prop.billing_period.month != co.billing_period.month:
                 bill_outline = "text-primary"
             else:
@@ -2936,7 +2929,7 @@ class Bills(Resource):
             else:
                 invs = len(smsstatus)
 
-            invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
+            # invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
             dict_obj = {
                 'propid':prop.id,
@@ -2946,7 +2939,7 @@ class Bills(Resource):
                 'name':fname_extracter(prop.name),
                 'tenants':num_units,
                 'ptenants':ptnts,
-                'invs':invss,
+                # 'invs':invss,
                 'progress':progress,
                 'water':(f"{watertotal:,.1f} "),
                 'deposit':(f"{deptotal:,.1f} "),
@@ -2977,23 +2970,6 @@ class Bills(Resource):
 
         return render_template(
             template,
-            renttotal = frenttotal,
-            watertotal = f"{fwatertotal:,.2f}",
-            electotal = felectotal,
-            garbtotal = fgarbtotal,
-            sectotal = fsectotal,
-            sevtotal = fsevtotal,
-            deptotal = fdeptotal,
-            argtotal = fargtotal,
-            penalties = f"{fpenalties:,.1f}",
-            arrearstotal = f"{farrearstotal:,.1f}",
-            others = f"{fothers:,.1f}",
-            totalbills = f"{ftotalbills:,.1f}",
-            totalpaid = f"{ftotalpaid:,.1f}",
-            totalbalance = f"{ftotalbalance:,.1f}",
-            fieldshow_dep = "dispnone" if not fdeptotal else "",
-            fieldshow_fine = "dispnone" if not fpenalties else "",
-            fieldshow_arr = "dispnone" if not farrearstotal else "",
             propids=propids,
             items=items,
             company=current_user.company,

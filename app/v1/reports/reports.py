@@ -7303,6 +7303,7 @@ class FetchStatistics(Resource):
         totalbalance = 0
 
         smsstatus = []
+        payments = []
 
         # inv_arr_status = []
         # inv_paid_status = []
@@ -7346,6 +7347,12 @@ class FetchStatistics(Resource):
             else:
                 smsstatus.append("1")
 
+
+            if bill.paid_amount:
+                payments.append("1")
+            else:
+                payments.append("0")
+
         numerator = smsstatus.count("1")
 
         if numerator == 0 and len(smsstatus) != 0:
@@ -7356,6 +7363,10 @@ class FetchStatistics(Resource):
             sms_outline = "text-success"
 
         sms = f'{numerator}/{len(smsstatus)}'
+
+
+        received = f'{payments.count("1")}/{len(payments)}'
+
 
         num_units = len(tenantauto(prop.id))
         ptnts = len(prop.ptenants)
@@ -7398,7 +7409,7 @@ class FetchStatistics(Resource):
         sms = sms
         
 
-        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,10,11]
+        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received]
 
 
 class FetchHouses(Resource):

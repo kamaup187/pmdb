@@ -2803,7 +2803,7 @@ class Bills(Resource):
         prop_ids = []
 
         items = prop_details(props)
-        propids = get_obj_ids(items)
+        propids = get_obj_propids(items)
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
         nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
@@ -2995,20 +2995,26 @@ class Payments(Resource):
         items = []
         prop_ids = []
 
-        frenttotal = 0
-        fwatertotal = 0
-        felectotal = 0
-        fgarbtotal = 0
-        fsectotal = 0
-        fsevtotal = 0
-        fdeptotal = 0
-        fargtotal = 0
-        fpenalties = 0
-        farrearstotal = 0
-        fothers = 0
-        ftotalbills = 0
-        ftotalpaid = 0
-        ftotalbalance = 0
+
+        items = prop_details(props)
+        propids = get_obj_propids(items)
+
+        prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
+
+        template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
+
+        return render_template(
+            template,
+            props=props,
+            propids=propids,
+            items=items,
+            company=current_user.company,
+            previous_month = prevmonth,
+            current_month=get_str_month(period.month)
+            )
+
+
+
         
         for prop in props:
             # sms = "0/0"
@@ -3109,21 +3115,6 @@ class Payments(Resource):
             # num_vacs = len(houseauto(prop.id)) - num_units
 
 
-            frenttotal += renttotal
-            fwatertotal += watertotal
-            felectotal += electotal
-            fgarbtotal += garbtotal
-            fsectotal += sectotal
-            fsevtotal += sevtotal
-            fdeptotal += deptotal
-            fargtotal += argtotal
-            fpenalties += penalties
-            farrearstotal += arrearstotal
-            fothers += others
-            ftotalbills += totalbills
-            ftotalpaid += totalpaid
-            ftotalbalance += totalbalance
-
             if prop.billing_period.month != co.billing_period.month:
                 bill_outline = "btn-primary"
             else:
@@ -3143,11 +3134,6 @@ class Payments(Resource):
                 'payments':payment_ratio,
                 'invs':len(smsstatus),
                 'progress':progress,
-                'deposit':(f"{p_deptotal:,.1f} / {deptotal:,.1f}"),
-                'water':(f"{p_watertotal:,.1f} / {watertotal:,.1f} "),
-                'rent':(f"{p_renttotal:,.1f} / {renttotal:,.1f} "),
-                'fine':(f"{p_penalties:,.1f} / {penalties:,.1f} "),
-                'others':(f"{p_others:,.1f} / {others:,.1f} "),
                 'total':(f"{totalbills:,.1f} "),
                 'paid':(f"{totalpaid:,.1f} "),
                 'bal':(f"{totalbalance:,.1f} "),
@@ -3171,22 +3157,6 @@ class Payments(Resource):
         return render_template(
             template,
             props=props,
-            renttotal = frenttotal,
-            watertotal = f"{fwatertotal:,.2f}",
-            electotal = felectotal,
-            garbtotal = fgarbtotal,
-            sectotal = fsectotal,
-            sevtotal = fsevtotal,
-            deptotal = fdeptotal,
-            argtotal = fargtotal,
-            penalties = f"{fpenalties:,.1f}",
-            arrearstotal = f"{farrearstotal:,.1f}",
-            others = f"{fothers:,.1f}",
-            totalbills = f"{ftotalbills:,.1f}",
-            totalpaid = f"{ftotalpaid:,.1f}",
-            totalbalance = f"{ftotalbalance:,.1f}",
-            fieldshow_fine = "dispnone" if not fpenalties else "",
-            fieldshow_dep = "dispnone" if not fdeptotal else "",
             propids=propids,
             items=items,
             company=current_user.company,

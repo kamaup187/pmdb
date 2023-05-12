@@ -2937,7 +2937,23 @@ def att_details(arr):
 def prop_details(arr):
     houselist = []
     for i in arr:
-        new_i = ApartmentOp.view_alt(i)
+        new_i = ApartmentOp.view_details(i)
+        houselist.append(new_i)
+
+    return houselist
+
+def prop_inv_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = ApartmentOp.view_invoices(i)
+        houselist.append(new_i)
+
+    return houselist
+
+def prop_pay_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = ApartmentOp.view_payments(i)
         houselist.append(new_i)
 
     return houselist

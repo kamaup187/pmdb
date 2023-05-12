@@ -1008,7 +1008,24 @@ class ApartmentOp(Apartment,Base):
         return bill_outline
 
 
-    def view_alt(self):
+    def view_details(self):
+        return {
+        'id':self.id,
+        "propid":self.id,
+        'editid':ApartmentOp.generate_editid(self),
+        'delid':ApartmentOp.generate_delid(self),
+        'identity':"prp"+str(self.id),
+        "name":self.name,
+        "location":self.location if self.location else "-not set-",
+        'owner':self.landlord if self.landlord else "-not set-",
+        'company':self.company.name if self.company else "N/A",
+        'status':self.property_type,
+        'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not self.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
+        'link-target':"btn-outline-success" if not self.company_id else "btn-outline-danger",
+        'createdby':self.user_id,
+        }
+    
+    def view_invoices(self):
         return {
         'id':self.id,
         "propid":self.id,
@@ -1020,13 +1037,17 @@ class ApartmentOp(Apartment,Base):
         'progress':ApartmentOp.get_progress(self),
         'bill_outline':ApartmentOp.get_bill_outline(self),
         "name":self.name,
-        "location":self.location if self.location else "-not set-",
-        'owner':self.landlord if self.landlord else "-not set-",
-        'company':self.company.name if self.company else "N/A",
-        'status':self.property_type,
-        'link':'<i class="fas fa-share-alt mr-1 text-success"></i><span class="text-gray-900">link</span>' if not self.company_id else '<i class="fas fa-sign-out-alt mr-1 text-danger"></i><span class="text-gray-900">unlink</span>',
-        'link-target':"btn-outline-success" if not self.company_id else "btn-outline-danger",
-        'createdby':self.user_id,
+        }
+
+    def view_payments(self):
+        return {
+        'id':self.id,
+        "propid":self.id,
+        'editid':ApartmentOp.generate_editid(self),
+        'delid':ApartmentOp.generate_delid(self),
+        'identity':"prp"+str(self.id),
+        "name":self.name,
+
         }
 
 

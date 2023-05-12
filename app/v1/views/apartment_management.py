@@ -2790,7 +2790,7 @@ class Bills(Resource):
                 houses.append(dict_obj)
             return render_template("ajax_bill_houses.html",houses=houses)
 
-        update_login_history("invoice",current_user)
+        # update_login_history("invoice",current_user)
 
 
         props = fetch_all_apartments_by_user(current_user)
@@ -2984,7 +2984,7 @@ class Payments(Resource):
     @login_required
     def get(self):
 
-        update_login_history("payment",current_user)
+        # update_login_history("payment",current_user)
 
         props = fetch_all_apartments_by_user(current_user)
 

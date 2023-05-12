@@ -989,12 +989,36 @@ class ApartmentOp(Apartment,Base):
             "Location":self.location,
             "owner":ApartmentOp.get_owner_name(self)
         }
+    
+    def get_progress(self):
+        if self.billprogress == "billing":
+            progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Billing'
+        elif self.billprogress == "failed":
+            progress = '<i class="fas fa-exclamation mr-2" role="status" aria-hidden="true"></i>Retry'
+        else:
+            progress = 'Generate'
+        return progress
+    
+    def get_bill_outline(self):
+        if self.billing_period.month != self.company.billing_period.month:
+            bill_outline = "text-primary"
+        else:
+            bill_outline = "text-dark"
+
+        return bill_outline
+
 
     def view_alt(self):
         return {
         'id':self.id,
-        'editid':HouseOp.generate_editid(self),
-        'delid':HouseOp.generate_delid(self),
+        "propid":self.id,
+        'editid':ApartmentOp.generate_editid(self),
+        'delid':ApartmentOp.generate_delid(self),
+        'identity':"prp"+str(self.id),
+        'billid':"bill"+str(self.id),
+        'smsid':"sms"+str(self.id),
+        'progress':ApartmentOp.get_progress(self),
+        'bill_outline':ApartmentOp.get_bill_outline(self),
         "name":self.name,
         "location":self.location if self.location else "-not set-",
         'owner':self.landlord if self.landlord else "-not set-",

@@ -7268,6 +7268,139 @@ class FetchTenancy(Resource):
         return [res[0],res[1],res[2],res[3],res[4]]
 
 
+class FetchStatistics(Resource):
+    def get(self):
+
+        prop_id = request.args.get("propid")
+        propid = get_identifier(prop_id)
+        prop = ApartmentOp.fetch_apartment_by_id(propid)
+
+        period_target = request.args.get("target_period")
+
+        if period_target:
+            datestring = date_formatter_alt(period_target)
+            target_period = parse(datestring)
+        else:
+            target_period = current_user.company.billing_period
+
+        monthlybills = prop.monthlybills
+
+        filtered_bills = fetch_current_billing_period_bills(target_period,monthlybills)
+
+        renttotal = 0
+        watertotal = 0
+        electotal = 0
+        garbtotal = 0
+        sectotal = 0
+        sevtotal = 0
+        deptotal = 0
+        argtotal = 0
+        penalties = 0
+        arrearstotal = 0
+        others = 0
+        totalbills = 0
+        totalpaid = 0
+        totalbalance = 0
+
+        smsstatus = []
+
+        # inv_arr_status = []
+        # inv_paid_status = []
+        # inv_bal_status = []
+
+        for bill in filtered_bills:
+            renttotal += bill.rent
+            watertotal += bill.water
+            electotal += bill.electricity
+            garbtotal += bill.garbage 
+            sectotal += bill.security
+            sevtotal += bill.maintenance
+            deptotal += bill.deposit if bill.deposit else 0
+            argtotal += bill.agreement
+            penalties += bill.penalty
+            arrearstotal += bill.arrears if bill.arrears > 0 else 0
+            others += bill.electricity + bill.garbage + bill.maintenance + bill.security + bill.agreement
+            totalbills += bill.total_bill if bill.total_bill > 0 else 0 
+            totalpaid += bill.paid_amount
+            totalbalance += bill.balance if bill.balance > 0 else 0
+
+            # print("INV STATUS for ",bill.house, prop, "SMS >>>>>",bill.sms_invoice,"Email >>>",bill.email_invoice)
+
+            # if "**" in MonthlyChargeOp.calculate_breakdown(bill):
+            #     inv_arr_status.append("error")
+            # else:
+            #     inv_arr_status.append("okay")
+
+            # if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
+            #     inv_paid_status.append("error")
+            # else:
+            #     inv_paid_status.append("okay")
+
+            # if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
+            #     inv_bal_status.append("error")
+            # else:
+            #     inv_bal_status.append("okay")
+
+            if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
+                smsstatus.append("0")
+            else:
+                smsstatus.append("1")
+
+        numerator = smsstatus.count("1")
+
+        if numerator == 0 and len(smsstatus) != 0:
+            sms_outline = "text-primary"
+        # elif numerator < len(smsstatus) and len(smsstatus) != 0:
+        #     sms_outline = "btn-warning"
+        else:
+            sms_outline = "text-success"
+
+        sms = f'{numerator}/{len(smsstatus)}'
+
+        num_units = len(tenantauto(prop.id))
+        ptnts = len(prop.ptenants)
+        clients = num_units + ptnts
+        # num_vacs = len(houseauto(prop.id)) - num_units
+
+
+        if prop.billing_period.month != prop.company.billing_period.month:
+            bill_outline = "text-primary"
+        else:
+            bill_outline = "text-dark"
+
+        if prop.billprogress == "billing":
+            progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Billing'
+        elif prop.billprogress == "failed":
+            progress = '<i class="fas fa-exclamation mr-2" role="status" aria-hidden="true"></i>Retry'
+        else:
+            progress = 'Generate'
+
+        # if len(smsstatus) < 1:
+        #     invs = '<span class="text-danger font-weight-bold">not billed</span'
+        # else:
+        #     invs = len(smsstatus)
+
+        # invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
+
+        # 'invs = invss,
+        progress = progress
+        water = (f"{watertotal:,.1f} ")
+        deposit = (f"{deptotal:,.1f} ")
+        rent = (f"{renttotal:,.1f} ")
+        fine = (f"{penalties:,.1f} ")
+        arrears = (f"{arrearstotal:,.1f} ")
+        others = (f"{others:,.1f} ")
+        total = (f"{totalbills:,.1f} ")
+        paid = (f"{totalpaid:,.1f} ")
+        bal = (f"{totalbalance:,.1f} ")
+        bill_outline = bill_outline
+        sms_outline = sms_outline
+        sms = sms
+        
+
+        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,10,11]
+
+
 class FetchHouses(Resource):
     @timer
     @login_required

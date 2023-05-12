@@ -11415,6 +11415,23 @@ def get_obj_ids(arr):
             if allocid:
                 obj_id_list.append(allocid)
 
+
+            identity=req.get("identity")
+            if identity:
+                obj_id_list.append(identity)
+
+            billid=req.get("billid")
+            if billid:
+                obj_id_list.append(billid)
+
+            smsid=req.get("smsid")
+            if smsid:
+                obj_id_list.append(smsid)
+
+            propid=req.get("propid")
+            if propid:
+                obj_id_list.append(propid)
+
     if not obj_id_list:
         obj_id_list.append("empty")
 

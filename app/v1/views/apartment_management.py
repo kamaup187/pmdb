@@ -2281,10 +2281,15 @@ class PropertyManagement(Resource):
         pg = None
 
         if crm(current_user):
-            page = request.args.get('page', 1, type=int)
-            pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
-            houselist = house_details(pg.items)
-            houses = len(pg.items)
+            # page = request.args.get('page', 1, type=int)
+            # pg = House.query.filter_by(apartment_id=propid).paginate(page=page, per_page=ROWS_PER_PAGE)
+            # houselist = house_details(pg.items)
+            # houses = len(pg.items)
+            houselist = []
+            houses = 0
+
+            tenancy = []
+            tenants = 0
         else:
             prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
             house_list = prop_obj.houses
@@ -2292,8 +2297,9 @@ class PropertyManagement(Resource):
             houses = len(house_list)
 
         
-        tenancy = tenantauto(prop_obj.id)
-        tenants = len(tenancy)
+            tenancy = tenantauto(prop_obj.id)
+            tenants = len(tenancy)
+
         owner = prop_obj.owner
         if prop_obj.caretaker_id:
             caretaker = UserOp.fetch_user_by_username(prop_obj.caretaker_id)

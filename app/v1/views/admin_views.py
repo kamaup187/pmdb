@@ -743,14 +743,17 @@ class AllProperties(Resource):
         template = "crm_ajax_allprops_detail.html" if crm(current_user) else "ajax_allprops_detail.html"
 
         if not crm(current_user):
+
             items = prop_details(props)
-            propids = get_obj_ids(items)
+            propids = get_obj_propids(items)
             if target == "tenants":
-                template = "ajax_prop_tenants.html"
-                return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
+                template = "ajax_prop_tenants_pre.html"
+            elif target == "units":
+                template = "ajax_prop_units.html"
             else:
                 template = "ajax_allprops_detail.html"
-                return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
+
+            return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
 
 
        
@@ -780,7 +783,8 @@ class AllProperties(Resource):
                 }
 
             elif target == "units":
-                template = "ajax_prop_units2.html"
+                template = "ajax_prop_units2.html" if crm(current_user) else "ajax_prop_units.html"
+
                 res = get_tenancy(prop)
 
                 dict_obj = {

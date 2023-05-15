@@ -12,21 +12,7 @@
 
 
 
-    
-      <div class="card mb-2 mt-1">
-        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-info font-weight-bold text-uppercase text-110"> <span id="backbtn">All Payments </span>
-            <span id="activeprop"class="text-primary ml-3"></span>
-            <span id="activeprop-item"class="text-primary ml-3"></span>
-          </span>
-          <div>
-            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
-              type="button">X</button>
-          </div>
-        </div>
-    
-        <div class="card-body flowing-body pt-2 pl-2">
+  
     
           <div class="toggleswitch divbg mb-2 d-none underline">
             <span>
@@ -78,12 +64,17 @@
                   <thead class="custom-header">
                     <tr>
                       <th class="text-primary font-weight-bold" data-orderable="true">Property</th>
-                      <th class="text-primary font-weight-bold " data-orderable="false">RECEIVED</th>
+                      <th class="text-black font-weight-bold ">NO. INVS</th>
+
                       <th class="text-primary font-weight-bold " data-orderable="false">Add</th>
 
-                      <th class="text-black ">TOTAL</th>
-                      <th class="text-black ">RECEIVED</th>
-                      <th class="text-black ">BALANCE</th>
+                      <th class="text-black font-weight-bold ">NO. PAID</th>
+                      <th class="text-black font-weight-bold ">NO. UNPAID</th>
+                      <th class="text-black font-weight-bold ">%</th>
+                      
+                      <th class="text-black ">DUE</th>
+                      <th class="text-black ">PAID</th>
+                      <th class="text-black ">BAL</th>
                     </tr>
                   </thead>
     
@@ -96,18 +87,25 @@
                             <span id="{{item['identity']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis text-left no-wrap">{{item['name']}}</span>
                         </div>
                       </td>
-    
-    
-                      <td id="receivedinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
-    
-    
+     
+                      <td id="invinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
 
                       <td class="data-cell text-center">
                         <div>
                             <span id="{{item['propid']}}" type="button" class="btn btn-outline-primary font-weight-bold btn-sm ellipsis no-wrap" data-toggle="modal"
-                            data-target="#addPaymentModal2">add payment</span>
+                            data-target="#addPaymentModal2">
+                            <i class="feather-18 text-black mr-1 pb-1" data-feather="plus-circle"></i> add payment</span>
                         </div>
-                    </td>
+                      </td>
+
+                      <td id="tpaidinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
+                      <td id="tunpaidinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
+                      <td id="ratioinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
+
+    
+    
+
+
   
 
 
@@ -115,7 +113,7 @@
                       <td id="totalinfo-{{item['propid']}}" class="data-cell text-right text-black font-weight-bold"><div class="dot-elastic mt-2"></div></td>
                       <td id="paidinfo-{{item['propid']}}" class="data-cell text-right font-weight-bold"><div class="dot-elastic mt-2"></div></td>
                       <td id="balinfo-{{item['propid']}}" class="data-cell text-right font-weight-bold"><div class="dot-elastic mt-2"></div></td>
-    
+
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -124,8 +122,7 @@
               </div>
             
           </div>
-        </div>
-      </div>
+
     </section>
 
     <div class="modal fade" id="uploadPaymentsExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
@@ -793,7 +790,10 @@
           $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
           $("#activeprop-child").text($(this).text())
 
-          $("#preloader-btn-alt").click();
+          $("#dummyData").removeClass('dispnone');
+          $("#propdisp-content").addClass('dispnone');
+
+          // $("#preloader-btn-alt").click();
           // $("#spinner").removeClass("dispnone")
           $.ajax({
               url: "{{ url_for('api.fetchpayments') }}",
@@ -803,7 +803,11 @@
                     target:"new alt"
                   },
               success: function(response) {
-                $("#postloader-btn-alt").click();
+                // $("#postloader-btn-alt").click();
+                $("#dummyData").addClass('dispnone');
+                $("#propdisp-content").removeClass('dispnone');
+
+
                 $('#result-view').toggleClass("d-none");
                 $('#reportbtns').toggleClass("d-none");
                 $('#arr-view').toggleClass("d-none");
@@ -846,7 +850,11 @@
               propid: item
             },
         success: function(response) {
-          $("#receivedinfo-" + item ).text(response[11]);
+          $("#tpaidinfo-" + item ).text(response[11]);
+          $("#tunpaidinfo-" + item ).text(response[12]);
+          $("#ratioinfo-" + item ).text(response[13]);
+          $("#invinfo-" + item ).text(response[14]);
+
           $("#totalinfo-" + item ).text(response[8]);
           $("#paidinfo-" + item ).text(response[9]);
           $("#balinfo-" + item ).text(response[10]);
@@ -2234,7 +2242,9 @@ $("#void_ctob").on('click',function(){
 
 
 
-
+<script>
+  feather.replace();
+</script>
 
 
 

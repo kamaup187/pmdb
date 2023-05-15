@@ -8,20 +8,6 @@
 
       <span id="targeturl" class="dispnone"></span>
     
-      <div class="card mb-2 mt-1">
-    
-        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase text-110">Resident/Tenant Invoices <span id="activeprop"
-              class="text-primary ml-3"></span></span>
-          <div>
-            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
-              type="button">X</button>
-          </div>
-        </div>
-    
-        <div class="card-body flowing-body pt-2 pl-2">
-    
     
           <!-- <div id="reportbtns" class="row mb-3">
                 <div class="col-lg-12 center-btn">
@@ -200,9 +186,7 @@
               </div>
             
           </div>
-        </div>
 
-      </div>
       
     </section>
 
@@ -314,8 +298,11 @@
           $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
           $("#activeprop-child").text($(this).text())
 
-          $("#preloader-btn-alt").click();
+          // $("#preloader-btn-alt").click();
           // $("#spinner").removeClass("dispnone")
+
+          $("#dummyData").removeClass('dispnone');
+          $("#propdisp-content").addClass('dispnone');
 
 
           $.ajax({
@@ -327,7 +314,12 @@
             },
             success: function(response) {
               // $("#spinner").addClass("dispnone")
-              $("#postloader-btn-alt").click();
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").removeClass('dispnone');        
+
+              // $("#postloader-btn-alt").click();
+
               $('#result-view').toggleClass("d-none");
               $('#reportbtns').toggleClass("d-none");
               $('#arr-view').toggleClass("d-none");
@@ -574,31 +566,49 @@
             if (response == "completed"){
               clearInterval(billingpoll);
 
-              $("#barloader").removeClass("dispnone")
+
+              $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
+              $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+              $("#activeprop").empty();
+
+
+              $("#propdisp").removeClass("dispnone")
+              $("#body-block").addClass("dispnone")
+              $("#proplist").addClass("dispnone")
+              $("#searchresults").addClass("dispnone")
+
+
+              $("#dummyData").removeClass('dispnone');
+              $("#barloader-alt").removeClass("dispnone")
+
+              $('#propdisp-content').empty()
+              $("#searchresults").empty()
+
+
 
               url = "{{ url_for('api.bills') }}"
 
               $.ajax({
-                    type: "get",
-                    url: url,
-                    success: function(response) {
-                      // $("#postloader-btn").click();
-                      if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                            $('#sidebarToggle').click();
-                            $('#smaccordionSidebar').removeClass("toggled");
-                          }
-                        $('#content-area').addClass("isopen text-danger");
-                      $("#barloader").addClass("dispnone")
+                  type: "get",
+                  url: url,
+                  data: {
+                    target:"tenants"
+                  },
+                  success: function(response) {
+                      $("#barloader-alt").addClass("dispnone")
+                      $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
 
                       $('.modal-backdrop').removeClass('modal-backdrop');
                       $('body').removeClass('modal-open');
 
-                      $("#propdisp").html(response);
-                    }
-                });
+                      $("#dummyData").addClass('dispnone');
+                      $("#propdisp-content").html(response);
+                  }
+              });
 
-            }
-            else{
+            }else{
               console.log(response)
             }
           }

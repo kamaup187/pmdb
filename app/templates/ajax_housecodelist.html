@@ -1,23 +1,22 @@
 
-<div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Groups and rates:</div>
 <div class="col-lg-12 no-padding">
     <div id="reqdata" class="table-responsive">
-        <table id="tenantData" class="table shadow " width="100%" cellspacing="0">
-            <thead>
+        <table id="tenantData2" class="table shadow " width="100%" cellspacing="0">
+            <thead class="custom-header">
                 <tr>
                 <th class="text-info font-weight-bold">Group</th>
-                <th class="text-info track-title-cell">Rent</th>
-                <th class="text-info track-title-cell">Service</th>
-                <th class="text-info track-title-cell">Water(unit)</th>
-                <th class="text-info track-title-cell">Water(fixed)</th>
-                <th class="text-info track-title-cell">Sewerage(unit)</th>
+                <th class="text-black">Rent</th>
+                <th class="text-black">Service</th>
+                <th class="text-black">Water(unit)</th>
+                <th class="text-black">Water(fixed)</th>
+                <th class="text-black">Sewerage(unit)</th>
 
-                <th class="text-info track-title-cell">Garbage</th>
-                <th class="text-info track-title-cell">Security</th>
-                <th class="text-info track-title-cell">Fine%</th>
-                <th class="text-info track-title-cell">Deposit(w)</th>
-                <th class="text-info track-title-cell">Deposit(e)</th>
-                <th class="text-info track-title-cell">Action</th>
+                <th class="text-black">Garbage</th>
+                <th class="text-black">Security</th>
+                <th class="text-black">Fine%</th>
+                <th class="text-black">Deposit(w)</th>
+                <th class="text-black">Deposit(e)</th>
+                <th class="text-black">Action</th>
                 
                 </tr>
             </thead>
@@ -64,13 +63,22 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-      $('#tenantData').DataTable({
-        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-        "pageLength": 100,
-        "searching":false,
-        "bLengthChange": false
-      });
-      $('.dataTables_length').addClass('bs-select');
+
+      if ( $.fn.dataTable.isDataTable( '#tenantData2' ) ) {
+          table = $('#tenantData2').DataTable();
+          console.log("TABLE has loaded bwana")
+      }
+      else {
+          table = $('#tenantData2').DataTable( {
+            "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+            "pageLength": 100,
+            "searching":false,
+            "bLengthChange": false
+          } );
+          $('.dataTables_length').addClass('bs-select');
+
+      }
+
       });
 </script>
 

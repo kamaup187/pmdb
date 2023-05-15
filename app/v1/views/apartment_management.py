@@ -2265,13 +2265,28 @@ class PropertyManagement(Resource):
     """class"""
     @login_required
     def get(self):
+
         prop_id = request.args.get("propid")
         propid = get_identifier(prop_id)
 
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
         db.session.expire(prop_obj)
+
         period=get_billing_period(prop_obj)
         str_period=get_str_month(period.month)
+
+        if crm(current_user):
+            template = "ajax_prop_detail2.html"
+        elif erp(current_user):
+            template = "ajax_prop_detail_erp.html"
+        else:
+            template = "ajax_prop_detail.html"
+
+        return render_template(
+            template,
+            prop=prop_obj,
+            period=str_period,
+            )
 
         # house_list = prop_obj.houses
 
@@ -6489,6 +6504,7 @@ class UpdateTenant(Resource):
         if target == "nonselfupdate":
             tenantid = request.args.get("tenantid")
             identity = get_identifier(tenantid)
+
             if tenantid.startswith("pedit") or request.args.get("ttype") == "resident" or request.args.get("ttype") == "owner":
                 tenant = PermanentTenantOp.fetch_tenant_by_id(identity)
             else:

@@ -7370,9 +7370,10 @@ class FetchStatistics(Resource):
         unreceived = f'{len(payments) - payments.count("1")}'
 
         try:
-            cal = payments.count("1")/len(payments) * 0.01
+            cal = payments.count("1")/len(payments) * 100
             ratio = f'{cal:,.1f}%'
-        except:
+        except Exception as e:
+            print("Error in ratio calculation", str(e))
             ratio = "0.0%"
 
         num_units = len(tenantauto(prop.id))

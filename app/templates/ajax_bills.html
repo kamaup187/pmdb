@@ -300,7 +300,7 @@
 
           // $("#preloader-btn-alt").click();
           // $("#spinner").removeClass("dispnone")
-
+          $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
           $("#dummyData").removeClass('dispnone');
           $("#propdisp-content").addClass('dispnone');
 
@@ -314,7 +314,7 @@
             },
             success: function(response) {
               // $("#spinner").addClass("dispnone")
-
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
               $("#dummyData").addClass('dispnone');
               $("#propdisp-content").removeClass('dispnone');        
 

@@ -790,6 +790,7 @@
           $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
           $("#activeprop-child").text($(this).text())
 
+          $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
           $("#dummyData").removeClass('dispnone');
           $("#propdisp-content").addClass('dispnone');
 
@@ -804,6 +805,8 @@
                   },
               success: function(response) {
                 // $("#postloader-btn-alt").click();
+
+                $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
                 $("#dummyData").addClass('dispnone');
                 $("#propdisp-content").removeClass('dispnone');
 

@@ -164,6 +164,8 @@
 
             $("#dummyData").removeClass('dispnone');
             $("#propdisp-content").addClass('dispnone');
+            $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
 
             $.ajax({
                 type: "get",
@@ -174,6 +176,8 @@
                 success: function(response) {
                   $("#dummyData").addClass('dispnone');
                   $("#propdisp-content").removeClass('dispnone');
+                  $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
                   $("#result-view").addClass("dispnone");
                   $("#child-view").removeClass("dispnone")
 

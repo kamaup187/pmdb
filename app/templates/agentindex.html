@@ -40,10 +40,12 @@
 
 
   <!-- <link rel="stylesheet" href="../static/style.css"> -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink-uptodate.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom_spinner.css') }}">
+
 
   <style type="text/css" media="print">
 
@@ -130,6 +132,62 @@
     .dropdown-dr:hover .dropdown-content {
       display: block;
     }
+
+
+
+
+    /* .lloading {
+      --loading-grey: #353131;;
+      background-color: var(--loading-grey);
+      background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, .5) 50%,
+        rgba(255, 255, 255, 0) 60%
+      ) var(--loading-grey);
+      background-size: 200% 100%;
+      background-position-x: 180%;
+      animation: 1s loading ease-in-out infinite;
+    } */
+
+    .title-loading {
+      padding: 3px 4px;
+
+      border-radius: 6px;
+      animation-delay: .06s;
+
+      --loading-grey: #3f7a74;
+
+      background-color: var(--loading-grey);
+      background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, .5) 20%,
+        rgba(255, 255, 255, .0) 60%,
+        rgba(255, 255, 255, .5) 80%
+      ) var(--loading-grey);
+      background-size: 200% 100%;
+      background-position-x: 180%;
+      animation: 1s loading ease-in-out infinite;
+    }
+
+    @keyframes loading {
+      to {
+        background-position-x: -20%;
+      }
+    }
+
+    .title-loaded{
+      padding: 3px 4px;
+
+      border-radius: 6px;
+      
+      background: linear-gradient(10deg,#f1f5f5,#ddefed,#f8f9f9 );
+
+    }
+
+
+
+
     </style>
 
 <script src="{{ url_for('static', filename='js/timepicker.js') }}"></script>
@@ -775,7 +833,7 @@
 
         <div class="row mobile-malaysian fixed-bar noprint">
 
-          <div class="col-xl-12 p-0 mobile-malaysian">
+          <div class="col-xl-12 pl-2 pr-2 pt-0 pb-0 rounded mobile-malaysian">
             <div class="card shadow h-0 py-0">
               <div class="card-body bg-white report-card-padding">
                     <div class="divjust-end center-btn">
@@ -1116,7 +1174,72 @@
 
 
           <div id="searchresults" class="dispnone"></div>
-          <div id="propdisp" class="dispnone"></div>
+          <div id="propdisp" class="dispnone">
+
+
+
+
+
+            <section class="contact_area section_gap">
+   
+              <div class="card mb-2 mt-1">
+            
+                <div class="card-header pt-2 pb-2 divjust-end fixed-headerr dispnon bg-white">
+                  <span id="title-loader" class="smallify text-black font-weight-bold text-uppercase text-110 title-loaded"><span id="maintitle"></span> <span id="activeprop" class="text-primary ml-3"></span></span>
+                  <div>
+                    <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
+                      type="button">X</button>
+                  </div>
+                </div>
+
+
+                <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+                  <div class="bar-alt"></div>
+                  <div class="bar-alt"></div>
+                  <div class="bar-alt"></div>
+                </div>
+                
+            
+                    <div id="dummy-loader" class="table-responsive">
+                      <table id="dummyData" class="table shadow mb-1  table-loader" width="100%" cellspacing="0">
+                          <thead>
+                              <tr>
+                                  <th class="text-black font-weight-bold pl-0">Property</th>
+                                  <th class="text-black font-weight-bold">Units</th>
+                                  <th class="text-black font-weight-bold">Clients</th>
+          
+                                  <th class="text-black font-weight-bold ">Available</th>
+                                  <th class="text-black font-weight-bold ">Booked</th>
+                                  <th class="text-black font-weight-bold ">Sold</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for item in items%}
+                              <tr>
+                      
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                    </div>
+
+                  <div id="propdisp-content" class="card-body flowing-body pt-2 pl-2"></div>
+
+              </div>
+            </section>
+          
+          
+           
+            
+            
+            
+
+
+
+
+
+
+          </div>
           
           <div id="proplist" class="dispnone">
             <div class="divjust-end underline-thin">
@@ -2843,6 +2966,38 @@
     feather.replace()
   </script>
 
+
+
+
+<script>
+          
+  $("#close-propdisp").on('click', function () {
+    $('#body-block').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+    // $('#content-area').removeClass("isopen text-danger");
+    // $('#list-area').removeClass("isopen text-danger");
+    $('#sidebarToggle').click();
+    $('#smaccordionSidebar').removeClass("toggled");
+    $(".fixloader").html(
+              '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
+          );
+          $(".fixloader2").html(
+              '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
+          );
+    // setTimeout(getPropStats, 1000);
+
+    $("#dummyData").removeClass('dispnone');
+    $('#propdisp-content').empty()
+
+
+  });
+</script>
+
+
+
+
+
+
 <script>
   const para1 = document.getElementById("rolling");
     
@@ -4039,38 +4194,101 @@ function badSnack() {
 <script>
   $(".propbtn").on('click',function(){
       // $("#body-block").addClass("dispnone")
-      // $("#preloader-btn").click();
-      $("#barloader").removeClass("dispnone")
+      // $("#barloader").removeClass("dispnone")
+
+      // url = "{{ url_for('api.allproperties') }}"
+
+      // $.ajax({
+      //     type: "get",
+      //     url: url,
+      //     success: function(response) {
+      //         if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+      //             $('#sidebarToggle').click();
+      //             $('#smaccordionSidebar').removeClass("toggled");
+      //           }
+      //         $('#content-area').addClass("isopen text-danger");
+      //         // $("#postloader-btn").click();
+      //         $("#barloader").addClass("dispnone")
+      //         $("#body-block").addClass("dispnone")
+      //         $("#propdisp").removeClass("dispnone")
+      //         $("#proplist").addClass("dispnone")
+      //         $("#searchresults").html("empty")
+      //         $("#searchresults").addClass("dispnone")
+      //         $("#propdisp").html(response);
+      //     }
+      // });
+
+      $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> PROPERTY LISTING'); feather.replace();
+      $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+      $("#activeprop").empty();
+
+
+      $("#propdisp").removeClass("dispnone")
+      $("#body-block").addClass("dispnone")
+      $("#proplist").addClass("dispnone")
+      $("#searchresults").addClass("dispnone")
+
+
+      $("#dummyData").removeClass('dispnone');
+      $("#barloader-alt").removeClass("dispnone")
+
+      $('#propdisp-content').empty()
+      $("#searchresults").empty()
+
+
 
       url = "{{ url_for('api.allproperties') }}"
 
       $.ajax({
           type: "get",
           url: url,
+          data: {
+            target:""
+          },
           success: function(response) {
-              if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                  $('#sidebarToggle').click();
-                  $('#smaccordionSidebar').removeClass("toggled");
-                }
-              $('#content-area').addClass("isopen text-danger");
-              // $("#postloader-btn").click();
-              $("#barloader").addClass("dispnone")
-              $("#body-block").addClass("dispnone")
-              $("#propdisp").removeClass("dispnone")
-              $("#proplist").addClass("dispnone")
-              $("#searchresults").html("empty")
-              $("#searchresults").addClass("dispnone")
-              $("#propdisp").html(response);
+              $("#barloader-alt").addClass("dispnone")
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").html(response);
           }
       });
+
+
+
+
+
   });
+
+
+  
 </script>
 
 <script>
   $(".tenantbtn").on('click',function(){
-      // $("#body-block").addClass("dispnone")
-      // $("#preloader-btn").click();
-      $("#barloader").removeClass("dispnone")
+
+      $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="users"></i> RESIDENT/TENANT LISTING'); feather.replace();
+      $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+      $("#activeprop").empty();
+
+
+      $("#propdisp").removeClass("dispnone")
+      $("#body-block").addClass("dispnone")
+      $("#proplist").addClass("dispnone")
+      $("#searchresults").addClass("dispnone")
+
+
+      $("#dummyData").removeClass('dispnone');
+      $("#barloader-alt").removeClass("dispnone")
+
+      $('#propdisp-content').empty()
+      $("#searchresults").empty()
+
+
 
       url = "{{ url_for('api.allproperties') }}"
 
@@ -4081,19 +4299,11 @@ function badSnack() {
             target:"tenants"
           },
           success: function(response) {
-              // if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-              //     $('#sidebarToggle').click();
-              //     $('#smaccordionSidebar').removeClass("toggled");
-              //   }
-              // $('#content-area').addClass("isopen text-danger");
-              // $("#postloader-btn").click();
-              $("#barloader").addClass("dispnone")
-              $("#body-block").addClass("dispnone")
-              $("#propdisp").removeClass("dispnone")
-              $("#proplist").addClass("dispnone")
-              $("#searchresults").html("empty")
-              $("#searchresults").addClass("dispnone")
-              $("#propdisp").html(response);
+              $("#barloader-alt").addClass("dispnone")
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").html(response);
           }
       });
   });
@@ -4160,7 +4370,7 @@ function badSnack() {
 </script>
 
 <script>
-  $(".housebtn").on('click',function(){
+  $(".housebtnn").on('click',function(){
     $("#barloader").removeClass("dispnone")
     setTimeout(function(){
       $("#barloader").addClass("dispnone")
@@ -4178,6 +4388,72 @@ function badSnack() {
     $("#searchresults").html("empty")
     $("#searchresults").addClass("dispnone")
 });
+
+
+
+
+$(".housebtn").on('click',function(){
+      // $("#body-block").addClass("dispnone")
+      // $("#preloader-btn").click();
+      // $("#barloader").removeClass("dispnone")
+
+      $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="home"></i> UNIT/HOUSE LISTING');feather.replace();
+      $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+      $("#activeprop").empty();
+
+
+      $("#propdisp").removeClass("dispnone")
+      $("#body-block").addClass("dispnone")
+      $("#proplist").addClass("dispnone")
+      $("#searchresults").addClass("dispnone")
+
+
+      $("#dummyData").removeClass('dispnone');
+      $("#barloader-alt").removeClass("dispnone")
+
+      $('#propdisp-content').empty()
+      $("#searchresults").empty()
+
+
+
+      url = "{{ url_for('api.allproperties') }}"
+
+      $.ajax({
+          type: "get",
+          url: url,
+          data: {
+            target:"units"
+          },
+          success: function(response) {
+              // if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
+              //     $('#sidebarToggle').click();
+              //     $('#smaccordionSidebar').removeClass("toggled");
+              //   }
+              // $('#content-area').addClass("isopen text-danger");
+              // $("#postloader-btn").click();
+              // $("#barloader").addClass("dispnone")
+              $("#barloader-alt").addClass("dispnone")
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+
+              // $("#body-block").addClass("dispnone")
+              // $("#propdisp").removeClass("dispnone")
+              // $("#proplist").addClass("dispnone")
+              // $("#searchresults").html("empty")
+              // $("#searchresults").addClass("dispnone")
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").html(response);
+          }
+      });
+  });
+
+
+
+
+
 
 $(".paybtn").on('click',function(){
   $("#barloader").removeClass("dispnone")
@@ -4217,7 +4493,7 @@ $(".paybtn").on('click',function(){
 //     $("#searchresults").addClass("dispnone")
 // });
 
-$(".billbtn").on('click',function(){
+$(".billbtnn").on('click',function(){
     // $("#body-block").addClass("dispnone")
     // $("#preloader-btn").click();
     $("#barloader").removeClass("dispnone")
@@ -4245,7 +4521,49 @@ $(".billbtn").on('click',function(){
       });
 });
 
-$(".paybtn2").on('click',function(){
+
+  $(".billbtn").on('click',function(){
+
+  $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
+  $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+  $("#activeprop").empty();
+
+
+  $("#propdisp").removeClass("dispnone")
+  $("#body-block").addClass("dispnone")
+  $("#proplist").addClass("dispnone")
+  $("#searchresults").addClass("dispnone")
+
+
+  $("#dummyData").removeClass('dispnone');
+  $("#barloader-alt").removeClass("dispnone")
+
+  $('#propdisp-content').empty()
+  $("#searchresults").empty()
+
+
+
+  url = "{{ url_for('api.bills') }}"
+
+  $.ajax({
+      type: "get",
+      url: url,
+      data: {
+        target:"tenants"
+      },
+      success: function(response) {
+          $("#barloader-alt").addClass("dispnone")
+          $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+          $("#dummyData").addClass('dispnone');
+          $("#propdisp-content").html(response);
+      }
+  });
+  });
+
+$(".paybtn22").on('click',function(){
     // $("#body-block").addClass("dispnone")
     // $("#preloader-btn").click();
     $("#barloader").removeClass("dispnone")
@@ -4271,6 +4589,48 @@ $(".paybtn2").on('click',function(){
             $("#propdisp").html(response);
           }
       });
+});
+
+
+$(".paybtn2").on('click',function(){
+
+$("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="dollar-sign"></i> RESIDENT/TENANT PAYMENTS'); feather.replace();
+$("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+$("#activeprop").empty();
+
+
+$("#propdisp").removeClass("dispnone")
+$("#body-block").addClass("dispnone")
+$("#proplist").addClass("dispnone")
+$("#searchresults").addClass("dispnone")
+
+
+$("#dummyData").removeClass('dispnone');
+$("#barloader-alt").removeClass("dispnone")
+
+$('#propdisp-content').empty()
+$("#searchresults").empty()
+
+
+
+url = "{{ url_for('api.payments') }}"
+
+$.ajax({
+    type: "get",
+    url: url,
+    data: {
+      target:"tenants"
+    },
+    success: function(response) {
+        $("#barloader-alt").addClass("dispnone")
+        $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+        $("#dummyData").addClass('dispnone');
+        $("#propdisp-content").html(response);
+    }
+});
 });
 
   $(".meterbtn").on('click',function(){

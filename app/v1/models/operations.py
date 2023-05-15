@@ -1406,9 +1406,11 @@ class HouseOp(House,Base):
         if self.servicetarget:
             if self.servicetarget == "owner":
                 badge = "badge-danger bg-danger"
+                target = "WN"
             else:
+                target = "TNT"
                 badge = "badge-primary bg-primary"
-            return f'<span class="badge {badge} badge-counter">{self.servicetarget}</span> {decor_fig} '
+            return f'<span class="badge {badge} badge-counter">{target}</span> {decor_fig} '
         else:
             return decor_fig
 
@@ -1423,9 +1425,11 @@ class HouseOp(House,Base):
         if self.watertarget:
             if self.watertarget == "tenant":
                 badge = "badge-primary bg-primary"
+                target = "TNT"
             else:
+                target = "WN"
                 badge = "badge-danger bg-danger"
-            return f'<span class="badge {badge} badge-counter">{self.watertarget}</span> {decor_fig}'
+            return f'<span class="badge {badge} badge-counter">{target}</span> {decor_fig}'
         else:
             return decor_fig
 
@@ -2162,7 +2166,10 @@ class PermanentTenantOp(PermanentTenant,Base):
             else:
                 self.phone = phone
         if uid:
-            self.uid = uid
+            if uid == "None":
+                self.uid = None
+            else:
+                self.uid = uid
         if email:
             if email == "null":
                 self.email = None
@@ -2559,7 +2566,10 @@ class TenantOp(Tenant,Base):
         if national_id:
             self.national_id = national_id
         if uid:
-            self.uid = uid
+            if uid == "None":
+                self.uid = None
+            else:
+                self.uid = uid
         if arr:
             self.initial_arrears = arr
         # else:
@@ -2674,8 +2684,6 @@ class TenantOp(Tenant,Base):
 
         time_with_s =  f'{date.strftime("%d/%b/%y")} {date.strftime("%H:%M")}'
 
-        print("check this out",datetime.datetime.now())
-
         return time_with_s
 
     def check_out_date(self):
@@ -2703,7 +2711,7 @@ class TenantOp(Tenant,Base):
         return date
     
     def get_status(self):
-        print(">>>>>>>",self.accepted_terms)
+        # print(">>>>>>>",self.accepted_terms)
         if self.accepted_terms:
             return '<span class="badge badge-success badge-counter">Accepted</span>'
         else:
@@ -2736,7 +2744,7 @@ class TenantOp(Tenant,Base):
         if not self.uid:
             return f"TNT{self.id}"
         else:
-            return f"{self.uid}/TNT{self.id}"
+            return f"{self.uid}"
 
     def get_deposit(alloc):
         try:

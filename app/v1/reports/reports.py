@@ -7265,7 +7265,7 @@ class FetchTenancy(Resource):
 
         res = get_tenancy(prop)
 
-        return [res[0],res[1],res[2],res[3],res[4]]
+        return [res[0],res[1],res[2],res[3],res[4],res[6]]
 
 
 class FetchStatistics(Resource):
@@ -7364,9 +7364,16 @@ class FetchStatistics(Resource):
 
         sms = f'{numerator}/{len(smsstatus)}'
 
+        invs = len(filtered_bills)
 
-        received = f'{payments.count("1")}/{len(payments)}'
+        received = f'{payments.count("1")}'
+        unreceived = f'{len(payments) - payments.count("1")}'
 
+        try:
+            cal = payments.count("1")/len(payments) * 0.01
+            ratio = f'{cal:,.1f}%'
+        except:
+            ratio = "0.0%"
 
         num_units = len(tenantauto(prop.id))
         ptnts = len(prop.ptenants)
@@ -7409,13 +7416,14 @@ class FetchStatistics(Resource):
         sms = sms
         
 
-        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received]
+        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received,unreceived,ratio,invs]
 
 
 class FetchHouses(Resource):
     @timer
     @login_required
     def get(self):
+        
         prop_id = request.args.get('propid')
         propid = get_identifier(prop_id)
 

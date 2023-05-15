@@ -14,7 +14,7 @@
                         <div class="gx-3 mb-3">
                             <!-- Form Group (first name)-->
                             <label class="small mb-1" for="groupName">Group name (rent amount or letters
-                                A,B,C...<span class="text-danger">*</span></label>
+                                A,B,C...)<span class="text-danger">*</span></label>
                             <input class="form-control" id="groupName" type="text"
                                 placeholder="Provide a name for the group" value="{{group.codename}}" />
 
@@ -359,15 +359,8 @@
             //   $('#submitgroup').addClass('btn-secondary')
             }, 2500);
             
-            $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
-                
-                $("#result-view").html(response);
-              }
-            });
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
         }
         });
         

@@ -8,6 +8,7 @@
       <span id="del_house_identifier" class="dispnone"></span>
       <span id="group_identifier" class="dispnone"></span>
       <span id="del_group_identifier" class="dispnone"></span>
+      
       <a id="download_groups" href="/download/template/groups" class="dispnone">download</a>
       <a id="download_units" href="/download/template/houses" class="dispnone">download</a>
     
@@ -27,37 +28,37 @@
               </div>
             </div> -->
 
-    
-      <div class="card mb-2 mt-1">
-    
-        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase text-110">Houses/Units <span id="activeprop" class="text-primary ml-3"></span></span>
-          <div>
-            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
-              type="button">X</button>
-          </div>
-        </div>
-    
-        <div class="card-body flowing-body pt-2 pl-2">
+
+
+
+
 
           <div class="pb-2 bg-white divjust-end">
+
+            <div>
+              <span id="backbtn" class="btn btn-sm btn-light text-black">
+                <!-- <i class="me-1" data-feather="user-plus"></i> -->
+                <i class="fas fa-long-arrow-alt-left"></i>
+                Back to properties
+              </span>
+
+            </div>
 
             <div class="">
   
               <span class="btn btn-sm btn-light text-black mobile-malaysian" data-toggle="modal" data-target="#exampleModal">
                 <i class="fas fa-folder-plus"></i>
-                Upload apartment photo
+                Upload photo
               </span>
   
               <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#groupModal">
                 <i class="fas fa-plus"></i>
-                Add group
+                Add category
               </span>
 
               <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#newHouseModal">
                 <i class="fas fa-plus"></i>
-                Add house
+                Add unit / house
               </span>
             </div>
   
@@ -93,9 +94,22 @@
             </div>
   
           </div> 
+
+
+          <div class="dispnon">
+            <nav class="nav nav-borders">
+              <!-- <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
+              <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
+              <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a> -->
+              <div>
+                <label class="me-2 btn text-primary underline"><input type="checkbox" value="cb1" class="chb dispnone" checked/>house view</label>
+                <label class="me-2 btn text-primary"><input type="checkbox" value="cb2" class="chb dispnone"/>category view</label>
+              </div>
+            </nav>
+          </div>
     
     
-          <div class="toggleswitch divbg text-info underline font-weight-bold">
+          <div class="toggleswitch divbg text-info underline font-weight-bold dispnone">
             <span class="dispnone">
               <span class="smallify">Tenants</span>
               <label class="switch">
@@ -117,8 +131,8 @@
             </span>
     
           </div>
-          <div id="result-view" class="row">
-            <div class="col-lg-12 no-padding">
+
+            <!-- <div class="col-lg-12 no-padding">
               <div id="reqdata" class="table-responsive">
                 <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
                   <thead>
@@ -166,22 +180,6 @@
                             aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header underline">House: <span
                                 class="text-info font-weight-bold">{{i['house']}}</span></div>
-    
-                            <!-- <div>
-                              <i class="fas fa-random ml-3 mr-2 text-success"></i><span id="{{i['id']}}" type="button"
-                                class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal"
-                                data-target="#updateHouseModal">ChangeGroup</span>
-                            </div>
-                            <div>
-                              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{i['editid']}}" type="button"
-                                class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal"
-                                data-target="#editHouseModal">Edit house</span>
-                            </div>
-                            <div>
-                              <i class="fas fa-trash-alt ml-3 mr-2 text-info"></i><span id="{{i['delid']}}" type="button"
-                                class="btn-outline-danger ellipsis borderless modalTrigger" data-toggle="modal"
-                                data-target="#deleteHouseModal">Remove</span>
-                            </div> -->
 
                             <div class="text-center">
                               <button id="{{i['id']}}" type="button" class="btn btn-sm btn-outline-primary ellipsis borderless text-left" data-toggle="modal" data-target="#updateHouseModal"><i class="fas fa-random"></i> ChangeGroup</span>
@@ -202,10 +200,20 @@
                   </tbody>
                 </table>
               </div>
+            </div> -->
+
+
+            <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+              <div class="bar-alt"></div>
+              <div class="bar-alt"></div>
+              <div class="bar-alt"></div>
             </div>
-          </div>
-        </div>
-      </div>
+            
+            <div id="child-result-view" class="row">
+        
+            </div>
+          
+
     </section>
     <!--================Contact Area =================-->
 
@@ -756,6 +764,115 @@
 
 
 <script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
+</script>
+
+
+
+<script>
+  function getUnits(propid, target, page) {
+    // showSpin();
+    spinOnChildView();
+    $("#barloader-alt").removeClass("dispnone")
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.fetchhouses') }}",
+      type: "get",
+      start_time: new Date().getTime(),
+      data: { 
+        propid:propid,
+        target:target,
+        page:page
+       },
+      success: function (response) {
+        $("#barloader-alt").addClass("dispnone")
+        spinOffChildView()
+
+        $("#child-result-view").html(response);
+      },
+      complete: function(data) {
+        $("#domtimeload").text((new Date().getTime() - this.start_time));
+      }
+    });
+  }
+
+  function getRates(propid, target, page) {
+    // showSpin();
+    spinOnChildView();
+
+    console.log("rates are getting fetched")
+
+
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.fetchrates') }}",
+      type: "get",
+      data: { 
+        propid:propid,
+        target:target,
+        page:page
+       },
+      success: function (response) {
+
+        $("#child-result-view").html(response);
+        console.log("rates have been fetched")
+
+        spinOffChildView()
+      }
+    });
+  }
+</script>
+
+
+<script type="text/javascript">
+  getUnits($("#prop_identifier").text(), "", 1)
+
+
+  $.fn.getLabels = function() {
+    return this.map(function() {
+        var labels = $(this).parents('label');
+        if (this.id) {
+            labels.add('label[for="' + this.id + '"]');
+        }
+        return labels.get();
+    });
+  };
+
+  $(".chb").change(function (e) {
+        $(".chb").getLabels().removeClass("underline");
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).getLabels().addClass("underline");
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "cb1"){
+            $(this).getLabels().addClass("underline");
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+          }else{
+            $(this).getLabels().addClass("underline");
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+          }
+        }
+
+      });
+
+</script>
+
+
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $('#tenantData').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
@@ -767,7 +884,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
 
@@ -779,7 +896,7 @@
     });
 </script>
 
-<script>
+<!-- <script>
   var rawIds = "{{ houseids|safe }}";
   var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
   console.log(ids)
@@ -799,80 +916,8 @@
       }
     });
   });
-</script>
+</script> -->
 
-
-
-<script>
-  
-  $("#reporttoggle").on('change',function(){
-    $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-    var cb = document.getElementById("reporttoggle");
-    if (cb.checked){
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-  
-  });
-  
-  $("#reporttoggle2").on('change',function(){
-    $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-    var cb2 = document.getElementById("reporttoggle2");
-    if (cb2.checked){
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-
-      $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-  
-  });
-
-  
-  $("#reporttoggle3").on('change',function(){
-    $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-    var cb3 = document.getElementById("reporttoggle3");
-    if (cb3.checked){
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-
-      $.ajax({
-                url: "{{ url_for('api.fetchrates') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
-    }
-
-  });
-
-</script>
 
 
 <script>
@@ -947,53 +992,6 @@
     });
     </script> -->
 
-<script>
-  $("#addhousecode").click(function(){   
-    $("#addhousecode").html("saving...")  
-      $.ajax({
-        url: "{{ url_for('api.createhousecode') }}",
-        type: "POST",
-        data: {
-                propid: $("#prop_identifier").text(),
-                housecode: $("#groupName").val(),
-                rentrate: $("#rentrate").val(),
-                waterrate: $("#waterrate").val(),
-                unitrate: $("#unitrate").val(),
-                elecunitrate: $("#elecunitrate").val(),
-                garbagerate: $("#garbagerate").val(),
-                securityrate: $("#securityrate").val(),
-                servicerate: $("#servicerate").val(),
-                waterdep: $("#waterdep").val(),
-                elecdep: $("#elecdep").val(),
-                finerate: $("#finerate").val()
-            },
-        success: function(response) {
-          $(".alert-msgs").html(response);
-
-
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
-                
-                $("#result-view").html(response);
-              }
-            });
-          
-          setTimeout(function(){
-            $(".alert-msgs").empty();
-            $(".reset").click();
-            $("#notifications").empty();
-            $('#addhousecode').attr('disabled', 'disabled');
-            $('#addhousecode').removeClass('btn-success')
-            $('#addhousecode').addClass('btn-secondary')
-            $("#addhousecode").html("submit")
-          }, 2000);
-        }
-      });
-  });
-</script>
 
 <script>
       
@@ -1062,17 +1060,8 @@
                 $(".closemodal").click();
               },3000)
 
-              setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchrates') }}",
-                  type: "get",
-                  data: {propid:  $("#prop_identifier").text()},
-                  success: function(response) {
-                    
-                    $("#result-view").html(response);
-                  }
-                });
-              },5000);
+              getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
 
           },
           error:function(){
@@ -1117,15 +1106,8 @@
         success: function(response) {
           $(".alert-msgs").html(response);
 
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
-                
-                $("#result-view").html(response);
-              }
-            });
+          getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1150,25 +1132,16 @@
             target:"delete"
           },
       success: function(response) {
-        // $(".payment-info").html(response);  
+        // $(".payment-info").html(response);
+
+        snack(response);
+        getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
         
         setTimeout(function(){
           $('#del_house').html('Delete');
           $(".closemodal").click();
             }, 1500);
-        setTimeout(function(){
 
-          $.ajax({
-              url: "{{ url_for('api.fetchhouses') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
-                
-                $("#result-view").html(response);
-              }
-            });
-
-            }, 3000);  
         
       }
     });
@@ -1194,19 +1167,8 @@
           $('#del_group').html('Delete');
           $(".closemodal").click();
             }, 1500);
-        setTimeout(function(){
-
-          $.ajax({
-              url: "{{ url_for('api.fetchrates') }}",
-              type: "get",
-              data: {propid:  $("#prop_identifier").text()},
-              success: function(response) {
-                
-                $("#result-view").html(response);
-              }
-            });
-
-            }, 3000);  
+        getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+ 
         
       }
     });
@@ -1416,15 +1378,18 @@
         success: function(response) {
           $(".alert-msgs").html(response);
 
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
+          snack(response);
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchhouses') }}",
+          //       type: "get",
+          //       data: {propid:  $("#prop_identifier").text()},
+          //       success: function(response) {
                   
-                  $("#result-view").html(response);
-                }
-              });
+          //         $("#result-view").html(response);
+          //       }
+          //     });
           
           setTimeout(function(){
             $(".alert-msgs").empty();
@@ -1513,8 +1478,10 @@
                 target:"edit house group"
             },
         success: function(response) {
-          $(".alert-msgs").html(response);
-          
+
+          snack(response);
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
           setTimeout(function(){
             $(".alert-msgs").empty();
             $(".reset").click();
@@ -1522,15 +1489,7 @@
             $('#updatehouse').attr('disabled', 'disabled');
             $("#updatehouse").html("Update")
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
+
         }
       });
   });
@@ -1554,8 +1513,10 @@
                 target:"edit house detail"
             },
         success: function(response) {
-          $(".alert-msgs").html(response);
-          
+
+          snack(response);
+          getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
           setTimeout(function(){
             $(".alert-msgs").empty();
             $(".reset").click();
@@ -1563,15 +1524,7 @@
             // $('#edithouse').attr('disabled', 'disabled');
             $("#edithouse").html("Update")
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchhouses') }}",
-                type: "get",
-                data: {propid:  $("#prop_identifier").text()},
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
+
         }
       });
   });

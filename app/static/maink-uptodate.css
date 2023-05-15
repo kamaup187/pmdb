@@ -125,14 +125,10 @@ table tr.odd {
   border-radius: 6px;
   padding: 16px;
 
-  /* position: fixed;
-  left: 50%;
-  top: 100px; */
   
   position: absolute;
   top: 100px;
 
-  /* top: calc(50% - 20px); */
   left: calc(50% - 20px);
 
   z-index: 9999999999999 !important;
@@ -1702,7 +1698,9 @@ clear: both;
     /* background-color: #333 !important; */
     position: fixed !important;
     /* top: 0 !important; */
-    margin-top: 73px !important;
+    /* margin-top: 73px !important; */
+    margin-top: 63px !important;
+
     margin-left: 0px !important;
     width: 100% !important;
     z-index: 10;

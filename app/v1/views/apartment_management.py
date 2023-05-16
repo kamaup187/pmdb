@@ -7484,8 +7484,10 @@ class CaptureReading(Resource):
 
     def post(self):
 
-        apartment_id = request.form.get('propid')
+        prop_id = request.form.get('propid')
         target = request.form.get('target')
+
+        apartment_id = get_identifier(prop_id)
 
         billing_period = get_billing_period(ApartmentOp.fetch_apartment_by_id(apartment_id))
         
@@ -7858,7 +7860,7 @@ class EditReading(Resource):
 
         else:
             if not reading_obj.charged:
-                msg = "Failed to update units, edit readings readings instead"
+                msg = "Failed to update units, edit readings instead"
                 return render_template("ajaxghosthouse.html",alert=msg)
             else:
                 try:

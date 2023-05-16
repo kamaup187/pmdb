@@ -7238,7 +7238,7 @@ class FetchReadings(Resource):
         
         billing_period = get_billing_period(prop_obj)
         
-        if target == "old":
+        if target == "old" or target == "current": #REFACTOR: should BE CURRENT AND NEXT BLOCK "NEXT"
             next_billing_month = billing_period.month
             str_month = get_str_month(next_billing_month)
             readings = readingsauto(billing_period,prop_obj)
@@ -7267,6 +7267,30 @@ class FetchTenancy(Resource):
 
         return [res[0],res[1],res[2],res[3],res[4],res[6]]
 
+class ReadingStats(Resource):
+    def get(self):
+
+        prop_id = request.args.get("propid")
+        propid = get_identifier(prop_id)
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        db.session.expire(prop_obj)
+        billing_period = get_billing_period(ApartmentOp.fetch_apartment_by_id(propid))
+        readperiod = request.args.get('readperiod')
+
+        if readperiod == "current":
+            readdate = billing_period
+        else:
+            readdate = billing_period
+            # readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
+
+        houses = prop_obj.houses
+        
+        unread_units = len(filtered_house_list(propid,readdate))
+        metered_units = len(filter_in_metered_houses(prop_obj.name))
+        read_units = metered_units - unread_units
+
+        return [len(houses),metered_units,read_units,unread_units,"-",readdate.month]
+    
 
 class FetchStatistics(Resource):
     def get(self):

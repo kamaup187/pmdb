@@ -4633,7 +4633,7 @@ $.ajax({
 });
 });
 
-  $(".meterbtn").on('click',function(){
+  $(".meterbtnn").on('click',function(){
     $("#barloader").removeClass("dispnone")
     setTimeout(function(){
       $("#barloader").addClass("dispnone")
@@ -4650,6 +4650,48 @@ $.ajax({
     $("#proplist").removeClass("dispnone")
     $("#searchresults").html("empty")
     $("#searchresults").addClass("dispnone")
+});
+
+
+$(".meterbtn").on('click',function(){
+
+$("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="thermometer"></i> METER READINGS'); feather.replace();
+$("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+$("#activeprop").empty();
+
+
+$("#propdisp").removeClass("dispnone")
+$("#body-block").addClass("dispnone")
+$("#proplist").addClass("dispnone")
+$("#searchresults").addClass("dispnone")
+
+
+$("#dummyData").removeClass('dispnone');
+$("#barloader-alt").removeClass("dispnone")
+
+$('#propdisp-content').empty()
+$("#searchresults").empty()
+
+
+
+url = "{{ url_for('api.allproperties') }}"
+
+$.ajax({
+    type: "get",
+    url: url,
+    data: {
+      target:"meters"
+    },
+    success: function(response) {
+        $("#barloader-alt").addClass("dispnone")
+        $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+        $("#dummyData").addClass('dispnone');
+        $("#propdisp-content").html(response);
+    }
+});
 });
 
 $(".expensebtn").on('click',function(){

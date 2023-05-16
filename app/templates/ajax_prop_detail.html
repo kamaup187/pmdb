@@ -33,7 +33,7 @@
 
 
 
-          <div class="pb-2 bg-white divjust-end">
+          <div class="pb-2 bg-white divjust-end underline-thin-fade">
 
             <div>
               <span id="backbtn" class="btn btn-sm btn-light text-black">
@@ -1245,7 +1245,7 @@
                   data: {propid:  $("#prop_identifier").text()},
                   success: function(response) {
                     
-                    $("#result-view").html(response);
+                    $("#child-result-view").html(response);
                   }
                 });
               },5000);

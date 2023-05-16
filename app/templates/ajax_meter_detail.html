@@ -15,42 +15,56 @@
 
 
 
-        <div class="">
-            <div class="divjust-end mb-2 underline-thin">
-              
-              <i class="fa fa-building fa-2x text-info"></i>
-              <div class="center-btn font-weight-bold text-success mb-2 text-xx">Meters & Reading</div>
-              <i id="close-propdisp" class="fa fa-2x fa-times text-danger"></i>
-             
-            </div>
+
+        <div class="pb-2 bg-white divjust-end underline-thin-fade">
+
+          <div>
+            <span id="backbtn" class="btn btn-sm btn-light text-black">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-long-arrow-alt-left"></i>
+              Back to properties
+            </span>
+
+          </div>
+
+          <div class="">
+
+            <span class="btn btn-sm btn-light text-black mobile-malaysian" data-toggle="modal" data-target="#manualBillingModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="upload"></i>
+              Upload data
+            </span>
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#meterReadingModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="plus-circle"></i>
+              Add reading
+            </span>
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#newMeterModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="plus-circle"></i>
+              Add meter
+            </span>
+          </div>
+
+          <div class="small">
+            <nav class="nav nav-borders">
+              <div class="info_item mr-2">
+                <i class="fas fa-map-marker mr-2"></i>
+                <input class="periods" id="period1" name="readperiod" type="radio" value="current" checked/>
+                <label class="small font-weight-bold mb-1 text-danger" for="period1">Current Period <span class="text-black">({{current_month}})</span></label>
+              </div> 
+            </nav>
+
+            <nav class="nav nav-borders">
+              <div class="info_item mr-2">
+                <i class="fas fa-receipt mr-2"></i>
+                <input class="periods" id="period2" name="readperiod" type="radio" value="next"/>
+                <label class="mb-1 small font-weight-bold text-danger" for="period2">Next period <span class="text-black">({{period}})</span></label>
+              </div>
+            </nav>
+          </div>
+        </div> 
             
             <div class="row">
-                <div class="col-lg-2">
-                    <div class="">
-                        <div class="text-xx mb-2 center-btn text-info font-weight-bold">{{prop.name}}</div>
-
-                        <div class="mb-3 center-btn">
-                          
-                          <button type="button" class="borderless modalTrigger small btn-light" data-toggle="modal" data-target="#exampleModal"><span class="fixed-width-prop"><img src="{{ prop.image_url }}" alt="No image"/></span></button>
-                          
-                        </div>
-  
-                    </div>
-                </div>
-
-                <div class="col-lg-4 text-info">
-                  <div class="info-item">
-                    <button type="button" class="borderless btn-success fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#meterReadingModal"><i class="fas fa-pen ml-4"></i><span class="mr-4">Readings input</span></button>
-                  </div>
-                  <div class="info_item">
-                    <button type="button" class="borderless btn-info fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#manualBillingModal"><i class="fas fa-upload ml-4"></i><span class="mr-4">Readings upload</span></button>
-                  </div>
-                  <div class="info_item">
-                    <button type="button" class="borderless btn-dark fixed-width-modal-btn divjust-end" data-toggle="modal" data-target="#newMeterModal"><i class="fas fa-plus ml-4"></i><span class="mr-4">Add new Meter</span></button>
-                  </div>
-
-
-                </div>
 
                 <div class="col-lg-3 dispnone">
 
@@ -74,7 +88,9 @@
                   </div>
 
                 </div>
-                <div id="meter_overview" class="col-lg-3 kiota-border">
+
+
+                <div id="meter_overview" class="col-lg-3 kiota-border dispnone">
 
                   <div class="info_item pt-2">
                     <i class="fas fa-house-user"></i>
@@ -89,25 +105,12 @@
                     <span>Unread units units:</span>
                     <span class="text-info"> {{unread_units}}</span>
                   </div>
-
               </div>
 
-              <div class="kiota-border col-lg-2 ml-3 pt-1">
-                Reading Period:
-                <div class="">
-                    <input class="" id="period1" name="readperiod" type="radio" value="current" checked/>
-                    <label class="small font-weight-bold mb-1 text-danger" for="period1">Current Period <span class="text-black">({{current_month}})</span></label>
-                </div>
-            
-                <div class="">
-                    <input class="" id="period2" name="readperiod" type="radio" value="next"/>
-                    <label class="mb-1 small font-weight-bold text-danger" for="period2">Next period <span class="text-black">({{period}})</span></label>
-                </div>
-            </div>
             </div>
         
 
-        <div class="toggleswitch divbg mb-3 underline text-info mt-2">
+        <div class="toggleswitch divbg mb-3 underline text-info mt-2 dispnone">
           <span>
             <span class="smallify">Meters</span>
             <label class="switch">
@@ -134,68 +137,26 @@
 
         </div>
 
-        <div id="result-view" class="row">
-          <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">Next billing period (<span class="text-info">{{period}}</span>) readings:</div>
-          <div class="col-lg-12 no-padding">
-              <div id="reqdata" class="table-responsive">
-                  <table id="readingData" class="table shadow" width="100%" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th class="text-info font-weight-bold">Meter.</th>
-                          <th class="text-info track-title-cell">House.</th>
-                          <th class="text-info track-title-cell">Prev.</th>
-                          <th class="text-info track-title-cell">Curr</th>
-                          <th class="text-info track-title-cell">Units</th>
-                          <th class="text-info track-title-cell">Rate</th>
-                          <th class="text-info track-title-cell">Charge</th>
-                          <th class="text-info track-title-cell">Month</th>
-                          <th class="text-info track-title-cell">Date</th>
-                          <th class="text-info track-title-cell">Edit</th>
-                          <th class="text-info track-title-cell">Edit</th>
-                          <th class="text-info track-title-cell">Delete</th>
 
-
-
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for bill in bills%}
-                        <tr>
-                          <td class="first-data-cell text-dark font-weight-bold">{{ bill['meter'] }}</td>
-                          <td class="data-cell">{{ bill['house'] }}</td>
-                          <td class="data-cell">{{ bill['last_reading'] }}</td>
-                          <td class="data-cell">{{ bill['reading'] }}</td>
-                          <td class="data-cell">{{ bill['units'] |safe}}</td>
-                          <td class="data-cell">{{ bill['rate'] }}</td>
-                          <td class="data-cell {{bill['highlight']}}">{{ bill['charged'] }}</td>
-                          <td class="data-cell">{{ bill['period'] }}</td>
-                          <td class="data-cell">{{ bill['date'] }}</td>
-
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['id']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editUnitsModal"><i class="fas fa-cog mr-1"></i>units</button>
-                            </div>
-                          </td>
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#editReadingModal"><i class="fas fa-cog mr-1"></i>readings</button>
-                            </div>
-                          </td>
-
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  modalTrigger no-wrap" data-toggle="modal" data-target="#deleteReadingModal"><i class="fas fa-trash-alt mr-1"></i>readings</button>
-                            </div>
-                          </td>
-
-                        </tr>
-                      {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
+        <div class="dispnon">
+          <nav class="nav nav-borders">
+            <div>
+              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> readings view</label>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> meters view</label>
+            </div>
+          </nav>
         </div>
+
+        <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
         </div>
+        
+        <div id="child-result-view" class="row">
+    
+        </div>
+        
     </section>
     <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editReadingModal"></button> -->
     <!--================Contact Area =================-->
@@ -721,13 +682,140 @@
     $.getScript(url);
   </script>
 
+
 <script>
-  $("#close-propdisp").on('click',function(){
-    $('#proplist').removeClass('dispnone')
-    $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-  });
+  function getReadings(propid, target, page) {
+    // showSpin();
+    spinOnChildView();
+    $("#barloader-alt").removeClass("dispnone")
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.fetchreadings') }}",
+      type: "get",
+      start_time: new Date().getTime(),
+      data: { 
+        propid:propid,
+        target:target,
+        page:page
+       },
+      success: function (response) {
+        $("#barloader-alt").addClass("dispnone")
+        spinOffChildView()
+
+        $("#child-result-view").html(response);
+      },
+      complete: function(data) {
+        $("#domtimeload").text((new Date().getTime() - this.start_time));
+      }
+    });
+  }
+
+  function getMeters(propid, target, page) {
+    // showSpin();
+    spinOnChildView();
+
+    console.log("rates are getting fetched")
+
+
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.fetchmeters') }}",
+      type: "get",
+      data: { 
+        propid:propid,
+        target:target,
+        page:page
+       },
+      success: function (response) {
+
+        $("#child-result-view").html(response);
+        console.log("rates have been fetched")
+
+        spinOffChildView()
+      }
+    });
+  }
 </script>
+
+
+<script type="text/javascript">
+  
+  getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+
+
+  $.fn.getLabels = function() {
+    return this.map(function() {
+        var labels = $(this).parents('label');
+        if (this.id) {
+            labels.add('label[for="' + this.id + '"]');
+        }
+        return labels.get();
+    });
+  };
+
+  $(".chb").change(function (e) {
+        $(".chb").getLabels().removeClass("underline");
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).getLabels().addClass("underline");
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "cb1"){
+            $(this).getLabels().addClass("underline");
+            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+          }else{
+            $(this).getLabels().addClass("underline");
+            getMeters($("#prop_identifier").text(),"",$("#currentunitpage").text())
+          }
+        }
+
+      });
+
+
+      $(".periods").change(function (e) {
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".periods").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "current"){
+            // $('#cb1').prop('checked', true);
+            // $(".chb").change();
+            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+          }else{
+            // $(".chb").change();
+            // $('#cb1').prop('checked', true);
+            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+          }
+        }
+
+      });
+
+</script>
+
+
+
+
+
+
+
 
 <script>
     $("#metertoggle").on('change',function(){
@@ -749,7 +837,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -778,7 +866,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -806,7 +894,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
     }
@@ -820,40 +908,12 @@
 
 
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('#readingData').DataTable({
-      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-      "pageLength": 100,
-      "searching":false,
-      "order": [[ 1, "asc" ]],
-      "bLengthChange": false
-    });
-    $('.dataTables_length').addClass('bs-select');
-    });
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
 </script>
-
-<script>
-  var rawIds = "{{ readingids|safe }}";
-  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
-  console.log(ids)
-  $.each(ids, function(i,item) {
-  
-    $("#"+item).on('click',function(){
-      console.log("clicked",item)
-      if( isNaN(parseInt(item)) ){
-        if(item.startsWith("del")){
-          $("#del_reading_identifier").html(item)
-        }else{
-          $("#edit_reading_identifier").html(item)
-        }
-      }else{
-        $("#reading_identifier").html(item)
-      }
-    });
-  });
-</script>
-
-
 
 
 <script>
@@ -895,7 +955,7 @@
               //     },
               //     success: function(response) {
                     
-              //       $("#result-view").html(response);
+              //       $("#child-result-view").html(response);
               //     }
               //   });
               // },5000);
@@ -991,7 +1051,7 @@
               //     },
               //     success: function(response) {
                     
-              //       $("#result-view").html(response);
+              //       $("#child-result-view").html(response);
               //     }
               //   });
               // },5000);
@@ -1101,7 +1161,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
           
@@ -1154,7 +1214,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
           
@@ -1225,7 +1285,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
           
@@ -1291,7 +1351,7 @@
                 },
                 success: function(response) {
                   
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                 }
               });
         }
@@ -1542,7 +1602,7 @@ $("#select_house_alt").on('change',function(){
                       target:"default"
                     },
                 success: function(response) {
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                   // $("#select_house option:eq('1')").attr("selected", "selected");
                   $("#select_house").change(); 
                   $("#meterReadingModal").find('#reading').focus();    
@@ -1616,7 +1676,7 @@ $("#select_house_alt").on('change',function(){
                       target:"default"
                     },
                 success: function(response) {
-                  $("#result-view").html(response);
+                  $("#child-result-view").html(response);
                   // $("#select_house option:eq('1')").attr("selected", "selected");
                   $("#select_house_alt").change();
                   $("#elecReadingModal").find('#reading-alt').focus();    
@@ -1799,7 +1859,7 @@ $("#select_house_alt").on('change',function(){
                       target:$("#current-reloader").text()
                     },
                 success: function(response) {
-                  $("#result-view").html(response);   
+                  $("#child-result-view").html(response);   
                 }
                 
               });
@@ -1841,7 +1901,7 @@ $("#select_house_alt").on('change',function(){
                       target:$("#current-reloader").text()
                     },
                 success: function(response) {
-                  $("#result-view").html(response);  
+                  $("#child-result-view").html(response);  
                 }
                 
               });
@@ -1898,7 +1958,7 @@ $("#select_house_alt").on('change',function(){
                     target:$("#current-reloader").text()
                   },
               success: function(response) {
-                $("#result-view").html(response);  
+                $("#child-result-view").html(response);  
               }
               
             });
@@ -1926,6 +1986,11 @@ $("#select_house_alt").on('change',function(){
     // $("#edithouse").html("")
     $("#close-elec").click();
   });
+</script>
+
+
+<script>
+  feather.replace();
 </script>
 
 

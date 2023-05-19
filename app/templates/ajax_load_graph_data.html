@@ -53,19 +53,60 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-3">
         <div class="card shadow mb-1 bg-white">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-bar mr-2"></i>Water consumption <span>(<span class="text-black">{{targetprop}}</span>)</span></div>
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-bar mr-2"></i>Occupancy <span>(<span class="text-black">{{targetprop}}</span>)</span></div>
 
             </div>
             <!-- Card Body -->
             <div class="card-body">
             <div class="chart-are">
                 <p id="theInput3" class="dispnone">{{waterstring}}</p>
-                <canvas id="barChart"></canvas>
+                <!-- <canvas id="barChart"></canvas> -->
+                <canvas id="myPieChart"></canvas>
             </div>
+
+            <div class="mt-4 text-center small">
+                <span class="mr-2">
+                  <i class="fas fa-circle text-primary"></i>Occupied
+                </span>
+                <span class="mr-2">
+                  <i class="fas fa-circle text-success"></i>Vacant
+                </span>
+
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 font-weight-bold text-info smallify targetprop"><i class="fas fa-chart-bar mr-2"></i>Invoice line items <span>(<span class="text-black">{{targetprop}}</span>)</span></div>
+
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are">
+                <p id="theInput4" class="dispnone">{{waterstring}}</p>
+                <!-- <canvas id="barChart"></canvas> -->
+                <canvas id="myPieChart2"></canvas>
+            </div>
+            <div class="mt-4 text-center small">
+                <span class="mr-2">
+                  <i class="fas fa-circle text-primary"></i>Rent
+                </span>
+                <span class="mr-2">
+                  <i class="fas fa-circle text-success"></i>Water
+                </span>
+                <span class="mr-2">
+                  <i class="fas fa-circle text-info"></i>Garbage
+                </span>
+              </div>
+
             </div>
         </div>
     </div>
@@ -136,7 +177,7 @@
         var app_data2 = stringData2.split`,`.map(x=>+x);
 
         var myLineChart = new Chart(ctxL, {
-        type: 'line',
+        type: 'bar',
         data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
         datasets: [{
@@ -329,5 +370,75 @@
     }]
     }
     }
+    });
+
+
+
+    var ctxP = document.getElementById("myPieChart");
+    var myPieChart = new Chart(ctxP, {
+    type: 'doughnut',
+    data: {
+        labels: ["Occupied", "Vacant"],
+        datasets: [{
+        data: [80, 20],
+        backgroundColor: ['#4e73df', '#36b9cc'],
+        hoverBackgroundColor: ['#2e59d9', '#2c9faf'],
+        hoverBorderColor: "rgba(234, 236, 244, 1)",
+        }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        caretPadding: 10,
+        },
+        legend: {
+        display: false
+        },
+        cutoutPercentage: 85,
+    },
+    });
+
+
+    // Set new default font family and font color to mimic Bootstrap's default styling
+    Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#858796';
+
+    // Pie Chart Example
+    var ctxP2 = document.getElementById("myPieChart2");
+    var myPieChart2 = new Chart(ctxP2, {
+    type: 'doughnut',
+    data: {
+        labels: ["Rent", "Water", "Garbage"],
+        datasets: [{
+        data: [80, 12, 8],
+        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+        hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+        hoverBorderColor: "rgba(234, 236, 244, 1)",
+        }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        caretPadding: 10,
+        },
+        legend: {
+        display: false
+        },
+        cutoutPercentage: 50,
+    },
     });
 </script>

@@ -1,186 +1,87 @@
 
-    <div class="row">
+<section class="contact_area section_gap">
         <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+
         <span id="exp_identifier" class="dispnone"></span>
         <span id="editexp_identifier" class="dispnone"></span>
         <span id="delexp_identifier" class="dispnone"></span>
-        <span id="target_identifier" class="dispnone">pending</span>
+
+        <span id="target_identifier" class="dispnone">completed</span>
 
 
-        <div id="header-strip" class="col-lg-12 no-padding">
-            <div class="card-header py-1 card-bg divjust-end" >
-                <span class="text-white font-weight-bold text-xx shadow-alt">{{propname}}</span>
-                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-clipboard-check mr-1"></i>Expenses</div>
-                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white shadow-alt"><i class="fas fa-times"></i></div></button>
+
+        <div class="pb-2 bg-white divjust-end underline-thin-fade">
+
+          <div>
+            <span id="backbtn" class="btn btn-sm btn-light text-danger font-weight-bold">
+              <!-- <i class="me-1" data-feather="user-plus"></i> -->
+              <i class="fas fa-long-arrow-alt-left text-danger"></i>
+              Back to properties
+            </span>
+
+          </div>
+
+          <div class="">
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#expenseRequestModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="upload"></i>
+              add expense
+            </span>
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#inclusionRequestModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="plus-circle"></i>
+              add remittance
+            </span>
+
+            <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#depositRefundModal">
+              <i class="feather-18 text-black mr-1 pb-1" data-feather="plus-circle"></i>
+              deposit refund
+            </span>
+          </div>
+
+          <div class="small">
+            <nav class="nav nav-borders">
+              <div class="info_item mr-2">
+                <i class="feather-18 text-black mr-1 pb-1" data-feather="calendar"></i>
+                <input class="periods" id="period1" name="readperiod" type="radio" value="old"/>
+                <label class="small font-weight-bold mb-1 text-danger" for="period1">Previous Period <span class="text-black"> - {{current_month}}</span></label>
+              </div> 
+            </nav>
+
+            <nav class="nav nav-borders">
+              <div class="info_item mr-2">
+                <i class="feather-18 text-black mr-1 pb-1" data-feather="calendar"></i>
+                <input class="periods" id="period2" name="readperiod" type="radio" value="current" checked/>
+                <label class="mb-1 small font-weight-bold text-danger" for="period2">Current period <span class="text-black"> - {{period}}</span></label>
+              </div>
+            </nav>
+          </div>
+        </div> 
+
+
+        <div class="dispnon">
+          <nav class="nav nav-borders">
+            <div>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="help-circle"></i>pending</label>
+              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="check-circle"></i>approved</label>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb3" value="cb3" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="slash"></i>rejected</label>
             </div>
-        </div>
-
-        <div class="col-lg-3 no-padding desktop-malaysian">
-          <div class="center-btn expense-buttons divjust-end-sm">
-              <button type="button" class="btn btn-outline-success expense-btn font-weight-bold small m-1" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus"></i>Add expense</button>
-              <button type="button" class="btn btn-outline-success expense-btn font-weight-bold small m-1" data-toggle="modal" data-target="#inclusionRequestModal"><i class="fas fa-fw fa-plus"></i>remittance</button>
-              <button type="button" class="btn btn-outline-info expense-btn small m-1" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus"></i>Deposit refund</button>
-          </div>
-        </div>
-
-        <div class="col-lg-12  no-padding mobile-malaysian underline-thin mb-2 mt-2">
-          <div class="center-btn divjust-end-sm mb-2">
-              <span type="button" class="btn btn-outline-primary font-weight-bold" data-toggle="modal" data-target="#expenseRequestModal"><i class="fas fa-fw fa-plus mr-2"></i>add expense</span>
-              <span type="button" class="btn btn-outline-primary font-weight-bold" data-toggle="modal" data-target="#inclusionRequestModal"><i class="fas fa-fw fa-plus mr-2"></i>remittance</span>
-              <span type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#depositRefundModal"><i class="fas fa-fw fa-plus-circle mr-2"></i>deposit refund</span>
-          </div>
-        </div>
-
-        <div class="col-lg-12">
- 
-                       
-                            <div class="toggleswitch divbg">
-                              <span>
-                                <span class="smallify text-info">Pending</span>
-                                <label class="switch">
-                                  <input id="reporttoggle" type="checkbox" checked>
-                                  <span class="slider round"></span>
-                                </label>
-                              </span>
-                            
-                              <span>
-                                <span class="smallify text-success">Approved</span>
-                                <label class="switch">
-                                  <input id="reporttoggle2" type="checkbox">
-                                  <span class="slider round"></span>
-                                </label>
-                              </span>
-                  
-                              <span>
-                                <span class="smallify text-danger">Rejected</span>
-                                <label class="switch">
-                                  <input id="reporttoggle4" type="checkbox">
-                                  <span class="slider round"></span>
-                                </label>
-                              </span>
-
-                              <span class="mt-3">
-                                <label for="period" class="no-wrap">
-                                  <input id="period" type="checkbox" checked> 
-                                  <span class="smallify text-success font-weight-bold">Current</span>
-                                </label>
-                              </span>
-                    
-                            </div>
-
-                            <!-- <form method="POST" action="/property/access">
-
-                                <div class="form-group divjust-end-lg">
-
-                                    <div class="">
-                                      <input id="search_date" name="date" type="text" placeholder="Select date" onfocus="(this.type='date')" class="form-control">
-                                    </div>
-
-                                    <div class="">
-                                      <select class="select-css" id ="search_status">
-                                        <option disabled selected value> Search by status </option>
-                                        
-                                        <option value="pending">Pending</option>
-                                        <option value="approved">Approved</option>
-                                        <option value="rejected">Rejected</option>
-                                        <option value="completed">Completed</option>
-                                        
-                                      </select>
-                                    </div>
-                                    <div class="center-btn divjust-end-sm">
-                                      <button type="reset" class="bg-gradient-danger borderless expense-form-btn has-margin small text-white">Clear</button>
-                                      <button id="submit" type="button" class="bg-gradient-success borderless expense-form-btn has-margin text-white">Search</button>
-                                    </div>
-                                </div>
-                            </form> -->
-
+          </nav>
         </div>
 
 
-    </div>
-    <div class="row">
-        <div class="col-lg-12 no-padding">
-
-          <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
-            <div class="bar-alt"></div>
-            <div class="bar-alt"></div>
-            <div class="bar-alt"></div>
-          </div>
-            <div id="reqdata" class="table-responsive">
-              <span class="font-weight-bold mr-2 smallify text-success mt-1">Approved expenses:</span>
-              <!-- <span>
-                <label>
-                  <span class="smallify text-gray-500">Recent data only</span>
-                  <input id="date-check" type="checkbox" checked>
-                </label>
-              </span> -->
-              <table id="expenseData" class="table shadow no-margin-bottom" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th class="text-info font-weight-bold">No.</th>
-                      <th class="text-info font-weight-bold">Item/Service</th>
-                      <th class="text-info track-title-cell">Category</th>
-                      <th class="text-info track-title-cell">Qty</th>
-                      <th class="text-info track-title-cell">House</th>
-                      <th class="text-info track-title-cell">Cost</th>
-                      <th class="text-info track-title-cell">Labour</th>
-                      <th class="text-info track-title-cell">Total</th>
-                      <th class="text-info track-title-cell">Status</th>
-                      <th class="text-info track-title-cell">Date</th>
-                      <th class="text-info track-title-cell">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for bill in items%}
-                    <tr>
-                      <td class="first-data-cell">{{ bill['id'] }}</td>
-                      <td class="data-cell">{{ bill['name'] }}</td>
-                      <td class="data-cell">{{ bill['type'] }}</td>
-                      <td class="data-cell">{{ bill['qty'] }}</td>
-                      <td class="data-cell">{{ bill['house'] }}</td>
-                      <td class="data-cell">{{ bill['cost'] }}</td>
-                      <td class="data-cell">{{ bill['labour'] }}</td>
-                      <td class="data-cell">{{ bill['amount'] }}</td>
-                      <td class="data-cell">{{ bill['status'] }}</td>
-                      <td class="data-cell">{{ bill['date'] }}</td>
-                      <td class="data-cell">
-                        <div class="dropdown no-arrow">
-                          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
-                          </a>
-                          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header underline">Item: <span class="text-info font-weight-bold">{{bill['name']}}</span></div>
-                
-                            <div>
-                              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{bill['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#approveModal">Approve/reject</span>
-                            </div>
-                            <div>
-                              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{bill['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editExpenseModal">Edit</span>
-                            </div>
-                            <div>
-                              <i class="fas fa-trash-alt text-danger ml-3 mr-2"></i><span id="{{bill['delid']}}" type="button" class="borderless ellipsis btn-outline-info modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteExpenseModal">Delete</span>
-                            </div>
-                            
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                      
-                  </table>
-            </div>
+        <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
         </div>
-</div>
+        
+        <div id="child-result-view" class="row">
+    
+        </div>
 
+</section>
 
-<script>
-  $("#close-propdisp").on('click',function(){
-    $('#proplist').removeClass('dispnone')
-    $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-  });
-</script>
 
 <div class="text-center">
 
@@ -669,171 +570,138 @@
   </div>
 </div>
 
+<script type="text/javascript">
+  $("#backbtn").click(function () {
+    $("#result-view").removeClass("dispnone");
+    $("#child-view").addClass("dispnone")
+    $("#activeprop").empty();
+  })
+</script>
+
 <script>
     setTimeout(function(){
     $("#alert-msgs").fadeOut(30000,"swing");
     }, 10000);
 </script>
 
-<script type="text/javascript">
-  $(document).ready(function () {
-    $('#expenseData').DataTable({
-      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-      "pageLength": 10,
-      "searching":false,
-      "bLengthChange": false
-    });
-    $('.dataTables_length').addClass('bs-select');
-    });
-</script>
 
-<script> 
-
-  var url = "{{ url_for('api.expensemanagement') }}"
-
-  $("#reporttoggle").on('change',function(){
-    
-    var cb = document.getElementById("reporttoggle");
-    if (cb.checked){
-      $("#target_identifier").html("pending")
-      $("#barloader-alt").removeClass("dispnone")
-
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb4 = document.getElementById("reporttoggle4");
-      cb4.checked = false;
-
-      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
-
-      $.ajax({
-                url: url,
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target: "pending",
-                  period:period
-                },
-                success: function(response) {
-                  $("#barloader-alt").addClass("dispnone")
-
-                  $("#reqdata").html(response);
-                }
-              });
-    }
-  
-  });
-  
-  $("#reporttoggle2").on('change',function(){
-    
-    var cb2 = document.getElementById("reporttoggle2");
-    if (cb2.checked){
-      $("#target_identifier").html("completed")
-      $("#barloader-alt").removeClass("dispnone")
-
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      // var cb3 = document.getElementById("reporttoggle3");
-      // cb3.checked = false;
-      var cb4 = document.getElementById("reporttoggle4");
-      cb4.checked = false;
-
-      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
-
-      $.ajax({
-                url: url,
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target: "completed",
-                  period:period
-                },
-                success: function(response) {
-                  $("#barloader-alt").addClass("dispnone")
-
-                  $("#reqdata").html(response);
-                }
-              });
-    }
-  
-  });
-
-  
-  $("#period").on('change',function(){
-    $("#barloader-alt").removeClass("dispnone")
-    if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
-    
-    $.ajax({
-                url: url,
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target: $("#target_identifier").text(),
-                  period: period
-                },
-                success: function(response) {
-                  $("#barloader-alt").addClass("dispnone")
-                  $("#reqdata").html(response);
-                }
-              });
-
-
-  });
-
-  $("#reporttoggle4").on('change',function(){
-    
-    var cb4 = document.getElementById("reporttoggle4");
-    if (cb4.checked){
-      $("#target_identifier").html("rejected")
-      $("#barloader-alt").removeClass("dispnone")
-
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-
-      if ($("#period").prop('checked')){var period = "current";}else{var period = "old";}
-
-      $.ajax({
-                url: url,
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target: "rejected",
-                  period:period
-                },
-                success: function(response) {
-                  $("#barloader-alt").addClass("dispnone")
-
-                  $("#reqdata").html(response);
-                }
-              });
-    }
-
-  });
-
-</script>
 
 <script>
-  var expids = "{{ expids|safe }}";
-  var exp_ids = expids.split`,`.map(x=>x); //adding plus converts the items to numbers
-  console.log(exp_ids)
-  $.each(exp_ids, function(i,item) {
-  
-    $("#"+item).on('click',function(){
-      console.log("clicked",item)
-      if( isNaN(parseInt(item)) ){
-        if(item.startsWith("del")){
-          $("#delexp_identifier").html(item)
-        }else{
-          $("#editexp_identifier").html(item)
-        }
-        
-      }else{
-        $("#exp_identifier").html(item)
+  function getExpenses(propid, target, period) {
+    // showSpin();
+    spinOnChildView();
+    $("#barloader-alt").removeClass("dispnone")
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.expensemanagement') }}",
+      type: "get",
+      start_time: new Date().getTime(),
+      data: { 
+        propid:propid,
+        target:target,
+        period:period
+       },
+      success: function (response) {
+        $("#barloader-alt").addClass("dispnone")
+        spinOffChildView()
+
+        $("#child-result-view").html(response);
+      },
+      complete: function(data) {
+        $("#domtimeload").text((new Date().getTime() - this.start_time));
       }
     });
-  });
+  }
+
 </script>
+
+
+
+
+<script type="text/javascript">
+  
+  getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
+
+  $.fn.getLabels = function() {
+    return this.map(function() {
+        var labels = $(this).parents('label');
+        if (this.id) {
+            labels.add('label[for="' + this.id + '"]');
+        }
+        return labels.get();
+    });
+  };
+
+  $(".chb").change(function (e) {
+        $(".chb").getLabels().removeClass("underline");
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).getLabels().addClass("underline");
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "cb1"){
+            $(this).getLabels().addClass("underline");
+            $("#target_identifier").text("pending")
+
+            getExpenses($("#prop_identifier").text(), "pending", $("input[name=readperiod]:checked").val())
+          }else if($(this).val() == "cb2"){
+            $(this).getLabels().addClass("underline");
+            $("#target_identifier").text("completed")
+
+            getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+          }else{
+            $(this).getLabels().addClass("underline");
+            $("#target_identifier").text("rejected")
+
+            getExpenses($("#prop_identifier").text(), "rejected", $("input[name=readperiod]:checked").val())
+          }
+        }
+
+      });
+
+
+      $(".periods").change(function (e) {
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".periods").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "current"){
+            // $('#cb1').prop('checked', true);
+            // $(".chb").change();
+            getExpenses($("#prop_identifier").text(), $("#target_identifier").text(), $("input[name=readperiod]:checked").val())
+          }else{
+            // $(".chb").change();
+            // $('#cb1').prop('checked', true);
+            getExpenses($("#prop_identifier").text(), $("#target_identifier").text(), $("input[name=readperiod]:checked").val())
+          }
+        }
+
+      });
+
+</script>
+
+
+
+
 
 <script>
   $('#itemname').keyup(function() {
@@ -882,8 +750,11 @@
               $('#submitmodalOne').addClass('btn-outline-secondary')
               $('#submitmodalOne').removeClass('btn-outline-success')
        
-              $("#reqdata").html(response);
+              snack(response);
               $(".reset").click();
+
+              getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           }
       });
 });
@@ -913,8 +784,10 @@
             success: function(response) {      
               $("#barloader-alt").addClass("dispnone")
        
-              $("#reqdata").html(response);
+              snack(response);
               $(".reset").click();
+              getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           }
       });
 });
@@ -942,7 +815,9 @@
               // $("#detailed-payments").toggleClass('invoice dispnone');
               // $("#payments-report").toggleClass('row dispnone');   
               $(".reset").click();         
-              $("#reqdata").html(response);
+              snack(response);
+              getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           }
       });
 });
@@ -968,7 +843,9 @@
             success: function(response) {  
               $(".reset").click();
               $("#barloader-alt").addClass("dispnone")          
-              $("#reqdata").html(response);
+              snack(response);
+              getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           }
       });
 });
@@ -1011,7 +888,9 @@
               // var cb4 = document.getElementById("reporttoggle4");
               // cb4.checked = false;
               $(".reset").click();
-              $("#reqdata").html(response);
+              snack(response);
+              getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           }
       });
 
@@ -1034,7 +913,7 @@
               },
               success: function(response) {
                 $('#submit').html('Search');
-                $("#reqdata").html(response);
+                snack(response);
 
               }
           });
@@ -1062,10 +941,16 @@
           $("#closeDeleteExpenseModal").click();
           $("#barloader-alt").addClass("dispnone")
 
-          $("#reqdata").html(response);
+          snack(response);
+          getExpenses($("#prop_identifier").text(), "completed", $("input[name=readperiod]:checked").val())
+
           
         }
       });
     });
     
     </script>
+
+<script>
+  feather.replace();
+</script>

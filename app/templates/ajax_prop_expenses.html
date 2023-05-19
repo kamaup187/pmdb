@@ -1,0 +1,219 @@
+
+
+<span id="prop_identifier" class="dispnone"></span>
+<span id="prop_id_identifier" class="dispnone"></span>
+<span id="edit_prop_identifier" class="dispnone"></span>
+
+
+      <!-- <div class="pb-1 bg-white">
+        <div class="mb-1">
+          <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
+            <i class="me-1" data-feather="users"></i>
+            Add New Tenant
+          </span>
+          <span class="btn btn-sm btn-light text-black">
+            <i class="me-1" data-feather="user-plus"></i>
+            Upload data
+          </span>
+        </div>
+      </div> -->
+      <div id="result-view" class="">
+        <div id="props" class="table-responsive">
+          <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+              <thead class="custom-header">
+                  <tr>
+                      <th class="text-black font-weight-bold pl-0">PROPERTY</th>
+                      <th class="text-black font-weight-bold">ITEMS</th>
+                      <th class="text-black font-weight-bold">COST</th>
+                      <th class="text-black font-weight-bold">MONTH</th>
+
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in items%}
+                  <tr>
+
+
+                      <td class="data-cell">
+                          <div>
+                              <span id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis2 text-left no-wrap">{{item['name']}}</span>
+                          </div>
+                      </td>
+                      
+          
+                      <td id="itemsinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+                      <td id="costinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+                      <td id="monthinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+        
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+        <div class="bar-alt"></div>
+        <div class="bar-alt"></div>
+        <div class="bar-alt"></div>
+      </div>
+
+      <div id="child-view" class="dispnone"></div>
+      
+
+
+<!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+<script>
+  var url = "{{ url_for('static', filename='upload.js') }}";
+  $.getScript(url);
+</script>
+
+
+
+<script>
+
+  $("#uploadPropModal").on('shown.bs.modal', function () {
+    $(".dismissparent").click();
+  });
+
+</script>
+
+<script>
+  var rawIds = "{{ propids|safe }}";
+  // var props = "{{ propnames|safe }}";
+  // var propnames= props.replace(/'/g,'"');
+  // propObjs = JSON.parse(propnames)
+
+  var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function (i, item) {
+
+    $("#" + item).on('click', function () {
+      console.log("clicked", item)
+      if (isNaN(parseInt(item))) {
+        if (item.startsWith("del")) {
+          $("#del_prop_identifier").html(item)
+        }
+        else if (item.startsWith("prp")) {
+          console.log("working here>>>>>>>>>>>>>>>>>>>>>>>>")
+
+          $("#prop_id_identifier").html(item)
+
+
+        } else {
+          $("#edit_prop_identifier").html(item)
+        }
+
+      } else {
+        console.log("working >>>>>>>>>>>>>>>>>>>>>>>>")
+
+        $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+        
+          $("#activeprop-child").text($(this).text())
+
+          $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+          $("#dummyData").removeClass('dispnone');
+          $("#propdisp-content").addClass('dispnone');
+
+
+          showSpin()
+          $.ajax({
+              type: "get",
+              url: "{{ url_for('api.expensemanagement') }}",
+              data: {
+                  propid:item
+              },
+              success: function(response) {
+                $("#result-view").addClass("dispnone");
+                $("#child-view").removeClass("dispnone")
+
+                $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+                $("#dummyData").addClass('dispnone');
+                $("#propdisp-content").removeClass('dispnone');
+
+
+
+                $("#child-view").html(response);
+              }
+          });
+
+        $("#prop_identifier").html(item)
+        var linkTarget = $("#" + item).children("span").text()
+        $("#link_identifier").html(linkTarget)
+
+      }
+    });
+
+
+    // showSpin()
+
+
+    if (isNaN(parseInt(item))){
+      //do nothing
+    }else{
+      $.ajax({
+      url: "{{ url_for('api.readingstats') }}",
+      type: "get",
+      data: {
+            propid: item
+          },
+      success: function(response) {
+        // $("#houseinfo-" + item ).text(response[0]);
+        // $("#meterinfo-" + item ).text(response[1]);
+        // $("#readinginfo-" + item ).text(response[2]);
+
+        $("#itemsinfo-" + item ).text("-");
+        $("#costinfo-" + item ).text("-");
+        $("#monthinfo-" + item ).text("-");
+      }
+    });
+    }
+
+
+
+  });
+
+
+
+</script>
+
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantPaymentData').DataTable({
+      "processing": true,
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "searching": false,
+      columnDefs: [{ targets: 0, type: 'natural' }],
+      "order": [[0, "asc"]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+</script> -->
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantPaymentData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+
+<script>
+  feather.replace();
+</script>
+ 
+
+  

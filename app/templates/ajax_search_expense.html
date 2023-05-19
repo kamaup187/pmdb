@@ -1,80 +1,87 @@
 
-<span class="font-weight-bold mr-2 smallify mt-1 {{datahighlight}}">{{data_group}}:</span>
-<!-- <span>
-  <label>
-    <span class="smallify text-gray-500">Recent data only</span>
-    <input id="date-check" type="checkbox" checked>
-  </label>
-</span> -->
-<table id="expenseData" class="table shadow" width="100%" cellspacing="0">
-  <thead>
-    <tr>
-      <th class="text-info font-weight-bold">No.</th>
-      <th class="text-info font-weight-bold">Item/Service</th>
-      <th class="text-info track-title-cell">Category</th>
-      <th class="text-info track-title-cell">Qty</th>
-      <!-- <th class="text-info track-title-cell">Description</th> -->
-      <th class="text-info track-title-cell">House</th>
-      <th class="text-info track-title-cell">Cost</th>
-      <th class="text-info track-title-cell">Labour</th>
-      <th class="text-info track-title-cell">Total</th>
-      <th class="text-info track-title-cell">Status</th>
-      <th class="text-info track-title-cell">Date</th>
-      <th class="text-info track-title-cell">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for bill in bills%}
-    <tr>
-      <td class="first-data-cell">{{ bill['id'] }}</td>
-      <td class="data-cell text-dark font-weight-bold">{{ bill['name'] }}</td>
-      <td class="data-cell">{{ bill['type'] }}</td>
-      <td class="data-cell">{{ bill['qty'] }}</td>
-      <td class="data-cell">{{ bill['house'] }}</td>
-      <td class="data-cell">{{ bill['cost'] }}</td>
-      <td class="data-cell">{{ bill['labour'] }}</td>
-      <td class="data-cell">{{ bill['amount'] }}</td>
-      <td class="data-cell">{{ bill['status'] }}</td>
-      <td class="data-cell">{{ bill['date'] }}</td>
-      <td class="data-cell"> 
-        <div class="dropdown no-arrow">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-            <div class="dropdown-header underline">Item: <span class="text-info font-weight-bold">{{bill['name']}}</span></div>
 
-            <div>
-              <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{bill['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#approveModal">approve/reject</span>
-            </div>
-            <div>
-              <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{bill['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editExpenseModal">Edit</span>
-            </div>
-            <div>
-              <i class="fas fa-trash-alt text-danger ml-3 mr-2"></i><span id="{{bill['delid']}}" type="button" class="borderless ellipsis btn-outline-info modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteExpenseModal">Delete</span>
-            </div>
-            
-          </div>
-      </div>
-      </td>
-    </tr>
-  {% endfor %}
-  </tbody>
-     
-  </table>
 
-  <script type="text/javascript">
+
+<!-- <script>
+  var new_modal = $("#new_modal")
+  $("#dynamic_modal").html(new_modal)
+</script> -->
+
+
+<div class="col-lg-12 text-black mb-1 ml-2 mt-2"><span class="text-uppercase">{{data_group}}</span></div>
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive ml-2">
+        <table id="readingData" class="table shadow mb-1" width="100%" cellspacing="0">
+            <thead class="custom-header">
+              <tr>
+
+                <th class="text-black">No.</th>
+                <th class="text-black">Item/Service</th>
+                <th class="text-black">Category</th>
+                <th class="text-black">Qty</th>
+                <th class="text-black">House</th>
+                <th class="text-black">Cost</th>
+                <th class="text-black">Labour</th>
+                <th class="text-black">Total</th>
+                <th class="text-black">Status</th>
+                <th class="text-black">Date</th>
+                <th class="text-black">Action</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items%}
+              <tr>
+                <td class="first-data-cell">{{ item['id'] }}</td>
+                <td class="data-cell text-black font-weight-bold">{{ item['name'] }}</td>
+                <td class="data-cell">{{ item['type'] }}</td>
+                <td class="data-cell">{{ item['qty'] }}</td>
+                <td class="data-cell">{{ item['house'] }}</td>
+                <td class="data-cell">{{ item['cost'] }}</td>
+                <td class="data-cell">{{ item['labour'] }}</td>
+                <td class="data-cell">{{ item['amount'] }}</td>
+                <td class="data-cell">{{ item['status'] }}</td>
+                <td class="data-cell">{{ item['date'] }}</td>
+                <td class="data-cell"> 
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger ellipsis-btn"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                      <div class="dropdown-header underline">Item: <span class="text-black">{{item['name']}}</span></div>
+          
+                      <div>
+                        <i class="fas fa-user ml-3 mr-2 text-success"></i><span id="{{item['id']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#approveModal">approve/reject</span>
+                      </div>
+                      <div>
+                        <i class="fas fa-edit ml-3 mr-2 text-info"></i><span id="{{item['editid']}}" type="button" class="btn-outline-info ellipsis borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editExpenseModal">Edit</span>
+                      </div>
+                      <div>
+                        <i class="fas fa-trash-alt text-danger ml-3 mr-2"></i><span id="{{item['delid']}}" type="button" class="borderless ellipsis btn-outline-info modalTrigger text-gray-700" data-toggle="modal" data-target="#deleteExpenseModal">Delete</span>
+                      </div>
+                      
+                    </div>
+                </div>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
     $(document).ready(function () {
-      $('#expenseData').DataTable({
+      $('#readingData').DataTable({
         "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-        "pageLength": 1000,
-        "searching":false,
+        "pageLength": 100,
         "order": [[ 3, "desc" ]],
+        "searching":false,
         "bLengthChange": false
       });
       $('.dataTables_length').addClass('bs-select');
       });
-  </script>
+</script>
 
 <script>
   var expids = "{{ expids|safe }}";
@@ -98,9 +105,6 @@
   });
 </script>
 
-
-
-<!-- <script>
-  var new_modal = $("#new_modal")
-  $("#dynamic_modal").html(new_modal)
-</script> -->
+<script>
+  feather.replace();
+</script>

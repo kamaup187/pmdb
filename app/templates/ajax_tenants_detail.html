@@ -12,71 +12,11 @@
 
 
       <span class="multisave dispnone"></span>
-
-        <!-- <div id="parent-section">
-          <div class="col-12 no-padding mb-1">
-            <div class="card-header py-1 card-bg-alt divjust-end" >
-                <div class="font-weight-bold text-white text-xx"><i class="fas fa-fw fa-users mr-3"></i>New tenants & Allocation</div>
-                <button id="close-propdisp" class="btn borderless"><div class="x-large xbutton-white"><i class="fas fa-times"></i></div></button>
-            </div>
-          </div> -->
-
-
-
-          <!-- <div class="col-lg-12 center-btn mb-3">
-            <span class="text-black text-xx smallify underline shadow-alt">{{prop.name}}</span>
-          </div> -->
-          
-
-          
-          <!-- <div class="row mb-3">
-              <div class="col-lg-12 center-btn">
-                <div class="info_item">
-                  <button type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#addTenantModal"><i class="fas fa-plus mr-1"></i><span class="smallify font-weight-bold">add new tenant</span></button>
-                  <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadPhoneExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Phone numbers</span></span>
-                  <span type="button" class="borderles btn btn-outline-info" data-toggle="modal" data-target="#uploadArrearsExcelModal"><i class="fas fa-upload mr-1"></i><span class="smallify font-weight-bold">Arrears bulk upload</span></span>
-
-                </div>
-
-              </div>
-
-          </div> -->
-        
-
-        <!-- <div class="toggleswitch text-info font-weight-bold divbg mb-3">
-          <span>
-            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Booked</span>
-            <span class="small desktop-malaysian">Pending</span>
-            <label class="switch">
-              <input id="reporttoggle" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-        
-          <span class="">
-            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Residents</span>
-            <span class="small desktop-malaysian">Residents</span>
-            <label class="switch">
-              <input id="reporttoggle2" type="checkbox" checked>
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-          <span class="">
-            <span class="mobile-malaysian"><i class="fas fa-eye mr-2"></i>Vacated</span>
-            <span class="small desktop-malaysian">Vacated</span>
-            <label class="switch">
-              <input id="reporttoggle3" type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </span>
-
-        </div> -->
-
+      
         <div class="pb-2 bg-white divjust-end">
 
           <div>
-            <span id="backbtn" class="btn btn-sm btn-light text-black">
+            <span id="backbtn" class="btn btn-sm btn-light text-danger">
               <!-- <i class="me-1" data-feather="user-plus"></i> -->
               <i class="fas fa-long-arrow-alt-left"></i>
               Back to properties
@@ -108,86 +48,31 @@
 
           </div>
 
-          <div class="">
-            <nav class="nav nav-borders">
-              <a id="booked" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Booked</a>
-              <a id="resident" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">On premises</a>
-              <a id="vacated" class="nav-link pb-0 pt-1 text-black ms-0" href="#">Vacated</a>
-            </nav>
-          </div>
-
         </div>
 
-        <div class="desktop-malaysian center-btn"><span class="text-dark"> Click <button id="expand" class="btn btn-outline-primary herebtn"> here </button>to <span id="expandtoggler">expand</span></span></div>
+
+        <div class="">
+          <nav class="nav nav-borders">
+            <div>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i>booked tenants</label>
+              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="users"></i>on premises</label>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb3" value="cb3" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="git-merge"></i>vacated tenants</label>
+            </div>
+          </nav>
+        </div>
+
+
+        <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
+          <div class="bar-alt"></div>
+        </div>
         
         <div id="child-result-view" class="row">
-        
-          <div class="col-lg-12 no-padding">
-              <div id="reqdata" class="table-responsive">
-                  <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
-                      <thead class="border-top-info">
-                        <tr>
-                          <th class="text-info font-weight-bold">Name</th>
-                          <th class="text-info track-title-cell" data-orderable="false">Ref</th>
-                          <th class="text-info track-title-cell" data-orderable="false">Label</th>
-                          <th class="text-info track-title-cell" data-orderable="false">Phone</th>
-                          <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">Email</th>
-                          <th class="text-info track-title-cell expand dispnone-alt" data-orderable="false">sms</th>
-                          <th class="text-info track-title-cell expand dispnone-alt">CheckIn</th>
-                          <th class="text-info track-title-cell expand dispnone-alt">Deposit</th>
-                          <th class="text-info track-title-cell text-success">Bal</th>
-                          <th class="text-info track-title-cell text-danger no-wrap" data-orderable="false">Add house</th>
-                          <th class="text-info track-title-cell text-danger" data-orderable="false">Clear</th>
-                          <th class="text-info track-title-cell text-primary" data-orderable="false">Edit</th>
-
-
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for bill in bills%}
-                        <tr>
-                          <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton ellipsis2 no-wrap"> <span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
-                          <td class="data-cell">{{ bill['uid']}}</td>
-                          <td class="data-cell">{{ bill['badge']|safe }}</td>
-                          <td class="data-cell">{{ bill['tel'] }}</td>
-                          <td class="data-cell expand dispnone-alt">{{ bill['email'] }}</td>
-                          <td class="data-cell expand dispnone-alt">{{ bill['sms'] }}</td>
-                          <td class="data-cell expand dispnone-alt">{{ bill['checkin'] }}</td>
-                          <td class="data-cell expand dispnone-alt">{{ bill['deposit'] }}</td>
-                          <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
-
-
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
-                            </div>
-                          </td>
-
-                          <!-- <td class="text-s data-cell">
-                            <div class="toolti">
-                              <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap tooltip" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add <span class="tooltiptext">{{bill['tooltip']}}</span></button>
-                            </div>
-                          </td> -->
-
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Clear</button>
-                            </div>
-                          </td>
-                          <td class="text-s data-cell">
-                            <div>
-                              <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
-                            </div>
-                          </td>
-
-                        </tr>
-                      {% endfor %}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
+    
         </div>
-        </div>
+
+
     </section>
  
 
@@ -616,7 +501,7 @@
   });
 </script> -->
 
-<script>
+<!-- <script>
   var rawIds = "{{ tenantids|safe }}";
   var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
   console.log(ids)
@@ -678,11 +563,11 @@
       }
     });
   });
-</script>
+</script> -->
 
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     $('#tenantData').DataTable({
       "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
@@ -694,7 +579,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 <script type="text/javascript">
   $("#backbtn").click(function () {
@@ -703,6 +588,126 @@
     $("#activeprop").empty();
   })
 </script>
+
+
+
+
+
+<script>
+  function getTenants(propid, target) {
+    // showSpin();
+    spinOnChildView();
+    $("#barloader-alt").removeClass("dispnone")
+    // $("#current-reloader").html(target);
+    $.ajax({
+      url: "{{ url_for('api.fetchtenants') }}",
+      type: "get",
+      start_time: new Date().getTime(),
+      data: { 
+        propid:propid,
+        target:target,
+       },
+      success: function (response) {
+        $("#barloader-alt").addClass("dispnone")
+        spinOffChildView()
+
+        $("#child-result-view").html(response);
+      },
+      complete: function(data) {
+        $("#domtimeload").text((new Date().getTime() - this.start_time));
+      }
+    });
+  }
+
+</script>
+
+
+
+
+<script type="text/javascript">
+  
+  getTenants($("#prop_identifier").text(), "current")
+
+
+  $.fn.getLabels = function() {
+    return this.map(function() {
+        var labels = $(this).parents('label');
+        if (this.id) {
+            labels.add('label[for="' + this.id + '"]');
+        }
+        return labels.get();
+    });
+  };
+
+  $(".chb").change(function (e) {
+        $(".chb").getLabels().removeClass("underline");
+
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".chb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).getLabels().addClass("underline");
+          $(this).prop('checked', false);
+        }else{
+
+          if ($(this).val() == "cb1"){
+            $(this).getLabels().addClass("underline");
+            $("#current-reloader").html("new");
+
+
+            getTenants($("#prop_identifier").text(), "new")
+          }else if($(this).val() == "cb2"){
+            $(this).getLabels().addClass("underline");
+            $("#current-reloader").html("current");
+
+            getTenants($("#prop_identifier").text(), "current")
+          }else{
+            $(this).getLabels().addClass("underline");
+            $("#current-reloader").html("old");
+
+            getTenants($("#prop_identifier").text(), "old")
+          }
+        }
+
+      });
+
+
+      // $(".periods").change(function (e) {
+
+      //   //Getting status before unchecking all
+      //   var status = $(this).prop("checked");
+
+      //   $(".periods").prop('checked', false);
+      //   $(this).prop('checked', true);
+
+      //   //false means checkbox was checked and 
+      //   //became unchecked on change event, so let it stay unchecked
+      //   if (status === false) {
+      //     $(this).prop('checked', false);
+      //   }else{
+
+      //     if ($(this).val() == "current"){
+      //       // $('#cb1').prop('checked', true);
+      //       // $(".chb").change();
+      //       getTenants($("#prop_identifier").text(), $("#target_identifier").text(), $("input[name=readperiod]:checked").val())
+      //     }else{
+      //       // $(".chb").change();
+      //       // $('#cb1').prop('checked', true);
+      //       getTenants($("#prop_identifier").text(), $("#target_identifier").text(), $("input[name=readperiod]:checked").val())
+      //     }
+      //   }
+
+      // });
+
+</script>
+
+
+
 
 
 <script>
@@ -772,108 +777,6 @@
   })
 </script>
 
-
-
-<script>
-  
-  $("#reporttoggle").on('change',function(){
-
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb = document.getElementById("reporttoggle");
-    if (cb.checked){
-      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-
-      $("#current-reloader").html("new");
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"new"
-                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
-    }
-  
-  });
-  
-  $("#reporttoggle2").on('change',function(){
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb2 = document.getElementById("reporttoggle2");
-    if (cb2.checked){
-      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb3 = document.getElementById("reporttoggle3");
-      cb3.checked = false;
-
-      $("#current-reloader").html("current");
-
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"somestring"
-                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
-    }
-  
-  });
-
-  
-  $("#reporttoggle3").on('change',function(){
-    var x = document.getElementById("expandtoggler");
-    x.innerHTML = "expand";
-    $('.expand').addClass("dispnone-alt")
-
-    var cb3 = document.getElementById("reporttoggle3");
-    if (cb3.checked){
-      $("#child-result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
-      var cb = document.getElementById("reporttoggle");
-      cb.checked = false;
-      var cb2 = document.getElementById("reporttoggle2");
-      cb2.checked = false;
-
-      $("#current-reloader").html("old");
-
-
-      $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"old"
-                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
-    }
-
-  });
-
-</script>
 
 
   <!-- <script>
@@ -1012,19 +915,8 @@
               },3000)
 
               setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchtenants') }}",
-                  type: "get",
-                  data: {
-                    propid:  $("#prop_identifier").text(),
-                    target: "somestring"
-                  },
-                  success: function(response) {
-                    
-                    $("#child-result-view").html(response);
-                  }
-                });
-              },5000);
+                getTenants($("#prop_identifier").text(), "current")
+              },3000);
 
           },
           error:function(){
@@ -1073,19 +965,8 @@
               },3000)
 
               setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchtenants') }}",
-                  type: "get",
-                  data: {
-                    propid:  $("#prop_identifier").text(),
-                    target: "somestring"
-                  },
-                  success: function(response) {
-                    
-                    $("#child-result-view").html(response);
-                  }
-                });
-              },5000);
+                getTenants($("#prop_identifier").text(), "current")
+              },3000);
 
           },
           error:function(){
@@ -1103,115 +984,6 @@
   });
 </script>
 
-<script>
-  $("#uploadarrears").on('click',function(){
-      $("#uploadarrears").html("Uploading...") 
-
-      url = "{{ url_for('api.editbill') }}"
-
-      var fd = new FormData();
-      var files = $('#tenantarrearsfile')[0].files;
-      fd.append('file',files[0]);
-      fd.append('target',"excelarrearsupload");
-      fd.append('propid',$("#prop_identifier").text());
-
-      $.ajax({
-          type: "POST",
-          url: url,
-          data:fd,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-              $(".alert-msgs").html(response);
-              $("#uploadarrears").html("Uploaded") 
-
-              setTimeout(function(){
-                $("#uploadarrears").html("Upload") 
-                $(".alert-msgs").empty();
-                $(".reset").click();
-                $(".closemodal").click();
-              },3000)
-
-              setTimeout(function(){
-                $.ajax({
-                  url: "{{ url_for('api.fetchtenants') }}",
-                  type: "get",
-                  data: {
-                    propid:  $("#prop_identifier").text(),
-                    target: "somestring"
-                  },
-                  success: function(response) {
-                    
-                    $("#child-result-view").html(response);
-                  }
-                });
-              },5000);
-
-          },
-          error:function(){
-            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
-            $("#uploadarrears").html("Retry") 
-
-            setTimeout(function(){
-              $("#uploadarrears").html("Upload") 
-                $(".alert-msgs").empty();
-                $(".reset").click();
-                $(".closemodal").click();
-              },5000)
-          }
-      });
-  });
-</script>
-
-<!-- <script>
-  $("#newtenant").click(function(){   
-    var cb2 = document.getElementById("migrate2");
-    if (cb2.checked){
-      var migrate2 = "True";
-    }else{
-      var migrate2 = "False";
-    }
-    $("#newtenant").html("saving...")  
-      $.ajax({
-        url: "{{ url_for('api.addtenant') }}",
-        type: "POST",
-        data: {
-                propid: $("#prop_identifier").text(),
-                house: $("#select_house2").val(),
-                name: $("#new_name").val(),
-                national_id: $("#new_natid").val(),
-                tel: $("#new_tel").val(),
-                email: $("#new_email").val(),
-                migrate: migrate2,
-                arr: $("#new_arr").val()
-            },
-        success: function(response) {
-          $(".alert-msgs").html(response);
-          
-          setTimeout(function(){
-            $(".alert-msgs").empty();
-            $(".reset").click();
-            // $('#newtenant').attr('disabled', 'disabled');
-            $('#newtenant').removeClass('btn-success')
-            $('#newtenant').addClass('btn-secondary')
-            $("#newtenant").html("submit")
-          }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target: "current"
-                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
-        }
-      });
-  });
-</script> -->
 
 <script>
   $("#editTenantModal").on('shown.bs.modal', function(){
@@ -1269,18 +1041,10 @@
             $('#edittenant').addClass('btn-secondary')
             $("#edittenant").html("submit")
           }, 1500);
-          $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:$("#current-reloader").text()
-                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
+
+
+          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+
         }
       });
   });
@@ -1423,17 +1187,8 @@
             $("#allocatebtn").html("allocate")
             $("#closeAllocateHouseModal").click();
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:$("#current-reloader").text()                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
+          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+
         }
       });
   });
@@ -1517,17 +1272,8 @@
             $("#clearance_notifications").empty();
             $("#clear_tenant").html("Clear")
           }, 2000);
-          $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:$("#current-reloader").text()                },
-                success: function(response) {
-                  
-                  $("#child-result-view").html(response);
-                }
-              });
+          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+
         }
       });
   });
@@ -1553,18 +1299,8 @@
             }, 1500);
         setTimeout(function(){
 
-          $.ajax({
-              url: "{{ url_for('api.fetchtenants') }}",
-              type: "get",
-              data: {
-                propid:$("#prop_identifier").text(),
-                target:$("#current-reloader").text()
-            },
-              success: function(response) {
-                
-                $("#child-result-view").html(response);
-              }
-            });
+          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+
 
             }, 100);  
         
@@ -1591,6 +1327,13 @@ $('#expand').click(function(){
   $('.expand').toggleClass("dispnone-alt")
   tabletoggler();
 })
+</script>
+
+
+
+
+<script>
+  feather.replace();
 </script>
 
 

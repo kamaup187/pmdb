@@ -752,6 +752,8 @@ class AllProperties(Resource):
                 template = "ajax_prop_units.html"
             elif target == "meters":
                 template = "ajax_prop_meters.html"
+            elif target == "expenses":
+                template = "ajax_prop_expenses.html"
             else:
                 template = "ajax_allprops_detail.html"
 

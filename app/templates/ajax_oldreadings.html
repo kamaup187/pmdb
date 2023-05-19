@@ -1,5 +1,6 @@
 
-<div class="col-lg-12 text-black mb-1">Period: (<span class="font-weight-bold">{{period}}</span>) readings:</div>
+<div class="col-lg-12 text-black mb-1 ml-2 mt-2">Period: <span class="text-uppercase">{{period}} readings</span></div>
+
 <div class="col-lg-12 no-padding">
     <div id="reqdata" class="table-responsive ml-2">
         <table id="readingData" class="table shadow mb-1" width="100%" cellspacing="0">
@@ -117,40 +118,6 @@
         
       }else{
         $("#reading_identifier").html(item)
-
-        // $("#"+item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
-        // $.ajax({
-        //     url: "{{ url_for('api.sendinvoices') }}",
-        //     type: "POST",
-        //     data: {
-        //           billid:item,
-        //           prop:$("#prop_identifier").text(),
-        //           target:"isolated",
-        //           ctype:"water"
-        //         },
-        //     success: function(response) {
-
-        //       setTimeout(function(){
-        //         $.ajax({
-        //         url: "{{ url_for('api.fetchreadings') }}",
-        //         type: "get",
-        //         data: {
-        //               propid: $("#prop_identifier").text(),
-        //               target:$("#current-reloader").text()
-        //             },
-        //         success: function(response) {
-        //           $("#result-view").html(response);
-        //           // $("#select_house option:eq('1')").attr("selected", "selected");
-        //         }
-                
-        //       });
-        //       }, 3000);
-
-        //     },
-        //     error: function(xhr) {
-        //       $("#"+item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
-        //       }
-        //   });
       }
     });
   });

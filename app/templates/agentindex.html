@@ -610,22 +610,30 @@
 
             <!-- Nav Item - Messages -->
             <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#approvalModal" aria-haspopup="true" aria-expanded="false">
+                <!-- <i class="fas fa-tasks fa-fw text-black mr-2"></i><span class="text-black font-weight-bold">Tasks</span> -->
+                <span class="text-black"><i class="feather-18 text-black font-weight-bold" data-feather="list"></i>Tasks</span>
+
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
+              </a>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#unclaimedPaymentsModal" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-money-check-alt fa-fw text-black mr-2"></i><span class="text-black font-weight-bold"></span>
+                <!-- <i class="fas fa-money-check-alt fa-fw text-black mr-2"></i><span class="text-black font-weight-bold"></span> -->
+                <i class="feather-18 text-black font-weight-bold" data-feather="database"></i>
+
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter">{{cbids_num}}</span>
               </a>
             </li>
 
 
-            <!-- Nav Item - Messages -->
-            <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-toggle="modal" data-target="#approvalModal" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-tasks fa-fw text-black mr-2"></i><span class="text-black font-weight-bold">Tasks</span>
-                <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">{{unread_num}}</span>
-              </a>
-            </li>
+
 
             <li class="nav-item dropdown no-arrow mx-1 dispnone">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -664,7 +672,9 @@
             <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw text-black"></i>
+                <!-- <i class="fas fa-bell fa-fw text-black"></i> -->
+                <i class="feather-18 text-black font-weight-bold" data-feather="bell"></i>
+
                 <!-- Counter - Alerts -->
                 <span class="badge badge-info badge-counter">{{unread_nots}}</span>
               </a>
@@ -727,7 +737,9 @@
 
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="modal" data-target="#messageModal" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-comments fa-fw text-black"></i>
+                <!-- <i class="fas fa-comments fa-fw text-black"></i> -->
+                <i class="feather-18 text-black font-weight-bold" data-feather="message-square"></i>
+
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter">{{unread_num}}</span>
               </a>
@@ -792,11 +804,12 @@
 
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0 mr-3">
-                  <div class="font-weight-bold text-black"><span class="text-primary mr-1">Wallet</span><span class="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></div>
+                  <!-- <div class="font-weight-bold text-black"><span class="text-primary mr-1">Wallet</span><span class="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></div> -->
+                  <span class="text-black"><i class="feather-18 text-black font-weight-bold" data-feather="credit-card"></i> Wallet <span class="wallet"><i class="fas fa-sync-alt fa-spin ml-2"></i></span></span>
                 </div>
 
                 <div class="sidebar-brand-icon rotate-n-0">
-                  <div class="icon-stack bg-gradient-secondary text-white font-weight-bold">{{user_initials}}</div>
+                  <div class="icon-stack bg-gradient-dark text-white font-weight-bold">{{user_initials}}</div>
 
                   <!-- <i class="fas fa-user-circle fa-2x text-success"></i> -->
                 </div>
@@ -839,48 +852,45 @@
                     <div class="divjust-end center-btn">
 
                       <div class="">
-                        <i class="feather-16 text-black" data-feather="grid"></i>
-                        <button class="propbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold">Properties</button>
+                        <button class="propbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="grid"></i>Properties</button>
                       </div>
                       <div class="">
-                        <i class="feather-16 text-black" data-feather="home"></i>
-                        <button class="housebtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Houses</button>
+                        
+                        <button class="housebtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="home"></i>Houses/Units</button>
                       </div>
                       <div class="">
-                        <i class="feather-16 text-black" data-feather="users"></i>
-                        <button class="tenantbtn btn btn-outline-info border-none p-0 m-0  font-weight-bold ">Tenants/Residents</button>
+                        
+                        <button class="tenantbtn btn btn-light border-none p-0 m-0  font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="users"></i>Tenants/Residents</button>
                       </div>
                       <div class="">
-                        <i class="feather-16 text-black" data-feather="thermometer"></i>
-                        <button class="meterbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Meters</button>
+                        <button class="meterbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="droplet"></i>Meters</button>
                       </div>
                       <div class="">
-                        <i class="feather-16 text-black" data-feather="file-text"></i>
-                        <button class="billbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Invoices</button>
+                        <button class="billbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="file-text"></i>Invoices</button>
                       </div>
+        
+                      <div class="">
+                        <button class="paybtn2 btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="dollar-sign"></i>Payments</button>
+                      </div>
+                      <div class="">
+                        <button class="expensebtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                          <i class="feather-24 pb-1" data-feather="layers"></i>Expenses</button>
+                      </div>
+
                       <div class="dispnone">
-                        <i class="fas fa-fw fa-coins text-gray-600"></i>
-                        <button class="paybtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Payments</button>
-                      </div>
-                      <div class="">
-                        <i class="feather-16 text-black" data-feather="dollar-sign"></i>
-                        <button class="paybtn2 btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Payments</button>
-                      </div>
-                      <div class="">
-                        <i class="feather-16 text-black" data-feather="layers"></i>
-                        <button class="expensebtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Expenses</button>
-                      </div>
-                      <div class=" dispnone">
-                        <i class="fas fa-fw fa-calendar-check text-gray-600"></i>
-                        <button class="subbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Submissions</button>
-                      </div>
-                      <div class=" dispnone">
                         <i class="fas fa-fw fa-comments text-gray-600"></i>
-                        <button class="reqsbtn btn btn-outline-info border-none p-0 m-0 font-weight-bold ">Requests</button>
+                        <button class="reqsbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">Requests</button>
                       </div>
+
                       <div class="mr-2">
-                        <i class="feather-16 text-black" data-feather="printer"></i>
-                        <a class="text-info font-weight-bold btn btn-outline-info  border-none p-0 m-0" href="{{ url_for('api.reports') }}">Reports</a>
+                        <a class="text-black font-weight-bold btn btn-light border-none p-0 m-0" href="{{ url_for('api.reports') }}">
+                          <i class="feather-24 pb-1" data-feather="printer"></i>Reports</a>
                       </div>
 
                       <!-- <div class="fixed-width-btn">
@@ -4694,7 +4704,7 @@ $.ajax({
 });
 });
 
-$(".expensebtn").on('click',function(){
+$(".expensebtnn").on('click',function(){
   $("#barloader").removeClass("dispnone")
     setTimeout(function(){
       $("#barloader").addClass("dispnone")
@@ -4711,6 +4721,50 @@ $(".expensebtn").on('click',function(){
     $("#proplist").removeClass("dispnone")
     $("#searchresults").html("empty")
     $("#searchresults").addClass("dispnone")
+});
+
+
+
+
+$(".expensebtn").on('click',function(){
+
+$("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="thermometer"></i>PROPERTY EXPENSES'); feather.replace();
+$("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+$("#activeprop").empty();
+
+
+$("#propdisp").removeClass("dispnone")
+$("#body-block").addClass("dispnone")
+$("#proplist").addClass("dispnone")
+$("#searchresults").addClass("dispnone")
+
+
+$("#dummyData").removeClass('dispnone');
+$("#barloader-alt").removeClass("dispnone")
+
+$('#propdisp-content').empty()
+$("#searchresults").empty()
+
+
+
+url = "{{ url_for('api.allproperties') }}"
+
+$.ajax({
+    type: "get",
+    url: url,
+    data: {
+      target:"expenses"
+    },
+    success: function(response) {
+        $("#barloader-alt").addClass("dispnone")
+        $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+        $("#dummyData").addClass('dispnone');
+        $("#propdisp-content").html(response);
+    }
+});
 });
 
 $(".tenantbtnn").on('click',function(){

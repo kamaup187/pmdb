@@ -3531,8 +3531,10 @@ class ExpenseManagement(Resource):
 
         # all_expenses = filter_in_recent_data(prop_obj.expenses)
         if period == "old":
+            str_month = get_str_month(get_prev_month(prop_obj.billing_period.month))
             all_expenses = fetch_prev_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
         else:
+            str_month = get_str_month(prop_obj.billing_period.month)
             all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
 
         raw_approved_expenses = []
@@ -3542,29 +3544,15 @@ class ExpenseManagement(Resource):
         completed_expenses = []
         rejected_expenses = []
 
-        for i in all_expenses:
-            if i.status == "approved":
-                raw_approved_expenses.append(i)
-
-        if target == "approved":
-            for i in raw_approved_expenses:
+        if target == "approved" or target == "completed":
+            for i in all_expenses:
                 item = InternalExpenseOp.view(i)
                 approved_expenses.append(item)
 
             reqids = get_obj_ids(approved_expenses)
 
-            return render_template('ajax_search_expense.html',bills=approved_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-success",data_group="Approved requests")
+            return render_template('ajax_search_expense.html',items=approved_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-success",data_group=f"Approved requests: {str_month}")
 
-        if target == "completed":
-            #print("all exxxxxxwsss",all_expenses)
-            for i in all_expenses:
-                if i.status == "completed":
-                    item = InternalExpenseOp.view(i)
-                    completed_expenses.append(item)
-
-            reqids = get_obj_ids(completed_expenses)
-
-            return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-info",data_group="Completed requests")
 
         if target == "rejected":
             for i in all_expenses:
@@ -3574,7 +3562,7 @@ class ExpenseManagement(Resource):
 
             reqids = get_obj_ids(rejected_expenses)
 
-            return render_template('ajax_search_expense.html',bills=rejected_expenses,expids=reqids,approved_exps=raw_approved_expenses,data_group="Rejected requests")
+            return render_template('ajax_search_expense.html',items=rejected_expenses,expids=reqids,approved_exps=raw_approved_expenses,data_group=f"Rejected requests: {str_month}")
         
         elif target == "pending":
             for i in all_expenses:
@@ -3584,15 +3572,11 @@ class ExpenseManagement(Resource):
 
             reqids = get_obj_ids(pending_expenses)
 
-            return render_template('ajax_search_expense.html',bills=pending_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-danger",data_group="Pending expenses")
+            return render_template('ajax_search_expense.html',items=pending_expenses,expids=reqids,approved_exps=raw_approved_expenses,datahighlight="text-danger",data_group=f"Pending expenses: {str_month}")
 
-        else:
-            for item in all_expenses:
-                if item.status == "completed":     
-                    obj = InternalExpenseOp.view(item)
-                    completed_expenses.append(obj)
-            
-            reqids = get_obj_ids(completed_expenses)
+        else:            
+            reqids = []
+            completed_expenses = []
 
             return render_template("ajax_expenses.html",items=completed_expenses,approved_exps=raw_approved_expenses,expids=reqids,prop=prop_obj,propname=fname_extracter(str(prop_obj)))
 
@@ -3625,54 +3609,13 @@ class Expenses(Resource):
     """class"""
     @login_required
     def get(self):
-        # apartment_list = fetch_all_apartments_by_user(current_user)
-
-        # raw_expenses = []
-        # pending_expenses = []
-        # approved_expenses = []
-        
-        # for prop in apartment_list:
-        #     exps = prop.expenses
-        #     raw_expenses.append(exps)
-        
-        # all_expenses = flatten(raw_expenses)
-        # for item in all_expenses:
-        #     if item.status == "pending":
-        #         pending_expenses.append(item)
-
-        # for item in all_expenses:
-        #     if item.status == "approved":
-        #         approved_expenses.append(item)
-        
-
-        # my_expenses = []
-        # for r in pending_expenses:
-        #     obj = InternalExpenseOp.view(r)
-        #     my_expenses.append(obj)
-
-        # req_id_list = []
-        # for req in my_expenses:
-        #     req_id = req["id"]
-        #     req_id_list.append(req_id)
-
-        # return Response(render_template(
-        #     'expenses.html',
-        #     props=apartment_list,
-        #     bills=my_expenses,
-        #     expenseids=req_id_list,
-        #     approved_exps=approved_expenses,
-        #     name=current_user.name,
-        #     logopath=logo(current_user.company)[0],
-        #     mobilelogopath=logo(current_user.company)[1],
-        #     group=get_group_name(current_user.user_group_id)
-        # ))
         pass
     @login_required
     def post(self):
-        expense_id = request.form.get('expenseid')
-        action = request.form.get('action')
+        expenseid = request.form.get('expenseid')
+        expense_id = get_identifier(expenseid)
 
-        expid = request.form.get('expid')
+        action = request.form.get('action')
 
         propid = request.form.get('propid')
         expense_type = request.form.get('exp_type')
@@ -3715,53 +3658,19 @@ class Expenses(Resource):
             int_month = get_numeric_month(month)
             # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
             expense_period = generate_date_alt(int_month,2023) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
-
-        pending_expenses = []
-        completed_expenses = []
-        rejected_expenses = []
-
-        
+       
         db.session.expire(prop_obj)
 
         if run == "expenseapproval":
             if not action:
                 action = "pending"
             expense_obj = InternalExpenseOp.fetch_expense_by_id(expense_id)
-            status_before_edit = expense_obj.status
 
             InternalExpenseOp.update_status(expense_obj,action)
             InternalExpenseOp.update_comment(expense_obj,desc)
 
-            # all_expenses = filter_in_recent_data(prop_obj.expenses)
-            all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
+            return success
 
-            if status_before_edit == "pending":
-                for i in all_expenses:
-                    if i.status == "pending":
-                        item = InternalExpenseOp.view(i)
-                        pending_expenses.append(item)
-
-                reqids = get_obj_ids(pending_expenses)
-                return render_template('ajax_search_expense.html',bills=pending_expenses,expids=reqids,data_group="Pending expenses")
-
-
-            elif status_before_edit == "completed":
-                for i in all_expenses:
-                    if i.status == "completed":
-                        item = InternalExpenseOp.view(i)
-                        completed_expenses.append(item)
-
-                reqids = get_obj_ids(completed_expenses)
-                return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,data_group="Completed requests")
-
-            else:
-                for i in all_expenses:
-                    if i.status == "rejected":
-                        item = InternalExpenseOp.view(i)
-                        rejected_expenses.append(item)
-
-                reqids = get_obj_ids(rejected_expenses)
-                return render_template('ajax_search_expense.html',bills=rejected_expenses,expids=reqids,data_group="Rejected requests")
 
         elif run == "expenserequest":
             if not expense_type:
@@ -3772,17 +3681,7 @@ class Expenses(Resource):
 
             InternalExpenseOp.update_status(expense_obj,"completed")
 
-            # all_expenses = filter_in_recent_data(prop_obj.expenses)
-            all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
-
-            for i in all_expenses:
-                if i.status == "completed":
-                    item = InternalExpenseOp.view(i)
-                    completed_expenses.append(item)
-
-            reqids = get_obj_ids(completed_expenses)
-
-            return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,datahighlight="text-success",data_group="Completed requests")
+            return success
 
         elif run == "expenseedit":
             editid = request.form.get('editid')
@@ -3813,36 +3712,7 @@ class Expenses(Resource):
                 InternalExpenseOp.update_cost(expense_obj,None,target_cost,target_labour,target_amount)
                 InternalExpenseOp.update_expense_type(expense_obj,expense_type)
 
-            # all_expenses = filter_in_recent_data(prop_obj.expenses)
-            all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
-
-
-            if expense_obj.status == "pending":
-                for i in all_expenses:
-                    if i.status == "pending":
-                        item = InternalExpenseOp.view(i)
-                        pending_expenses.append(item)
-
-                reqids = get_obj_ids(pending_expenses)
-                return render_template('ajax_search_expense.html',bills=pending_expenses,expids=reqids,data_group="Pending expenses")
-
-            elif expense_obj.status == "completed":
-                for i in all_expenses:
-                    if i.status == "completed":
-                        item = InternalExpenseOp.view(i)
-                        completed_expenses.append(item)
-
-                reqids = get_obj_ids(completed_expenses)
-                return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,data_group="Completed requests")
-
-            else:
-                for i in all_expenses:
-                    if i.status == "rejected":
-                        item = InternalExpenseOp.view(i)
-                        rejected_expenses.append(item)
-
-                reqids = get_obj_ids(rejected_expenses)
-                return render_template('ajax_search_expense.html',bills=rejected_expenses,expids=reqids,data_group="Rejected requests")
+            return success
 
         elif run == "expensedelete":
             delid = request.form.get('delid')
@@ -3854,138 +3724,10 @@ class Expenses(Resource):
             number = delid[target_index:]
 
             expense_obj = InternalExpenseOp.fetch_expense_by_id(number)
-            status_before_delete = expense_obj.status
 
             InternalExpenseOp.delete(expense_obj)
-
-            # all_expenses = filter_in_recent_data(prop_obj.expenses)
-            all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
-
-            if status_before_delete == "pending":
-                for i in all_expenses:
-                    if i.status == "pending":
-                        item = InternalExpenseOp.view(i)
-                        pending_expenses.append(item)
-
-                reqids = get_obj_ids(pending_expenses)
-                return render_template('ajax_search_expense.html',bills=pending_expenses,expids=reqids,data_group="Pending expenses")
-
-            elif status_before_delete == "completed":
-                for i in all_expenses:
-                    if i.status == "completed":
-                        item = InternalExpenseOp.view(i)
-                        completed_expenses.append(item)
-
-                reqids = get_obj_ids(completed_expenses)
-                return render_template('ajax_search_expense.html',bills=completed_expenses,expids=reqids,data_group="Completed requests")
-
-            else:
-                for i in all_expenses:
-                    if i.status == "rejected":
-                        item = InternalExpenseOp.view(i)
-                        rejected_expenses.append(item)
-
-                reqids = get_obj_ids(rejected_expenses)
-                return render_template('ajax_search_expense.html',bills=rejected_expenses,expids=reqids,data_group="Rejected requests")
-
-
-        # elif run == "expensedisplay":
-        #     """deprecated"""
             
-        #     expenses = fetch_expenses(current_user)
-
-        #     my_expenses = []
-
-        #     req_id_list = []
-
-        #     if prop:
-        #         new_list = []
-        #         for item in expenses:
-        #             if str(item.apartment) == prop:
-        #                 new_list.append(item)
-
-        #     if date:
-        #         filter_list = [] #to hold filtered data
-        #         if prop:
-                    
-        #             for item in new_list:
-        #                 str_item_date = str(item.date.date())
-        #                 if str_item_date == date:
-        #                     filter_list.append(item)
-
-        #         else:
-        #             for item in expenses:
-        #                 str_item_date = str(item.date.date())
-        #                 if str_item_date == date:
-        #                     filter_list.append(item)
-
-        #     if status:
-        #         filter_list2 = [] # to hold further filtered data
-        #         if prop:
-        #             if date:
-        #                 for item in filter_list:
-        #                     if item.status == status:
-        #                         filter_list2.append(item)
-        #             else:
-        #                 for item in new_list:
-        #                     if item.status == status:
-        #                         filter_list2.append(item)
-
-        #         else:
-        #             if date:
-        #                 for item in filter_list:
-        #                     if item.status == status:
-        #                         filter_list2.append(item)
-        #             else:
-        #                 for item in expenses:
-        #                     if item.status == status:
-        #                         filter_list2.append(item)
-
-        #     else:
-        #         filter_list2 = []
-            
-
-        #     # my_expenses = []
-        #     if prop and date and status:
-        #         print("ayeya")
-        #         expense_data = filter_list2
-        #     elif prop and date:
-        #         expense_data = filter_list
-        #     elif prop and status:
-        #         expense_data = filter_list2
-        #     elif date and status:
-        #         expense_data = filter_list2
-        #     elif prop:
-        #         expense_data = new_list
-        #     elif date:
-        #         expense_data = filter_list
-        #     else:
-        #         expense_data = filter_list2
-
-        #     # expense_data = remove_dups(new_list)
-        #     for r in expense_data:
-        #         obj = InternalExpenseOp.view(r)
-        #         my_expenses.append(obj)
-
-        #     req_id_list = []
-        #     for req in my_expenses:
-        #         req_id = req["id"]
-        #         req_id_list.append(req_id)
-
-        #     return render_template('ajax_search_expense.html',bills=my_expenses,expids=req_id_list)
-
-            # my_expenses = []
-            # for r in expenses:
-            #     obj = InternalExpenseOp.view(r)
-            #     my_expenses.append(obj)
-
-            # req_id_list = []
-            # for req in my_expenses:
-            #     req_id = req["id"]
-            #     req_id_list.append(req_id)
-
-            # return render_template('ajax_search_expense.html',bills=my_expenses,expenseids=req_id_list)
-
+            return success
 
 
 
@@ -8802,43 +8544,23 @@ class Results(Resource):
                 paidtotal_sum_members.append(new_item['paid'])
 
             totalrent = sum_values(renttotal_sum_members)
-            renttotal = (f"{totalrent:,}")
 
             totalwater = sum_values(watertotal_sum_members)
-            watertotal = (f"{totalwater:,}")
             
             totalelectricity = sum_values(electricitytotal_sum_members)
-            electotal = (f"{totalelectricity:,}")
 
             totalgarbage = sum_values(garbagetotal_sum_members)
-            garbtotal = (f"{totalgarbage:,}")
 
             totalsecurity = sum_values(securitytotal_sum_members)
-            sectotal = (f"{totalsecurity:,}")
 
             totalservice = sum_values(servicetotal_sum_members)
-            servtotal = (f"{totalservice:,}")
 
             totalagreement = sum_values(agreementtotal_sum_members)
-            agrtotal = (f"{totalagreement:,}")
 
             totaldeposit = sum_values(deposittotal_sum_members)
-            deptotal = (f"{totaldeposit:,}")
 
             totalfine = sum_values(finetotal_sum_members)
-            finetotal = (f"{totalfine:,}")
 
-            totalarrears = sum_positive_values(arrearstotal_sum_members)
-            arrearstotal = (f"{totalarrears:,}")
-            
-            totalbill = sum_values(billtotal_sum_members)
-            billtotal = (f"{totalbill:,}")
-
-            totalpaid = sum_values(paidtotal_sum_members)
-            paidtotal = (f"{totalpaid:,}")
-
-            totalbalance = sum_positive_values(balancetotal_sum_members)
-            balancetotal = (f"{totalbalance:,}")
 
             fieldshow_sec = "dispnone" if not totalsecurity else ""
             fieldshow_sev = "dispnone" if not totalservice else ""
@@ -8867,19 +8589,6 @@ class Results(Resource):
             return render_template(
                 "ajax_bills_detail.html",
                 prop=prop_obj,
-                rent=renttotal,
-                water=watertotal,
-                elec=electotal,
-                garb=garbtotal,
-                sec=sectotal,
-                serv=servtotal,
-                arg=agrtotal,
-                dep=deptotal,
-                fine=finetotal,
-                arrears=arrearstotal,
-                total=billtotal,
-                paid=paidtotal,
-                bal=balancetotal,
                 fieldshow_dep=fieldshow_dep,
                 fieldshow_water=fieldshow_water,
                 fieldshow_rent=fieldshow_rent,

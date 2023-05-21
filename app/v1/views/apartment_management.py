@@ -1465,7 +1465,7 @@ class PropStats(Resource):
             collection_percentage = f"{collection_percentage:,.0f}",
             total_collections=(f"{total_collections:,.1f}"),
             total_balances=(f"{total_balances:,.1f}"),
-            total_bills = (f"{total_bills:,.1f}"),
+            total_bills = (f"{total_bills:,.1f} billaaaa"),
             numdefaulters = defaulters,
             numinvs = invss,
             proponfocus=proponfocus,
@@ -1633,6 +1633,8 @@ class GraphStats(Resource):
         collections_per_apartment = []
         bills_per_apartment = []
         units_per_apartment = []
+        occupancy = []
+        sms_per_property = []
 
         commission_per_apartment = []
 
@@ -1651,9 +1653,11 @@ class GraphStats(Resource):
             annual_month_collections=[] #list of monthlycollections combined totals
             annual_month_bills=[] #list of monthlycollections combined totals
             annual_month_units=[] #list of monthlycollections combined totals
-
+            annual_month_sms=[] #list of monthlysms combined totals
             annual_month_commissions = []
 
+            occupied = filter_in_occupied_houses(apartment.name)
+            tenancy = [len(occupied),len(apartment.houses)-len(occupied)]
 
             range_arg = period.month +1 
             months = [*range(1, range_arg, 1)]
@@ -1663,12 +1667,17 @@ class GraphStats(Resource):
                 that_month_total = 0
                 that_month_totalbill = 0
                 that_month_totalunits = 0
+                that_month_totalsms = 0
 
                 that_month_commissionable = 0
 
                 monthly_collection_data = [] #list of amounts of a particular month
                 monthly_bill_data = [] #list of amounts of a particular month
                 monthly_reading_data = [] #list of amounts of a particular month
+
+                for item in apartment.sent_messages:
+                    if item.date.month == month and item.date.year == period.year:
+                        that_month_totalsms += 1
 
 
                 for item in apartment.payment_data:
@@ -1714,17 +1723,25 @@ class GraphStats(Resource):
                 annual_month_collections.append(that_month_total)
                 annual_month_bills.append(that_month_totalbill)
                 annual_month_units.append(that_month_totalunits)
+                annual_month_sms.append(that_month_totalsms)
             
             collections_per_apartment.append(annual_month_collections) #list of lists
             bills_per_apartment.append(annual_month_bills) #list of lists
             units_per_apartment.append(annual_month_units) #list of lists
+            sms_per_property.append(annual_month_sms) #list of lists
+            occupancy.append(tenancy)
 
             commission_per_apartment.append(annual_month_commissions)
+
+        
 
                 
         collectiondatalist = [sum(elts) for elts in zip(*collections_per_apartment)]
         billdatalist = [sum(elts) for elts in zip(*bills_per_apartment)]
         unitdatalist = [sum(elts) for elts in zip(*units_per_apartment)]
+        tenancylist = [sum(elts) for elts in zip(*occupancy)]
+        smsdatalist = [sum(elts) for elts in zip(*sms_per_property)]
+
 
         commissiondatalist = [sum(elts) for elts in zip(*commission_per_apartment)]
 
@@ -1735,7 +1752,10 @@ class GraphStats(Resource):
         collection_string = ','.join(map(str, collectiondatalist))
         bill_string = ','.join(map(str, billdatalist))
         water_string = ','.join(map(str, unitdatalist))
+        pie_string = ','.join(map(str, tenancylist))
+        sms_string = ','.join(map(str,smsdatalist))
         commission_string = ','.join(map(str,commissiondatalist))
+
 
         if crm(current_user):
             template = 'ajax_load_graph_data3.html'
@@ -1749,6 +1769,8 @@ class GraphStats(Resource):
             collectionstring=collection_string,
             billstring=bill_string,
             waterstring=water_string,
+            smsstring=sms_string,
+            piestring=pie_string,
             incomestring=commission_string,
             outcomestring = 0,
             netcomestring=commission_string,
@@ -1789,7 +1811,11 @@ class Dashboard(Resource):
 
         if target == "proponfocus":
             currmonth = get_month_year(period)
-            return [prop,currmonth]
+            propa = smart_truncate(prop,20)
+            return [propa,currmonth]
+
+        if target == "walletstats":
+            return "0.0"
 
         if target == "expectedstats":
 

@@ -1,0 +1,129 @@
+
+
+
+
+    <!-- Area Chart -->
+        <div class="card shadow mb-1 bg-white">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <div class="m-0 text-black smallify targetprop add-skeleton-performance"><i class="feather-16 pb-1" data-feather="trending-up"></i>
+                  Performance: <span class="font-weight-bold font-italic targetprop">{{targetprop}}</span></div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <div class="chart-are add-skeleton-performance">
+                <p id="theInput" class="dispnone">{{billstring}}</p>
+                <p id="theInput2" class="dispnone">{{collectionstring}}</p>
+                <!-- <canvas id="myAreaChart"></canvas> -->
+                <canvas id="lineChart"></canvas>
+            </div>
+            </div>
+        </div>
+
+
+
+    <script>
+        var ctxL = document.getElementById("lineChart").getContext('2d');
+
+        var stringData = document.getElementById("theInput").innerText;
+        var app_data = stringData.split`,`.map(x=>+x);
+
+        var stringData2 = document.getElementById("theInput2").innerText;
+        var app_data2 = stringData2.split`,`.map(x=>+x);
+
+        var myLineChart = new Chart(ctxL, {
+        type: 'bar',
+        data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
+        datasets: [{
+        label: "Expected collection",
+        data: app_data,
+
+        backgroundColor: [
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)',
+        'rgba(105, 0, 132, .2)'
+        ],
+        borderColor: [
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)',
+        'rgba(200, 99, 132, .7)'
+        ],
+  
+        // backgroundColor: [
+        // 'rgba(105, 0, 132, .2)',
+        // ],
+        // borderColor: [
+        // 'rgba(200, 99, 132, .7)',
+        // ],
+        borderWidth: 2
+        },
+        {
+        label: "Actual collection",
+        data: app_data2,
+
+
+        // backgroundColor: [
+        // 'rgba(0, 137, 132, .2)',
+        // ],
+        // borderColor: [
+        // 'rgba(0, 10, 130, .7)',
+        // ],
+
+
+        backgroundColor: [
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)',
+        'rgba(0, 137, 132, .2)'
+        ],
+        borderColor: [
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)',
+        'rgba(0, 10, 130, .7)'
+        ],
+
+        borderWidth: 2
+        }
+        ]
+        },
+        options: {
+        responsive: true
+        }
+        });
+    </script>

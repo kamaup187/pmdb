@@ -1273,7 +1273,7 @@
                                   <div class="image-wrap">
                                     <button id="{{prop.id}}" class="btn btn-outline-success  borderles mb-2 fixed-width-prop no-margin divcol">
                                       <img class="img-prop text-xs" src="{{ prop.image_url }}" alt="--no image--"/>
-                                      <!-- <span class="small mobile-malaysia text-ss">{{prop.name}}</span> -->
+                                      <!-- <span class="small  text-ss">{{prop.name}}</span> -->
                                       <span class="small desktop-malaysia"><h6 class="text-black ln-14 font-weight-bold titanic-iceberg sss">{{prop.name}}</h6></span>
                                       <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
                                     </button>
@@ -1364,134 +1364,7 @@
 
             <!-- Content Row -->
 
-            <div id="dynamic-stats" class="row">
-
-                <div class="col-xl-3 col-md-6 mb-1 desktop-malaysian no-padding">
-                  <div class="card shadow h-100 py-0 {{card_theme}}">
-                    <div class="card-body titanic-iceberg-top titanic-iceberg-bottom">
-                        <div class="row no-gutters align-items-cente">
-                            <div class="col mr-0">
-                                <div class="text-xs text-gray-200 mb-1">{{month_string}} Bills (total)</div>
-                                <div class="text-xs text-gray-200 mb-1">{{month_string}} Paid (total)</div>
-                                <div class="text-xs text-gray-200 mb-1">Balance (Net)</div>
-                                <div class="text-xs text-gray-200 mb-1">Current Property</span></div>
-                                
-                            </div>
-                            <div class="col-auto">
-                                <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">
-                                  <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                                  <div class="fountainG-small">
-                                    <div class="fountainG_1s fountainG-s"></div>
-                                    <div class="fountainG_2s fountainG-s"></div>
-                                    <div class="fountainG_3s fountainG-s"></div>
-                                  </div>
-                                </div>
-                                <div class="text-xs mb-0 font-weight-bold text-gray-400 mb-1">
-                                  <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                                  <div class="fountainG-small">
-                                    <div class="fountainG_1s fountainG-s"></div>
-                                    <div class="fountainG_2s fountainG-s"></div>
-                                    <div class="fountainG_3s fountainG-s"></div>
-                                  </div>
-                                </div>
-                                <div class="text-xs mb-0 font-weight-bold text-white mb-2">
-                                  <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                                  <div class="fountainG-small">
-                                    <div class="fountainG_1s fountainG-s"></div>
-                                    <div class="fountainG_2s fountainG-s"></div>
-                                    <div class="fountainG_3s fountainG-s"></div>
-                                  </div>
-                                </div>
-                                <div class="text-xs mb-0 font-weight-bold text-warning mb-1">
-                                  <div class="fountainG-small">
-                                    <div class="fountainG_1s fountainG-s"></div>
-                                    <div class="fountainG_2s fountainG-s"></div>
-                                    <div class="fountainG_3s fountainG-s"></div>
-                                  </div>
-                                </div>
-                                <!-- <div class="progress progress-sm mr-2">
-                                  <div class="progress-bar bg-info" role="progressbar" style="width: {{occupancy_rate}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div> -->
-                            </div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
-                    <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
-                        <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white small">{{month_string}}</span> | Amount due(total)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
-                              <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                              <div class="fountainG-big">
-                                <div class="fountainG_1b fountainG-b"></div>
-                                <div class="fountainG_2b fountainG-b"></div>
-                                <div class="fountainG_3b fountainG-b"></div>
-                                <!-- <div id="fountainG_4" class="fountainG"></div>
-                                <div id="fountainG_5" class="fountainG"></div>
-                                <div id="fountainG_6" class="fountainG"></div>
-                                <div id="fountainG_7" class="fountainG"></div>
-                                <div id="fountainG_8" class="fountainG"></div> -->
-                              </div>
-                            </div>
-                            </div>
-                            <div class="col-auto">
-                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
-                    <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
-                        <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white small">{{month_string}}</span> | payments(total)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
-                              <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                              <div class="fountainG-big">
-                                <div class="fountainG_1b fountainG-b"></div>
-                                <div class="fountainG_2b fountainG-b"></div>
-                                <div class="fountainG_3b fountainG-b"></div>
-                              </div>
-                            </div>
-                            </div>
-                            <div class="col-auto">
-                            <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pending Requests Card Example -->
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
-                    <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
-                        <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Outstanding balance</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-500 addloader">
-                              <!-- <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div> -->
-                              <div class="fountainG-big">
-                                <div class="fountainG_1b fountainG-b"></div>
-                                <div class="fountainG_2b fountainG-b"></div>
-                                <div class="fountainG_3b fountainG-b"></div>
-                              </div>
-                            </div>
-                            </div>
-                            <div class="col-auto">
-                            <i class="fas fa-money-check-alt fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="dynamic-stats" class="row dispnone">
 
                 <!-- <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
                     <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
@@ -1520,39 +1393,11 @@
                     </div>
                 </div> -->
 
-                <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian dispnone">
-                  <div class="card border-left-dark shadow h-100 py-2 {{card_theme}}">
-                      <div class="card-body">
-                          <div class="row no-gutters align-items-center">
-                              <div class="col mr-2 dispnon">
-                                  <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Current Property</div>
-                                  <div class="align-items-center">
-                                      
-                                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-500 addloader">
-                                        <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
-
-                                        <!-- <div class="fountainG-big">
-                                          <div class="fountainG_1b fountainG-b"></div>
-                                          <div class="fountainG_2b fountainG-b"></div>
-                                          <div class="fountainG_3b fountainG-b"></div>
-                                        </div> -->
-                                        
-                                      </div>
-                                      
-                                  </div>
-                              </div>
-                              <div class="col-auto">
-                                  <i class="fas fa-city fa-2x text-gray-300"></i>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
             </div>
 
             <div class="row">
 
-            <div id="prop-card" class="col-xl-3 col-md-6 mb-1 mobile-malaysian prop-toggler">
+            <div id="prop-card" class="col-xl-3 col-md-6 mb-1  prop-toggler">
               <div class="card border-left-info shadow-alt h-100 py-2 {{card_theme}}">
                   <div class="card-body">
                       <div class="no-gutters">
@@ -1601,7 +1446,7 @@
               </div>
             </div>
       
-            <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+            <div class="col-xl-3 col-md-6 mb-1 ">
               <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -1609,9 +1454,12 @@
                       <div class="text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span
                           class="text-white dispnone">{{month_string}} | </span>Expected collection</div>
                       <div class="h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
+
+                        Kes <div class="d-inline-block ml-2 dot-elastic"></div>
             
-                        Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
-                          aria-hidden="true"></span>
+                        <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
+                          aria-hidden="true"></span> -->
+
                         <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
                                       <div class="cssload-container-alt"><div class="cssload-speeding-wheel-alt"></div></div>
                                       <div class="fountainG-big"><div class="fountainG_1b fountainG-b"></div><div class="fountainG_2b fountainG-b"></div><div class="fountainG_3b fountainG-b"></div></div> -->
@@ -1620,11 +1468,12 @@
                     <div class="col-auto billbtn">
                       <span class="text-gray-300">
                         <span class="fa-2x text-warning ln-10 addloader-alt" id="expectedstats2">
-                          <div class="fountainG-small d-inline mr-1">
+                          <!-- <div class="fountainG-small d-inline mr-1">
                             <div class="fountainG_1s fountainG-s"></div>
                             <div class="fountainG_2s fountainG-s"></div>
                             <div class="fountainG_3s fountainG-s"></div>
-                          </div>
+                          </div> -->
+                          <div class="d-inline-block ml-2 dot-elastic"></div>
                         </span>
                       </span>
                       <div class="text-gray-300" id="expectedstats3">invoices</div>
@@ -1634,19 +1483,21 @@
               </div>
             </div>
       
-            <div class="col-xl-3 col-md-6 mb-1 no-padding mobile-malaysian">
+            <div class="col-xl-3 col-md-6 mb-1 no-padding ">
                 <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                     <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2 border-right-warning">
                         <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white dispnone">{{month_string}} | </span>Actual collection</div>
                         <div class="h5 mb-0 font-weight-bold text-warning addloader" id="collectionstats">
-                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                          Kes <div class="d-inline-block ml-2 dot-elastic"></div>
+                          <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
                         </div>
                         </div>
                         <div class="col-auto">
-                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10" id="collectionstats2">
-                            <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10 addloader-alt" id="collectionstats2">
+                            <div class="d-inline-block ml-2 dot-elastic"></div>
+                            <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
                           <div class="text-gray-300">collection ratio</div>
                         </div>
@@ -1656,19 +1507,21 @@
             </div>
       
       
-            <div class="col-xl-3 col-md-6 mb-1 mobile-malaysian">
+            <div class="col-xl-3 col-md-6 mb-1 ">
                 <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                     <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2 border-right-warning">
                         <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Balance</div>
                         <div class="h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
-                          Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>
+                          Kes <div class="d-inline-block ml-2 dot-elastic"></div>
+                          <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
                         </div>
                         </div>
                         <div class="balancebtn col-auto border-left-warnin">
-                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10" id="balancestats2">
-                            <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>
+                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10 addloader-alt" id="balancestats2">
+                            <div class="d-inline-block ml-2 dot-elastic"></div>
+                            <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
                           <div class="nonpaybtn text-gray-300">unpaid invoices</div>
                         </div>
@@ -1940,67 +1793,22 @@
             </div>
 
 
-                            <!-- Pie Chart -->
-              <div class="dispnone col-12">
-                <div class="card shadow mb-1 bg-white">
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 
-                            <div class="font-weight-bold">
-                              <div class="fountainG-small">
-                                <div class="fountainG_1s fountainG-s"></div>
-                                <div class="fountainG_2s fountainG-s"></div>
-                                <div class="fountainG_3s fountainG-s"></div>
-                              </div>
-                            </div>
-                          
-                            <div class="font-weight-bold">
-                              <div class="fountainG-small">
-                                <div class="fountainG_1s fountainG-s"></div>
-                                <div class="fountainG_2s fountainG-s"></div>
-                                <div class="fountainG_3s fountainG-s"></div>
-                              </div>
-                            </div>
-
-                            <div class="font-weight-bold">
-                              <div class="fountainG-small">
-                                <div class="fountainG_1s fountainG-s"></div>
-                                <div class="fountainG_2s fountainG-s"></div>
-                                <div class="fountainG_3s fountainG-s"></div>
-                              </div>
-                            </div>
-
-                            <div class="font-weight-bold">
-                              <div class="fountainG-small">
-                                <div class="fountainG_1s fountainG-s"></div>
-                                <div class="fountainG_2s fountainG-s"></div>
-                                <div class="fountainG_3s fountainG-s"></div>
-                              </div>
-                            </div>
-
-                    </div>
-                </div>
-
-              </div>
             </div>
 
             <div id="graph-area" class="row">
 
-                <!-- Area Chart -->
-              <div class="col-lg-6">
+              <!-- Area Chart -->
+              <div class="col-lg-5">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
-                        <div class="m-0 font-weight-bold text-info"><i class="fas fa-chart-line mr-2"></i>Expected vs Actual Collections</div>
-                        <div class="fountainG-small d-inline mr-1">
-                          <div class="fountainG_1s fountainG-s"></div>
-                          <div class="fountainG_2s fountainG-s"></div>
-                          <div class="fountainG_3s fountainG-s"></div>
-                        </div>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="trending-up"></i>
+                          Perfomance: <span class="font-weight-bold font-italic targetprop hide">placeholder placeholder</span></div>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                    <div class="chart-are">
+                    <div class="chart-are title-loading">
                         <p id="theInput" class="dispnone">{{billstring}}</p>
                         <p id="theInput2" class="dispnone">{{collectionstring}}</p>
                         <!-- <canvas id="myAreaChart"></canvas> -->
@@ -2010,24 +1818,52 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
-                        <div class="m-0 font-weight-bold text-info"><i class="fas fa-chart-bar mr-2"></i>Water consumption</div>
-                        <div class="fountainG-small d-inline mr-1">
-                          <div class="fountainG_1s fountainG-s"></div>
-                          <div class="fountainG_2s fountainG-s"></div>
-                          <div class="fountainG_3s fountainG-s"></div>
-                        </div>
-
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="trending-up"></i> Sent sms: <span
+                                class="font-weight-bold font-italic hide">placeholder placeholder</span></div>
+                
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                    <div class="chart-are">
-                        <p id="theInput3" class="dispnone">{{billstring}}</p>
-                        <canvas id="barChart"></canvas>
+
+
+                        <div class="chart-are pb-5 pt-3 title-loading">
+
+                            <p id="theInputSms" class="dispnone">{{waterstring}}</p>
+                            <!-- <canvas id="barChart"></canvas> -->
+                            <canvas id="smsChart"></canvas>
+                        </div>
+                
                     </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card shadow mb-1 bg-white">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="trending-up"></i> Occupancy: <span class="font-weight-bold font-italic hide">placeholder placeholder</span></div>
+
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body ">
+                    <div class="chart-are pb-4 pt-4 title-loading">
+                        <p id="theInput4" class="dispnone">{{waterstring}}</p>
+                        <!-- <canvas id="barChart"></canvas> -->
+                        <canvas id="myPieChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center pb-4 pt-3 title-loading">
+                        <span class="mr-2">
+                          <i class="fas fa-circle text-primary"></i> Occupied
+                        </span>
+                        <span class="mr-2">
+                          <i class="fas fa-circle text-success"></i> Vacant
+                        </span>
+                      </div>
+
                     </div>
                 </div>
             </div>
@@ -2831,39 +2667,39 @@
             }
         });
     }
-    function getPropData() {
-        $.ajax({
-            url: "{{ url_for('api.propdata') }}",
-            type: 'get',
-            success: function(data) {
-                // $('#dynamic-content').html(data);
-                $("#barloader").addClass("dispnone")
-                $('#dynamic-props').html(data);
+    // function getPropData() {
+    //     $.ajax({
+    //         url: "{{ url_for('api.propdata') }}",
+    //         type: 'get',
+    //         success: function(data) {
+    //             // $('#dynamic-content').html(data);
+    //             $("#barloader").addClass("dispnone")
+    //             $('#dynamic-props').html(data);
   
-            },
-            complete:function(data) {
-                setTimeout(getPropStats, 10);
-            }
-        });
-    }
+    //         },
+    //         complete:function(data) {
+    //             setTimeout(getPropStats, 10);
+    //         }
+    //     });
+    // }
   
-    function getPropStats() {
-        $.ajax({
-            url: "{{ url_for('api.propstats') }}",
-            type: 'get',
-            data: {
-                    prop: localStorage.getItem('propvar')
-                  },
-            success: function(data) {
-                // $('#dynamic-content').html(data);
-                $('#dynamic-stats').html(data);
+    // function getPropStats() {
+    //     $.ajax({
+    //         url: "{{ url_for('api.propstats') }}",
+    //         type: 'get',
+    //         data: {
+    //                 prop: localStorage.getItem('propvar')
+    //               },
+    //         success: function(data) {
+    //             // $('#dynamic-content').html(data);
+    //             $('#dynamic-stats').html(data);
   
-            },
-            complete:function(data) {
-                // setTimeout(getHouseStats, 10);
-            }
-        });
-    }
+    //         },
+    //         complete:function(data) {
+    //             // setTimeout(getHouseStats, 10);
+    //         }
+    //     });
+    // }
   
     // function getHouseStats() {
     //     $.ajax({
@@ -2882,36 +2718,17 @@
     //         }
     //     });
     // }
-    function getGraphStats() {
-        $.ajax({
-            url: "{{ url_for('api.graphstats') }}",
-            type: 'get',
-            data: {
-                    prop: localStorage.getItem('propvar'),
-                    month: localStorage.getItem('monthvar')
 
-                  },
-            success: function(data) {
-                // $('#dynamic-content').html(data);
-                $('#graph-area').html(data);
-  
-            },
-            // complete:function(data) {
-            //     setTimeout(getFeed, 1000);
-            // }
-        });
 
-        setTimeout(getWalletBalance, 10);
+    getFeed();
 
-    }
-    
     // $(document).ready(function() {
     //     setTimeout(getFeed,1);
     //     setTimeout(getPropData,10);
     // });
   
-    setTimeout(getFeed,1);
-    setTimeout(getPropData,10);
+    // setTimeout(getFeed,1);
+    // setTimeout(getPropData,10);
 
   
     // $(document).ready(function() {
@@ -2974,6 +2791,7 @@
   
   <script>
     feather.replace()
+    $("#barloader").addClass("dispnone")
   </script>
 
 
@@ -3581,11 +3399,26 @@ function animateHH(element) {
   $('#viewperiod').datepicker().on('changeDate', function () {
     localStorage.setItem('monthvar',this.value);
 
-    $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
-    $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
-    $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+    // $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
+    // $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
+    // $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+    $(".addloader").html('Kes <div class="d-inline-block ml-2 dot-elastic"></div>')
+    $(".fixloader").html('<div class="d-inline-block ml-2 dot-elastic"></div>')
+    $(".addloader-alt").html('<div class="d-inline-block ml-2 dot-elastic"></div>')
+
 
     getCurrentProp();
+    getExpectedStats();
+    getCollectionStats();
+    getBalanceStats();
+    getPropStats();
+    getHouseStats();
+    getPTenantStats();
+    getTenantStats();
+    getVacantStats();
+    getGraphStats();
+    getWalletBalance();
+
   });
 
 </script>
@@ -3940,12 +3773,24 @@ function animateHH(element) {
 
       localStorage.setItem('propvar',propvar);
 
-      $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
-      $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
-      $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+      // $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
+      // $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
+      // $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
+      $(".addloader").html('Kes <div class="d-inline-block ml-2 dot-elastic"></div>')
+      $(".fixloader").html('<div class="d-inline-block ml-2 dot-elastic"></div>')
+      $(".addloader-alt").html('<div class="d-inline-block ml-2 dot-elastic"></div>')
 
       getCurrentProp()
-      // getHouseStats()
+      getExpectedStats()
+      getCollectionStats()
+      getBalanceStats()
+      getPropStats()
+      getHouseStats()
+      getPTenantStats()
+      getTenantStats()
+      getVacantStats()
+      getGraphStats()
+      getWalletBalance()
   });
 </script>
 
@@ -3987,7 +3832,6 @@ function animateHH(element) {
   }
 
 function goodSnack() {
-  console.log("good got called");
   $("#snackbed").html('<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>');
   $("#snackbar").addClass("show");
   setTimeout(function () {
@@ -3995,12 +3839,15 @@ function goodSnack() {
   }
 
 function badSnack() {
-  console.log("bad got called");
   $("#snackbed").html('<div id="snackbar" class="error"><i class="fas fa-times"></i> Failed! operation unsuccessful<div>');
   $("#snackbar").addClass("show");
   setTimeout(function () {
     $("#snackbar").removeClass("show")}, 3000);
   }
+
+
+
+
 
   function getCurrentProp(){
     $.ajax({
@@ -4017,7 +3864,7 @@ function badSnack() {
         },
     });
 
-    setTimeout(getExpectedStats, 10);
+    // setTimeout(getExpectedStats, 10);
 
   }
 
@@ -4038,7 +3885,7 @@ function badSnack() {
         },
     });
 
-    setTimeout(getCollectionStats, 10);
+    // setTimeout(getCollectionStats, 10);
 
   }
 
@@ -4057,7 +3904,7 @@ function badSnack() {
         },
     });
 
-    setTimeout(getBalanceStats, 10);
+    // setTimeout(getBalanceStats, 10);
 
   }
 
@@ -4076,11 +3923,11 @@ function badSnack() {
         },
     });
 
-    setTimeout(getPropStatsAlt, 10);
+    // setTimeout(getPropStats, 10);
 
   }
 
-  function getPropStatsAlt() {
+  function getPropStats() {
         $.ajax({
             url: "{{ url_for('api.dashboard') }}",
             type: 'get',
@@ -4094,7 +3941,7 @@ function badSnack() {
   
             }
         });
-      setTimeout(getHouseStats, 10);
+      // setTimeout(getHouseStats, 10);
 
     }
 
@@ -4112,7 +3959,7 @@ function badSnack() {
   
             }
         });
-      setTimeout(getPTenantStats, 10);
+      // setTimeout(getPTenantStats, 10);
 
     }
 
@@ -4130,7 +3977,7 @@ function badSnack() {
   
             }
         });
-      setTimeout(getTenantStats, 10);
+      // setTimeout(getTenantStats, 10);
 
     }
 
@@ -4148,7 +3995,7 @@ function badSnack() {
   
             }
         });
-      setTimeout(getVacantStats, 10);
+      // setTimeout(getVacantStats, 10);
 
     }
 
@@ -4166,7 +4013,29 @@ function badSnack() {
   
             }
         });
-      setTimeout(getGraphStats, 10);
+      // setTimeout(getGraphStats, 10);
+
+    }
+
+
+    function getGraphStats() {
+          $('.add-skeleton').addClass("title-loading");  
+        $.ajax({
+            url: "{{ url_for('api.graphstats') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    month: localStorage.getItem('monthvar')
+
+                  },
+            success: function(data) {
+                $('#graph-area').html(data);  
+                $('.add-skeleton').removeClass("title-loading"); 
+
+            },
+        });
+
+        // setTimeout(getWalletBalance, 10);
 
     }
 
@@ -4177,7 +4046,7 @@ function badSnack() {
             type: 'get',
             data: {
                     prop: localStorage.getItem('propvar'),
-                    target:"vacantstats"
+                    target:"walletstats"
 
                   },
             success: function(data) {
@@ -4189,6 +4058,16 @@ function badSnack() {
     }
 
   getCurrentProp()
+  getExpectedStats()
+  getCollectionStats()
+  getBalanceStats()
+  getPropStats()
+  getHouseStats()
+  getPTenantStats()
+  getTenantStats()
+  getVacantStats()
+  getGraphStats()
+  getWalletBalance()
 
 </script>
 
@@ -4881,63 +4760,157 @@ $("#closemodule").on('click',function(){
   responsive: true
   }
   });
-</script>
-
-<script>
-  var ctxB = document.getElementById("barChart").getContext('2d');
 
 
-  var stringData3 = document.getElementById("theInput3").innerText;
-  var app_data3 = stringData3.split`,`.map(x=>+x);
+  var ctxP = document.getElementById("myPieChart");
+    var myPieChart = new Chart(ctxP, {
+    type: 'doughnut',
+    data: {
+        labels: ["Occupied", "Vacant"],
+        datasets: [{
+        data: [60, 40],
+        backgroundColor: ['#4e73df', '#1cc88a'],
+        hoverBackgroundColor: ['#2e59d9', '#17a673'],
+        hoverBorderColor: "rgba(234, 236, 244, 1)",
+        }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        caretPadding: 10,
+        },
+        legend: {
+        display: false
+        },
+        cutoutPercentage: 50,
+    },
+    });
 
-  var myBarChart = new Chart(ctxB, {
-  type: 'bar',
-  data: {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
-  datasets: [{
-  label: '# of units consumed(total)',
-  data: [],
-  backgroundColor: [
-  'rgba(255, 99, 132, 0.2)',
-  'rgba(54, 162, 235, 0.2)',
-  'rgba(255, 206, 86, 0.2)',
-  'rgba(75, 192, 192, 0.2)',
-  'rgba(153, 102, 255, 0.2)',
-  'rgba(255, 159, 64, 0.2)',
-  'rgba(255, 99, 132, 0.2)',
-  'rgba(54, 162, 235, 0.2)',
-  'rgba(255, 206, 86, 0.2)',
-  'rgba(75, 192, 192, 0.2)',
-  'rgba(153, 102, 255, 0.2)',
-  'rgba(255, 159, 64, 0.2)'
-  ],
-  borderColor: [
-  'rgba(255,99,132,1)',
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 206, 86, 1)',
-  'rgba(75, 192, 192, 1)',
-  'rgba(153, 102, 255, 1)',
-  'rgba(255, 159, 64, 1)',
-  'rgba(255,99,132,1)',
-  'rgba(54, 162, 235, 1)',
-  'rgba(255, 206, 86, 1)',
-  'rgba(75, 192, 192, 1)',
-  'rgba(153, 102, 255, 1)',
-  'rgba(255, 159, 64, 1)'
-  ],
-  borderWidth: 1
-  }]
-  },
-  options: {
-  scales: {
-  yAxes: [{
-  ticks: {
-  beginAtZero: true
-  }
-  }]
-  }
-  }
-  });
+
+
+    function number_format(number, decimals, dec_point, thousands_sep) {
+      // *     example: number_format(1234.56, 2, ',', ' ');
+      // *     return: '1 234,56'
+      number = (number + '').replace(',', '').replace(' ', '');
+      var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+        s = '',
+        toFixedFix = function(n, prec) {
+          var k = Math.pow(10, prec);
+          return '' + Math.round(n * k) / k;
+        };
+      // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+      s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+      if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+      }
+      if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
+      }
+      return s.join(dec);
+    }
+
+
+
+    // Area Chart Example
+    var ctx = document.getElementById("smsChart");
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: "Earnings",
+          lineTension: 0.3,
+          backgroundColor: "rgba(78, 115, 223, 0.05)",
+          borderColor: "rgba(78, 115, 223, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointBorderColor: "rgba(78, 115, 223, 1)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+          pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: [0, 000, 000, 000, 00, 0000, 000, 000, 000, 000, 0, 00],
+        }],
+      },
+      options: {
+        maintainAspectRatio: true,
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
+        scales: {
+          xAxes: [{
+            time: {
+              unit: 'date'
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            ticks: {
+              maxTicksLimit: 11
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              maxTicksLimit: 5,
+              padding: 10,
+              // Include a dollar sign in the ticks
+              callback: function(value, index, values) {
+                return number_format(value);
+              }
+            },
+            gridLines: {
+              color: "rgb(234, 236, 244)",
+              zeroLineColor: "rgb(234, 236, 244)",
+              drawBorder: false,
+              borderDash: [2],
+              zeroLineBorderDash: [2]
+            }
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          titleMarginBottom: 10,
+          titleFontColor: '#6e707e',
+          titleFontSize: 14,
+          borderColor: '#dddfeb',
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          displayColors: false,
+          intersect: false,
+          mode: 'index',
+          caretPadding: 10,
+          callbacks: {
+            label: function(tooltipItem, chart) {
+              var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+              return datasetLabel + ': KES' + number_format(tooltipItem.yLabel);
+            }
+          }
+        }
+      }
+    });
 </script>
 
 <script>

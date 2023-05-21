@@ -1409,8 +1409,7 @@
                                         class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i
                                           class="fas fa-caret-down mr-2"></i>Property<i class="fas fa-caret-down ml-2"></i></div>
                                       <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentprop">
-                                        <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
-                                          aria-hidden="true"></span>
+                                        <div class="d-inline-block ml-2 dot-elastic"></div>
                                       </div>
                                     
                                     
@@ -1429,8 +1428,7 @@
                                         class="d-inline p-1 select-prop prop-toggle text-xs font-weight-bold text-white text-uppercase mb-1"><i
                                           class="fas fa-caret-down mr-2"></i>Showing<i class="fas fa-caret-down ml-2"></i></div>
                                       <div class="h5 mb-0 font-weight-bold text-warning prop-display prop-toggle" id="currentmonth">
-                                        <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status"
-                                          aria-hidden="true"></span>
+                                        <div class="d-inline-block ml-2 dot-elastic"></div>
                                       </div>
                                     
                                       <div class="form-group mb-0 dispnone prop-select">
@@ -1450,10 +1448,10 @@
               <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 border-right-warning">
-                      <div class="text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span
+                    <div class="col mr-1 pr-1 border-right-warning">
+                      <div class="title-loading exp-coll-sloader text-xs font-weight-bold text-white text-uppercase mb-1 no-wrap"><span
                           class="text-white dispnone">{{month_string}} | </span>Expected collection</div>
-                      <div class="h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
+                      <div class="title-loading exp-coll-sloader h5 mb-0 font-weight-bold text-warning addloader" id="expectedstats">
 
                         Kes <div class="d-inline-block ml-2 dot-elastic"></div>
             
@@ -1487,9 +1485,9 @@
                 <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                     <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2 border-right-warning">
-                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white dispnone">{{month_string}} | </span>Actual collection</div>
-                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="collectionstats">
+                        <div class="col mr-1 border-right-warning pr-1">
+                        <div class="title-loading act-coll-sloader text-xs font-weight-bold text-white text-uppercase mb-1"><span class="text-white dispnone">{{month_string}} | </span>Actual collection</div>
+                        <div class="title-loading act-coll-sloader h5 mb-0 font-weight-bold text-warning addloader" id="collectionstats">
                           Kes <div class="d-inline-block ml-2 dot-elastic"></div>
                           <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
                         </div>
@@ -1511,9 +1509,9 @@
                 <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                     <div class="card-body">
                     <div class="row no-gutters align-items-center">
-                        <div class="col mr-2 border-right-warning">
-                        <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Balance</div>
-                        <div class="h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
+                        <div class="col mr-1 pr-1 border-right-warning">
+                        <div class="title-loading bal-sloader text-xs font-weight-bold text-white text-uppercase mb-1">Balance</div>
+                        <div class="title-loading bal-sloader h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
                           Kes <div class="d-inline-block ml-2 dot-elastic"></div>
                           <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
                         </div>
@@ -1745,13 +1743,14 @@
 
               <div class="col-12">
                 <div class="card shadow mb-1 bg-white">
-                    <div class="card-header py-0 p-2 d-flex flex-row align-items-center justify-content-between x-smallify">
+                    <div class="card-header py-0 p-2 d-flex flex-row align-items-center justify-content-between x-smallify title-loadin">
 
                             <div class="font-weight-bold">
                               <i class="fas fa-city text-info ml-1"></i>
                               <span class="text-black">Properties: </span>
                               <span class="text-primary fa-2x mr-1 ln-28 fixloader" id="propstats">
-                                <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                <div class="d-inline-block ml-2 dot-elastic"></div>
+                                <!-- <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span> -->
                               </span>
                             </div>
                           
@@ -1759,7 +1758,7 @@
                               <i class="fas fa-home text-info ml-1"></i>
                               <span class="text-black">Houses: </span>
                                 <span class="text-primary fa-2x mr-1 ln-10 fixloader" id="housestats">
-                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                  <div class="d-inline-block ml-2 dot-elastic"></div>
                                 </span>
                             </div>
 
@@ -1767,7 +1766,7 @@
                               <i class="fas fa-users text-info ml-1"></i>
                               <span class="text-black">Residents: </span>
                                 <span class="text-success fa-2x mr-1 ln-10 fixloader" id="ptenantstats">
-                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                  <div class="d-inline-block ml-2 dot-elastic"></div>
                                 </span>
                             </div>
 
@@ -1775,7 +1774,7 @@
                               <i class="fas fa-users text-info ml-1"></i>
                               <span class="text-black">Tenants: </span>
                                 <span class="text-success fa-2x mr-1 ln-10 fixloader" id="tenantstats">
-                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                  <div class="d-inline-block ml-2 dot-elastic"></div>
                                 </span>
                             </div>
 
@@ -1783,7 +1782,7 @@
                               <i class="fas fa-door-open text-info ml-1"></i>
                               <span class="text-black">Vacant(rented units): </span>
                                 <span class="text-danger fa-2x mr-1 ln-10 fixloader" id="vacantstats">
-                                  <span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>
+                                  <div class="d-inline-block ml-2 dot-elastic"></div>
                                 </span>
                             </div>
 
@@ -1799,12 +1798,12 @@
             <div id="graph-area" class="row">
 
               <!-- Area Chart -->
-              <div class="col-lg-5">
+              <div id="performance-graph-area" class="col-lg-5">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="trending-up"></i>
-                          Perfomance: <span class="font-weight-bold font-italic targetprop hide">placeholder placeholder</span></div>
+                          Performance: <span class="font-weight-bold font-italic targetprop hide">placeholder placeholder</span></div>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
@@ -1818,7 +1817,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div id="sms-graph-area" class="col-lg-4">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -1841,7 +1840,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-3">
+            <div id="occupancy-pie-area" class="col-lg-3">
                 <div class="card shadow mb-1 bg-white">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -3416,7 +3415,12 @@ function animateHH(element) {
     getPTenantStats();
     getTenantStats();
     getVacantStats();
-    getGraphStats();
+
+    // getGraphStats();
+    getPerformanceGraph()
+    getSmsGraph()
+    getOccupancyPie()
+
     getWalletBalance();
 
   });
@@ -3789,7 +3793,11 @@ function animateHH(element) {
       getPTenantStats()
       getTenantStats()
       getVacantStats()
-      getGraphStats()
+      // getGraphStats()
+      getPerformanceGraph()
+      getSmsGraph()
+      getOccupancyPie()
+
       getWalletBalance()
   });
 </script>
@@ -3870,6 +3878,7 @@ function badSnack() {
 
 
   function getExpectedStats() {
+    $(".exp-coll-sloader").addClass("title-loading")
     $.ajax({
         url: "{{ url_for('api.dashboard') }}",
         type: 'get',
@@ -3882,6 +3891,7 @@ function badSnack() {
             $('#expectedstats').text(data[0]);
             $('#expectedstats2').text(data[1]);
             $('#expectedstats3').text(data[2]);
+            $(".exp-coll-sloader").removeClass("title-loading")
         },
     });
 
@@ -3890,6 +3900,8 @@ function badSnack() {
   }
 
   function getCollectionStats() {
+    $(".act-coll-sloader").addClass("title-loading")
+
     $.ajax({
         url: "{{ url_for('api.dashboard') }}",
         type: 'get',
@@ -3901,6 +3913,8 @@ function badSnack() {
         success: function(data) {
             $('#collectionstats').text(data[0]);
             $('#collectionstats2').text(data[1]);
+            $(".act-coll-sloader").removeClass("title-loading")
+
         },
     });
 
@@ -3909,6 +3923,7 @@ function badSnack() {
   }
 
   function getBalanceStats() {
+    $(".bal-sloader").addClass("title-loading")
     $.ajax({
         url: "{{ url_for('api.dashboard') }}",
         type: 'get',
@@ -3920,6 +3935,7 @@ function badSnack() {
         success: function(data) {
             $('#balancestats').text(data[0]);
             $('#balancestats2').text(data[1]);
+            $(".bal-sloader").removeClass("title-loading")
         },
     });
 
@@ -4040,6 +4056,74 @@ function badSnack() {
     }
 
 
+    function getPerformanceGraph() {
+          $('.add-skeleton-performance').addClass("title-loading");  
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    month: localStorage.getItem('monthvar'),
+                    target:"performance graph"
+
+                  },
+            success: function(data) {
+                $('#performance-graph-area').html(data);  
+                $('.add-skeleton-performance').removeClass("title-loading"); 
+
+            },
+        });
+
+        // setTimeout(getWalletBalance, 10);
+
+    }
+
+    function getSmsGraph() {
+          $('.add-skeleton-sms').addClass("title-loading");  
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    month: localStorage.getItem('monthvar'),
+                    target:"sms graph"
+
+                  },
+            success: function(data) {
+                $('#sms-graph-area').html(data);  
+                $('.add-skeleton-sms').removeClass("title-loading"); 
+
+            },
+        });
+
+        // setTimeout(getWalletBalance, 10);
+
+    }
+
+    function getOccupancyPie() {
+          $('.add-skeleton-pie').addClass("title-loading");  
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    month: localStorage.getItem('monthvar'),
+                    target:"occupancy pie"
+
+                  },
+            success: function(data) {
+                $('#occupancy-pie-area').html(data);  
+                $('.add-skeleton-pie').removeClass("title-loading"); 
+
+            },
+        });
+
+        // setTimeout(getWalletBalance, 10);
+
+    }
+
+
+
     function getWalletBalance() {
         $.ajax({
             url: "{{ url_for('api.dashboard') }}",
@@ -4066,7 +4150,13 @@ function badSnack() {
   getPTenantStats()
   getTenantStats()
   getVacantStats()
-  getGraphStats()
+
+  // getGraphStats()
+  getPerformanceGraph()
+  getSmsGraph()
+  getOccupancyPie()
+
+
   getWalletBalance()
 
 </script>

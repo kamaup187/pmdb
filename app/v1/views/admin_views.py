@@ -1448,7 +1448,10 @@ class Properties(Resource):
                 pps = []
 
                 try:
-                    curr_user = UserOp.fetch_user_by_usercode("6753")
+                    if localenv:
+                        curr_user = UserOp.fetch_user_by_usercode("2786")
+                    else:
+                        curr_user = UserOp.fetch_user_by_usercode("6753")
                     props = fetch_all_apartments_by_user(curr_user)
                     for prop in props:
                         vacs = filter_out_occupied_houses(prop.name)
@@ -1512,7 +1515,10 @@ class PropertiesByLocation(Resource):
             if bearer == hash:
                 pps = []
                 regions = []
-                curr_user = UserOp.fetch_user_by_usercode("6753")
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
                 try:
                     loc_name = location_name.title()
                 except:
@@ -1593,8 +1599,12 @@ class Property(Resource):
         if auth:
             bearer = auth.split(" ")[1]
             if bearer == hash:
-                curr_user = UserOp.fetch_user_by_usercode("6753")
 
+
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 propid = get_identifier(property_code)
                 prop = ApartmentOp.fetch_apartment_by_id(propid)
@@ -1679,8 +1689,10 @@ class Units(Resource):
                 else:
                     houses = []
 
-                    curr_user = UserOp.fetch_user_by_usercode("6753")
-
+                    if localenv:
+                        curr_user = UserOp.fetch_user_by_usercode("2786")
+                    else:
+                        curr_user = UserOp.fetch_user_by_usercode("6753")
 
                     if not prop in curr_user.company.props:
 
@@ -1778,7 +1790,11 @@ class Unit(Resource):
                     }
 
                 else:
-                    curr_user = UserOp.fetch_user_by_usercode("6753")
+
+                    if localenv:
+                        curr_user = UserOp.fetch_user_by_usercode("2786")
+                    else:
+                        curr_user = UserOp.fetch_user_by_usercode("6753")
 
                     props = fetch_all_apartments_by_user(curr_user)
 
@@ -1862,7 +1878,10 @@ class VacantUnits(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
 
-                curr_user = UserOp.fetch_user_by_usercode("6753")
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 props = fetch_all_apartments_by_user(curr_user)
 
@@ -1932,7 +1951,10 @@ class VacantUnitsByProperty(Resource):
 
                 houses = []
 
-                curr_user = UserOp.fetch_user_by_usercode("6753")
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 propid = get_identifier(property_code)
                 
@@ -2021,8 +2043,10 @@ class FetchInvoicesPerProperty(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
                 houses = []
-
-                curr_user = UserOp.fetch_user_by_usercode("6753")
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
 
                 propid = get_identifier(property_code)
                 
@@ -2141,7 +2165,10 @@ class FetchInvoicePerUnit(Resource):
                     }
 
                 else:
-                    curr_user = UserOp.fetch_user_by_usercode("6753")
+                    if localenv:
+                        curr_user = UserOp.fetch_user_by_usercode("2786")
+                    else:
+                        curr_user = UserOp.fetch_user_by_usercode("6753")
 
                     props = fetch_all_apartments_by_user(curr_user)
 
@@ -2337,8 +2364,11 @@ class FetchLocations(Resource):
             bearer = auth.split(" ")[1]
             if bearer == hash:
 
+                if localenv:
+                    curr_user = UserOp.fetch_user_by_usercode("2786")
+                else:
+                    curr_user = UserOp.fetch_user_by_usercode("6753")
 
-                curr_user = UserOp.fetch_user_by_usercode("6753")
                 locs = LocationOp.fetch_all_locations()
 
                 props = fetch_all_apartments_by_user(curr_user)

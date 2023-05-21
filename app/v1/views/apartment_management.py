@@ -1595,39 +1595,6 @@ class GraphStats(Resource):
             except:
                 period = datetime.datetime.now()
 
-        # time = datetime.datetime.now()
-       
-        # if current_user.company and current_user.id != 1:
-        #     present_month = current_user.company.billing_period.month
-        #     present_year = current_user.company.billing_period.year
-        # else:
-        #     present_month = time.month
-        #     present_year = time.year
-            
-        # if not present_month: # remove this check on april 2021
-        #     present_month = time.month
-        # if not present_year:
-        #     present_year = time.year
-        
-
-        # apartment_list = fetch_all_apartments_by_user(current_user)
-        # prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-        # props = []
-        # if prop == "All properties":
-        #     props = apartment_list
-        # elif prop_obj:
-        #     if prop_obj in apartment_list:
-        #         props.append(prop_obj)
-        #     else:
-        #         try:
-        #             props.append(apartment_list[0])
-        #         except:
-        #             pass
-        # else:
-        #     try:
-        #         props.append(apartment_list[0])
-        #     except:
-        #         pass
         ###############################################################################
 
         collections_per_apartment = []
@@ -1642,12 +1609,6 @@ class GraphStats(Resource):
 
         for apartment in props:
             db.session.expire(apartment)
-
-            # prop_messages = []
-            # for msg in prop_messages:
-            #     if msg.status == "pending":
-            #         unread_messages.append(msg)
-
 
             ##########################################
             annual_month_collections=[] #list of monthlycollections combined totals
@@ -1811,11 +1772,117 @@ class Dashboard(Resource):
 
         if target == "proponfocus":
             currmonth = get_month_year(period)
-            propa = smart_truncate(prop,20)
+            propa = smart_truncate(prop,16)
             return [propa,currmonth]
 
         if target == "walletstats":
             return "0.0"
+
+        if target == "performance graph":
+            collections_per_apartment = []
+            bills_per_apartment = []
+
+            for apartment in props:
+                db.session.expire(apartment)
+
+                ##########################################
+                annual_month_collections=[] #list of monthlycollections combined totals
+                annual_month_bills=[] #list of monthlycollections combined totals
+
+                range_arg = period.month +1 
+                months = [*range(1, range_arg, 1)]
+                
+                for month in months:
+                    that_month_total = 0
+                    that_month_totalbill = 0
+
+                    for item in apartment.payment_data:
+                        if item.pay_period.month == month and item.pay_period.year == period.year and not item.voided:
+                            that_month_total += item.amount
+
+                    for item in apartment.monthlybills:
+                        if item.month == month and item.year == period.year:
+                            that_month_totalbill += item.total_bill
+
+                    annual_month_collections.append(that_month_total)
+                    annual_month_bills.append(that_month_totalbill)
+                
+                collections_per_apartment.append(annual_month_collections) #list of lists
+                bills_per_apartment.append(annual_month_bills) #list of lists
+
+            collectiondatalist = [sum(elts) for elts in zip(*collections_per_apartment)]
+            billdatalist = [sum(elts) for elts in zip(*bills_per_apartment)]
+
+            ############################################################
+       
+            collection_string = ','.join(map(str, collectiondatalist))
+            bill_string = ','.join(map(str, billdatalist))
+       
+                
+            return Response(render_template(
+                'ajax_performance_graph.html',
+                targetprop = prop,
+                collectionstring=collection_string,
+                billstring=bill_string,
+            ))
+
+        if target == "sms graph":
+            sms_per_property = []
+
+            for apartment in props:
+                db.session.expire(apartment)
+
+                ##########################################
+                annual_month_sms=[] #list of monthlysms combined totals
+
+                range_arg = period.month +1 
+                months = [*range(1, range_arg, 1)]
+                
+                for month in months:
+                    that_month_totalsms = 0
+
+                    for item in apartment.sent_messages:
+                        if item.date.month == month and item.date.year == period.year:
+                            that_month_totalsms += 1
+                    
+                    annual_month_sms.append(that_month_totalsms)
+
+                sms_per_property.append(annual_month_sms) #list of lists
+
+            smsdatalist = [sum(elts) for elts in zip(*sms_per_property)]
+
+            ############################################################
+        
+            sms_string = ','.join(map(str,smsdatalist))
+                
+            return Response(render_template(
+                "ajax_sms_graph.html",
+                targetprop = prop,
+                smsstring=sms_string,
+            ))
+
+        if target == "occupancy pie":
+            occupancy = []
+
+            for apartment in props:
+                db.session.expire(apartment)
+
+                occupied = filter_in_occupied_houses(apartment.name)
+                tenancy = [len(occupied),len(apartment.houses)-len(occupied)]
+             
+                occupancy.append(tenancy)
+
+            tenancylist = [sum(elts) for elts in zip(*occupancy)]
+
+            ############################################################
+        
+            pie_string = ','.join(map(str, tenancylist))
+                       
+            return Response(render_template(
+                "ajax_occupancy_piechart.html",
+                targetprop = prop,
+                piestring=pie_string,
+            ))
 
         if target == "expectedstats":
 

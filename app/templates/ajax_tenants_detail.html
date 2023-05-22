@@ -584,7 +584,10 @@
 <script type="text/javascript">
   $("#backbtn").click(function () {
     $("#result-view").removeClass("dispnone");
-    $("#child-view").addClass("dispnone")
+    reloadParent()
+    $("#child-view").addClass("dispnone");
+    $("#child-view").empty();
+    $("#tenancy-reloader").text("parent");
     $("#activeprop").empty();
   })
 </script>
@@ -1265,6 +1268,8 @@
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+
+          getFeed();
           
           setTimeout(function(){
             $(".alert-msgs").empty();

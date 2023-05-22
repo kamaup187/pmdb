@@ -7289,9 +7289,44 @@ class ReadingStats(Resource):
         metered_units = len(filter_in_metered_houses(prop_obj.name))
         read_units = metered_units - unread_units
 
-        return [len(houses),metered_units,read_units,unread_units,"-",readdate.month]
-    
+        str_month = get_str_month(readdate.month)
 
+        if not metered_units:
+            str_month = "n/a"
+            unread_units = "n/a"
+
+        return [len(houses),metered_units,read_units,unread_units,"-",str_month]
+
+class ExpenseStats(Resource):
+    def get(self):
+
+        prop_id = request.args.get("propid")
+        propid = get_identifier(prop_id)
+        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        db.session.expire(prop_obj)
+        readperiod = request.args.get('readperiod')
+
+        totcost = 0.0
+
+        if readperiod == "old":
+            str_month = get_str_month(get_prev_month(prop_obj.billing_period.month))
+            all_expenses = fetch_prev_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
+        else:
+            str_month = get_str_month(prop_obj.billing_period.month)
+            all_expenses = fetch_current_billing_period_data(prop_obj.billing_period,prop_obj.expenses)
+            # readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
+
+        for item in all_expenses:
+            try:
+                totcost += item.amount
+            except:
+                print("calculation error")
+
+        if not all_expenses:
+            str_month = "-"
+
+        return [len(all_expenses),totcost,str_month]
+    
 class FetchStatistics(Resource):
     def get(self):
 

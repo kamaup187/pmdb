@@ -123,36 +123,11 @@ function autocomplete(inp, arr) {
                     $("#barloader").addClass("dispnone")
                     $("#body-block").addClass("dispnone")
                     $("#propdisp").addClass("dispnone")
-                    $('#proplist').addClass('dispnone')
                     $('#searchresults').removeClass('dispnone')
-  
-  
-                    if ($('#content-area').hasClass("isopen") || $('#list-area').hasClass("isopen") || $('#search-area').hasClass("isopen")) {
-                      console.log("pass")
-                    } else {
-                      $('#sidebarToggle').click();
-                      $('#smaccordionSidebar').removeClass("toggled");
-                    }
-  
+    
   
                     $("#searchresults").html(response);
-                    $("#search-area").addClass("isopen")
-  
-                    // $.ajax({
-                    //   url: "/fetch/bills",
-                    //   type: "get",
-                    //   data: {
-                    //     tenantid:$("#id-holder").text(),
-                    //     ttarget:"ttarget",
-                    //     target:"tenant bill"
-                    //   },
-                    //   success: function(response) {
-  
-                    //     $("#search-result-view").html(response);
-                    //   }
-                    // });
-  
-  
+    
                   }
                 });
                 /*close the list of autocompleted values,
@@ -237,8 +212,6 @@ function autocomplete(inp, arr) {
   
   $("#search-btn").on('click', function(e) {
               
-    // $("#body-block").addClass("dispnone")
-    // $("#spinner").removeClass("dispnone")
     $("#preloader-btn").click();
     $("#barloader").removeClass("dispnone")
   
@@ -253,46 +226,19 @@ function autocomplete(inp, arr) {
         $("#barloader").addClass("dispnone")
   
         $("#body-block").addClass("dispnone")
-        $('#proplist').addClass('dispnone')
         $("#propdisp").addClass("dispnone")
         $("#searchresults").removeClass("dispnone")
-  
-  
-        if ($('#content-area').hasClass("isopen") || $('#list-area').hasClass("isopen") || $('#search-area').hasClass("isopen")){
-          console.log("pass")
-        } else {
-          $('#sidebarToggle').click();
-          $('#smaccordionSidebar').removeClass("toggled");
-        }
-  
+    
         $("#searchresults").html(response);
-        $("#search-area").addClass("isopen")
-        // if ($("#tenant_identifier").text()){
-        //   $.ajax({
-        //     url: "/fetch/bills",
-        //     type: "get",
-        //     data: {
-        //       tenantid:$("#id-holder").text(),
-        //       ttarget:"ttarget",
-        //       target:"tenant bill"
-        //     },
-        //     success: function(response) {
-              
-        //       $("#search-result-view").html(response);
-        //     }
-        //   });
-        // }
+
       }
     });
   });
   
   $("#search-mobile-btn").on('click', function(e) {
               
-    // $("#body-block").addClass("dispnone")
-    // $("#spinner").removeClass("dispnone")
     $("#preloader-btn").click();
     $("#barloader").removeClass("dispnone")
-  
   
     $.ajax({
       url: "/results",
@@ -303,41 +249,12 @@ function autocomplete(inp, arr) {
         $("#barloader").addClass("dispnone")
   
         $("#body-block").addClass("dispnone")
-        $('#proplist').addClass('dispnone')
         $("#propdisp").addClass("dispnone")
-        // $("#spinner").addClass("dispnone")
-        
-  
-  
-        if ($('#content-area').hasClass("isopen") || $('#list-area').hasClass("isopen") || $('#search-area').hasClass("isopen")){
-          console.log("pass")
-        } else {
-          $('#sidebarToggle').click();
-          $('#smaccordionSidebar').removeClass("toggled");
-        }
-  
-  
+         
         $("#searchresults").removeClass("dispnone")
-  
-  
+    
         $("#searchresults").html(response);
-        $("#search-area").addClass("isopen")
         
-        // if ($("#tenant_identifier").text()){
-        //   $.ajax({
-        //     url: "/fetch/bills",
-        //     type: "get",
-        //     data: {
-        //       tenantid:$("#id-holder").text(),
-        //       ttarget:"ttarget",
-        //       target:"tenant bill"
-        //     },
-        //     success: function(response) {
-              
-        //       $("#search-result-view").html(response);
-        //     }
-        //   });
-        // }
       }
     });
   });

@@ -1,73 +1,100 @@
+<!-- Area Chart -->
+<div class="card shadow mb-1 bg-white">
+  <!-- Card Header - Dropdown -->
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="m-0 text-black smallify targetprop add-skeleton-performance"><i class="feather-16 pb-1"
+        data-feather="bar-chart-2"></i>
+      Performance: <span class="font-weight-bold font-italic targetprop">{{targetprop}}</span></div>
+  </div>
+  <!-- Card Body -->
+  <div class="card-body">
+    <div class="chart-are add-skeleton-performance">
+      <p id="theInput" class="dispnone">{{billstring}}</p>
+      <p id="theInput2" class="dispnone">{{collectionstring}}</p>
+      <!-- <canvas id="myAreaChart"></canvas> -->
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+</div>
 
 
 
+<script>
 
-    <!-- Area Chart -->
-        <div class="card shadow mb-1 bg-white">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <div class="m-0 text-black smallify targetprop add-skeleton-performance"><i class="feather-16 pb-1" data-feather="trending-up"></i>
-                  Performance: <span class="font-weight-bold font-italic targetprop">{{targetprop}}</span></div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-            <div class="chart-are add-skeleton-performance">
-                <p id="theInput" class="dispnone">{{billstring}}</p>
-                <p id="theInput2" class="dispnone">{{collectionstring}}</p>
-                <!-- <canvas id="myAreaChart"></canvas> -->
-                <canvas id="lineChart"></canvas>
-            </div>
-            </div>
-        </div>
+  function number_format(number, abbr, decimals, dec_point, thousands_sep) {
+    // *     example: number_format(1234.56, 2, ',', ' ');
+    // *     return: '1 234,56'
+    var abr = (typeof abbr === 'undefined') ? 1 : abbr
 
+    number = (number * abr + '').replace(',', '').replace(' ', '');
+    var n = !isFinite(+number) ? 0 : +number,
+      prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+      sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+      dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+      s = '',
+      toFixedFix = function (n, prec) {
+        var k = Math.pow(10, prec);
+        return '' + Math.round(n * k) / k;
+      };
+    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (s[0].length > 3) {
+      s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+    if ((s[1] || '').length < prec) {
+      s[1] = s[1] || '';
+      s[1] += new Array(prec - s[1].length + 1).join('0');
+    }
+    return s.join(dec);
+  }
 
+  // console.log('================================',number_format(345000,0.01))
 
-    <script>
-        var ctxL = document.getElementById("lineChart").getContext('2d');
+  var ctxL = document.getElementById("lineChart").getContext('2d');
 
-        var stringData = document.getElementById("theInput").innerText;
-        var app_data = stringData.split`,`.map(x=>+x);
+  var stringData = document.getElementById("theInput").innerText;
+  var app_data = stringData.split`,`.map(x => +x);
 
-        var stringData2 = document.getElementById("theInput2").innerText;
-        var app_data2 = stringData2.split`,`.map(x=>+x);
+  var stringData2 = document.getElementById("theInput2").innerText;
+  var app_data2 = stringData2.split`,`.map(x => +x);
 
-        var myLineChart = new Chart(ctxL, {
-        type: 'bar',
-        data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
-        datasets: [{
-        label: "Expected collection",
+  var myLineChart = new Chart(ctxL, {
+    type: 'bar',
+    data: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+      datasets: [{
+        label: "Expected collection (Kes `000)",
         data: app_data,
 
         backgroundColor: [
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)',
-        'rgba(105, 0, 132, .2)'
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)',
+          'rgba(105, 0, 132, .2)'
         ],
         borderColor: [
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)',
-        'rgba(200, 99, 132, .7)'
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)',
+          'rgba(200, 99, 132, .7)'
         ],
-  
+
         // backgroundColor: [
         // 'rgba(105, 0, 132, .2)',
         // ],
@@ -75,9 +102,9 @@
         // 'rgba(200, 99, 132, .7)',
         // ],
         borderWidth: 2
-        },
-        {
-        label: "Actual collection",
+      },
+      {
+        label: "Actual collection (Kes `000)",
         data: app_data2,
 
 
@@ -90,40 +117,110 @@
 
 
         backgroundColor: [
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)',
-        'rgba(0, 137, 132, .2)'
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)',
+          'rgba(0, 137, 132, .2)'
         ],
         borderColor: [
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)',
-        'rgba(0, 10, 130, .7)'
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)',
+          'rgba(0, 10, 130, .7)'
         ],
 
         borderWidth: 2
+      }
+      ]
+    },
+    // options: {
+    // responsive: true
+    // }
+
+    options: {
+      maintainAspectRatio: true,
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0
         }
-        ]
-        },
-        options: {
-        responsive: true
+      },
+      scales: {
+        xAxes: [{
+          time: {
+            unit: 'date'
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            maxTicksLimit: 11
+          }
+        }],
+        yAxes: [{
+          ticks: {
+            maxTicksLimit: 15,
+            beginAtZero: true,
+            padding: 5,
+            // Include a dollar sign in the ticks
+            callback: function (value, index, values) {
+              return number_format(value,0.001);
+            }
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: true,
+            borderDash: [2],
+            zeroLineBorderDash: [2]
+          }
+        }],
+      },
+
+      legend: {
+        display: true
+      },
+
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: '#6e707e',
+        titleFontSize: 14,
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: true,
+        intersect: false,
+        mode: 'index',
+        caretPadding: 10,
+        callbacks: {
+          label: function (tooltipItem, chart) {
+            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+            return ' Kes ' + number_format(tooltipItem.yLabel);
+          }
         }
-        });
-    </script>
+      }
+    }
+  });
+</script>

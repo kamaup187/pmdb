@@ -4777,7 +4777,8 @@ class SmsDelivery(Resource):
 
                 co = payment_obj.apartment.company
                 raw_rem_sms =co.remainingsms
-                str_co = co.name
+
+                str_co = f"\n\n ~ {payment_obj.apartment.name} (UID{str(co.id)})"
 
                 tele = tenant_obj.phone
                 name = tenant_obj.name
@@ -4819,7 +4820,8 @@ class SmsDelivery(Resource):
                 billing_period = get_billing_period(prop_obj)
 
                 co = invoice_obj.apartment.company
-                str_co = co.name
+
+                str_co = f"\n\n ~ {invoice_obj.apartment.name} (UID{str(co.id)})"
 
                 tele = tenant.phone
                 name = tenant.name

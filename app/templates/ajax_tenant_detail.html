@@ -847,55 +847,42 @@
 
 <script>
   $("#close-searchresults").on('click',function(){
-    if($("#content-area").hasClass("isopen")){
+    $('#searchresults').addClass('dispnone');
+    $('#searchresults').html("empty");
+
+
+    if ($("#propdisp-content").html().length > 0){
       $('#propdisp').removeClass('dispnone');
-      
-      $('#searchresults').addClass('dispnone');
-      $('#search-area').removeClass('isopen');
 
-      if ($('#tenant-area').hasClass('isactive')){
-        console.log("ajax expend")
-        $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"somestring"
-                },
-                success: function(response) {
-                  
-                  $("#result-view").html(response);
-                }
-              });
+      if($('#tenancy-reloader').text() == "children"){
+        // do child stuff
+        getTenants($("#prop_identifier").text(), "current")
+
+      }else if($('#tenancy-reloader').text() == "parent"){
+        // do parent stuff
+        reloadParent()
+      }else{
+        // do nothing
       }
-      $(".fixloader").html(
-                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
-            );
-            $(".fixloader2").html(
-                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
-            );
-      setTimeout(getPropStats, 10);
-
-      $('#searchresults').html("empty");
-
-    }else if($('#list-area').hasClass("isopen")){
-      // $('#propdisp').removeClass('dispnone');
-
-      $('#proplist').removeClass('dispnone');
-      $('#searchresults').html("empty");
-      $('#searchresults').addClass('dispnone');
-      $('#search-area').removeClass('isopen');
-    } else {
-      // $('#propdisp').removeClass('dispnone');
-
-      $('#searchresults').addClass('dispnone');
-      $('#search-area').removeClass('isopen');
+    }else{
       $('#body-block').removeClass('dispnone')
-      $('#searchresults').html("empty");
-      $('#sidebarToggle').click();
-      $('#smaccordionSidebar').removeClass("toggled");
-    }
 
+      getCurrentProp()
+      getExpectedStats()
+      getCollectionStats()
+      getBalanceStats()
+      getPropStats()
+      getHouseStats()
+      getPTenantStats()
+      getTenantStats()
+      getVacantStats()
+      // getGraphStats()
+      getPerformanceGraph()
+      getSmsGraph()
+      getOccupancyPie()
+
+      getWalletBalance()
+    }
   });
 </script>
 
@@ -1645,6 +1632,8 @@
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+
+          getFeed();
           
           setTimeout(function(){
             $(".alert-msgs").empty();

@@ -376,7 +376,7 @@
                 $("#dummyData").addClass('dispnone');
                 $("#propdisp-content").removeClass('dispnone');
 
-
+                $("#tenancy-reloader").text("children")
 
                 $("#child-view").html(response);
               }
@@ -415,6 +415,38 @@
 
 
 
+</script>
+
+
+<script>
+      function reloadParent() {
+        var rawIds = "{{ propids|safe }}";
+          var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+          $.each(ids, function (i, item) {
+        
+            if (isNaN(parseInt(item))){
+              //do nothing
+            }else{
+
+              $("#houseinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+              $("#tenantinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+
+              $.ajax({
+              url: "{{ url_for('api.fetchtenancy') }}",
+              type: "get",
+              data: {
+                    propid: item
+                  },
+              success: function(response) {
+                $("#houseinfo-" + item ).text(response[0]);
+                $("#tenantinfo-" + item ).text(response[1]);
+              }
+            });
+            }
+
+          });
+
+    }
 </script>
 
 
@@ -563,6 +595,8 @@ $("#downloadtenants").click(function(){
 
           snack(response);
 
+          getFeed();
+
 
           if (migrate3 == "True"){
             $.ajax({
@@ -586,31 +620,33 @@ $("#downloadtenants").click(function(){
           }, 2000);
 
 
-          var rawIds = "{{ propids|safe }}";
-          var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
-          $.each(ids, function (i, item) {
+          // var rawIds = "{{ propids|safe }}";
+          // var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+          // $.each(ids, function (i, item) {
         
-            if (isNaN(parseInt(item))){
-              //do nothing
-            }else{
+          //   if (isNaN(parseInt(item))){
+          //     //do nothing
+          //   }else{
 
-              $("#houseinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
-              $("#tenantinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+          //     $("#houseinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
+          //     $("#tenantinfo-" + item ).html('<div class="dot-elastic mt-2"></div>');
 
-              $.ajax({
-              url: "{{ url_for('api.fetchtenancy') }}",
-              type: "get",
-              data: {
-                    propid: item
-                  },
-              success: function(response) {
-                $("#houseinfo-" + item ).text(response[0]);
-                $("#tenantinfo-" + item ).text(response[1]);
-              }
-            });
-            }
+          //     $.ajax({
+          //     url: "{{ url_for('api.fetchtenancy') }}",
+          //     type: "get",
+          //     data: {
+          //           propid: item
+          //         },
+          //     success: function(response) {
+          //       $("#houseinfo-" + item ).text(response[0]);
+          //       $("#tenantinfo-" + item ).text(response[1]);
+          //     }
+          //   });
+          //   }
 
-          });
+          // });
+
+          reloadParent();
 
 
 

@@ -153,24 +153,18 @@
       //do nothing
     }else{
       $.ajax({
-      url: "{{ url_for('api.readingstats') }}",
+      url: "{{ url_for('api.expensestats') }}",
       type: "get",
       data: {
             propid: item
           },
       success: function(response) {
-        // $("#houseinfo-" + item ).text(response[0]);
-        // $("#meterinfo-" + item ).text(response[1]);
-        // $("#readinginfo-" + item ).text(response[2]);
-
-        $("#itemsinfo-" + item ).text("-");
-        $("#costinfo-" + item ).text("-");
-        $("#monthinfo-" + item ).text("-");
+        $("#itemsinfo-" + item ).text(response[0]);
+        $("#costinfo-" + item ).text(response[1]);
+        $("#monthinfo-" + item ).text(response[2]);
       }
     });
     }
-
-
 
   });
 

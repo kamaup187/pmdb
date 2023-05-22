@@ -1881,6 +1881,8 @@ class Dashboard(Resource):
             return Response(render_template(
                 "ajax_occupancy_piechart.html",
                 targetprop = prop,
+                occupied = tenancylist[0],
+                vacant = tenancylist[1],
                 piestring=pie_string,
             ))
 

@@ -2,7 +2,7 @@
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
       <div class="m-0 text-black smallify targetprop add-skeleton-sms"><i class="feather-16 pb-1"
-          data-feather="trending-up"></i> Sent sms: <span class="font-weight-bold font-italic">{{targetprop}}</span>
+          data-feather="bar-chart-2"></i> Sent sms: <span class="font-weight-bold font-italic">{{targetprop}}</span>
       </div>
 
     </div>
@@ -102,7 +102,8 @@
         }],
         yAxes: [{
           ticks: {
-            maxTicksLimit: 5,
+            maxTicksLimit: 15,
+            beginAtZero: true,
             padding: 10,
             // Include a dollar sign in the ticks
             callback: function (value, index, values) {

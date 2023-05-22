@@ -1561,6 +1561,11 @@ class UserLogin(Resource):
         #     print("no invoice,no receipt")
 
             # advanta_sms_delivery2(kiotapay_api_key,kiotapay_partner_id,birr.smsid)
+        # birr = MonthlyChargeOp.fetch_specific_bill(70615)
+        # if birr:
+        #     import pdb; pdb.set_trace()
+        # else:
+        #     print("no birr there buana")
         ################################################################################
 
         auth = os.getenv("TARGET") or TARGET

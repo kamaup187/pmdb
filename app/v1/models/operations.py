@@ -3757,11 +3757,18 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             return f'{num}'
 
+    def check_invnum(self):
+        if self.house.apartment_id != self.apartment_id:
+            invnum = f"!{self.id}"
+        else:
+            invnum = f"{self.id}"
+        return invnum
+
     def view_detail(self):
         
         return {
             'id':self.id,
-            'invnum':self.id + 13285,
+            'invnum':MonthlyChargeOp.check_invnum(self),
             'viewid':MonthlyChargeOp.generate_viewid(self),
             'smsid':MonthlyChargeOp.generate_smsid(self),
             'mailid':MonthlyChargeOp.generate_mailid(self),
@@ -3826,7 +3833,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         
         return {
             'id':self.id,
-            'invnum':self.id + 13285,
+            'invnum':self.id,
             'editid':MonthlyChargeOp.generate_editid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",

@@ -8145,7 +8145,11 @@ def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8220,7 +8224,11 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8296,7 +8304,11 @@ def rent_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8439,7 +8451,11 @@ def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8488,7 +8504,11 @@ def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8559,7 +8579,11 @@ def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8616,7 +8640,11 @@ def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8684,7 +8712,11 @@ def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
     if houseids:
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
-            house_list.append(hse)
+            if hse:
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
@@ -8778,7 +8810,10 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                houses.append(hse)
+                if hse.apartment_id != apartment_id:
+                    continue
+                else:
+                    houses.append(hse)
     else:
         houses = apartment_obj.houses
 

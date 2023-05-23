@@ -7218,6 +7218,47 @@ class FetchTenants(Resource):
                 new_i = PermanentTenantOp.view(i)
                 tenantlist.append(new_i)
 
+        if not erp(current_user):
+            vacs = filter_out_occupied_houses(prop_obj.name)
+            for item in vacs:
+                """build dict"""
+                dict_obj = {
+                    'id':"0",
+                    'identity':"0",
+                    'editid':"0",
+                    'delid':"0",
+                    'allocid':"0",
+                    'uid':"0",
+                    'name':item.name,
+                    'fullname':item.name,
+                    'terms':"N/A",
+                    'hst':item.name + "(vacant)",
+                    'hstalt':f'<span class="text-gray-900">({item.name})</span> <span class="text-danger font-weight-bold small">vacant</span>',
+                    'idno':"N/A",
+                    'tel':"-",
+                    'email':"-",
+                    'sms':"-",
+                    'deposit':"-",
+                    'housenum':"-",
+                    'status':"available",
+                    'badge':'<span class="badge bg-danger badge-danger badge-counter">vacant</span>',
+                    'checkin':"-",
+                    'checkout':"-",
+                    'days':"0",
+                    'bill':"0",
+                    'paid':"0",
+                    'rate':"0",
+                    'balance':"0",
+                    'highlight':"text-white-300",
+                    'viewable':"danger",
+                    'active':"disabled",
+                    'vactive':"disabled",
+                    'tooltip': "allow tenant to occupy more than one house first",
+                    'regby':"N/A"
+                }
+                tenantlist.append(dict_obj)
+
+
             tenantids = get_obj_ids(tenantlist)
 
             moreids = inject_tenants_ids(tenantlist) 

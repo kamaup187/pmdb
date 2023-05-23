@@ -43,12 +43,12 @@
 
                 <td class="text-s data-cell">
                   <div>
-                    <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Clear</button>
+                    <button id="{{bill['delid']}}" type="button" class="btn action-btn btn-outline-danger font-weight-bold  no-wrap" {{bill['vactive']}}  data-toggle="modal" data-target="#tenantClearanceModal"><i class="fas fa-sign-out-alt mr-1"></i>Clear</button>
                   </div>
                 </td>
                 <td class="text-s data-cell">
                   <div>
-                    <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
+                    <button id="{{bill['editid']}}" type="button" class="btn action-btn btn-outline-primary font-weight-bold  no-wrap" {{bill['vactive']}}  data-toggle="modal" data-target="#editTenantModal"><i class="fas fa-user-edit mr-1"></i>Edit</button>
                   </div>
                 </td>
 

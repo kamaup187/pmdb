@@ -8146,14 +8146,14 @@ def water_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for h in house_list:
+        if h.apartment_id != int(apartment_id):
+            continue
+
         meter_readings = h.meter_readings
 
         for item in meter_readings:
@@ -8225,15 +8225,19 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
+        if house.apartment_id != int(apartment_id):
+            print("skipped wrong invoicing")
+            print("APP ID ",apartment_id,"HOUSE APP ID ",house.apartment_id)
+            print("TYPE APP ID ",type(apartment_id),"TYPE HOUSE APP ID ",type(house.apartment_id))
+            continue
+
+        print("Billing correctly")
         checker = None
         rent_charge = 0
         
@@ -8452,14 +8456,13 @@ def garbage_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for house in house_list:
+        if house.apartment_id != int(apartment_id):
+            continue
         house_id = house.id
         checker = None
         garbage_charge = 0
@@ -8505,15 +8508,14 @@ def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
+        if house.apartment_id != int(apartment_id):
+            continue
         checker = None
         fixed_water_charge = 0
 
@@ -8580,14 +8582,13 @@ def electricity_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for h in house_list:
+        if h.apartment_id != int(apartment_id):
+            continue
         meter_readings = h.meter_readings
 
         for item in meter_readings:
@@ -8641,15 +8642,14 @@ def security_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
     for house in house_list:
         house_id = house.id
+        if house.apartment_id != int(apartment_id):
+            continue
         checker = None
         security_charge = 0
 
@@ -8713,16 +8713,15 @@ def maintenance_bill(apartment_id,houseids,chargetype,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    house_list.append(hse)
+                house_list.append(hse)
     else:
         house_list = houseauto(apartment_id)
 
 
     for house in house_list:
         house_id = house.id
+        if house.apartment_id != int(apartment_id):
+            continue
         checker = None
         service_charge = 0
 
@@ -8810,10 +8809,7 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         for i in houseids:
             hse = HouseOp.fetch_house_by_id(i)
             if hse:
-                if hse.apartment_id != apartment_id:
-                    continue
-                else:
-                    houses.append(hse)
+                houses.append(hse)
     else:
         houses = apartment_obj.houses
 
@@ -8821,7 +8817,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
         # with mail.connect() as conn:
         print ("Billing has started with mail connected successfully")
         for house in houses:
-
+            if house.apartment_id != int(apartment_id):
+                continue
             if apartment_obj.company.ctype == "crm":
                 project_end_date = house.owner.checkin + relativedelta(months=15)
                 deposit1 = house.owner.deposit

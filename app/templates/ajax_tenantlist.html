@@ -8,16 +8,17 @@
         <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
             <thead class="custom-header">
                 <tr>
-                <th class="text-black">Name</th>
+                <th class="text-black">House</th>
+                <th class="text-black">Status</th>
+                <th class="text-black">Tenant</th>
                 <th class="text-black" data-orderable="false">Ref</th>
-                <th class="text-black" data-orderable="false">Label</th>
                 <th class="text-black" data-orderable="false">Phone</th>
                 <th class="text-black" data-orderable="false">Email</th>
                 <th class="text-black" data-orderable="false">sms</th>
                 <th class="text-black">CheckIn</th>
                 <th class="text-black">Deposit</th>
                 <th class="text-black text-success">Bal</th>
-                <th class="text-black text-danger no-wrap" data-orderable="false">Add house</th>
+                <!-- <th class="text-black text-danger no-wrap" data-orderable="false">Add house</th> -->
                 <th class="text-black text-danger" data-orderable="false">Clear</th>
                 <th class="text-black text-primary" data-orderable="false">Edit</th>
                 </tr>
@@ -25,9 +26,18 @@
             <tbody>
               {% for bill in items%}
               <tr>
-                <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"><span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td>
-                <td class="data-cell">{{ bill['ref']}}</td>
+                <!-- <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-success namebutton no-wrap"><span class="desktop-malaysian">{{ bill['hst']|safe }}</span> <span class="mobile-malaysian">{{bill['hstalt']|safe}}</span></td> -->
+                <!-- <td id="{{bill['identity']}}" class="data-cell font-weight-bold btn mt-1 action-btn btn-outline-primary namebutton no-wrap"><span class="desktop-malaysian">{{ bill['housenum']|safe }}</span> <span class="mobile-malaysian">{{bill['housenum']|safe}}</span></td> -->
+                <td class="data-cell" id="{{bill['identity']}}">
+                  <div>
+                      <span type="button" class="btn btn-outline-primary btn-sm ellipsis2 text-left no-wrap">{{bill['housenum']|safe}}</span>
+                  </div>
+              </td>
+              
+
                 <td class="data-cell">{{ bill['badge']|safe }}</td>
+                <td class="data-cell">{{ bill['fullname']}}</td>
+                <td class="data-cell">{{ bill['uid']}}</td>
                 <td class="data-cell">{{ bill['tel'] }}</td>
                 <td class="data-cell">{{ bill['email'] }}</td>
                 <td class="data-cell">{{ bill['sms'] }}</td>
@@ -35,11 +45,11 @@
                 <td class="data-cell">{{ bill['deposit'] }}</td>
                 <td class="data-cell {{bill['highlight']}}">{{ bill['balance'] }}</td>
 
-                <td class="text-s data-cell">
+                <!-- <td class="text-s data-cell">
                   <div>
                     <button id="{{bill['id']}}" type="button" class="btn action-btn font-weight-bold {{bill['viewable']}} no-wrap" {{bill['active']}}  data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Add</button>
                   </div>
-                </td>
+                </td> -->
 
                 <td class="text-s data-cell">
                   <div>
@@ -59,6 +69,35 @@
     </div>
 </div>
 
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $('#tenantData').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "searching":false,
+      "order": [[ 0, "asc" ]],
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+
 <script type="text/javascript">
   $(document).ready(function () {
     $('#tenantData').DataTable({
@@ -67,6 +106,7 @@
       "searching":false,
       "order": [[ 0, "asc" ]],
       columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ],type: 'natural' }],
       "bLengthChange": false
     });
     $('.dataTables_length').addClass('bs-select');

@@ -2604,12 +2604,23 @@ class TenantOp(Tenant,Base):
         if house_alloc_objs:
             for house_alloc in house_alloc_objs:
                 if house_alloc.active == True:
-                    houses.append(house_alloc.house)
+                    houses.append(house_alloc.house.name)
             if len(houses) > 3:
                 houses = ["multiple"]
-            str_houses = ','.join(map(str, houses))
+            if len(houses) > 1:
+                str_houses = ','.join(map(str, houses))
+            else:
+                try:
+                    str_houses = houses[0]
+                except:
+                    str_houses = "-vacated-"
+
             return str_houses if houses else "-vacated-"
         return "-pending-"
+
+    def style_house_name(self):
+        house =  TenantOp.get_houseno(self)
+        return f'<span class="text-gray-900 font-weight-bold">{house}</span>'
 
     def combine_house_tenant(self):
         try:
@@ -2740,6 +2751,20 @@ class TenantOp(Tenant,Base):
         else:
             return "Tenant"
 
+    def format_fullname(self):
+        if self.name:
+            try:
+                name = self.name.split()
+                if len(name) > 1:
+                    return name[0].title() + " " + name[1].title()
+                else:
+                    return name[0].title()
+            except Exception as e:
+                print("err len>>",len(self.name),"name:",self.name)
+                return "Tenant"
+        else:
+            return "Tenant"
+
     def get_uid(self):
         if not self.uid:
             return f"TNT{self.id}"
@@ -2802,7 +2827,7 @@ class TenantOp(Tenant,Base):
             'allocid':TenantOp.generate_alloc_identity(self),
             'uid':TenantOp.get_uid(self),
             'name':TenantOp.generate_name(self),
-            'fullname':self.name,
+            'fullname':TenantOp.format_fullname(self),
             'terms':TenantOp.get_status(self),
             'hst':TenantOp.combine_house_tenant(self),
             'hstalt':TenantOp.combine_house_tenant_alt(self),
@@ -2811,9 +2836,9 @@ class TenantOp(Tenant,Base):
             'email':TenantOp.get_email(self),
             'sms':TenantOp.billable(self),
             'deposit':TenantOp.get_deposit(self),
-            'housenum':TenantOp.get_houseno(self),
+            'housenum':TenantOp.style_house_name(self),
             'status':self.status,
-            'badge':'<span class="badge bg-success badge-success badge-counter">tenant</span>',
+            'badge':'<span class="badge font-weight-bold bg-success-alt text-success">occupied</span>',
             'checkin':TenantOp.check_in_date(self),
             'checkout':TenantOp.check_out_date(self),
             'days':TenantOp.get_acc_days(self),

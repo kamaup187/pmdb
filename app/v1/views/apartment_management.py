@@ -3965,7 +3965,7 @@ class BulkSms(Resource):
                         text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
                         send_internal_email_notifications(prop_obj.company.name,text)
                         response = sms.send(text, ["+254716674695"],sender)
-                        return failure
+                        return failure + "sms already sent"
                     else:
                         ApartmentOp.update_reminder_status(prop_obj,"sent")
                         job8 = q.enqueue_call(

@@ -46,7 +46,11 @@ from .v1 import version_one as v1
 
 def create_app(*args):
 
-    print("STARTING APPLICATION ...")
+    print("INITIATING APPLICATION ...")
+
+    print("Printing LELUT: ",os.getenv('LELUT'))
+    print("Printing PCHOMOSNET: ",os.getenv('PCHOMOSNET'))
+    print("Printing CHEMOSI: ",os.getenv('CHEMOSI'))
 
     try:
         from do_secrets import APP_SETTINGS

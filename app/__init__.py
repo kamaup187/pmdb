@@ -71,7 +71,7 @@ def create_app(*args):
     print("NOW CONFIG >>>",configuration)
 
     app = Flask(__name__)
-    # Talisman(app,content_security_policy=None)    
+    Talisman(app,content_security_policy=None)    
     
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>loading configurations<<<<<<<<<<<<<<<<<<<<<<",configuration)
 

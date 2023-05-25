@@ -4309,8 +4309,6 @@ def send_bulk_sms(propid,temp_txt):
                     # if allowed:
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
-                        return None
-
                     elif co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
                         sms_sender(co.name,message,phonenum)
 
@@ -4425,14 +4423,8 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
-                        return None
-
-
                     elif co.sms_provider == "Advanta":
-                    # allowed = True
-                    # if allowed:
                         sms_sender(co.name,message,phonenum)
-
                     else:
                         #Once this is done, that's it! We'll handle the rest
                         response = sms.send(message, recipient, sender)

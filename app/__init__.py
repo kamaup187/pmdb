@@ -42,13 +42,17 @@ from .v1.models.datamodel import *
 from .v1 import version_one as v1
 # from .v2 import version_two as v2
 
+
+
 def create_app(*args):
+
+    print("STARTING APPLICATION ...")
 
     try:
         from do_secrets import APP_SETTINGS
-        print("FETCHING APP SECRETS FILE")
+        # print("FETCHING APP SECRETS FILE")
     except ImportError:
-        print("FETCHING APP SECRETS FROM ENVIRONMENT")
+        # print("FETCHING APP SECRETS FROM ENVIRONMENT")
         APP_SETTINGS = os.getenv('APP_SETTINGS')
 
     configuration = os.getenv('APP_SETTINGS') or APP_SETTINGS

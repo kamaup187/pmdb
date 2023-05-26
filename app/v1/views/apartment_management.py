@@ -1465,7 +1465,7 @@ class PropStats(Resource):
             collection_percentage = f"{collection_percentage:,.0f}",
             total_collections=(f"{total_collections:,.1f}"),
             total_balances=(f"{total_balances:,.1f}"),
-            total_bills = (f"{total_bills:,.1f} billaaaa"),
+            total_bills = (f"{total_bills:,.1f}"),
             numdefaulters = defaulters,
             numinvs = invss,
             proponfocus=proponfocus,

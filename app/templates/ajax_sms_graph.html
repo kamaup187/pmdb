@@ -1,20 +1,29 @@
   <div class="card shadow mb-1 bg-white">
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <div class="m-0 text-black smallify targetprop add-skeleton-sms"><i class="feather-16 pb-1"
-          data-feather="bar-chart-2"></i> Sent sms: <span class="font-weight-bold font-italic">{{targetprop}}</span>
+      <div class="m-0 text-black smallify targetprop add-skeleton-sms"><i class="feather-24 pb-1"
+          data-feather="bar-chart-2"></i> SMS Count: <span class="font-weight-bold font-italic">{{targetprop}}</span>
       </div>
+
+      <div id="switchpie"><i class="feather-24 pb-1 text-black"
+        data-feather="repeat"></i></div>
 
     </div>
     <!-- Card Body -->
     <div class="card-body">
 
-
       <div class="chart-are add-skeleton-sms pb-5 pt-3">
 
-        <p id="smsInput" class="dispnone">{{smsstring}}</p>
-        <!-- <canvas id="barChart"></canvas> -->
-        <canvas id="smsChart"></canvas>
+        <div>
+          <p id="smsInput" class="dispnone">{{smsstring}}</p>
+          <canvas id="smsChart"></canvas>
+        </div>
+
+        <!-- <div>
+          <p id="smsInput2" class="dispnone">{{smsstring}}</p>
+          <canvas id="smsChart2"></canvas>  
+        </div> -->
+
       </div>
 
     </div>

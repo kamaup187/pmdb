@@ -5281,10 +5281,11 @@ class InternalMessagesOp(InternalMessages,Base):
 
 class SentMessagesOp(SentMessages,Base):
     """class"""
-    def __init__(self,text,characters,cost,tenant_id,ptenant_id,apartment_id,company_id):
+    def __init__(self,text,characters,cost,date_sent,tenant_id,ptenant_id,apartment_id,company_id):
         self.text = text
         self.characters = characters
         self.cost = cost
+        self.sms_period = date_sent
         self.tenant_id = tenant_id
         self.ptenant_id = ptenant_id
         self.apartment_id = apartment_id

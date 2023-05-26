@@ -1853,8 +1853,12 @@ class SendSms(Resource):
             char_count = len(message)
 
             cost = 1 if char_count <= 160 else 2
+
+            smsperiod_m = payment_obj.apartment.billing_period.month
+            smsperiod_y = payment_obj.apartment.billing_period.year
+            smsperiod = generate_date(smsperiod_m, smsperiod_y)
             
-            sms_obj = SentMessagesOp(message,char_count,cost,tenant_obj.id,None,payment_obj.apartment.id,co.id)
+            sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_obj.id,None,payment_obj.apartment.id,co.id)
             sms_obj.save()
 
             if tenant_obj.sms:

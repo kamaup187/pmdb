@@ -3870,9 +3870,9 @@ class BulkSms(Resource):
         if target == "general":
             if not propid:
                 return failure
-            job8 = q.enqueue_call(
-                func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
-            )
+            # job8 = q.enqueue_call(
+            #     func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
+            # )
             text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],sender)
 
@@ -4009,8 +4009,11 @@ class TenantSms(Resource):
                         cost = 3
 
                     ptenant_id = None
+
+                    prop_obj = tenant.apartment
+                    smsperiod = generate_date(prop_obj.billing_period.month,prop_obj.billing_period.year)
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant.id,ptenant_id,tenant.apartment.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant.id,ptenant_id,tenant.apartment.id,co.id)
                     sms_obj.save()
 
                     if target == "lasshouse":

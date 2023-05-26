@@ -1656,6 +1656,7 @@ class SentMessages(db.Model):
 
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    sms_period = db.Column(db.DateTime, default=db.func.current_timestamp())
     text = db.Column(db.VARCHAR)
     characters = db.Column(db.Integer, default=0)
     cost = db.Column(db.Float,default=0.0)

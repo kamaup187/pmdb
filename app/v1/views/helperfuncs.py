@@ -4194,8 +4194,8 @@ def send_statement(tenantid):
         else:
             cost = 3
         
-        sms_obj = SentMessagesOp(message,char_count,cost,None,ptenant.id,prop.id,co.id)
-        sms_obj.save()
+        # sms_obj = SentMessagesOp(message,char_count,cost,None,ptenant.id,prop.id,co.id)
+        # sms_obj.save()
 
         if target == "lasshouse":
             report = inva_send_sms(message,phonenum)
@@ -4301,8 +4301,10 @@ def send_bulk_sms(propid,temp_txt):
                         cost = 2
                     else:
                         cost = 3
+
+                    smsperiod = generate_date(prop.billing_period.month, prop.billing_period.year)
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
                     # allowed = True
@@ -4417,8 +4419,10 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                         cost = 2
                     else:
                         cost = 3
+
+                    smsperiod = generate_date(prop.billing_period.month, prop.billing_period.year)
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,tenant_id,ptenant_id,prop.id,co.id)
+                    sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
                     sms_obj.save()
 
                     if target == "lasshouse":
@@ -4600,6 +4604,8 @@ def autosend_pending_smsreceipts(payids):
                     #         raw_cost = resp["cost"]
                     #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
                     #         CompanyOp.set_rem_quota(co,rem_sms)
+                    smsperiod = generate_date(payment_obj.apartment.billing_period.month, payment_obj.apartment.billing_period.year)
+
 
                     ####################################################################################
                     if target == "lasshouse":
@@ -4612,7 +4618,7 @@ def autosend_pending_smsreceipts(payids):
                             PaymentOp.update_smsid(payment_obj,smsid)
                             PaymentOp.update_sms_status(payment_obj,"sent")
                             res = update_sms_units(co,message)
-                            sms_obj = SentMessagesOp(message,res[0],res[1],tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                            sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
                             sms_obj.save()
 
                     else:
@@ -4625,7 +4631,7 @@ def autosend_pending_smsreceipts(payids):
                             PaymentOp.update_sms_status(payment_obj,stat)
                             if stat == "sent":
                                 res = update_sms_units(co,message) 
-                                sms_obj = SentMessagesOp(message,res[0],res[1],tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
                                 sms_obj.save()
                     #####################################################################################
                     
@@ -5651,7 +5657,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 else:
                                     message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
 
-
+                            smsperiod = generate_date(prop_obj.billing_period.month, prop_obj.billing_period.year)
 
                             ####################################################################################
                             if target == "lasshouse":
@@ -5664,7 +5670,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     MonthlyChargeOp.update_smsid(bill,smsid)
                                     MonthlyChargeOp.update_sms_status(bill,"sent")
                                     res = update_sms_units(co,message)
-                                    sms_obj = SentMessagesOp(message,res[0],res[1],None,tenant.id,prop_obj.id,co.id)
+                                    sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,None,tenant.id,prop_obj.id,co.id)
                                     sms_obj.save()
 
                             else:
@@ -5677,7 +5683,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     MonthlyChargeOp.update_sms_status(bill,stat)
                                     if stat == "sent":
                                         res = update_sms_units(co,message) 
-                                        sms_obj = SentMessagesOp(message,res[0],res[1],None,tenant.id,prop_obj.id,co.id)
+                                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,None,tenant.id,prop_obj.id,co.id)
                                         sms_obj.save()
                             #####################################################################################
 
@@ -5763,6 +5769,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 else:
                                     message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
 
+                            smsperiod = generate_date(prop_obj.billing_period.month, prop_obj.billing_period.year)
 
                             if target == "lasshouse":
                                 report = inva_send_sms(message,phonenum)
@@ -5774,7 +5781,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     MonthlyChargeOp.update_smsid(bill,smsid)
                                     MonthlyChargeOp.update_sms_status(bill,"sent")
                                     res = update_sms_units(co,message)
-                                    sms_obj = SentMessagesOp(message,res[0],res[1],tenant2.id,None,prop_obj.id,co.id)
+                                    sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant2.id,None,prop_obj.id,co.id)
                                     sms_obj.save()
 
                             else:
@@ -5787,7 +5794,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                     MonthlyChargeOp.update_sms_status(bill,stat)
                                     if stat == "sent":
                                         res = update_sms_units(co,message) 
-                                        sms_obj = SentMessagesOp(message,res[0],res[1],tenant2.id,None,prop_obj.id,co.id)
+                                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant2.id,None,prop_obj.id,co.id)
                                         sms_obj.save()
 
 

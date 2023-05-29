@@ -1828,10 +1828,14 @@ class Dashboard(Resource):
 
         if target == "sms graph":
             sms_per_property = []
+            specific_month_sms_cost = 0.0
+            total_tts = 0
 
             for apartment in props:
                 db.session.expire(apartment)
 
+                tts = len(tenantauto(apartment.id))
+                total_tts += tts
                 ##########################################
                 annual_month_sms=[] #list of monthlysms combined totals
 
@@ -1844,21 +1848,43 @@ class Dashboard(Resource):
                     for item in apartment.sent_messages:
                         if item.date.month == month and item.date.year == period.year:
                             that_month_totalsms += 1
-                    
                     annual_month_sms.append(that_month_totalsms)
 
+                # ii = 0
+                for item in apartment.sent_messages:
+                    if item.date.month == period.month and item.date.year == period.year:
+                        # ii += 1
+                        try:
+                            # print("adding item ", ii," ",item.date, "cost ",item.cost)
+                            specific_month_sms_cost += item.cost
+                        except:
+                            pass
+                    
+
                 sms_per_property.append(annual_month_sms) #list of lists
+
+            # import pdb; pdb.set_trace()
+
+            sms_estimate = (2/3 * total_tts * 4 * 1.6 ) + (1/3 * total_tts * 4 * 0.8)
+            estimate = f"{sms_estimate:,.1f}"
+            actual = f"{specific_month_sms_cost:,.1f}"
+
+            estimateactual = [estimate,actual]
 
             smsdatalist = [sum(elts) for elts in zip(*sms_per_property)]
 
             ############################################################
         
             sms_string = ','.join(map(str,smsdatalist))
+            estimate_string = ','.join(map(str,estimateactual))
                 
             return Response(render_template(
                 "ajax_sms_graph.html",
                 targetprop = prop,
                 smsstring=sms_string,
+                estimatestring=estimate_string,
+                estimate=estimate,
+                actual=actual
             ))
 
         if target == "occupancy pie":

@@ -102,14 +102,6 @@
                       <td id="tunpaidinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
                       <td id="ratioinfo-{{item['propid']}}" class="data-cell text-center text-black"><div class="dot-elastic mt-2"></div></td>
 
-    
-    
-
-
-  
-
-
-    
                       <td id="totalinfo-{{item['propid']}}" class="data-cell text-right text-black font-weight-bold"><div class="dot-elastic mt-2"></div></td>
                       <td id="paidinfo-{{item['propid']}}" class="data-cell text-right font-weight-bold"><div class="dot-elastic mt-2"></div></td>
                       <td id="balinfo-{{item['propid']}}" class="data-cell text-right font-weight-bold"><div class="dot-elastic mt-2"></div></td>
@@ -856,8 +848,25 @@
           $("#tpaidinfo-" + item ).text(response[11]);
           $("#tunpaidinfo-" + item ).text(response[12]);
           $("#ratioinfo-" + item ).text(response[13]);
-          $("#invinfo-" + item ).text(response[14]);
 
+
+
+          var elemratio = $("#ratioinfo-" + item )
+          var ratio = elemratio.text().replace("%", "");
+
+
+          if(ratio=="100.0"){
+            elemratio.addClass("bg-green1");elemratio.removeClass("bg-red1");elemratio.removeClass("bg-orange1");
+          }else if(ratio>"77"){
+            elemratio.addClass("bg-green1");elemratio.removeClass("bg-red1");elemratio.removeClass("bg-orange1");
+          }else if(ratio>"24"){
+            elemratio.addClass("bg-orange1");elemratio.removeClass("bg-red1");elemratio.removeClass("bg-green1");
+          }else{
+            elemratio.addClass("bg-red1");elemratio.removeClass("bg-orange1");elemratio.removeClass("bg-green1");
+          }
+
+
+          $("#invinfo-" + item ).text(response[14]);
           $("#totalinfo-" + item ).text(response[8]);
           $("#paidinfo-" + item ).text(response[9]);
           $("#balinfo-" + item ).text(response[10]);

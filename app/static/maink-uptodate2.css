@@ -21,6 +21,7 @@
 .container-fluid {
   overflow-y: scroll;
 } */
+
 .bg-danger-alt {
   background-color: #eadcdc !important;
 }
@@ -3859,4 +3860,21 @@ span:nth-child(7) {
   100% {
     transform: scale(1, 1);
   }
+}
+
+
+.bg-red1 {
+  background-color: #eadcdc !important;
+  color: #e74a3b !important;
+  font-weight: 900 !important;
+}
+
+.bg-orange1 {
+  background-color: #fff4c5e0 !important;
+  font-weight: 900 !important;
+}
+
+.bg-green1 {
+  background-color: #bff8bf !important;
+  font-weight: 900 !important;
 }

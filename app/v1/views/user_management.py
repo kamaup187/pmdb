@@ -1622,6 +1622,7 @@ class UserLogin(Resource):
             flash('Incorrect password!','fail')
             return redirect(url_for('api.userlogin'))
         elif downtime:
+            db.session.rollback()
             # response = sms.send("Login is experiencing issues", ["+254716674695"],sender)
             flash('Login failed, system undergoing maintenance!','fail')
             return redirect(url_for('api.userlogin'))

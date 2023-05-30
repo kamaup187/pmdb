@@ -600,7 +600,7 @@ $("#downloadtenants").click(function(){
 
           if (migrate3 == "True"){
             $.ajax({
-              url: "/billing",
+              url: "/create/invoices",
               type: "POST",
               data: {
                 propid: $("#edit_prop_identifier").text(),

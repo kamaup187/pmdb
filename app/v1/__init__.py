@@ -280,6 +280,8 @@ api.add_resource(ViewBugs, "/view/bugs")
 api.add_resource(Invoice,"/invoice")
 api.add_resource(BillInvoice,"/bill/invoice")
 api.add_resource(CreateInvoice,"/create/invoice")
+api.add_resource(CreateInvoices,"/create/invoices")
+
 api.add_resource(ClientInvoice,"/client/invoice")
 api.add_resource(MyPayments,"/payments")
 api.add_resource(Receipt,"/receipt")

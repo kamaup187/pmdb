@@ -1574,6 +1574,13 @@ class UserLogin(Resource):
         #     print("no birr2 there buana")
 
         # import pdb; pdb.set_trace()
+
+        # response = sms.send("Good morning Peter, we have updated sms balance. ~ Peter", ["+254726770158"],"KIOTAPAY")
+
+        # cwq = CompanyOp.fetch_company_by_id(8)
+        # if cwq:
+        #     import pdb; pdb.set_trace()
+
         ################################################################################
 
         auth = os.getenv("TARGET") or TARGET

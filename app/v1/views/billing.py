@@ -186,7 +186,7 @@ class Billing(Resource):
 
             houseids = [resident.house.id for resident in residents]
         
-        if not to_bill:
+        if not to_bill: #for erp whose guest is not to be invoiced
             houseids = [9999999999999999999]
 
         ApartmentOp.update_billing_progress(prop,"billing")
@@ -334,6 +334,14 @@ class BillProgress(Resource):
         apartment_id = propid[4:]
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
         return prop.billprogress
+
+class CreateInvoices(Resource):
+    """class for creating new invoices"""
+    def get(self):
+        pass
+    def post(self):
+        pass
+
 
 
 class ClientBilling(Resource):

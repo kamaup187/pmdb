@@ -923,7 +923,6 @@ class Index(Resource):
             #     p = PaymentDetailOp("mpesa","7555555","","","","","",apart1.id)
             #     p.save()
 
-            cpw = "KiotaPay"
 
             secret_struct = os.getenv("SECRETNAME")
             if not secret_struct:
@@ -954,10 +953,14 @@ class Index(Resource):
             if str(company) == "Inva Properties":
                 card_theme = "premier-card-theme"
 
+            cpw = "KiotaPay"
+            cpwfavi = "img"
+
             auth = os.getenv("TARGET") or TARGET
             if auth == "lasshouse":
                 card_theme = "premier-card-theme"
-                cpw = "Inva"
+                cpw = r_cpw
+                cpwfavi = r_cpwfavi
 
             if current_user.company_user_group.name == "Sales":
                 sidebar = "sidebar-toggled sidenav-toggled"
@@ -975,6 +978,7 @@ class Index(Resource):
                 topbar_theme = "bg-white" if str(company) == "Premier Realty" else "bg-white",
                 card_theme = card_theme,
                 cpw = cpw,
+                cpwfavi = cpwfavi,
                 sidebar=sidebar,
                 toggle=toggle,
                 co=company,

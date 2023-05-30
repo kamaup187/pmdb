@@ -781,7 +781,7 @@ class Index(Resource):
             if company.name == "Lesama Ltd":
                 shortcode2 = "Paybill: 969610 Acc: LesamaKe"
             else:
-                if os.getenv("TARGET") == "lasshouse":
+                if os.getenv("TARGET") or TARGET == "lasshouse":
                     shortcode2 = f"Paybill: 000XXX Acc: {companyname2}#{company.id}"
                 else:
                     shortcode2= f"Paybill: 4081687 Acc: {companyname2}#{company.id}"

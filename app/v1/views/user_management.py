@@ -1442,7 +1442,7 @@ class TenantUserSignUpStageTwo(Resource):
 
 class LandingPage(Resource):
     def get(self):
-        if os.getenv("TARGET") == "lasshouse":
+        if os.getenv("TARGET") or TARGET == "lasshouse":
             return Response(render_template("home.html"))
         elif os.getenv("HOMEPAGE") or HOMEPAGE == "False":
             return redirect(url_for('api.index'))

@@ -123,21 +123,19 @@ class Billing(Resource):
 
         houseids = []
 
+        ###########################################################
         if not apartment_name:
             propid = request.form.get("propid")
             print("APARTMENT ID TO BILL IS>>>>",propid)
-            # apartment_id = propid[4:]
             apartment_id = get_identifier(propid)
             prop = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
             apartment_name = prop.name
         else:
             apartment_id = get_apartment_id(apartment_name)
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+        #############################################################
 
-        to_bill = True
-
-        if billing == "false":
-            to_bill = False
+        to_bill = False if billing == "false" else True
 
         try:
             billdate = date_formatter(date)
@@ -145,6 +143,7 @@ class Billing(Resource):
         except:
             bill_date = None
 
+        ################################################################
         if level:
             try:
                 hse_arr = [s for s in houses.split(',')]
@@ -161,7 +160,10 @@ class Billing(Resource):
             except Exception as e:
                 print("ERROR in generating houseids >>>", str(e))
                 houseids = []
+        ################################################################
 
+
+        ################################################################
         if target == "single" and tenantid:
             try:
                 billdate = date_formatter_weekday(date)
@@ -186,7 +188,7 @@ class Billing(Resource):
 
             houseids = [resident.house.id for resident in residents]
         
-        if not to_bill: #for erp whose guest is not to be invoiced
+        if not to_bill: #for crm whose client is not to be invoiced
             houseids = [9999999999999999999]
 
         ApartmentOp.update_billing_progress(prop,"billing")
@@ -300,8 +302,9 @@ class Billing(Resource):
             
             str_month = get_str_month(month)
 
-            txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
-            send_internal_email_notifications(current_user.company.name,txt)
+            if not erp(current_user):
+                txt = f"{current_user.company} has billed for {str_month} for {apartment_name}"
+                send_internal_email_notifications(current_user.company.name,txt)
 
 
 
@@ -340,8 +343,46 @@ class CreateInvoices(Resource):
     def get(self):
         pass
     def post(self):
-        pass
+        propid = request.form.get("propid")
+        date = request.form.get("date")
+        houses = request.form.get("houses")
+        level = request.form.get("level")
+        target = request.form.get("target")
 
+        print("APARTMENT ID TO BILL IS>>>>",propid)
+        apartment_id = get_identifier(propid)
+
+        try:
+            billdate = date_formatter(date)
+            bill_date = parse(billdate)
+        except:
+            bill_date = None
+
+        if not bill_date:
+            bill_date = current_user.company.billing_period
+
+        houseids = []
+
+        if level:
+            try:
+                hse_arr = [s for s in houses.split(',')]
+                hse = hse_arr[0]
+                hse_obj = get_specific_house_obj(apartment_id,hse)
+                houseids.append(hse_obj.id)
+                print("SINGLE HOUSEID",houseids)
+            except:
+                print("ERROR in generating single houseid >>>", str(e))
+
+        else:
+            try:
+                houseids = [int(s) for s in houses.split(',')]
+                print("MULTIPLE HOUSEIDS",houseids)
+            except Exception as e:
+                print("ERROR in generating MULTIPLE houseids >>>", str(e))
+
+        billjob = q.enqueue_call(
+            func=main_total_bill, args=(apartment_id,houseids,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
+        )
 
 
 class ClientBilling(Resource):
@@ -1792,7 +1833,7 @@ class DiscardBills(Resource):
         # except:
         #     pass
 
-        if current_user.username.startswith('qc') or current_user.username.startswith('quality') or current_user.usercode == "3551" or current_user.usercode == "9672" or current_user.usercode == "6811":
+        if current_user.username.startswith('qc') or current_user.username.startswith('quality') or localenv:
             job34 = q.enqueue_call(
                 func=discard_bills, args=(propids,), result_ttl=5000
             )

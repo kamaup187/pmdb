@@ -547,7 +547,7 @@
     });
 
     $.ajax({
-      url: "/billing",
+      url: "/create/invoices",
       type: "POST",
       data: {
         propid: propitem,
@@ -555,6 +555,7 @@
         date:$("#billdatepicker").val()
       },
       success: function (response) {
+        $(".dismissparent").click();
 
         var billingpoll = setInterval(function () {
 

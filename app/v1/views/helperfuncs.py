@@ -124,6 +124,8 @@ greatwall_partner_id = 321
 
 kiotanum = "+254716674695"
 
+r_cpw = "InvaPay"
+r_cpwfavi = "images"
 
 typing = '<i class="fas fa-fw fa-pen text-primary mr-1"></i>'
 proceed = '<i class="fas fa-fw fa-check-circle text-success mr-1"></i>'

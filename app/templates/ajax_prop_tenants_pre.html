@@ -137,63 +137,85 @@
                     </div>
 
 
-                    <div class="row">
-                      <!-- <div class="col-4 form-group">
-                        <span class="text-black">Days</span>
-                          <input id="total_time" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
-                      </div> -->
-                      
-                      <div class="col-6 form-group">
-                        <span class="divjust-end">
-                          <span class="text-black">Current rates (rent)</span>
-                        </span>
+                    <div class="tcheck dispnone">
 
-                          <input id="default_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
-                      </div>
-
-                      <div class="col-6 form-group">
-                        <span class="divjust-end">
-                          <span class="text-black">Agreed rates</span>
-                        </span>
-                          <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
-                      </div>
-                    </div>
-
-                    <div class="form-group input-icons">
-                      <span>Name<span class="text-danger small">(mandatory)</span></span>
-                        <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
-                        <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                    </div>
-
-                    <div class="form-group input-icons">
-                      <span>Mobile number <span class="text-primary small">(recommended)</span></span>
-                        <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
-                        <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                    </div>
-
-                    <div class="form-group input-icons">
-                      <span>Email<span class="text-primary small">(optional)</span></span>
-                        <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
-                        <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                    </div>
-
-                    <div class="form-group input-icons">
-                      <span>ID number <span class="text-primary small">(optional)</span></span>
-                        <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
-                        <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
-                    </div>
-
-                    <div class="fancy-checkbox-group form-control mb-4 divjust">
-                      <div class="divjust-end">
+                      <div class="row">
                         
-                        <label class="mr-3" for="createinvoice">Create invoice
-                          <input type="checkbox" id="createinvoice"/>
-                        </label>
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Current rates (rent)</span>
+                          </span>
 
-                        <label class="ml-3" for="migrate2">Charge deposit
-                          <input type="checkbox" id="migrate2"/>
-                        </label>
-                      </div>       
+                            <input id="default_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                        </div>
+
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Agreed rates</span>
+                          </span>
+                            <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                        </div>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Name<span class="text-danger small">(mandatory)</span></span>
+                          <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Mobile number <span class="text-primary small">(recommended)</span></span>
+                          <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>Email<span class="text-primary small">(optional)</span></span>
+                          <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="form-group input-icons">
+                        <span>ID number <span class="text-primary small">(optional)</span></span>
+                          <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      </div>
+
+                      <div class="fancy-checkbox-group form-control mb-4 divjust">
+                        <div class="divjust-end">
+                          
+                          <label class="mr-3" for="createinvoice">Create invoice
+                            <input type="checkbox" id="createinvoice"/>
+                          </label>
+
+                          <label class="ml-3" for="migrate2">Charge deposit
+                            <input type="checkbox" id="migrate2"/>
+                          </label>
+
+                          <label class="ml-3 text-danger" for="prorate">Prorate?
+                            <input class="proratecb" type="checkbox" id="prorate"/>
+                          </label>
+                        </div>       
+                      </div>
+
+                      <div id="prorator" class="row dispnone">
+                        
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Prorated Days</span>
+                          </span>
+
+                            <input id="prorated_days" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                        </div>
+
+                        <div class="col-6 form-group">
+                          <span class="divjust-end">
+                            <span class="text-black">Calculated Amount</span>
+                          </span>
+                            <input id="calc_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                        </div>
+                      </div>
+
                     </div>
 
                   </div>
@@ -528,6 +550,7 @@ $("#tenanttype").on('change', function(){
 <script>
 // This script autopulate house options and displays tenant name
 $("#select_house2").on('change', function(){
+  $(".tcheck").removeClass("dispnone")
   $.ajax({
     url: "{{ url_for('api.allocatetenants') }}",
     type: "get",
@@ -554,6 +577,60 @@ $("#downloadtenants").click(function(){
           $('#downloadtenants').html("<i class='fas fa-file-download mr-2'></i>Template")
       },8000);
   });
+</script>
+
+
+<script>
+    $(".proratecb").change(function (e) {
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".proratecb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+          $("#prorator").addClass("dispnone")
+          $("#calc_rates").val(0.0);
+          $("#prorated_days").val(0.0);
+
+        }else{
+          $("#prorator").removeClass("dispnone")
+          $("#calc_rates").val(0.0);
+          $("#prorated_days").val(0.0);
+
+        }
+
+      });
+
+
+
+        $("#prorated_days").keyup(function () {
+          var base_value = 0.0;
+          var empty = false;
+          // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+          if ($('#prorated_days').val() == "") {
+            empty = true;
+          }
+          if (empty) {
+            $("#calc_rates").val(0.0);
+          } else {
+            if ($('#agreed_rates').val() == "") {
+              //use default rates
+              base_value = $("#default_rates").val() / 30 * $(this).val()
+            } else {
+              //use agreed rates
+              base_value = $("#agreed_rates").val() / 30 * $(this).val()
+            }
+            $("#calc_rates").val(Math.round(base_value));
+          }
+
+        });
+
+
+
 </script>
 
 <script>
@@ -613,6 +690,8 @@ $("#downloadtenants").click(function(){
           setTimeout(function(){
             $(".alert-msgs").empty();
             $(".reset").click();
+            $(".tcheck").addClass("dispnone")
+
             // $('#newtenant').attr('disabled', 'disabled');
             $('#newtenant').removeClass('btn-success')
             $('#newtenant').addClass('btn-secondary')

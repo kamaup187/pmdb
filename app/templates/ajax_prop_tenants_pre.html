@@ -619,10 +619,12 @@ $("#downloadtenants").click(function(){
           } else {
             if ($('#agreed_rates').val() == "") {
               //use default rates
-              base_value = $("#default_rates").val() / 30 * $(this).val()
+              var calc = $("#default_rates").val();
+              base_value = calc.replace(",","") / 30 * $(this).val()
             } else {
               //use agreed rates
-              base_value = $("#agreed_rates").val() / 30 * $(this).val()
+              var calc = $("#agreed_rates").val();
+              base_value = calc.replace(",","") / 30 * $(this).val()
             }
             $("#calc_rates").val(Math.round(base_value));
           }

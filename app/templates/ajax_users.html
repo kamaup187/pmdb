@@ -17,18 +17,7 @@
             </div>
           </div>
         </div> -->
-      <div class="card  mb-2 mt-1">
 
-        <div class="card-header pt-3 pb-2 divjust-end fixed-headerr dispnon bg-white">
-          <!-- <div class="mt-1 font-weight-bold text-black text-xx">Property listings</div> -->
-          <span class="smallify text-black font-weight-bold text-uppercase">Users panel</span>
-          <div>
-            <button id="close-propdisp" class="btn btn-sm btn-danger mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white"
-              type="button">X</button>
-          </div>
-        </div>
-
-        <div class="card-body flowing-body pt-2 pl-2">
 
           <div class="pb-1 bg-white">
             <div class="mb-1">
@@ -47,27 +36,27 @@
             <div class="col-lg-12 no-padding">
               <div id="props" class="table-responsive">
                   <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
-                      <thead>
+                      <thead class="custom-header">
                         <tr>
-                          <th class="text-info font-weight-bold">Name</th>
-                          <th class="text-info font-weight-bold">Username</th>
+                          <th class="text-black">Name</th>
+                          <th class="text-black">Username</th>
 
-                          <th class="text-info font-weight-bold">Phone</th>
-                          <th class="text-info font-weight-bold">Email</th>
-                          <th class="text-info font-weight-bold">Id</th>
-                          <th class="text-info font-weight-bold">Code</th>
+                          <th class="text-black">Phone</th>
+                          <th class="text-black">Email</th>
+                          <th class="text-black">Id</th>
+                          <th class="text-black">Code</th>
 
-                          <th class="text-info font-weight-bold">Props</th>
-                          <th class="text-info font-weight-bold">Units</th>
+                          <th class="text-black">Props</th>
+                          <th class="text-black">Units</th>
 
-                          <th class="text-info font-weight-bold">Level</th>
+                          <th class="text-black">Level</th>
 
-                          <th class="text-info font-weight-bold">Group</th>
-                          <th class="text-info track-title-cell">Active</th>                    
-                          <th class="text-info track-title-cell">Date</th>
+                          <th class="text-black">Group</th>
+                          <th class="text-black">Active</th>                    
+                          <th class="text-black">Date</th>
 
-                          <!-- <th class="text-info track-title-cell">Edit</th> -->
-                          <th class="text-info track-title-cell">Remove</th>
+                          <!-- <th class="text-black">Edit</th> -->
+                          <th class="text-black">Remove</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -108,8 +97,7 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
     </section>
 
 
@@ -119,7 +107,7 @@
           <div class="modal-content">
             <div class="indicator"></div>
             <div class="modal-header">
-              <h5 class="modal-title text-info font-weight-bold mb-1" id="paymentDetailModalLabel">Property registration</h5>
+              <h5 class="modal-title text-black mb-1" id="paymentDetailModalLabel">Property registration</h5>
               <span class="modal-info"></span>
             </div>
             <div class="modal-body">
@@ -319,13 +307,13 @@
                             <div class="col-lg-12 no-padding">
                               <div id="group-data" class="table-responsive">
                                 <table id="groupData" class="table shadow mb-1" width="100%" cellspacing="0">
-                                  <thead>
+                                  <thead class="custom-header">
                                     <tr>
-                                      <th class="text-info font-weight-bold">Name</th>
+                                      <th class="text-black">Name</th>
                           
-                                      <th class="text-info font-weight-bold">No. of users</th>
+                                      <th class="text-black">No. of users</th>
                           
-                                      <th class="text-info track-title-cell">Remove</th>
+                                      <th class="text-black">Remove</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -430,22 +418,18 @@
   </script>
   
 
-<script>
-  $("#close-propdisp").on('click',function(){
-    $('#body-block').removeClass('dispnone')
-    $('#propdisp').addClass('dispnone');
-    $('#content-area').removeClass("isopen text-danger");
-    $('#list-area').removeClass("isopen text-danger");
-    $('#sidebarToggle').click();
-    $('#smaccordionSidebar').removeClass("toggled");
-  });
-</script>
 
 <script>
-      
-  $("#uploadPropModal").on('shown.bs.modal', function(){
-    $(".dismissparent").click();
+
+$("#close-propdisp-users").on('click', function () {
+    $("#tenancy-reloader").text("off")
+    $('#body-block').removeClass('dispnone')
+    $('#propdisp').addClass('dispnone');
+
+    $('#propdisp-content').empty();
+
   });
+
 
 </script>
 

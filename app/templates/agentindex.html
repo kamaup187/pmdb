@@ -2004,133 +2004,6 @@
 
 
 
-  
-
-  <div class="text-center">
-    <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="indicator"></div>
-          <div class="modal-header">
-            <h5 class="modal-title text-info font-weight-bold" id="paymentDetailModalLabel">Update company details  >> {{co.name}}</h5>
-          </div>
-          <div class="modal-body">
-            <div class="media mb-2">
-              <div class="media-body">
-                <div class="position-relative">
-                  <form class="" action="/update/companyinfo" method="POST">
-                      <span class="small text-danger">Note: Fill in fields that you are updating only</span>
-                      <!-- <div class="form-group">
-                        <input type="text" name="co_name" class="form-control" placeholder="Company Name : {{co.name}}" disabled>
-                      </div> -->
-
-                      <div class="form-group row">
-                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
-                          <label class="small mb-1" for="inputEmail">Name</label>
-                          <input class="form-control" type="text" name="co_name" placeholder="NAME: {{co.name}}">
-                        </div>
-        
-                        <div class="col-sm-6 text-left">
-                          <label class="small mb-1" for="inputEmail">SMS Number</label>
-                          <input class="form-control" type="text" name="co_stel" placeholder="Tel: {{co.sphone}}">
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
-                          <label class="small mb-1" for="inputEmail">Street address</label>
-                            <input class="form-control" name="co_address" placeholder="Physical address">
-                        </div>
-        
-                        <div class="col-sm-6 text-left">
-                          <label class="small mb-1" for="inputEmail">Postal address</label>
-                            <input class="form-control" name="co_mailbox" placeholder="Mail box">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
-                          <label class="small mb-1" for="inputEmail">Nearest city</label>
-                            <input class="form-control" type="text" name="co_city" placeholder="City">
-                        </div>
-        
-                        <div class="col-sm-6 text-left">
-                          <label class="small mb-1" for="inputEmail">Locality</label>
-                            <input class="form-control" type="text" name="co_region" placeholder="Region">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
-                          <label class="small mb-1" for="inputEmail">Company email contact</label>
-                            <input class="form-control" type="text" name="co_mail" placeholder="Email: {{co.email}}">
-                        </div>
-        
-                        <div class="col-sm-6 text-left">
-                          <label class="small mb-1" for="inputEmail">Company voice contact</label>
-                            <input class="form-control" type="tel" name="co_tel" placeholder="Tel: {{co.phone}}">
-                        </div>
-                      </div>
-
-                      <hr>
-                      <div class="divbg center-btn">
-                        <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check mr-1"></i>Update</button>
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
-                      </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="indicator"></div>
-        <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Switch to the next billing month</h5>
-          <div class="alert-msgs"></div>
-        </div>
-        <div class="modal-body pt-0">
-          <div class="media mb-2">
-            <div class="media-body">
-              <div class="position-relative">
-                <div class="card-body modal-forms">
-                  <div class="center-btn mb-3 mt-3">
-                    (<span class="text-black">Currently: <span class="text-info underline">{{billingmonth}} </span></span>)
-                  </div>
-                  <div class="center-btn mb-2 mt-2 dispnone">
-                    <span class="text-black">Confirm to advance to <span class="text-danger underline">{{previousbillingmonth}} </span></span>
-                  </div>
-
-                  <div class="form-group no-paddin input-icons">
-                    <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                      <input id="switchperiod" class="form-control ph" type="text" placeholder="Select month to bill" readonly />
-                      <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
-                    </div>
-                  </div>
-
-
-                  <div class="mt-2 divbg">
-                    <div>
-                      <span id="nextbilling" type="button" class="btn btn-sm btn-danger text-gray-danger">Advance</span>
-                    </div>
-
-                    <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
-
-                  </div>
-      
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-kubwa-sana" role="document">
       <div class="modal-content">
@@ -2158,136 +2031,6 @@
     </div>
   </div>
 
-  <div class="modal fade" id="unclaimedPaymentsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-kubwa-sana" role="document">
-      <div class="modal-content">
-        <div class="indicator"></div>
-        <div class="modal-header pb-0">
-
-          <div class="divjust-end">
-            <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
-            <a id="download_mpesapayments" href="" target="_blank" class="dispnone"></a>
-
-
-            <div id="mpesapayments" class="dispnone">
-
-              <div class="divjust-end">
-                <div class="form-group input-icons mb-2">
-                  <label class="mb-0">Select paybill:</label>
-                  <select name="usergroup" class="form-control" id ="shortcode" >
-                    <option disabled selected value> Select Paybill </option>
-                    {% for o in shortcodes %}
-                    <option value="{{ o }}">{{ o }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-
-                <div class="form-group mb-2 ml-2">
-                  <label class="mb-0">Select month:</label>
-                  <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
-                    <input id="from" name="month" class="form-control ph" type="text" placeholder="-none set-" />
-                  </div>
-                </div>
-
-                <div class="form-group mb-2 mt-3">
-                  <button id="downloadmpesapayments" type="button" class="btn borderles btn-light ml-3 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <button id="togglempesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View report</span></button>
-            
-            <div class="dispnone">
-              <button id="createinvoice" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Create invoice</span></button>
-              <button id="printcinv" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Print invoice</span></button>
-            </div>
-
-
-          </div>
-
-        </div>
-        <div id="invoicearea" class="modal-body pt-0">
-          <div class="media mb-2">
-            <div class="media-body">
-              <div class="position-relative">
-                <div class="card-body modal-forms">
-
-                  <div id="" class="table-responsive">
-                    <table id="unresolvedpayments" class="table shadow mb-1" width="100%" cellspacing="0">
-                      <thead class="">
-                        <tr>
-                          <th class="text-info font-weight-bold">Shortcode</th>
-                          <th class="text-info font-weight-bold">FirstName</th>
-                          <th class="text-info font-weight-bold">LastName</th>
-                          <th class="text-info font-weight-bold">Phone</th> 
-                          <th class="text-info font-weight-bold">House</th>                                                                 
-                          <th class="text-info">Ref</th>
-                          <th class="text-info text-danger">Amount</th>
-                          <th class="text-info">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for cbid in cbids%}
-                        <tr>
-                                                                                   
-                          <td class="data-cell ">{{ cbid['paybill'] }}</td>
-                          <td class="data-cell ">{{ cbid['fname'] }}</td>
-                          <td class="data-cell ">{{ cbid['lname'] }}</td>
-                          <td class="data-cell ">{{ cbid['phone'] }}</td>
-                          <td class="data-cell ">{{ cbid['billref'] }}</td>
-                          <td class="data-cell ">{{ cbid['transid'] }}</td>
-                          <td class="data-cell ">{{ cbid['amount'] }}</td>
-                          <td class="data-cell ">{{ cbid['date'] }}</td>
-
-                        </tr>
-                      {% endfor %}
-                      </tbody>
-                  </table>
-                  </div>
-      
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-kubwa-sana" role="document">
-      <div class="modal-content">
-        <div class="indicator"></div>
-        <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify font-weight-bold">Settings</span>
-            <div>
-              <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
-            </div>
-          </h5>
-          <div class="alert-msgs"></div>
-        </div>
-        <div class="modal-body pt-0">
-          <div class="media mb-2">
-            <div class="media-body">
-              <div class="position-relative">
-                <div class="card-body modal-forms">
-
-                  <div class="text-center text-success font-weight-bold">
-                    Settings will appear here
-                  </div>
-      
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-kubwa-sana" role="document">
@@ -2821,6 +2564,8 @@
 
 
   });
+
+
 </script>
 
 
@@ -4295,7 +4040,29 @@ function badSnack() {
   $(".userbtn").on('click',function(){
       // $("#body-block").addClass("dispnone")
       // $("#preloader-btn").click();
-      $("#barloader").removeClass("dispnone")
+      // $("#barloader").removeClass("dispnone")
+
+
+      $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> MANAGE USERS'); feather.replace();
+      $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+      $("#activeprop").empty();
+
+
+      $("#propdisp").removeClass("dispnone")
+      $("#body-block").addClass("dispnone")
+      $("#proplist").addClass("dispnone")
+      $("#searchresults").addClass("dispnone")
+
+
+      $("#dummyData").removeClass('dispnone');
+      $("#barloader-alt").removeClass("dispnone")
+
+      $('#propdisp-content').empty()
+      $("#searchresults").empty()
+
+
 
       url = "{{ url_for('api.users') }}"
 
@@ -4303,19 +4070,11 @@ function badSnack() {
           type: "get",
           url: url,
           success: function(response) {
-              if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){
-                  $('#sidebarToggle').click();
-                  $('#smaccordionSidebar').removeClass("toggled");
-                }
-              $('#content-area').addClass("isopen text-danger");
-              // $("#postloader-btn").click();
-              $("#barloader").addClass("dispnone")
-              $("#body-block").addClass("dispnone")
-              $("#propdisp").removeClass("dispnone")
-              $("#proplist").addClass("dispnone")
-              $("#searchresults").html("empty")
-              $("#searchresults").addClass("dispnone")
-              $("#propdisp").html(response);
+            $("#barloader-alt").addClass("dispnone")
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").html(response);
           }
       });
   });

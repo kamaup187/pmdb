@@ -2944,6 +2944,14 @@ def att_details(arr):
         houselist.append(new_i)
 
     return houselist
+
+def com_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = CompanyOp.view_details(i)
+        houselist.append(new_i)
+
+    return houselist
     
 def prop_details(arr):
     houselist = []
@@ -12422,7 +12430,8 @@ def get_obj_ids(arr):
             req_id = req["id"]
             obj_id_list.append(req_id)
             editid = req.get("editid")
-            obj_id_list.append(editid)
+            if editid:
+                obj_id_list.append(editid)
             delid = req["delid"]
             obj_id_list.append(delid)
             

@@ -743,24 +743,6 @@
       });
   </script>
 
-  <script>
-    $("#close-propdisp").on('click',function(){
-      $('#body-block').removeClass('dispnone')
-      $('#propdisp').addClass('dispnone');
-      $(".fixloader").html(
-                '<span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>'
-            );
-            $(".fixloader2").html(
-                '<span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>'
-            );
-      setTimeout(getPropStats, 10);
-
-      // $('#content-area').removeClass("isopen text-danger");
-      // $('#list-area').removeClass("isopen text-danger");
-      // $('#sidebarToggle').click();
-      // $('#smaccordionSidebar').removeClass("toggled");
-    });
-  </script>
 
 <script>
   var rawIds = "{{ propids|safe }}";

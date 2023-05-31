@@ -7310,6 +7310,18 @@ class FetchTenancy(Resource):
 
         return [res[0],res[1],res[2],res[3],res[4],res[6]]
 
+
+class FetchAdminStats(Resource):
+    def get(self):
+        com_id = request.args.get("comid")
+        comid = get_identifier(com_id)
+        cc = CompanyOp.fetch_company_by_id(comid)
+        
+        props = len(cc.props)
+        users = len(cc.users)
+
+        return [props,users]
+
 class ReadingStats(Resource):
     def get(self):
 

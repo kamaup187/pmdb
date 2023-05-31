@@ -10515,7 +10515,7 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
 
 
 
-def main_total_bill(apartment_id,houseids,user_id,month,year):
+def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
     from app import create_app
     app = create_app()
     app.app_context().push()
@@ -10657,7 +10657,11 @@ def main_total_bill(apartment_id,houseids,user_id,month,year):
                     electricity += i.amount
                     ChargeOp.update_compiled_status(i,True)
 
-            rent += house.housecode.rentrate if house.housecode.rentrate else 0
+            if rent_bill:
+                rent += rent_bill
+            else:
+                rent += house.housecode.rentrate if house.housecode.rentrate else 0
+
             garbage += house.housecode.garbagerate if house.housecode.garbagerate else 0
             security += house.housecode.securityrate if house.housecode.securityrate else 0
             maintenance += house.housecode.servicerate if house.housecode.servicerate else 0

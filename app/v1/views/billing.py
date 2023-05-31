@@ -348,8 +348,17 @@ class CreateInvoices(Resource):
         houses = request.form.get("houses")
         level = request.form.get("level")
         target = request.form.get("target")
+        prorate = request.form.get("prorate")
+
+        pr_rent = validate_float_inputs(prorate)
+
+        if pr_rent[0] == "null":
+            rent_bill = 0.0
+        else:
+            rent_bill = pr_rent[0]
 
         print("APARTMENT ID TO BILL IS>>>>",propid)
+
         apartment_id = get_identifier(propid)
 
         try:
@@ -381,7 +390,7 @@ class CreateInvoices(Resource):
                 print("ERROR in generating MULTIPLE houseids >>>", str(e))
 
         billjob = q.enqueue_call(
-            func=main_total_bill, args=(apartment_id,houseids,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
+            func=main_total_bill, args=(apartment_id,houseids,rent_bill,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
         )
 
 

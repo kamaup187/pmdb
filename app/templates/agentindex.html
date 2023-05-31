@@ -2383,6 +2383,14 @@
 
 
   <script type="text/javascript">
+
+    var mm = new Date();
+    var mth = mm.getMonth();
+    var yr = mm.getFullYear();
+    var mm_arr = ["01","02","03","04","05","06","07","08","09","11","12"]
+    var monthyr = mm_arr[mth] + "-" + yr;
+    localStorage.setItem('monthvar',monthyr);
+
     function getFeed() {
       $("#searchInput").attr("placeholder", "Please wait...");
         $.ajax({

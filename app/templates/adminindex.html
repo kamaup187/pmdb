@@ -954,7 +954,7 @@
 
         <!-- Topbar -->
         <nav class="navbar fixed-nav navbar-expand navbar-light bg-white topbar mb-0 static-top shadow desktop-malaysian noprint">
-          <span class="desktop-malaysian floating-apartment-mobile text-xs mb-0 text-info">{{companyname}}</span>
+          <!-- <span class="desktop-malaysian floating-apartment-mobile text-xs mb-0 text-info">INVA</span> -->
           <!-- Sidebar Toggle (Topbar) -->
 
           <button id="sidebarTogglesm" class="btn btn-link rounded-circle mr-0 text-info">
@@ -1001,7 +1001,7 @@
             </li> -->
 
             <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <li class="nav-item dropdown no-arrow mx-1 dispnone">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw kiota-col"></i>
                 <!-- Counter - Alerts -->
@@ -1029,7 +1029,7 @@
             </li>
 
             <!-- Nav Item - Messages -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <li class="nav-item dropdown no-arrow mx-1 dispnone">
               <a class="nav-link overide-nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-envelope fa-fw kiota-col"></i>
                 <!-- Counter - Messages -->
@@ -1139,7 +1139,7 @@
             <span class="spinner-border spinner-border mr-2 fa-2x text-success" role="status" aria-hidden="true"></span>Fetching data...
           </div>
 
-        <div class="container-fluid mobile-malaysian">
+        <div class="container-fluid">
           <div class="row no-padding noprint">
             <div class="col-12 desktop-malaysian no-padding">
               <form class="d-non d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-searc" autocomplete="off"> 
@@ -1471,93 +1471,31 @@
                         <div class="divjust-end center-btn">
 
                           <div class="fixed-width-btn">
-                            <a class="billbtn" href="#">
+                            <a class="clientbtn" href="#">
                                 <button class="btn btn-outline-info borderles my-width mb-1">
                                   <div><i class="fas fa-coins fa-2x shadow-alt mb-2"></i></div>
-                                <span><h6 class="small-text">Bills</h6></span>
+                                <span><h6 class="small-text">CLIENTS</h6></span>
                                 </button>
                             </a>
                           </div>
 
                           <div class="fixed-width-btn">
-                              <a class="housebtn" href="#">
+                              <a class="propbtn" href="#">
                                   <button class="btn btn-outline-info  borderles my-width mb-1">
                                     <div><i class="fas fa-city fa-2x shadow-alt mb-2 "></i></div>
-                                  <span><h6 class="small-text">Units</h6></span>
+                                  <span><h6 class="small-text">PROPERTIES</h6></span>
                                   </button>
                               </a>
                           </div>
                   
-
                           <div class="fixed-width-btn">
-                            <a class="tenantbtn" href="#">
+                            <a class="" href="#">
                                 <button class="btn btn-outline-info  borderles my-width mb-1">
                                   <div id="loader4"><i class="fas fa-house-user fa-2x shadow-alt mb-2 "></i></div>
-                                <span><h6 class="small-text">Tenants</h6></span>
+                                <span><h6 class="small-text">INVOICES</h6></span>
                                 </button>
                             </a>
                           </div>
-
-                        </div>
-                        <div class="divjust-end center-btn">
-
-                          <div class="fixed-width-btn">
-                            <a class="meterbtn" href="#">
-                                <button class="btn btn-outline-info  borderles my-width mb-1">
-                                  <div><i class="fas fa-faucet fa-2x shadow-alt mb-2 "></i></div>
-                                  <span><h6 class="small-text">Meters</h6></span>
-                                </button>
-                            </a>
-                            </div>
-
-                            <div class="fixed-width-btn">
-                              <a class="paybtn2" href="#">
-                                  <button class="btn btn-outline-info  borderles my-width mb-1">
-                                    <div><i class="fas fa-hand-holding-usd fa-2x shadow-alt mb-2 "></i></div>
-                                  <span><h6 class="small-text">Receive payments</h6></span>
-                                  </button>
-                              </a>
-                            </div>
-
-                            <div class="fixed-width-btn">
-                              <a class="expensebtn" href="#">
-                                  <button class="btn btn-outline-info  borderles my-width mb-1">
-                                    <div><i class="fas fa-money-check-alt fa-2x shadow-alt mb-2 "></i></div>
-                                  <span><h6 class="small-text">Internal Expenses</h6></span>
-                                  </button>
-                              </a>
-                            </div>
-
-                        </div>
-
-                        <div class="divjust-end center-btn">
-
-                            <div class="fixed-width-btn">
-                              <a class="" href="{{ url_for('api.modifyaccessright') }}">
-                                  <button class="btn btn-outline-info  borderles my-width mb-1">
-                                    <div><i class="fas fa-users-cog fa-2x shadow-alt mb-2 "></i></div>
-                                    <span><h6 class="small-text">Access Control</h6></span>
-                                  </button>
-                              </a>
-                            </div>
-                    
-                            <div class="fixed-width-btn">
-                              <a class="subbtn" href="#">
-                                  <button class="btn btn-outline-info  borderles my-width mb-1">
-                                    <div><i class="fas fa-clipboard-list fa-2x shadow-alt mb-2 "></i></div>
-                                  <span><h6 class="small-text">Submissions</h6></span>
-                                  </button>
-                              </a>
-                            </div>
-
-                            <div class="fixed-width-btn">
-                                <a id="btn9" href="{{ url_for('api.reports') }}">
-                                    <button class="btn btn-outline-info  borderles my-width mb-1">
-                                      <div id="loader9"><i class="fas fa-poll fa-2x shadow-alt mb-2 "></i></div>
-                                    <span><h6 class="small-text">View reports</h6></span>
-                                    </button>
-                                </a>
-                            </div>
 
                         </div>
                         
@@ -1565,107 +1503,6 @@
                   </div>
                 </div>
 
-                <div class="col-xl-12 mb-1 no-padding mobile-malaysian dispnone">
-                    <div class="card shadow h-0 py-0">
-                      <div class="card-body bg-white report-card-padding">
-                            <div class="divjust-end center-btn">
-
-                              <div class="fixed-width-btn">
-                                <a class="billbtn" href="#">
-                                    <button class="btn btn-outline-info borderles my-width mb-1">
-                                        <div>
-                                          <i class="fas fa-house-user fa-2x shadow-alt"></i>
-                                        </div>
-                                        <span class="small mobile-malaysian sss">Bills</span>
-                                    </button>
-                                </a>
-                              </div>
-
-                              <div class="fixed-width-btn">
-                                <a href="#" class="housebtn">
-                                    <button class="btn btn-outline-success  borderles my-width mb-1">
-                                        <div>
-                                          <i class="fas fa-home fa-2x shadow-alt "></i>
-                                        </div>
-                                        <span class="small mobile-malaysian sss">Units</span>
-                                    </button>
-                                </a>
-                              </div>
-
-                              <div class="fixed-width-btn">
-                                <a class="tenantbtn" href="#">
-                                    <button class="btn btn-outline-info borderles my-width mb-1">
-                                        <div id="loader11">
-                                          <i class="fas fa-users fa-2x shadow-alt "></i>
-                                        </div>
-                                        <span class="small mobile-malaysian sss">Tenants</span>
-                                    </button>
-                                </a>
-                              </div>
-
-                              <div class="fixed-width-btn">
-                                <a href="#" class="meterbtn">
-                                  <button class="btn btn-outline-success  borderles my-width mb-1">
-                                      <div>
-                                        <i class="fas fa-faucet fa-2x shadow-alt "></i>
-                                      </div>
-                                      <span class="small mobile-malaysian sss">Meters</span>
-                                  </button>
-                                </a>
-                              </div>
-
-                                
-                                <div class="fixed-width-btn">
-                                  <a class="paybtn" href="#">
-                                      <button class="btn btn-outline-info borderles my-width mb-1">
-                                          <div>
-                                            <i class="fas fa-hand-holding-usd fa-2x shadow-alt "></i>
-                                          </div>
-                                          <span class="small mobile-malaysian sss">Receive payment</span>
-                                      </button>
-                                  </a>
-                                </div>
-                
-                                <div class="fixed-width-btn">
-                                    <a class="expensebtn" href="#">
-                                        <button class="btn btn-outline-success borderles my-width mb-1">
-                                            <div>
-                                              <i class="fas fa-money-check-alt fa-2x shadow-alt "></i>
-                                            </div>
-                                            <span class="small mobile-malaysian sss">Expenses</span>
-                                        </button>
-                                    </a>
-                                </div>
-
-                        
-                                <div class="fixed-width-btn">
-                                  <a class="subbtn" href="#">
-                                      <button class="btn btn-outline-info borderles my-width mb-1">
-                                          <div>
-                                            <i class="fas fa-clipboard-list fa-2x shadow-alt "></i>
-                                          </div>
-                                          <span class="small mobile-malaysian sss">Submissions</span>
-                                      </button>
-                                  </a>
-                                </div>
-
-
-                
-                                <div class="fixed-width-btn">
-                                    <a id="btn17" href="{{ url_for('api.reports') }}">
-                                        <button class="btn btn-outline-success borderles my-width mb-1">
-                                            <div id="loader17">
-                                              <i class="fas fa-poll fa-2x shadow-alt "></i>
-                                            </div>
-                                            <span class="small mobile-malaysian sss">View reports</span>
-                                        </button>
-                                    </a>
-                                </div>
-                
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 

@@ -12879,7 +12879,7 @@ def access(current_user):
             return False
         
 def permission(user,param):
-    if user.username.startswith('qc') or user.user_group_id == 3 or user.user_group_id == 2:
+    if user.username.startswith('qc') or user.user_group_id == 3 or user.user_group_id == 2 or user.user_group_id == 1:
         return True
     elif user.company_user_group.name == 'Director':
         return True

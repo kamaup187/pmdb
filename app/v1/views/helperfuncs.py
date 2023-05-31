@@ -2828,8 +2828,9 @@ def new_tenants_injector_alt(apartment_id):
     new_list=[]
 
     tenants = filter_in_tenant_allocs(apartment_id)
+    may_epoch = generate_exact_date(27,5,2023)
     for alloc in tenants:
-        if alloc.tenant.residency == "New":
+        if alloc.tenant.residency == "New" and alloc.date > may_epoch:
             new_list.append(alloc.tenant)
     return new_list
 

@@ -683,6 +683,57 @@
   </script>
 
 
+<!-- <script>
+
+  $("#reading").keyup(function(e){
+  
+  // inp.addEventListener("keydown", function(e) {
+    if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+            /*and simulate a click on the "active" item:*/
+           if( $('#capture').hasClass('btn-success')){
+              $('#capture').click();
+           }else if( $('#capture-alt').hasClass('btn-success')){
+              $('#capture-alt').click();
+           }else{
+            console.log("hizo vitu haiko active buana!")
+           }
+          
+        }
+  })
+</script> -->
+
+
+
+<script>
+  var input1 = document.getElementById("reading");
+  input1.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if( $('#capture').hasClass('btn-success')){
+        document.getElementById("capture").click();
+      }else{
+        console.log("water hakuna kitu!")
+      }
+
+    }
+  });
+
+  var input2 = document.getElementById("reading-alt");
+  input2.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if( $('#capture-alt').hasClass('btn-success')){
+        document.getElementById("capture-alt").click();
+      }else{
+        console.log("elec hakuna kitu!")
+      }
+    }
+  });
+  </script>
+
+
 <script>
   function getReadings(propid, target, page) {
     // showSpin();
@@ -1500,38 +1551,42 @@ $("#select_house_alt").on('change',function(){
             success: function(response) {
               $("#select_house").html(response);
               $("#select_house option:eq('1')").attr("selected", "selected");
-              // $("#select_house").change();
-              $.ajax({
-                url: "{{ url_for('api.fetchreadings') }}",
-                type: "get",
-                data: {
-                      propid: $("#prop_identifier").text(),
-                      target:"default"
-                    },
-                success: function(response) {
-                  $("#child-result-view").html(response);
-                  // $("#select_house option:eq('1')").attr("selected", "selected");
-                  $("#select_house").change(); 
-                  $("#meterReadingModal").find('#reading').focus();    
-                }
+              $("#select_house").change();
+              $("#meterReadingModal").find('#reading').focus();    
+
+              getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+
+              // $.ajax({
+              //   url: "{{ url_for('api.fetchreadings') }}",
+              //   type: "get",
+              //   data: {
+              //         propid: $("#prop_identifier").text(),
+              //         target:"default"
+              //       },
+              //   success: function(response) {
+              //     $("#child-result-view").html(response);
+              //     // $("#select_house option:eq('1')").attr("selected", "selected");
+              //     $("#select_house").change(); 
+              //     $("#meterReadingModal").find('#reading').focus();    
+              //   }
                 
-              });
+              // });
             }
             
           });
 
-          $.ajax({
-                url: "{{ url_for('api.capturereading') }}",
-                type: "get",
-                data: {
-                      propid: $("#prop_identifier").text(),
-                      target:"meter overview"
-                    },
-                success: function(response) {
-                  $("#meter_overview").html(response);   
-                }
+          // $.ajax({
+          //       url: "{{ url_for('api.capturereading') }}",
+          //       type: "get",
+          //       data: {
+          //             propid: $("#prop_identifier").text(),
+          //             target:"meter overview"
+          //           },
+          //       success: function(response) {
+          //         $("#meter_overview").html(response);   
+          //       }
                 
-              });
+          //     });
           
         }
       });
@@ -1574,22 +1629,10 @@ $("#select_house_alt").on('change',function(){
             success: function(response) {
               $("#select_house_alt").html(response);
               $("#select_house_alt option:eq('1')").attr("selected", "selected");
-              // $("#select_house").change();
-              $.ajax({
-                url: "{{ url_for('api.fetchreadings') }}",
-                type: "get",
-                data: {
-                      propid: $("#prop_identifier").text(),
-                      target:"default"
-                    },
-                success: function(response) {
-                  $("#child-result-view").html(response);
-                  // $("#select_house option:eq('1')").attr("selected", "selected");
-                  $("#select_house_alt").change();
-                  $("#elecReadingModal").find('#reading-alt').focus();    
-                }
-                
-              });
+              $("#select_house_alt").change();
+              $("#elecReadingModal").find('#reading-alt').focus();    
+              getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+
             }
             
           });
@@ -1758,18 +1801,7 @@ $("#select_house_alt").on('change',function(){
             },
         success: function(response) {
           $(".alert-msgs").html(response);
-          $.ajax({
-                url: "{{ url_for('api.fetchreadings') }}",
-                type: "get",
-                data: {
-                      propid: $("#prop_identifier").text(),
-                      target:$("#current-reloader").text()
-                    },
-                success: function(response) {
-                  $("#child-result-view").html(response);   
-                }
-                
-              });
+          getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
           
           setTimeout(function(){
             $("#new_units").empty();
@@ -1800,18 +1832,7 @@ $("#select_house_alt").on('change',function(){
             },
         success: function(response) {
           $(".alert-msgs").html(response);
-          $.ajax({
-                url: "{{ url_for('api.fetchreadings') }}",
-                type: "get",
-                data: {
-                      propid: $("#prop_identifier").text(),
-                      target:$("#current-reloader").text()
-                    },
-                success: function(response) {
-                  $("#child-result-view").html(response);  
-                }
-                
-              });
+          getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
           
           setTimeout(function(){
             $(".alerts-editreading").empty();
@@ -1857,18 +1878,8 @@ $("#select_house_alt").on('change',function(){
                 
               });
 
-        $.ajax({
-              url: "{{ url_for('api.fetchreadings') }}",
-              type: "get",
-              data: {
-                    propid: $("#prop_identifier").text(),
-                    target:$("#current-reloader").text()
-                  },
-              success: function(response) {
-                $("#child-result-view").html(response);  
-              }
-              
-            });
+              getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+
 
           $(".closemodal").click();
                    

@@ -578,7 +578,10 @@ class Users(Resource):
 
                 tele = sms_phone_number_formatter(del_user.phone)
 
-                response = sms.send(message1, [tele],sender)
+                if os.getenv('TARGET') == 'lasshouse' or TARGET:
+                    inva_send_sms(message1,tele)
+                else:
+                    response = sms.send(message1, [tele],sender)
             else:
                 response = sms.send(f"{del_user} has no phone", ["+254716674695"],sender)
 

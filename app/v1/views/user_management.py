@@ -1058,24 +1058,23 @@ class AdminCreateAgent(Resource):
         return Response(render_template("admin_createagent.html"))
 
     def post(self):
-        fname=request.form.get('fname')
-        lname=request.form.get('lname')
+        name=request.form.get('name')
         phone=request.form.get('tel')
         natid=request.form.get('natid')
         email=request.form.get('email')
-        company_name = request.form.get('company')
-        address = request.form.get('address')
+        company_name = request.form.get('com')
+        address = request.form.get('region')
+
         mail_box = request.form.get('mailbox')
         tel = request.form.get('company_tel')
         mail = request.form.get('company_mail')
         description = request.form.get('desc')
-        pass1 = request.form.get('p1')
-        pass2 = request.form.get('p2')
+        
+        pass1 = "@1234@"
+        pass2 = "@1234@"
 
         created_by = 1
         usergroup_id = 3
-
-        name = fname + " " + lname
 
         is_present  = UserOp.fetch_user_by_national_id(natid)
         
@@ -1129,10 +1128,10 @@ class AdminCreateAgent(Resource):
                 user.save()
 
                 msg='Account created successfully.'
-                flash(msg,"success")
+                return success + msg
             else:
                 msg='Account creation failed.'
-                flash(msg,"success")
+                
 
             return redirect(url_for('api.index'))
 

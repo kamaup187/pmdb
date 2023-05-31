@@ -669,6 +669,16 @@ class DeleteReceipt(Resource):
         else:
             return "Non deleted"
 
+class Clients(Resource):
+    def get(self):
+        coms = CompanyOp.fetch_all_companies()
+
+        items = com_details(coms)
+        propids = get_obj_ids(items)
+
+        return render_template("ajax_all_clients.html",propids=propids,items=items)
+
+
 class AllProperties(Resource):
     def get(self):
         target =  request.args.get("target")
@@ -1159,7 +1169,8 @@ class AddProp(Resource):
         present = ApartmentOp.fetch_apartment_by_name(prop.title())
         if present:
             print("SIMILAR PROP EXISTS >> ",present.name)
-            abort(403)
+            # abort(403)
+            return failure + "similar property exists"
             # return f'<span class="text-danger">Similar apartment exists</span>'
 
         owner = request.form.get("landlord")

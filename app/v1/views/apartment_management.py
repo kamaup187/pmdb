@@ -950,8 +950,6 @@ class Index(Resource):
 
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
-            if str(company) == "Inva Properties":
-                card_theme = "premier-card-theme"
 
             cpw = "KiotaPay"
             cpwfavi = "img"
@@ -1453,8 +1451,6 @@ class PropStats(Resource):
             
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
-            if str(company) == "Inva Properties":
-                card_theme = "premier-card-theme"
         else:
             card_theme = "card-bg"
         
@@ -1776,6 +1772,10 @@ class Dashboard(Resource):
 
         if target == "proponfocus":
             currmonth = get_month_year(period)
+
+            if request.args.get("admin") == "admin":
+                prop = "All Companies"
+
             propa = smart_truncate(prop,16)
             return [propa,currmonth]
 
@@ -1783,6 +1783,11 @@ class Dashboard(Resource):
             return "0.0"
 
         if target == "performance graph":
+            if request.args.get("admin") == "admin":
+                props = []
+                prop = "All clients"
+
+
             collections_per_apartment = []
             bills_per_apartment = []
 
@@ -1834,6 +1839,10 @@ class Dashboard(Resource):
             sms_per_property = []
             specific_month_sms_cost = 0.0
             total_tts = 0
+
+            if request.args.get("admin") == "admin":
+                props = []
+                prop = "All clients"
 
             for apartment in props:
                 db.session.expire(apartment)
@@ -1894,6 +1903,11 @@ class Dashboard(Resource):
         if target == "occupancy pie":
             occupancy = []
 
+            if request.args.get("admin") == "admin":
+                props = []
+                prop = "All clients"
+
+
             for apartment in props:
                 db.session.expire(apartment)
 
@@ -1907,17 +1921,26 @@ class Dashboard(Resource):
             ############################################################
         
             pie_string = ','.join(map(str, tenancylist))
+
+            try:
+                occupied = tenancylist[0],
+                vacant = tenancylist[1],
+            except:
+                occupied = 1
+                vacant = 1
+                piestring = "1,1"
                        
             return Response(render_template(
                 "ajax_occupancy_piechart.html",
                 targetprop = prop,
-                occupied = tenancylist[0],
-                vacant = tenancylist[1],
+                occupied = occupied,
+                vacant = vacant,
                 piestring=pie_string,
             ))
 
         if target == "expectedstats":
-
+            if request.args.get("admin") == "admin":
+                props = []
 
             total_bills = 0
             invs = 0
@@ -1941,14 +1964,16 @@ class Dashboard(Resource):
             return [f'Kes {total_bills:,.1f}',invs,month_str]
 
         if target == "collectionstats":
-
             # period = current_user.company.billing_period
 
             total_bills = 0
             total_collections = 0
 
 
-            props = run_props(prop,current_user)
+            # props = run_props(prop,current_user)
+
+            if request.args.get("admin") == "admin":
+                props = []
 
             for apartment in props:
 
@@ -1971,13 +1996,15 @@ class Dashboard(Resource):
             return [f'Kes {total_collections:,.1f}',f'{ratio:,.0f} %']
 
         if target == "balancestats":
-
             # period = current_user.company.billing_period
 
             total_balances = 0
             defaulters = 0
 
-            props = run_props(prop,current_user)
+            # props = run_props(prop,current_user)
+
+            if request.args.get("admin") == "admin":
+                props = []
 
             for apartment in props:
 

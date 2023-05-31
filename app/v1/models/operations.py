@@ -277,6 +277,13 @@ class CompanyOp(Company,Base):
             "props" : len(self.props),
             "date": CompanyOp.month_format(self.billing_period) if self.billing_period else "N/A"
         }
+    
+    def view_details(self):
+        return {
+            "id": self.id,
+            "delid": "del" + str(self.id),
+            "name": self.name
+        }
         
 class CompanyUserGroupOp(CompanyUserGroup,Base):
     """class to house company user groups"""

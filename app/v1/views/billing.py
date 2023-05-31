@@ -7477,12 +7477,14 @@ class ResetAllMpesaData(Resource):
 
         for obj in mpesa_requests:
             if obj.active:
-                MpesaRequestOp.update_status(obj,False,"Transaction was successful")
+                pass
+                # MpesaRequestOp.update_status(obj,False,"Transaction was successful")
 
         mpesa_data = MpesaPaymentOp.fetch_all_records()
         for obj in mpesa_data:
             if not obj.claimed:
-                MpesaPaymentOp.update_status(obj,True)
+                pass
+                # MpesaPaymentOp.update_status(obj,True)
         return "data reset"
 
 class QueryMpesaTrans(Resource):

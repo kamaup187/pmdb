@@ -22,11 +22,7 @@
         <div class="mb-1">
           <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
             <i class="me-1 feather-16" data-feather="plus-circle"></i>
-            List property
-          </span>
-          <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadDataExcelModal">
-            <i class="me-1 feather-16" data-feather="upload"></i>
-            Upload data
+            Add company
           </span>
         </div>
       </div>
@@ -37,22 +33,13 @@
           <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
             <thead>
               <tr>
-                <th class="text-black pl-0">Property</th>
+                <th class="text-black pl-0">Company</th>
                 <th class="text-black pl-0">Code</th>
 
-                <th class="text-black">Houses</th>
-                <th class="text-black">Tenants</th>
-                <th class="text-black">Vacant</th>
-                <th class="text-black">Occupancy</th>
+                <th class="text-black">Properties</th>
+                <th class="text-black">Users</th>
 
 
-                <th class="text-black ">Landlord</th>
-                <th class="text-black ">Location</th>
-
-                <th class="text-black ">Company</th>
-                <th class="text-black">Type</th>
-                <th class="text-black">Link</th>
-                <!-- <th class="text-black">Edit</th> -->
                 <th class="text-black">Del</th>
                 <th class="text-black">By</th>
               </tr>
@@ -66,26 +53,8 @@
                 
                 <td class="data-cell">{{item['id']}}</td>
 
-                <td id="houseinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
-                <td id="tenantinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
-                <td id="vacantinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
-                <td id="ratioinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
-
-
-                <td class="data-cell text-gray-700 small ">{{ item['owner'] }}</td>
-                <td class="data-cell text-gray-700 small ">{{ item['location'] }}</td>
-                <td class="data-cell text-gray-900 small ">{{ item['company'] }}</td>
-
-                <td class="data-cell">{{item['status']}}</td>
-
-                <td class="data-cell">
-                  <div>
-                    <span id="{{item['id']}}" type="button"
-                      class="{{item['link-target']}} ellipsis borderless modalTrigger text-gray-700 "
-                      data-toggle="modal" data-bs-toggle="modal" data-target="#linkModal">{{item['link'] |
-                      safe}}</span>
-                  </div>
-                </td>
+                <td id="propinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
+                <td id="userinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
 
                 <td class="data-cell">
                   <div>
@@ -185,7 +154,7 @@
       <div class="indicator"></div>
       <div class="modal-header pb-0 text-center">
         <h5 class="modal-title text-info divjust-end underline-thin-fade">
-          <span class="mr-3 smallify">List new property</span>
+          <span class="mr-3 smallify">Add client</span>
           <div>
             <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal"
               data-bs-toggle="modal" data-target="#uploadPropModal"><i class="fa fa-upload"></i></button>
@@ -206,26 +175,15 @@
 
                     <div class="row underline-thin">
                       <div class="form-group col-md-6 no-paddin input-icons">
-                        <span>Property name? <span class="text-danger mr-5">*</span><span
-                            class="text-danger iconotifications">--</span></span>
-                        <input id="prop" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
-                          placeholder="City View Heights" />
-                        <span class="input-group-addon field-icon"><i
-                            class="fas fa-fw fa-address-card text-info"></i></span>
+                        <span>Client name? <span class="text-danger mr-5">*</span></span>
+                        <input id="cuname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
+                          placeholder="John Doe" />
                       </div>
 
-                      <div class="form-group col-md-6 input-icons">
-                        <span>Region/Estate</span>
-                        <input id="select_region" list="region_list"
-                          class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
-                          placeholder="Ruaka" required>
-                        <datalist id="region_list">
-
-                          {% for o in regions %}
-                          <option value="{{ o }}">
-                            {% endfor %}
-
-                        </datalist>
+                      <div class="form-group col-md-6 no-paddin input-icons">
+                        <span>National Id? <span class="text-danger mr-5">*</span></span>
+                        <input id="cnatid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
+                          placeholder="12345678" />
                       </div>
                     </div>
 
@@ -233,20 +191,43 @@
                   <div class="row underline-thin">
 
                     <div class="form-group col-md-6 no-paddin input-icons">
-                      <span>Landlord <span class="text-primary small">(optional)</span></span>
-                      <input id="cname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
-                        placeholder="Jonh Warui" />
-                      <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                      <span>Email <span class="text-danger mr-5">*</span></span>
+                      <input id="cmail" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
+                        placeholder="someone@example.com" />
                     </div>
 
                     <div class="form-group col-md-6 no-paddin input-icons">
-                      <span>Mobile number <span class="text-primary small">(optional)</span></span>
+                      <span>Mobile number <span class="text-danger mr-5">*</span></span>
                       <input id="ctel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
                         placeholder="0712345678" />
-                      <span class="input-group-addon field-icon"><i class="fas fa-fw fa-phone text-info"></i></span>
                     </div>
 
                   </div>
+
+                  <div class="row underline-thin">
+
+                    <div class="form-group col-md-6 no-paddin input-icons">
+                      <span>Company name <span class="text-danger mr-5">*</span></span>
+                      <input id="cname" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"
+                        placeholder="VAAL REAL ESTATE" />
+                    </div>
+
+                    <div class="form-group col-md-6 input-icons">
+                      <span>Region/Estate</span>
+                      <input id="select_region" list="region_list"
+                        class="form-control border-top-0 border-right-0 border-left-0 ph" type="text" name="title"
+                        placeholder="Hurlingham" required>
+                      <datalist id="region_list">
+
+                        {% for o in regions %}
+                        <option value="{{ o }}">
+                          {% endfor %}
+
+                      </datalist>
+                    </div>
+
+                  </div>
+
 
 
               </div>
@@ -267,7 +248,7 @@
 </div>
 
 
-<div class="modal fade" id="uploadPropModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel"
+<div class="modal fade" id="uploadPropModall" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -580,7 +561,6 @@
 <script>
   var rawIds = "{{ propids|safe }}";
   var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
-  console.log(ids)
   $.each(ids, function (i, item) {
 
     $("#" + item).on('click', function () {
@@ -618,17 +598,14 @@
         //do nothing
       }else{
         $.ajax({
-        url: "{{ url_for('api.fetchtenancy') }}",
+        url: "{{ url_for('api.fetchadminstats') }}",
         type: "get",
         data: {
-              propid: item
+              comid: item
             },
         success: function(response) {
-          $("#houseinfo-" + item ).text(response[0]);
-          $("#tenantinfo-" + item ).text(response[1]);
-          $("#vacantinfo-" + item ).text(response[3]);
-          $("#ratioinfo-" + item ).text(response[4]);
-
+          $("#propinfo-" + item ).text(response[0]);
+          $("#userinfo-" + item ).text(response[1]);
         }
       });
       }
@@ -800,14 +777,14 @@
 
     $.ajax({
       type: "POST",
-      url: "{{ url_for('api.addprop') }}",
+      url: "{{ url_for('api.admincreateagent') }}",
       data: {
-        landlord: $("#cname").val(),
+        name: $("#cuname").val(),
         tel: $("#ctel").val(),
+        natid: $("#cnatid").val(),
+        email: $("#cmail").val(),
+        com: $("#cname").val(),
         region: $("#select_region").val(),
-        prop: $("#prop").val(),
-        agency: "True",
-        target: ""
       },
       success: function (response) {
         $(".alert-msgs").html(response);
@@ -817,7 +794,7 @@
           $(".dismissparent").click();
         }, 2000);
 
-        $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> PROPERTY LISTING'); feather.replace();
+        $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> CLIENT LISTING'); feather.replace();
         $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
 
         $("#dummyData").addClass('dispnone');
@@ -826,7 +803,7 @@
         $("#barloader-alt").removeClass("dispnone")
 
 
-        url = "{{ url_for('api.allproperties') }}"
+        url = "{{ url_for('api.clients') }}"
 
         $.ajax({
             type: "get",
@@ -851,34 +828,8 @@
 
       },
       error: function () {
-
-        $(".dismissparent").click();
-
-        $("#barloader-alt").addClass("dispnone")
-        $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
-
-        $("#dummyData").addClass('dispnone');
-
         $(".alert-msgs").html('<span class="text-danger">Similar property exists</span>');
         $('#add_prop').html('Re-submit');
-
-
-        url = "{{ url_for('api.allproperties') }}"
-
-        $.ajax({
-            type: "get",
-            url: url,
-            data: {
-              target:""
-            },
-            success: function(response) {
-                $("#barloader-alt").addClass("dispnone")
-                $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
-
-                $("#dummyData").addClass('dispnone');
-                $("#propdisp-content").html(response);
-            }
-        });
 
       }
 

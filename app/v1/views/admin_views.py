@@ -1470,6 +1470,7 @@ class Properties(Resource):
                         pdict = {
                             "property_code":prop.id,
                             "name": prop.name,
+                            "image":prop.image_url,
                             "units_num":len(prop.houses),
                             "vacants_num":len(vacs),
                             "location":prop.location.name
@@ -1559,6 +1560,7 @@ class PropertiesByLocation(Resource):
                             pdict = {
                                 "property_code":prop.id,
                                 "name": prop.name,
+                                "image":prop.image_url,
                                 "units_num":len(prop.houses),
                                 "vacants_num":len(vacs),
                                 "location":prop.location.name
@@ -1643,6 +1645,7 @@ class Property(Resource):
                             pdict = {
                                 "property_code":prop.id,
                                 "name": prop.name,
+                                "image":prop.image_url,
                                 "units_num":len(prop.houses),
                                 "vacants_num":len(vacs),
                                 "location":prop.location.name

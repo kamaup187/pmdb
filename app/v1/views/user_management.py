@@ -1544,11 +1544,11 @@ class UserLogin(Resource):
         ################################################################################
         # birr = ApartmentOp.fetch_apartment_by_id(409)
 
-        # # birr = MonthlyChargeOp.fetch_specific_bill(63598)
-        # if birr:
-        #     for t in birr.tenants:
-        #         TenantOp.delete(t)
-        # print("not birr")
+        # birr = MonthlyChargeOp.fetch_specific_bill(72893)
+        # if not birr:
+        #     print("not birr")
+        # else:
+        #     import pdb; pdb.set_trace()
 
         # inv = MonthlyChargeOp.fetch_monthlycharge_by_smsid("773798839")
         # rec = PaymentOp.fetch_payment_by_smsid("773798839")

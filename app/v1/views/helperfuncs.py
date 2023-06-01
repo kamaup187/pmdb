@@ -6612,8 +6612,34 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                     occupancy = check_occupancy(house_obj)
 
                     if occupancy[0] == "occupied":
-                        print("Specified house occupied: ",house_obj)
-                        pass
+                        # print("Specified house occupied: ",house_obj)
+                        # pass
+
+                        curr_user = UserOp.fetch_user_by_id(user_id)
+
+                        if curr_user.company.name == "GreatHomes Consultants":
+
+                            active_alloc = check_house_occupied(tenant_obj)[2]
+
+                            AllocateTenantOp.update_status(active_alloc,False,tenant_obj.balance,datetime.datetime.now(),current_user.name)
+                            TenantOp.update_status(tenant_obj,"Vacated")
+
+                            TenantOp.update_balance(0.0)
+
+                            house_id = house_obj.id
+                            tenant_id = tenant_obj.id
+
+                            checkin = datetime.datetime.now()
+                            checkout = datetime.datetime.now()
+
+                            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
+                            allocate_tenant_obj.save()
+
+                            TenantOp.update_status(tenant_obj,"Resident")
+                            TenantOp.update_residency(tenant_obj,"Old")
+                        else:
+                            print("Specified house occupied: ",house_obj)
+                            pass
 
                     else:
                         house_id = house_obj.id

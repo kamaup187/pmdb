@@ -1002,6 +1002,8 @@ class ApartmentOp(Apartment,Base):
             progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Billing'
         elif self.billprogress == "failed":
             progress = '<i class="fas fa-exclamation mr-2" role="status" aria-hidden="true"></i>Retry'
+        elif self.billprogress == "queued":
+            progress = '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Queuing'
         else:
             progress = 'Generate'
         return progress

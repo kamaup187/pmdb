@@ -3149,6 +3149,18 @@ def check_occupancy(house_obj):
 
     return "empty","vacant"
 
+def get_active_leases(house_obj):
+    """check whether house is occupied or not before allocation"""
+    allocs = [] 
+    if house_obj.tenant_allocated:
+        tenant_allocs = house_obj.tenant_allocated
+        
+        for tenant_alloc in tenant_allocs:
+            if tenant_alloc.active == True:
+                allocs.append(tenant_alloc)
+
+    return allocs
+
 def check_house_occupied(tenant_obj):
     """check whether tenant is a resident or alien""" 
     if tenant_obj.house_allocated:
@@ -6407,6 +6419,8 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
     app = create_app()
     app.app_context().push()
 
+    curr_user = UserOp.fetch_user_by_id(user_id)
+
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
 
     for item in dict_array:
@@ -6473,9 +6487,8 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                 code_obj.save()
 
         else:
-            print("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
-            lfile("Entire row skipped>>","HOUSE",unit,"GROUP",group,"TENANT",tenant)
-            continue
+            pass
+            # continue
 
         try:
             housename = str(int(unit) if unit else "" )
@@ -6490,20 +6503,19 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         except:
             house_name = housename
 
+
         house_obj = get_specific_house_obj(apartment_id,house_name)
-        
-        if house_obj:
-            print("Skipping ",house_name)
 
-        elif housename:
-            house_obj = HouseOp(house_name,apartment_id,code_obj.id,user_id,desc)
-            house_obj.save()
-        else:
-            pass
+        # import pdb; pdb.set_trace()
 
-
-        print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
-        lfile("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+        if not house_obj:
+            if housename and code_obj:
+                house_obj = HouseOp(house_name,apartment_id,code_obj.id,user_id,desc)
+                house_obj.save()
+            else:
+                pass
+        if not house_obj:
+            continue
 
         try:
             if isinstance(raw_mobile,str):
@@ -6543,12 +6555,11 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
         if mobile:
             rawstrtel = mobile.replace(" ", "")
             if len(rawstrtel) > 9:
-                print(mobile,"is too long")
+                
                 strtel = ""
             else:
                 strtel = rawstrtel
         else:
-            print(mobile,"mobile does not exist")
             strtel = ""
 
         if strtel.startswith("0"):
@@ -6573,6 +6584,18 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
             if tenant.lower() == "vacant" or tenant.startswith("-") or tenant.startswith("_") or len(tenant) < 2:
                 print(tenant,"name is not allowed")
                 similar = True
+
+                if curr_user.company.name == "GreatHomes Consultants" or localenv:
+
+                    active_allocs = get_active_leases(house_obj)
+
+                    for x in active_allocs:                            
+                        AllocateTenantOp.update_status(x,False,x.tenant.balance,datetime.datetime.now(),curr_user.name)
+                        TenantOp.update_status(x.tenant,"Vacated")
+                        TenantOp.update_balance(x.tenant,0.0)
+
+                    continue
+
 
             tenants = prop.tenants
 
@@ -6599,48 +6622,64 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                     print("SIMILAR MOBILE NUMBER EXISTS: ",tenantphone,present4,"House",present4.house_allocated,"Apartment",present4.apartment)
                     similar = False
 
-            if similar:
+            if curr_user.company.name == "GreatHomes Consultants" or localenv:
+                # TenantOp.delete(tenant_obj)
+                print("STEP 1")
                 pass
             else:
-                if ttype == "ptenant":
-                    ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
-                    ptenant_obj.save()
+                if similar:
+                    continue
                 else:
-                    tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
-                    tenant_obj.save()
+                    pass
 
-                    occupancy = check_occupancy(house_obj)
+            # if ttype == "ptenant":
+            #     ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
+            #     ptenant_obj.save()
+            # else:
+            #     tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
+            #     tenant_obj.save()
 
-                    if occupancy[0] == "occupied":
-                        # print("Specified house occupied: ",house_obj)
-                        # pass
+            if ttype == "ptenant":
+                tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
+                tenant_obj.save()
+            else:
+                tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
+                tenant_obj.save()
 
-                        curr_user = UserOp.fetch_user_by_id(user_id)
 
-                        if curr_user.company.name == "GreatHomes Consultants":
+                active_allocs = get_active_leases(house_obj)
 
-                            active_alloc = check_house_occupied(tenant_obj)[2]
+                print("STEP 2 ", "ACTIVE ALLOCS FOR HOUSE ",house_obj.name, " ARE >>> ",active_allocs)
 
-                            AllocateTenantOp.update_status(active_alloc,False,tenant_obj.balance,datetime.datetime.now(),current_user.name)
-                            TenantOp.update_status(tenant_obj,"Vacated")
+                if curr_user.company.name == "GreatHomes Consultants" or localenv:
 
-                            TenantOp.update_balance(0.0)
+                    print("Geeting to lease removal")
 
-                            house_id = house_obj.id
-                            tenant_id = tenant_obj.id
 
-                            checkin = datetime.datetime.now()
-                            checkout = datetime.datetime.now()
+                    if active_allocs:
 
-                            allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
-                            allocate_tenant_obj.save()
+                        for x in active_allocs:                            
+                            AllocateTenantOp.update_status(x,False,x.tenant.balance,datetime.datetime.now(),curr_user.name)
+                            TenantOp.update_status(x.tenant,"Vacated")
+                            TenantOp.update_balance(x.tenant,0.0)
 
-                            TenantOp.update_status(tenant_obj,"Resident")
-                            TenantOp.update_residency(tenant_obj,"Old")
-                        else:
-                            print("Specified house occupied: ",house_obj)
-                            pass
+                    house_id = house_obj.id
+                    tenant_id = tenant_obj.id
 
+                    checkin = datetime.datetime.now()
+                    checkout = datetime.datetime.now()
+
+                    allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None)
+                    allocate_tenant_obj.save()
+
+                    TenantOp.update_status(tenant_obj,"Resident")
+                    TenantOp.update_residency(tenant_obj,"Old")
+
+                else:
+                    active_alloc = check_house_occupied(tenant_obj)[2]
+                    if active_alloc:
+                        print("Specified house occupied: ",house_obj)
+                        pass
                     else:
                         house_id = house_obj.id
                         tenant_id = tenant_obj.id

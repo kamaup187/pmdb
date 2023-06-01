@@ -361,6 +361,9 @@ class CreateInvoices(Resource):
 
         apartment_id = get_identifier(propid)
 
+        prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+        ApartmentOp.update_billing_progress(prop,"queued")
+
         try:
             billdate = date_formatter(date)
             bill_date = parse(billdate)

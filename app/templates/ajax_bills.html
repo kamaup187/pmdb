@@ -518,7 +518,7 @@
 <script>
   $("#generatebtn").click(function () {
     $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
-    $("#"+$("#bill_prop_identifier").text()).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+    $("#"+$("#bill_prop_identifier").text()).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>queuing');
 
     var houselist = [];
     var propitem = $("#bill_prop_identifier").text()
@@ -537,6 +537,7 @@
       },
       success: function (response) {
         $(".dismissparent").click();
+        $(this).html('Generate');
 
         var billingpoll = setInterval(function () {
 

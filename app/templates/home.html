@@ -428,7 +428,7 @@
               </div> <!-- .accordion-item -->
               <div class="accordion-item">
                 <h2 class="mb-0">
-                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">How to link your bank account with kodimann?</button>
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">How to link your bank account with InvaPay?</button>
                 </h2>
 
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion_1">
@@ -458,31 +458,33 @@
             <div class="owl-single owl-carousel">
               <div class="testimonial mx-auto">
                 <figure class="img-wrap">
-                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                  <!-- <img src="../static/images/person_.jpg" alt="Image" class="img-fluid"> -->
+                  <!-- <i class="fa fa-user"></i> -->
+                  <i class="feather-18 text-black font-weight-bold" data-feather="user"></i>
                 </figure>
-                <h3 class="name">Adam Aderson</h3>
+                <h3 class="name">Kelvin Mwangi</h3>
                 <blockquote>
-                  <p>&ldquo;--&rdquo;</p>
+                  <p>&ldquo;InvaPay is backed  by exceptional team we find brilliant. This software has saved me time within my job as a property manager&rdquo;</p>
                 </blockquote>
               </div>
 
               <div class="testimonial mx-auto">
                 <figure class="img-wrap">
-                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                  <i class="feather-18 text-black font-weight-bold" data-feather="home"></i>
                 </figure>
-                <h3 class="name">Lukas Devlin</h3>
+                <h3 class="name">CornerStone Properties</h3>
                 <blockquote>
-                  <p>&ldquo;--.&rdquo;</p>
+                  <p>&ldquo;With growing competition in every industry in every aspect — from price to technology to innovation — CornerStone believes the way to differentiate your brand is through improving customer experience. This exactly what we have achieved through InvaPay&rdquo;</p>
                 </blockquote>
               </div>
 
               <div class="testimonial mx-auto">
                 <figure class="img-wrap">
-                  <img src="../static/images/person_.jpg" alt="Image" class="img-fluid">
+                  <i class="feather-18 text-black font-weight-bold" data-feather="users"></i>
                 </figure>
-                <h3 class="name">Kayla Bryant</h3>
+                <h3 class="name">Martin Juma</h3>
                 <blockquote>
-                  <p>&ldquo;--.&rdquo;</p>
+                  <p>&ldquo;Simple system and yet so powerful. All my tenants get timely invoices and receipts, thanks to InvaPay.&rdquo;</p>
                 </blockquote>
               </div>
 
@@ -875,6 +877,11 @@
     <script src="../static/jsx/custom.js"></script>
     <script src="{{ url_for('static', filename='landingtwo/js/jquery.validate.min.js') }}"></script>
     <script src="../static/jsx/val.js"></script>
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+    <script>
+      feather.replace()
+    </script>
 
     <script>
       $("#gotopersonal").click(function(){

@@ -6511,9 +6511,6 @@ class UpdateTenant(Resource):
         if email:
             present1 = TenantOp.fetch_tenant_by_email(email)
             present2 = UserOp.fetch_user_by_email(email)
-            # if present1 or present2:
-            #     msg="Email taken, use another email or leave blank"
-            #     # return render_template('ajaxghosthouse.html',alert=msg)
 
         if national_id:
             present3 = TenantOp.fetch_tenant_by_nat_id(national_id)

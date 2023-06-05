@@ -2031,6 +2031,105 @@
     </div>
   </div>
 
+  <div class="modal fade" id="unclaimedPaymentsModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-kubwa-sana" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0">
+
+          <div class="divjust-end">
+            <h5 class="modal-title text-danger" id="paymentDetailModalLabel">Unresolved payments ({{cbids_num}})</h5>
+            <a id="download_mpesapayments" href="" target="_blank" class="dispnone"></a>
+
+
+            <div id="mpesapayments" class="dispnone">
+
+              <div class="divjust-end">
+                <div class="form-group input-icons mb-2">
+                  <label class="mb-0">Select paybill:</label>
+                  <select name="usergroup" class="form-control" id ="shortcode" >
+                    <option disabled selected value> Select Paybill </option>
+                    {% for o in shortcodes %}
+                    <option value="{{ o }}">{{ o }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="form-group mb-2 ml-2">
+                  <label class="mb-0">Select month:</label>
+                  <div id="datepicker8" class="date" data-date-format="dd-mm-yyyy">
+                    <input id="from" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                  </div>
+                </div>
+
+                <div class="form-group mb-2 mt-3">
+                  <button id="downloadmpesapayments" type="button" class="btn borderles btn-light ml-3 mt-2 no-wrap"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View</span></button>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <button id="togglempesapayments" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>View report</span></button>
+            
+            <div class="dispnone">
+              <button id="createinvoice" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Create invoice</span></button>
+              <button id="printcinv" type="button" class="btn btn-sm borderles small btn-light ml-3 mb-2"><span class="fixed-width-prop"><i class="fas fa-print mr-2"></i>Print invoice</span></button>
+            </div>
+
+
+          </div>
+
+        </div>
+        <div id="invoicearea" class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+                  <div id="" class="table-responsive">
+                    <table id="unresolvedpayments" class="table shadow mb-1" width="100%" cellspacing="0">
+                      <thead class="">
+                        <tr>
+                          <th class="text-info font-weight-bold">Shortcode</th>
+                          <th class="text-info font-weight-bold">FirstName</th>
+                          <th class="text-info font-weight-bold">LastName</th>
+                          <th class="text-info font-weight-bold">Phone</th> 
+                          <th class="text-info font-weight-bold">House</th>                                                                 
+                          <th class="text-info">Ref</th>
+                          <th class="text-info text-danger">Amount</th>
+                          <th class="text-info">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for cbid in cbids%}
+                        <tr>
+                                                                                   
+                          <td class="data-cell ">{{ cbid['paybill'] }}</td>
+                          <td class="data-cell ">{{ cbid['fname'] }}</td>
+                          <td class="data-cell ">{{ cbid['lname'] }}</td>
+                          <td class="data-cell ">{{ cbid['phone'] }}</td>
+                          <td class="data-cell ">{{ cbid['billref'] }}</td>
+                          <td class="data-cell ">{{ cbid['transid'] }}</td>
+                          <td class="data-cell ">{{ cbid['amount'] }}</td>
+                          <td class="data-cell ">{{ cbid['date'] }}</td>
+
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                  </table>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-kubwa-sana" role="document">

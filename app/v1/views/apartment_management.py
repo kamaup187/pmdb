@@ -5693,8 +5693,10 @@ class AddTenant(Resource):
                     """introduce an error"""
                     nonexistent_item = sheet.row_values(1)[1000000]
 
+                dict_array = []
+
                 for row in rows:
-                    
+                   
                     try:
                         tenanthouse = str(int(sheet.row_values(row)[0]) if sheet.row_values(row)[0] else "" )
                     except:
@@ -5711,113 +5713,123 @@ class AddTenant(Resource):
 
                     checkin = sheet.row_values(row)[4] if sheet.row_values(row)[4] else ""
 
+                    item_dict = {
+                        "tenanthouse":tenanthouse,
+                        "raw_mobile":raw_mobile,
+                        "email":email,
+                        "natid":natid,
+                        "checkin":checkin
+                    }
+
+                    dict_array.append(item_dict)
+
+                biodatajob = q.enqueue_call(
+                    func=read_biodata_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                )
+
                     # from datetime import datetime
 
-                    try:
-                        dt = datetime.datetime.fromordinal(datetime.datetime(1900, 1, 1).toordinal() + int(checkin) - 2)
-                        hour, minute, second = floatHourToTime(checkin % 1)
-                        dt = dt.replace(hour=hour, minute=minute, second=second)
-                    except:
-                        dt = datetime.datetime.now()
+                    # try:
+                    #     dt = datetime.datetime.fromordinal(datetime.datetime(1900, 1, 1).toordinal() + int(checkin) - 2)
+                    #     hour, minute, second = floatHourToTime(checkin % 1)
+                    #     dt = dt.replace(hour=hour, minute=minute, second=second)
+                    # except:
+                    #     dt = datetime.datetime.now()
 
-                    print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+                    # print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
 
-                    try:
-                        if isinstance(raw_mobile,str):
-                            tel = raw_mobile
-                        else:
-                            tel = str(int(raw_mobile))
-                    except:
-                        print("Failed to stringify",raw_mobile)
-                        tel = ""
+                    # try:
+                    #     if isinstance(raw_mobile,str):
+                    #         tel = raw_mobile
+                    #     else:
+                    #         tel = str(int(raw_mobile))
+                    # except:
+                    #     print("Failed to stringify",raw_mobile)
+                    #     tel = ""
 
-                    if tel:
+                    # if tel:
 
-                        if isinstance(tel,str):
-                            mobile0 = tel.replace(" ", "")
-                            mobile1 = mobile0.replace("`", "")
-                            mobile2 = mobile1.replace("'", "")
+                    #     if isinstance(tel,str):
+                    #         mobile0 = tel.replace(" ", "")
+                    #         mobile1 = mobile0.replace("`", "")
+                    #         mobile2 = mobile1.replace("'", "")
 
-                            if mobile2.startswith("0"):
-                                mobile = mobile2.lstrip("0")
+                    #         if mobile2.startswith("0"):
+                    #             mobile = mobile2.lstrip("0")
   
-                            elif mobile2.startswith("+254"):
-                                mobile = mobile2.lstrip("+254")
+                    #         elif mobile2.startswith("+254"):
+                    #             mobile = mobile2.lstrip("+254")
 
-                            elif mobile2.startswith("254"):
-                                mobile = mobile2.lstrip("254")
+                    #         elif mobile2.startswith("254"):
+                    #             mobile = mobile2.lstrip("254")
 
-                            else:
-                                mobile = mobile2
+                    #         else:
+                    #             mobile = mobile2
 
-                        else:
-                            print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
-                            mobile = ""
-                    else:
-                        mobile = ""
+                    #     else:
+                    #         print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                    #         mobile = ""
+                    # else:
+                    #     mobile = ""
 
 
-                    if mobile:
-                        rawstrtel = mobile.replace(" ", "")
-                        if len(rawstrtel) > 9:
-                            print(mobile,"is too long")
-                            strtel = ""
-                        else:
-                            strtel = rawstrtel
-                    else:
-                        print(mobile,"mobile does not exist")
-                        strtel = ""
+                    # if mobile:
+                    #     rawstrtel = mobile.replace(" ", "")
+                    #     if len(rawstrtel) > 9:
+                    #         print(mobile,"is too long")
+                    #         strtel = ""
+                    #     else:
+                    #         strtel = rawstrtel
+                    # else:
+                    #     print(mobile,"mobile does not exist")
+                    #     strtel = ""
 
-                    if strtel.startswith("0"):
-                        tenantphone = strtel
-                    else:
-                        tenantphone = "0" + strtel
+                    # if strtel.startswith("0"):
+                    #     tenantphone = strtel
+                    # else:
+                    #     tenantphone = "0" + strtel
                 
-                    tenant_house = tenanthouse.upper()
-                    house_obj = get_specific_house_obj(apartment_id,tenant_house)
-                    if not house_obj:
-                        print("Specified house doesnt exist: ",tenant_house)
-                        continue
-                    else:
-                        house_id = house_obj.id
+                    # tenant_house = tenanthouse.upper()
+                    # house_obj = get_specific_house_obj(apartment_id,tenant_house)
+                    # if not house_obj:
+                    #     print("Specified house doesnt exist: ",tenant_house)
+                    #     continue
+                    # else:
+                    #     house_id = house_obj.id
 
-                    occupancy = check_occupancy(house_obj)
+                    # occupancy = check_occupancy(house_obj)
 
-                    if occupancy[0] == "occupied":
-                        tenant = occupancy[1]
-                    else:
-                        tenant = None
-                        continue
+                    # if occupancy[0] == "occupied":
+                    #     tenant = occupancy[1]
+                    # else:
+                    #     tenant = None
+                    #     continue
 
-                    alloc = check_house_occupied(tenant)
+                    # alloc = check_house_occupied(tenant)
 
-                    if dt:
-                        AllocateTenantOp.update_checkin_date(alloc[2], dt)
+                    # if dt:
+                    #     AllocateTenantOp.update_checkin_date(alloc[2], dt)
 
-                    if tenant:
-                        # created_by = current_user.id
-                        if tenantphone and tenantphone != "0":
-                            present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
-                            if present4:
-                                print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone)
-                                # TenantOp.delete(present4)
-                                continue
+                    # if tenant:
+                    #     # created_by = current_user.id
+                    #     if tenantphone and tenantphone != "0":
+                    #         present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
+                    #         if present4:
+                    #             print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone,"in property: ",present4.apartment,"of co: ",present4.apartment.company)
+                    #             # TenantOp.delete(present4)
+                    #             continue
                             
-                            print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
-                            if len(tenant.phone)<2:
-                                print("Updating...",tenant)
-                                TenantOp.update_phone(tenant,tenantphone)
+                    #         print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
+                    #         if len(tenant.phone)<2:
+                    #             print("Updating...",tenant)
+                    #             TenantOp.update_phone(tenant,tenantphone)
 
-                        tenantemail = email.lower() if email else ""
-                        if len(tenantemail) > 3:
-                            TenantOp.update_email(tenant,tenantemail)
+                    #     tenantemail = email.lower() if email else ""
+                    #     if len(tenantemail) > 3:
+                    #         TenantOp.update_email(tenant,tenantemail)
 
-                        if len(natid) > 6:
-                            TenantOp.update_national_id(tenant,natid)
-
-
-                # import pdb; pdb.set_trace()
-
+                    #     if len(natid) > 6:
+                    #         TenantOp.update_national_id(tenant,natid)
 
                 return '<span class="text-success">Upload successful</span>'
 

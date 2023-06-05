@@ -1624,6 +1624,7 @@ $("#select_house_alt").on('change',function(){
             type: "POST",
             data: {
                   propid: $("#prop_identifier").text(),
+                  readperiod: $("input[name=readperiod]:checked").val(),
                   run:"houselist-alt"
                 },
             success: function(response) {

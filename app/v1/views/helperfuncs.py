@@ -4650,7 +4650,12 @@ def autosend_pending_smsreceipts(payids):
                     ####################################################################################
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
-                        return None
+                        if report:
+                            PaymentOp.update_smsid(payment_obj,report["msgid"])
+                            PaymentOp.update_sms_status(payment_obj,"sent")
+                            res = update_sms_units(co,message)
+                            sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                            sms_obj.save()
 
                     elif co.sms_provider == "Advanta":
                         smsid = sms_sender(co.name,message,phonenum)
@@ -5702,7 +5707,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             ####################################################################################
                             if target == "lasshouse":
                                 report = inva_send_sms(message,phonenum)
-                                return None
+                                MonthlyChargeOp.update_sms_status(bill,"sent")
+
 
                             elif co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -5813,7 +5819,24 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
                             if target == "lasshouse":
                                 report = inva_send_sms(message,phonenum)
-                                return None
+
+                                # if report:
+                                #     param1 = report["apikey"]
+                                #     param2 = report["partnerID"]
+                                #     param3 = report["msgid"]
+
+                                #     jb = q.enqueue_in(timedelta(seconds=300), advanta_sms_delivery, args=(param1,param2,param3,))
+                                #     return param3
+                                # else:
+                                #     print("NO REPORT TO CHECK")
+                                #     return None
+
+                                MonthlyChargeOp.update_sms_status(bill,"sent")
+                                if report:
+                                    MonthlyChargeOp.update_smsid(bill,report["msgid"])
+                                    res = update_sms_units(co,message)
+                                    sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant2.id,None,prop_obj.id,co.id)
+                                    sms_obj.save()
 
                             elif co.sms_provider == "Advanta":
                                 smsid = sms_sender(co.name,message,phonenum)
@@ -6531,6 +6554,9 @@ def read_biodata_excel(dict_array,apartment_id,user_id):
                 print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
                 if len(tenant.phone)<2:
                     print("Updating...",tenant)
+                    TenantOp.update_phone(tenant,tenantphone)
+                else:
+                    print("FORCE OVERIDDING OVER")
                     TenantOp.update_phone(tenant,tenantphone)
 
             tenantemail = email.lower() if email else ""

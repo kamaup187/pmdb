@@ -325,7 +325,11 @@ class CompanyGroup(Resource):
 
 class ForgotPassword(Resource):
     def get(self):
-        return Response(render_template('selfsignup.html'))
+        if os.getenv("TARGET") == "lasshouse" or TARGET:
+            template = "selfsignup2.html"
+        else:
+            template = "selfsignup.html"
+        return Response(render_template(template))
 
 class SelfPasswordUpdate(Resource):
     def get(self,ri):
@@ -764,12 +768,19 @@ class Users(Resource):
 
 
             if new_user.phone:
-                targeturl = f"https://kiotapay.com/passwordupdate/{new_user.phone}"
+                if os.getenv('TARGET') == 'lasshouse' or TARGET:
+                    targeturl = f"https://kiotapay.com/passwordupdate/{new_user.phone}"
+                else:
+                    targeturl = f"https://inva.properties/passwordupdate/{new_user.phone}"
+                    
                 message1 = f"Greetings {new_user.name}. \nKindly click on the link below to set your password and proceed to login. \n\n{targeturl}"
 
                 tele = sms_phone_number_formatter(new_user.phone)
 
-                response = sms.send(message1, [tele],sender)
+                if os.getenv('TARGET') == 'lasshouse' or TARGET:
+                    inva_send_sms(message1,tele)
+                else:
+                    response = sms.send(message1, [tele],sender)
             else:
                 response = sms.send(f"{new_user} has no phone", ["+254716674695"],sender)
 

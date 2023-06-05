@@ -6451,7 +6451,8 @@ def read_biodata_excel(dict_array,apartment_id,user_id):
             if isinstance(tel,str):
                 mobile0 = tel.replace(" ", "")
                 mobile1 = mobile0.replace("`", "")
-                mobile2 = mobile1.replace("'", "")
+                mobile11 = mobile1.replace("'", "")
+                mobile2 = mobile11.replace("-", "")
 
                 if mobile2.startswith("0"):
                     mobile = mobile2.lstrip("0")

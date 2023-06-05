@@ -6516,7 +6516,8 @@ def read_biodata_excel(dict_array,apartment_id,user_id):
                 if present4:
                     print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone,"in property: ",present4.apartment,"of co: ",present4.apartment.company)
                     # TenantOp.delete(present4)
-                    continue
+                    # continue
+                    print("OVERIDDING OVER")
                 
                 print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
                 if len(tenant.phone)<2:

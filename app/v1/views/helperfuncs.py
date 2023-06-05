@@ -6414,6 +6414,124 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
     return "completed"
 
+def read_biodata_excel(dict_array,apartment_id,user_id):
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
+
+    for item in dict_array:
+
+        tenanthouse=item["tenanthouse"]
+        raw_mobile=item["raw_mobile"]
+        email=item["email"]
+        natid=item["natid"]
+        checkin=item["checkin"]
+
+
+        try:
+            dt = datetime.datetime.fromordinal(datetime.datetime(1900, 1, 1).toordinal() + int(checkin) - 2)
+            hour, minute, second = floatHourToTime(checkin % 1)
+            dt = dt.replace(hour=hour, minute=minute, second=second)
+        except:
+            dt = datetime.datetime.now()
+
+        print("STARTING...TELL:",raw_mobile,"Type:",type(raw_mobile))
+
+        try:
+            if isinstance(raw_mobile,str):
+                tel = raw_mobile
+            else:
+                tel = str(int(raw_mobile))
+        except:
+            print("Failed to stringify",raw_mobile)
+            tel = ""
+
+        if tel:
+
+            if isinstance(tel,str):
+                mobile0 = tel.replace(" ", "")
+                mobile1 = mobile0.replace("`", "")
+                mobile2 = mobile1.replace("'", "")
+
+                if mobile2.startswith("0"):
+                    mobile = mobile2.lstrip("0")
+
+                elif mobile2.startswith("+254"):
+                    mobile = mobile2.lstrip("+254")
+
+                elif mobile2.startswith("254"):
+                    mobile = mobile2.lstrip("254")
+
+                else:
+                    mobile = mobile2
+
+            else:
+                print("MOBILE HAS UNKNOWN FORMAT",tel,"its type is",type(tel))
+                mobile = ""
+        else:
+            mobile = ""
+
+
+        if mobile:
+            rawstrtel = mobile.replace(" ", "")
+            if len(rawstrtel) > 9:
+                print(mobile,"is too long")
+                strtel = ""
+            else:
+                strtel = rawstrtel
+        else:
+            print(mobile,"mobile does not exist")
+            strtel = ""
+
+        if strtel.startswith("0"):
+            tenantphone = strtel
+        else:
+            tenantphone = "0" + strtel
+    
+        tenant_house = tenanthouse.upper()
+        house_obj = get_specific_house_obj(apartment_id,tenant_house)
+        if not house_obj:
+            print("Specified house doesnt exist: ",tenant_house)
+            continue
+        else:
+            house_id = house_obj.id
+
+        occupancy = check_occupancy(house_obj)
+
+        if occupancy[0] == "occupied":
+            tenant = occupancy[1]
+        else:
+            tenant = None
+            continue
+
+        alloc = check_house_occupied(tenant)
+
+        if dt:
+            AllocateTenantOp.update_checkin_date(alloc[2], dt)
+
+        if tenant:
+            # created_by = current_user.id
+            if tenantphone and tenantphone != "0":
+                present4 = TenantOp.fetch_tenant_by_tel(tenantphone)
+                if present4:
+                    print("SIMILAR MOBILE NUMBER EXISTS: ",present4,"of",tenantphone,"in property: ",present4.apartment,"of co: ",present4.apartment.company)
+                    # TenantOp.delete(present4)
+                    continue
+                
+                print("FNDHBVSDJBVHFVJFBVHDBVHBVJB::::",tenant)
+                if len(tenant.phone)<2:
+                    print("Updating...",tenant)
+                    TenantOp.update_phone(tenant,tenantphone)
+
+            tenantemail = email.lower() if email else ""
+            if len(tenantemail) > 3:
+                TenantOp.update_email(tenant,tenantemail)
+
+            if len(natid) > 6:
+                TenantOp.update_national_id(tenant,natid)
+
+
+
 def read_excel(dict_array,apartment_id,ttype,user_id):
     from app import create_app
     app = create_app()

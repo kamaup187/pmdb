@@ -2,26 +2,26 @@
   <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
       <thead class="custom-header">
           <tr>
-          <th class="text-primary track-title-cell">Unit</th>
-          <th class="text-primary track-title-cell">Invoice</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_rent}} ">Rent</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_water}}">Water</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_elec}}">Electricity</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_garb}}">Garbage</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_sec}}">Security</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_sev}}">Service</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_dep}}">Deposit</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_arg}}">Agreement</th>
-          <th class="text-primary track-title-cell expand dispnone-alt {{fieldshow_fine}}">Fine</th>
-          <th class="text-danger track-title-cell {{fieldshow_arr}}">Arr</th>
-          <th class="text-primary track-title-cell">Total</th>
-          <th class="text-primary track-title-cell expand dispnone-alt">Paid</th>
-          <th class="text-primary track-title-cell expand dispnone-alt text-danger">BCF</th>
-          <th class="text-primary track-title-cell">SMS</th>
-          <th class="text-primary track-title-cell">EMAIL</th>
-          <th class="text-primary track-title-cell expand dispnone-alt">Edit</th>
-          <th class="text-danger track-title-cell expand dispnone-alt">Delete</th>
-          <th class="text-danger track-title-cell expand dispnone-alt">By</th>
+          <th class="text-black">Unit</th>
+          <th class="text-black">Invoice</th>
+          <th class="text-black {{fieldshow_rent}} ">Rent</th>
+          <th class="text-black {{fieldshow_water}}">Water</th>
+          <th class="text-black {{fieldshow_elec}}">Electricity</th>
+          <th class="text-black {{fieldshow_garb}}">Garbage</th>
+          <th class="text-black {{fieldshow_sec}}">Security</th>
+          <th class="text-black {{fieldshow_sev}}">Service</th>
+          <th class="text-black {{fieldshow_dep}}">Deposit</th>
+          <th class="text-black {{fieldshow_arg}}">Agreement</th>
+          <th class="text-black {{fieldshow_fine}}">Fine</th>
+          <th class="text-black {{fieldshow_arr}}">Arr</th>
+          <th class="text-black">Total</th>
+          <th class="text-black">Paid</th>
+          <th class="text-black">BCF</th>
+          <th class="text-black">SMS</th>
+          <th class="text-black">EMAIL</th>
+          <th class="text-black">Edit</th>
+          <th class="text-danger">Delete</th>
+          <th class="text-black">By</th>
           </tr>
       </thead>
       <tbody>
@@ -34,20 +34,20 @@
             </div>
           </td>
           <!-- <td class="data-cell">{{ i['tenant'] }}</td> -->
-          <td class="data-cell expand dispnone-alt {{fieldshow_rent}} text-right">{{ i['rent'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_water}} text-right">{{ i['water'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_elec}} text-right">{{ i['electricity'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_garb}} text-right">{{ i['garbage'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_sec}} text-right">{{ i['security'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_sev}} text-right">{{ i['service'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_dep}} text-right">{{ i['deposit'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_arg}} text-right">{{ i['agreement'] }}</td>
-          <td class="data-cell expand dispnone-alt {{fieldshow_fine}} text-right">{{ i['fine'] }}</td>
+          <td class="data-cell {{fieldshow_rent}} text-right">{{ i['rent'] }}</td>
+          <td class="data-cell {{fieldshow_water}} text-right">{{ i['water'] }}</td>
+          <td class="data-cell {{fieldshow_elec}} text-right">{{ i['electricity'] }}</td>
+          <td class="data-cell {{fieldshow_garb}} text-right">{{ i['garbage'] }}</td>
+          <td class="data-cell {{fieldshow_sec}} text-right">{{ i['security'] }}</td>
+          <td class="data-cell {{fieldshow_sev}} text-right">{{ i['service'] }}</td>
+          <td class="data-cell {{fieldshow_dep}} text-right">{{ i['deposit'] }}</td>
+          <td class="data-cell {{fieldshow_arg}} text-right">{{ i['agreement'] }}</td>
+          <td class="data-cell {{fieldshow_fine}} text-right">{{ i['fine'] }}</td>
           <td class="data-cell {{fieldshow_arr}} text-danger text-right">{{ i['arrears'] }}</td>
-          <td class="text-primary track-title-cell font-weight-bold text-right">{{ i['total'] }}</td>
-          <td class="data-cell expand dispnone-alt font-weight-bold text-right">{{ i['paid'] }}</td>
+          <td class="data-cell text-right">{{ i['total'] }}</td>
+          <td class="data-cell text-right">{{ i['paid'] }}</td>
           
-          <td class="data-cell expand dispnone-alt font-weight-bold text-right">{{ i['balance'] }}</td>
+          <td class="data-cell text-right">{{ i['balance'] }}</td>
 
           <td class="text-center data-cell">
             <div>
@@ -59,46 +59,57 @@
                 <span id="{{i['mailid']}}" type="button" class="btn {{i['mailoutline']}} font-weight-bold btn-sm ellipsis no-wrap" {{i['mailactive']}} >{{i['mailstatus']|safe}}</span>
             </div>
         </td>
-          <td class="text-center data-cell expand dispnone-alt">
+          <td class="text-center data-cell ">
             <div>
               <button id="{{i['editid']}}" type="button" class="btn btn-sm {{i['editoutline']}} font-weight-bold  ellipsis no-wrap" {{i['active']}} data-toggle="modal" data-target="#editBillModal"><i class="fas fa-cog mr-1"></i>Edit</button>
             </div>
           </td>
-          <td class="text-center data-cell expand dispnone-alt">
+          <td class="text-center data-cell ">
             <div>
               <button id="{{i['delid']}}" type="button" class="btn btn-sm text-danger font-weight-bold  ellipsis no-wrap {{i['active']}}" data-toggle="modal" data-target="#discardBillModal"><i class="fas fa-trash-alt mr-1"></i>Discard</button>
             </div>
           </td>
-          <td class="data-cell text-center text-dark font-weight-bold expand dispnone-alt">{{ i['billedby'] }}</td>
+          <td class="data-cell text-center text-dark font-weight-bold ">{{ i['billedby'] }}</td>
           </tr>
           {% endfor %}
       </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="2" class="center-btn font-weight-bold data-cell text-black">Total</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_rent}}">{{rent}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_water}}">{{water}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_elec}}">{{elec}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_garb}}">{{garb}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_sec}}">{{sec}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_sev}}">{{serv}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_dep}}">{{dep}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_arg}}">{{agr}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_fine}}">{{fine}}</td>
-          <td class="font-weight-bold data-cell text-black text-right {{fieldshow_arr}}">{{arrears}}</td>
-          <td class="font-weight-bold data-cell text-black text-right">{{total}}</td>
-          <td class="font-weight-bold data-cell text-black text-right">{{paid}}</td>
-          <td class="font-weight-bold data-cell text-black text-right">{{bal}}</td>
 
-        </tr>
-      </tfoot>
   </table>
+
+    <!-- Pagination Links-->
+    <div class="text-right mt-3">
+      <button id="prev{{prev_num}}" class="btn btn-outline-dark 
+      {% if page == 1 %}disabled{% endif %}">&laquo;</button>
+      <!-- Loop through the number of pages to display a link for each-->
+      {% for page_num in iter_list %}
+          {% if page_num %}
+            <!-- Check for the active page and set the link to "Active"-->
+            {% if page == page_num %}
+                <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+            {% else %}
+                <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+            {% endif %}
+          {% else %}
+            ...
+          {% endif %}
+      {% endfor %}
+      <button id="next{{next_num}}" class="btn btn-outline-dark 
+      {% if page == pages %}disabled{% endif %}">&raquo;
+      </button>
+    </div>
+    <p class="text-right mt-3">
+      <span id="pages" class="dispnone">{{pages}}</span>
+      Total items: <span class="text-black">{{num_items}}</span>, showing page <span class="text-black">{{page}}</span> of <span class="text-black">{{pages}}</span>
+    </p>
 </div>
 
 
     <script type="text/javascript">
       $(document).ready(function () {
         $('#tenantData').DataTable({
+          "processing": true,
+          "paging": false,
+          "info" : false,
           "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
           "pageLength": 100,
           "searching":false,
@@ -208,12 +219,29 @@
 
 
 <script>
-  $("#expand").click();
+    function loader(item) {
+      getInvs($("#prop_identifier").text(), "", item)
+      $("#currentinvpage").text(item)
+    }
+    
+    var pages = range(1, $("#pages").text())
+    $.each(pages, function (i, item) {
+      $("#num" + item).on('click', function () {
+        loader(item)
+      })
+    })
+    $.each(pages, function (i, item) {
+      $("#next" + item).on('click', function () {
+        loader(item)
+      })
+    })
+    $.each(pages, function (i, item) {
+      $("#prev" + item).on('click', function () {
+        loader(item)
+      })
+    })
 </script>
 
-<script>
-  tabletoggler();
-</script>
 
 <!-- <script>
   function tabletoggler() {

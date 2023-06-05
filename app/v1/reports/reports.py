@@ -8104,7 +8104,17 @@ class FetchBills(Resource):
             
             bills = prop_obj.monthlybills
 
-            current_bills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+            period_target = request.args.get("target_period")
+
+            if period_target:
+                datestring = date_formatter_alt(period_target)
+                target_period = parse(datestring)
+            else:
+                target_period = prop_obj.billing_period
+
+            if not period_target:
+                period_target = f"{format_month(current_user.company.billing_period.month)}-{current_user.company.billing_period.year}"
+
 
             detailed_bills = []
 
@@ -8113,6 +8123,7 @@ class FetchBills(Resource):
             electricitytotal_sum_members = []
             garbagetotal_sum_members = []
             securitytotal_sum_members = []
+            servicetotal_sum_members = []
             deposittotal_sum_members = []
             agreementtotal_sum_members = []
             finetotal_sum_members = []
@@ -8120,35 +8131,6 @@ class FetchBills(Resource):
             billtotal_sum_members = []
             paidtotal_sum_members = []
             balancetotal_sum_members = []
-
-            for bill in current_bills:
-
-                deposit = bill.deposit if bill.deposit else 0.0
-                agreement = bill.agreement if bill.agreement else 0.0
-
-                renttotal_sum_members.append(bill.rent)
-
-                watertotal_sum_members.append(bill.water)
-
-                electricitytotal_sum_members.append(bill.electricity)
-
-                garbagetotal_sum_members.append(bill.garbage)
-
-                securitytotal_sum_members.append(bill.security)
-
-                deposittotal_sum_members.append(deposit)
-
-                agreementtotal_sum_members.append(agreement)
-
-                finetotal_sum_members.append(bill.penalty)
-
-                arrearstotal_sum_members.append(bill.arrears)
-
-                billtotal_sum_members.append(bill.total_bill)
-
-                paidtotal_sum_members.append(bill.paid_amount)
-
-                balancetotal_sum_members.append(bill.balance)
 
             vacants = filter_out_occupied_houses(prop_obj.name)
             for vac in vacants:
@@ -8176,21 +8158,22 @@ class FetchBills(Resource):
                     'hst':house_tenant,
                     'vacancy':"text-danger",
                     'rent':0.0,
-                    'water':f"{water_charge:,.1f}",
+                    'water':water_charge,
                     'electricity':electricity_charge,
                     'garbage':0.0,
                     'security':0.0,
+                    'service': 0.0,
                     'agreement':0.0,
                     'deposit':0.0,
                     'fine': 0.0,
                     'arrears': 0.0,
                     'total': water_charge + electricity_charge,
-                    'paid': water_charge + electricity_charge,
+                    'paid': 0.0,
+                    'active':"disabled",
                     'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
                     'smsactive':"disabled",
                     'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
                     'mailactive':"disabled",
-                    'active':"disabled",
                     'balance':0.0
                 }
                 detailed_bills.append(new_item)
@@ -8200,61 +8183,95 @@ class FetchBills(Resource):
                 billtotal_sum_members.append(new_item['total'])
                 paidtotal_sum_members.append(new_item['paid'])
 
+
+            # pg_data = fetch_pg_current_billing_period_bills(request,target_period,bills)
+            current_bills = fetch_current_billing_period_bills(target_period,bills)
+
+            for bill in current_bills:
+
+                deposit = bill.deposit if bill.deposit else 0.0
+                agreement = bill.agreement if bill.agreement else 0.0
+
+                renttotal_sum_members.append(bill.rent)
+
+                watertotal_sum_members.append(bill.water)
+
+                electricitytotal_sum_members.append(bill.electricity)
+
+                garbagetotal_sum_members.append(bill.garbage)
+
+                securitytotal_sum_members.append(bill.security)
+
+                servicetotal_sum_members.append(bill.maintenance)
+
+                deposittotal_sum_members.append(deposit)
+
+                agreementtotal_sum_members.append(agreement)
+
+                finetotal_sum_members.append(bill.penalty)
+
+                arrearstotal_sum_members.append(bill.arrears)
+
+                billtotal_sum_members.append(bill.total_bill)
+
+                paidtotal_sum_members.append(bill.paid_amount)
+
+                balancetotal_sum_members.append(bill.balance)
+
+
             totalrent = sum_values(renttotal_sum_members)
-            renttotal = (f"{totalrent:,}")
 
             totalwater = sum_values(watertotal_sum_members)
-            watertotal = (f"{totalwater:,}")
             
             totalelectricity = sum_values(electricitytotal_sum_members)
-            electricitytotal = (f"{totalelectricity:,}")
 
             totalgarbage = sum_values(garbagetotal_sum_members)
-            garbagesectotal = (f"{totalgarbage:,}")
 
             totalsecurity = sum_values(securitytotal_sum_members)
-            garbagesectotal = (f"{totalsecurity:,}")
+
+            totalservice = sum_values(servicetotal_sum_members)
 
             totalagreement = sum_values(agreementtotal_sum_members)
-            agreementtotal = (f"{totalagreement:,}")
 
             totaldeposit = sum_values(deposittotal_sum_members)
-            deposittotal = (f"{totaldeposit:,}")
 
             totalfine = sum_values(finetotal_sum_members)
-            finetotal = (f"{totalfine:,}")
 
-            totalarrears = sum_positive_values(arrearstotal_sum_members)
-            arrearstotal = (f"{totalarrears:,}")
-            
-            totalbill = sum_values(billtotal_sum_members)
-            billtotal = (f"{totalbill:,}")
-
-            totalpaid = sum_values(paidtotal_sum_members)
-            paidtotal = (f"{totalpaid:,}")
-
-            totalbalance = sum_positive_values(balancetotal_sum_members)
-            balancetotal = (f"{totalbalance:,}")
 
             fieldshow_sec = "dispnone" if not totalsecurity else ""
+            fieldshow_sev = "dispnone" if not totalservice else ""
+            fieldshow_rent = "dispnone" if not totalrent else ""
             fieldshow_elec = "dispnone" if not totalelectricity else ""
             fieldshow_garb = "dispnone" if not totalgarbage else ""
             fieldshow_water = "dispnone" if not totalwater else ""
-            fieldshow_rent = "dispnone" if not totalrent else ""
             fieldshow_dep = "dispnone" if not totaldeposit else ""
             fieldshow_arg = "dispnone" if not totalagreement else ""
             fieldshow_fine = "dispnone" if not totalfine else ""
-            # fieldshow_arr = "dispnone" if not totalarrears else ""
-            fieldshow_arr = ""
 
+            # fieldshow_arr = "dispnone" if not totalarrears else ""
+
+            fieldshow_arr = ""
 
             print(totalagreement,fieldshow_arg)
 
             detailed_bills_alt = bill_details(current_bills)
 
-            detailed_bills += detailed_bills_alt
+            unpaginated_bills = detailed_bills + detailed_bills_alt
 
-            billids = get_obj_ids_alt(detailed_bills)
+            pg_data = paginator(request,unpaginated_bills)
+
+            # current_bills = pg_data[1]
+            items = pg_data[1]
+
+            page = pg_data[2]
+            pages = len(pg_data[0])
+            iter_list = pg_data[3]
+            prev_num = pg_data[4]
+            next_num = pg_data[5]
+
+            num_items = len(unpaginated_bills)
+
+            billids = get_obj_ids_alt(items)
 
             str_month = get_str_month(prop_obj.billing_period.month)
 
@@ -8269,11 +8286,188 @@ class FetchBills(Resource):
                 fieldshow_arg=fieldshow_arg,
                 fieldshow_fine=fieldshow_fine,
                 fieldshow_sec=fieldshow_sec,
+                fieldshow_sev=fieldshow_sev,
                 fieldshow_arr=fieldshow_arr,
                 current_month=str_month,
-                bills=detailed_bills,
+                bills=items,
+                page=page,
+                pages=pages,
+                iter_list=iter_list,
+                prev_num=prev_num,
+                next_num=next_num,
+                num_items=num_items,
                 billids=billids
                 )
+
+
+            # detailed_bills = []
+
+            # renttotal_sum_members = []
+            # watertotal_sum_members = []
+            # electricitytotal_sum_members = []
+            # garbagetotal_sum_members = []
+            # securitytotal_sum_members = []
+            # deposittotal_sum_members = []
+            # agreementtotal_sum_members = []
+            # finetotal_sum_members = []
+            # arrearstotal_sum_members = []
+            # billtotal_sum_members = []
+            # paidtotal_sum_members = []
+            # balancetotal_sum_members = []
+
+            # for bill in current_bills:
+
+            #     deposit = bill.deposit if bill.deposit else 0.0
+            #     agreement = bill.agreement if bill.agreement else 0.0
+
+            #     renttotal_sum_members.append(bill.rent)
+
+            #     watertotal_sum_members.append(bill.water)
+
+            #     electricitytotal_sum_members.append(bill.electricity)
+
+            #     garbagetotal_sum_members.append(bill.garbage)
+
+            #     securitytotal_sum_members.append(bill.security)
+
+            #     deposittotal_sum_members.append(deposit)
+
+            #     agreementtotal_sum_members.append(agreement)
+
+            #     finetotal_sum_members.append(bill.penalty)
+
+            #     arrearstotal_sum_members.append(bill.arrears)
+
+            #     billtotal_sum_members.append(bill.total_bill)
+
+            #     paidtotal_sum_members.append(bill.paid_amount)
+
+            #     balancetotal_sum_members.append(bill.balance)
+
+            # vacants = filter_out_occupied_houses(prop_obj.name)
+            # for vac in vacants:
+            #     if vac.owner:
+            #         continue
+            #     all_charges = vac.charges
+            #     water_charge = 0.0
+            #     electricity_charge = 0.0
+            #     for charge in all_charges:
+            #         if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 2:
+            #             water_charge = charge.amount
+            #         if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 5:
+            #             electricity_charge = charge.amount
+
+            #     house_tenant = vac.name  + "(Vacant)"
+
+            #     new_item = {
+            #         'id':"0",
+            #         'viewid':"0",
+            #         'smsid':"0",
+            #         'mailid':"0",
+            #         'delid':"0",
+            #         'editid':"0",
+            #         'payid':"0",
+            #         'hst':house_tenant,
+            #         'vacancy':"text-danger",
+            #         'rent':0.0,
+            #         'water':f"{water_charge:,.1f}",
+            #         'electricity':electricity_charge,
+            #         'garbage':0.0,
+            #         'security':0.0,
+            #         'agreement':0.0,
+            #         'deposit':0.0,
+            #         'fine': 0.0,
+            #         'arrears': 0.0,
+            #         'total': water_charge + electricity_charge,
+            #         'paid': water_charge + electricity_charge,
+            #         'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+            #         'smsactive':"disabled",
+            #         'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+            #         'mailactive':"disabled",
+            #         'active':"disabled",
+            #         'balance':0.0
+            #     }
+            #     detailed_bills.append(new_item)
+
+            #     watertotal_sum_members.append(new_item['water'])
+            #     electricitytotal_sum_members.append(new_item['electricity'])
+            #     billtotal_sum_members.append(new_item['total'])
+            #     paidtotal_sum_members.append(new_item['paid'])
+
+            # totalrent = sum_values(renttotal_sum_members)
+            # renttotal = (f"{totalrent:,}")
+
+            # totalwater = sum_values(watertotal_sum_members)
+            # watertotal = (f"{totalwater:,}")
+            
+            # totalelectricity = sum_values(electricitytotal_sum_members)
+            # electricitytotal = (f"{totalelectricity:,}")
+
+            # totalgarbage = sum_values(garbagetotal_sum_members)
+            # garbagesectotal = (f"{totalgarbage:,}")
+
+            # totalsecurity = sum_values(securitytotal_sum_members)
+            # garbagesectotal = (f"{totalsecurity:,}")
+
+            # totalagreement = sum_values(agreementtotal_sum_members)
+            # agreementtotal = (f"{totalagreement:,}")
+
+            # totaldeposit = sum_values(deposittotal_sum_members)
+            # deposittotal = (f"{totaldeposit:,}")
+
+            # totalfine = sum_values(finetotal_sum_members)
+            # finetotal = (f"{totalfine:,}")
+
+            # totalarrears = sum_positive_values(arrearstotal_sum_members)
+            # arrearstotal = (f"{totalarrears:,}")
+            
+            # totalbill = sum_values(billtotal_sum_members)
+            # billtotal = (f"{totalbill:,}")
+
+            # totalpaid = sum_values(paidtotal_sum_members)
+            # paidtotal = (f"{totalpaid:,}")
+
+            # totalbalance = sum_positive_values(balancetotal_sum_members)
+            # balancetotal = (f"{totalbalance:,}")
+
+            # fieldshow_sec = "dispnone" if not totalsecurity else ""
+            # fieldshow_elec = "dispnone" if not totalelectricity else ""
+            # fieldshow_garb = "dispnone" if not totalgarbage else ""
+            # fieldshow_water = "dispnone" if not totalwater else ""
+            # fieldshow_rent = "dispnone" if not totalrent else ""
+            # fieldshow_dep = "dispnone" if not totaldeposit else ""
+            # fieldshow_arg = "dispnone" if not totalagreement else ""
+            # fieldshow_fine = "dispnone" if not totalfine else ""
+            # # fieldshow_arr = "dispnone" if not totalarrears else ""
+            # fieldshow_arr = ""
+
+
+            # print(totalagreement,fieldshow_arg)
+
+            # detailed_bills_alt = bill_details(current_bills)
+
+            # detailed_bills += detailed_bills_alt
+
+            # billids = get_obj_ids_alt(detailed_bills)
+
+            # str_month = get_str_month(prop_obj.billing_period.month)
+
+            # return render_template(
+            #     "ajax_prop_bills.html",
+            #     prop=prop_obj,
+            #     fieldshow_dep=fieldshow_dep,
+            #     fieldshow_water=fieldshow_water,
+            #     fieldshow_rent=fieldshow_rent,
+            #     fieldshow_garb=fieldshow_garb,
+            #     fieldshow_elec=fieldshow_elec,
+            #     fieldshow_arg=fieldshow_arg,
+            #     fieldshow_fine=fieldshow_fine,
+            #     fieldshow_sec=fieldshow_sec,
+            #     fieldshow_arr=fieldshow_arr,
+            #     current_month=str_month,
+            #     bills=detailed_bills,
+            #     billids=billids
+            #     )
 
 
 class CollectionRatioReport(Resource):

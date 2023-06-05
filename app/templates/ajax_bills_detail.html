@@ -8,6 +8,9 @@
       <span id="edit_bill_identifier" class="dispnone"></span>
       <span id="del_bill_identifier" class="dispnone"></span>
       <span id="target_payment_id" class="dispnone"></span>
+
+      <span id="currentinvpage" class="dispnone">1</span>
+
       <a id="download_arrears" href="/download/template/arrears" class="dispnone">download</a>
 
 
@@ -63,10 +66,10 @@
 
         
         <div class="ro">
-          <div id="titletoggler" class="col-lg-12 font-weight-bold text-dark center-btn mb-1 desktop-malaysian">{{current_month}} bills: Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div>
+          <!-- <div id="titletoggler" class="col-lg-12 font-weight-bold text-dark center-btn mb-1 desktop-malaysian">{{current_month}} bills: Click <button id="expand" class="btn btn-outline-primary no-padding"> here </button>to <span id="expandtoggler">expand</span></div> -->
           <div id="arr-view2" class="d-none"></div>
           <div id="result-view2" class="">
-              <div id="reqdata" class="table-responsive">
+              <!-- <div id="reqdata" class="table-responsive">
                   <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
                       <thead class="custom-header">
                           <tr>
@@ -101,7 +104,6 @@
                               <button id="{{i['id']}}" type="button" class="btn btn-sm {{i['viewable']}} font-weight-bold  ellipsis no-wrap" {{i['active']}} data-toggle="modal" data-target="#invoiceModal"><i class="fas fa-eye mr-1 text-black"></i> #{{i['invnum']}}</button>
                             </div>
                           </td>
-                          <!-- <td class="data-cell">{{ i['tenant'] }}</td> -->
                           <td class="data-cell {{fieldshow_rent}} text-right">{{ i['rent'] }}</td>
                           <td class="data-cell {{fieldshow_water}} text-right">{{ i['water'] }}</td>
                           <td class="data-cell {{fieldshow_elec}} text-right">{{ i['electricity'] }}</td>
@@ -142,7 +144,31 @@
                           {% endfor %}
                       </tbody>
                   </table>
-              </div>
+
+                  <div class="text-right mt-3">
+                    <button id="prev{{prev_num}}" class="btn btn-outline-dark 
+                    {% if page == 1 %}disabled{% endif %}">&laquo;</button>
+                    {% for page_num in iter_list %}
+                        {% if page_num %}
+                          {% if page == page_num %}
+                              <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+                          {% else %}
+                              <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+                          {% endif %}
+                        {% else %}
+                          ...
+                        {% endif %}
+                    {% endfor %}
+                    <button id="next{{next_num}}" class="btn btn-outline-dark 
+                    {% if page == pages %}disabled{% endif %}">&raquo;
+                    </button>
+                  </div>
+                  <p class="text-right mt-3">
+                    <span id="pages" class="dispnone">{{pages}}</span>
+                    Total items: <span class="text-black">{{num_items}}</span>, showing page <span class="text-black">{{page}}</span> of <span class="text-black">{{pages}}</span>
+                  </p>
+
+              </div> -->
           </div>
         </div>
     </section>
@@ -455,9 +481,12 @@
       });
     </script>
 
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
       $(document).ready(function () {
         $('#tenantData').DataTable({
+          "processing": true,
+          "paging": false,
+          "info" : false,
           "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
           "pageLength": 100,
           "searching":false,
@@ -468,105 +497,40 @@
         });
         $('.dataTables_length').addClass('bs-select');
         });
-    </script>
-
-    <script>
-      var rawIds = "{{ billids|safe }}";
-      var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
-      console.log(ids)
-      $.each(ids, function (i, item) {
-
-        $("#" + item).on('click', function () {
-          console.log("clicked", item)
-          if (isNaN(parseInt(item))) {
-            if (item.startsWith("sms")) {
-              // $("#view_bill_identifier").html(item)
-
-              console.log("sending sms")
+    </script> -->
 
 
-              $("#" + item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
-              $.ajax({
-                url: "{{ url_for('api.sendinvoices') }}",
-                type: "POST",
-                data: {
-                  billid: item,
-                  prop: $("#prop_identifier").text(),
-                  target: "isolated"
-                },
-                success: function (response) {
-
-                  setTimeout(function () {
-                    $.ajax({
-                      url: "{{ url_for('api.fetchbills') }}",
-                      type: "get",
-                      data: {
-                        propid: $("#prop_identifier").text(),
-                        target: "sometarget"
-                      },
-                      success: function (response) {
-
-                        $("#result-view2").html(response);
-                      }
-                    });
-                  }, 5000);
-
-                },
-                error: function (xhr) {
-                  $("#" + item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
-                }
-              });
-
-            } else if (item.startsWith("mail")) {
-              // $("#view_bill_identifier").html(item)
-
-              console.log("sending mail")
-
-              $("#" + item).html('<i class="fas fa-spinner fa-spin mr-1"></i>')
-              $.ajax({
-                url: "{{ url_for('api.sendinvoices') }}",
-                type: "POST",
-                data: {
-                  billid: item,
-                  prop: $("#prop_identifier").text(),
-                  target: "isolated mail"
-                },
-                success: function (response) {
-
-                  setTimeout(function () {
-                    $.ajax({
-                      url: "{{ url_for('api.fetchbills') }}",
-                      type: "get",
-                      data: {
-                        propid: $("#prop_identifier").text(),
-                        target: "sometarget"
-                      },
-                      success: function (response) {
-
-                        $("#result-view2").html(response);
-                      }
-                    });
-                  }, 5000);
-
-                },
-                error: function (xhr) {
-                  $("#" + item).html('<i class="fas fa-exclamation-circle text-danger mr-1">Fail</i>')
-                }
-              });
-
-            } else if (item.startsWith("del")) {
-              $("#del_bill_identifier").html(item)
-            }
-            else {
-              $("#edit_bill_identifier").html(item)
-            }
-
-          } else {
-            $("#bill_identifier").html(item)
+      <script>
+        
+        function getInvs(propid, target, page) {
+        showSpin();
+        $("#barloader-alt").removeClass("dispnone")
+        // $("#current-reloader").html(target);
+        $.ajax({
+          url: "{{ url_for('api.fetchbills') }}",
+          type: "get",
+          start_time: new Date().getTime(),
+          data: { 
+            propid:propid,
+            target:target,
+            page:page,
+            size:20
+           },
+          success: function (response) {
+            $("#barloader-alt").addClass("dispnone")
+            $("#result-view2").html(response);
+          },
+          complete: function(data) {
+            $("#domtimeload").text((new Date().getTime() - this.start_time));
           }
         });
-      });
-    </script>
+      }
+        
+      </script> 
+
+<script type="text/javascript">
+  getInvs($("#prop_identifier").text(), "", 1)
+</script>
 
 <script>
   $("#editBillModal").on('shown.bs.modal', function(){
@@ -640,19 +604,22 @@
             },
         success: function(response) {
           $(".alert-msgs").html(response);
+
+          getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
           // location.reload();
-          $.ajax({
-                url: "{{ url_for('api.fetchbills') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"sometarget"
-                },
-                success: function(response) {
+          // $.ajax({
+          //       url: "{{ url_for('api.fetchbills') }}",
+          //       type: "get",
+          //       data: {
+          //         propid:  $("#prop_identifier").text(),
+          //         target:"sometarget"
+          //       },
+          //       success: function(response) {
                   
-                  $("#result-view2").html(response);
-                }
-            });
+          //         $("#result-view2").html(response);
+          //       }
+          //   });
           setTimeout(function(){
             $(".alert-msgs").empty();
             $(".reset").click();
@@ -695,18 +662,9 @@
                 },
             success: function(response) {
               $("#billeditbed").html(response);
-              $.ajax({
-                  url: "{{ url_for('api.fetchbills') }}",
-                  type: "get",
-                  data: {
-                    propid:  $("#prop_identifier").text(),
-                    target:"sometarget"
-                  },
-                  success: function(response) {
-                    
-                    $("#result-view2").html(response);
-                  }
-              });
+
+              getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
             },
             error: function(xhr) {
               $("#billeditbed").html('<div class="center-btn text-danger mb-3">Cannot edit vacant unit!</div>');
@@ -751,18 +709,9 @@
         $(".closemodal").click();
         $(".payment-info").html("<span class='text-success'>Bill deleted successfully</span>");  
         $('#delete_payment').html('Discard !');
-        $.ajax({
-                url: "{{ url_for('api.fetchbills') }}",
-                type: "get",
-                data: {
-                  propid:  $("#prop_identifier").text(),
-                  target:"sometarget"
-                },
-                success: function(response) {
-                  
-                  $("#result-view2").html(response);
-                }
-            });
+
+        getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
         
       },
       error: function(xhr) {

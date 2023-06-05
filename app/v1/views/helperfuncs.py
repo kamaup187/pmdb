@@ -1585,6 +1585,14 @@ def fetch_current_billing_period_bills(billing_period,arr):
             current_billling_period_data.append(i)
     return current_billling_period_data
 
+def fetch_pg_current_billing_period_bills(req,billing_period,arr):
+    current_billling_period_data = []
+    for i in arr:
+        if i.month == billing_period.month and i.year == billing_period.year:
+            current_billling_period_data.append(i)
+    return paginator(req,current_billling_period_data)
+
+
 def fetch_recent_bills(billing_period,arr):
     current_billling_period_data = []
 
@@ -13133,17 +13141,22 @@ def get_sum(arr,mykey):
     return tot
 
 def paginator(request_obj,arr):
-    try:
-        pg = int(request_obj.args.get('page'))
-    except:
+    if request_obj:
+        try:
+            pg = int(request_obj.args.get('page'))
+        except:
+            pg = 1
+        try:
+            page_size = int(request_obj.args.get('size'))
+        except:
+            if len(arr):
+                page_size = len(arr)
+            else:
+                page_size = 1
+
+    else:
         pg = 1
-    try:
-        page_size = int(request_obj.args.get('size'))
-    except:
-        if len(arr):
-            page_size = len(arr)
-        else:
-            page_size = 1
+        page_size = 3
 
     pages_data = []
 
@@ -13163,7 +13176,34 @@ def paginator(request_obj,arr):
         else:
             pg_data = []
 
-    return pages_data,pg_data,pg
+
+    left_edge=1
+    left_current=2
+    right_current=2
+    right_edge=1
+
+    last = 0
+    iter_list = []
+    for num in range(1, len(pages_data) + 1):
+        if num <= left_edge or \
+            (num > pg - left_current - 1 and
+            num < pg + right_current) or \
+            num > len(pages_data) - right_edge:
+            if last + 1 != num:
+                iter_list.append(None)
+            else:
+                iter_list.append(num)
+            last = num
+
+    #len pages_data = total pages
+    #pg_data = paginated_data
+    #pg = page
+    #iter_list = iterator
+
+    next_num = pg + 1 if pg < last else last
+    prev_num = pg - 1 if pg > 1 else 1
+
+    return pages_data,pg_data,pg,iter_list,prev_num,next_num
 
 
 def get_tenancy(prop):

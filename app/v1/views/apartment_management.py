@@ -8612,7 +8612,7 @@ class Results(Resource):
             if not period_target:
                 period_target = f"{format_month(current_user.company.billing_period.month)}-{current_user.company.billing_period.year}"
             
-            current_bills = fetch_current_billing_period_bills(target_period,bills)
+            # current_bills = fetch_current_billing_period_bills(target_period,bills)
 
             detailed_bills = []
 
@@ -8630,38 +8630,8 @@ class Results(Resource):
             paidtotal_sum_members = []
             balancetotal_sum_members = []
 
-            for bill in current_bills:
-
-                deposit = bill.deposit if bill.deposit else 0.0
-                agreement = bill.agreement if bill.agreement else 0.0
-
-                renttotal_sum_members.append(bill.rent)
-
-                watertotal_sum_members.append(bill.water)
-
-                electricitytotal_sum_members.append(bill.electricity)
-
-                garbagetotal_sum_members.append(bill.garbage)
-
-                securitytotal_sum_members.append(bill.security)
-
-                servicetotal_sum_members.append(bill.maintenance)
-
-                deposittotal_sum_members.append(deposit)
-
-                agreementtotal_sum_members.append(agreement)
-
-                finetotal_sum_members.append(bill.penalty)
-
-                arrearstotal_sum_members.append(bill.arrears)
-
-                billtotal_sum_members.append(bill.total_bill)
-
-                paidtotal_sum_members.append(bill.paid_amount)
-
-                balancetotal_sum_members.append(bill.balance)
-
-            vacants = filter_out_occupied_houses(prop_obj.name)
+            # vacants = filter_out_occupied_houses(prop_obj.name)
+            vacants = []
             for vac in vacants:
                 if vac.owner:
                     continue
@@ -8712,6 +8682,43 @@ class Results(Resource):
                 billtotal_sum_members.append(new_item['total'])
                 paidtotal_sum_members.append(new_item['paid'])
 
+
+            # pg_data = fetch_pg_current_billing_period_bills(request,target_period,bills)
+            # current_bills = fetch_current_billing_period_bills(target_period,bills)
+            current_bills = []
+
+            for bill in current_bills:
+
+                deposit = bill.deposit if bill.deposit else 0.0
+                agreement = bill.agreement if bill.agreement else 0.0
+
+                renttotal_sum_members.append(bill.rent)
+
+                watertotal_sum_members.append(bill.water)
+
+                electricitytotal_sum_members.append(bill.electricity)
+
+                garbagetotal_sum_members.append(bill.garbage)
+
+                securitytotal_sum_members.append(bill.security)
+
+                servicetotal_sum_members.append(bill.maintenance)
+
+                deposittotal_sum_members.append(deposit)
+
+                agreementtotal_sum_members.append(agreement)
+
+                finetotal_sum_members.append(bill.penalty)
+
+                arrearstotal_sum_members.append(bill.arrears)
+
+                billtotal_sum_members.append(bill.total_bill)
+
+                paidtotal_sum_members.append(bill.paid_amount)
+
+                balancetotal_sum_members.append(bill.balance)
+
+
             totalrent = sum_values(renttotal_sum_members)
 
             totalwater = sum_values(watertotal_sum_members)
@@ -8749,9 +8756,22 @@ class Results(Resource):
 
             detailed_bills_alt = bill_details(current_bills)
 
-            detailed_bills += detailed_bills_alt
+            unpaginated_bills = detailed_bills + detailed_bills_alt
 
-            billids = get_obj_ids_alt(detailed_bills)
+            pg_data = paginator(request,unpaginated_bills)
+
+            # current_bills = pg_data[1]
+            items = pg_data[1]
+
+            page = pg_data[2]
+            pages = len(pg_data[0])
+            iter_list = pg_data[3]
+            prev_num = pg_data[4]
+            next_num = pg_data[5]
+
+            num_items = len(unpaginated_bills)
+
+            billids = get_obj_ids_alt(items)
 
             str_month = get_str_month(prop_obj.billing_period.month)
 
@@ -8769,7 +8789,13 @@ class Results(Resource):
                 fieldshow_sev=fieldshow_sev,
                 fieldshow_arr=fieldshow_arr,
                 current_month=str_month,
-                bills=detailed_bills,
+                bills=items,
+                page=page,
+                pages=pages,
+                iter_list=iter_list,
+                prev_num=prev_num,
+                next_num=next_num,
+                num_items=num_items,
                 billids=billids
                 )
 

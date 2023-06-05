@@ -291,6 +291,8 @@
             type: "get",
             data: {
               id: item,
+              page:1,
+              size:2,
               target_period:$("#target_period").text()
             },
             success: function(response) {

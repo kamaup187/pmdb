@@ -5,23 +5,18 @@
   <span id="prop_id_identifier" class="dispnone"></span>
   <span id="edit_prop_identifier" class="dispnone"></span>
   <span id="del_prop_identifier" class="dispnone"></span>
+
+  <span id="currentclientpage" class="dispnone">1</span>
+
   <a id="downbtn" href="/download/template/properties" class="dispnone">download</a>
   <a id="download_template" href="/download/template/datafile" class="dispnone">download</a>
-
-
-
-  <div class="card dispnone">
-    <div class="card-headera">
-      Featured
-    </div>
-  </div>
   
 
 
       <div class="pb-1 mt-2 bg-white">
         <div class="mb-1">
           <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#addPropertyModal">
-            <i class="me-1 feather-16" data-feather="plus-circle"></i>
+            <i class="me-1 feather-16 pb-1" data-feather="plus-circle"></i>
             Add company
           </span>
         </div>
@@ -29,9 +24,9 @@
 
 
       <div id="result-view">
-        <div id="props" class="table-responsive">
+        <div id="reqdata" class="table-responsive">
           <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
-            <thead>
+            <thead class="custom-header">
               <tr>
                 <th class="text-black pl-0">Company</th>
                 <th class="text-black pl-0">Code</th>
@@ -40,35 +35,62 @@
                 <th class="text-black">Users</th>
 
 
-                <th class="text-black">Del</th>
-                <th class="text-black">By</th>
+                <th class="text-black">Remove</th>
+                <!-- <th class="text-black">By</th> -->
               </tr>
             </thead>
             <tbody>
               {% for item in items%}
               <tr>
                 <td id="{{item['editid']}}" class="first-data-cell text-primary font-weight-bold" data-toggle="modal"
-                  data-bs-toggle="modal" data-target="#editPropModal">{{ item['name'] }}
+                  data-bs-toggle="modal" data-target="#editPropModa">{{ item['name'] }}
                 </td>
                 
-                <td class="data-cell">{{item['id']}}</td>
+                <td class="data-cell text-center">{{item['id']}}</td>
 
-                <td id="propinfo-{{item['id']}}" class="data-cell"><div class="dot-elastic mt-2"></div></td>
-                <td id="userinfo-{{item['id']}}" class="data-cell "><div class="dot-elastic mt-2"></div></td>
+                <td id="propinfo-{{item['id']}}" class="data-cell text-center"><div class="dot-elastic mt-2"></div></td>
+                <td id="userinfo-{{item['id']}}" class="data-cell text-center"><div class="dot-elastic mt-2"></div></td>
 
-                <td class="data-cell">
+                <td class="data-cell text-center">
                   <div>
                     <span id="{{item['delid']}}" type="button"
                       class="btn btn-outline-danger ellipsi borderless modalTrigger p-1" data-toggle="modal"
-                      data-target="#deletePropModal"><i class="fas fa-trash-alt"></i><span
+                      data-target="#deletePropModa"><i class="fas fa-trash-alt"></i><span
                         class="text-gray-900"></span></span>
                   </div>
                 </td>
-                <td class="data-cell">{{ item['createdby'] }}</td>
+                <!-- <td class="data-cell">{{ item['createdby'] }}</td> -->
               </tr>
               {% endfor %}
             </tbody>
           </table>
+
+          <div class="text-right mt-3">
+            <button id="prev{{prev_num}}" class="btn btn-outline-dark 
+            {% if page == 1 %}disabled{% endif %}">&laquo;</button>
+            <!-- Loop through the number of pages to display a link for each-->
+            {% for page_num in iter_list %}
+                {% if page_num %}
+                  <!-- Check for the active page and set the link to "Active"-->
+                  {% if page == page_num %}
+                      <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+                  {% else %}
+                      <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+                  {% endif %}
+                {% else %}
+                  ...
+                {% endif %}
+            {% endfor %}
+            <button id="next{{next_num}}" class="btn btn-outline-dark 
+            {% if page == pages %}disabled{% endif %}">&raquo;
+            </button>
+          </div>
+      
+          <p class="text-right mt-3">
+            <span id="pages" class="dispnone">{{pages}}</span>
+            Total items: <span class="text-black">{{num_items}}</span>, showing page <span class="text-black">{{page}}</span> of <span class="text-black">{{pages}}</span>
+          </p>
+
         </div>
 
       </div>
@@ -615,23 +637,96 @@
 
 
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('#tenantPaymentData').DataTable({
-      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-      "pageLength": 100,
-      "searching": false,
-      columnDefs: [{ targets: 0, type: 'natural' }],
-      "order": [[0, "asc"]],
-      "bLengthChange": false
+    $(document).ready(function () {
+      $('#tenantPaymentData').DataTable({
+        "processing": true,
+        "paging": false,
+        "info": false,
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        "order": [[0, "asc"]],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
     });
-    $('.dataTables_length').addClass('bs-select');
+</script>
+
+
+
+<script>
+        
+  function getClients(target, page) {
+
+    if($("#pagesize").val() == "" ){
+      var size = 10
+    }else{
+      var size = $("#pagesize").val()
+    }
+  showSpin();
+
+  $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> CLIENT LISTING'); feather.replace();
+  $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+  $("#dummyData").addClass('dispnone');
+  $("#propdisp-content").removeClass('dispnone');
+
+  $("#barloader-alt").removeClass("dispnone")
+
+
+  $.ajax({
+    url: "{{ url_for('api.clients') }}",
+    type: "get",
+    start_time: new Date().getTime(),
+    data: { 
+      target:target,
+      page:page,
+      size:size
+     },
+    success: function (response) {
+      $("#barloader-alt").addClass("dispnone")
+      $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+      $("#dummyData").addClass('dispnone');
+      $("#propdisp-content").html(response);
+    },
+    complete: function(data) {
+      $("#domtimeload").text((new Date().getTime() - this.start_time));
+    }
   });
+}
+  
+</script> 
+
+<script>
+  function loader(item) {
+    getClients("", item)
+    $("#currentinvpage").text(item)
+  }
+  
+  var pages = range(1, $("#pages").text())
+  $.each(pages, function (i, item) {
+    $("#num" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#next" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#prev" + item).on('click', function () {
+      loader(item)
+    })
+  })
 </script>
 
 
 
 
-
+<!-- 
 <script>
   // This script displays alerts and tenant name before clearance
   $("#addPropertyModal").on('shown.bs.modal', function () {
@@ -658,7 +753,7 @@
       }
     });
   });
-</script>
+</script> -->
 
 
 <script>

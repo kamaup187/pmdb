@@ -8268,7 +8268,6 @@ class FetchBills(Resource):
             iter_list = pg_data[3]
             prev_num = pg_data[4]
             next_num = pg_data[5]
-
             num_items = len(unpaginated_bills)
 
             billids = get_obj_ids_alt(items)

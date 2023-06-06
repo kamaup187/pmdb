@@ -13186,6 +13186,8 @@ def paginator(request_obj,arr):
 
     pages_data = []
 
+    # print("paginator params: ","page: ",pg," size: ",page_size)
+
     for i in range(0, len(arr), page_size):
         pages_data.append(arr[i:i+page_size])
 

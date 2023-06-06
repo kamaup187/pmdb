@@ -148,19 +148,21 @@
             success: function (response) {
 
               setTimeout(function () {
-                $.ajax({
-                  url: "{{ url_for('api.fetchbills') }}",
-                  type: "get",
-                  data: {
-                    propid: $("#prop_identifier").text(),
-                    target: "sometarget"
-                  },
-                  success: function (response) {
+                getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
 
-                    $("#result-view2").html(response);
-                  }
-                });
-              }, 5000);
+                // $.ajax({
+                //   url: "{{ url_for('api.fetchbills') }}",
+                //   type: "get",
+                //   data: {
+                //     propid: $("#prop_identifier").text(),
+                //     target: "sometarget"
+                //   },
+                //   success: function (response) {
+
+                //     $("#result-view2").html(response);
+                //   }
+                // });
+              }, 8000);
 
             },
             error: function (xhr) {

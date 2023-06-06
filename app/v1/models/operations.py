@@ -271,6 +271,7 @@ class CompanyOp(Company,Base):
     def view(self):
         return {
             "id": self.id,
+            "delid": "del" + str(self.id),
             "name": self.name,
             "users": len(CompanyOp.view_users(self)),
             "user": CompanyOp.get_first_user(self),

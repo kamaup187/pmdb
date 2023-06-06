@@ -673,10 +673,51 @@ class Clients(Resource):
     def get(self):
         coms = CompanyOp.fetch_all_companies()
 
-        items = com_details(coms)
+
+        actual_clients = []
+
+        items = os.getenv('VAR_ITEMS') or VAR_ITEMS
+
+        lst_items = items.split(",")
+
+        # print("heeeeeeeeeeeeeeee",lst_items)
+
+        for client in coms:
+            if client.name:
+                if client.name.lower() in lst_items:
+                    coms.remove(client)
+                else:
+                    clr = CompanyOp.view(client)
+                    actual_clients.append(clr)
+            else:
+                # CompanyOp.delete(client)
+                clr = CompanyOp.view(client)
+                actual_clients.append(clr)
+
+
+        pg_data = paginator(request,actual_clients)
+
+        items = pg_data[1]
+        page = pg_data[2]
+        pages = len(pg_data[0])
+        iter_list = pg_data[3]
+        prev_num = pg_data[4]
+        next_num = pg_data[5]
+        num_items = len(actual_clients)
+
         propids = get_obj_ids(items)
 
-        return render_template("ajax_all_clients.html",propids=propids,items=items)
+        return render_template(
+            "ajax_all_clients.html",
+            propids=propids,
+            items=items,
+            page=page,
+            pages=pages,
+            iter_list=iter_list,
+            prev_num=prev_num,
+            next_num=next_num,
+            num_items=num_items,
+            )
 
 
 class AllProperties(Resource):

@@ -379,7 +379,7 @@
                   <td class="data-cell text-right">{{bill['totalalt']}}</td>
                   <td class="data-cell text-right">{{bill['amounttotal']}}</td>
                   <td class="data-cell text-right paidedit"> </td>
-                  <td class="data-cell text-right">{{ bill['paid-alt-alt'] }}</td>
+                  <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe}}</td>
                   <td class="data-cell text-right">{{ bill['balance'] }}</td>
                 </tr>
               {% endfor %}

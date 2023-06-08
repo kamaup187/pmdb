@@ -2094,7 +2094,9 @@ class CombinedReport(Resource):
             letterhead=logo(current_user.company)[3],
             co=current_user.company,
             billids = get_obj_ids(detailed_bills),
-            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
+            printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
 class CustomCombinedReport(Resource):

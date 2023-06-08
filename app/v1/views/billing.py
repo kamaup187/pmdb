@@ -2574,6 +2574,8 @@ class ReceivePayment(Resource):
                     edit = ""
 
                 if localenv:
+                    # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
+
                     order = {
                         "dep":2,
                         "garb":1,

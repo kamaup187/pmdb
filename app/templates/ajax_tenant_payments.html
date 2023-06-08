@@ -5,31 +5,43 @@
 <span id="target_payment_id" class="dispnone"></span>
 
 <!-- <div class="col-lg-12 font-weight-bold text-dark center-btn mb-1">({month} payments <button id="expand" class="btn btn-outline-primary herebtn"> <span id="expandtoggler">expand</span> </button></div> -->
-<div class="pb-2 bg-white divjust-end">
+<div class="pb-2 bg-white">
 
-  <div>
-    <span id="backbtn" class="btn btn-sm btn-light text-black">
-      <!-- <i class="me-1" data-feather="user-plus"></i> -->
-      <i class="fas fa-long-arrow-alt-left"></i>
-      Back to properties
-    </span>
+  <div class="divjust-end">
+    <div>
+      <span id="backbtn" class="btn btn-sm btn-light text-danger p-1 mr-3">
+        <!-- <i class="me-1" data-feather="user-plus"></i> -->
+        <i class="fas fa-long-arrow-alt-left text-black"></i>
+        Back to properties
+      </span>
 
+      <span type="button" id="addpaybtn" class="btn btn-sm btn-light text-primary font-weight-bold" data-toggle="modal" data-target="#addPaymentModal2">
+        <i class="feather-18 text-black mr-1 pb-0" data-feather="plus-circle"></i> add payment
+      </span>
+
+    </div>
+    <div class="hide">hide</div>
   </div>
-  
-  <div class="">
-    <nav class="nav nav-borders">
-      <a id="current" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">current</a>
-      <a id="previous" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">previous</a>
-      <a id="voided" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
-      <a class="hide nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
-      <a id="unclaimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">unclaimed</a>
-      <a id="archived" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">archived</a>
-      <a id="claimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Resolved</a>
 
 
-      <!-- <a id="closebtn" class="nav-link pb-0 pt-1 text-danger underline d-none active ms-0" href="#">Close voided payments</a> -->
-    </nav>
+  <div class="row mt-2">
+    <div class="col-lg-6">
+      <nav class="nav nav-borders">
+        <a id="current" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">current</a>
+        <a id="previous" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">previous</a>
+        <a id="voided" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
+      </nav>
+    </div>
+
+    <div class="col-lg-6">
+      <nav class="nav nav-borders">
+        <a id="unclaimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">unclaimed</a>
+        <a id="archived" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">archived</a>
+        <a id="claimed" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">Resolved</a>
+      </nav>
+    </div>
   </div>
+
 
 </div>
 
@@ -150,6 +162,15 @@
     $('#reportbtns').toggleClass("d-none");
     $('#arr-view').toggleClass("d-none");
   });
+</script>
+
+<script>
+  // $("#addpaybtn").click(function(){
+  //   $('#prop_identifier_main').text($("#propobj_id").text());
+  // })
+
+  var propcode =  $("#prop_identifier").text()
+  $("#prop_identifier_main").html(propcode)
 </script>
 
 <!-- <script>
@@ -352,4 +373,8 @@
                 }
               });
   })
+</script>
+
+<script>
+  feather.replace();
 </script>

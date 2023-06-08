@@ -3171,6 +3171,7 @@ class Payments(Resource):
 
         if localenv:
             template = "ajax_allpayments_minimal_test.html"
+            # template = "ajax_allpayments.html"
         elif target == "minimal":
             template = 'ajax_allpayments_minimal.html'
         else:

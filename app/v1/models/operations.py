@@ -3686,10 +3686,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         try:
             if self.tenant.id in tids:
-                badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
+                badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
                 return badge
             elif self.paidll:
-                badge = f'<span class="badge bg-success badge-success badge-counter">paid to ll</span> {decor_fig}'
+                badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
                 return badge
             else:
                 return decor_fig

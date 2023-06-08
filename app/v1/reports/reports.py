@@ -2087,10 +2087,14 @@ class CombinedReport(Resource):
                 expenses_amount += exp.amount
 
         loan = 0.0
-  
+
+        paidmgt = paid_rent - paidll
+          
         netrent = paid_rent
 
         formatted_netrent = (f"{netrent:,.1f}")
+        formatted_paidmgt = (f"{paidmgt:,.1f}")
+        formatted_paidll = (f"{paidll:,.1f}")
 
         if apartment_obj.commission:
             commission = netrent * apartment_obj.commission * 0.01
@@ -2105,7 +2109,7 @@ class CombinedReport(Resource):
 
         ll=0.0
 
-        raw_netpay = netrent - commission - expenses_amount - loan - ll
+        raw_netpay = netrent - commission - expenses_amount - loan - ll - paidll
         netpay = (f"{raw_netpay:,.1f}")
 
         props = fetch_all_apartments_by_user(current_user)
@@ -2149,6 +2153,8 @@ class CombinedReport(Resource):
             expenses = f"{expenses_amount:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
+            formatted_paidmgt=formatted_paidmgt,
+            formatted_paidll=formatted_paidll,
             commission=formatted_commision,
             commission_percentage=commission_percentage,
             netpay=netpay,

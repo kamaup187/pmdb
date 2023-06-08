@@ -622,15 +622,15 @@
             <li class="nav-item dropdown no-caret d-none d-md-block me-3">
               <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <div class="text-black font-weight-bold"><i class="fas fa-tasks fa-fw text-black mr-2"></i><span class="text-black font-weight-bold">Quick Actions</span></div>
+                  <div class="text-black"><i class="fas fa-tasks fa-fw text-black mr-2"></i><span class="text-black">Quick Actions</span></div>
                   <!-- <i class="fas fa-chevron-right dropdown-arrow"></i> -->
               </a>
               <div style="min-width: 240px;" class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up"
                   aria-labelledby="navbarDropdownDocs">
-                  <a class="dropdown-item py-2 userbtn" href="#">
+                  <a class="dropdown-item py-2 paybtn3" href="#">
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="dollar-sign"></i></div>
                       <div class="">
-                          <div class="small text-gray-500 d-inline">Payments</div>
+                          <div class="small text-gray-500 d-inline">Payments(minimized data)</div>
                           <div class="text-black font-weight-bold">Register payment</div>
                       </div>
                   </a>
@@ -638,20 +638,20 @@
 
 
 
-                  <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#billModal">
+                  <a class="dropdown-item py-3" href="#" data-toggle="modal" data-target="#onboardModal">
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="users"></i></div>
                       <div>
-                          <div class="small text-gray-500">Tenants</div>
+                          <div class="small text-gray-500">Tenants(minimized data)</div>
                           <div class="text-black font-weight-bold">Tenants onboarding</div>
                       </div>
                   </a>
 
                   <div class="dropdown-divider m-0"></div>
                   
-                  <a class="dropdown-item py-3" href="#" type="button" data-toggle="modal" data-target="#companyDetailModal">
+                  <a class="dropdown-item py-3" href="#" type="button" data-toggle="modal" data-target="#readingModal">
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="activity"></i></div>
                       <div>
-                          <div class="small text-gray-500">Meters</div>
+                          <div class="small text-gray-500">Meters(minimized data)</div>
                           <div class="text-black font-weight-bold">Register readings</div>
                       </div>
                   </a>
@@ -2047,7 +2047,205 @@
     </div>
   </div> -->
 
+  <div class="text-center">
+    <div class="modal fade" id="companyDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header">
+            <h5 class="modal-title text-info font-weight-bold" id="paymentDetailModalLabel">Update company details  >> {{co.name}}</h5>
+          </div>
+          <div class="modal-body">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <form class="" action="/update/companyinfo" method="POST">
+                      <span class="small text-danger">Note: Fill in fields that you are updating only</span>
+                      <!-- <div class="form-group">
+                        <input type="text" name="co_name" class="form-control" placeholder="Company Name : {{co.name}}" disabled>
+                      </div> -->
 
+                      <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                          <label class="small mb-1" for="inputEmail">Name</label>
+                          <input class="form-control" type="text" name="co_name" placeholder="NAME: {{co.name}}">
+                        </div>
+        
+                        <div class="col-sm-6 text-left">
+                          <label class="small mb-1" for="inputEmail">SMS Number</label>
+                          <input class="form-control" type="text" name="co_stel" placeholder="Tel: {{co.sphone}}">
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                          <label class="small mb-1" for="inputEmail">Street address</label>
+                            <input class="form-control" name="co_address" placeholder="Physical address">
+                        </div>
+        
+                        <div class="col-sm-6 text-left">
+                          <label class="small mb-1" for="inputEmail">Postal address</label>
+                            <input class="form-control" name="co_mailbox" placeholder="Mail box">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                          <label class="small mb-1" for="inputEmail">Nearest city</label>
+                            <input class="form-control" type="text" name="co_city" placeholder="City">
+                        </div>
+        
+                        <div class="col-sm-6 text-left">
+                          <label class="small mb-1" for="inputEmail">Locality</label>
+                            <input class="form-control" type="text" name="co_region" placeholder="Region">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-6 mb-3 mb-sm-0 text-left">
+                          <label class="small mb-1" for="inputEmail">Company email contact</label>
+                            <input class="form-control" type="text" name="co_mail" placeholder="Email: {{co.email}}">
+                        </div>
+        
+                        <div class="col-sm-6 text-left">
+                          <label class="small mb-1" for="inputEmail">Company voice contact</label>
+                            <input class="form-control" type="tel" name="co_tel" placeholder="Tel: {{co.phone}}">
+                        </div>
+                      </div>
+
+                      <hr>
+                      <div class="divbg center-btn">
+                        <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check mr-1"></i>Update</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="payModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Register Payments</h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+
+
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="onboardModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Add/remove tenants</h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <div class="center-btn mb-3 mt-3">
+                    (<span class="text-black">Minified data version: <span class="text-info">Coming soon!</span></span>)
+                  </div>     
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="readingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Register meter reading</h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <div class="center-btn mb-3 mt-3">
+                    (<span class="text-black">Minified data version: <span class="text-info">Coming soon!</span></span>)
+                  </div>     
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="billModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Switch to the next billing month</h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <div class="center-btn mb-3 mt-3">
+                    (<span class="text-black">Currently: <span class="text-info underline">{{billingmonth}} </span></span>)
+                  </div>
+                  <div class="center-btn mb-2 mt-2 dispnone">
+                    <span class="text-black">Confirm to advance to <span class="text-danger underline">{{previousbillingmonth}} </span></span>
+                  </div>
+
+                  <div class="form-group no-paddin input-icons">
+                    <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                      <input id="switchperiod" class="form-control ph" type="text" placeholder="Select month to bill" readonly />
+                      <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                    </div>
+                  </div>
+
+
+                  <div class="mt-2 divbg">
+                    <div>
+                      <span id="nextbilling" type="button" class="btn btn-sm btn-danger text-gray-danger">Advance</span>
+                    </div>
+
+                    <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-kubwa-sana" role="document">
@@ -4482,6 +4680,48 @@ $(".paybtn22").on('click',function(){
             $("#propdisp").html(response);
           }
       });
+});
+
+
+$(".paybtn3").on('click',function(){
+
+$("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="dollar-sign"></i> RESIDENT/TENANT PAYMENTS'); feather.replace();
+$("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+$("#activeprop").empty();
+
+
+$("#propdisp").removeClass("dispnone")
+$("#body-block").addClass("dispnone")
+$("#proplist").addClass("dispnone")
+$("#searchresults").addClass("dispnone")
+
+
+$("#dummyData").removeClass('dispnone');
+$("#barloader-alt").removeClass("dispnone")
+
+$('#propdisp-content').empty()
+$("#searchresults").empty()
+
+
+
+url = "{{ url_for('api.payments') }}"
+
+$.ajax({
+    type: "get",
+    url: url,
+    data: {
+      target:"minimal"
+    },
+    success: function(response) {
+        $("#barloader-alt").addClass("dispnone")
+        $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+        $("#dummyData").addClass('dispnone');
+        $("#propdisp-content").html(response);
+    }
+});
 });
 
 

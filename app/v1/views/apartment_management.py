@@ -3152,6 +3152,7 @@ class Payments(Resource):
     def get(self):
 
         # update_login_history("payment",current_user)
+        target = request.args.get('target')
 
         props = fetch_all_apartments_by_user(current_user)
 
@@ -3168,7 +3169,12 @@ class Payments(Resource):
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
 
-        template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
+        if localenv:
+            template = "ajax_allpayments_minimal_test.html"
+        elif target == "minimal":
+            template = 'ajax_allpayments_minimal.html'
+        else:
+            template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
 
         return render_template(
             template,
@@ -8464,21 +8470,24 @@ class Results(Resource):
                         badge_status = "badge badge-danger badge-counter"
 
 
-                if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-                    houses = tenant_obj.house
+                # if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
+                #     houses = tenant_obj.house
 
 
-                else:
-                    if get_active_houses(tenant_obj)[0] == "Resident":
-                        print(get_active_houses(tenant_obj)[0])
-                        houses = get_active_houses(tenant_obj)[1]
-                    elif get_active_houses(tenant_obj)[0] == "Vacated":
-                        print(get_active_houses(tenant_obj)[0])
-                        houses = get_active_houses(tenant_obj)[1].house
-                    else:
-                        houses = None
+                # else:
+                #     if get_active_houses(tenant_obj)[0] == "Resident":
+                #         print(get_active_houses(tenant_obj)[0])
+                #         houses = get_active_houses(tenant_obj)[1]
+                #     elif get_active_houses(tenant_obj)[0] == "Vacated":
+                #         print(get_active_houses(tenant_obj)[0])
+                #         houses = get_active_houses(tenant_obj)[1].house
+                #     else:
+                #         houses = None
 
-                alloc = check_house_occupied(tenant_obj)[2]
+                houses = tenant_obj.house
+
+
+                alloc = None
 
                 if tenant_obj.sms:
                     smsable = "Yes"

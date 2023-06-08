@@ -1935,6 +1935,8 @@ class CombinedReport(Resource):
         paid_rent = 0.0
         bcftotal = 0.0
 
+        paidll = 0.0
+
         ###################################################################################################
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         db.session.expire(apartment_obj)
@@ -1972,6 +1974,10 @@ class CombinedReport(Resource):
                 bbftotal += arr if arr > 0 else 0.0
 
                 paidtotal += bill.paid_amount
+                if bill.paidll:
+                    paidll += bill.paidll
+                    paidtotal -= bill.paidll
+
                 if bill.deposit_paid:
                     paidtotal -= bill.deposit_paid
 
@@ -2002,6 +2008,10 @@ class CombinedReport(Resource):
 
                 bbftotal += bill.arrears if bill.arrears > 0 else 0.0
                 paidtotal += bill.paid_amount
+
+                if bill.paidll:
+                    paidll += bill.paidll
+                    paidtotal -= bill.paidll
 
                 if bill.total_bill < 0:
                     if bill.paid_amount:

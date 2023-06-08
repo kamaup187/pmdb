@@ -2046,16 +2046,16 @@ class CombinedReport(Resource):
             if vac.name in availables:
                 continue
             new_item = {
-                'id':"0",
-                'delid':"0",
-                'editid':"0",
+                "depositpaid":0.0,
+                "depositdue":0.0,
                 'house':vac.name,
-                'tenant-alt':"--VACANT--",
+                'tenant':"--VACANT--",
                 'vacancy':"text-danger",
                 'arrears':0,
                 'rent':0.0,
-                'calc_total':0.0,
-                'paid':0.0,
+                'totalalt':0.0,
+                'amounttotal':0.0,
+                'paid-alt-alt':0.0,
                 'balance': 0.0
             }
             detailed_bills.append(new_item)

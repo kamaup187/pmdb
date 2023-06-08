@@ -392,6 +392,8 @@ class CreateInvoices(Resource):
             except Exception as e:
                 print("ERROR in generating MULTIPLE houseids >>>", str(e))
 
+        print("PRORATA >>>>>>>",rent_bill)
+
         billjob = q.enqueue_call(
             func=main_total_bill, args=(apartment_id,houseids,rent_bill,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
         )

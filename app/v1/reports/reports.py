@@ -1887,8 +1887,13 @@ class CombinedReport(Resource):
 
             apartment_list = fetch_all_apartments_by_user(current_user)
 
+            if current_user.company.id == 114:
+                template = "report_combined_statement_alt.html"
+            else:
+                template = "report_combined_statement.html"
+
             return Response(render_template(
-                'report_combined_statement.html',
+                template,
                 tenantlist=[],
                 prop_obj=None,
                 props=apartment_list,
@@ -1920,6 +1925,9 @@ class CombinedReport(Resource):
         penaltytotal = 0.0
         deposittotal = 0.0
 
+        depositptotal = 0.0
+        depositdtotal = 0.0
+
         amounttotal = 0.0
         billtotal = 0.0
 
@@ -1946,16 +1954,64 @@ class CombinedReport(Resource):
         availables = []
         for bill in current_month_bills:
             """compute subtotals"""
-            # bill_item = LandlordSummaryOp.external_view(bill)
-            bill_item = MonthlyChargeOp.view_detail(bill)
-            detailed_bills.append(bill_item)
 
-            total = bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
-            total += bill.arrears if bill.arrears > 0 else 0.0
+            if current_user.company_id == 114: # DEPOSITS SEPARATED FROM INVOICES
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.view_combined(bill)
 
-            amountdue = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
+                detailed_bills.append(bill_item)
 
-            bbftotal += bill.arrears if bill.arrears > 0 else 0.0
+                total = bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.penalty
+                arr = bill.arrears - bill.deposit_balance
+                total += arr if arr > 0 else 0.0
+
+                amountdue = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.penalty
+                if bill.deposit_balance:
+                    amountdue -= bill.deposit_balance
+
+                bbftotal += arr if arr > 0 else 0.0
+
+                paidtotal += bill.paid_amount
+                if bill.deposit_paid:
+                    paidtotal -= bill.deposit_paid
+
+                depositptotal += bill_item['depositpaid']
+                depositdtotal += bill_item['depositdue']
+
+
+                # if total < 0:
+                #     if bill.paid_amount:
+                #         bcftotal += bill.balance if bill.balance > 0 else 0.0 #refactor, negative total cannot lead to positive balance
+                #         bcftotal -= bill.paid_amount
+                #         bcftotal += bill.deposit_paid if bill.deposit_paid else 0.0
+                #     else:
+                #         bcftotal += bill.balance if bill.balance > 0 else 0.0
+                #         bcftotal -= bill.deposit_balance if bill.deposit_balance else 0.0
+                # else:
+                bcftotal += bill.balance if bill.balance > 0 else 0.0
+                bcftotal -= bill.deposit_due if bill.deposit_due else 0.0
+
+            else:
+                bill_item = MonthlyChargeOp.view_detail(bill)
+                detailed_bills.append(bill_item)
+
+                total = bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
+                total += bill.arrears if bill.arrears > 0 else 0.0
+
+                amountdue = bill.arrears + bill.rent + bill.water + bill.garbage + bill.security + bill.maintenance + bill.deposit + bill.penalty
+
+                bbftotal += bill.arrears if bill.arrears > 0 else 0.0
+                paidtotal += bill.paid_amount
+
+                if bill.total_bill < 0:
+                    if bill.paid_amount:
+                        bcftotal += bill.balance if bill.balance > 0 else 0.0 #refactor, negative total cannot lead to positive balance
+                        bcftotal -= bill.paid_amount
+                    else:
+                        bcftotal += bill.balance if bill.balance > 0 else 0.0
+                else:
+                    bcftotal += bill.balance if bill.balance > 0 else 0.0
+
 
             renttotal += bill.rent
             watertotal += bill.water
@@ -1968,16 +2024,9 @@ class CombinedReport(Resource):
             billtotal += total if total > 0 else 0.0
             amounttotal += amountdue if amountdue > 0 else 0.0
 
-            paidtotal += bill.paid_amount
             paid_rent += bill.rent_paid if bill.rent_paid else 0
-            if bill.total_bill < 0:
-                if bill.paid_amount:
-                    bcftotal += bill.balance if bill.balance > 0 else 0.0 #refactor, negative total cannot lead to positive balance
-                    bcftotal -= bill.paid_amount
-                else:
-                    bcftotal += bill.balance if bill.balance > 0 else 0.0
-            else:
-                bcftotal += bill.balance if bill.balance > 0 else 0.0
+
+
                 
             availables.append(bill.house.name)
 
@@ -2010,6 +2059,8 @@ class CombinedReport(Resource):
         tsecurity = (f"{securitytotal:,}")
         tservice = (f"{servicetotal:,}")
         tdeposit = (f"{deposittotal:,}")
+        tdepositp = (f"{depositptotal:,}")
+        tdepositd = (f"{depositdtotal:,}")
         tpenalty = (f"{penaltytotal:,}")
 
 
@@ -2053,8 +2104,13 @@ class CombinedReport(Resource):
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
+        if apartment_obj.company.id == 114:
+            template = "report_combined_statement_alt.html"
+        else:
+            template = "report_combined_statement.html"
+
         return Response(render_template(
-            'report_combined_statement.html',
+            template,
             prop=selected_apartment,
             propid=propid,
             prop_obj=apartment_obj,
@@ -2071,6 +2127,8 @@ class CombinedReport(Resource):
             securitytotal=tsecurity,
             servicetotal=tservice,
             deposittotal=tdeposit,
+            depositptotal=tdepositp,
+            depositdtotal=tdepositd,
             penaltytotal=tpenalty,
 
             billtotal=tbill,
@@ -2093,7 +2151,7 @@ class CombinedReport(Resource):
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
             co=current_user.company,
-            billids = get_obj_ids(detailed_bills),
+            billids = [],
             # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
             printdate = datetime.datetime.now().strftime("%d/%m/%Y"),

@@ -3673,7 +3673,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def show_ll_status(self):
         if self.paid_amount:
-            rounded_fig = round(self.paid_amount,2)
+            if self.deposit_paid:
+                tpaid = self.paid_amount - self.deposit_paid
+            else:
+                tpaid = self.paid_amount
+            rounded_fig = round(tpaid,2)
             decor_fig = (f"{rounded_fig:,}")
         else:
             decor_fig = 0.0
@@ -3736,6 +3740,26 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             return f"{arrears:,.1f} **"
 
+    def calculate_breakdown_no_dep(self):
+        arrears = self.arrears - self.deposit_balance
+        breaks = 0.0
+
+        breaks += self.rent_balance if self.rent_balance else 0.0
+        breaks += self.water_balance if self.water_balance else 0.0
+        breaks += self.garbage_balance if self.garbage_balance else 0.0
+        breaks += self.security_balance if self.security_balance else 0.0
+        breaks += self.electricity_balance if self.electricity_balance else 0.0
+        breaks += self.maintenance_balance if self.maintenance_balance else 0.0
+        breaks += self.agreement_balance if self.agreement_balance else 0.0
+        breaks += self.penalty_balance if self.penalty_balance else 0.0
+
+        if breaks == arrears:
+            return f"{arrears:,.1f}"
+        elif self.month == 9:
+            return f"{arrears:,.1f}"
+        else:
+            return f"{arrears:,.1f} **"
+
     def calculate_pbreakdown(self):
         paid = self.paid_amount
         breaks = 0.0
@@ -3775,6 +3799,26 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         breaks += self.maintenance_due if self.maintenance_due else 0.0
         breaks += self.agreement_due if self.agreement_due else 0.0
         breaks += self.deposit_due if self.deposit_due else 0.0
+        breaks += self.penalty_due if self.penalty_due else 0.0
+
+        if breaks == bal:
+            return f"{bal:,.1f}"
+        elif self.month == 9:
+            return f"{bal:,.1f}"
+        else:
+            return f"{bal:,.1f} **"
+
+    def calculate_dbreakdown_no_dep(self):
+        bal = self.balance - self.deposit_due
+        breaks = 0.0
+
+        breaks += self.rent_due if self.rent_due else 0.0
+        breaks += self.water_due if self.water_due else 0.0
+        breaks += self.garbage_due if self.garbage_due else 0.0
+        breaks += self.security_due if self.security_due else 0.0
+        breaks += self.electricity_due if self.electricity_due else 0.0
+        breaks += self.maintenance_due if self.maintenance_due else 0.0
+        breaks += self.agreement_due if self.agreement_due else 0.0
         breaks += self.penalty_due if self.penalty_due else 0.0
 
         if breaks == bal:
@@ -4021,6 +4065,42 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'price':MonthlyChargeOp.fig_format(self.total_bill),
             'paid':MonthlyChargeOp.fig_format(self.paid_amount),
             'mode':TenantOp.fetch_payment_mode(self.tenant)
+        }
+
+    def get_deposit_paid(self):
+        if self.tenant:
+            deposit_paid = 0.0
+        else:
+            deposit_paid = 0.0
+        return deposit_paid
+
+    def get_deposit_due(self):
+        if self.tenant:
+            deposit_due = 0.0
+        else:
+            deposit_due = 0.0
+        return deposit_due
+
+    def view_combined(self):
+        return {
+            'tenant':MonthlyChargeOp.get_tenant_name(self),
+            'house':self.house,
+            'depositpaid':MonthlyChargeOp.get_deposit_paid(self),
+            'depositdue':MonthlyChargeOp.get_deposit_due(self),
+            'arrears':MonthlyChargeOp.calculate_breakdown_no_dep(self),
+            'rent':MonthlyChargeOp.fig_format(self.rent),
+            'water':MonthlyChargeOp.fig_format(self.water),
+            'garbage':self.garbage,
+            'electricity':MonthlyChargeOp.fig_format(self.electricity),
+            'security':self.security,
+            'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
+            'agreement':self.agreement,
+            'electricity':self.electricity,
+            'security':self.security,
+            'totalalt':MonthlyChargeOp.calculate_total_alt_alt(self.arrears,self.rent,self.water,self.maintenance,self.garbage,self.security),
+            'amounttotal':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.garbage,self.security),
+            'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
+            'balance':MonthlyChargeOp.calculate_dbreakdown_no_dep(self),
         }
 
 class PaymentScheduleOp(PaymentSchedule,Base):

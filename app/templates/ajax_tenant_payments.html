@@ -15,12 +15,26 @@
         Back to properties
       </span>
 
-      <span type="button" id="addpaybtn" class="btn btn-sm btn-light text-primary font-weight-bold" data-toggle="modal" data-target="#addPaymentModal2">
+      <span type="button" class="btn btn-sm btn-light text-primary font-weight-bold mr-3 mobile-malaysian" data-toggle="modal" data-target="#addPaymentModal2">
         <i class="feather-18 text-black mr-1 pb-0" data-feather="plus-circle"></i> add payment
+      </span>
+
+      <span type="button" class="btn btn-sm btn-light text-primary font-weight-bold mobile-malaysian" data-toggle="modal" data-bs-toggle="modal" data-target="#addTenantModal"> 
+        <i class="feather-18 text-black mr-1 pb-0" data-feather="plus-circle"></i> add tenant</span>
       </span>
 
     </div>
     <div class="hide">hide</div>
+  </div>
+
+  <div class="desktop-malaysian center-btn mt-3">
+    <span type="button" class="btn btn-sm btn-light text-primary font-weight-bold mr-3" data-toggle="modal" data-target="#addPaymentModal2">
+      <i class="feather-18 text-black mr-1 pb-0" data-feather="plus-circle"></i> add payment
+    </span>
+
+    <span type="button" class="btn btn-sm btn-light text-primary font-weight-bold" data-toggle="modal" data-bs-toggle="modal" data-target="#addTenantModal"> 
+      <i class="feather-18 text-black mr-1 pb-0" data-feather="plus-circle"></i> add tenant</span>
+    </span>
   </div>
 
 
@@ -191,7 +205,33 @@
     $("#child-result-view").addClass("d-none")
     $("#activeprop").empty();
     $("#activeprop-item").empty();
-    console.log("been called")
+
+
+    var rawIds = "{{ propids|safe }}";
+    var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+    $.each(ids, function (i, item) {
+  
+      if (isNaN(parseInt(item))){
+        //do nothing
+      }else{
+        $.ajax({
+        url: "{{ url_for('api.fetchstatistics') }}",
+        type: "get",
+        data: {
+              propid: item
+            },
+        success: function(response) {
+          $("#receivedinfo-" + item ).text(response[11]);
+          $("#totalinfo-" + item ).text(response[8]);
+          $("#paidinfo-" + item ).text(response[9]);
+          $("#balinfo-" + item ).text(response[10]);
+        }
+      });
+      }
+
+    });
+
+
   })
 </script>
 

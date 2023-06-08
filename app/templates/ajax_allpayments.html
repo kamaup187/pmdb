@@ -437,6 +437,149 @@
       </div>
     </div>
 
+    <div class="modal fade" id="addTenantModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info divjust-end underline-thin-fade">
+              <span class="mr-3 smallify">Add new tenant/resident</span>
+              <div>
+                <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2">
+    
+                        <div id="tenanttype" class="fancy-checkbox-group form-control mb-2 divjust">
+                            <div>
+                              <input type="radio" id="ttype" name="ttype" value="tenant" checked/>
+                              <label for="ttype">Tenant</label>
+                            </div>
+    
+                            <div>
+                              <input type="radio" id="ttype2" name="ttype" value="owner" disabled/>
+                              <label for="ttype2">Resident</label>
+                            </div>
+                               
+                        </div>
+                        
+                        <div class="form-group no-paddin input-icons">
+                          <span>Select house<span class="text-danger small">(mandatory)</span></span>
+                          <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_house2" >
+                            <option disabled selected value> loading... </option>
+                          </select>
+                          <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
+                        </div>
+    
+    
+                        <div class="tcheck dispnone">
+    
+                          <div class="row">
+                            
+                            <div class="col-6 form-group">
+                              <span class="divjust-end">
+                                <span class="text-black">Default rates (Monthly rent)</span>
+                              </span>
+    
+                                <input id="default_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                            </div>
+    
+                            <div class="col-6 form-group">
+                              <span class="divjust-end">
+                                <span class="text-black">Agreed rates (monthly rent)</span>
+                              </span>
+                                <input id="agreed_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                            </div>
+                          </div>
+    
+                          <div class="form-group input-icons">
+                            <span>Name<span class="text-danger small">(mandatory)</span></span>
+                              <input id="new_name" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                          </div>
+    
+                          <div class="form-group input-icons">
+                            <span>Mobile number <span class="text-primary small">(recommended)</span></span>
+                              <input id="new_tel" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                          </div>
+    
+                          <div class="form-group input-icons">
+                            <span>Email<span class="text-primary small">(optional)</span></span>
+                              <input id="new_email" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                          </div>
+    
+                          <div class="form-group input-icons">
+                            <span>ID number <span class="text-primary small">(optional)</span></span>
+                              <input id="new_natid" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                              <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                          </div>
+    
+                          <div class="fancy-checkbox-group form-control mb-4 divjust">
+                            <div class="divjust-end">
+                              
+                              <label class="mr-3" for="createinvoice">Create invoice
+                                <input type="checkbox" id="createinvoice"/>
+                              </label>
+    
+                              <label class="ml-3" for="migrate2">Charge deposit
+                                <input type="checkbox" id="migrate2"/>
+                              </label>
+    
+                              <label class="ml-3 text-danger" for="prorate">Prorate?
+                                <input class="proratecb" type="checkbox" id="prorate"/>
+                              </label>
+                            </div>       
+                          </div>
+    
+                          <div id="prorator" class="row dispnone">
+                            
+                            <div class="col-6 form-group">
+                              <span class="divjust-end">
+                                <span class="text-black">Prorated Days</span>
+                              </span>
+    
+                                <input id="prorated_days" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                            </div>
+    
+                            <div class="col-6 form-group">
+                              <span class="divjust-end">
+                                <span class="text-black">Calculated Amount</span>
+                              </span>
+                                <input id="calc_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                            </div>
+                          </div>
+    
+                        </div>
+    
+                      </div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="newtenant" type="button" class="btn-secondary borderless text-white">Save</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="receiptPaymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -1051,6 +1194,175 @@
         }
       });
     });
+
+
+    $(document).ready(function(){
+    $("#addTenantModal").on('shown.bs.modal', function(){
+      $(this).find('#select_house2').focus();
+
+      $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier_main").text(),
+            target:"house options"
+          },
+      success: function(response) {
+        $("#select_house2").html(response);
+      }
+    });
+
+    });
+  });
+</script>
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#select_house2").on('change', function(){
+    $(".tcheck").removeClass("dispnone")
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "get",
+      data: {
+            propid: $("#prop_identifier_main").text(),
+            house: $("#select_house2").val(),
+            target:"default rates"
+          },
+      success: function(response) {
+        $("#default_rates").val(response);
+      }
+    });
+  });
+  </script>
+
+
+<script>
+  $(".proratecb").change(function (e) {
+      //Getting status before unchecking all
+      var status = $(this).prop("checked");
+
+      $(".proratecb").prop('checked', false);
+      $(this).prop('checked', true);
+
+      //false means checkbox was checked and 
+      //became unchecked on change event, so let it stay unchecked
+      if (status === false) {
+        $(this).prop('checked', false);
+        $("#prorator").addClass("dispnone")
+        $("#calc_rates").val(0.0);
+        $("#prorated_days").val(0.0);
+
+      }else{
+        $("#prorator").removeClass("dispnone")
+        $("#calc_rates").val(0.0);
+        $("#prorated_days").val(0.0);
+
+      }
+
+    });
+
+
+    $("#agreed_rates").keyup(function(){
+      $("#calc_rates").val(0.0);
+      $("#prorated_days").val(0.0);
+    })
+
+      $("#prorated_days").keyup(function () {
+        var base_value = 0.0;
+        var empty = false;
+        // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+        if ($('#prorated_days').val() == "") {
+          empty = true;
+        }
+        if (empty) {
+          $("#calc_rates").val(0.0);
+        } else {
+          if ($('#agreed_rates').val() == "") {
+            //use default rates
+            var calc = $("#default_rates").val();
+            base_value = calc.replace(",","") / 30 * $(this).val()
+          } else {
+            //use agreed rates
+            var calc = $("#agreed_rates").val();
+            base_value = calc.replace(",","") / 30 * $(this).val()
+          }
+          $("#calc_rates").val(Math.round(base_value));
+        }
+
+      });
+
+</script>
+
+
+<script>
+  $("#newtenant").click(function(){   
+    var cb2 = document.getElementById("migrate2");
+    if (cb2.checked){
+      var migrate2 = "True";
+    }else{
+      var migrate2 = "False";
+    }
+
+
+    var cb3 = document.getElementById("createinvoice");
+    if (cb3.checked){
+      var migrate3 = "True";
+    }else{
+      var migrate3 = "False";
+    }
+
+    $("#newtenant").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.addtenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#prop_identifier_main").text(),
+                house: $("#select_house2").val(),
+                group:$("#agreed_rates").val(),
+                name: $("#new_name").val(),
+                national_id: $("#new_natid").val(),
+                tel: $("#new_tel").val(),
+                email: $("#new_email").val(),
+                ttype:document.querySelector('input[name="ttype"]:checked').value,
+                migrate: migrate2,
+                invoice: migrate3,
+                arr: $("#new_arr").val()
+            },
+        success: function(response) {
+          // $(".alert-msgs").html(response);
+
+          snack(response);
+
+          getFeed();
+
+
+          if (migrate3 == "True"){
+            $.ajax({
+              url: "/create/invoices",
+              type: "POST",
+              data: {
+                propid: $("#prop_identifier_main").text(),
+                houses:$("#select_house2").val(),
+                prorate: $("#calc_rates").val(),
+                level:"new tenant"
+              },
+            success: function (response) {}})
+          }
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $(".tcheck").addClass("dispnone")
+
+            // $('#newtenant').attr('disabled', 'disabled');
+            $('#newtenant').removeClass('btn-success')
+            $('#newtenant').addClass('btn-secondary')
+            $("#newtenant").html("submit")
+          }, 2000);
+
+        }
+      });
+  });
 </script>
 
 <script>
@@ -1594,6 +1906,19 @@
                       $("#child-result-view").html(response);
                     }
                   });
+                }else{
+                  $.ajax({
+                    url: "{{ url_for('api.fetchpayments') }}",
+                    type: "get",
+                    data: {
+                          propid: $("#prop_identifier").text(),
+                          target:"new"
+                        },
+                    success: function(response) {
+                      $("#child-result-view").html(response);
+                      
+                    }
+                  });
                 }
 
 
@@ -1604,29 +1929,29 @@
 
 
 
-                var rawIds = "{{ propids|safe }}";
-                var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
-                $.each(ids, function (i, item) {
+                // var rawIds = "{{ propids|safe }}";
+                // var ids = rawIds.split`,`.map(x => x); //adding plus converts the items to numbers
+                // $.each(ids, function (i, item) {
               
-                  if (isNaN(parseInt(item))){
-                    //do nothing
-                  }else{
-                    $.ajax({
-                    url: "{{ url_for('api.fetchstatistics') }}",
-                    type: "get",
-                    data: {
-                          propid: item
-                        },
-                    success: function(response) {
-                      $("#receivedinfo-" + item ).text(response[11]);
-                      $("#totalinfo-" + item ).text(response[8]);
-                      $("#paidinfo-" + item ).text(response[9]);
-                      $("#balinfo-" + item ).text(response[10]);
-                    }
-                  });
-                  }
+                //   if (isNaN(parseInt(item))){
+                //     //do nothing
+                //   }else{
+                //     $.ajax({
+                //     url: "{{ url_for('api.fetchstatistics') }}",
+                //     type: "get",
+                //     data: {
+                //           propid: item
+                //         },
+                //     success: function(response) {
+                //       $("#receivedinfo-" + item ).text(response[11]);
+                //       $("#totalinfo-" + item ).text(response[8]);
+                //       $("#paidinfo-" + item ).text(response[9]);
+                //       $("#balinfo-" + item ).text(response[10]);
+                //     }
+                //   });
+                //   }
 
-                });
+                // });
 
             },
             error: function(xhr) {

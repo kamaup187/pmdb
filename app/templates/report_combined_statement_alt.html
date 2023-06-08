@@ -366,7 +366,7 @@
                 {% for bill in bills%}
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
-                  <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+                  <td class="data-cell text-left">{{ bill['tenant']}}</td>
                   <td class="data-cell text-right">{{ bill['arrears'] }}</td>
                   <td class="data-cell text-right ">{{ bill['depositpaid'] }}</td>
                   <td class="data-cell text-right ">{{ bill['depositdue'] }}</td>
@@ -451,7 +451,7 @@
                 <div class="text-black">
                   <div class="mb-1 text-gray-900">Kshs {{formatted_paidmgt}}</div>
                   <div class="mb-1 text-gray-900">Kshs {{formatted_paidll}}</div>
-                    
+
                   <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   

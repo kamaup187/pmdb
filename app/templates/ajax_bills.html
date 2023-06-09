@@ -69,7 +69,7 @@
 
                 <div id="pickmonth" class="ml-3">
                   <span class="btn btn-sm btn-success text-white">
-                    <i class="me-1" data-feather="user-plus"></i>
+                    <i class="me-1 feather-16" data-feather="user-plus"></i>
                     view
                   </span>
                 </div>
@@ -276,8 +276,9 @@
         else if(item.startsWith("prp")){
           console.log("Clicked properties")
 
-          $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span></span>')
+          $("#activeprop").html('<i class="fas fa-chevron-right mr-3"></i><span id="activeprop-child"></span><i class="fas fa-chevron-right ml-3 mr-3"></i><span id="activeprop-period"></span>')
           $("#activeprop-child").text($(this).text())
+          $("#activeprop-period").text($("#target_period").text())
 
           // $("#preloader-btn-alt").click();
           // $("#spinner").removeClass("dispnone")
@@ -408,7 +409,8 @@
         url: "{{ url_for('api.fetchstatistics') }}",
         type: "get",
         data: {
-              propid: item
+              propid: item,
+              period: $("#target_period").text()
             },
         success: function(response) {
           $("#clientinfo-" + item ).text(response[0]);
@@ -756,22 +758,59 @@
 
   $("#pickmonth").on('click',function(){
 
-    $("#barloader").removeClass("dispnone")
-    $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+      $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
+      $("#title-loader").addClass("title-loading"); $("#title-loader").removeClass("title-loaded");
 
-    url = "{{ url_for('api.bills') }}"
-    $.ajax({
-          type: "get",
-          url: url,
-          data: {target_period:$("#billmonthpicker").val()},
-          success: function(response) {
 
-            $("#barloader").addClass("dispnone")
-            $('.modal-backdrop').removeClass('modal-backdrop');
-            $('body').removeClass('modal-open');
-            $("#propdisp").html(response);
-          }
+      $("#activeprop").empty();
+
+
+      $("#propdisp").removeClass("dispnone")
+      $("#body-block").addClass("dispnone")
+      $("#proplist").addClass("dispnone")
+      $("#searchresults").addClass("dispnone")
+
+
+      $("#dummyData").removeClass('dispnone');
+      $("#barloader-alt").removeClass("dispnone")
+
+      // $('#propdisp-content').empty()
+      $("#searchresults").empty()
+
+
+
+      url = "{{ url_for('api.bills') }}"
+      $.ajax({
+        type: "get",
+        url: url,
+        data: {
+          target_period:$("#billmonthpicker").val()
+        },
+        success: function (response) {
+          $("#barloader-alt").addClass("dispnone")
+          $("#title-loader").removeClass("title-loading"); $("#title-loader").addClass("title-loaded");
+
+          $("#dummyData").addClass('dispnone');
+          $("#propdisp-content").html(response);
+        }
       });
+
+    // $("#barloader").removeClass("dispnone")
+    // $("#activeprop").html('<i class="fas fa-spinner fa-spin mr-3"></i>')
+
+    // url = "{{ url_for('api.bills') }}"
+    // $.ajax({
+    //       type: "get",
+    //       url: url,
+    //       data: {},
+    //       success: function(response) {
+
+    //         $("#barloader").addClass("dispnone")
+    //         $('.modal-backdrop').removeClass('modal-backdrop');
+    //         $('body').removeClass('modal-open');
+    //         $("#propdisp").html(response);
+    //       }
+    //   });
   })
 
 </script>

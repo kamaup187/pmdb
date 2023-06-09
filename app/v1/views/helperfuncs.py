@@ -2970,10 +2970,10 @@ def prop_details(arr):
 
     return houselist
 
-def prop_inv_details(arr):
+def prop_inv_details(arr,period):
     houselist = []
     for i in arr:
-        new_i = ApartmentOp.view_invoices(i)
+        new_i = ApartmentOp.view_invoices(i,period)
         houselist.append(new_i)
 
     return houselist

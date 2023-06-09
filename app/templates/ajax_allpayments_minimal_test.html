@@ -630,6 +630,39 @@
       </div>
     </div>
 
+    <div class="modal fade" id="payOrderModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header pb-0">
+            <div class="smallify text-white font-weight-bold bg-gradient-info form-control mb-2">
+              Set payment priority
+            </div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="billprioritybed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editpriority" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeBillModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -1563,14 +1596,14 @@
                 bookingpaid : ($("#bookingpaid").val()),
                 addfeepaid : ($("#addfeepaid").val()),
                 instalmentpaid : ($("#instalmentpaid").val()),
-                rentpaid : ($("#rentpaid").val()),
+                rentpaid : ($(".rentpaid").val()),
                 waterpaid : ($("#waterpaid").val()),
                 electricitypaid : ($("#electricitypaid").val()),
-                garbagepaid : ($("#garbagepaid").val()),
+                garbagepaid : ($(".garbagepaid").val()),
                 securitypaid : ($("#securitypaid").val()),
                 servicepaid : ($("#servicepaid").val()),
                 penaltypaid : ($("#penaltypaid").val()),
-                depositpaid : ($("#depositpaid").val()),
+                depositpaid : ($(".depositpaid").val()),
                 agreementpaid :($("#agreementpaid").val()),
                 paidamount:$("#paidamount").val(),
                 overpayment:$("#advance_pay").val(),
@@ -1728,6 +1761,12 @@
 </script>
 
 <script type="text/javascript">
+  $('#payOrderModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<script type="text/javascript">
   $('#editArrModal').on('hidden.bs.modal', function (e) {
     $('body').addClass('modal-open');
   });
@@ -1761,6 +1800,29 @@
       error: function(xhr) {
         $("#billeditbed").html('<div class="center-btn text-danger mb-3">error!</div>');
         $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#payOrderModal").on('shown.bs.modal', function(){
+    $("#editpriority").removeClass("dispnone");
+    $("#billprioritybed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"set priority"
+          },
+      success: function(response) {
+        $("#billprioritybed").html(response);
+      },
+      error: function(xhr) {
+        $("#billprioritybed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        $("#editpriority").addClass("dispnone");
         }
     });
   });

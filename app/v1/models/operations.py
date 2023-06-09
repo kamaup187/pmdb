@@ -1009,8 +1009,10 @@ class ApartmentOp(Apartment,Base):
             progress = 'Generate'
         return progress
     
-    def get_bill_outline(self):
-        if self.billing_period.month != self.company.billing_period.month:
+    def get_bill_outline(self,period):
+        if not period:
+            period = self.company.billing_period
+        if self.billing_period.month != period.month:
             bill_outline = "text-primary"
         else:
             bill_outline = "text-dark"
@@ -1035,7 +1037,7 @@ class ApartmentOp(Apartment,Base):
         'createdby':self.user_id,
         }
     
-    def view_invoices(self):
+    def view_invoices(self,period):
         return {
         'id':self.id,
         "propid":self.id,
@@ -1045,7 +1047,7 @@ class ApartmentOp(Apartment,Base):
         'billid':"bill"+str(self.id),
         'smsid':"sms"+str(self.id),
         'progress':ApartmentOp.get_progress(self),
-        'bill_outline':ApartmentOp.get_bill_outline(self),
+        'bill_outline':ApartmentOp.get_bill_outline(self,period),
         "name":self.name,
         }
 

@@ -1,89 +1,28 @@
-<span id="edit_bill_identifier" class="dispnone">{{bill.id}}</span>
 
 <div class="container">
-    <div class="form-group mb-1 text-right {{edit}}">
-        <span class="">
-            <input type="checkbox" id="paidll" class="check-bt" name="paidll" value="paidll">
-            <label class="text-black" for="paidll">Paid to landlord?</label>
-        </span>
-
-        <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal"
-            data-target="#payOrderModal"><i class="fas fa-list mr-2"></i>set priority</button>
-
-        <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal"
-            data-target="#editBillModal"><i class="fas fa-edit mr-1"></i>edit invoice</button>
-        <!-- <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal" data-target="#editPayModal"><i class="fas fa-cogs mr-1"></i>edit payments</button> -->
-    </div>
-
 
     <div id="lineitems">
 
-
-        {%if bill.booking_due%}
         <div class="row">
-            <div class="form-group col-md-6">
-                <span class="text-dark">DEPOSIT AMOUNT</span>
-                <input id="bookingdue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.booking_due}}" disabled />
+            <div class="form-group col-6 no-paddin text-black font-weight-bold text-uppercase">
+                <span>Deposit due</span>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group col-6 no-paddin text-black font-weight-bold text-uppercase">
                 <span>Deposit paid </span>
-                <input id="bookingpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
             </div>
         </div>
-
-        {% endif %}
-
-        {%if bill.instalment_due%}
-        <div class="row">
-            <div class="form-group col-6">
-                <span class="text-dark"> All Instalments due </span> </span>
-                <input id="instalmentdue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.instalment_due}}" disabled />
-            </div>
-            <div class="form-group col-6">
-                <span>Instalment paid </span>
-                <input id="instalmentpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
-            </div>
-        </div>
-        {% endif %}
-
-        {%if bill.addfee_due%}
-        <div class="row">
-            <div class="form-group col-6">
-                <span class="text-dark">Other payments due (excise duty, legal e.tc @{{bill.addfee}})</span> </span>
-                <input id="addfeedue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.addfee_due}}" disabled />
-            </div>
-            <div class="form-group col-6">
-                <span>Others payments </span>
-                <input id="addfeepaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
-            </div>
-        </div>
-        {% endif %}
 
         {%if bill.deposit_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Deposit due</span>
-                <input id="due{{order['dep']}}"
-                    class="depositdue form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.deposit_due}}" disabled />
+                <input id="depositdue"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                    type="text" value="Deposit" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Deposit paid </span>
-                <input id="paid{{order['dep']}}"
-                    class="depositpaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                <input id="depositpaid"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                    placeholder="set priority" value="1" />
             </div>
         </div>
         {% endif %}
@@ -91,16 +30,14 @@
         {%if bill.rent_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Rent due</span>
-                <input id="due{{order['rent']}}"
-                    class="rentdue form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger"
-                    type="text" value="{{bill.rent_due}}" disabled />
+                <input id="rentdue"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger"
+                    type="text" value="Rent" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Rent paid </span>
-                <input id="paid{{order['rent']}}"
-                    class="rentpaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                <input id="rentpaid"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                    placeholder="set priority" value="2" />
             </div>
         </div>
         {% endif %}
@@ -141,16 +78,14 @@
         {%if bill.garbage_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Garbage due</span>
-                <input id="due{{order['garb']}}"
-                    class="garbagedue form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.garbage_due}}" disabled />
+                <input id="garbagedue"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                    type="text" value="Garbage" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Garbage paid </span>
-                <input id="paid{{order['garb']}}"
-                    class="garbagepaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" />
+                <input id="garbagepaid"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                    placeholder="set priority" value="3" />
             </div>
         </div>
 
@@ -226,12 +161,6 @@
 </div>
 
 
-<div id="advancepay" class="form-group dispnone no-paddin input-icons">
-    <span class="text-danger font-weight-bold">Overpayment/Advance/Prepayment</span>
-    <input id="advance_pay"
-        class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
-        value="" disabled />
-</div>
 
 <!-- <script>
     let wrapper=document.querySelector("#lineitems");

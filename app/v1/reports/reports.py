@@ -7465,7 +7465,7 @@ class FetchStatistics(Resource):
         propid = get_identifier(prop_id)
         prop = ApartmentOp.fetch_apartment_by_id(propid)
 
-        period_target = request.args.get("target_period")
+        period_target = request.args.get("period")
 
         if period_target:
             datestring = date_formatter_alt(period_target)
@@ -7563,7 +7563,7 @@ class FetchStatistics(Resource):
             cal = payments.count("1")/len(payments) * 100
             ratio = f'{cal:,.1f}%'
         except Exception as e:
-            print("Error in ratio calculation", str(e))
+            # print("Error in ratio calculation", str(e))
             ratio = "0.0%"
 
         num_units = len(tenantauto(prop.id))
@@ -8180,7 +8180,13 @@ class FetchBills(Resource):
             
             bills = prop_obj.monthlybills
 
-            period_target = request.args.get("target_period")
+            period_target = request.args.get("period")
+
+            if period_target:
+                datestring = date_formatter_alt(period_target)
+                target_period = parse(datestring)
+            else:
+                target_period = current_user.company.billing_period
 
             if period_target:
                 datestring = date_formatter_alt(period_target)

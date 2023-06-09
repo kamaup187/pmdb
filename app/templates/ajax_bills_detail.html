@@ -44,14 +44,45 @@
               <i class="fas fa-long-arrow-alt-left"></i>
               Back to properties
             </span>
+
+
+                          
+            <span class="ml-3">
+              <!-- <a id="previous-period" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">{{previous_month}}</a>
+              <a id="current-period" class="nav-link pb-0 pt-1 text-black underline active ms-0" href="#">{{current_month}}(current)</a>
+              <a id="next-period" class="nav-link pb-0 pt-1 text-black ms-0" href="#">{{next_month}}</a> -->
+
+              <span class="mb-1 smallify">
+                <input id="billmonthpicker2" class="ph ml-1" type="text" placeholder="choose month to view..." style="max-width: 50%;" readonly />
+              </span>
+
+              <span id="pickmonth2" class="ml-3">
+                <span class="btn btn-sm btn-success text-white p-1">
+                  <i class="me-1" data-feather="user-plus"></i>
+                  view
+                </span>
+              </span>
+
+            </span>
+
+
           </div>
 
+          
+
           <div class="">
-            <nav class="nav nav-borders">
 
-              <span class="nav-link pl-0 pb-0 pt-1"><input type="text" style="max-width: 70%;" id="pagesize" placeholder="set page size here" class="form-control ph-dark"></span>
+            <span class="mb-1 smallify ml-1">
+              <input id="pagesize" class="ph" type="text" placeholder="set paging" style="max-width: 50%;" />
+            </span>
 
-              <a class="nav-link pl-0 pb-0 pt-2 pb-2 text-black ms-0" href="#" data-toggle="modal" data-target="#uploadArrearsExcelModal">
+            <span class="mobile-malaysian">
+
+              <!-- <span class="nav-link pl-0 pb-0 pt-1"><input type="text" style="max-width: 70%;" id="pagesize" placeholder="set page size here" class="form-control ph-dark"></span> -->
+
+
+
+              <a class="text-black ms-0" href="#" data-toggle="modal" data-target="#uploadArrearsExcelModal">
                 <span class="btn btn-sm btn-light text-black">
                   <!-- <i class="me-1" data-feather="user-plus"></i> -->
                   <i class="fas fa-long-arrow-alt-up"></i>
@@ -61,7 +92,7 @@
 
               <!-- <a id="arrbtn2" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">Arrears comparison statement</a> -->
               <a id="closebtn" class="nav-link pb-0 pt-1 text-danger underline d-none active ms-0" href="#">Close comparison sheet</a>
-            </nav>
+            </span>
 
           </div>
 
@@ -485,6 +516,25 @@
       });
     </script>
 
+<script>
+  $("#billmonthpicker2").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+
+
+  $("#pickmonth2").on('click',function(){
+
+    $("#target_period").text($("#billmonthpicker2").val());
+    getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+    $("#activeprop-period").text($("#target_period").text())
+
+})
+</script>
+
     <!-- <script type="text/javascript">
       $(document).ready(function () {
         $('#tenantData').DataTable({
@@ -502,6 +552,8 @@
         $('.dataTables_length').addClass('bs-select');
         });
     </script> -->
+
+  
 
 
       <script>
@@ -522,6 +574,7 @@
           start_time: new Date().getTime(),
           data: { 
             propid:propid,
+            period:$("#target_period").text(),
             target:target,
             page:page,
             size:size
@@ -981,6 +1034,6 @@
     $("#arr-view").toggleClass("d-none")
     $("#arr-view").empty();
 
-    $("#activeprop").empty();
+    $("#activeprop-child").empty();
   })
 </script>

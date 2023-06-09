@@ -2924,11 +2924,7 @@ class Bills(Resource):
 
         target = request.args.get('target')
 
-        # period_target = request.args.get('target_period')
-
         period_target = request.args.get("target_period")
-
-        
 
         if period_target:
             datestring = date_formatter_alt(period_target)
@@ -2938,6 +2934,7 @@ class Bills(Resource):
 
         if not period_target:
             period_target = f"{format_month(current_user.company.billing_period.month)}-{current_user.company.billing_period.year}"
+
 
         if target == "houses":
             propid = request.args.get('propid')
@@ -2964,16 +2961,16 @@ class Bills(Resource):
 
         co = current_user.company
 
-        period = get_billing_period(current_user.company)
+        # period = get_billing_period(current_user.company)
 
         items = []
         prop_ids = []
 
-        items = prop_inv_details(props)
+        items = prop_inv_details(props,target_period)
         propids = get_obj_propids(items)
 
-        prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
-        nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
+        # prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
+        # nextmonth = f'{get_str_month(get_next_month(co.billing_period.month))}'
 
         template = 'crm_ajax_bills.html' if crm(current_user) else 'ajax_bills.html'
 
@@ -2982,9 +2979,9 @@ class Bills(Resource):
             propids=propids,
             items=items,
             company=current_user.company,
-            previous_month = prevmonth,
-            next_month = nextmonth,
-            current_month=get_str_month(period.month),
+            # previous_month = prevmonth,
+            # next_month = nextmonth,
+            # current_month=get_str_month(period.month),
             period_target=period_target
             )
 
@@ -3169,11 +3166,13 @@ class Payments(Resource):
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
 
-        if localenv:
-            template = "ajax_allpayments_minimal_test.html"
-            # template = "ajax_allpayments.html"
-        elif target == "minimal":
-            template = 'ajax_allpayments_minimal.html'
+
+        # template = "ajax_allpayments.html"
+        if target == "minimal":
+            if localenv:
+                template = "ajax_allpayments_minimal_test.html"
+            else:
+                template = 'ajax_allpayments_minimal.html'
         else:
             template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
 
@@ -6599,7 +6598,12 @@ class AllocateTenants(Resource):
         tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id) if tenant_id else None
 
         if target == "house options":
-            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select house")
+            if not house_list:
+                placeholder = "No house available!"
+            else:
+                placeholder = "select house"
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder=placeholder)
+        
         if target == "house grid options":
             house_list = houseauto(apartment_id)
             houses = []

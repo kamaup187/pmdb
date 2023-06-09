@@ -1082,6 +1082,9 @@ class EditBill(Resource):
         else:
             update = ['','Kshs']
 
+        if target == "set priority":
+            return render_template("ajax_pay_priority.html",bill=bill)
+
         if target == "editarrears":
             if warning:
                 warning = 'CAUTION! This is not the current invoice arrears'

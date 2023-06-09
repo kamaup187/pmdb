@@ -194,7 +194,7 @@ api.add_resource(CallBackUrlSirenga,"/m/sirenga/ins/payment")
 api.add_resource(CallBackUrlVillaOne,"/m/villa1/ins/payment")
 api.add_resource(CallBackUrlVillaTwo,"/m/villa2/ins/payment")
 
-
+api.add_resource(CallBackUrlVilla162,"/m/villa162/ins/payment")
 
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")

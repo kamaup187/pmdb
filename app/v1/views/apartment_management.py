@@ -871,7 +871,8 @@ class Index(Resource):
                     cbid.save()
 
             for cil in company.shortcodes:
-                if cil.shortcode == "7031325,7514112":
+                rgs = ["7031325,7514112"]
+                if cil.shortcode in rgs:
                     print("delllllinnnnnnng")
                     ShortcodeOp.delete(cil)
 

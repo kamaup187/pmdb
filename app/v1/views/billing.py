@@ -5634,7 +5634,7 @@ class CallBackUrlGoldLabel(Resource):
 
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlBizlineBestel(Resource):
     def get(self):
@@ -5669,7 +5669,7 @@ class CallBackUrlBizlineBestel(Resource):
 
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlBizlineNeema(Resource):
     def get(self):
@@ -5703,7 +5703,7 @@ class CallBackUrlBizlineNeema(Resource):
         msg = f"NEEMA MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlLagad(Resource):
     def get(self):
@@ -5737,7 +5737,7 @@ class CallBackUrlLagad(Resource):
         msg = f"LAGAD MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 
 class CallBackUrlGassa(Resource):
@@ -5772,7 +5772,7 @@ class CallBackUrlGassa(Resource):
         msg = f"GASSA MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlGrace(Resource):
     def get(self):
@@ -5806,8 +5806,148 @@ class CallBackUrlGrace(Resource):
         msg = f"GRACE MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
+
+class CallBackUrlVilla2355(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla2107(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla2109(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla164(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlVilla162(Resource):
     def get(self):
@@ -5838,10 +5978,222 @@ class CallBackUrlVilla162(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        msg = f"GRACE MPESA DATA JUST IN {trans_amnt} from {fname}"
+        CtoBop.update_status(ctob_obj,"claimed")
+
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla160(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla898(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla900(Resource):
+
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla902(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
+
+class CallBackUrlVilla904(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj) 
+
+class CallBackUrlVilla166(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        CtoBop.update_status(ctob_obj,"claimed")
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        # mpesa_response(ctob_obj)
 
 
 class CallBackUrlGadi(Resource):
@@ -5876,7 +6228,7 @@ class CallBackUrlGadi(Resource):
         msg = f"GADI MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 
 class CallBackUrlLacasa(Resource):
@@ -5911,7 +6263,7 @@ class CallBackUrlLacasa(Resource):
         msg = f"LACASA MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 
 class CallBackUrlImani(Resource):
@@ -5946,7 +6298,7 @@ class CallBackUrlImani(Resource):
         msg = f"IMANI MPESA DATA JUST IN {trans_amnt} from {fname}"
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response(ctob_obj)
+        # mpesa_response(ctob_obj)
 
 class CallBackUrlAssetisha(Resource):
     def get(self):

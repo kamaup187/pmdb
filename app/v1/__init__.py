@@ -194,7 +194,19 @@ api.add_resource(CallBackUrlSirenga,"/m/sirenga/ins/payment")
 api.add_resource(CallBackUrlVillaOne,"/m/villa1/ins/payment")
 api.add_resource(CallBackUrlVillaTwo,"/m/villa2/ins/payment")
 
+
+api.add_resource(CallBackUrlVilla2355,"/m/villa2355/ins/payment")
+api.add_resource(CallBackUrlVilla2107,"/m/villa2107/ins/payment")
+api.add_resource(CallBackUrlVilla2109,"/m/villa2109/ins/payment")
+api.add_resource(CallBackUrlVilla164,"/m/villa164/ins/payment")
 api.add_resource(CallBackUrlVilla162,"/m/villa162/ins/payment")
+api.add_resource(CallBackUrlVilla160,"/m/villa160/ins/payment")
+api.add_resource(CallBackUrlVilla898,"/m/villa900/ins/payment")
+api.add_resource(CallBackUrlVilla900,"/m/villa902/ins/payment")
+api.add_resource(CallBackUrlVilla902,"/m/villa904/ins/payment")
+api.add_resource(CallBackUrlVilla904,"/m/villa166/ins/payment")
+api.add_resource(CallBackUrlVilla166,"/m/villa898/ins/payment")
+
 
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")

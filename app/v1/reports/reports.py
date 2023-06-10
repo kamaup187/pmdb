@@ -6660,6 +6660,95 @@ class MpesaStatement(Resource):
             company=current_user.company
         ))
 
+class MpesaStatement2(Resource):
+    @login_required
+    def get(self):
+
+        co = current_user.company
+
+        shortcode_id = request.args.get("shortcode")
+
+        shiftstart = request.args.get("shiftstart")
+        shiftend = request.args.get("shiftend")
+
+
+        if not shortcode_id:
+
+            shortcodes = co.shortcodes
+            return Response(render_template(
+                'report_mpesa_statement2.html',
+                shortcodes=shortcodes,
+                name=current_user.name,
+                co=current_user.company,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+        # start = request.args.get("from")
+
+        # if not start:
+        #     begin_date_month = datetime.datetime.now().month
+        #     begin_date_year = datetime.datetime.now().year
+        #     begin_date = generate_start_date(begin_date_month, begin_date_year)
+        # else:
+        #     begin = date_formatter_alt(start)
+        #     begin_date = parse(begin)
+
+        # end_date = begin_date.date() + datetime.timedelta(days=29)
+
+        # month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date.date()).days+1)]
+        # year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date.date()).days+1)]
+
+        if not shiftstart:
+            return "shift not specified"
+        else:
+            str_start = date_formatter_weekday(shiftstart)
+            timestring = str_start + " " + '00:00'
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_weekday(shiftend)
+            timestring = str_end + " " + '00:00'
+            end = parse(timestring)
+
+
+        shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
+
+        cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+
+        main = []
+        total = 0.0
+        for bill in cbids:
+            if bill.post_date:
+                if bill.post_date > start and bill.post_date < end:
+                    total += bill.trans_amnt
+                    main.append(bill)
+
+        cbids_dicts = ctb_payment_details(main)
+
+        str_day = start.day
+        str_year = start.year
+                
+        ########################################################
+        # timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
+
+        ########################################################
+
+        return Response(render_template(
+            'report_mpesa_statement2.html',
+            bills=cbids_dicts,
+            total=f"{total:,.1f}",
+            shortcode=shortcode,
+            name=current_user.name,
+            timeline=timeline,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company
+        ))
+
 
 class BookingSchedule(Resource):
     @login_required

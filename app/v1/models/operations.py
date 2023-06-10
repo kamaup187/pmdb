@@ -4919,6 +4919,10 @@ class CtoBop(CtoB,Base):
         paydate = self.post_date
         str_date = paydate.strftime("%d/%b/%y")
         return str_date
+    
+    def get_time(self):
+        str_date = self.period.strftime("%X")
+        return str_date
 
     def get_status(self):
         if self.status:
@@ -4944,7 +4948,8 @@ class CtoBop(CtoB,Base):
             'fname':self.fname,
             'lname':self.lname,
             'status':CtoBop.get_status(self),
-            'date':CtoBop.get_date(self)
+            'date':CtoBop.get_date(self),
+            'time':CtoBop.get_time(self)
         }
 
 
@@ -4990,7 +4995,6 @@ class LandlordRemittanceOp(LandlordRemittance,Base):
     def get_date(self):
         str_date = self.period.strftime("%d/%b/%y")
         return str_date
-
 
     def view(self):
         return {

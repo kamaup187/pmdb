@@ -858,8 +858,8 @@ class Index(Resource):
             #             else:
             #                 print("cbid did not find its sibling payment")
 
-            if company.id== 117:
-                shorts = ["7031325","7514112"]
+            if company.id == 117:
+                shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166"]
             else:
                 shorts = []
 
@@ -867,7 +867,7 @@ class Index(Resource):
                 print("shorts",short)
                 cbid = ShortcodeOp.fetch_shortcode_by_id(short)
                 if not cbid:
-                    cbid = ShortcodeOp(short,"",company.id)
+                    cbid = ShortcodeOp(short,"general",company.id)
                     cbid.save()
 
             for cil in company.shortcodes:
@@ -884,7 +884,7 @@ class Index(Resource):
 
             sifted = []
             for shortcode in shortcodes:
-                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687":
+                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687" or shortcode.description == "general":
                     continue
                 raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
 

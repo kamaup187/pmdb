@@ -4921,7 +4921,8 @@ class CtoBop(CtoB,Base):
         return str_date
     
     def get_time(self):
-        str_date = self.period.strftime("%X")
+        paydate = self.post_date
+        str_date = paydate.strftime("%X")
         return str_date
 
     def get_status(self):

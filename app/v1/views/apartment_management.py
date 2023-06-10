@@ -870,11 +870,11 @@ class Index(Resource):
                     cbid = ShortcodeOp(short,"general",company.id)
                     cbid.save()
 
-            for cil in company.shortcodes:
-                rgs = ["7031325","7514112"]
-                if cil.shortcode in rgs:
-                    print("delllllinnnnnnng")
-                    ShortcodeOp.delete(cil)
+            # for cil in company.shortcodes:
+            #     rgs = ["7031325","7514112"]
+            #     if cil.shortcode in rgs:
+            #         print("delllllinnnnnnng")
+            #         ShortcodeOp.delete(cil)
 
             if company.name == "Latitude Properties":
                 shortcodes = []

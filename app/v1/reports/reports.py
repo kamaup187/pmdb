@@ -6671,13 +6671,17 @@ class MpesaStatement2(Resource):
         shiftstart = request.args.get("shiftstart")
         shiftend = request.args.get("shiftend")
 
+        shortcodes = co.shortcodes
+
+        tills = [shortcode.shortcode for shortcode in shortcodes]
+
+        tills.append("All")
 
         if not shortcode_id:
 
-            shortcodes = co.shortcodes
             return Response(render_template(
                 'report_mpesa_statement2.html',
-                shortcodes=shortcodes,
+                shortcodes=tills,
                 name=current_user.name,
                 co=current_user.company,
                 logopath=logo(current_user.company)[0],
@@ -6711,10 +6715,11 @@ class MpesaStatement2(Resource):
             timestring = str_end + " " + '00:00'
             end = parse(timestring)
 
-
-        shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
-
-        cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+        if shortcode_id == "All":
+            cbids = co.cbids
+        else:
+            # shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
+            cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
 
         main = []
         total = 0.0
@@ -6733,13 +6738,17 @@ class MpesaStatement2(Resource):
         # timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
         timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
 
+        if shortcode_id == "All":
+            shortcode_id = ""
+
         ########################################################
 
         return Response(render_template(
             'report_mpesa_statement2.html',
             bills=cbids_dicts,
             total=f"{total:,.1f}",
-            shortcode=shortcode,
+            shortcode=shortcode_id,
+            shortcodes=tills,
             name=current_user.name,
             timeline=timeline,
             logopath=logo(current_user.company)[0],

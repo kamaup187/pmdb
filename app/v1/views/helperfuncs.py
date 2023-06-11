@@ -4052,6 +4052,18 @@ def generate_date(month,year):
     # .day if month != 2 else datetime.datetime.now().day - 3
     return datetime.datetime(year, month, 15)
 
+def generate_exact_date(str_t):
+    try:
+        year = str_t[:4]
+        month = str_t[4:6]
+        day = str_t[6:8]
+        hour = str_t[8:10]
+        minute = str_t[10:12]
+        second = str_t[12:14]
+        return datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+    except:
+        return datetime.datetime(1994, 11, 16)
+
 def generate_date_alt(month,year):
     # print("Month",month,"Year",year)
     # if month == 2:

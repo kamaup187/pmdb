@@ -6742,6 +6742,10 @@ class MpesaStatement2(Resource):
 
         # print("start: ",start, "end: ",end)
 
+        shortcode_obj = None
+
+        narr = ""
+
         if shortcode_id == "All":
             cbids = co.cbids
         else:
@@ -6754,14 +6758,29 @@ class MpesaStatement2(Resource):
                     cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
                 else:
                     cbids = []
+            if shortcode_obj:
+                if not shortcode_obj.description:
+                    narr = "narration"
 
         main = []
         total = 0.0
         for bill in cbids:
-            if bill.post_date:
-                if bill.post_date > start and bill.post_date < end:
-                    total += bill.trans_amnt
-                    main.append(bill)
+
+            str_t = bill.trans_time
+            try:
+                year = str_t[:4]
+                month = str_t[4:6]
+                day = str_t[6:8]
+                hour = str_t[8:10]
+                minute = str_t[10:12]
+                second = str_t[12:14]
+                ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+            except:
+                ftime = self.post_date
+
+            if ftime > start and ftime < end:
+                total += bill.trans_amnt
+                main.append(bill)
 
         cbids_dicts = ctb_payment_details(main)
 
@@ -6781,6 +6800,7 @@ class MpesaStatement2(Resource):
             'report_mpesa_statement2.html',
             bills=cbids_dicts,
             total=f"{total:,.1f}",
+            narration=narration,
             shortcode=shortcode_id,
             shortcodes=tills,
             name=current_user.name,

@@ -4923,13 +4923,37 @@ class CtoBop(CtoB,Base):
         db.session.commit()
 
     def get_date(self):
-        paydate = self.post_date
-        str_date = paydate.strftime("%d/%b/%y")
+        str_t = self.trans_time
+        try:
+            year = str_t[:4]
+            month = str_t[4:6]
+            day = str_t[6:8]
+            hour = str_t[8:10]
+            minute = str_t[10:12]
+            second = str_t[12:14]
+            ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+        except:
+            ftime = self.post_date
+        # paydate = self.post_date
+        str_date = ftime.strftime("%d/%b/%y")
         return str_date
     
     def get_time(self):
-        paydate = self.post_date
-        str_date = paydate.strftime("%X")
+
+        str_t = self.trans_time
+        try:
+            year = str_t[:4]
+            month = str_t[4:6]
+            day = str_t[6:8]
+            hour = str_t[8:10]
+            minute = str_t[10:12]
+            second = str_t[12:14]
+            ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+        except:
+            ftime = self.post_date
+
+        # paydate = self.post_date
+        str_date = ftime.strftime("%X")
         return str_date
 
     def get_status(self):

@@ -166,6 +166,10 @@
                       <th class="">SHORTCODE</th>
                       {%endif%}
 
+                      {%if narration%}
+                      <th class="">ACCOUNT</th>
+                      {%endif%}
+
                       <th class="">REF</th>
                       <th class="">CLIENT</th>
                       <th class="">CONTACT</th>
@@ -182,6 +186,10 @@
                       {%if not shortcode%}
                       <td class="data-cell text-left">{{ bill['paybill'] }}</td>
                       {%endif%}
+
+                      {%if narration%}
+                      <td class="data-cell text-left">{{ bill['billref'] }}</td>
+                      {%endif%}
                       
                       <td class="data-cell text-center">{{ bill['transid'] }}</td>
                       <td class="data-cell text-center">{{bill['fname']}}</td>
@@ -197,6 +205,10 @@
                       <td class="font-weight-bold"></td>
     
                       {%if not shortcode%}
+                      <td class="font-weight-bold"></td>
+                      {%endif%}
+
+                      {%if narration%}
                       <td class="font-weight-bold"></td>
                       {%endif%}
 
@@ -310,6 +322,10 @@
                   <th class="">SHORTCODE</th>
                   {%endif%}
 
+                  {%if narration%}
+                  <th class="">ACCOUNT</th>
+                  {%endif%}
+
                   <th class="">REF</th>
                   <th class="">CLIENT</th>
                   <th class="">CONTACT</th>
@@ -327,6 +343,10 @@
                   <td class="data-cell text-left">{{ bill['paybill'] }}</td>
                   {%endif%}
 
+                  {%if narration%}
+                  <td class="data-cell text-left">{{ bill['billref'] }}</td>
+                  {%endif%}
+
                   <td class="data-cell text-center">{{ bill['transid'] }}</td>
                   <td class="data-cell text-center">{{bill['fname']}}</td>
                   <td class="data-cell text-right">{{ bill['phone'] }}</td>
@@ -342,6 +362,10 @@
                   <td class="font-weight-bold"></td>
 
                   {%if not shortcode%}
+                  <td class="font-weight-bold"></td>
+                  {%endif%}
+
+                  {%if narration%}
                   <td class="font-weight-bold"></td>
                   {%endif%}
 
@@ -468,7 +492,7 @@
 
 
   var date = new Date();
-  date.setDate(date.getDate() -1);
+  date.setDate(date.getDate());
   $("#checkindate").datepicker("setDate", date); //set default checkindate
 
   date.setDate(date.getDate() + 1);

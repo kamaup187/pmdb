@@ -6800,7 +6800,7 @@ class MpesaStatement2(Resource):
             'report_mpesa_statement2.html',
             bills=cbids_dicts,
             total=f"{total:,.1f}",
-            narration=narration,
+            narration=narr,
             shortcode=shortcode_id,
             shortcodes=tills,
             name=current_user.name,

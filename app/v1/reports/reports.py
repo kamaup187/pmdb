@@ -6679,6 +6679,8 @@ class MpesaStatement2(Resource):
             if code.description:
                 if code.description != "general":
                     tills.append(code.description)
+                else:
+                    tills.append(code.shortcode)
             else:
                 tills.append(code.shortcode)
 

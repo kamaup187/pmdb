@@ -7,6 +7,17 @@
 <span id="urlpattern" class="dispnone">/rent/statement</span>
 <span id="filename" class="dispnone">{{timeline}} mpesa statement.pdf</span>
 
+<style>
+  input[type=time] {
+  border: none;
+  /* border-radius: 5%; */
+  color: #2a2c2d;
+  font-size: 14px;
+  font-family: helvetica;
+  width: 100%;
+}
+</style>
+
 <div class="row">
     <div class="col-lg-12 ">
         <div class="formwrapper">
@@ -62,7 +73,9 @@
                         </span>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
-                          <span class="input-group-addon field-icon">(10 AM)</span>
+                          <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                          <input class="form-contro ph" type="time" name="begin" min="00:00" max="24:00" value="10:00">
+
                         </div>
                       </div>
 
@@ -73,7 +86,9 @@
                         </span>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
-                          <span class="input-group-addon field-icon">(10 AM)</span>
+                          <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                          <input class="form-contro ph" type="time" name="end" min="00:00" max="24:00" value="10:00">
+
                         </div>
                       </div>
                     

@@ -6671,6 +6671,9 @@ class MpesaStatement2(Resource):
         shiftstart = request.args.get("shiftstart")
         shiftend = request.args.get("shiftend")
 
+        begin_t = request.args.get("begin")
+        end_t = request.args.get("end")
+
         shortcodes = co.shortcodes
 
         tills = []
@@ -6718,13 +6721,19 @@ class MpesaStatement2(Resource):
             return "shift not specified"
         else:
             str_start = date_formatter_weekday(shiftstart)
-            timestring = str_start + " " + '10:00'
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + begin_t
+
             start = parse(timestring)
 
                             
             str_end = date_formatter_weekday(shiftend)
-            timestring = str_end + " " + '10:00'
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + end_t
+
             end = parse(timestring)
+
+        # print("start: ",start, "end: ",end)
 
         if shortcode_id == "All":
             cbids = co.cbids

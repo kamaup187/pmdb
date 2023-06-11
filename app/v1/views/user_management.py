@@ -1557,6 +1557,9 @@ class UserLogin(Resource):
         # till = "9565863"
         # if birr:
         #     CtoBop.update_desc(birr,till)
+
+        # birr = CtoBop.fetch_record_by_ref("RFB2SO44DO")
+        # import pdb; pdb.set_trace()
         
         # birr = ApartmentOp.fetch_apartment_by_id(409)
 

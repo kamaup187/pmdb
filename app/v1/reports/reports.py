@@ -6673,7 +6673,15 @@ class MpesaStatement2(Resource):
 
         shortcodes = co.shortcodes
 
-        tills = [shortcode.shortcode for shortcode in shortcodes]
+        tills = []
+
+        for code in shortcodes:
+            if code.description:
+                tills.append(code.description)
+            else:
+                tills.append(code.shortcode)
+
+        # tills = [shortcode.shortcode for shortcode in shortcodes]
 
         tills.append("All")
 
@@ -6707,19 +6715,26 @@ class MpesaStatement2(Resource):
             return "shift not specified"
         else:
             str_start = date_formatter_weekday(shiftstart)
-            timestring = str_start + " " + '00:00'
+            timestring = str_start + " " + '10:00'
             start = parse(timestring)
 
                             
             str_end = date_formatter_weekday(shiftend)
-            timestring = str_end + " " + '00:00'
+            timestring = str_end + " " + '10:00'
             end = parse(timestring)
 
         if shortcode_id == "All":
             cbids = co.cbids
         else:
-            # shortcode = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
-            cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+            shortcode_obj = ShortcodeOp.fetch_shortcode_by_till(shortcode_id)
+            if shortcode_obj:
+                cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_obj.shortcode)
+            else:
+                shortcode_obj = ShortcodeOp.fetch_shortcode_by_id(shortcode_id)
+                if shortcode_obj:
+                    cbids = CtoBop.fetch_all_records_by_shortcode(shortcode_id)
+                else:
+                    cbids = []
 
         main = []
         total = 0.0

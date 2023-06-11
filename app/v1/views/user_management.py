@@ -1553,8 +1553,10 @@ class UserLogin(Resource):
         """Handle GET request for this view. Url ---> /signin"""
 
         ################################################################################
-        # birr = CtoBop.fetch_all_records_by_shortcode("7514162")
-        # import pdb; pdb.set_trace()
+        # birr = ShortcodeOp.fetch_shortcode_by_id("7609898")
+        # till = "9565863"
+        # if birr:
+        #     CtoBop.update_desc(birr,till)
         
         # birr = ApartmentOp.fetch_apartment_by_id(409)
 

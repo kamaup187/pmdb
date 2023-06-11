@@ -325,6 +325,9 @@ class ShortcodeOp(Shortcode,Base):
     def fetch_shortcode_by_id(shortcode):
         return Shortcode.query.filter_by(shortcode=shortcode).first()
 
+    @staticmethod
+    def fetch_shortcode_by_till(till):
+        return Shortcode.query.filter_by(description=till).first()
 
 class GroupRoleOp(GroupRole,Base):
     """class"""
@@ -4913,6 +4916,10 @@ class CtoBop(CtoB,Base):
 
     def update_trans(self,trans):
         self.trans_id = trans
+        db.session.commit()
+
+    def update_desc(self,trans):
+        self.description = trans
         db.session.commit()
 
     def get_date(self):

@@ -5769,7 +5769,54 @@ class CallBackUrlGassa(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        msg = f"GASSA MPESA DATA JUST IN {trans_amnt} from {fname}"
+
+        prop = ApartmentOp.fetch_apartment_by_id(725)
+
+
+        a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""
+        if a1:
+            a2 = a1.replace("R", "")
+            a3 = a2.replace("r", "")
+            a4 = a3.replace("M", "")
+            a5 = a4.replace("m", "")
+
+            a6 = a5.upper()
+
+            for house in prop.houses:
+                n = name_standard(house.name)
+                if n == a6:
+                    target_house = house
+                    break
+
+        if not target_house:
+            print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+            return {"message": "House not found"}, 404
+
+        propid = prop.id
+
+        dict_array = []
+
+        if prop:
+            payperiod = prop.billing_period
+
+            dict_obj = {
+            "housename":target_house.name,
+            "amount":trans_amnt,
+            "date":"",
+            "ref":trans_id,
+            "desc":"",
+            "comment":""
+            }
+
+            dict_array.append(dict_obj)
+
+            uploadsjob2 = q.enqueue_call(
+                func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+            )
+
+            CtoBop.update_status(ctob_obj,"claimed")
+
+
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
         # mpesa_response(ctob_obj)
@@ -5803,10 +5850,53 @@ class CallBackUrlGrace(Resource):
         ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        msg = f"GRACE MPESA DATA JUST IN {trans_amnt} from {fname}"
-        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+        prop = ApartmentOp.fetch_apartment_by_id(724)
 
-        # mpesa_response(ctob_obj)
+
+        a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""
+        if a1:
+            a2 = a1.replace("R", "")
+            a3 = a2.replace("r", "")
+            a4 = a3.replace("M", "")
+            a5 = a4.replace("m", "")
+
+            a6 = a5.upper()
+
+            for house in prop.houses:
+                n = name_standard(house.name)
+                if n == a6:
+                    target_house = house
+                    break
+
+        if not target_house:
+            print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+            return {"message": "House not found"}, 404
+
+        propid = prop.id
+
+        dict_array = []
+
+        if prop:
+            payperiod = prop.billing_period
+
+            dict_obj = {
+            "housename":target_house.name,
+            "amount":trans_amnt,
+            "date":"",
+            "ref":trans_id,
+            "desc":"",
+            "comment":""
+            }
+
+            dict_array.append(dict_obj)
+
+            uploadsjob2 = q.enqueue_call(
+                func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+            )
+
+            CtoBop.update_status(ctob_obj,"claimed")
+
+
 
 
 class CallBackUrlVilla2355(Resource):

@@ -2900,6 +2900,9 @@ class GuestStatement(Resource):
         shiftstart = request.args.get("shiftstart")
         shiftend = request.args.get("shiftend")
 
+        begin_t = request.args.get("begin")
+        end_t = request.args.get("end")
+
         if not selected_apartment:
 
             apartment_list = fetch_all_apartments_by_user(current_user)
@@ -2919,12 +2922,16 @@ class GuestStatement(Resource):
             return "shift not specified"
         else:
             str_start = date_formatter_weekday(shiftstart)
-            timestring = str_start + " " + '10:00'
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + begin_t
+
             start = parse(timestring)
 
                             
             str_end = date_formatter_weekday(shiftend)
-            timestring = str_end + " " + '10:00'
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + end_t
+
             end = parse(timestring)
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)

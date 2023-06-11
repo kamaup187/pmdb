@@ -12571,7 +12571,7 @@ def auto_consume_ctob2(ctob_obj):
 def name_standard(name):
     try:
         n1 = name.replace(" ","")
-        n2 = name.upper()
+        n2 = n1.upper()
     except:
         n2 = name
     return n2

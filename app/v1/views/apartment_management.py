@@ -885,7 +885,7 @@ class Index(Resource):
 
             sifted = []
             for shortcode in shortcodes:
-                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687" or shortcode.description == "general":
+                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687" or shortcode.description:
                     continue
                 raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
 

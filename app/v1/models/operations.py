@@ -4938,6 +4938,22 @@ class CtoBop(CtoB,Base):
         # paydate = self.post_date
         str_date = ftime.strftime("%d/%b/%y")
         return str_date
+
+    def get_timestamp(self):
+        str_t = self.trans_time
+        try:
+            year = str_t[:4]
+            month = str_t[4:6]
+            day = str_t[6:8]
+            hour = str_t[8:10]
+            minute = str_t[10:12]
+            second = str_t[12:14]
+            ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+        except:
+            ftime = self.post_date
+        # paydate = self.post_date
+        str_date = ftime.strftime("%x %X")
+        return str_date
     
     def get_time(self):
 
@@ -4982,6 +4998,7 @@ class CtoBop(CtoB,Base):
             'lname':self.lname,
             'status':CtoBop.get_status(self),
             'date':CtoBop.get_date(self),
+            'stamp':CtoBop.get_timestamp(self),
             'time':CtoBop.get_time(self)
         }
 

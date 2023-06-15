@@ -1263,7 +1263,8 @@ class Balances(Resource):
             else:
                 targetbills = fetch_current_billing_period_bills(prop.billing_period,bills)
             for i in targetbills:
-                if not i.paid_amount and i.balance > 0:
+                #if not i.paid_amount and i.balance > 0:
+                if i.balance > 0:
                     main.append(i)
 
         bills = bill_details(main)

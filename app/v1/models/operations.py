@@ -3416,7 +3416,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             fname = "None"
 
         house =  self.house.name
-        return f'{house} <span class="text-gray-600">{fname}</span> {ttype}' 
+        # return f'{house} <span class="text-gray-600">{fname}</span> {ttype}' 
+        return f'{house} <span class="text-gray-600">{fname}</span>' 
 
     def combine_garbsec(self):
         garb = self.garbage if self.garbage else 0.0 #TODO - remove condition

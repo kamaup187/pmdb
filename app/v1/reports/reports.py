@@ -8366,91 +8366,158 @@ class FetchBills(Resource):
             paidtotal_sum_members = []
             balancetotal_sum_members = []
 
-            vacants = filter_out_occupied_houses(prop_obj.name)
-            for vac in vacants:
-                if vac.owner:
-                    continue
-                all_charges = vac.charges
-                water_charge = 0.0
-                electricity_charge = 0.0
-                for charge in all_charges:
-                    if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 2:
-                        water_charge = charge.amount
-                    if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 5:
-                        electricity_charge = charge.amount
+            if target == "vacant":
+                page_header = "Vacant units"
+                vacants = filter_out_occupied_houses(prop_obj.name)
+                for vac in vacants:
+                    if vac.owner:
+                        continue
+                    all_charges = vac.charges
+                    water_charge = 0.0
+                    electricity_charge = 0.0
+                    for charge in all_charges:
+                        if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 2:
+                            water_charge = charge.amount
+                        if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 5:
+                            electricity_charge = charge.amount
 
-                house_tenant = vac.name  + "(Vacant)"
+                    house_tenant = vac.name  + "(Vacant)"
 
-                new_item = {
-                    'id':"0",
-                    'viewid':"0",
-                    'smsid':"0",
-                    'mailid':"0",
-                    'delid':"0",
-                    'editid':"0",
-                    'payid':"0",
-                    'hst':house_tenant,
-                    'vacancy':"text-danger",
-                    'rent':0.0,
-                    'water':water_charge,
-                    'electricity':electricity_charge,
-                    'garbage':0.0,
-                    'security':0.0,
-                    'service': 0.0,
-                    'agreement':0.0,
-                    'deposit':0.0,
-                    'fine': 0.0,
-                    'arrears': 0.0,
-                    'total': water_charge + electricity_charge,
-                    'paid': 0.0,
-                    'active':"disabled",
-                    'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
-                    'smsactive':"disabled",
-                    'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
-                    'mailactive':"disabled",
-                    'balance':0.0
-                }
-                detailed_bills.append(new_item)
+                    new_item = {
+                        'id':"0",
+                        'viewid':"0",
+                        'smsid':"0",
+                        'mailid':"0",
+                        'delid':"0",
+                        'editid':"0",
+                        'payid':"0",
+                        'hst':house_tenant,
+                        'vacancy':"text-danger",
+                        'rent':0.0,
+                        'water':water_charge,
+                        'electricity':electricity_charge,
+                        'garbage':0.0,
+                        'security':0.0,
+                        'service': 0.0,
+                        'agreement':0.0,
+                        'deposit':0.0,
+                        'fine': 0.0,
+                        'arrears': 0.0,
+                        'total': water_charge + electricity_charge,
+                        'paid': 0.0,
+                        'active':"disabled",
+                        'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                        'smsactive':"disabled",
+                        'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                        'mailactive':"disabled",
+                        'balance':0.0
+                    }
+                    detailed_bills.append(new_item)
 
-                watertotal_sum_members.append(new_item['water'])
-                electricitytotal_sum_members.append(new_item['electricity'])
-                billtotal_sum_members.append(new_item['total'])
-                paidtotal_sum_members.append(new_item['paid'])
+                    watertotal_sum_members.append(new_item['water'])
+                    electricitytotal_sum_members.append(new_item['electricity'])
+                    billtotal_sum_members.append(new_item['total'])
+                    paidtotal_sum_members.append(new_item['paid'])
+
+                pg_data = paginator(request,detailed_bills)
+
+            elif target == "pending":
+                page_header = "Occupied uninvoiced units"
+                pending = filter_in_occupied_houses(prop_obj.name)
+                for i in pending:
+                    tenant_obj = check_occupancy(i)[1]
+                    curr_inv = fetch_current_tenant_invoice(i,tenant_obj)
+                    if curr_inv:
+                        continue
+                    all_charges = i.charges
+                    water_charge = 0.0
+                    electricity_charge = 0.0
+                    for charge in all_charges:
+                        if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 2:
+                            water_charge = charge.amount
+                        if charge.date.month == prop_obj.billing_period.month and charge.date.year == prop_obj.billing_period.year and charge.charge_type_id == 5:
+                            electricity_charge = charge.amount
+
+                    house_tenant = i.name  + f" {(tenant_obj.name)}"
+
+                    new_item = {
+                        'id':"0",
+                        'viewid':"0",
+                        'smsid':"0",
+                        'mailid':"0",
+                        'delid':"0",
+                        'editid':"0",
+                        'payid':"0",
+                        'hst':house_tenant,
+                        'vacancy':"text-danger",
+                        'rent':0.0,
+                        'water':water_charge,
+                        'electricity':electricity_charge,
+                        'garbage':0.0,
+                        'security':0.0,
+                        'service': 0.0,
+                        'agreement':0.0,
+                        'deposit':0.0,
+                        'fine': 0.0,
+                        'arrears': 0.0,
+                        'total': water_charge + electricity_charge,
+                        'paid': 0.0,
+                        'active':"disabled",
+                        'smsstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                        'smsactive':"disabled",
+                        'mailstatus': '<i class="fas fa-ban text-danger ml-3"></i>',
+                        'mailactive':"disabled",
+                        'balance':0.0
+                    }
+                    detailed_bills.append(new_item)
+
+                    watertotal_sum_members.append(new_item['water'])
+                    electricitytotal_sum_members.append(new_item['electricity'])
+                    billtotal_sum_members.append(new_item['total'])
+                    paidtotal_sum_members.append(new_item['paid'])
+
+                pg_data = paginator(request,detailed_bills)
+
+            else:
+                page_header = "Invoiced occupied units"
+                # pg_data = fetch_pg_current_billing_period_bills(request,target_period,bills)
+                current_bills = fetch_current_billing_period_bills(target_period,bills)
+
+                for bill in current_bills:
+
+                    deposit = bill.deposit if bill.deposit else 0.0
+                    agreement = bill.agreement if bill.agreement else 0.0
+
+                    renttotal_sum_members.append(bill.rent)
+
+                    watertotal_sum_members.append(bill.water)
+
+                    electricitytotal_sum_members.append(bill.electricity)
+
+                    garbagetotal_sum_members.append(bill.garbage)
+
+                    securitytotal_sum_members.append(bill.security)
+
+                    servicetotal_sum_members.append(bill.maintenance)
+
+                    deposittotal_sum_members.append(deposit)
+
+                    agreementtotal_sum_members.append(agreement)
+
+                    finetotal_sum_members.append(bill.penalty)
+
+                    arrearstotal_sum_members.append(bill.arrears)
+
+                    billtotal_sum_members.append(bill.total_bill)
+
+                    paidtotal_sum_members.append(bill.paid_amount)
+
+                    balancetotal_sum_members.append(bill.balance)
 
 
-            # pg_data = fetch_pg_current_billing_period_bills(request,target_period,bills)
-            current_bills = fetch_current_billing_period_bills(target_period,bills)
 
-            for bill in current_bills:
-
-                deposit = bill.deposit if bill.deposit else 0.0
-                agreement = bill.agreement if bill.agreement else 0.0
-
-                renttotal_sum_members.append(bill.rent)
-
-                watertotal_sum_members.append(bill.water)
-
-                electricitytotal_sum_members.append(bill.electricity)
-
-                garbagetotal_sum_members.append(bill.garbage)
-
-                securitytotal_sum_members.append(bill.security)
-
-                servicetotal_sum_members.append(bill.maintenance)
-
-                deposittotal_sum_members.append(deposit)
-
-                agreementtotal_sum_members.append(agreement)
-
-                finetotal_sum_members.append(bill.penalty)
-
-                arrearstotal_sum_members.append(bill.arrears)
-
-                billtotal_sum_members.append(bill.total_bill)
-
-                paidtotal_sum_members.append(bill.paid_amount)
-
-                balancetotal_sum_members.append(bill.balance)
+                detailed_bills = bill_details(current_bills)
+                pg_data = paginator(request,detailed_bills)
 
 
             totalrent = sum_values(renttotal_sum_members)
@@ -8488,12 +8555,6 @@ class FetchBills(Resource):
 
             print(totalagreement,fieldshow_arg)
 
-            detailed_bills_alt = bill_details(current_bills)
-
-            unpaginated_bills = detailed_bills + detailed_bills_alt
-
-            pg_data = paginator(request,unpaginated_bills)
-
             # current_bills = pg_data[1]
             items = pg_data[1]
 
@@ -8502,7 +8563,7 @@ class FetchBills(Resource):
             iter_list = pg_data[3]
             prev_num = pg_data[4]
             next_num = pg_data[5]
-            num_items = len(unpaginated_bills)
+            num_items = len(detailed_bills)
 
             billids = get_obj_ids_alt(items)
 
@@ -8524,6 +8585,7 @@ class FetchBills(Resource):
                 current_month=str_month,
                 bills=items,
                 page=page,
+                page_header=page_header,
                 pages=pages,
                 iter_list=iter_list,
                 prev_num=prev_num,

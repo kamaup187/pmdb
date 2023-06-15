@@ -5808,13 +5808,13 @@ class CallBackUrlGassa(Resource):
             "comment":""
             }
 
-            dict_array.append(dict_obj)
+            # dict_array.append(dict_obj)
 
-            uploadsjob2 = q.enqueue_call(
-                func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
-            )
+            # uploadsjob2 = q.enqueue_call(
+            #     func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+            # )
 
-            CtoBop.update_status(ctob_obj,"claimed")
+            # CtoBop.update_status(ctob_obj,"claimed")
 
 
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
@@ -5888,13 +5888,13 @@ class CallBackUrlGrace(Resource):
             "comment":""
             }
 
-            dict_array.append(dict_obj)
+            # dict_array.append(dict_obj)
 
-            uploadsjob2 = q.enqueue_call(
-                func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
-            )
+            # uploadsjob2 = q.enqueue_call(
+            #     func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+            # )
 
-            CtoBop.update_status(ctob_obj,"claimed")
+            # CtoBop.update_status(ctob_obj,"claimed")
 
 
 

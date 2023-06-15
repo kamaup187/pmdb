@@ -4895,6 +4895,64 @@ $.ajax({
 });
 });
 
+
+
+
+
+      $(".balancebtn").on('click',function(){
+    
+          // $("#targeturl").html("/balances");
+          $(".nonpaybtn").html("<i class=\"fas fa-spinner fa-spin mr-4\"></i>Generating...")
+
+
+          $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="clipboard"></i>UNPAID INVOICES'); feather.replace();
+          $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+          $("#activeprop").empty();
+
+
+          $("#propdisp").removeClass("dispnone")
+          $("#body-block").addClass("dispnone")
+          $("#proplist").addClass("dispnone")
+          $("#searchresults").addClass("dispnone")
+
+
+          $("#dummyData").removeClass('dispnone');
+          $("#barloader-alt").removeClass("dispnone")
+
+          $('#propdisp-content').empty()
+          $("#searchresults").empty()
+    
+          $.ajax({
+            url: "/balances",
+            type: "get",
+            data: {
+                  propid:""
+                },
+            success: function(response) {
+    
+              $(".nonpaybtn").html("non-payments")
+              $("#barloader-alt").addClass("dispnone")
+              
+              $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+              $("#dummyData").addClass('dispnone');
+              $("#propdisp-content").html(response);
+            },
+            error: function(xhr) {
+              // $("#invoicebed").html('<div class="center-btn text-danger mb-3">Invoice not found!</div>');
+              }
+          });
+        
+    
+    
+      });
+
+
+
+
+
 $(".tenantbtnn").on('click',function(){
   $("#barloader").removeClass("dispnone")
     setTimeout(function(){

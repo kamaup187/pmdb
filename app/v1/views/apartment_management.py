@@ -2014,8 +2014,8 @@ class Dashboard(Resource):
                     if item.month == period.month and item.year == period.year:
                         total_balances += item.balance if item.balance > 0 else 0
 
-                        if not item.paid_amount:
-                            defaulters += 1 if item.balance > 1 else 0
+                        # if not item.paid_amount:
+                        defaulters += 1 if item.balance > 1 else 0
 
             if datetime.datetime.now().day < 6:
                 defaulters = "--"

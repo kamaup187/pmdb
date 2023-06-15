@@ -42,7 +42,7 @@
                 <div class="p-5">
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-2">New Tenant?</h1>
-                    <p class="mb-1">Well. Just enter your national id below and we'll redirect you to set your password</p>
+                    <p class="mb-1">Well. Just enter your mobile number below and we'll redirect you to set your password</p>
                   </div>
                   {% with messages = get_flashed_messages(with_categories=true) %}
                   {% for category, message in messages %}
@@ -54,7 +54,7 @@
                   <span class="hide">hide</span>
                   <form class="user" method="POST" action="/tenant/signup" autocomplete="off">
                     <div class="form-group">
-                      <input type="text" class="form-control form-control-user" name="national_id" placeholder="Enter national id..." required>
+                      <input type="text" class="form-control form-control-user" name="national_id" placeholder="Enter mobile number..." required>
                     </div>
                     <button id="search" class="btn btn-info btn-user btn-block">
                       Sign Up

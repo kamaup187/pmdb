@@ -2017,14 +2017,10 @@ class Dashboard(Resource):
                         if not item.paid_amount:
                             defaulters += 1 if item.balance > 1 else 0
 
-            if period.day < 6:
+            if datetime.datetime.now().day < 6:
                 defaulters = "--"
             else:
                 pass
-
-            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_balances = 3629379.0
-                defaulters = "168"
 
             return [f'Kes {total_balances:,.1f}',f'{defaulters}']
 

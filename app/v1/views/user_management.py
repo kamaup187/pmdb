@@ -1391,11 +1391,13 @@ class TenantUserSignUpStageOne(Resource):
 
     def post(self):
         national_id = request.form.get("national_id")
-        existing_user = UserOp.fetch_user_by_national_id(national_id)
+        # existing_user = UserOp.fetch_user_by_national_id(national_id)
+        existing_user = UserOp.fetch_user_by_phone(national_id)
         if existing_user:
             flash("Account already set up, please login","success")
             return redirect(url_for("api.tenantusersignupstageone")) 
-        tenant = TenantOp.fetch_tenant_by_nat_id(national_id)
+        # tenant = TenantOp.fetch_tenant_by_nat_id(national_id)
+        tenant = TenantOp.fetch_tenant_by_tel(national_id)
         if tenant:
             if not tenant.house_allocated:
                 flash("Contact management for house allocation","fail")

@@ -4952,7 +4952,7 @@ class CtoBop(CtoB,Base):
         except:
             ftime = self.post_date
         # paydate = self.post_date
-        str_date = ftime.strftime("%x %X")
+        str_date = ftime.strftime("%d/%m/%Y %X")
         return str_date
     
     def get_time(self):

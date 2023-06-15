@@ -1553,8 +1553,8 @@ class UserLogin(Resource):
         """Handle GET request for this view. Url ---> /signin"""
 
         ################################################################################
-        # birr = ShortcodeOp.fetch_shortcode_by_id("7609898")
-        # till = "9565863"
+        # birr = ShortcodeOp.fetch_shortcode_by_id("7609902")
+        # till = "9565867"
         # if birr:
         #     CtoBop.update_desc(birr,till)
 

@@ -2218,6 +2218,12 @@ def date_formatter_weekday(dd):
     year = target_part.split('-')[2]
     return month + "-" + date + "-" + year
 
+def date_formatter_datetime_obj(dd):
+    date = dd.day
+    month = dd.month
+    year = dd.year
+    return str(month) + "-" + str(date) + "-" + str(year)
+
 def floatHourToTime(fh):
     hours, hourSeconds = divmod(fh, 1)
     minutes, seconds = divmod(hourSeconds * 60, 1)

@@ -876,6 +876,21 @@ class Index(Resource):
             #         print("delllllinnnnnnng")
             #         ShortcodeOp.delete(cil)
 
+
+            # str_start = generate_exact_date(datetime.datetime.now().day,datetime.datetime.now().month,datetime.datetime.now().year)
+            # str_end = generate_exact_date(tom,datetime.datetime.now().month,datetime.datetime.now().year)
+
+            str_start = date_formatter_datetime_obj(time)
+            str_end = date_formatter_datetime_obj(time + relativedelta(days=1))
+
+            timestring = str_start + " " + '10:00'
+
+            start = parse(timestring)
+
+            timestring = str_end + " " + '10:00'
+
+            end = parse(timestring)
+
             if company.name == "Latitude Properties":
                 shortcodes = []
                 banksdata = []
@@ -884,22 +899,55 @@ class Index(Resource):
                 banksdata = company.cbids
 
             sifted = []
+            sifted_alt = []
+
             for shortcode in shortcodes:
-                if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687" or shortcode.description:
-                    continue
-                raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+                raw_unclaimed_alt = []
+                raw_unclaimed = []
+                if shortcode.description:
+                    if shortcode.description != "general":
+                        raw_unclaimed_alt = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
+                        # print("warazi",raw_unclaimed_alt)
+                # if shortcode.shortcode == "4012401" or shortcode.shortcode == "4081687" or shortcode.description:
+                #     continue
+                else:
+                    raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode.shortcode)
 
                 for r in raw_unclaimed:
                     # targets = ["532406","964399","4012401","4081687"]
                     if r.status == "unclaimed":
                         sifted.append(r)
 
+                for r in raw_unclaimed_alt:
+                    # targets = ["532406","964399","4012401","4081687"]
+
+                    str_t = r.trans_time
+                    try:
+                        year = str_t[:4]
+                        month = str_t[4:6]
+                        day = str_t[6:8]
+                        hour = str_t[8:10]
+                        minute = str_t[10:12]
+                        second = str_t[12:14]
+                        ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+                        # print("kitrue",ftime,"starttime",start,"endtime",end)
+                    except:
+                        ftime = self.post_date
+                        # print("mrazi",ftime,"starttime",start,"endtime",end)
+
+
+                    if ftime > start and ftime < end:
+                        sifted_alt.append(r)
+
             for r in banksdata:
                     if r.status == "unclaimed" and r.mode == "Bank":
                         sifted.append(r)
 
             cbids = ctb_payment_details(sifted)
+            cbids_alt = ctb_payment_details(sifted_alt)
+
             cbids_num = len(cbids)
+            cbids_num_alt = len(cbids_alt)
 
             # apart1 = ApartmentOp.fetch_apartment_by_name("Aviv")
             # if not apart1.paymentdetails:
@@ -985,6 +1033,7 @@ class Index(Resource):
                 cbids=cbids,
                 shortcodes=company.shortcodes,
                 cbids_num=cbids_num,
+                cbids_num_alt=cbids_num_alt,
                 logobg=logobg,
                 numsms=smsfrac,
                 shortcode = shortcode2,

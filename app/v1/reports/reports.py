@@ -1246,7 +1246,6 @@ class Balances(Resource):
     """class"""
     @login_required
     def get(self):
-        print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
         txt = f"balances by {current_user.name}"
         send_internal_email_notifications(current_user.company.name,txt)
 
@@ -1276,7 +1275,6 @@ class ArrearsComparison(Resource):
     """class"""
     @login_required
     def get(self):
-        print("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
         propid = request.args.get("propid")
         if not propid:
             props = fetch_all_apartments_by_user(current_user)
@@ -6731,7 +6729,6 @@ class MpesaStatement2(Resource):
             str_start = date_formatter_weekday(shiftstart)
             # timestring = str_start + " " + '10:00'
             timestring = str_start + " " + begin_t
-
             start = parse(timestring)
 
                             

@@ -37,7 +37,7 @@ class Reports(Resource):
             timeline = None
             period = current_user.company.billing_period
 
-        print(">>>>",period)
+        # print(">>>>",period)
 
         ##################################################################################################
         items = []
@@ -2668,6 +2668,7 @@ class RentStatement(Resource):
         detailed_bills = []
 
         totalbbf = 0.0
+        actual_totalbbf = 0.0
         totalrent = 0.0
 
         totalpaid = 0.0

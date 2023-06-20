@@ -169,10 +169,12 @@
                     <tr>
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
+                      <th class="">TYPE</th>
                       <th class="">BB/F</th>
                       <th class="">RENT</th>
                       <th class="">TOTAL DUE</th>
                       <th class="">TOTAL PAID</th>
+                      <th class="">DATE PAID</th>
                       <th class="">BC/F</th>
 
                     </tr>
@@ -182,10 +184,12 @@
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+                      <td class="data-cell text-right">{{ bill['desc'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{bill['rent-total']}}</td>
                       <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                     </tr>
                   {% endfor %}
@@ -193,11 +197,12 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
                     </tr>
                   </tfoot>
@@ -415,10 +420,12 @@
                 <tr>
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
+                  <th class="">TYPE</th>
                   <th class="">BB/F</th>
                   <th class="">RENT</th>
                   <th class="">TOTAL DUE</th>
                   <th class="">TOTAL PAID</th>
+                  <th class="">DATE PAID</th>
                   <th class="">BC/F</th>
 
                 </tr>
@@ -428,10 +435,12 @@
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
+                  <td class="data-cell text-right">{{ bill['desc'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
                   <td class="data-cell text-right">{{bill['rent-total']}}</td>
                   <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                 </tr>
               {% endfor %}
@@ -439,11 +448,12 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                  <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right">-</td>
                   <td class="font-weight-bold text-right">{{bcftotal}}</td>
                 </tr>
               </tfoot>

@@ -2694,6 +2694,7 @@ class RentStatement(Resource):
 
                 if bill.rent_balance:
                     totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
+                    actual_totalbbf += bill.rent_balance
 
                 totalrent += bill.rent if bill.rent else 0.0
                 totalpaid += bill.rent_paid if bill.rent_paid else 0.0
@@ -2729,7 +2730,7 @@ class RentStatement(Resource):
 
         renttotal = (f"{totalrent:,}")
 
-        totalbill = totalbbf + totalrent
+        totalbill = actual_totalbbf + totalrent
         billtotal = (f"{totalbill:,}")
         paidtotal = (f"{totalpaid:,}")
         bcftotal = (f"{totalbcf:,}")

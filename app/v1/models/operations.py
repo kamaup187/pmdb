@@ -3917,6 +3917,23 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'billedby':MonthlyChargeOp.get_name(self)
         }
 
+    def get_desc(description):
+        if description:
+            if "2" in description or "two" in description.lower():
+                desc = "2BR"
+            elif "bedsitter" in description.lower():
+                desc = "BEDSITTER"
+            elif "1" in description or "one" in description.lower():
+                desc = "1BR"
+            elif "3" in description or "three" in description.lower():
+                desc = "3BR"
+            else:
+                desc = "n/a"
+        else:
+            desc = "N/A"
+
+        return desc
+
     def external_view(self):
         
         return {
@@ -3927,6 +3944,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'tenantid':self.tenant_id if self.tenant_id else "-",
             'month':MonthlyChargeOp.year_month(self),
             'year':self.year,
+            'desc':MonthlyChargeOp.get_desc(self.house.description),
             'tenant':MonthlyChargeOp.get_tenant_name(self),
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
@@ -3982,6 +4000,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'mathbbf':MonthlyChargeOp.calculate_bbf(self),
             'calc_total':MonthlyChargeOp.calculate_total(self),
             'paid':MonthlyChargeOp.calculate_paid(self),
+            'date-paid':MonthlyChargeOp.get_date(self),
             'balance':MonthlyChargeOp.calculate_bcf(self)
         }
 

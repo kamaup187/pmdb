@@ -2107,8 +2107,12 @@ class UploadPayments(Resource):
 
                 dict_array.append(dict_obj)
 
+            # uploadsjob2 = q.enqueue_call(
+            #     func=read_payments_excel, args=(dict_array,payperiod,prop.id,current_user.id,None,), result_ttl=5000
+            # )
+
             uploadsjob2 = q.enqueue_call(
-                func=read_payments_excel, args=(dict_array,payperiod,prop.id,current_user.id,None,), result_ttl=5000
+                func=read_payments_excel2, args=(dict_array,payperiod,prop.id,current_user.id,None,), result_ttl=5000
             )
 
         except Exception as e:

@@ -4336,7 +4336,7 @@ class LandlordSummaryOp(LandlordSummary,Base):
             'tenantid':self.tenant_id,
             'month':LandlordSummaryOp.year_month(self),
             'year':self.year,
-            'tenant':self.tenant.name.split()[0],
+            'tenant':self.tenant.name.split()[0] if self.tenant else "-",
             'house':self.house,
             'rent':LandlordSummaryOp.fig_format(self.rent),
             'water':LandlordSummaryOp.fig_format(self.water),

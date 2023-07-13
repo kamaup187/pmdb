@@ -3680,7 +3680,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def show_ll_status(self):
         if self.paid_amount:
             if self.deposit_paid:
-                tpaid = self.paid_amount - self.deposit_paid
+                # tpaid = self.paid_amount - self.deposit_paid
+                tpaid = self.paid_amount
             else:
                 tpaid = self.paid_amount
             rounded_fig = round(tpaid,2)

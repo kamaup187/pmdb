@@ -1876,7 +1876,14 @@ class Dashboard(Resource):
        
             collection_string = ','.join(map(str, collectiondatalist))
             bill_string = ','.join(map(str, billdatalist))
-       
+
+            # if current_user.company_user_group.name == "Field":
+            #     collection_string = ""
+            #     bill_string = ""
+
+            if current_user.company_user_group.name == "Field":
+                collection_string = "0"
+                bill_string = "0"
                 
             return Response(render_template(
                 'ajax_performance_graph.html',
@@ -2007,9 +2014,9 @@ class Dashboard(Resource):
 
             month_str=f'{get_str_mnth(period.month)} invoices'
 
-            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_bills = 3629379.0
-                invs = "170"
+            if current_user.company_user_group.name == "Field":
+                return ["N/A","-",month_str]
+
 
             return [f'Kes {total_bills:,.1f}',invs,month_str]
 
@@ -2038,9 +2045,8 @@ class Dashboard(Resource):
             except:
                 ratio = 0
 
-            if current_user.username.startswith("qc") and current_user.company.name == "KEVMA REAL ESTATE":
-                total_collections = 17500.0
-                ratio = 0.0
+            if current_user.company_user_group.name == "Field":
+                return ["N/A",'- %']
 
 
             return [f'Kes {total_collections:,.1f}',f'{ratio:,.0f} %']
@@ -2071,8 +2077,10 @@ class Dashboard(Resource):
             else:
                 pass
 
-            return [f'Kes {total_balances:,.1f}',f'{defaulters}']
+            if current_user.company_user_group.name == "Field":
+                return ["N/A",'-']
 
+            return [f'Kes {total_balances:,.1f}',f'{defaulters}']
 
         if target == "propstats":
             return len(props)

@@ -678,6 +678,8 @@ class Clients(Resource):
 
         items = os.getenv('VAR_ITEMS') or VAR_ITEMS
 
+        # import pdb; pdb.set_trace()
+
         lst_items = items.split(",")
 
         # print("heeeeeeeeeeeeeeee",lst_items)

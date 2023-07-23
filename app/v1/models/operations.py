@@ -3853,6 +3853,18 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             invnum = f"{self.id}"
         return invnum
 
+    def calculate_deposits(self):
+        if self.tenant:
+            if self.tenant.deposits:
+                try:
+                    deps = self.tenant.deposits.total
+                    bal = deps-self.deposit_due
+                    return f"{bal:,.1f}"
+                except:
+                    return 0.0
+            return 0.0
+        return 0.0
+
     def view_detail(self):
         
         return {
@@ -3890,6 +3902,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
+            'deposit-paid':MonthlyChargeOp.calculate_deposits(self),
+            'deposit-due':MonthlyChargeOp.fig_format(self.deposit_due),
+
             'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
             'deparg':MonthlyChargeOp.combine_deparg(self),
             'fine':MonthlyChargeOp.fig_format(self.penalty),

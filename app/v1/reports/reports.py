@@ -2143,7 +2143,7 @@ class CombinedReport(Resource):
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
-        if apartment_obj.company.id == 114:
+        if apartment_obj.company.id == 1144444444:
             template = "report_combined_statement_alt.html"
         else:
             template = "report_combined_statement.html"

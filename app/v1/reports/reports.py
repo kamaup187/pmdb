@@ -1956,7 +1956,7 @@ class CombinedReport(Resource):
         for bill in current_month_bills:
             """compute subtotals"""
 
-            if current_user.company_id == 114: # DEPOSITS SEPARATED FROM INVOICES
+            if current_user.company_id == 11444444444: # DEPOSITS SEPARATED FROM INVOICES
                 # bill_item = LandlordSummaryOp.external_view(bill)
                 bill_item = MonthlyChargeOp.view_combined(bill)
 

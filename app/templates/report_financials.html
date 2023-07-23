@@ -162,12 +162,15 @@
                       <!-- <th class="">DATE</th>
                       <th class="">TIME</th> -->
                       <th class="">DATE</th>
+                      <th class="">MONTH</th>
+
                       {%if not prop%}
                       <th class="">PROPERTY</th>
                       {%endif%}
 
                       <th class="">REF</th>
                       <th class="">MODE</th>
+                      <th class="">HOUSE</th>
 
                       <th class="">CLIENT</th>
                       <th class="">CONTACT</th>
@@ -179,7 +182,7 @@
                     {% for bill in bills%}
                     <tr>
                       <td class="data-cell text-center">{{ bill['stamp'] }}</td>
-                      <!-- <td class="data-cell text-left">{{ bill['time']}}</td> -->
+                      <td class="data-cell text-left">{{ bill['month']}}</td>
 
                       {%if not prop%}
                       <td class="data-cell text-left">{{ bill['prop'] }}</td>
@@ -187,7 +190,9 @@
                       <td class="data-cell text-left">{{ bill['ref'] }}</td>
 
                       <td class="data-cell text-left">{{ bill['mode'] }}</td>
+                      <td class="data-cell text-center">{{bill['house']}}</td>
                       <td class="data-cell text-center">{{bill['tenant']}}</td>
+
                       <td class="data-cell text-right">{{ bill['phone'] }}</td>
                       <td class="data-cell text-right">{{ bill['amount'] }}</td>
                     </tr>
@@ -205,7 +210,7 @@
 
                       <td class="font-weight-bold"></td>
 
-                      <td colspan="3" class="font-weight-bold"></td>
+                      <td colspan="4" class="font-weight-bold"></td>
                       
                       <td class="font-weight-bold text-right">{{total}}</td>
     
@@ -309,7 +314,7 @@
               <thead class="custom-header-alt small">
                 <tr>
                   <th class="">DATE</th>
-                  <!-- <th class="">TIME</th> -->
+                  <th class="">MONTH</th>
 
                   {%if not prop%}
                   <th class="">PROPERTY</th>
@@ -335,6 +340,8 @@
                   
                   <td class="data-cell text-left">{{ bill['ref'] }}</td>
                   <td class="data-cell text-left">{{ bill['mode'] }}</td>
+                  <td class="data-cell text-center">{{bill['house']}}</td>
+
                   <td class="data-cell text-center">{{bill['tenant']}}</td>
                   <td class="data-cell text-right">{{ bill['phone'] }}</td>
                   <td class="data-cell text-right">{{ bill['amount'] }}</td>
@@ -354,7 +361,7 @@
 
                   <td class="font-weight-bold"></td>
 
-                  <td colspan="3" class="font-weight-bold"></td>
+                  <td colspan="4" class="font-weight-bold"></td>
                   
                   <td class="font-weight-bold text-right">{{total}}</td>
 

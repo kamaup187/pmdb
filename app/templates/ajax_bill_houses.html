@@ -1,6 +1,6 @@
 {% for house in houses %}
 <div class="fancy-checkbox-group form-control mb-2 smallify">
-  <input type="checkbox" name="billhouse" id="{{house.id}}" value="{{house.id}}">
-  <label class="mr-3 me-3 hover-text" for="{{house.id}}">{{house.name}}</label>
+  <input type="checkbox" name="billhouse" id="house{{house.id}}" value="{{house.id}}">
+  <label class="mr-3 me-3 hover-text" for="house{{house.id}}">{{house.name}}</label>
 </div>
 {% endfor %}

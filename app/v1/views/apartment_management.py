@@ -3008,6 +3008,17 @@ class Bills(Resource):
                 houses.append(dict_obj)
             return render_template("ajax_bill_houses.html",houses=houses)
 
+        if target == "props":
+            props = fetch_all_apartments_by_user(current_user)
+            houses = []
+            for item in props:
+                dict_obj = {
+                    "name": item,
+                    "id":item.id
+                }
+                houses.append(dict_obj)
+            return render_template("ajax_bill_props.html",houses=houses)
+
         # update_login_history("invoice",current_user)
 
 

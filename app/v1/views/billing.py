@@ -345,6 +345,8 @@ class CreateInvoices(Resource):
     def post(self):
         propid = request.form.get("propid")
         date = request.form.get("date")
+        allprops = request.form.get("allprops")
+        props = request.form.get("props")
         houses = request.form.get("houses")
         level = request.form.get("level")
         target = request.form.get("target")
@@ -357,12 +359,32 @@ class CreateInvoices(Resource):
         else:
             rent_bill = pr_rent[0]
 
-        print("APARTMENT ID TO BILL IS>>>>",propid)
 
-        apartment_id = get_identifier(propid)
+        if allprops:
+            propids = [item.id for item in fetch_all_apartments_by_user(current_user)]
+            print("initial propids: ", propids)
 
-        prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
-        ApartmentOp.update_billing_progress(prop,"queued")
+            apartment_id = None
+            prop = None
+
+            if props:
+                try:
+                    propids = [int(s) for s in props.split(',')]
+                    print("MULTIPLE PROPIDS",propids)
+                except Exception as e:
+                    print("ERROR in generating MULTIPLE propids >>>", str(e))
+
+
+            print("final propids: ", propids)
+            props_to_bill = propids
+
+                
+        else:
+            print("APARTMENT ID TO BILL IS>>>>",propid)
+
+            apartment_id = get_identifier(propid)
+
+            props_to_bill =[apartment_id]
 
         try:
             billdate = date_formatter(date)
@@ -372,6 +394,7 @@ class CreateInvoices(Resource):
 
         if not bill_date:
             bill_date = current_user.company.billing_period
+
 
         houseids = []
 
@@ -394,9 +417,13 @@ class CreateInvoices(Resource):
 
         print("PRORATA >>>>>>>",rent_bill)
 
-        billjob = q.enqueue_call(
-            func=main_total_bill, args=(apartment_id,houseids,rent_bill,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
-        )
+        for apartment_id in props_to_bill:
+            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            ApartmentOp.update_billing_progress(prop,"queued")
+
+            billjob = q.enqueue_call(
+                func=main_total_bill, args=(apartment_id,houseids,rent_bill,current_user.id,bill_date.month,bill_date.year,), result_ttl=5000
+            )
 
 
 class ClientBilling(Resource):

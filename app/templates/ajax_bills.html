@@ -75,6 +75,15 @@
                 </div>
 
               </nav>
+
+              <div class="pb-1 bg-white">
+                <div class="mb-1">
+                  <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#generateInvoicesModal">
+                    <i class="me-1 feather-18" data-feather="fast-forward"></i>
+                    Generate all
+                  </span>
+                </div>
+              </div>
               
             </div>
 
@@ -232,6 +241,64 @@
                     <div class="mt-2 divbg">
                       <div>
                         <span id="generatebtn" type="button" class="btn btn-sm btn-danger text-gray-danger">Generate</span>
+                      </div>
+  
+                      <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
+  
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="generateInvoicesModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info h4 text-uppercase" id="paymentDetailModalLabel">Generate invoices</h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <div class="mb-3 mt-3 h5">
+                      <span class="text-black">Current period: <span class="text-info underline">{{current_month}} </span></span>
+                    </div>
+
+
+                  <div class="mb-1 smallify">
+                    <input type="checkbox" name="" id="diffperiodall">
+                    <label class="mr-3 me-3 text-danger" for="diffperiodall">Bill different period?</label>
+                    <input id="billdatepickerall" class="ph dispnone" type="text" placeholder="choose date..." readonly />
+                    
+                  </div>
+  
+
+                    
+
+                    <div class="mb-2 smallify">
+                      <input type="checkbox" name="" id="billallprops" checked>
+                      <label class="mr-3 me-3 text-danger" for="billallprops">Bill all properties</label>
+                    </div>
+
+                    <fieldset id="propfield" class="mt-2 dispnone">
+                      <legend class="legend">Select properties:</legend>
+                      <div id="propbed" class="mt-"></div>
+                    </fieldset>
+
+    
+                    <div class="mt-2 divbg">
+                      <div>
+                        <span id="generateallbtn" type="button" class="btn btn-sm btn-danger text-gray-danger">Generate</span>
                       </div>
   
                       <button class="btn btn-sm btn-light dismissparent" type="button" data-dismiss="modal"></i>Dismiss</button>
@@ -455,6 +522,12 @@
     todayHighlight: true,
     format: "dd-mm-yyyy"
   });
+
+  $("#billdatepickerall").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "dd-mm-yyyy"
+  });
 </script>
 
 <script>
@@ -485,6 +558,23 @@
         }
     });
   });
+
+
+  $("#generateInvoicesModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.bills') }}",
+      type: "get",
+      data: {
+            target:"props"
+          },
+      success: function(response) {
+        $("#propbed").html(response);
+      },
+      error: function(xhr) {
+        alert("Error")
+        }
+    });
+  });
 </script>
 
 <script type="text/javascript">
@@ -498,6 +588,15 @@
     }
   });
 
+  $('#diffperiodall').change(function () {
+    if (this.checked) {
+      $("#billdatepickerall").removeClass("dispnone")
+    }
+    else {
+      $("#billdatepickerall").addClass("dispnone")
+    }
+  });
+
   $('#billall').change(function () {
     if (this.checked) {
       $("#housefield").addClass("dispnone")
@@ -507,21 +606,30 @@
     }
   });
 
-  $("#showbutton").click(function () {
-    var favorite = [];
-    $.each($("input[name='billhouse']:checked"), function () {
-      console.log(this.value);
-      favorite.push($(this).val());
-    });
-    console.log("My favourite sports are: " + favorite.join(", "));
+  $('#billallprops').change(function () {
+    if (this.checked) {
+      $("#propfield").addClass("dispnone")
+    }
+    else {
+      $("#propfield").removeClass("dispnone")
+    }
   });
+
+  // $("#showbutton").click(function () {
+  //   var favorite = [];
+  //   $.each($("input[name='billhouse']:checked"), function () {
+  //     console.log(this.value);
+  //     favorite.push($(this).val());
+  //   });
+  //   console.log("My favourite sports are: " + favorite.join(", "));
+  // });
 </script>
 
 
 
 <script>
   $("#generatebtn").click(function () {
-    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>billing');
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>generating');
     $("#"+$("#bill_prop_identifier").text()).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>queuing');
 
     var houselist = [];
@@ -553,6 +661,7 @@
             if (response == "completed"){
               clearInterval(billingpoll);
 
+              $(this).html('Generate');
 
               $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
               $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
@@ -609,6 +718,76 @@
 </script>
 
 
+<script>
+  $("#generateallbtn").click(function () {
+    $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>generating');
+
+
+    $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
+    $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+
+    $("#activeprop").empty();
+
+
+    $("#propdisp").removeClass("dispnone")
+    $("#body-block").addClass("dispnone")
+    $("#proplist").addClass("dispnone")
+    $("#searchresults").addClass("dispnone")
+
+    $("#dummyData").removeClass('dispnone');
+    $("#barloader-alt").removeClass("dispnone")
+
+    $("#searchresults").empty()
+
+
+    var proplist = [];
+
+    $.each($("input[name='billprop']:checked"), function () {
+      proplist.push($(this).val());
+    });
+
+    $.ajax({
+      url: "/create/invoices",
+      type: "POST",
+      data: {
+        allprops:"allprops",
+        props:proplist.join(", "),
+        date:$("#billdatepickerall").val()
+      },
+      success: function (response) {
+        $(".dismissparent").click();
+        $(this).html('Generate');
+
+        setTimeout(function () {
+
+          url = "{{ url_for('api.bills') }}"
+
+          $.ajax({
+              type: "get",
+              url: url,
+              data: {
+                target:"tenants"
+              },
+              success: function(response) {
+                  $("#barloader-alt").addClass("dispnone")
+                  $("#title-loader").removeClass("title-loading");$("#title-loader").addClass("title-loaded");
+
+                  $('.modal-backdrop').removeClass('modal-backdrop');
+                  $('body').removeClass('modal-open');
+
+                  $("#dummyData").addClass('dispnone');
+
+                  $("#propdisp-content").html(response);
+              }
+          });
+
+        }, 5000)
+      }
+    });
+  })
+
+</script>
 
 
 <script>
@@ -967,7 +1146,9 @@
   
   </script> -->
 
-
+<script>
+  feather.replace()
+</script>
 
 
 

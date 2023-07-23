@@ -6813,6 +6813,134 @@ class MpesaStatement2(Resource):
         ))
 
 
+class Financials(Resource):
+    @login_required
+    def get(self):
+
+        prop = request.args.get("prop")
+
+        shiftstart = request.args.get("shiftstart")
+        shiftend = request.args.get("shiftend")
+
+        begin_t = request.args.get("begin")
+        end_t = request.args.get("end")
+
+        props = fetch_all_apartments_by_user(current_user)
+
+        # tills = [shortcode.shortcode for shortcode in shortcodes]
+
+        props.append("All")
+
+        if not prop:
+
+            return Response(render_template(
+                'report_financials.html',
+                props=props,
+                name=current_user.name,
+                co=current_user.company,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1]
+            ))
+
+        # start = request.args.get("from")
+
+        # if not start:
+        #     begin_date_month = datetime.datetime.now().month
+        #     begin_date_year = datetime.datetime.now().year
+        #     begin_date = generate_start_date(begin_date_month, begin_date_year)
+        # else:
+        #     begin = date_formatter_alt(start)
+        #     begin_date = parse(begin)
+
+        # end_date = begin_date.date() + datetime.timedelta(days=29)
+
+        # month_range = [(begin_date.date() + datetime.timedelta(days=x)).month for x in range(0, (end_date-begin_date.date()).days+1)]
+        # year_range = [(begin_date.date() + datetime.timedelta(days=x)).year for x in range(0, (end_date-begin_date.date()).days+1)]
+
+        if not shiftstart:
+            return "shift not specified"
+        else:
+            str_start = date_formatter_weekday(shiftstart)
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + begin_t
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_weekday(shiftend)
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + end_t
+
+            end = parse(timestring)
+
+        # print("start: ",start, "end: ",end)
+
+        prop_obj = None
+
+        if prop == "All":
+            rpayments = [item.payment_data for item in fetch_all_apartments_by_user(current_user)]
+            payments = flatten(rpayments)
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            if prop_obj:
+                payments = prop_obj.payment_data
+            else:
+                print("Properties not found")
+                payments = []
+
+
+        main = []
+        total = 0.0
+        for bill in payments:
+            if bill.voided:
+                continue
+
+            # str_t = bill.trans_time
+            # try:
+            #     year = str_t[:4]
+            #     month = str_t[4:6]
+            #     day = str_t[6:8]
+            #     hour = str_t[8:10]
+            #     minute = str_t[10:12]
+            #     second = str_t[12:14]
+            #     ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+            # except:
+            #     ftime = self.post_date
+
+            ftime=bill.pay_date
+
+            if ftime > start and ftime < end:
+                total += bill.amount
+                main.append(bill)
+
+        cbids_dicts = payment_details(main)
+
+        str_day = start.day
+        str_year = start.year
+                
+        ########################################################
+        # timeline = f'{begin_date.strftime("%b/%y")} to {end_date.strftime("%b/%y")}'
+        timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
+
+        if prop == "All":
+            prop = ""
+
+        ########################################################
+
+        return Response(render_template(
+            'report_financials.html',
+            bills=cbids_dicts,
+            total=f"{total:,.1f}",
+            prop=prop,
+            props=props,
+            name=current_user.name,
+            timeline=timeline,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company
+        ))
+
 class BookingSchedule(Resource):
     @login_required
     def get(self):

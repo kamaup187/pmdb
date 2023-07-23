@@ -337,6 +337,7 @@ api.add_resource(SalesStatement,"/sales/statement")
 api.add_resource(BookingSchedule,"/booking/schedule")
 api.add_resource(MpesaStatement,"/mpesa/statement")
 api.add_resource(MpesaStatement2,"/mpesa/statement2")
+api.add_resource(Financials,"/financials")
 
 api.add_resource(MeritStatementOne,"/st/one")
 

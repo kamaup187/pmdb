@@ -1,0 +1,550 @@
+{% extends 'basereport.html' %}
+
+{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+
+<span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="filename" class="dispnone">{{timeline}} payments statement.pdf</span>
+
+<style>
+  input[type=time] {
+  border: none;
+  /* border-radius: 5%; */
+  color: #2a2c2d;
+  font-size: 14px;
+  font-family: helvetica;
+  width: 100%;
+}
+</style>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="formwrapper">
+            <div class="card bt-none noprint">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-light underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">payments Statement Report</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                  </div>
+                </a>
+                
+                <div class="divjust-end">
+                  <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                </div>
+                
+
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="noprint" id="collapseCardExample">
+                <div class="card-body p-0">
+                    <form class="row bg-light" method="GET" action="/financials">
+
+                    
+                      <div class="col-lg-3 form-group mb-2">
+                        <label class="mb-0">Select Property:</label>
+                        <select name="prop" class="select-css" id="prop" required>
+                          <option disabled selected value> select property </option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    
+                      <!-- <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                        <label class="mb-0">Select month:</label>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div> -->
+
+                      <div class="col-lg-3 form-group input-icons">
+                        <span class="divjust-end">
+                          <span class="text-danger font-weight-bold">Start date</span>
+                          <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
+                        </span>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
+                          <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                          <input class="form-contro ph" type="time" name="begin" min="00:00" max="24:00" value="10:00">
+
+                        </div>
+                      </div>
+
+                      <div class="col-lg-3 form-group input-icons">
+                        <span class="divjust-end">
+                          <span class="text-danger font-weight-bold">End date</span>
+                          <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
+                        </span>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
+                          <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                          <input class="form-contro ph" type="time" name="end" min="00:00" max="24:00" value="10:00">
+
+                        </div>
+                      </div>
+                    
+                      <div class="col-lg-2 form-group mb-2">
+                        <button type="submit" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}}/>
+              </div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <span class="font-weight-bold text-white"><span class="mt-3">PAYMENTS RECONCILIATION STATEMENT REPORT FOR {{timeline}}</span></span>
+          </div>
+
+          
+          
+          
+          <div class="divjust-end">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  {%if prop%}
+                  <span class="mr-1">PROPERTY: {{prop}}</span>
+                  {%endif%}
+                </div>
+
+              </div>
+            </div>
+                    
+          </div>
+
+          <!-- <div class="center-btn mb-4 mt-4">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div> -->
+
+                    
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <!-- <th class="">DATE</th>
+                      <th class="">TIME</th> -->
+                      <th class="">DATE</th>
+                      {%if not prop%}
+                      <th class="">PROPERTY</th>
+                      {%endif%}
+
+                      <th class="">REF</th>
+                      <th class="">MODE</th>
+
+                      <th class="">CLIENT</th>
+                      <th class="">CONTACT</th>
+                      <th class="">AMOUNT</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['stamp'] }}</td>
+                      <!-- <td class="data-cell text-left">{{ bill['time']}}</td> -->
+
+                      {%if not prop%}
+                      <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                      {%endif%}
+                      <td class="data-cell text-left">{{ bill['ref'] }}</td>
+
+                      <td class="data-cell text-left">{{ bill['mode'] }}</td>
+                      <td class="data-cell text-center">{{bill['tenant']}}</td>
+                      <td class="data-cell text-right">{{ bill['phone'] }}</td>
+                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                    </tr>
+                  {% endfor %}
+    
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td class="font-weight-bold">TOTALS ...</td>
+                      <!-- <td class="font-weight-bold"></td> -->
+    
+                      {%if not prop%}
+                      <td class="font-weight-bold"></td>
+                      {%endif%}
+
+                      <td class="font-weight-bold"></td>
+
+                      <td colspan="3" class="font-weight-bold"></td>
+                      
+                      <td class="font-weight-bold text-right">{{total}}</td>
+    
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+
+          <div class="divjust-end ln-16 mobile-malaysian">
+            <div class="mt-4">
+
+              <div class="mb-2">
+                <div class="text-black-bold">
+                  Prepared By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Checked By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                  <div class="ln-10">__________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Approved By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="text-black-bold">
+                  Date:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+  
+            </div>
+
+
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12  dispnone printdisplay text-uppercase">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+         
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <span class="font-weight-bold text-white"><span class="mt-3">PAYMENTS RECONCILIATION STATEMENT REPORT FOR {{timeline}}</span></span>
+          </div>
+
+          <div class="mb-2 mt-1">
+            <div class="ln-16">
+              {%if prop%}
+              <span class="mr-1">PROPERTY: {{prop}}</span>
+              {%endif%}
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">DATE</th>
+                  <!-- <th class="">TIME</th> -->
+
+                  {%if not prop%}
+                  <th class="">PROPERTY</th>
+                  {%endif%}
+
+                  <th class="">REF</th>
+                  <th class="">MODE</th>
+
+                  <th class="">CLIENT</th>
+                  <th class="">CONTACT</th>
+                  <th class="">AMOUNT</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="data-cell text-center">{{ bill['stamp'] }}</td>
+                  <!-- <td class="data-cell text-left">{{ bill['time']}}</td> -->
+                  {%if not prop%}
+                  <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                  {%endif%}
+                  
+                  <td class="data-cell text-left">{{ bill['ref'] }}</td>
+                  <td class="data-cell text-left">{{ bill['mode'] }}</td>
+                  <td class="data-cell text-center">{{bill['tenant']}}</td>
+                  <td class="data-cell text-right">{{ bill['phone'] }}</td>
+                  <td class="data-cell text-right">{{ bill['amount'] }}</td>
+
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td class="font-weight-bold">TOTALS ...</td>
+                  <!-- <td class="font-weight-bold"></td> -->
+
+                  {%if not prop%}
+                  <td class="font-weight-bold"></td>
+                  {%endif%}
+
+                  <td class="font-weight-bold"></td>
+
+                  <td colspan="3" class="font-weight-bold"></td>
+                  
+                  <td class="font-weight-bold text-right">{{total}}</td>
+
+
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              <div class="mt-4">
+
+                <div class="mb-2">
+                  <div class="text-black-bold">
+                    Prepared By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                    <div class="ln-10">__________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Checked By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                    <div class="ln-10">__________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Approved By:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="text-black-bold">
+                    Date:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+    
+              </div>
+  
+            </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  // $("#month").datepicker({ 
+  //   autoclose: true, 
+  //   todayHighlight: true,
+  //   format: "mm-yyyy",
+  //   startView: "months", 
+  //   minViewMode: "months"
+  // });
+
+
+
+
+
+
+
+
+
+  $("#checkindate").datepicker({
+    autoclose: true,
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy"
+  }).on('changeDate', function (e) {
+    var checkin = $(this).datepicker('getDate')
+    checkin.setDate(checkin.getDate() + 1);
+    $("#checkoutdate").datepicker("setDate", checkin); //set default checkoutdate
+  });
+
+  $("#checkoutdate").datepicker({
+    autoclose: true,
+    format: "DD, dd-mm-yyyy"
+  });
+
+
+  var date = new Date();
+  date.setDate(date.getDate());
+  $("#checkindate").datepicker("setDate", date); //set default checkindate
+
+  date.setDate(date.getDate() + 1);
+  $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
+
+
+
+// function checkTimeAlt(i) {
+//   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+//   return i;
+// }
+// function appendTime(){
+//   var now = new Date();
+//   var hr = now.getHours();
+//   var mm = now.getMinutes();
+
+//   hr = checkTimeAlt(hr);
+//   mn = checkTimeAlt(mm);
+
+//   $("#checkintime").val(hr + ":" + mm)
+// }
+// appendTime()
+</script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

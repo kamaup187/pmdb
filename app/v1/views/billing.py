@@ -2584,14 +2584,14 @@ class ReceivePayment(Resource):
                     edit = ""
 
                 if localenv:
-                    # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
+                    return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
 
-                    order = {
-                        "dep":2,
-                        "garb":1,
-                        "rent":3
-                    }
-                    return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
+                    # order = {
+                    #     "dep":2,
+                    #     "garb":1,
+                    #     "rent":3
+                    # }
+                    # return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
 
                 return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
 

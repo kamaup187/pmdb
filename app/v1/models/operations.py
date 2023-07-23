@@ -4502,6 +4502,14 @@ class PaymentOp(Payment,Base):
             fname = self.house.owner.name.title()
 
         return fname
+    
+    def get_tenant_tel(self):
+        if self.tenant:
+            fname = self.tenant.phone
+        else:
+            fname = self.house.owner.phone
+
+        return fname
 
     def highlight(self):
         if self.balance:
@@ -4564,15 +4572,19 @@ class PaymentOp(Payment,Base):
         else:
             return "Instalment payment"
 
-    
+    def get_pay_timestamp(self):
+        return self.pay_date.strftime("%d/%m/%Y %X")
+
     def view(self):
         return {
             'id':self.id,
             'editid':PaymentOp.generate_editid(self),
             'delid':PaymentOp.generate_delid(self),
             'tenant':PaymentOp.get_names(self),
+            'phone':PaymentOp.get_tenant_tel(self),
             'tenant-alt':PaymentOp.get_names(self),
             'house':self.house.name,
+            'prop':self.apartment.name,
             'hst':PaymentOp.combine_house_tenant_alt(self),
             'mode':PaymentOp.fname_extracter(self.paymode),
             'payid':self.id,
@@ -4586,6 +4598,7 @@ class PaymentOp(Payment,Base):
             'instalment':self.instalment_paid,
             'comments':PaymentOp.comments(self),
             'month':PaymentOp.get_month(self),
+            'stamp':PaymentOp.get_pay_timestamp(self),
             'date':PaymentOp.get_date_time(self)[0],
             'time':PaymentOp.get_date_time(self)[1],
             'balance':PaymentOp.fig_format(self.balance),

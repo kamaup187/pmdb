@@ -412,7 +412,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="tenantClearanceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="tenantClearanceModall" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
@@ -443,6 +443,226 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal" id="tenantClearanceModal" data-easein="expandIn" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h5 class="modal-title text-danger divjust-end">
+              <span class="mr-3 smallify"> <span><i class="feather-24 pb-1 text-danger" data-feather="server"></i></span> Tenant Clearance Form</span>
+              <div>
+                <button class="btn btn-sm mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white dismissmodal" type="button" data-dismiss="modal"><i class="feather-32 pb-1 text-danger" data-feather="x"></i></button>
+              </div>
+            </h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-1">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+  
+                    <div id="workarea" class="container-xl px-4 mt-2">
+
+                          <div class="card mb-2">
+                            <div class="card-header text-malibu-green divjust-end"><span>Tenant Name: </span> <span id="postingbranch" class="text-malibu-blue font-weight-bold">Paul Kibugee</span>
+                            </div>
+                        </div>
+  
+                          <div class="card mb-2">
+                            <div class="card-header text-malibu-green divjust-end"><span>House/Unit: </span> <span id="deliveryitype" class="text-malibu-blue font-weight-bold">H5</span></div>
+                        </div>
+
+                        <form class="scrollable-modal" autocomplete="off">
+
+              
+                        <div class="card mb-2">
+                          <div id="toggle-depositcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Deposit Held: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                          <div class="card-body collapsible collapse">
+                            <div class="form-group">
+                              
+                              <div class="mb-2">
+                                <span class="text-black">Deposit breakdown</span>
+                                  
+                                  <div class="gx-3 mb-1">
+                                      <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
+                                      <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                                      
+                                  </div>
+
+                                <div class="gx-3 mb-1">
+                                      <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
+                                      <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                      </div>
+
+
+                      <div class="card mb-2">
+                        <div id="toggle-balancecard" class="card-header text-malibu-green divjust-end prevent-select"><span>Outstanding balance/Arrears : </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                        <div class="card-body collapsible collapse">
+                          <div class="form-group">
+                            <div class="mb-2">
+                              <span class="text-black">Balance breakdown</span>
+                                
+                                <div class="gx-3 mb-1">
+                                    <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
+                                    <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                                    
+                                </div>
+
+                              <div class="gx-3 mb-1">
+                                    <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
+                                    <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card mb-2">
+                      <div id="toggle-repaircard" class="card-header text-malibu-green divjust-end prevent-select"><span>Repairs & Maintenance: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                      <div class="card-body collapsible collapse">
+                        <div class="form-group">
+                          
+                          <div class="mb-2">
+                            <span class="text-black">Repairs breakdown</span>
+                              
+                              <div class="gx-3 mb-1">
+                                  <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
+                                  <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                                  
+                              </div>
+
+                            <div class="gx-3 mb-1">
+                                  <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
+                                  <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                            </div>
+
+                          </div>
+
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class="card mb-2">
+                    <div id="toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                    <div class="card-body collapsible collapse">
+                      <div class="form-group">
+                        
+                        <div class="mb-2">
+                          <span class="text-black">Breakdown</span>
+                            
+                            <div class="gx-3 mb-1">
+                                <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
+                                <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                                
+                            </div>
+
+                          <div class="gx-3 mb-1">
+                                <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
+                                <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+  
+                  <div class="card mb-4">
+                      <div class="card-header text-black font-weight-bold divjust-end h4"><span >Amount due: </span> <span class="d-inline-block ml-2 text-malibu-blue font-weight-bold" id="dtype">65,000</span>
+                      </div>
+                      <div class="card-body">
+
+                        <div class="gx-3 mb-1">
+                          <label class="small text-malibu-blue mb-1" for="customername">Deduct from deposit</label>
+                          <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                        </div>
+
+                        <div class="gx-3 mb-1">
+                          <label class="small text-malibu-blue mb-1" for="customername">Closing balance</label>
+                          <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                        </div>
+
+                          <div class="">
+                            <div class="gx-3 mb-1">
+                                  <label class="small text-malibu-blue mb-1" for="postcomment">Comments <span id="toggle-comment" class="prevent-select font-italic text-primary small">-more-</span> </label>            
+                                  <textarea class="form-control optional dispnone" id="postcomment" type="text" placeholder="E.g Client feedback (optional)"></textarea>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                      </form>
+  
+                      <div class="mb-4">
+                        <button id="postorder" class="btn btn-danger btn-sm form-control font-weight-bold text-white" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="log-out"></i> clear tenant</span> </button>
+                      </div>
+  
+                  </div>
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- <div class="mt-1 text-right">
+              <button id="" class="btn btn-danger btn-sm text-white" data-dismiss="modal" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="slash"></i> cancel posting</span> </button>
+            </div> -->
+   
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script>
+      var toogleIds = ["toggle-depositcard","toggle-balancecard","toggle-repaircard","toggle-additionalcard"]
+      $.each(toogleIds, function(i,item) {
+        $("#"+item).on('click',function(){
+
+          $(".collapsible").removeClass("active");
+          $(this).next().addClass("active");
+
+
+          $(".collapsible").not(".active").addClass("collapse");
+          $(this).next().toggleClass("collapse");
+
+          // if($(this).next().hasClass("collapse")){$(this).find("span.hideshow").text("-more details-")}else{$(this).find("span.hideshow").text("-hide details-")}
+
+
+          if($(this).next().hasClass("collapse")){$(this).next().removeClass("active")}else{$(this).next().addClass("active");}
+
+          if($(".collapsible").hasClass("active")){
+            console.log("yararayara")
+            $(".collapsible").prev().find("span.hideshow").text("-hide details-")
+          }else{
+            console.log("kweekweee")
+            $(".collapsible").prev().find("span.hideshow").text("-more details-")
+          }
+     
+        });
+      })
+  
+      // $("#toggle-depositcard").on('click', function() {
+      //   $(this).next().addClass("active");
+
+      //   $(".collapsible").not(".active").addClass("collapse");
+        
+      //   $(this).next().toggleClass("collapse");
+
+      //   if($(this).next().hasClass("collapse")){$(this).find("span#hideshow").text("-show details-")}else{$(this).find("span#hideshow").text("--hide details--")}
+      // })
+    </script>
 
     <div class="text-center">
       <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">

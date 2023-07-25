@@ -4454,48 +4454,59 @@ def send_bulk_sms(propid,temp_txt):
 
                     smsperiod = generate_date(prop.billing_period.month, prop.billing_period.year)
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
-                    sms_obj.save()
+                    # sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                    # sms_obj.save()
 
                     # allowed = True
                     # if allowed:
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
-                    elif co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
+                        res = update_sms_units(co,message)
+
+                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                        sms_obj.save()
+
+                    else:
                         sms_sender(co.name,message,phonenum)
+                        res = update_sms_units(co,message)
+
+                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                        sms_obj.save()
+
+                    # elif co.sms_provider == "Advanta" or prop.name == "Greatwall Gardens 2":
 
                     # if co.name == "Lesama Ltd":
                     #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
                     # elif co.name == "KEVMA REAL ESTATE":
                     #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-                    else:
-                        #Once this is done, that's it! We'll handle the rest
-                        response = sms.send(message, recipient, sender)
-                        print(response)
-                        resp = response["SMSMessageData"]["Recipients"][0]
+                    # else:
+                    #     #Once this is done, that's it! We'll handle the rest
+                    #     response = sms.send(message, recipient, sender)
+                    #     print(response)
+                    #     resp = response["SMSMessageData"]["Recipients"][0]
                                                         
-                        code = resp["statusCode"]
+                    #     code = resp["statusCode"]
 
-                        if code == 101: # SMS WAS SENT
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
-                            print("EVERYTHING IS SMOOTH")
+                    #     if code == 101: # SMS WAS SENT
+                    #         raw_cost = resp["cost"]
+                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    #         CompanyOp.set_rem_quota(co,rem_sms)
+                    #         print("EVERYTHING IS SMOOTH")
                             
-                        elif code == 403:
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    #     elif code == 403:
+                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
-                        elif code == 405:
-                            response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
-                            print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    #     elif code == 405:
+                    #         response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
-                        elif code == 406:
-                            raw_cost = resp["cost"]
-                            rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                            CompanyOp.set_rem_quota(co,rem_sms)
-                            print("SMS BLOCKED BY ",tenant_obj,prop)
-                        else:
-                            print("ALAAAAAAAA")
+                    #     elif code == 406:
+                    #         raw_cost = resp["cost"]
+                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    #         CompanyOp.set_rem_quota(co,rem_sms)
+                    #         print("SMS BLOCKED BY ",tenant_obj,prop)
+                    #     else:
+                    #         print("ALAAAAAAAA")
 
                 except Exception as e:
                     print(f"Houston, we have a problem {e}")
@@ -4572,14 +4583,23 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
 
                     smsperiod = generate_date(prop.billing_period.month, prop.billing_period.year)
                     
-                    sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
-                    sms_obj.save()
+                    # sms_obj = SentMessagesOp(message,char_count,cost,smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                    # sms_obj.save()
 
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
+                        res = update_sms_units(co,message)
+
+                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                        sms_obj.save()
+
                     # elif co.sms_provider == "Advanta":
                     else:
                         sms_sender(co.name,message,phonenum)
+                        res = update_sms_units(co,message)
+
+                        sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,prop.id,co.id)
+                        sms_obj.save()
 
                     # else:
                     #     #Once this is done, that's it! We'll handle the rest

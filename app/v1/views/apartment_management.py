@@ -3998,9 +3998,9 @@ class BulkSms(Resource):
         if target == "general":
             if not propid:
                 return failure
-            # job8 = q.enqueue_call(
-            #     func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
-            # )
+            job8 = q.enqueue_call(
+                func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
+            )
             text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
             response = sms.send(text, ["+254716674695"],sender)
 

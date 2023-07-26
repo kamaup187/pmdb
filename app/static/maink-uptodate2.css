@@ -1558,6 +1558,9 @@ i:hover {
 .full-w {
   width: 98% !important;
 }
+.noborder{
+  border-style: none !important;
+}
 .borderless {
   border-style: none;
   border-radius: 5px;

@@ -1,0 +1,30 @@
+      {% if dep.rentdep%}
+      <div class="gx-3 mb-1">
+          <label class="small text-malibu-blue mb-1" for="rentdep_breakdown">Rent deposit</label>
+          <input class="form-control text-right" id="rentdep_breakdown" type="text" value="{{dep.rentdep}}" placeholder="E.g 25,000" />
+          
+      </div>
+      {% endif %}
+
+      {% if dep.waterdep%}
+
+    <div class="gx-3 mb-1">
+          <label class="small text-malibu-blue mb-1" for="waterdep_breakdown">Water deposit</label>            
+          <input class="form-control text-right" id="waterdep_breakdown" type="text" value="{{dep.waterdep}}" placeholder="E.g 1,500" />
+    </div>
+    {% endif %}
+    {% if dep.elecdep%}
+    <div class="gx-3 mb-1">
+        <label class="small text-malibu-blue mb-1" for="elecdep_breakdown">Electricity deposit</label>
+        <input class="form-control text-right" id="elecdep_breakdown" type="text" value="{{dep.elecdep}}" placeholder="E.g 2,000" />
+        
+    </div>
+    {% endif %}
+
+    {% if dep.otherdep%}
+
+  <div class="gx-3 mb-1">
+        <label class="small text-malibu-blue mb-1" for="otherdep_breakdown">Other (service charge)</label>            
+        <input class="form-control text-right" id="otherdep_breakdown" type="text" value="{{dep.otherdep}}" placeholder="E.g 3,500" />
+  </div>
+  {% endif %}

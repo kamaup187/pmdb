@@ -431,7 +431,7 @@
                       <div id="clearance_notifications"></div>
                    
                       <div class="divbg center-btn">
-                        <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>
+                        <button id="clear_tenanttt" type="button" class="btn-danger borderless text-white">Clear</button>
                         <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
                       </div>
                     </form>
@@ -467,24 +467,24 @@
                     <div id="workarea" class="container-xl px-4 mt-2">
 
                           <div class="card mb-2">
-                            <div class="card-header text-malibu-green divjust-end"><span>Tenant Name: </span> <span id="postingbranch" class="text-malibu-blue font-weight-bold">Paul Kibugee</span>
+                            <div class="card-header text-malibu-green divjust-end"><span>Tenant Name: </span> <span id="clear_tenant_name" class="text-malibu-blue font-weight-bold">Paul Kibugee</span>
                             </div>
                         </div>
   
                           <div class="card mb-2">
-                            <div class="card-header text-malibu-green divjust-end"><span>House/Unit: </span> <span id="deliveryitype" class="text-malibu-blue font-weight-bold">H5</span></div>
+                            <div class="card-header text-malibu-green divjust-end"><span>House/Unit: </span> <span id="clear_tenant_house" class="text-malibu-blue font-weight-bold">H5</span></div>
                         </div>
 
                         <form class="scrollable-modal" autocomplete="off">
 
               
                         <div class="card mb-2">
-                          <div id="toggle-depositcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Deposit Held: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                          <div id="toggle-depositcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Deposit Held: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_deposits"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                           <div class="card-body collapsible collapse">
                             <div class="form-group">
                               
-                              <div class="mb-2">
-                                <span class="text-black">Deposit breakdown</span>
+                              <span class="text-black">Deposit breakdown</span>
+                              <div id="deposit_breakdown">
                                   
                                   <div class="gx-3 mb-1">
                                       <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
@@ -505,22 +505,26 @@
 
 
                       <div class="card mb-2">
-                        <div id="toggle-balancecard" class="card-header text-malibu-green divjust-end prevent-select"><span>Outstanding balance/Arrears : </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                        <div id="toggle-balancecard" class="card-header text-malibu-green divjust-end prevent-select"><span>Outstanding balance/Arrears : </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_arrears"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                         <div class="card-body collapsible collapse">
                           <div class="form-group">
                             <div class="mb-2">
                               <span class="text-black">Balance breakdown</span>
-                                
+
+                              <div id="balance_breakdown">
                                 <div class="gx-3 mb-1">
-                                    <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
-                                    <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                                    
-                                </div>
+                                  <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
+                                  <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
+                                  
+                              </div>
 
                               <div class="gx-3 mb-1">
                                     <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
                                     <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
                               </div>
+                              </div>
+                                
+
 
                             </div>
 
@@ -530,20 +534,20 @@
 
 
                     <div class="card mb-2">
-                      <div id="toggle-repaircard" class="card-header text-malibu-green divjust-end prevent-select"><span>Repairs & Maintenance: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                      <div id="toggle-repaircard" class="card-header text-malibu-green divjust-end prevent-select"><span>Repairs & Maintenance: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_repairs"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                       <div class="card-body collapsible collapse">
                         <div class="form-group">
                           
                           <div class="mb-2">
                             <span class="text-black">Repairs breakdown</span>
                               
-                              <div class="gx-3 mb-1">
+                              <div class="gx-3 mb-1 dispnone">
                                   <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
                                   <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
                                   
                               </div>
 
-                            <div class="gx-3 mb-1">
+                            <div class="gx-3 mb-1 dispnone">
                                   <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
                                   <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
                             </div>
@@ -555,20 +559,20 @@
                   </div>
 
                   <div class="card mb-2">
-                    <div id="toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold">45,000 <span class="hideshow font-italic small text-primary"> -more details-</span></span></div>
+                    <div id="toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_others"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                     <div class="card-body collapsible collapse">
                       <div class="form-group">
                         
                         <div class="mb-2">
                           <span class="text-black">Breakdown</span>
                             
-                            <div class="gx-3 mb-1">
+                            <div class="gx-3 mb-1 dispnone">
                                 <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
                                 <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
                                 
                             </div>
 
-                          <div class="gx-3 mb-1">
+                          <div class="gx-3 mb-1 dispnone">
                                 <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
                                 <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
                           </div>
@@ -579,32 +583,39 @@
                 </div>
   
                   <div class="card mb-4">
-                      <div class="card-header text-black font-weight-bold divjust-end h4"><span >Amount due: </span> <span class="d-inline-block ml-2 text-malibu-blue font-weight-bold" id="dtype">65,000</span>
+                      <div class="card-header text-black font-weight-bold divjust-end h4 prevent-select"><span >Amount due: </span> <span class="d-inline-block ml-2 text-malibu-blue font-weight-bold" id="clear_tenant_due">0.0</span>
                       </div>
                       <div class="card-body">
 
-                        <div class="gx-3 mb-1">
-                          <label class="small text-malibu-blue mb-1" for="customername">Deduct from deposit</label>
-                          <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                        </div>
-
-                        <div class="gx-3 mb-1">
-                          <label class="small text-malibu-blue mb-1" for="customername">Closing balance</label>
-                          <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                        </div>
-
-                          <div class="">
-                            <div class="gx-3 mb-1">
-                                  <label class="small text-malibu-blue mb-1" for="postcomment">Comments <span id="toggle-comment" class="prevent-select font-italic text-primary small">-more-</span> </label>            
-                                  <textarea class="form-control optional dispnone" id="postcomment" type="text" placeholder="E.g Client feedback (optional)"></textarea>
-                            </div>
+                          <div class="text-right prevent-select">
+                            <span class="">
+                              <input type="checkbox" id="deductdep" class="deductfromdep">
+                              <label for="deductdep">Deduct from deposit?</label> 
+                            </span>
                           </div>
+                          
+  
+                          <div class="gx-3 mb-1 prevent-select">
+                            <div class="text-malibu-blue text-right h5">Closing balance</div>
+                            <div id="clear_tenant_balance" class="text-malibu-blue text-right h5 underline-thin">0.0</div>
+                          </div>
+  
+                            <div class="">
+                              <div class="gx-3 mb-1">
+                                    <label class="small text-malibu-blue mb-1" for="postcomment">Comments <span id="toggle-comment" class="prevent-select font-italic text-primary small">-more-</span> </label>            
+                                    <textarea class="form-control optional dispnone" id="postcomment" type="text" placeholder="E.g Client feedback (optional)"></textarea>
+                              </div>
+                            </div>
+   
+                        </div>
+
+
                       </div>
-                  </div>
+                  
                       </form>
   
                       <div class="mb-4">
-                        <button id="postorder" class="btn btn-danger btn-sm form-control font-weight-bold text-white" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="log-out"></i> clear tenant</span> </button>
+                        <button id="clear_tenantt" class="btn btn-danger btn-sm form-control font-weight-bold text-white" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="log-out"></i> clear tenant</span> </button>
                       </div>
   
                   </div>
@@ -625,44 +636,6 @@
 
 
 
-    <script>
-      var toogleIds = ["toggle-depositcard","toggle-balancecard","toggle-repaircard","toggle-additionalcard"]
-      $.each(toogleIds, function(i,item) {
-        $("#"+item).on('click',function(){
-
-          $(".collapsible").removeClass("active");
-          $(this).next().addClass("active");
-
-
-          $(".collapsible").not(".active").addClass("collapse");
-          $(this).next().toggleClass("collapse");
-
-          // if($(this).next().hasClass("collapse")){$(this).find("span.hideshow").text("-more details-")}else{$(this).find("span.hideshow").text("-hide details-")}
-
-
-          if($(this).next().hasClass("collapse")){$(this).next().removeClass("active")}else{$(this).next().addClass("active");}
-
-          if($(".collapsible").hasClass("active")){
-            console.log("yararayara")
-            $(".collapsible").prev().find("span.hideshow").text("-hide details-")
-          }else{
-            console.log("kweekweee")
-            $(".collapsible").prev().find("span.hideshow").text("-more details-")
-          }
-     
-        });
-      })
-  
-      // $("#toggle-depositcard").on('click', function() {
-      //   $(this).next().addClass("active");
-
-      //   $(".collapsible").not(".active").addClass("collapse");
-        
-      //   $(this).next().toggleClass("collapse");
-
-      //   if($(this).next().hasClass("collapse")){$(this).find("span#hideshow").text("-show details-")}else{$(this).find("span#hideshow").text("--hide details--")}
-      // })
-    </script>
 
     <div class="text-center">
       <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
@@ -1377,6 +1350,45 @@
 
 
 <script>
+  var toogleIds = ["toggle-depositcard","toggle-balancecard","toggle-repaircard","toggle-additionalcard"]
+  $.each(toogleIds, function(i,item) {
+    $("#"+item).on('click',function(){
+
+      $(".collapsible").removeClass("active");
+      $(this).next().addClass("active");
+
+      $(".collapsible").not(".active").addClass("collapse");
+      $(this).next().toggleClass("collapse");
+
+      if($(this).next().hasClass("collapse")){$(this).next().removeClass("active")}else{$(this).next().addClass("active");}
+
+      $(".collapsible").not(".active").prev().find("span.hideshow").text("-more details-")
+      $(".collapsible.active").prev().find("span.hideshow").text("-hide details-")
+
+      if (item == "toggle-depositcard"){
+        if($(this).next().hasClass("active")){
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#del_tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"deposit breakdown"
+                },
+            success: function(response) {
+              $("#deposit_breakdown").html(response);
+            }
+          });
+        }
+      }
+ 
+    });
+  })
+
+</script>
+
+
+<script>
   // This script  performs actual allocation
   $("#allocatebtn").click(function(){   
     var cb = document.getElementById("migrate");
@@ -1422,27 +1434,68 @@
   $("#tenantClearanceModal").on('shown.bs.modal', function(){
     $.ajax({
       url: "{{ url_for('api.tenantclearance') }}",
-      type: "POST",
+      type: "get",
       data: {
             tenant_id: $("#del_tenant_identifier").text(),
             ttype:$("#ttype3").text(),
-            runalert:"somestring"
+            target:"general"          
           },
       success: function(response) {
-        $("#clearance_notifications").html(response);
-        $.ajax({
-                url: "{{ url_for('api.tenantclearance') }}",
-                type: "POST",
-                data: {
-                  tenant_id:$("#del_tenant_identifier").text(),
-                  ttype:$("#ttype3").text(),
-                  target:"tenant name"
-                },
-                success: function(response) {
+        $("#clear_tenant_name").text(response["name"]);
+        $("#clear_tenant_house").text(response["house"]);
+        $("#clear_tenant_deposits").text(response["deposits"]);
+        $("#clear_tenant_arrears").text(response["arrears"]);
+        $("#clear_tenant_repairs").text(response["repairs"]);
+        $("#clear_tenant_others").text(response["others"]);
+
+        var totalDue = parseFloat($("#clear_tenant_arrears").text().replace(/,/g,"")) + parseFloat($("#clear_tenant_repairs").text().replace(/,/g,""))
+        $("#clear_tenant_due").text(totalDue.toFixed(1))
+
+        $("#clear_tenant_balance").text(totalDue.toFixed(1))
+
+
+        $(".deductfromdep").change(function (e) {
+
+          //Getting status before unchecking all
+          var status = $(this).prop("checked");
+
+          $(".deductfromdep").prop('checked', false);
+          $(this).prop('checked', true);
+
+          //false means checkbox was checked and 
+          //became unchecked on change event, so let it stay unchecked
+          if (status === false) {
+            $(this).prop('checked', false);
+            $("#clear_tenant_balance").text(totalDue.toFixed(1))
+
+          }else{
+          var closingBalance = parseFloat($("#clear_tenant_due").text().replace(/,/g,"")) - parseFloat($("#clear_tenant_deposits").text().replace(/,/g,""))
+          $("#clear_tenant_balance").text(Math.round(closingBalance).toFixed(1))
+          }
+
+      });
+
+        // $.ajax({
+        //         url: "{{ url_for('api.tenantclearance') }}",
+        //         type: "POST",
+        //         data: {
+        //           tenant_id:$("#del_tenant_identifier").text(),
+        //           ttype:$("#ttype3").text(),
+        //           target:"tenant name"
+        //         },
+        //         success: function(response) {
                   
-                  $(".tenantname").html(response);
-                }
-              });   
+        //           $(".tenantname").html(response);
+        //         }
+        //       });   
+      },
+      error: function(){
+        $("#clear_tenant_name").text("!");
+        $("#clear_tenant_house").text("!");
+        $("#clear_tenant_deposits").text("!");
+        $("#clear_tenant_arrears").text("!");
+        $("#clear_tenant_repairs").text("!");
+        $("#clear_tenant_others").text("!");
       }
     });
   });

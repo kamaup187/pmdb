@@ -6822,7 +6822,37 @@ class AllocateTenants(Resource):
 class TenantClearance(Resource):
     @login_required
     def get(self):
-        pass
+        tenantid = request.args.get('tenant_id')
+        tenant_id = get_identifier(tenantid)
+        ttype = request.args.get("ttype")
+        target = request.args.get("target")
+
+
+
+        if ttype == "owner" or ttype == "resident":
+            abort(403)
+        else:
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            
+        if tenant_obj.multiple_houses:
+            abort(403)
+
+        if target == "general":
+
+            house_obj = check_house_occupied(tenant_obj)[1]
+            tdict = {
+                "name": tenant_obj.name,
+                "house": house_obj.name,
+                "deposits": f"{tenant_obj.deposits.total:,.1f}" if tenant_obj.deposits else "0.0",
+                "arrears": f"{tenant_obj.balance:,.1f}",
+                "repairs": "0.0",
+                "others" : "0.0"
+            }
+
+            return tdict
+        else:
+            return render_template("ajax_dynamic_deposits.html",dep=tenant_obj.deposits)
+
 
     @login_required
     def post(self):

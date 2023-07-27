@@ -3737,6 +3737,10 @@ def fetch_current_tenant_invoice(house_obj,tenant_obj):
         continue
     return None
 
+def fetch_latest_tenant_invoice(tenant_obj):
+    bills = tenant_obj.monthly_charges
+    return max(bills, key=lambda x: x.id) if bills else None
+
 def fetch_target_period_invoice(house_obj,period):
 
     bills = house_obj.monthlybills

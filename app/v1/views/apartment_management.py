@@ -6850,8 +6850,11 @@ class TenantClearance(Resource):
             }
 
             return tdict
-        else:
+        elif target == "deposit breakdown":
             return render_template("ajax_dynamic_deposits.html",dep=tenant_obj.deposits)
+        else:
+            bill = fetch_latest_tenant_invoice(tenant_obj)
+            return render_template("ajax_dynamic_invoice.html",bill=bill)
 
 
     @login_required

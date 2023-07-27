@@ -486,16 +486,7 @@
                               <span class="text-black">Deposit breakdown</span>
                               <div id="deposit_breakdown">
                                   
-                                  <div class="gx-3 mb-1">
-                                      <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
-                                      <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                                      
-                                  </div>
-
-                                <div class="gx-3 mb-1">
-                                      <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
-                                      <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
-                                </div>
+                                <div class="d-inline-block dot-elastic"></div>
 
                               </div>
 
@@ -512,16 +503,7 @@
                               <span class="text-black">Balance breakdown</span>
 
                               <div id="balance_breakdown">
-                                <div class="gx-3 mb-1">
-                                  <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
-                                  <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                                  
-                              </div>
-
-                              <div class="gx-3 mb-1">
-                                    <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
-                                    <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
-                              </div>
+                                <div class="d-inline-block dot-elastic"></div>
                               </div>
                                 
 
@@ -537,21 +519,14 @@
                       <div id="toggle-repaircard" class="card-header text-malibu-green divjust-end prevent-select"><span>Repairs & Maintenance: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_repairs"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                       <div class="card-body collapsible collapse">
                         <div class="form-group">
-                          
                           <div class="mb-2">
                             <span class="text-black">Repairs breakdown</span>
-                              
-                              <div class="gx-3 mb-1 dispnone">
-                                  <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
-                                  <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                                  
-                              </div>
 
-                            <div class="gx-3 mb-1 dispnone">
-                                  <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
-                                  <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                            <div id="repairs_breakdown">
+                              -
+                              <!-- <div class="d-inline-block dot-elastic"></div> -->
                             </div>
-
+                              
                           </div>
 
                         </div>
@@ -562,22 +537,16 @@
                     <div id="toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_others"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                     <div class="card-body collapsible collapse">
                       <div class="form-group">
-                        
                         <div class="mb-2">
                           <span class="text-black">Breakdown</span>
-                            
-                            <div class="gx-3 mb-1 dispnone">
-                                <label class="small text-malibu-blue mb-1" for="customername">Rent deposit</label>
-                                <input class="form-control text-right" id="customername" type="text" value="35,000" placeholder="E.g 25,000" />
-                                
-                            </div>
 
-                          <div class="gx-3 mb-1 dispnone">
-                                <label class="small text-malibu-blue mb-1" for="customernumber">Water deposit</label>            
-                                <input class="form-control text-right" id="customerphone" type="text" value="2,000" placeholder="E.g 1,500" />
+                          <div id="others_breakdown">
+                            -
+                            <!-- <div class="d-inline-block dot-elastic"></div> -->
                           </div>
-
+                            
                         </div>
+
                       </div>
                     </div>
                 </div>
@@ -1367,6 +1336,8 @@
 
       if (item == "toggle-depositcard"){
         if($(this).next().hasClass("active")){
+          $("#deposit_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+
           $.ajax({
             url: "{{ url_for('api.tenantclearance') }}",
             type: "get",
@@ -1377,6 +1348,24 @@
                 },
             success: function(response) {
               $("#deposit_breakdown").html(response);
+            }
+          });
+        }
+      }
+
+      if (item == "toggle-balancecard"){
+        if($(this).next().hasClass("active")){
+          $("#balance_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#del_tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"balance breakdown"
+                },
+            success: function(response) {
+              $("#balance_breakdown").html(response);
             }
           });
         }

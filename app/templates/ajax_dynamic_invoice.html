@@ -1,0 +1,99 @@
+      <div class="text-black font-weight-bold font-italic mb-3">Invoice month: {{bill.month}}/{{bill.year}}</div>
+      {% if bill.arrears%}
+      <div class="gx-3 mb-1">
+      <label class="small text-malibu-blue mb-1" for="arrears_breakdown">Arrears</label>
+      <input class="form-control text-right" id="arrears_breakdown" type="text" value="{{bill.arrears}}" placeholder="E.g 25,000" />
+      
+      </div>
+      {% endif %}
+
+
+      {% if bill.deposit%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="deposit_breakdown">Deposit charge</label>            
+            <input class="form-control text-right" id="deposit_breakdown" type="text" value="{{bill.deposit}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+      {% if bill.agreement%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="agreement_breakdown">Agreement fee</label>            
+            <input class="form-control text-right" id="agreement_breakdown" type="text" value="{{bill.agreement}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+      {% if bill.rent%}
+      <div class="gx-3 mb-1">
+          <label class="small text-malibu-blue mb-1" for="rent_breakdown">Rent</label>
+          <input class="form-control text-right" id="rentdep_breakdown" type="text" value="{{bill.rent}}" placeholder="E.g 25,000" />
+          
+      </div>
+      {% endif %}
+
+      {% if bill.water%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="water_breakdown">Water</label>            
+            <input class="form-control text-right" id="water_breakdown" type="text" value="{{bill.water}}" placeholder="E.g 1,500" />
+      </div>
+      {% endif %}
+
+    {% if bill.electricity%}
+    <div class="gx-3 mb-1">
+        <label class="small text-malibu-blue mb-1" for="electricity_breakdown">Electricity</label>
+        <input class="form-control text-right" id="electricity_breakdown" type="text" value="{{bill.electricity}}" placeholder="E.g 2,000" />
+        
+    </div>
+    {% endif %}
+
+      {% if bill.maintenace%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="service_breakdown">Service charge</label>            
+            <input class="form-control text-right" id="service_breakdown" type="text" value="{{bill.maintenance}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+      {% if bill.garbage%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="garbage_breakdown">Garbage</label>            
+            <input class="form-control text-right" id="garbage_breakdown" type="text" value="{{bill.garbage}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+      {% if bill.security%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="security_breakdown">Security charge</label>            
+            <input class="form-control text-right" id="security_breakdown" type="text" value="{{bill.security}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+      {% if bill.penalty%}
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="penalty_breakdown">Penalty charge</label>            
+            <input class="form-control text-right" id="penalty_breakdown" type="text" value="{{bill.penalty}}" placeholder="E.g 3,500" />
+      </div>
+      {% endif %}
+
+
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="total_breakdown">TOTAL DUE</label>            
+            <input class="form-control text-right ph-dark" id="penalty_breakdown" type="text" value="{{bill.total_bill}}" placeholder="E.g 3,500" />
+      </div>
+
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="paid_breakdown">PAID</label>            
+            <input class="form-control text-right" id="penalty_breakdown" type="text" value="{{bill.paid_amount}}" placeholder="E.g 3,500" />
+      </div>
+
+      <div class="gx-3 mb-1">
+            <label class="small text-malibu-blue mb-1" for="balance_breakdown">BALANCE</label>            
+            <input class="form-control text-right" id="penalty_breakdown" type="text" value="{{bill.balance}}" placeholder="E.g 3,500" />
+      </div>
+
+      <div class="divjust mt-2">
+            <button class="btn btn-sm text-success pb-0 pt-0">
+                  Update
+            </button>
+            <button class="btn btn-sm text-danger pb-0 pt-0">
+                  Delete
+            </button>
+      </div>

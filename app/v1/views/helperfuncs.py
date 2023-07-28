@@ -218,7 +218,7 @@ class TokenGen(object):
         self.expires_in = {}
         self.refresh_expires_in = 0
 
-    def create_access_token_data(self, data, grant_type, user_id):
+    def create_access_token_data(self, data, grant_type):
             """
             Create data needed by an access token.
 
@@ -237,7 +237,7 @@ class TokenGen(object):
             .. versionchanged:: 1.1.0
                 New parameters ``data`` and ``user_id``
             """
-            result = {"access_token": self.generate(data, user_id), "token_type": "Bearer"}
+            result = {"access_token": self.generate(data), "token_type": "Bearer"}
 
             if self.expires_in.get(grant_type, 0) > 0:
                 result["refresh_token"] = self.generate()
@@ -247,7 +247,7 @@ class TokenGen(object):
             return result
 
 
-    def generate(self, data=None, user_id=None):
+    def generate(self, data):
             """
             Implemented by generators extending this base class.
 
@@ -273,7 +273,7 @@ class GenerateToken(TokenGen):
         self.token_length = length
         TokenGen.__init__(self)
 
-    def generate(self, data=None, company_id=None):
+    def generate(self, data):
         """
         :return: A new token
         :rtype: str
@@ -283,14 +283,14 @@ class GenerateToken(TokenGen):
         return encoded_p
 
 
-def get_token(data=None, company_id=None):
+def get_token(ckey,skey):
     # a =GenerateToken()
     malibu = {
-        "ckey":"malibu",
-        "skey":"malibu"
+        "ckey":ckey,
+        "skey":skey
     }
     a=GenerateToken()
-    b = GenerateToken.create_access_token_data(a,malibu,"client_credentials",1)
+    b = GenerateToken.create_access_token_data(a,malibu,"client_credentials")
     print("",b)
     return b
 

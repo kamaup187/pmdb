@@ -7475,8 +7475,61 @@ class CallBackUrlEquityProd(Resource):
         response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
         resp = jsonify(response)
         return make_response(resp)
+    
 
+class Oauth2BankIntegration(Resource):
+    def get(self):
 
+        ckey = request.form.get("client_id")
+        skey = request.form.get("client_secret")
+        granttype = request.form.get("grant_type")
+        scope = request.form.get("scope")
+
+        if not ckey:
+            print("Fallback method used")
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            try:
+                data = json.loads(my_json)
+                print(data)
+
+                payload = f"Data received from family {data}"
+
+                advanta_send_sms(payload,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+
+                ckey = data.get("client_id")
+                skey = data.get("client_secret")
+                granttype = data.get("grant_type")
+                scope = data.get("scope")
+            except Exception as e:
+                print("ERR",e)
+                return "Unknown error"
+
+        print(ckey,"::::::::::::::::::::::::::::")
+        print(skey,"::::::::::::::::::::::::::::")
+
+        print(granttype,">>>>>>>>>>::::::::::::::::::::::::::::")
+        print(scope,">>>>>>>>>>::::::::::::::::::::::::::::")
+
+        if granttype != "client_credentials":
+            return "Invalid grant_type specified"
+        if scope != "FBL_COLLECTIONS":
+            return "Invalid scope specified"
+
+        print(ckey,"::::::::::::::::::::::::::::")
+        print(skey,"::::::::::::::::::::::::::::")
+
+        if ckey and skey:
+            return get_token(ckey,skey)
+        else:
+            return "Invalid client credentials"
+
+        # {  "client_id": "client@esb.familybank.co.ke", 
+        # "client_secret": "#secret123$", 
+        # "grant_type": "client_credentials", 
+        # "scope": "FBL_COLLECTIONS " }
+
+        
 class CallBackUrlTestMerit(Resource):
     def post(self):
         authenticated = False

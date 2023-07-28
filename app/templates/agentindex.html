@@ -2163,7 +2163,13 @@
       <div class="modal-content">
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Add/remove tenants</h5>
+          <h5 class="modal-title text-info divjust-end underline-thin-fade">
+            <span class="mr-3 smallify">Add new tenant/resident</span>
+            <div>
+              <!-- <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadTenantExcelModal"><i class="fa fa-upload"></i></button> -->
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
           <div class="alert-msgs"></div>
         </div>
         <div class="modal-body pt-0">
@@ -2171,9 +2177,121 @@
             <div class="media-body">
               <div class="position-relative">
                 <div class="card-body modal-forms">
-                  <div class="center-btn mb-3 mt-3">
-                    (<span class="text-black">Minified data version: <span class="text-info">Coming soon!</span></span>)
-                  </div>     
+                  <form autocomplete="off" method="POST" action="">
+   
+                    <div class="mt-2">
+  
+                      <div id="" class="fancy-checkbox-group form-control mb-2 divjust">
+                          <div>
+                            <input type="radio" id="" name="" value="tenant" checked/>
+                            <label for="">Tenant</label>
+                          </div>
+  
+                          <div>
+                            <input type="radio" id="" name="" value="owner"/>
+                            <label for="">Resident</label>
+                          </div>
+                             
+                      </div>
+                      
+                      <div class="form-group no-paddin input-icons">
+                        <span>Select house<span class="text-danger small">(mandatory)</span></span>
+                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="" >
+                          <option disabled selected value> loading... </option>
+                        </select>
+                        <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
+                      </div>
+  
+  
+                      <div class="tcheck">
+  
+                        <div class="row">
+                          
+                          <div class="col-6 form-group">
+                            <span class="divjust-end">
+                              <span class="text-black">Default rates (Monthly rent)</span>
+                            </span>
+  
+                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                          </div>
+  
+                          <div class="col-6 form-group">
+                            <span class="divjust-end">
+                              <span class="text-black">Agreed rates (monthly rent)</span>
+                            </span>
+                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                          </div>
+                        </div>
+  
+                        <div class="form-group input-icons">
+                          <span>Name<span class="text-danger small">(mandatory)</span></span>
+                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+  
+                        <div class="form-group input-icons">
+                          <span>Mobile number <span class="text-primary small">(recommended)</span></span>
+                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+  
+                        <div class="form-group input-icons">
+                          <span>Email<span class="text-primary small">(optional)</span></span>
+                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+  
+                        <div class="form-group input-icons">
+                          <span>ID number <span class="text-primary small">(optional)</span></span>
+                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
+                        </div>
+  
+                        <div class="fancy-checkbox-group form-control mb-4 divjust">
+                          <div class="divjust-end">
+                            
+                            <label class="mr-3" for="">Create invoice
+                              <input type="checkbox" id=""/>
+                            </label>
+  
+                            <label class="ml-3" for="">Charge deposit
+                              <input type="checkbox" id=""/>
+                            </label>
+  
+                            <label class="ml-3 text-danger" for="prorate">Prorate?
+                              <input class="proratecb" type="checkbox" id="prorate"/>
+                            </label>
+                          </div>       
+                        </div>
+  
+                        <div id="" class="row dispnone">
+                          
+                          <div class="col-6 form-group">
+                            <span class="divjust-end">
+                              <span class="text-black">Prorated Days</span>
+                            </span>
+  
+                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                          </div>
+  
+                          <div class="col-6 form-group">
+                            <span class="divjust-end">
+                              <span class="text-black">Calculated Amount</span>
+                            </span>
+                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                          </div>
+                        </div>
+  
+                      </div>
+  
+                    </div>
+                  
+                    <div class="divbg center-btn">
+                      <button id="" type="button" class="btn-secondary borderless text-white">Save</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
                 </div>
               </div>
             </div>
@@ -2188,7 +2306,7 @@
       <div class="modal-content">
         <div class="indicator"></div>
         <div class="modal-header pb-0 text-center">
-          <h5 class="modal-title text-info" id="paymentDetailModalLabel">Register meter reading</h5>
+          <h5 class="modal-title text-info" id="">Water readings <span class="ml-5"><button id="switch-elec" class="borderless btn btn-outline-info" data-toggle="modal" data-target="#elecReadingModal"><i class="fas fa-sync-alt"></i></button></span></h5>
           <div class="alert-msgs"></div>
         </div>
         <div class="modal-body pt-0">
@@ -2196,9 +2314,32 @@
             <div class="media-body">
               <div class="position-relative">
                 <div class="card-body modal-forms">
-                  <div class="center-btn mb-3 mt-3">
-                    (<span class="text-black">Minified data version: <span class="text-info">Coming soon!</span></span>)
-                  </div>     
+                  <form autocomplete="off" method="POST" action="">
+
+                    <div class="form-group input-icons mt-2">
+                      <i class="fa fa-caret-down icon text-info"></i>
+                      <select name="house" class="form-control" id ="" >
+                        <option disabled selected value> -- Select House -- </option>
+                        {% for o in items %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="center-btn mb-1" id=""></div>
+                    <div id="">
+                      <div class="form-group">
+                        <input id="" class="form-control" type="text" name="rentrate" placeholder="type reading here" disabled>
+                      </div>
+                    </div>
+                    <div id=""></div>
+                  
+                    <div class="divbg center-btn">
+                      <button id="" type="button" class="btn-secondary borderless text-white" disabled>Capture</button>
+                      <button id="" class="btn btn-danger" type="button" data-dismiss="modal"></i>Dismiss</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
                 </div>
               </div>
             </div>

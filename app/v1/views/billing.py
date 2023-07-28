@@ -7503,7 +7503,13 @@ class Oauth2BankIntegration(Resource):
                 scope = data.get("scope")
             except Exception as e:
                 print("ERR",e)
-                return "Unknown error"
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid payload"
+                }
+                resp = jsonify(response)
+                return make_response(resp)
 
         print(ckey,"::::::::::::::::::::::::::::")
         print(skey,"::::::::::::::::::::::::::::")
@@ -7512,14 +7518,40 @@ class Oauth2BankIntegration(Resource):
         print(scope,">>>>>>>>>>::::::::::::::::::::::::::::")
 
         if ckey != "malibu@esb.familybank.co.ke":
-            return "Invalid client id"
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid client id"
+                }
+                resp = jsonify(response)
+                return make_response(resp)
+
         if skey != "q150c2bf#1c4ee7da42!yt":
-            return "Invalid client secret"
+
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid client secret"
+            }
+            resp = jsonify(response)
+            return make_response(resp)
 
         if granttype != "client_credentials":
-            return "Invalid grant_type specified"
+            response = {
+                "resultCode":1,
+                "resultDesc":"Invalid grant_type specified"
+            }
+            resp = jsonify(response)
+            return make_response(resp)
+
+
         if scope != "FBL_COLLECTIONS":
-            return "Invalid scope specified"
+            response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid scope specified"
+                }
+            resp = jsonify(response)
+            return make_response(resp)
+
 
         print(ckey,"::::::::::::::::::::::::::::")
         print(skey,"::::::::::::::::::::::::::::")
@@ -7527,7 +7559,13 @@ class Oauth2BankIntegration(Resource):
         if ckey and skey:
             return get_token(ckey,skey)
         else:
-            return "Invalid client credentials"
+            response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid client credentials"
+                }
+            resp = jsonify(response)
+            return make_response(resp)
+            
 
         # {  "client_id": "client@esb.familybank.co.ke", 
         # "client_secret": "#secret123$", 

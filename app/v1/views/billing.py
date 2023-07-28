@@ -7511,6 +7511,11 @@ class Oauth2BankIntegration(Resource):
         print(granttype,">>>>>>>>>>::::::::::::::::::::::::::::")
         print(scope,">>>>>>>>>>::::::::::::::::::::::::::::")
 
+        if ckey != "malibu@esb.familybank.co.ke":
+            return "Invalid client id"
+        if skey != "q150c2bf#1c4ee7da42!yt":
+            return "Invalid client secret"
+
         if granttype != "client_credentials":
             return "Invalid grant_type specified"
         if scope != "FBL_COLLECTIONS":

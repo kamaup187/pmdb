@@ -2617,12 +2617,27 @@ class ReceivePayment(Resource):
 
                 if localenv:
                     return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
-
                     # order = {
-                    #     "dep":2,
+                    #     "rent":1,
                     #     "garb":1,
-                    #     "rent":3
+                    #     "garb":1,
+                    #     "dep":4
                     # }
+                    # if current_user.company_id == 114:
+                    #     order = {
+                    #         "rent":1,
+                    #         "garb":1,
+                    #         "garb":1,
+                    #         "dep":4
+                    #     }
+                    # else:
+                    #     order = {
+                    #         "dep":1,
+                    #         "rent":2,
+                    #         "water":3,
+                    #         "garb":4
+                    #     }
+
                     # return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
 
                 return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)

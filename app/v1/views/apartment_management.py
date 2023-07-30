@@ -5471,7 +5471,7 @@ class AddTenant(Resource):
 
         prop = ApartmentOp.fetch_apartment_by_name(prop_id)
         if not prop:
-            apartment_id = get_identifier(propid)
+            apartment_id = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
         else:
             apartment_id = prop.id

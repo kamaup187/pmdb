@@ -646,7 +646,7 @@
                       </div>
                   </a>
 
-                  <div class="dropdown-divider m-0"></div>
+                  <!-- <div class="dropdown-divider m-0"></div>
                   
                   <a class="dropdown-item py-3" href="#" type="button" data-toggle="modal" data-target="#readingModal">
                       <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="activity"></i></div>
@@ -654,10 +654,7 @@
                           <div class="small text-gray-500">Meters(minimized data)</div>
                           <div class="text-black font-weight-bold">Register readings</div>
                       </div>
-                  </a>
-
-
-
+                  </a> -->
 
               </div>
           </li>
@@ -1506,7 +1503,7 @@
                     </div>
                     <div class="col-auto billbtn">
                       <span class="text-gray-300">
-                        <span class="fa-2x text-warning ln-10 addloader-alt" id="expectedstats2">
+                        <span class="text-xx text-warning ln-10 addloader-alt" id="expectedstats2">
                           <!-- <div class="fountainG-small d-inline mr-1">
                             <div class="fountainG_1s fountainG-s"></div>
                             <div class="fountainG_2s fountainG-s"></div>
@@ -1534,7 +1531,7 @@
                         </div>
                         </div>
                         <div class="col-auto">
-                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10 addloader-alt" id="collectionstats2">
+                          <span class="text-gray-300"><span class="text-xx text-warning ln-10 addloader-alt" id="collectionstats2">
                             <div class="d-inline-block ml-2 dot-elastic"></div>
                             <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
@@ -1558,7 +1555,7 @@
                         </div>
                         </div>
                         <div class="balancebtn col-auto border-left-warnin">
-                          <span class="text-gray-300"><span class="fa-2x text-warning ln-10 addloader-alt" id="balancestats2">
+                          <span class="text-gray-300"><span class="text-xx text-warning ln-10 addloader-alt" id="balancestats2">
                             <div class="d-inline-block ml-2 dot-elastic"></div>
                             <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
@@ -2181,15 +2178,15 @@
    
                     <div class="mt-2">
   
-                      <div id="" class="fancy-checkbox-group form-control mb-2 divjust">
+                      <div id="tenant_type_onboard" class="fancy-checkbox-group form-control mb-2 divjust">
                           <div>
-                            <input type="radio" id="" name="" value="tenant" checked/>
-                            <label for="">Tenant</label>
+                            <input type="radio" id="ttype_onboard" name="ttype_onboard" value="tenant" checked/>
+                            <label for="ttype_onboard">Tenant</label>
                           </div>
   
                           <div>
-                            <input type="radio" id="" name="" value="owner"/>
-                            <label for="">Resident</label>
+                            <input type="radio" id="ttype_onboard2" name="ttype_onboard" value="owner" disabled/>
+                            <label for="ttype_onboard2">Resident</label>
                           </div>
                              
                       </div>
@@ -2214,7 +2211,7 @@
                       </div>
   
   
-                      <div class="tcheck_onboard">
+                      <div class="tcheck_onboard dispnone">
   
                         <div class="row">
                           
@@ -2223,73 +2220,73 @@
                               <span class="text-black">Default rates (Monthly rent)</span>
                             </span>
   
-                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
+                              <input id="default_onboard_rates" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" readonly/>
                           </div>
   
                           <div class="col-6 form-group">
                             <span class="divjust-end">
                               <span class="text-black">Agreed rates (monthly rent)</span>
                             </span>
-                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                              <input id="agreed_rates_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                           </div>
                         </div>
   
                         <div class="form-group input-icons">
                           <span>Name<span class="text-danger small">(mandatory)</span></span>
-                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
+                            <input id="new_name_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="Tenant's name"/>
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
   
                         <div class="form-group input-icons">
                           <span>Mobile number <span class="text-primary small">(recommended)</span></span>
-                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
+                            <input id="new_tel_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="07xxxx"/>
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
   
                         <div class="form-group input-icons">
                           <span>Email<span class="text-primary small">(optional)</span></span>
-                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
+                            <input id="new_email_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="someone@example.com"/>
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
   
                         <div class="form-group input-icons">
                           <span>ID number <span class="text-primary small">(optional)</span></span>
-                            <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
+                            <input id="new_natid_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="12xxxx"/>
                             <span class="input-group-addon field-icon"><i class="fas fa-fw fa-hashtag text-info"></i></span>
                         </div>
   
                         <div class="fancy-checkbox-group form-control mb-4 divjust">
                           <div class="divjust-end">
                             
-                            <label class="mr-3" for="">Create invoice
-                              <input type="checkbox" id=""/>
+                            <label class="mr-3" for="createinvoice_onboard">Create invoice
+                              <input type="checkbox" id="createinvoice_onboard"/>
                             </label>
   
-                            <label class="ml-3" for="">Charge deposit
-                              <input type="checkbox" id=""/>
+                            <label class="ml-3" for="migrate_onboard">Charge deposit
+                              <input type="checkbox" id="migrate_onboard"/>
                             </label>
   
-                            <label class="ml-3 text-danger" for="prorate">Prorate?
-                              <input class="proratecb" type="checkbox" id="prorate"/>
+                            <label class="ml-3 text-danger" for="prorate_onboard">Prorate?
+                              <input class="proratecb" type="checkbox" id="prorate_onboard"/>
                             </label>
                           </div>       
                         </div>
   
-                        <div id="" class="row dispnone">
+                        <div id="prorator_onboard" class="row dispnone">
                           
                           <div class="col-6 form-group">
                             <span class="divjust-end">
                               <span class="text-black">Prorated Days</span>
                             </span>
   
-                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
+                              <input id="prorated_days_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text" placeholder="type here"/>
                           </div>
   
                           <div class="col-6 form-group">
                             <span class="divjust-end">
                               <span class="text-black">Calculated Amount</span>
                             </span>
-                              <input id="" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
+                              <input id="calc_rates_onboard" class="form-control border-top-0 border-right-0 border-left-0  ph" type="text"/>
                           </div>
                         </div>
   
@@ -2298,7 +2295,7 @@
                     </div>
                   
                     <div class="divbg center-btn">
-                      <button id="" type="button" class="btn-secondary borderless text-white">Save</button>
+                      <button id="newtenant_onboard" type="button" class="btn-secondary borderless text-white">Save</button>
                       <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                     </div>
                     
@@ -5431,20 +5428,172 @@ $("#closemodule").on('click',function(){
 
   // This script autopulate house options and displays tenant name
 $("#select_onboard_house").on('change', function(){
-  $(".tcheck").removeClass("dispnone")
+  $(".tcheck_onboard").removeClass("dispnone")
   $.ajax({
     url: "{{ url_for('api.allocatetenants') }}",
     type: "get",
     data: {
-          propid: $("#edit_prop_identifier").text(),
-          house: $("#select_house2").val(),
+          propid: $("#select_onboard_prop").val(),
+          house: $("#select_onboard_house").val(),
           target:"default rates"
         },
     success: function(response) {
-      $("#default_rates").val(response);
+      $("#default_onboard_rates").val(response);
     }
   });
 });
+
+
+
+$(".proratecb").change(function (e) {
+        //Getting status before unchecking all
+        var status = $(this).prop("checked");
+
+        $(".proratecb").prop('checked', false);
+        $(this).prop('checked', true);
+
+        //false means checkbox was checked and 
+        //became unchecked on change event, so let it stay unchecked
+        if (status === false) {
+          $(this).prop('checked', false);
+          $("#prorator_onboard").addClass("dispnone")
+          $("#calc_rates_onboard").val(0.0);
+          $("#prorated_days_onboard").val(0.0);
+
+        }else{
+          $("#prorator_onboard").removeClass("dispnone")
+          $("#calc_rates_onboard").val(0.0);
+          $("#prorated_days_onboard").val(0.0);
+
+        }
+
+      });
+
+
+      $("#agreed_rates_onboard").keyup(function(){
+        $("#calc_rates_onboard").val(0.0);
+        $("#prorated_days_onboard").val(0.0);
+      })
+
+        $("#prorated_days_onboard").keyup(function () {
+          var base_value = 0.0;
+          var empty = false;
+          // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+          if ($('#prorated_days_onboard').val() == "") {
+            empty = true;
+          }
+          if (empty) {
+            $("#calc_rates_onboard").val(0.0);
+          } else {
+            if ($('#agreed_rates_onboard').val() == "") {
+              //use default rates
+              var calc = $("#default_onboard_rates").val();
+              base_value = calc.replace(",","") / 30 * $(this).val()
+            } else {
+              //use agreed rates
+              var calc = $("#agreed_rates_onboard").val();
+              base_value = calc.replace(",","") / 30 * $(this).val()
+            }
+            $("#calc_rates_onboard").val(Math.round(base_value));
+          }
+
+        });
+
+        $("#calc_rates_onboard").keyup(function () {
+          var base_value = 0.0;
+          var empty = false;
+          // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+          if ($('#calc_rates_onboard').val() == "") {
+            empty = true;
+          }
+          if (empty) {
+            $("#prorated_days_onboard").val(0);
+          } else {
+            if ($('#agreed_rates_onboard').val() == "") {
+              //use default rates
+              var calc = $("#default_onboard_rates").val();
+              base_value = $(this).val() / calc.replace(",","") * 30
+            } else {
+              //use agreed rates
+              var calc = $("#agreed_rates_onboard").val();
+              base_value = $(this).val() / calc.replace(",","") * 30
+            }
+            $("#prorated_days_onboard").val(Math.round(base_value));
+          }
+
+        });
+
+
+
+  $("#newtenant_onboard").click(function(){   
+    var cb2 = document.getElementById("migrate_onboard");
+    if (cb2.checked){
+      var migrate_onboard = "True";
+    }else{
+      var migrate_onboard = "False";
+    }
+
+
+    var cb3 = document.getElementById("createinvoice_onboard");
+    if (cb3.checked){
+      var migrate_onboard2 = "True";
+    }else{
+      var migrate_onboard2 = "False";
+    }
+
+    $("#newtenant_onboard").html("saving...")  
+      $.ajax({
+        url: "{{ url_for('api.addtenant') }}",
+        type: "POST",
+        data: {
+                propid: $("#select_onboard_prop").val(),
+                house: $("#select_onboard_house").val(),
+                group:$("#agreed_rates_onboard").val(),
+                name: $("#new_name_onboard").val(),
+                national_id: $("#new_natid_onboard").val(),
+                tel: $("#new_tel_onboard").val(),
+                email: $("#new_email_onboard").val(),
+                ttype:document.querySelector('input[name="ttype_onboard"]:checked').value,
+                migrate: migrate_onboard,
+                invoice: migrate_onboard2,
+                arr:0.0
+            },
+        success: function(response) {
+          // $(".alert-msgs").html(response);
+
+          snack(response);
+
+          getFeed();
+
+
+          if (migrate_onboard2 == "True"){
+            $.ajax({
+              url: "/create/invoices",
+              type: "POST",
+              data: {
+                propid: $("#select_onboard_prop").val(),
+                houses:$("#select_onboard_house").val(),
+                prorate: $("#calc_rates_onboard").val(),
+                level:"new tenant"
+              },
+            success: function (response) {}})
+          }
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".reset").click();
+            $(".tcheck").addClass("dispnone")
+
+            // $('#newtenant').attr('disabled', 'disabled');
+            $('#newtenant_onboard').removeClass('btn-success')
+            $('#newtenant_onboard').addClass('btn-secondary')
+            $("#newtenant_onboard").html("submit")
+          }, 2000);
+
+
+        }
+      });
+  });
   </script>
 
 

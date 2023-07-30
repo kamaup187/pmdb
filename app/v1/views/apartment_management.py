@@ -2016,9 +2016,14 @@ class Dashboard(Resource):
 
             if current_user.company_user_group.name == "Field":
                 return ["N/A","-",month_str]
+            
+            occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+            unpacked_occupancy = flatten(occupancy)
+            num_of_occ = len(unpacked_occupancy)
 
+            invss = f"{invs}/{num_of_occ}"
 
-            return [f'Kes {total_bills:,.1f}',invs,month_str]
+            return [f'Kes {total_bills:,.1f}',invss,month_str]
 
         if target == "collectionstats":
             # period = current_user.company.billing_period
@@ -5119,9 +5124,13 @@ class AddTenant(Resource):
         raw_checkin = request.args.get("date")
 
         propid = request.args.get("propid")
-        prop_id = get_identifier(propid)
 
-        prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+        prop = ApartmentOp.fetch_apartment_by_name(propid)
+        if not prop:
+            prop_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+        else:
+            prop_id = prop.id
 
         if target == "fetch guest by natid":
             natid = request.args.get('natid')
@@ -5288,9 +5297,13 @@ class AddTenant(Resource):
             target = request.form.get('target')
             propid = request.form.get('propid')
 
-            apartment_id = get_identifier(propid)
 
-            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            prop = ApartmentOp.fetch_apartment_by_name(propid)
+            if not prop:
+                apartment_id = get_identifier(propid)
+                prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            else:
+                apartment_id = prop.id
 
             name = request.form.get('name')
             phone = request.form.get('tel')
@@ -5456,9 +5469,12 @@ class AddTenant(Resource):
         prop_id = request.form.get('propid')
 
 
-        apartment_id = get_identifier(prop_id)
-
-        prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+        prop = ApartmentOp.fetch_apartment_by_name(prop_id)
+        if not prop:
+            apartment_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+        else:
+            apartment_id = prop.id
 
         if target == "lead engagement":
             return success
@@ -6632,7 +6648,11 @@ class AllocateTenants(Resource):
         target = request.args.get('target')
 
         if target == "default rates":
-            apartment_id = get_identifier(prop_id)
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop_id)
+            if prop_obj:
+                apartment_id = prop_obj.id
+            else:
+                apartment_id = get_identifier(prop_id)
 
             specific_house = get_specific_house_obj(apartment_id,house_num)
             if specific_house:

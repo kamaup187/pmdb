@@ -382,7 +382,12 @@ class CreateInvoices(Resource):
         else:
             print("APARTMENT ID TO BILL IS>>>>",propid)
 
-            apartment_id = get_identifier(propid)
+            prop = ApartmentOp.fetch_apartment_by_name(propid)
+            if not prop:
+                apartment_id = get_identifier(propid)
+                prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+            else:
+                apartment_id = prop.id
 
             props_to_bill =[apartment_id]
 
@@ -405,7 +410,7 @@ class CreateInvoices(Resource):
                 hse_obj = get_specific_house_obj(apartment_id,hse)
                 houseids.append(hse_obj.id)
                 print("SINGLE HOUSEID",houseids)
-            except:
+            except Exception as e:
                 print("ERROR in generating single houseid >>>", str(e))
 
         else:

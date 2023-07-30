@@ -109,14 +109,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Penalty due</span>
-                <input id="penaltydue"
+                <input id="due{{order['fine']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="{{bill.penalty_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Penalty paid </span>
-                <input id="penaltypaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['fine']}}"
+                    class="finepaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>
@@ -125,14 +125,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Service due</span>
-                <input id="servicedue"
+                <input id="due{{order['serv']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="{{bill.maintenance_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Service paid </span>
-                <input id="servicepaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['serv']}}"
+                    class="servicepaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>
@@ -150,7 +150,7 @@
                 <span>Garbage paid </span>
                 <input id="paid{{order['garb']}}"
                     class="garbagepaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" />
+                    placeholder="0.0" value="" disabled/>
             </div>
         </div>
 
@@ -159,14 +159,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Security due</span>
-                <input id="securitydue"
+                <input id="due{{order['sec']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="{{bill.security_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Security paid </span>
-                <input id="securitypaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['sec']}}"
+                    class="securitypaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>
@@ -176,14 +176,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Water due</span>
-                <input id="waterdue"
+                <input id="due{{order['water']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger"
                     type="text" value="{{bill.water_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Water paid </span>
-                <input id="waterpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['water']}}"
+                    class="waterpaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>
@@ -192,14 +192,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Electricity due</span>
-                <input id="electricitydue"
+                <input id="due{{order['elec']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="{{bill.electricity_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Electricity paid </span>
-                <input id="electricitypaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['elec']}}"
+                    class="elecpaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>
@@ -209,14 +209,14 @@
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Agreement due</span>
-                <input id="agreementdue"
+                <input id="due{{order['agre']}}"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="{{bill.agreement_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Agreement paid </span>
-                <input id="agreementpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                <input id="paid{{order['agre']}}"
+                    class="agrepaid form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
             </div>
         </div>

@@ -1200,7 +1200,8 @@
               payperiod:$("#billdatepicker").val(),
               paidamount: $("#paidamount").val(),
               housecheck:"manual",
-              target: "breakdown"
+              target: "breakdown",
+              target2:"minimal",
             },
             success: function (response) {
               $("#billbreakdown").html(response);
@@ -1304,7 +1305,8 @@
                 payperiod: $("#billdatepicker").val(),
                 paidamount: $("#paidamount").val(),
                 housecheck:"manual",
-                target: "breakdown"
+                target: "breakdown",
+                target2:"minimal",
               },
               success: function (response) {
                 $("#billbreakdown").html(response);
@@ -1500,33 +1502,27 @@
     let instalmentdue = parseInt($("#instalmentdue").val())
     let addfeedue = parseInt($("#addfeedue").val())
 
-    let due2 = parseInt($("#due2").val())
-
-    let waterdue = parseInt($("#waterdue").val())
-    if (waterdue < 0){
-      waterdue = 0
-    }
-    let electricitydue = parseInt($("#electricitydue").val())
-    let due3 = parseInt($("#due3").val())
-    let securitydue = parseInt($("#securitydue").val())
-    let servicedue = parseInt($("#servicedue").val())
-    let penaltydue = parseInt($("#penaltydue").val())
     let due1 = parseInt($("#due1").val())
-    let agreementdue = parseInt($("#agreementdue").val())
+    let due2 = parseInt($("#due2").val())
+    let due3 = parseInt($("#due3").val())
+    let due4 = parseInt($("#due4").val())
+    let due5 = parseInt($("#due5").val())
+    let due6 = parseInt($("#due6").val())
+    let due7 = parseInt($("#due7").val())
+    let due8 = parseInt($("#due8").val())
+    let due9 = parseInt($("#due9").val())
 
 
     if (bal >= due1) {$("#paid1").val(due1);bal -= due1}else if (bal < due1 && bal > 0) {$("#paid1").val(bal);bal = 0}else {$("#paid1").val(0.0)}
-
     if (bal >= due2) {$("#paid2").val(due2);bal -= due2}else if (bal < due2 && bal > 0) {$("#paid2").val(bal);bal = 0}else {$("#paid2").val(0.0)}
     if (bal >= due3) {$("#paid3").val(due3);bal -= due3}else if (bal < due3 && bal > 0) {$("#paid3").val(bal);bal = 0}else {$("#paid3").val(0.0)}
-    if (bal >= penaltydue) {$("#penaltypaid").val(penaltydue);bal -= penaltydue}else if (bal < penaltydue && bal > 0) {$("#penaltypaid").val(bal);bal = 0}else {$("#penaltypaid").val(0.0)}
-    if (bal >= securitydue) {$("#securitypaid").val(securitydue);bal -= securitydue}else if (bal < securitydue && bal > 0) {$("#securitypaid").val(bal);bal = 0}else {$("#securitypaid").val(0.0)}
-    if (bal >= servicedue) {$("#servicepaid").val(servicedue);bal -= servicedue}else if (bal < servicedue && bal > 0) {$("#servicepaid").val(bal);bal = 0}else {$("#servicepaid").val(0.0)}
+    if (bal >= due4) {$("#paid4").val(due4);bal -= due4}else if (bal < due4 && bal > 0) {$("#paid4").val(bal);bal = 0}else {$("#paid4").val(0.0)}
+    if (bal >= due5) {$("#paid5").val(due5);bal -= due5}else if (bal < due5 && bal > 0) {$("#paid5").val(bal);bal = 0}else {$("#paid5").val(0.0)}
+    if (bal >= due6) {$("#paid6").val(due6);bal -= due6}else if (bal < due6 && bal > 0) {$("#paid6").val(bal);bal = 0}else {$("#paid6").val(0.0)}
+    if (bal >= due7) {$("#paid7").val(due7);bal -= due7}else if (bal < due7 && bal > 0) {$("#paid7").val(bal);bal = 0}else {$("#paid7").val(0.0)}
+    if (bal >= due8) {$("#paid8").val(due8);bal -= due8}else if (bal < due8 && bal > 0) {$("#paid8").val(bal);bal = 0}else {$("#paid8").val(0.0)}
+    if (bal >= due9) {$("#paid9").val(due9);bal -= due9}else if (bal < due9 && bal > 0) {$("#paid9").val(bal);bal = 0}else {$("#paid9").val(0.0)}
 
-    if (bal >= waterdue) {$("#waterpaid").val(waterdue);bal -= waterdue}else if (bal < waterdue && bal > 0) {$("#waterpaid").val(bal);bal = 0}else {$("#waterpaid").val(0.0)}
-    if (bal >= electricitydue) {$("#electricitypaid").val(electricitydue);bal -= electricitydue}else if (bal < electricitydue && bal > 0) {$("#electricitypaid").val(bal);bal = 0}else {$("#electricitypaid").val(0.0)}
-
-    if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
 
     if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
     if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
@@ -1596,15 +1592,27 @@
                 bookingpaid : ($("#bookingpaid").val()),
                 addfeepaid : ($("#addfeepaid").val()),
                 instalmentpaid : ($("#instalmentpaid").val()),
+
+                // paid1:$("#paid1").val(),
+                // paid2:$("#paid2").val(),
+                // paid3:$("#paid3").val(),
+                // paid4:$("#paid4").val(),
+                // paid5:$("#paid5").val(),
+                // paid6:$("#paid6").val(),
+                // paid7:$("#paid7").val(),
+                // paid8:$("#paid8").val(),
+                // paid9:$("#paid9").val(),
+
                 rentpaid : ($(".rentpaid").val()),
-                waterpaid : ($("#waterpaid").val()),
-                electricitypaid : ($("#electricitypaid").val()),
+                waterpaid : ($(".waterpaid").val()),
+                electricitypaid : ($(".elecpaid").val()),
                 garbagepaid : ($(".garbagepaid").val()),
-                securitypaid : ($("#securitypaid").val()),
-                servicepaid : ($("#servicepaid").val()),
-                penaltypaid : ($("#penaltypaid").val()),
+                securitypaid : ($(".securitypaid").val()),
+                servicepaid : ($(".servicepaid").val()),
+                penaltypaid : ($(".finepaid").val()),
                 depositpaid : ($(".depositpaid").val()),
-                agreementpaid :($("#agreementpaid").val()),
+                agreementpaid :($(".agrepaid").val()),
+
                 paidamount:$("#paidamount").val(),
                 overpayment:$("#advance_pay").val(),
                 housecheck:$("#housecheck").text()

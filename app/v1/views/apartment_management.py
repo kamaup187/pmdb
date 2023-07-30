@@ -3239,10 +3239,10 @@ class Payments(Resource):
 
         # template = "ajax_allpayments.html"
         if target == "minimal":
-            if localenv:
-                template = "ajax_allpayments_minimal_test.html"
-            else:
-                template = 'ajax_allpayments_minimal.html'
+            # if localenv:
+            template = "ajax_allpayments_minimal_test.html"
+            # else:
+                # template = 'ajax_allpayments_minimal.html'
         else:
             template = 'crm_ajax_allpayments.html' if crm(current_user) else 'ajax_allpayments.html'
 

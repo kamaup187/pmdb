@@ -2178,6 +2178,7 @@ class ReceivePayment(Resource):
         cbid = request.args.get("cbid")
         payperiod = request.args.get("payperiod")
         target = request.args.get("target")
+        target2 = request.args.get("target2")
         housecheck = request.args.get("housecheck")
 
         if not permission(current_user, 'write'):
@@ -2615,30 +2616,47 @@ class ReceivePayment(Resource):
                 else:
                     edit = ""
 
-                if localenv:
-                    return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
+                if target2 == "minimal":
+                # if localenv:
+                    # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
                     # order = {
                     #     "rent":1,
-                    #     "garb":1,
-                    #     "garb":1,
-                    #     "dep":4
+                    #     "garb":2,
+                    #     "dep":6,
+                    #     "water":4,
+                    #     "sec":5,
+                    #     "serv":7,
+                    #     "fine":3,
+                    #     "agre":8,
+                    #     "elec":9
                     # }
-                    # if current_user.company_id == 114:
-                    #     order = {
-                    #         "rent":1,
-                    #         "garb":1,
-                    #         "garb":1,
-                    #         "dep":4
-                    #     }
-                    # else:
-                    #     order = {
-                    #         "dep":1,
-                    #         "rent":2,
-                    #         "water":3,
-                    #         "garb":4
-                    #     }
 
-                    # return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
+                    if current_user.company_id == 114:
+                        order = {
+                            "rent":1,
+                            "garb":2,
+                            "dep":6,
+                            "water":4,
+                            "sec":5,
+                            "serv":7,
+                            "fine":3,
+                            "agre":8,
+                            "elec":9
+                        }
+                    else:
+                        order = {
+                        "dep":1,
+                        "rent":2,
+                        "garb":3,
+                        "water":4,
+                        "sec":6,
+                        "serv":7,
+                        "fine":5,
+                        "agre":8,
+                        "elec":9
+                        }
+
+                    return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
 
                 return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
 

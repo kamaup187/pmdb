@@ -1,4 +1,12 @@
       <div class="text-black font-weight-bold font-italic mb-3">Invoice month: {{bill.month}}/{{bill.year}}</div>
+
+      <div class="text-right prevent-select">
+            <span class="text-danger">
+              <input type="checkbox" id="discard_bill" class="discard_bill">
+              <label for="discard_bill">Delete this invoice?</label> 
+            </span>
+      </div>
+          
       {% if bill.arrears%}
       <div class="gx-3 mb-1">
       <label class="small text-malibu-blue mb-1" for="arrears_breakdown">Arrears</label>

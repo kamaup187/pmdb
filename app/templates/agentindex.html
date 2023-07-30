@@ -2193,17 +2193,28 @@
                           </div>
                              
                       </div>
+
+                      <div class="form-group no-paddin input-icons">
+                        <span>Select property<span class="text-danger small">(mandatory)</span></span>
+                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_onboard_prop" >
+                          <option disabled selected value> select property</option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                        <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
+                      </div>
                       
                       <div class="form-group no-paddin input-icons">
                         <span>Select house<span class="text-danger small">(mandatory)</span></span>
-                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="" >
+                        <select class="select-css border-top-0 border-right-0 border-left-0 " id ="select_onboard_house" >
                           <option disabled selected value> loading... </option>
                         </select>
                         <span class="input-group-addon field-icon-two"><i class="fas fa-fw fa-caret-down text-info"></i></span>
                       </div>
   
   
-                      <div class="tcheck">
+                      <div class="tcheck_onboard">
   
                         <div class="row">
                           
@@ -5399,6 +5410,42 @@ $("#closemodule").on('click',function(){
     });
 </script>
 
+
+<script>
+  // This script autopulate house options and displays tenant name
+  $("#select_onboard_prop").on('change', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#select_onboard_prop").val(),
+            target:"house options"
+          },
+      success: function(response) {
+        $("#select_onboard_house").html(response);
+      }
+    });
+  });
+
+
+
+  // This script autopulate house options and displays tenant name
+$("#select_onboard_house").on('change', function(){
+  $(".tcheck").removeClass("dispnone")
+  $.ajax({
+    url: "{{ url_for('api.allocatetenants') }}",
+    type: "get",
+    data: {
+          propid: $("#edit_prop_identifier").text(),
+          house: $("#select_house2").val(),
+          target:"default rates"
+        },
+    success: function(response) {
+      $("#default_rates").val(response);
+    }
+  });
+});
+  </script>
 
 
 </body>

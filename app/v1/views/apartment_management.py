@@ -6655,7 +6655,13 @@ class AllocateTenants(Resource):
             migrate = "False"
         bool_migrate = return_bool(migrate)
 
-        apartment_id = get_identifier(prop_id)
+        print(">>>>>>>>",prop_id)
+
+        prop_obj = ApartmentOp.fetch_apartment_by_name(prop_id)
+        if prop_obj:
+            apartment_id = prop_obj.id if prop_obj else None
+        else:
+            apartment_id = get_identifier(prop_id)
         tenant_id = get_identifier(tenantid)
         
         stored_apartment = ApartmentOp.fetch_apartment_by_id(apartment_id) if prop_id else None
@@ -6664,7 +6670,7 @@ class AllocateTenants(Resource):
 
         if target == "house options":
             if not house_list:
-                placeholder = "No house available!"
+                placeholder = "No vacant house!"
             else:
                 placeholder = "select house"
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder=placeholder)

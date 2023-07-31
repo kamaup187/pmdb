@@ -7940,7 +7940,52 @@ class CallBackUrlValidateTestFamily(Resource):
 
                 if identifier:
                     ref = identifier.upper()
-                    if ref not in houses:
+                    house_obj = None
+                    tenant_obj = None
+                    if ref in houses:
+                        for h in houses:
+                            if h == ref:
+                                house_obj = get_specific_house_obj(762,h)
+                                tenant_obj = check_occupancy(house_obj)[1]
+                                break
+
+                        response = {
+                            "status_code": "ACCOUNT_FOUND",
+                            "status_description": "ACCOUNT IS VALID",
+                            "date_time": ftime,
+                            "payload": {
+                                "identifier": identifier,
+                                "identifier_type": identifier_type,
+                                "customer_id": f"TNT{tenant_obj.id}" if tenant_obj else "-",
+                                "customer_name": tenant_obj.name if tenant_obj else "-"
+                                }
+                            }
+
+                        # response = {
+                        #     "status_code": "ACCOUNT_NOT_FOUND",
+                        #     "status_description": "ACCOUNT IS INVALID",
+                        #     "date_time": ftime,
+                        #     "payload": {
+                        #         "identifier": identifier,
+                        #         "identifier_type": identifier_type,
+                        #         "customer_id": "N/A",
+                        #         "customer_name": "N/A"
+                        #     }
+                        #     }
+
+                    else:
+                        # response = {
+
+                        #     "status_code": "ACCOUNT_FOUND",
+                        #     "status_description": "ACCOUNT IS VALID",
+                        #     "date_time": ftime,
+                        #     "payload": {
+                        #         "identifier": identifier,
+                        #         "identifier_type": identifier_type,
+                        #         "customer_id": "-",
+                        #         "customer_name": "Tenant"
+                        #         }
+                        #     }
 
                         response = {
                             "status_code": "ACCOUNT_NOT_FOUND",
@@ -7952,20 +7997,6 @@ class CallBackUrlValidateTestFamily(Resource):
                                 "customer_id": "N/A",
                                 "customer_name": "N/A"
                             }
-                            }
-
-                    else:
-                        response = {
-
-                            "status_code": "ACCOUNT_FOUND",
-                            "status_description": "ACCOUNT IS VALID",
-                            "date_time": ftime,
-                            "payload": {
-                                "identifier": identifier,
-                                "identifier_type": identifier_type,
-                                "customer_id": "-",
-                                "customer_name": "Tenant"
-                                }
                             }
 
                 else:
@@ -8058,16 +8089,34 @@ class CallBackUrlTestFamily(Resource):
         
                 print("Data will be proccessed here")
 
-                trans_id = data.get('transactionref')
-                trans_time = data.get('transactionDate')
-                trans_amnt = data.get('amount')
-                trans_type = data.get('tranParticular')
+
+                datad = {
+                    "action": "PAYMENT_NOTIFICATION",
+                    "payload": {
+                    "customer_id": "1000101",
+                    "payer_name": "John Kyalo",
+                    "payer_phone": "0722xxxxx ",
+                    "txn_amount": 100.00,
+                    "payment_mode": "DEPOSIT",
+                    "txn_reference": "015BAAT202620003",
+                    "collection_account": "xxxxxxxxxxxxxxx",
+                    "txn_narration": "Account deposit.",
+                    "date_time": "2020-07-01 18:50:00"
+                    }
+                    }
+
+                trans_type = data.get('action')
+                
+                trans_id = data.get("payload").get('txn_reference')
+                trans_time = data.get("payload").get('date_time')
+                trans_amnt = data.get("payload").get('txn_amount')
+                bill_ref_num = data.get("payload").get('customer_id')
+                msisdn = data.get("payload").get('payer_phone')
+                fname = data.get("payload").get('payer_name')
+
                 business_shortcode = "000000"
-                bill_ref_num = data.get('description')
-                invoice_num = data.get('billNumber')
-                msisdn = data.get('phonenumber')
                 org_acc_bal = 0
-                fname = data.get('debitcustname')
+                invoice_num = ""
                 lname = "N/A"
 
                 mode = "Bank"

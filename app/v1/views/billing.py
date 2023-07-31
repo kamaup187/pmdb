@@ -8136,7 +8136,8 @@ class CallBackUrlTestFamily(Resource):
                         data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"test",mode,company_id)
                         data_obj.save()
 
-                        curr_time = datetime.datetime.now()
+                        curr_time = datetime.datetime.now() + relativedelta(hours=3)
+                        ftime = f'{curr_time.strftime("%d-%b-%y")} {curr_time.strftime("%H:%M:%p")}'
                         # response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
                         erpRefId = f"0{data_obj.id}00{company_id}{curr_time.month}{curr_time.year}"
                         response = {
@@ -8144,6 +8145,13 @@ class CallBackUrlTestFamily(Resource):
                             "resultDesc": "Successful",
                             "erpRefId": erpRefId
                         }
+
+                        response = {
+                            "status_code ": "PAYMENT_ACK",
+                            "status_description": "Payment Transaction Received Successfully",
+                            "payment_ref": erpRefId,
+                            "date_time": ftime
+                            }
 
                 else:
                     response = {

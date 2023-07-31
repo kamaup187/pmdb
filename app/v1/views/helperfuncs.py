@@ -6534,35 +6534,40 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             except:
                 dt = tenant.date
 
+            acceptables = ["yes","Yes","YES"]
+
+
+            if rentdep_str not in acceptables and waterdep_str not in acceptables and elecdep_str not in acceptables:
+                valuesx = validate_float_inputs_to_exclude_zeros_alt(rentdep_str,waterdep_str,elecdep_str)
+                rentdep = valuesx[0];waterdep = valuesx[1];elecdep = valuesx[2]
+            else:
+                if house_obj.housecode:
+                    if rentdep_str in acceptables:
+                        rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
+                    else:
+                        rentdep = 0.0
+                    # if house_obj.name == "B9":
+                    #     rentdep = rentdep * -1
+                    if waterdep_str in acceptables:
+                        waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
+                    else:
+                        waterdep = 0.0
+
+                    if elecdep_str in acceptables:
+                        elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
+                    else:
+                        elecdep = 0.0
+                else:
+                    rentdep = 0.0; waterdep = 0.0; elecdep = 0.0
+
             values = validate_float_inputs_to_exclude_zeros_alt(otherdep)
-            
-            if house_obj.housecode:
-                acceptables = ["yes","Yes","YES"]
-                if rentdep_str in acceptables:
-                    rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
-                else:
-                    rentdep = 0.0
-                # if house_obj.name == "B9":
-                #     rentdep = rentdep * -1
-                if waterdep_str in acceptables:
-                    waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
-                else:
-                    waterdep = 0.0
+            total = rentdep+waterdep+elecdep+values[0]
 
-                if elecdep_str in acceptables:
-                    elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
-                else:
-                    elecdep = 0.0
-
-
-
-                total = rentdep+waterdep+elecdep+values[0]
-
-                if tenant.deposits:
-                    TenantDepositOp.delete(tenant.deposits)
-                    # print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
-                    # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
-                    # TenantOp.update_deposit(tenant,total)
+            if tenant.deposits:
+                TenantDepositOp.delete(tenant.deposits)
+                # print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
+                # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
+                # TenantOp.update_deposit(tenant,total)
 
 
                 print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)

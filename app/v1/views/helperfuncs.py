@@ -239,6 +239,9 @@ class TokenGen(object):
             """
             result = {"access_token": self.generate(data), "token_type": "Bearer"}
 
+            result["expires_in"] = "3600"
+
+
             if self.expires_in.get(grant_type, 0) > 0:
                 result["refresh_token"] = self.generate()
 

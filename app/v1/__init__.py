@@ -263,6 +263,9 @@ api.add_resource(CallBackUrlTestCherahEquity,"/bank/cherah/test")
 api.add_resource(CallBackUrlMerit,"/v1/merit/collection")
 api.add_resource(CallBackUrlTestMerit,"/v1/merit/test/collection")
 
+api.add_resource(CallBackUrlValidateTestFamily,"/v1/merit/sandbox/validate")
+api.add_resource(CallBackUrlTestFamily,"/v1/merit/sandbox/collection")
+
 api.add_resource(Oauth2BankIntegration,"/oauth2/v1/generate")
 
 api.add_resource(CallBackUrlLes,"/les/45")

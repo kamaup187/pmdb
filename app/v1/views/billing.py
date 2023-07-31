@@ -7844,6 +7844,154 @@ class CallBackUrlMerit(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
+class CallBackUrlValidateTestFamily(Resource):
+    def post(self):
+        authenticated = False
+
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+
+        auth = request.headers.get("Authorization")
+
+        ww = f"{my_json} auth > {auth},TEST FAMILY has sent data"
+        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+        # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+        # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
+
+        ckey="malibu@esb.familybank.co.ke"
+        skey="q150c2bf#1c4ee7da42!yt"
+
+        hash = generate_hash(ckey,skey)
+
+        # auth = request.headers.get("Authorization")
+        # print("AAAAUUUUTH",auth)
+        if auth:
+            bearer = auth.split(" ")[1]
+            if bearer == hash:
+                authenticated = True
+            else:
+                # resp = sms.send("TEST FAMILY has sent data with wrong creds", ["+254716674695"],"KIOTAPAY")
+                ww = "TEST FAMILY has sent data with wrong creds"
+                advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Failed Authorization"
+                }
+
+        else:
+            # resp = sms.send("TEST FAMILY has sent data with no creds", ["+254716674695"],"KIOTAPAY")
+            advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+            response = {
+                "resultCode":1,
+                "resultDesc":"Failed Authorization"
+            }
+            # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"AUTH HEADER MISSING"}
+
+        if authenticated:
+            print("Authenticated")
+
+            #parse for json
+            # my_data=request.data
+            # my_json = my_data.decode('utf8').replace("'", '"')
+
+            # ww = f"{my_json},TEST MERIT IM has sent data"
+            # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
+            try:
+                data = json.loads(my_json)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+                print(data)
+                lfile(data)
+                print("#####################################EQUITY EQUITY EQUITY############################################")
+        
+                print("Data will be proccessed here")
+
+
+                # datad = {
+                # "action": "VALIDATION",
+                # "payload": {
+                # "identifier": "H1",
+                # "identifier_type": "ID_NUMBER",
+                # "collection_account": "xxxxxxxxxxxxxxx"
+                # }
+                # }
+
+                action = data.get('action')
+                identifier = data.get('payload').get('identifier')
+                identifier_type = data.get('payload').get('identifier_type')
+                collection_account = data.get('payload').get('collection_account')
+
+
+                mode = "Bank"
+                company_id = 120
+                # company_id = 2
+
+                co = CompanyOp.fetch_company_by_id(company_id)
+                props = co.props
+                prop_houses = [p.houses for p in props]
+                houses = [h.name.upper() for h in flatten(prop_houses)]
+
+                timenow = datetime.datetime.now()
+                ftime = f'{(timenow + relativedelta(hours=3)).strftime("%d-%b-%y")} {(timenow + relativedelta(hours=3)).strftime("%H:%M:%p")}'
+
+                if identifier:
+                    ref = identifier.upper()
+                    if ref not in houses:
+
+                        response = {
+                            "status_code": "ACCOUNT_NOT_FOUND",
+                            "status_description": "ACCOUNT IS INVALID",
+                            "date_time": ftime,
+                            "payload": {
+                                "identifier": identifier,
+                                "identifier_type": identifier_type,
+                                "customer_id": "N/A",
+                                "customer_name": "N/A"
+                            }
+                            }
+
+                    else:
+                        response = {
+
+                            "status_code": "ACCOUNT_FOUND",
+                            "status_description": "ACCOUNT IS VALID",
+                            "date_time": ftime,
+                            "payload": {
+                                "identifier": identifier,
+                                "identifier_type": identifier_type,
+                                "customer_id": "-",
+                                "customer_name": "Tenant"
+                                }
+                            }
+
+                else:
+                    response = {
+                        "resultCode":1,
+                        "resultDesc":"Invalid payload"
+                    }
+
+
+            except Exception as e:
+                # sms.send("TEST FAMILY has error data", ["+254716674695"],"KIOTAPAY")
+                ww = "TEST FAMILY has error data" + str(e)
+                advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
+                # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}
+
+                response = {
+                    "resultCode":1,
+                    "resultDesc":"Invalid payload"
+                }
+
+                print ("It failed, Bank integration has an error" + str(e))
+
+        resp = jsonify(response)
+        return make_response(resp)
+
 class CallBackUrlTestFamily(Resource):
     def post(self):
         authenticated = False
@@ -7859,8 +8007,8 @@ class CallBackUrlTestFamily(Resource):
 
         # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")
 
-        ckey="malibu"
-        skey="q150c2bf1c4ee7da42yt"
+        ckey="malibu@esb.familybank.co.ke"
+        skey="q150c2bf#1c4ee7da42!yt"
 
         hash = generate_hash(ckey,skey)
 
@@ -7923,7 +8071,7 @@ class CallBackUrlTestFamily(Resource):
                 lname = "N/A"
 
                 mode = "Bank"
-                company_id = 1
+                company_id = 120
 
                 if trans_id:
 
@@ -7957,7 +8105,7 @@ class CallBackUrlTestFamily(Resource):
 
             except Exception as e:
                 # sms.send("TEST FAMILY has error data", ["+254716674695"],"KIOTAPAY")
-                ww = "TEST FAMILY has error data" + e
+                ww = "TEST FAMILY has error data" + str(e)
                 advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
                 # response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":"Payload missing or unrecognized"}

@@ -4927,12 +4927,14 @@ class SmsDelivery(Resource):
                 # txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref-{reference} Confirmed. \nDear {fname}, we have received sum of Kshs. {payment_obj.amount}. \n{running_bal} \n\n~{str_co}."
                 txt = f"Failed delivery to {tenant_obj.name} of {tele} ({prop_obj.name}). \n\nRental payment Ref {reference}, sum of {paid} confirmed. \n{running_bal} \n\n{receipt} \n\n~{str_co}."
 
-                response = sms.send(txt, recipient ,sender)
+                # response = sms.send(txt, recipient ,sender)
 
-                resp = response["SMSMessageData"]["Recipients"][0]
-                raw_cost = resp["cost"]
-                rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                CompanyOp.set_rem_quota(co,rem_sms)
+                # advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+
+                # resp = response["SMSMessageData"]["Recipients"][0]
+                # raw_cost = resp["cost"]
+                # rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                # CompanyOp.set_rem_quota(co,rem_sms)
 
 
         elif invoice_obj:
@@ -5049,12 +5051,14 @@ class SmsDelivery(Resource):
                     else:
                         message = f"Failed delivery to {tenant.name} of {tele} ({prop_obj.name}). \n\nDear {fname}, your {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {bankdetails} \n\n ~ {str_co}."
 
-                    response = sms.send(message, recipient, sender)
+                    # response = sms.send(message, recipient, sender)
 
-                    resp = response["SMSMessageData"]["Recipients"][0]
-                    raw_cost = resp["cost"]
-                    rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                    CompanyOp.set_rem_quota(co,rem_sms)
+                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+
+                    # resp = response["SMSMessageData"]["Recipients"][0]
+                    # raw_cost = resp["cost"]
+                    # rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    # CompanyOp.set_rem_quota(co,rem_sms)
 
                 except Exception as e:
                     print(f"Houston, we have a problem {e}")

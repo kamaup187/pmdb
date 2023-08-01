@@ -9339,8 +9339,8 @@ def fixed_water_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
                             # target_readings.append(item)
 
             if reading_obj:
-                if reading_obj.units > 1:
-                    return None
+                if reading_obj.units > 0:
+                    continue
 
             for charge in all_charges:
                 if str(charge) == "Water" and charge.date.month == month and charge.date.year == year and not charge.reading_id:

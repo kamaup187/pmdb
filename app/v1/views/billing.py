@@ -7516,7 +7516,7 @@ class CallBackUrlEquityProd(Resource):
     
 
 class Oauth2BankIntegration(Resource):
-    def get(self):
+    def post(self):
 
         ckey = request.form.get("client_id")
         skey = request.form.get("client_secret")

@@ -1287,8 +1287,144 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
             PaymentOp.update_sms_status(payment_obj,resp1)
         elif bill_obj:
             MonthlyChargeOp.update_sms_status(bill_obj,resp1)
+
+            invoice_obj =  bill_obj
+
+            try:
+                print("Found invoice of ",invoice_obj.tenant.name,"Message status>>",resp1)
+            except:
+                print("Found invoice of ",invoice_obj.ptenant.name,"Message status>>",resp1)
+
+
+            db.session.expire(invoice_obj)
+            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "UserInBlacklist" or invoice_obj.sms_invoice == "AbsentSubscriber":
+                MonthlyChargeOp.update_sms_status(invoice_obj,"success-alt")
+
+                if invoice_obj.ptenant:
+                    tenant = invoice_obj.ptenant
+                else:
+                    tenant = invoice_obj.tenant
+
+                prop_obj = invoice_obj.apartment
+                billing_period = get_billing_period(prop_obj)
+
+                co = invoice_obj.apartment.company
+
+                str_co = f"\n\n ~ {invoice_obj.apartment.name} (UID{str(co.id)})"
+
+                tele = tenant.phone
+                name = tenant.name
+                fname = fname_extracter(name)
+                if not fname:
+                    fname = name
+
+                sibling_water_bill = fetch_current_billing_period_readings(prop_obj.billing_period,invoice_obj.house.meter_readings)
+
+                try:
+                    wbill = sibling_water_bill[0]
+                except:
+                    wbill = None
+
+                if wbill:
+                    amount = 0.0
+                    standing_charge = 0.0
+
+                    if wbill.charged:
+                        charge_obj = ChargeOp.fetch_charge_by_reading_id(wbill.id)
+                        amount = charge_obj.amount
+
+                        standing_charge = invoice_obj.house.housecode.watercharge
+                        if standing_charge:
+                            amount += standing_charge
+
+                    smslastreading = (f"{wbill.last_reading} ")
+                    smscurrentreading = (f"{wbill.reading} ")
+                    smsunits = (f"{wbill.units} ")
+                    smsstd = f"Standing charge: Kes {standing_charge}" if invoice_obj.house.housecode.watercharge else ""
+                    smsbill = (f"Kes {amount:,} ")
+
+                    wmessage = f"\n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nWater: {smsbill}"
+                else:
+                    wmessage = ""
+
+                arrears = invoice_obj.arrears
+
+                calculated_total = 0.0
+                if invoice_obj.paid_amount and arrears > 0:
+                    if arrears <= invoice_obj.paid_amount:
+                        calculated_total = invoice_obj.total_bill - arrears
+                        arrears = 0.0
+                    else:
+                        arrears = invoice_obj.arrears - invoice_obj.paid_amount
+                        calculated_total = invoice_obj.total_bill - invoice_obj.paid_amount
+
+                smsrent = f"\n\nRent:{invoice_obj.rent:,}," if invoice_obj.rent else ""
+
+                if wmessage:
+                    smswater = wmessage
+                else:
+                    smswater = f"\nWater:{invoice_obj.water}," if invoice_obj.water else ""
+
+                if invoice_obj.house.payment_bankacc:
+                    bankdetails = f'\n\nBank: {invoice_obj.house.payment_bank} \nAcc: {invoice_obj.house.payment_bankacc}'
+                elif prop_obj.payment_bank == "PayBill":
+                    prop_name = prop_obj.name.split(" ")[0]
+                    bankdetails = f'\n\n {prop_obj.payment_bank}: {prop_obj.payment_bankacc} \nAcc: {prop_name.lower()}/{invoice_obj.house.name}'
+                elif prop_obj.payment_bank:
+                    bankdetails = f'\n\nBank: {prop_obj.payment_bank} \nAcc: {prop_obj.payment_bankacc}'
+                else:
+                    bankdetails = ""
+
+                smsgarb = f"\nGarbage:{invoice_obj.garbage}," if invoice_obj.garbage else ""
+                smssec = f"\nSecurity:{invoice_obj.security}," if invoice_obj.security else ""
+                smselec = f"\nElectricity:{invoice_obj.electricity}," if invoice_obj.electricity else ""
+                smsdep = f"\nDeposit:{invoice_obj.deposit}" if invoice_obj.deposit else ""
+                smsarrears = f"\nArrears:{invoice_obj.arrears}" if invoice_obj.arrears else ""
+                smsfine = f"\nFine:{invoice_obj.penalty}" if invoice_obj.penalty else ""
+                # smstotal = (f"{invoice_obj.total_bill:,.1f}")
+                smstotal = (f"{invoice_obj.total_bill:,.1f}") if not calculated_total else (f"{calculated_total:,.1f}")
+                bankdetails = bankdetails
+
+
+                raw_rem_sms =co.remainingsms
+
+                tele = tenant.phone
+                str_month = get_str_month(billing_period.month)
+
+                try:
+                    recipient = [sms_phone_number_formatter(co.sphone)] if co.sphone else ["+254716674695"]
+
+                    if arrears < 0.0:
+                        bbf = -1 * arrears
+                        sms_bbf = (f"{bbf:,}")
+                        txt = f"Failed delivery to {tenant.name} of {tele} ({prop_obj.name}). \n\nDear {fname}, your {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsfine} \nPaid: {sms_bbf} \nTotal due: {smstotal} {bankdetails} \n\n ~ {str_co}."
+                    else:
+                        txt = f"Failed delivery to {tenant.name} of {tele} ({prop_obj.name}). \n\nDear {fname}, your {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {bankdetails} \n\n ~ {str_co}."
+
+                    # response = sms.send(message, recipient, sender)
+
+                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+
+                    # resp = response["SMSMessageData"]["Recipients"][0]
+                    # raw_cost = resp["cost"]
+                    # rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
+                    # CompanyOp.set_rem_quota(co,rem_sms)
+
+                except Exception as e:
+                    print(f"Houston, we have a problem {e}")
+
+
+
         else:
             print("CANNOT UPDATE DELIVERY STATUS FOR NON EXISTENT OBJECT")
+
+
+
+
+
+
+
+
 
 
 def advanta_sms_delivery2(apikey,partnerid,msgid):

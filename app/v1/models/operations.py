@@ -747,7 +747,8 @@ class PaymentDetailOp(PaymentDetail,Base):
         self.apartment_id = apartment_id
 
     def update_details(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
-        self.paytype = paytype
+        if paytype:
+            self.paytype = paytype
         self.nartype = nartype
         self.mpesapaybill = paybill
 

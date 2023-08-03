@@ -5906,10 +5906,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             elif co.name == "Malibu Pharmacy Ltd":
                 str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0714370597)"
             else:
-                str_co = f"\n\n ~ {bill.apartment.name} (UID{str(co.id)})"
+                str_co = f"\n\n ~ {bill.apartment.name} (-{str(co.id)})"
 
+            cclist = ["Sentom Investment","SELECTRA LIMITED"]
             if co.name == "Malibu Pharmacy Ltd":
                 misc = "\nKindly pay your rent by 5th to avoid accruing penalties on late payments."
+            elif co.name in cclist:
+                misc = f"\nKindly pay your rent by 5th. \n{co.phone}"
             else:
                 misc = ""
 

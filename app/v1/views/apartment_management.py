@@ -143,17 +143,17 @@ class Scripts(Resource):
             uploadsjob2 = q.enqueue_call(
                 func=advanta_sms_delivery, args=(kiotapay_api_key,kiotapay_partner_id,r,), result_ttl=5000
                 )
-        # cco = CompanyOp.fetch_company_by_name("")
-        # props = cco.props
-        # for p in props:
-
-        #     payment_details_obj = p.paymentdetails
-        #     if not payment_details_obj:
-        #         print("noooooonnnoonooo",p.paymentdetails)
-        #         p = PaymentDetailOp(paytype,None,"","Equity","","",bankaccountnumber,"247247",p.id)
-        #         p.save()
-        #     else:
-        #         PaymentDetailOp.update_details(payment_details_obj,"",nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
+        cco = CompanyOp.fetch_company_by_name("Sentom Investment")
+        if cco:
+            props = cco.props
+            for p in props:
+                payment_details_obj = p.paymentdetails
+                if not payment_details_obj:
+                    print("noooooonnnoonooo",p.paymentdetails)
+                    p = PaymentDetailOp("bankpay",None,"","Equity","","SENTOM INVESTMENT","441365","247247",p.id)
+                    p.save()
+                else:
+                    PaymentDetailOp.update_details(payment_details_obj,"","","","","","SENTOM INVESTMENT","441365","247247")
 
 
         return "working..."

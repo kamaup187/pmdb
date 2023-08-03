@@ -749,14 +749,20 @@ class PaymentDetailOp(PaymentDetail,Base):
     def update_details(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
         if paytype:
             self.paytype = paytype
-        self.nartype = nartype
-        self.mpesapaybill = paybill
-
-        self.bankname = bankname
-        self.bankbranch = bankbranch
-        self.bankaccountname = bankaccountname
-        self.bankaccountnumber = bankaccountnumber
-        self.bankpaybill = bankpaybill
+        if nartype:
+            self.nartype = nartype
+        if paybill:
+            self.mpesapaybill = paybill
+        if bankname:
+            self.bankname = bankname
+        if bankbranch:
+            self.bankbranch = bankbranch
+        if bankaccountname:
+            self.bankaccountname = bankaccountname
+        if bankaccountnumber:
+            self.bankaccountnumber = bankaccountnumber
+        if bankpaybill:
+            self.bankpaybill = bankpaybill
         db.session.commit()
 
 

@@ -342,14 +342,16 @@ class BalanceReport(Resource):
 
             if target == "lasshouse":
                 report = inva_send_sms(sms_text,tel)
-            elif prop_obj.company.sms_provider == "Advanta":
-                sms_sender(prop_obj.company.name,sms_text,tel)
+                # elif prop_obj.company.sms_provider == "Advanta":
             else:
-                try:
-                    notify = sms.send(sms_text, recipient,sender)
-                    print(notify)
-                except Exception as e:
-                    print("sending logs failed",e)
+                sms_sender(prop_obj.company.name,sms_text,tel)
+                advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+            # else:
+            #     try:
+            #         notify = sms.send(sms_text, recipient,sender)
+            #         print(notify)
+            #     except Exception as e:
+            #         print("sending logs failed",e)
         else:
             print("Telephone not provided")
 

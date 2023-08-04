@@ -7844,7 +7844,7 @@ class CallBackUrlMerit(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
-class CallBackUrlValidateTestFamily(Resource):
+class CallBackUrlValidateFamily(Resource):
     def post(self):
         authenticated = False
 
@@ -8023,7 +8023,7 @@ class CallBackUrlValidateTestFamily(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
-class CallBackUrlTestFamily(Resource):
+class CallBackUrlFamily(Resource):
     def post(self):
         authenticated = False
 

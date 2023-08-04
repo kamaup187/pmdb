@@ -5905,8 +5905,10 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                 str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0735267087)"
             elif co.name == "Malibu Pharmacy Ltd":
                 str_co = f"\n\n ~ {bill.apartment.name} (Tel: 0714370597)"
+            elif co.name == "SELECTRA LIMITED":
+                str_co = f"\n\n ~ {bill.apartment.name}"
             else:
-                str_co = f"\n\n ~ {bill.apartment.name} (-{str(co.id)})"
+                str_co = f"\n\n ~ {bill.apartment.name} (uid{str(co.id)})"
 
             cclist = ["Sentom Investment","SELECTRA LIMITED"]
             if co.name == "Malibu Pharmacy Ltd":

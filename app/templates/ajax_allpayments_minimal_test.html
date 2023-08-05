@@ -663,6 +663,64 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editDepModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header pb-0">
+            <div class="smallify text-white font-weight-bold bg-gradient-info form-control mb-2">
+              Update deposits
+            </div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="depbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="editdep" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeBillModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $("#editdep").click(function(){   
+        $("#editdep").html("updating...")  
+          $.ajax({
+            url: "{{ url_for('api.updatedeposit') }}",
+            type: "POST",
+            data: {
+                    billid: $("#edit_bill_identifier").text(),
+                    rent: $("#edit_rentdep").val(),
+                    water: $("#edit_waterdep").val(),
+                    electricity: $("#edit_elecdep").val(),
+                    other:$("#edit_otherdep").val(),
+                    // status: $("input[name=depstatus]:checked").val(),
+                    // ttype: $("#ttype").text()
+                },
+            success: function(response) {
+              // $("#tenant-deposit").html(response)
+              $("#editdep").html("Update")  
+    
+            }
+          });
+      });
+    </script>
+    
+
     <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -1775,6 +1833,12 @@
 </script>
 
 <script type="text/javascript">
+  $('#editDepModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<script type="text/javascript">
   $('#editArrModal').on('hidden.bs.modal', function (e) {
     $('body').addClass('modal-open');
   });
@@ -1831,6 +1895,29 @@
       error: function(xhr) {
         $("#billprioritybed").html('<div class="center-btn text-danger mb-3">error!</div>');
         $("#editpriority").addClass("dispnone");
+        }
+    });
+  });
+
+</script>
+
+<script>
+  $("#editDepModal").on('shown.bs.modal', function(){
+    $("#editdep").removeClass("dispnone");
+    $("#depbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"editdeposits"
+          },
+      success: function(response) {
+        $("#depbed").html(response);
+      },
+      error: function(xhr) {
+        $("#depbed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        $("#editdep").addClass("dispnone");
         }
     });
   });

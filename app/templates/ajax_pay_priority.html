@@ -5,14 +5,27 @@
 
         <div class="row">
             <div class="form-group col-6 no-paddin text-black font-weight-bold text-uppercase">
-                <span>Deposit due</span>
+                <span>ITEM</span>
             </div>
             <div class="form-group col-6 no-paddin text-black font-weight-bold text-uppercase">
-                <span>Deposit paid </span>
+                <span>PRIORITY </span>
             </div>
         </div>
 
-        {%if bill.deposit_due%}
+        <div class="row">
+            <div class="form-group col-6 no-paddin input-icons">
+                <input id="depositdue"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                    type="text" value="Rent" disabled />
+            </div>
+            <div class="form-group col-6 no-paddin input-icons">
+                <input id="depositpaid"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                    placeholder="set priority" value="{{priorities.get('rent')}}" />
+            </div>
+        </div>
+
+
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
                 <input id="depositdue"
@@ -22,142 +35,90 @@
             <div class="form-group col-6 no-paddin input-icons">
                 <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="set priority" value="1" />
+                    placeholder="set priority" value="{{priorities.get('dep')}}" />
             </div>
         </div>
-        {% endif %}
 
-        {%if bill.rent_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <input id="rentdue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger"
-                    type="text" value="Rent" disabled />
-            </div>
-            <div class="form-group col-6 no-paddin input-icons">
-                <input id="rentpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="set priority" value="2" />
-            </div>
-        </div>
-        {% endif %}
-
-        {%if bill.penalty_due%}
-        <div class="row">
-            <div class="form-group col-6 no-paddin input-icons">
-                <span>Penalty due</span>
-                <input id="penaltydue"
+                <input id="depositdue"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.penalty_due}}" disabled />
+                    type="text" value="Water" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Penalty paid </span>
-                <input id="penaltypaid"
+                <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                    placeholder="set priority" value="{{priorities.get('water')}}" />
             </div>
         </div>
-        {% endif %}
-        {%if bill.maintenance_due%}
-        <div class="row">
-            <div class="form-group col-6 no-paddin input-icons">
-                <span>Service due</span>
-                <input id="servicedue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.maintenance_due}}" disabled />
-            </div>
-            <div class="form-group col-6 no-paddin input-icons">
-                <span>Service paid </span>
-                <input id="servicepaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
-            </div>
-        </div>
-        {% endif %}
 
-        {%if bill.garbage_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <input id="garbagedue"
+                <input id="depositdue"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
                     type="text" value="Garbage" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <input id="garbagepaid"
+                <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="set priority" value="3" />
+                    placeholder="set priority" value="{{priorities.get('garb')}}" />
             </div>
         </div>
 
-        {% endif %}
-        {%if bill.security_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Security due</span>
-                <input id="securitydue"
+                <input id="depositdue"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.security_due}}" disabled />
+                    type="text" value="Security" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Security paid </span>
-                <input id="securitypaid"
+                <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                    placeholder="set priority" value="{{priorities.get('sec')}}" />
             </div>
         </div>
-        {% endif %}
 
-        {%if (bill.water_due) %}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Water due</span>
-                <input id="waterdue"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 text-right text-danger"
-                    type="text" value="{{bill.water_due}}" disabled />
-            </div>
-            <div class="form-group col-6 no-paddin input-icons">
-                <span>Water paid </span>
-                <input id="waterpaid"
-                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
-            </div>
-        </div>
-        {% endif %}
-        {%if bill.electricity_due%}
-        <div class="row">
-            <div class="form-group col-6 no-paddin input-icons">
-                <span>Electricity due</span>
-                <input id="electricitydue"
+                <input id="depositdue"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.electricity_due}}" disabled />
+                    type="text" value="Service" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Electricity paid </span>
-                <input id="electricitypaid"
+                <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                    placeholder="set priority" value="{{priorities.get('serv')}}" />
             </div>
         </div>
-        {% endif %}
 
-        {%if bill.agreement_due%}
         <div class="row">
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Agreement due</span>
-                <input id="agreementdue"
+                <input id="depositdue"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                    type="text" value="{{bill.agreement_due}}" disabled />
+                    type="text" value="Penalty" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Agreement paid </span>
-                <input id="agreementpaid"
+                <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" disabled />
+                    placeholder="set priority" value="{{priorities.get('fine')}}" />
             </div>
         </div>
+
+        <div class="row">
+            <div class="form-group col-6 no-paddin input-icons">
+                <input id="depositdue"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                    type="text" value="Electricity" disabled />
+            </div>
+            <div class="form-group col-6 no-paddin input-icons">
+                <input id="depositpaid"
+                    class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                    placeholder="set priority" value="{{priorities.get('elec')}}" />
+            </div>
+        </div>
+
 
     </div>
-    {% endif %}
 </div>
 
 

@@ -1115,7 +1115,32 @@ class EditBill(Resource):
             update = ['','Kshs']
 
         if target == "set priority":
-            return render_template("ajax_pay_priority.html",bill=bill)
+            if current_user.company_id == 114:
+                order = {
+                    "rent":"1",
+                    "garb":2,
+                    "dep":6,
+                    "water":4,
+                    "sec":5,
+                    "serv":7,
+                    "fine":3,
+                    "agre":8,
+                    "elec":9
+                }
+            else:
+                order = {
+                "dep":"1",
+                "rent":"2",
+                "garb":3,
+                "water":4,
+                "sec":6,
+                "serv":7,
+                "fine":5,
+                "agre":8,
+                "elec":9
+                }
+
+            return render_template("ajax_pay_priority.html",priorities=order)
 
         if target == "editarrears":
             if warning:
@@ -1136,6 +1161,16 @@ class EditBill(Resource):
                 return render_template("ajax_dynamic_billbalances.html",bill=bill,warning=warning)
             else:
                 return render_template("ajax_dynamic_billbalances.html",bill=bill,warning=warning)
+            
+        elif target == "editdeposits":
+            dep = None
+            tenant = bill.tenant if bill.tenant  else None
+            if tenant:
+                dep = tenant.deposits if tenant.deposits else None
+            if dep:
+                return render_template("ajax_dynamic_dep_form.html",bill=dep)
+            else:
+                return "N/A"
 
         else:
             return render_template("ajax_dynamic_bill_form_alt.html",waterlock=update[0],waterlock_icon=update[1],bill=bill,warning=warning)
@@ -3820,6 +3855,8 @@ class UpdateDeposit(Resource):
         tenantid = request.form.get("tenant_id")
         ttype = request.form.get("ttype")
 
+        bill_id = request.form.get('billid')
+
         rentdep = request.form.get("rent")
         waterdep = request.form.get("water")
         elecdep = request.form.get("electricity")
@@ -3830,10 +3867,14 @@ class UpdateDeposit(Resource):
 
         if ttype == "owner" or ttype == "resident":
             return ""
+        elif bill_id:
+            billid = get_identifier(bill_id)
+            bill = MonthlyChargeOp.fetch_specific_bill(billid)
+            tenant_obj = bill.tenant
+            
         else:
             tenant_id = get_identifier(tenantid)
             tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-            house_obj = check_house_occupied(tenant_obj)[1]
 
         dep = tenant_obj.deposits
 

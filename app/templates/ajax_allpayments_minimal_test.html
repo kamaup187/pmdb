@@ -2006,7 +2006,8 @@
                   house: $("#select_house").val(),
                   cbid:$("#c2bitem_id").text(),
                   paidamount:$("#paidamount").val(),
-                  target:"breakdown"
+                  target:"breakdown",
+                  target2:"minimal"
                 },
             success: function(response) {
               $("#billbreakdown").html(response);
@@ -2084,7 +2085,8 @@
                   house2: $("#house-holder").text(),
                   cbid:$("#c2bitem_id").text(),
                   paidamount: $("#paidamount").val(),
-                  target: "breakdown"
+                  target: "breakdown",
+                  target2:"minimal",
                 },
                 success: function (response) {
                   $("#billbreakdown").html(response);

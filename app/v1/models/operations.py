@@ -3862,9 +3862,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def calculate_paid_deposits(self):
         if self.tenant:
-            if self.tenant.deposits:
+            if self.tenant.deposit:
                 try:
-                    deps = self.tenant.deposits.total
+                    deps = self.tenant.deposit
                     # bal = deps-self.deposit_due
                     return f"{deps:,.1f}"
                 except:
@@ -3880,9 +3880,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         tot = wt+rent+elec
 
         if self.tenant:
-            if self.tenant.deposits:
+            if self.tenant.deposit:
                 try:
-                    deps = self.tenant.deposits.total
+                    deps = self.tenant.deposit
                     bal = tot - deps
                     return f"{bal:,.1f}"
                 except:

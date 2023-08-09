@@ -190,6 +190,9 @@
                       <th class="">TENANT NAME</th>
                       <th class="">BB/F</th>
                       <th class="rent">RENT</th>
+                      <th class="rent">RENT PAID</th>
+                      <th class="rent">RENT BAL</th>
+
                       <th class="water">WATER</th>
                       <th class="garbage">GARBAGE</th>
                       <th class="security dispnone">SECURITY</th>
@@ -211,7 +214,11 @@
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['arrears'] }}</td>
-                      <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
+
+                      <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-due'] }}</td>
+
                       <td class="data-cell text-right water">{{ bill['water'] }}</td>
                       <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
                       <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
@@ -232,6 +239,8 @@
                       <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right rent">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right rent">-</td>
+                      <td class="font-weight-bold text-right rent">-</td>
                       <td class="font-weight-bold text-right water">{{watertotal}}</td>
                       <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
                       <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
@@ -346,6 +355,9 @@
                   <th class="">TENANT NAME</th>
                   <th class="">BB/F</th>
                   <th class="rent">RENT</th>
+                  <th class="rent">RENT PAID</th>
+                  <th class="rent">RENT BAL</th>
+
                   <th class="water">WATER</th>
                   <th class="garbage">GARBAGE</th>
                   <th class="security dispnone">SECURITY</th>
@@ -366,7 +378,10 @@
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['arrears'] }}</td>
-                  <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
+                  <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
+                  <td class="data-cell text-right rent">{{ bill['rent-due'] }}</td>
+
                   <td class="data-cell text-right water">{{ bill['water'] }}</td>
                   <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
                   <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
@@ -386,6 +401,8 @@
                   <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right rent">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right rent">-</td>
+                  <td class="font-weight-bold text-right rent">-</td>
                   <td class="font-weight-bold text-right water">{{watertotal}}</td>
                   <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
                   <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>

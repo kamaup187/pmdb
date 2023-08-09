@@ -194,8 +194,8 @@
                       <th class="garbage">GARBAGE</th>
                       <th class="security dispnone">SECURITY</th>
                       <th class="service dispnone">SERVICE</th>
-                      <th class="deposit">DEPOSIT DUE</th>
                       <th class="deposit">DEPOSIT PAID</th>
+                      <th class="deposit">DEPOSIT BAL</th>
 
                       <!-- <th class="penalty">LPF</th> -->
                       <th class="">TOTAL</th>
@@ -216,8 +216,8 @@
                       <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
                       <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                       <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
-                      <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                       <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
+                      <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
                       <td class="data-cell text-right">{{bill['totalalt']}}</td>
                       <td class="data-cell text-right">{{bill['amounttotal']}}</td>
@@ -236,7 +236,7 @@
                       <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
                       <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                       <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
-                      <td class="font-weight-bold text-right deposit">{{deposittotal}}</td>
+                      <td class="font-weight-bold text-right deposit">-</td>
                       <td class="font-weight-bold text-right deposit">-</td>
 
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
@@ -350,8 +350,8 @@
                   <th class="garbage">GARBAGE</th>
                   <th class="security dispnone">SECURITY</th>
                   <th class="service dispnone">SERVICE</th>
-                  <th class="deposit">DEPOSIT DUE</th>
                   <th class="deposit">DEPOSIT PAID</th>
+                  <th class="deposit">DEPOSIT BAL</th>
                   <!-- <th class="penalty">LPF</th> -->
                   <th class="">TOTAL</th>
                   <th class="">AMOUNT DUE</th>
@@ -371,8 +371,8 @@
                   <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
                   <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                   <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
-                  <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                   <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
+                  <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                   <td class="data-cell text-right">{{bill['totalalt']}}</td>
                   <td class="data-cell text-right">{{bill['amounttotal']}}</td>
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
@@ -390,7 +390,7 @@
                   <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
                   <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                   <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
-                  <td class="font-weight-bold text-right deposit">{{deposittotal}}</td>
+                  <td class="font-weight-bold text-right deposit">-</td>
                   <td class="font-weight-bold text-right deposit">-</td>
                   <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                   <td class="font-weight-bold text-right">{{billtotal}}</td>

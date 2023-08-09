@@ -3860,12 +3860,30 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             invnum = f"{self.id}"
         return invnum
 
-    def calculate_deposits(self):
+    def calculate_paid_deposits(self):
         if self.tenant:
             if self.tenant.deposits:
                 try:
                     deps = self.tenant.deposits.total
-                    bal = deps-self.deposit_due
+                    # bal = deps-self.deposit_due
+                    return f"{deps:,.1f}"
+                except:
+                    return 0.0
+            return 0.0
+        return 0.0
+
+    def calculate_deposit_balance(self):
+        wt = self.house.housecode.waterdep if self.house.housecode else 0.0
+        rent = self.house.housecode.rentrate if self.house.housecode else 0.0
+        elec = self.house.housecode.elecdep if self.house.housecode else 0.0
+
+        tot = wt+rent+elec
+
+        if self.tenant:
+            if self.tenant.deposits:
+                try:
+                    deps = self.tenant.deposits.total
+                    bal = tot - deps
                     return f"{bal:,.1f}"
                 except:
                     return 0.0
@@ -3909,8 +3927,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
-            'deposit-paid':MonthlyChargeOp.calculate_deposits(self),
-            'deposit-due':MonthlyChargeOp.fig_format(self.deposit_due),
+            'deposit-paid':MonthlyChargeOp.calculate_paid_deposits(self),
+            'deposit-due':MonthlyChargeOp.calculate_deposit_balance(self),
 
             'deductions':MonthlyChargeOp.calculate_total_alt(self.house.housecode.int_commission,self.house.housecode.servicerate),
             'deparg':MonthlyChargeOp.combine_deparg(self),

@@ -367,6 +367,7 @@
                   <!-- <th class="penalty">LPF</th> -->
                   <th class="">TOTAL</th>
                   <th class="">AMOUNT DUE</th>
+                  <th class="paidedit">PAID(edit)</th>
                   <th class="">TOTAL PAID</th>
                   <th class="">BC/F</th>
 
@@ -390,6 +391,7 @@
                   <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                   <td class="data-cell text-right">{{bill['totalalt']}}</td>
                   <td class="data-cell text-right">{{bill['amounttotal']}}</td>
+                  <td class="data-cell text-right paidedit"> </td>
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['balance'] }}</td>
                 </tr>
@@ -412,6 +414,7 @@
                   <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{amounttotal}}</td>
+                  <td class="text-right paidedit"> - </td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
                   <td class="font-weight-bold text-right">{{bcftotal}}</td>
                 </tr>

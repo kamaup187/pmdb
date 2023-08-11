@@ -8181,11 +8181,11 @@ class CallBackUrlFamily(Resource):
                         ftime = f'{curr_time.strftime("%d-%b-%y")} {curr_time.strftime("%H:%M:%p")}'
                         # response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
                         erpRefId = f"0{data_obj.id}00{company_id}{curr_time.month}{curr_time.year}"
-                        response = {
-                            "resultCode": 0,
-                            "resultDesc": "Successful",
-                            "erpRefId": erpRefId
-                        }
+                        # response = {
+                        #     "resultCode": 0,
+                        #     "resultDesc": "Successful",
+                        #     "erpRefId": erpRefId
+                        # }
 
                         response = {
                             "status_code ": "PAYMENT_ACK",
@@ -8193,6 +8193,79 @@ class CallBackUrlFamily(Resource):
                             "payment_ref": erpRefId,
                             "date_time": ftime
                             }
+
+
+
+                        com = CompanyOp.fetch_company_by_id(company_id)
+                        props = com.props
+
+                        prop = None
+                        if bill_ref_num:
+
+                            if bill_ref_num.startswith("TNT"):
+                                clean_ref = bill_ref_num.replace("TNT", "")
+                                tenant_obj = TenantOp.fetch_tenant_by_id(clean_ref)
+                            else:
+                                tenant_obj = TenantOp.fetch_tenant_by_uid(bill_ref_num)
+                        else:
+                            tenant_obj = None
+
+                        if tenant_obj:
+                            target_house = check_house_occupied(tenant_obj)[1]
+                            if target_house:
+                                prop = target_house.apartment
+                        else:
+                            target_house = None
+
+                        if not target_house:
+                            unformatted_ref = bill_ref_num.replace(" ","") if bill_ref_num else ""
+                            if unformatted_ref:
+                                formatted_ref = bill_ref_num.upper()
+
+                            for prp in props:
+                                for house in prp.houses:
+                                    n = name_standard(house.name)
+                                    if n == formatted_ref:
+                                        prop = house.apartment
+                                        target_house = house
+                                        break
+
+                        if not target_house:
+                            print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+                            # return {"message": "House not found"}, 404
+                        else:
+
+                            propid = prop.id if prop else None
+
+                            dict_array = []
+
+                            if prop:
+                                payperiod = prop.billing_period
+
+                                dict_obj = {
+                                "housename":target_house.name,
+                                "amount":trans_amnt,
+                                "date":"",
+                                "ref":trans_id,
+                                "desc":"",
+                                "comment":""
+                                }
+
+                                dict_array.append(dict_obj)
+
+                                uploadsjob2 = q.enqueue_call(
+                                    func=read_payments_excel, args=(dict_array,payperiod,propid,1,data_obj.id,), result_ttl=5000
+                                )
+
+                                CtoBop.update_status(data_obj,"claimed")
+
+
+                            # auto_consume_ctob2(ctob_obj)
+
+
+
+
+
 
                 else:
                     response = {

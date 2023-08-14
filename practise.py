@@ -123,4 +123,23 @@
 #         respdict = None
 
 #     return respdict
+def name_standard(name):
+    try:
+        n1 = name.replace(" ","")
+        n2 = n1.upper()
+    except:
+        n2 = name
+    return n2
+
+n = name_standard("b211,b210")
+
+print(n)
+
+if "," in n:
+    n_units = n.split(",")
+else:
+    n_units = [n]
+
+
+print("yoyoyo",n_units)
 

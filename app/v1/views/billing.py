@@ -8217,21 +8217,61 @@ class CallBackUrlFamily(Resource):
                         else:
                             target_house = None
 
+                        multiple_units = []
+
                         if not target_house:
-                            unformatted_ref = bill_ref_num.replace(" ","") if bill_ref_num else ""
-                            if unformatted_ref:
-                                formatted_ref = bill_ref_num.upper()
+                            # unformatted_ref = bill_ref_num.replace(" ","") if bill_ref_num else ""
+                            # if unformatted_ref:
+                            #     formatted_ref = bill_ref_num.upper()
+                            formatted_ref = name_standard(bill_ref_num)
+
+                            if "," in formatted_ref:
+                                n_units = formatted_ref.split(",")
+                            else:
+                                n_units = [formatted_ref]
 
                             for prp in props:
                                 for house in prp.houses:
                                     n = name_standard(house.name)
-                                    if n == formatted_ref:
+                                    if n in n_units:
                                         prop = house.apartment
                                         target_house = house
                                         break
 
+                            for prp in props:
+                                for house in prp.houses:
+                                    n = name_standard(house.name)
+                                    if n in n_units:
+                                        multiple_units.append(n)
+                                      
+
                         if not target_house:
                             print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+
+                            if multiple_units:
+                                propid = prop.id if prop else None
+
+                                dict_array = []
+
+                                if prop:
+                                    payperiod = prop.billing_period
+
+                                    dict_obj = {
+                                    "housename":multiple_units,
+                                    "amount":trans_amnt,
+                                    "date":"",
+                                    "ref":trans_id,
+                                    "desc":"",
+                                    "comment":"multiple units"
+                                    }
+
+                                    dict_array.append(dict_obj)
+
+                                    # uploadsjob2 = q.enqueue_call(
+                                    #     func=read_payments_excel_multiple, args=(dict_array,payperiod,propid,1,data_obj.id,), result_ttl=5000
+                                    # )
+
+                                    CtoBop.update_status(data_obj,"claimed")
                             # return {"message": "House not found"}, 404
                         else:
 

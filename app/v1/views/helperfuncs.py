@@ -6737,6 +6737,36 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
 
     return "completed"
 
+def calculate_paid_deposits(bill):
+    if bill.tenant:
+        if bill.tenant.deposit:
+            try:
+                return bill.tenant.deposit
+            except:
+                return 0.0
+        return 0.0
+    return 0.0
+
+def calculate_deposit_balance(bill):
+    wt = bill.house.housecode.waterdep if bill.house.housecode else 0.0
+    rent = bill.house.housecode.rentrate if bill.house.housecode else 0.0
+    elec = bill.house.housecode.elecdep if bill.house.housecode else 0.0
+
+    tot = wt+rent+elec
+
+    if bill.tenant:
+        if bill.tenant.deposit:
+            try:
+                deps = bill.tenant.deposit
+                if (tot-deps) > 0:
+                    return tot - deps
+                else:
+                    return 0.0
+            except:
+                return 0.0
+        return 0.0
+    return 0.0
+
 def read_biodata_excel(dict_array,apartment_id,user_id):
     from app import create_app
     app = create_app()

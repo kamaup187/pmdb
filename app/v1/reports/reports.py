@@ -3001,27 +3001,27 @@ class GeneralRentStatement(Resource):
 
         ###################################################################################################
    
+        if reporttype == "vacant units":
+            vacants = filter_out_occupied_houses(apartment_obj.name)
 
-        vacants = filter_out_occupied_houses(apartment_obj.name)
-
-        for vac in vacants:
-            if vac.id in house_ids:
-                continue
-            new_item = {
-                'id':"0",
-                'delid':"0",
-                'editid':"0",
-                'house':vac.name,
-                'tenant-alt':"--VACANT--",
-                'vacancy':"text-danger",
-                'arrears':0.0,
-                'deposit':0.0,
-                'rent':0.0,
-                'total':0.0,
-                'paid':0.0,
-                'balance': 0.0
-            }
-            detailed_bills.append(new_item)
+            for vac in vacants:
+                if vac.id in house_ids:
+                    continue
+                new_item = {
+                    'id':"0",
+                    'delid':"0",
+                    'editid':"0",
+                    'house':vac.name,
+                    'tenant-alt':"--VACANT--",
+                    'vacancy':"text-danger",
+                    'arrears':0.0,
+                    'deposit':0.0,
+                    'rent':0.0,
+                    'total':0.0,
+                    'paid':0.0,
+                    'balance': 0.0
+                }
+                detailed_bills.append(new_item)
 
 
         bbftotal = (f"{totalbbf:,}")

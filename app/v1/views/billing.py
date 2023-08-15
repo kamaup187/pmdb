@@ -3294,13 +3294,31 @@ class ReceivePayment(Resource):
                 security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
                 service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
 
-                if specific_charge_obj.tenant_id:
-                    if specific_charge_obj.house.housecode.rentrate:
-                        rent_paid += overpayment
-                else:
-                    if specific_charge_obj.ptenant_id:
-                        if specific_charge_obj.house.housecode.servicerate:
-                            service_paid += overpayment
+                if specific_charge_obj.apartment.company_id == 114:
+                    tenant_dep_deficit = calculate_deposit_balance(specific_charge_obj)
+                    if tenant_dep_deficit:
+                        if overpayment > tenant_dep_deficit:
+                            total = calculate_paid_deposits(specific_charge_obj) + tenant_dep_deficit
+                            TenantOp.update_deposit(tenant_obj,total)
+                            overpayment -= tenant_dep_deficit
+                        elif overpayment < tenant_dep_deficit:
+                            total = calculate_paid_deposits(specific_charge_obj) + overpayment
+                            TenantOp.update_deposit(tenant_obj,total)
+                            overpayment = 0
+                        elif overpayment == tenant_dep_deficit:
+                            total = calculate_paid_deposits(specific_charge_obj) + overpayment
+                            TenantOp.update_deposit(tenant_obj,total)
+                            overpayment = 0
+
+                             
+                if overpayment > 1:
+                    if specific_charge_obj.tenant_id:
+                        if specific_charge_obj.house.housecode.rentrate:
+                            rent_paid += overpayment
+                    else:
+                        if specific_charge_obj.ptenant_id:
+                            if specific_charge_obj.house.housecode.servicerate:
+                                service_paid += overpayment
 
                 deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
@@ -3324,14 +3342,14 @@ class ReceivePayment(Resource):
                     garbagebal = specific_charge_obj.garbage_due - garbagepaid
                     depositbal = specific_charge_obj.deposit_due - depositpaid
                     agreementbal = specific_charge_obj.agreement_due - agreementpaid
-
-                    if specific_charge_obj.tenant_id:
-                        if specific_charge_obj.house.housecode.rentrate:
-                            rentbal -= overpayment
-                    else:
-                        if specific_charge_obj.ptenant_id:
-                            if specific_charge_obj.house.housecode.servicerate:
-                                servicebal -= overpayment
+                    if overpayment > 1:
+                        if specific_charge_obj.tenant_id:
+                            if specific_charge_obj.house.housecode.rentrate:
+                                rentbal -= overpayment
+                        else:
+                            if specific_charge_obj.ptenant_id:
+                                if specific_charge_obj.house.housecode.servicerate:
+                                    servicebal -= overpayment
 
                     MonthlyChargeOp.update_dues(specific_charge_obj,bookbal,instbal,addfeebal,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 except Exception as e:

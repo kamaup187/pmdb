@@ -3034,7 +3034,7 @@ class GeneralRentStatement(Resource):
 
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} / {target_period.year}"
+        timeline = f"{str_month.upper()} / {target_period.year} -- Category : {reporttype}"
 
         try:
             ratio = (f"{(totalpaid/totaldue)*100:,.1f} %")

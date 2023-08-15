@@ -2077,6 +2077,7 @@ class CombinedReport(Resource):
                 "depositdue":0.0,
                 'house':vac.name,
                 'tenant':"--VACANT--",
+                'tenant-alt':"--VACANT--",
                 'vacancy':"text-danger",
                 'arrears':0,
                 'rent':0.0,

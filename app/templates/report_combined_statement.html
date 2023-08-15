@@ -190,20 +190,20 @@
                       <th class="">TENANT NAME</th>
                       <th class="">BB/F</th>
                       <th class="rent">RENT</th>
+                      <th class="rent">RENT DUE</th>
                       <th class="rent">RENT PAID</th>
-                      <th class="rent">RENT BAL</th>
 
                       <th class="water">WATER</th>
                       <th class="garbage">GARBAGE</th>
                       <th class="security dispnone">SECURITY</th>
                       <th class="service dispnone">SERVICE</th>
-                      <th class="deposit">DEPOSIT PAID</th>
-                      <th class="deposit">DEPOSIT BAL</th>
+                      <th class="deposit">D PAID</th>
+                      <th class="deposit">D BAL</th>
 
                       <!-- <th class="penalty">LPF</th> -->
                       <th class="">TOTAL</th>
-                      <th class="">AMOUNT DUE</th>
-                      <th class="">TOTAL PAID</th>
+                      <th class="">DUE</th>
+                      <th class="">PAID</th>
                       <th class="">BC/F</th>
 
                     </tr>
@@ -216,8 +216,8 @@
                       <td class="data-cell text-right">{{ bill['arrears'] }}</td>
 
                       <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
-                      <td class="data-cell text-right rent">{{ bill['rent-due'] }}</td>
 
                       <td class="data-cell text-right water">{{ bill['water'] }}</td>
                       <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
@@ -226,8 +226,7 @@
                       <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
                       <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
-                      <td class="data-cell text-right">{{bill['totalalt']}}</td>
-                      <td class="data-cell text-right">{{bill['amounttotal']}}</td>
+                      <td class="data-cell text-right">{{bill['totaldue']}}</td>
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['balance'] }}</td>
                     </tr>
@@ -249,7 +248,6 @@
                       <td class="font-weight-bold text-right deposit">-</td>
 
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
-                      <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{amounttotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
@@ -259,30 +257,52 @@
 
           </div>
 
-          <div class="divjust-end ln-16 mobile-malaysian noprint">
-            {%if not expenselist%}
-            <div class="hide">space</div>
-            {%endif%}
+          <div class="divjust-end ln-16 mobile-malaysian nobreak">
+            <div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Approved By:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Date:</div>
+                <div class="col-6">........................</div>
+              </div>
+            </div>
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                <div class="mb-1 text-black-bold">TOTAL RENT PAID TO MGT</div>
-                <div class="text-black-bold mb-1">TOTALS</div>
+                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
+
+                <div class="text-gray-900 mb-1">TOTALS</div>
                 <div class="hide mb-2">space</div>
 
 
 
 
-                <div class="mb-1 pt-2 text-black-bold">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}} on rent paid</div>
 
-                <div class="mb-1 text-black-bold">OTHER DEDUCTIONS</div>
-                <div class="mb-1 text-black-bold">TOTAL DEDUCTIONS</div>
+                <div class="mb-1">OTHER DEDUCTIONS</div>
+                <div class="mb-1">TOTAL DEDUCTIONS</div>
                 <div class="hide mb-2">space</div>
-                <div class="mb-3 text-black-bold">NET PAYABLE</div>
+                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
-                <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
+                <div class="mb-1 text-gray-900">Kshs {{formatted_paidmgt}}</div>
+                <div class="mb-1 text-gray-900">Kshs {{formatted_paidll}}</div>
 
                 <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                 <div class="hide mb-2">space</div>
@@ -294,7 +314,7 @@
 
                 <div class="hide mb-2">space</div>
 
-                <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
+                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
               </div>
             </div>
           </div>
@@ -355,20 +375,20 @@
                   <th class="">TENANT NAME</th>
                   <th class="">BB/F</th>
                   <th class="rent">RENT</th>
+                  <th class="rent">RENT DUE</th>
                   <th class="rent">RENT PAID</th>
-                  <th class="rent">RENT BAL</th>
 
                   <th class="water">WATER</th>
                   <th class="garbage">GARBAGE</th>
                   <th class="security dispnone">SECURITY</th>
                   <th class="service dispnone">SERVICE</th>
-                  <th class="deposit">DEPOSIT PAID</th>
-                  <th class="deposit">DEPOSIT BAL</th>
+                  <th class="deposit">D PAID</th>
+                  <th class="deposit">D BAL</th>
                   <!-- <th class="penalty">LPF</th> -->
                   <th class="">TOTAL</th>
-                  <th class="">AMOUNT DUE</th>
+                  <th class="">DUE</th>
                   <th class="paidedit">PAID(edit)</th>
-                  <th class="">TOTAL PAID</th>
+                  <th class="">PAID</th>
                   <th class="">BC/F</th>
 
                 </tr>
@@ -380,8 +400,8 @@
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['arrears'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
-                  <td class="data-cell text-right rent">{{ bill['rent-due'] }}</td>
 
                   <td class="data-cell text-right water">{{ bill['water'] }}</td>
                   <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
@@ -389,10 +409,9 @@
                   <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
                   <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
                   <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
-                  <td class="data-cell text-right">{{bill['totalalt']}}</td>
-                  <td class="data-cell text-right">{{bill['amounttotal']}}</td>
+                  <td class="data-cell text-right">{{bill['totaldue']}}</td>
                   <td class="data-cell text-right paidedit"> </td>
-                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe}}</td>
                   <td class="data-cell text-right">{{ bill['balance'] }}</td>
                 </tr>
               {% endfor %}
@@ -412,7 +431,6 @@
                   <td class="font-weight-bold text-right deposit">-</td>
                   <td class="font-weight-bold text-right deposit">-</td>
                   <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
-                  <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{amounttotal}}</td>
                   <td class="text-right paidedit"> - </td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
@@ -447,6 +465,8 @@
               <div class="divjust-end mr-5">
                 <div class="mr-4">
                   <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
+
                   <div class="text-gray-900 mb-1">TOTALS</div>
                   <div class="hide mb-2">space</div>
   
@@ -462,8 +482,9 @@
                 </div>
   
                 <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{formatted_netrent}}</div>
-  
+                  <div class="mb-1 text-gray-900">Kshs {{formatted_paidmgt}}</div>
+                  <div class="mb-1 text-gray-900">Kshs {{formatted_paidll}}</div>
+
                   <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                   <div class="hide mb-2">space</div>
   

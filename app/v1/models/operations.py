@@ -3696,7 +3696,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         else:
             decor_fig = 0.0
 
-        tids = [8466,1258,1261,1268]
+        # tids = [8466,1258,1261,1268]
+        tids = []
 
         try:
             if self.tenant.id in tids:
@@ -3938,6 +3939,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'total':MonthlyChargeOp.fig_format(self.total_bill),
             'totalalt':MonthlyChargeOp.calculate_total_alt_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
             'amounttotal':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
+            'totaldue':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.garbage,self.security),
             'paid':MonthlyChargeOp.calculate_pbreakdown(self),
             'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),

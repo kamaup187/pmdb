@@ -1,0 +1,673 @@
+{% extends 'basereport.html' %}
+
+{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+
+<span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
+<span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="formwrapper">
+            <div class="card bt-none noprint">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-light underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">General Rent statement</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                  </div>
+                </a>
+                
+                <div class="divjust-end">
+                  {%if prop%}
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                  {%endif%}
+                </div>
+                
+
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="noprint" id="collapseCardExample">
+                <div class="card-body p-0">
+                    <form class="row bg-light" method="GET" action="/generalrent/statement">
+                      <div class="col-lg-3 form-group mb-2 ml-lg-5">
+                        <label class="mb-0">Select type:</label>
+                        <select name="reporttype" class="select-css" id="reporttype">
+                          <option slected value="all invoices">All invoices</option>
+                          <option value="paid invoices">Paid invoices</option>
+                          <option value="unpaid invoices">Unpaid invoices</option>
+                          <option value="partial paid invoices">Partial paid invoices</option>
+
+                        </select>
+                      </div>
+                    
+                      <div class="col-lg-3 form-group mb-2">
+                        <label class="mb-0">Select property:</label>
+                        <select name="prop" class="select-css" id="prop" required>
+                          <option disabled selected value> select property </option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    
+                      <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                        <label class="mb-0">Select month:</label>
+                        <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div>
+                    
+                      <div class="col-lg-2 form-group mb-2">
+                        <button type="submit" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                      </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">GENERAL STATEMENT FOR RENT FOR {{timeline}}</span></span>
+          </div>
+
+          
+          
+          
+          {%if prop_obj%}
+          <div class="divjust-end text-black">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.landlord%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+                  {% endif %}
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.location_id%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          
+            <div class="mt-5 mr-2">
+              <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
+            </div>
+          
+          </div>
+          {%endif%}
+
+          <!-- <div class="center-btn mb-4 mt-4">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div> -->
+
+                    
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">PNO</th>
+                      <th class="">TENANT NAME</th>
+                      <th class="header-right">TYPE</th>
+                      <th class="header-right">BB/F</th>
+                      <th class="header-right">DEP</th>
+                      <th class="header-right">RENT</th>
+                      <th class="header-right">TOTAL DUE</th>
+                      <th class="header-right">TOTAL PAID</th>
+                      <th class="header-right">DATE PAID</th>
+                      <th class="header-right">BC/F</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+                      <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                      <td class="data-cell text-right">{{ bill['arrears'] }}</td>
+                      <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{bill['total']}}</td>
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right">{{deptotal}}</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{billtotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+          <div>
+            {%if expenselist%}
+            <div class="fs-65pc">
+              <div class="">Expenses</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">House</th>
+                        <th class="p-0">Expense</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['house'] }}</td>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="2" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
+            {%endif%}
+          </div>
+
+          <div class="divjust-end ln-16 mobile-malaysian">
+            <div class="mt-4">
+
+              <div class="mb-2">
+                <div class="">
+                  Prepared By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                  <div class="ln-10">_____________________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Checked By:
+                </div>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold text-black-bold"></div>
+                  <div class="ln-10">_____________________</div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Approved By:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Cheque No:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div>
+                  Date:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+  
+            </div>
+
+
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12  dispnone printdisplay text-uppercase">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+         
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">GENERAL STATEMENT FOR RENT FOR {{timeline}}</span></span>
+          </div>
+
+          {%if prop_obj%}
+          <div class="divjust-end">
+          <div class="mb-2 mt-1">
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+            </div>
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.landlord%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+              {% endif %}
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.location_id%}
+              <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mt-5 mr-2">
+            <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
+          </div>
+
+          </div>
+          {%endif%}
+
+          <div class="table-responsive">
+            <table class="table" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">PNO</th>
+                  <th class="">TENANT NAME</th>
+                  <th class="">TYPE</th>
+                  <th class="">BB/F</th>
+                  <th class="">RENT</th>
+                  <th class="">TOTAL DUE</th>
+                  <th class="">TOTAL PAID</th>
+                  <th class="">DATE PAID</th>
+                  <th class="">BC/F</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-left no-wrap">{{ bill['tenant-alt']}}</td>
+                  <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right">{{bill['rent-total']}}</td>
+                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                  <td class="font-weight-bold text-right">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right">{{billtotal}}</td>
+                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                </tr>
+              </tfoot>
+            </table>
+            {%if expenselist%}
+            <div class="fs-65pc">
+              <div class="">Expenses</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">House</th>
+                        <th class="p-0">Expense</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['house'] }}</td>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="2" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
+            {%endif%}
+            <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              <div class="mt-4">
+
+                <div class="mb-2">
+                  <div class="">
+                    Prepared By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">{{name}}</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Checked By:
+                  </div>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold"></div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Approved By:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Cheque No:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Date:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+    
+              </div>
+  
+              <div class="divjust-end mr-5">
+                <div class="mr-4">
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                  <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
+                  <!-- <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div> -->
+                  <div class="text-gray-900 mb-1">TOTALS</div>
+                  <div class="hide mb-2">space</div>
+  
+  
+  
+  
+                  <div class="mb-1 pt-2 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
+                  <div class="mb-1 text-gray-900">MGT FEES VAT</div>
+                  <div class="mb-1 text-gray-900">LETTING FEE</div>
+                  <!-- <div class="mb-1">LETTING FEE VAT</div> -->
+  
+                  <div class="mb-1 text-gray-900">DISBURSEMENTS</div>
+                  <div class="mb-1 text-gray-900">PAID TO L.LORD</div>
+
+                  <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
+                  <div class="mb-1 text-gray-900">LANDLORD BALANCE</div>
+
+                  <div class="hide mb-2">space</div>
+                  <div class="text-gray-900 mb-3 text-110">NET PAYABLE</div>
+                </div>
+  
+                <div class="text-black">
+                  <div class="mb-1 text-gray-900">Kshs {{paidtotal_alt}}</div>
+                  <div class="mb-1 text-gray-900">Kshs {{paidll}}</div>
+                  <!-- <div class="mb-1 text-gray-900">Kshs. {{remits}}</div> -->
+                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
+                  <div class="hide mb-2">space</div>
+  
+                  <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
+                  <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
+  
+                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{paidll}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1 overline underline">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
+                  <div class="mb-1">Kshs {{remits}} (<span class="text-primary">credit</span>)</div>
+  
+                  <div class="hide mb-2">space</div>
+  
+                  <div class="text-gray-900 mb-3 text-110 overline underline">Kshs {{netpay}}</div>
+                </div>
+              </div>
+            </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title" id="paymentDetailModalLabel">Edit monthly bill summary record</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div class="mt-2" id="billeditbed"></div>
+                
+                  <div class="divbg center-btn">
+                    <button id="editbill" type="button" class="btn btn-outline-danger borderles">Update</button>
+                    <button class="btn btn-outline-secondary" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $("#month").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

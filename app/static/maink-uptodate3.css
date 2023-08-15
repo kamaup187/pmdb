@@ -807,7 +807,7 @@ body {
 .custom-header-alt th {
   padding: 4px !important;
   text-transform: uppercase;
-  font-weight: bold;
+  /* font-weight: bold; */
   color:#000 !important;
   background-color: #fafafa !important;
   text-align: center !important;
@@ -819,8 +819,19 @@ body {
   text-align: center !important;
   border-left: 2px solid #000000;
 }
+
+.custom-header-alt .header-left{
+  text-align: left !important;
+  border-left: 1px solid #dddddd;
+}
+
+.custom-header-alt .header-right{
+  text-align: right !important;
+  border-left: 1px solid #dddddd;
+}
+
 .custom-header-alt th:last-child {
-  text-align: center !important;
+  /* text-align: center !important; */
   border-right: 2px solid #000000;
 }
 

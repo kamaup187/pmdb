@@ -3753,8 +3753,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == arrears:
             return f"{arrears:,.1f}"
-        elif self.month == 9:
-            return f"{arrears:,.1f}"
+            # elif self.month == 9:
+            #     return f"{arrears:,.1f}"
         else:
             return f"{arrears:,.1f} **"
 
@@ -3773,8 +3773,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == arrears:
             return f"{arrears:,.1f}"
-        elif self.month == 9:
-            return f"{arrears:,.1f}"
+            # elif self.month == 9:
+            #     return f"{arrears:,.1f}"
         else:
             return f"{arrears:,.1f} **"
 
@@ -3797,8 +3797,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == paid:
             return f"{paid:,.1f}"
-        elif self.month == 9:
-            return f"{paid:,.1f}"
+            # elif self.month == 9:
+            #     return f"{paid:,.1f}"
         else:
             return f"{paid:,.1f} **"
 
@@ -3914,6 +3914,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'hst':MonthlyChargeOp.combine_house_tenant_alt(self),
             'idno':self.tenant.national_id if self.tenant else "-",
             'house':self.house,
+            'desc':self.house.description,
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
             'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),

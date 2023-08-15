@@ -2974,15 +2974,11 @@ class GeneralRentStatement(Resource):
         for bill in monthlybills:
             if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
                 sifted_bills.append(bill)
-                print("aye", "bill month " ,bill.month, "period selected ", target_period.month)
             elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.balance < 1:
                 sifted_bills.append(bill)
-                print("jejeje", bill.balance)
             elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "partial paid invoices" and bill.paid_amount:
                 sifted_bills.append(bill)
-                print("lololo")
             elif bill.month == target_period.month and bill.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices":
-                print("waaaallla", "bill month " ,bill.month, "period selected ", target_period.month)
                 sifted_bills.append(bill)
             else:pass
 

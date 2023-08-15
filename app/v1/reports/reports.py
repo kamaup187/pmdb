@@ -2925,6 +2925,7 @@ class GeneralRentStatement(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
+        reporttype = request.args.get("reporttype")
         target = request.args.get("target")
 
 
@@ -2967,23 +2968,40 @@ class GeneralRentStatement(Resource):
         db.session.expire(apartment_obj)
 
         monthlybills = apartment_obj.monthlybills
+        sifted_bills = []
+        [print(e.month, e.year) for e in monthlybills]
         ###################################################################################################
         for bill in monthlybills:
-            if bill.month == target_period.month and bill.year == target_period.year:
-                # print("AYYYYYYE",bill.paidll,"houseeee",bill.house,"amount paiiideee",bill.paid_amount)
-                house_ids.append(bill.house_id)
-                """compute subtotals"""
-                # bill_item = LandlordSummaryOp.external_view(bill)
-                bill_item = MonthlyChargeOp.view_detail(bill)
+            if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
+                sifted_bills.append(bill)
+                print("aye", "bill month " ,bill.month, "period selected ", target_period.month)
+            elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.balance < 1:
+                sifted_bills.append(bill)
+                print("jejeje", bill.balance)
+            elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "partial paid invoices" and bill.paid_amount:
+                sifted_bills.append(bill)
+                print("lololo")
+            elif bill.month == target_period.month and bill.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices":
+                print("waaaallla", "bill month " ,bill.month, "period selected ", target_period.month)
+                sifted_bills.append(bill)
+            else:pass
 
-                detailed_bills.append(bill_item)
+        [print(e.month, e.year) for e in sifted_bills]
 
-                totalbbf += bill.arrears if bill.arrears else 0.0
-                totaldep += bill.deposit if bill.deposit else 0.0
-                totalrent += bill.rent if bill.rent else 0.0
-                totaldue += bill.total_bill if bill.total_bill else 0.0
-                totalpaid += bill.paid_amount if bill.paid_amount else 0.0
-                totalbcf += bill.balance if bill.balance else 0.0
+        for bill in sifted_bills:
+            house_ids.append(bill.house_id)
+            """compute subtotals"""
+            # bill_item = LandlordSummaryOp.external_view(bill)
+            bill_item = MonthlyChargeOp.view_detail(bill)
+
+            detailed_bills.append(bill_item)
+
+            totalbbf += bill.arrears if bill.arrears else 0.0
+            totaldep += bill.deposit if bill.deposit else 0.0
+            totalrent += bill.rent if bill.rent else 0.0
+            totaldue += bill.total_bill if bill.total_bill else 0.0
+            totalpaid += bill.paid_amount if bill.paid_amount else 0.0
+            totalbcf += bill.balance if bill.balance else 0.0
 
         ###################################################################################################
    

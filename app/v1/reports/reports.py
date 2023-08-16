@@ -2969,7 +2969,7 @@ class GeneralRentStatement(Resource):
 
         monthlybills = apartment_obj.monthlybills
         sifted_bills = []
-        [print(e.month, e.year) for e in monthlybills]
+        # [print(e.month, e.year) for e in monthlybills]
         ###################################################################################################
         for bill in monthlybills:
             if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
@@ -2982,7 +2982,7 @@ class GeneralRentStatement(Resource):
                 sifted_bills.append(bill)
             else:pass
 
-        [print(e.month, e.year) for e in sifted_bills]
+        # [print(e.month, e.year) for e in sifted_bills]
 
         for bill in sifted_bills:
             house_ids.append(bill.house_id)
@@ -3042,7 +3042,7 @@ class GeneralRentStatement(Resource):
             ratio = f"0.0 %"
 
         return Response(render_template(
-            'report_general_rent_statement.html',
+            'ajax_report_general_rent_statement.html',
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,

@@ -1,12 +1,14 @@
 {% extends 'basereport.html' %}
 
 {% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
 
+<span id="remitperiod" class="dispnone">{{selected_month}}</span>
+<span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
+<span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
 
-<button id="btnDownload" class="btn btn-success btn-sm dispnone">
-  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
-</button>
-
+<div class="row">
     <div class="col-lg-12 ">
         <div class="formwrapper">
             <div class="card bt-none noprint">
@@ -19,13 +21,36 @@
                     <span><i class="fas fa-chevron-down ml-3"></i></span>
                   </div>
                 </a>
-                                
+                
+                <div class="divjust-end">
+                  {%if prop%}
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#llBalanceModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="corner-down-left"></i><span class="ml-1 mobile-malaysian text-white">LL Bal</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button class="btn btn-success btn-sm curve" data-toggle="modal" data-target="#remitModal">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="navigation"></i><span class="ml-1 mobile-malaysian text-white">Remit</span>
+                    </button>
+                  </div>
+
+                  <div class="mr-3 mb-1">
+                    <button id="btnDownload" class="btn btn-success btn-sm curve">
+                      <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
+                    </button>
+                  </div>
+                  {%endif%}
+                </div>
+                
 
               </div>
               <!-- Card Content - Collapse -->
               <div class="noprint" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light">
+                    <form class="row bg-light" method="GET" action="/generalrent/statement">
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
                         <select name="reporttype" class="select-css" id="reporttype">
@@ -56,7 +81,7 @@
                       </div>
                     
                       <div class="col-lg-2 form-group mb-2">
-                        <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                        <button type="submit" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
                       </div>
                     </form>
                 </div>
@@ -64,11 +89,6 @@
             </div>
         </div>
     </div>
-
-
-    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
-
-<div id="reportbase" class="row">
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
   <div class="col-lg-12 noprint text-uppercase">
@@ -92,6 +112,11 @@
               <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
               <div class="ln-16">Email: {{co.mail}}</div>
             </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
           </div>
 
           <div class="center-btn mt-2 overline underline bg-aviv">
@@ -529,9 +554,39 @@
 
 </div>
 
+<div class="modal fade" id="editBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title" id="paymentDetailModalLabel">Edit monthly bill summary record</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div class="mt-2" id="billeditbed"></div>
+                
+                  <div class="divbg center-btn">
+                    <button id="editbill" type="button" class="btn btn-outline-danger borderles">Update</button>
+                    <button class="btn btn-outline-secondary" id="closeModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                    <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
 
 <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
 <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
@@ -592,26 +647,6 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script> -->
-
-
-<script>
-  $("#view_general").click(function () {
-
-      $.ajax({
-          url: "/generalrent/statement",
-          type: "get",
-          data: {
-              prop: $("#prop").val(),
-              month: $("#month").val(),
-              reporttype: $("#reporttype").val()
-          },
-          success: function (response) {
-              $("#reportbase").html(response)
-          }
-      });
-
-  });
-</script>
 
 
 {% endblock %}

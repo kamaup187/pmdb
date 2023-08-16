@@ -56,7 +56,7 @@ class Reports(Resource):
                 # if period_of_billing.date() in date_range:
 
                 if item.month == period.month and item.year == period.year:
-                    print(item.month,item.year)
+                    # print(item.month,item.year)
 
                     try:
                         total_collections += item.rent_paid if item.rent_paid > 0 else 0
@@ -2149,7 +2149,7 @@ class CombinedReport(Resource):
         if apartment_obj.company.id == 1144444444:
             template = "report_combined_statement_alttttt.html"
         else:
-            template = "report_combined_statement.html"
+            template = "ajax_report_combined_statement.html"
 
         return Response(render_template(
             template,

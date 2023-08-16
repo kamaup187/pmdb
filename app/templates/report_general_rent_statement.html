@@ -593,10 +593,38 @@
     });
 </script> -->
 
+<!-- 
+<script>
+  $("#view_general").click(function () {
+
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "",
+          type: "get",
+          data: {
+              prop: $("#prop").val(),
+              month: $("#month").val(),
+              reporttype: $("#reporttype").val()
+          },
+          success: function (response) {
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
+
+          }
+      });
+
+  });
+</script> -->
+
+
 
 <script>
   $("#view_general").click(function () {
 
+    if ($("#prop").val() == "" || $("#month").val() == "") {
+      alert("Please select property and date!")
+    }else{
+      //pass
       $("#preloader-btn").click();
       $.ajax({
           url: "/generalrent/statement",
@@ -612,8 +640,9 @@
 
           }
       });
-
+    }
   });
+  
 </script>
 
 

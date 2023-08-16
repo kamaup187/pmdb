@@ -1,129 +1,11 @@
-{% extends 'basereport.html' %}
 
-{% block content %}
+<span id="edit_bill_identifier" class="dispnone"></span>
+<!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
+<span id="filename" class="dispnone">{{prop}} {{timeline}} combined statement.pdf</span>
+<span id="orientation" class="dispnone">landscape</span>
 
-<style type="text/css" media="print">
 
-  @page{
-    size:landscape;
-  }
 
-</style>
-
-<button id="btnDownload" class="btn btn-success btn-sm dispnone">
-  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
-</button>
-
-    <div class="col-lg-12 noprint">
-        <div class="formwrapper">
-            <div class="card bt-none">
-              <!-- Card Header - Accordion -->
-              <div class="divjust-end bg-light underline">
-                
-                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                  <div class="font-weight-bold text-black pt-1">
-                    <span class="ml-lg-4 font-weight-bold text-uppercase">Select below</span>
-                    <span><i class="fas fa-chevron-down ml-3"></i></span>
-                  </div>
-                </a>
-
-                
-
-              </div>
-              <!-- Card Content - Collapse -->
-              <div class="" id="collapseCardExample">
-                <div class="card-body pt-0">
-                    <form class="bg-white">
-
-                      <div class="row">
-                        <div class="col-lg-3 form-group mb-2 ml-lg-5">
-                          <label class="mb-0">Select type:</label>
-                          <select name="reporttype" class="select-css" id="reporttype">
-                            <option selected value="collected">Based on collected amount only</option>
-                            <option value="uncollected">Based on amount due</option>
-                          </select>
-                        </div>
-                      
-                        <div class="col-lg-3 form-group mb-2">
-                          <label class="mb-0">Select property:</label>
-                          <select name="prop" class="select-css" id="prop" required>
-                            <option disabled selected value> select property </option>
-                            {% for o in props %}
-                            <option value="{{ o }}">{{ o }}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      
-                        <div class="col-lg-3 form-group mb-2 mr-lg-5">
-                          <label class="mb-0">Select month:</label>
-                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
-                          </div>
-                        </div>
-                      
-                        <div class="col-lg-2 form-group mb-2">
-                          <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span class="text-danger">Items to display:</span>
-                        <div class="divbg form-group mb-0 x-smallify text-black">
-                                  
-                          <span class="spanwidth ml-4">
-                            <input type="checkbox" id="rent" class="check-btn ml-md-3" name="bank" value="rent" checked>
-                            <label for="rent">Rent</label>
-                          </span>
-          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="water" class="check-btn ml-md-3" name="bank" value="water" checked>
-                            <label for="water">Water</label> 
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="garbage" class="check-btn ml-md-2" name="bank" value="garbage" checked>
-                            <label for="garbage">Garbage</label> 
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="security" class="check-btn ml-md-1" name="bank" value="security">
-                            <label for="security">Security</label>
-                          </span>
-                          
-                          <span class="spanwidth">
-                            <input type="checkbox" id="service" class="check-btn ml-md-2" name="bank" value="service">
-                            <label for="service">Service</label>
-                          </span>
-  
-                          <span class="spanwidth">
-                            <input type="checkbox" id="deposit" class="check-btn ml-md-3" name="bank" value="deposit" checked>
-                            <label for="deposit">Deposits</label>
-                          </span>
-
-                          <span class="spanwidth dispnone">
-                            <input type="checkbox" id="penalty" class="check-btn ml-md-2" name="bank" value="penalty">
-                            <label for="penalty">Penalty</label>
-                          </span>
-
-                          <span class="spanwidth">
-                            <input type="checkbox" id="paidedit" class="check-btn ml-md-2" name="bank" value="paidedit" checked>
-                            <label for="paidedit">Extra field(edit paid)</label>
-                          </span>
-
-                        </div>
-                      </div>
-
-                    </form>
-                </div>
-              </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
-
-    <div id="reportbase" class="row">
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
   <div class="col-lg-12 noprint">
@@ -147,7 +29,18 @@
           </div>
 
           <div class="ln-14 divjust-end">
-            <span class="hide">hide</span>
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+            </button>
+            <script>
+              feather.replace()
+
+              button = document.getElementById('ajaxbtnDownload');
+              button.addEventListener('click', () => {
+                document.title=$("#filename").text(); 
+                window.print()
+              });
+            </script>
             <span>Dated : <span class="text-black">{{reportdate}}</span></span>
           </div>
 
@@ -157,7 +50,7 @@
           </div>
 
           {%if prop_obj%}
-          <div class="mb-2 mt-1">
+          <div class="mb-2 mt-1 text-black">
             <div class="ln-16">
               <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
             </div>
@@ -508,11 +401,8 @@
 
 </div>
 
-</div>
-
 
 <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
-<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
 
 
 <!-- 
@@ -538,15 +428,7 @@
   });
 </script> -->
 
-<script>
-  $("#month").datepicker({ 
-    autoclose: true, 
-    todayHighlight: true,
-    format: "mm-yyyy",
-    startView: "months", 
-    minViewMode: "months"
-  });
-</script>
+
 
 
 <!-- <script type="text/javascript">
@@ -571,37 +453,84 @@
     });
 </script> -->
 
-
-
 <script>
-  $("#view_general").click(function () {
+  let myarr = ["rent","water","garbage","security","service","deposit","penalty","paidedit"]
 
-    if ($("#prop").val() == "" || $("#month").val() == "") {
-      alert("Please select property and date!")
-    }else{
-      //pass
-      $("#preloader-btn").click();
-      $.ajax({
-          url: "/combined/report",
-          type: "get",
-          data: {
-              prop: $("#prop").val(),
-              month: $("#month").val(),
-              reporttype: $("#reporttype").val()
-          },
-          success: function (response) {
-              $("#reportbase").html(response)
-              $("#postloader-btn").click();
 
-          }
-      });
-    }
-  });
+  $.each(myarr, function(i,item) {
   
+    $("#"+item).on('change',function(){
+      let cb = document.getElementById(item);
+      if (cb.checked){
+        $("."+item).removeClass("dispnone")
+      }else{
+        $("."+item).addClass("dispnone")
+      }
+
+    });
+
+  });
+
+
+  </script>
+
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      dom: '<"dt-buttons"Bf><"clear">lirtp',
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      autoWidth: true,
+      buttons: [
+        "colvis",
+        "copyHtml5",
+        "csvHtml5",
+        "excelHtml5",
+        "pdfHtml5",
+        "print"
+      ],
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [{ targets: 0, type: 'natural' }],
+      // "info" : false,
+      "order": [[0, "asc"]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+
+
+</script>
+<script>
+
+
+  $('#data-table').DataTable({
+    "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+    "pageLength": 100,
+    "bPaginate": false, //hide pagination control
+    "bFilter": false, //hide filter control
+    "searching": false,
+    "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
+    // "targets": 'no-sort',
+    // "bSort": false,
+    // columnDefs: [ { targets: 0, type: 'natural' } ],
+    "info": false,
+    "order": [[0, "asc"]],
+    "bLengthChange": false
+  });
+  $('.dataTables_length').addClass('bs-select');
+
 </script>
 
 
-{% endblock %}
+
 
 
 

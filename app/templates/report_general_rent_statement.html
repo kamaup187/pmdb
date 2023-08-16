@@ -25,6 +25,17 @@
               <!-- Card Content - Collapse -->
               <div class="noprint" id="collapseCardExample">
                 <div class="card-body p-0">
+                  <div class="kiota-borde col-md-6 pt-1">
+                    <div class="">
+                        <input class="" id="invdate" name="datatype" type="radio" value="invdate" checked/>
+                        <label class="small font-weight-bold mb-1 text-danger" for="invdate">Fetch records by invoice date</label>
+                    </div>
+                
+                    <div class="">
+                        <input class="" id="paydate" name="datatype" type="radio" value="paydate" />
+                        <label class="mb-1 small font-weight-bold text-danger" for="paydate">Fetch records by payment date</label>
+                    </div>
+                  </div>
                     <form class="row bg-light">
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
@@ -632,6 +643,7 @@
           data: {
               prop: $("#prop").val(),
               month: $("#month").val(),
+              datatype: $("input[name=datatype]:checked").val(),
               reporttype: $("#reporttype").val()
           },
           success: function (response) {

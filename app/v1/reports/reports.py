@@ -2926,7 +2926,7 @@ class GeneralRentStatement(Resource):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
         reporttype = request.args.get("reporttype")
-        target = request.args.get("target")
+        datatype = request.args.get("datatype")
 
 
         if not selected_apartment:
@@ -2971,17 +2971,31 @@ class GeneralRentStatement(Resource):
         sifted_bills = []
         # [print(e.month, e.year) for e in monthlybills]
         ###################################################################################################
-        for bill in monthlybills:
-            if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
-                sifted_bills.append(bill)
-            elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.paid_amount:
-                sifted_bills.append(bill)
-            elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
-                sifted_bills.append(bill)
-            elif bill.month == target_period.month and bill.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
-                sifted_bills.append(bill)
-            else:pass
+        if datatype == "invdate":
 
+            for bill in monthlybills:
+                if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
+                    sifted_bills.append(bill)
+                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.paid_amount:
+                    sifted_bills.append(bill)
+                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
+                    sifted_bills.append(bill)
+                elif bill.month == target_period.month and bill.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
+                    sifted_bills.append(bill)
+                else:pass
+
+        else:
+            for bill in monthlybills:
+                if bill.pay_date:
+                    if bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "all invoices":
+                        sifted_bills.append(bill)
+                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "paid invoices" and bill.paid_amount:
+                        sifted_bills.append(bill)
+                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
+                        sifted_bills.append(bill)
+                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
+                        sifted_bills.append(bill)
+                    else:pass
         # [print(e.month, e.year) for e in sifted_bills]
 
         for bill in sifted_bills:

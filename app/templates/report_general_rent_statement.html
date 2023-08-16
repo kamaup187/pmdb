@@ -597,6 +597,7 @@
 <script>
   $("#view_general").click(function () {
 
+      $("#preloader-btn").click();
       $.ajax({
           url: "/generalrent/statement",
           type: "get",
@@ -607,6 +608,8 @@
           },
           success: function (response) {
               $("#reportbase").html(response)
+              $("#postloader-btn").click();
+
           }
       });
 

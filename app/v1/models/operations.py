@@ -2860,7 +2860,7 @@ class TenantOp(Tenant,Base):
             'deposit':TenantOp.get_deposit(self),
             'housenum':TenantOp.style_house_name(self),
             'status':self.status,
-            'badge':'<span class="badge font-weight-bold bg-success-alt text-success">occupied</span>',
+            'badge':'<span class="badge font-weight-bold bg-success-alt text-success-dark">occupied</span>',
             'checkin':TenantOp.check_in_date(self),
             'checkout':TenantOp.check_out_date(self),
             'days':TenantOp.get_acc_days(self),

@@ -7792,7 +7792,7 @@ class FetchTenants(Resource):
                     'deposit':"-",
                     'housenum':f'<span class="text-gray-900 font-weight-bold">{item.name}</span>',
                     'status':"available",
-                    'badge':'<span class="badge font-weight-bold bg-danger-alt text-danger">vacant</span>',
+                    'badge':'<span class="badge font-weight-bold bg-danger-alt text-danger-dark">vacant</span>',
                     'checkin':"-",
                     'checkout':"-",
                     'days':"0",

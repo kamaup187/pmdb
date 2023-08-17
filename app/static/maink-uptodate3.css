@@ -23,11 +23,16 @@
 } */
 
 .bg-danger-alt {
-  background-color: #eadcdc !important;
+  background-color: #eea9a9 !important;
 }
-
+.text-danger-dark{
+  color: #ad0505 !important;
+}
 .bg-success-alt {
-  background-color: #e1ffe1 !important;
+  background-color: #a5f3a5 !important;
+}
+.text-success-dark{
+  color: #022716 !important;
 }
 
 .bg-warning-alt {
@@ -2894,9 +2899,9 @@ clear: both;
   border: 1px solid #545558;
   border-collapse: collapse;
 }
-.bg-danger-alt {
+/* .bg-danger-alt {
   background-color: #ea88d5 !important;
-}
+} */
 .my-table-cell {
   padding-left: 0px !important;
   padding-right: 10px !important;

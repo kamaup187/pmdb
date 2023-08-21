@@ -6179,10 +6179,10 @@ class AddTenant(Resource):
                 #     msg="Email taken, use another email or leave blank"
                 #     return render_template('ajaxghosthouse.html',alert=msg)
 
-            present = TenantOp.fetch_tenant_by_nat_id(national_id)
-            if present:
-                msg = "Tenant of similar national id exists"
-                return render_template('ajaxghosthouse.html',alert=msg)
+            # present = TenantOp.fetch_tenant_by_nat_id(national_id)
+            # if present:
+            #     msg = "Tenant of similar national id exists"
+            #     return render_template('ajaxghosthouse.html',alert=msg)
 
             if ttype != "tenant":
                 if not house_num:

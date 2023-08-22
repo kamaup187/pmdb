@@ -2976,11 +2976,11 @@ class GeneralRentStatement(Resource):
             for bill in monthlybills:
                 if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
                     sifted_bills.append(bill)
-                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.paid_amount:
+                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.balance < 1:
                     sifted_bills.append(bill)
-                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
-                    sifted_bills.append(bill)
-                elif bill.month == target_period.month and bill.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
+                # elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
+                #     sifted_bills.append(bill)
+                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "unpaid invoices" and bill.balance > 0:
                     sifted_bills.append(bill)
                 else:pass
 

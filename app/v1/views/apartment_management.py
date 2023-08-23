@@ -6962,9 +6962,9 @@ class TenantClearance(Resource):
         #     month = get_str_month(billing_period.month)
         #     msg_two = f"arrears of Kshs {balance}"
 
-        # for bill in bills:
-        #     if bill.month == billing_period.month and bill.year == billing_period.year:
-        #         target_bill = bill
+        for bill in bills:
+            if bill.month == billing_period.month and bill.year == billing_period.year:
+                target_bill = bill
         #         if present_day_period < 30 and present_month_period == billing_period.month:
         #             month = get_str_month(billing_period.month)
         #             checkbox = True
@@ -6977,51 +6977,51 @@ class TenantClearance(Resource):
                 return render_template("ajaxproceed.html",alert=msg_three)
             # return render_template('ajax_clearance.html',checkbox=checkbox,checkboxtwo=checkboxtwo,alert_one=msg_one,alert_two=msg_two,current_bill_month=month)
        
-        # bill_discard = get_bool(discard_bill)
+        bill_discard = get_bool(discard_bill)
         # pay_off_balance_with_deposit = get_bool(pay_off_balance)
-        # vacate_period = billing_period
+        vacate_period = billing_period
         
-        # if bill_discard:
-        #     vacate_period = billing_period - relativedelta(months=1)
+        if bill_discard:
+            vacate_period = billing_period - relativedelta(months=1)
             
-        #     deductions = house_obj.housecode.rentrate + house_obj.housecode.garbagerate + house_obj.housecode.securityrate
+            deductions = target_bill.balance
 
-        #     # update_water = target_bill.water
+            # update_water = target_bill.water
 
-        #     # update_rent = 0.0
+            # update_rent = 0.0
 
-        #     # update_garbage = 0.0
+            # update_garbage = 0.0
 
-        #     # update_electricity = target_bill.electricity
+            # update_electricity = target_bill.electricity
 
-        #     # update_security = 0.0
+            # update_security = 0.0
 
-        #     # update_maintenance = target_bill.maintenance
+            # update_maintenance = target_bill.maintenance
 
-        #     # update_penalty = target_bill.penalty
+            # update_penalty = target_bill.penalty
 
-        #     # const_arrears = target_bill.arrears
-        #     # const_deposit = target_bill.deposit if target_bill.deposit else 0.0
-        #     # const_agreement = target_bill.agreement if target_bill.agreement else 0.0
+            # const_arrears = target_bill.arrears
+            # const_deposit = target_bill.deposit if target_bill.deposit else 0.0
+            # const_agreement = target_bill.agreement if target_bill.agreement else 0.0
 
-        #     # total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears+const_deposit+const_agreement #total amount is incremented only by updates
-        #     # MonthlyChargeOp.update_monthly_charge(target_bill,update_water,update_rent,update_garbage,update_electricity,update_security,"null","null",update_maintenance,update_penalty,"null",total_amount,current_user.id)
+            # total_amount = update_water+update_rent+update_garbage+update_electricity+update_security+update_maintenance+update_penalty+const_arrears+const_deposit+const_agreement #total amount is incremented only by updates
+            # MonthlyChargeOp.update_monthly_charge(target_bill,update_water,update_rent,update_garbage,update_electricity,update_security,"null","null",update_maintenance,update_penalty,"null",total_amount,current_user.id)
 
-        #     # bal = target_bill.balance
-        #     # bal = bal - deductions #these are updates, if one has update, the rest are zeros
-        #     # MonthlyChargeOp.update_balance(target_bill,bal)
-        #     MonthlyChargeOp.delete(target_bill)
+            # bal = target_bill.balance
+            # bal = bal - deductions #these are updates, if one has update, the rest are zeros
+            # MonthlyChargeOp.update_balance(target_bill,bal)
+            MonthlyChargeOp.delete(target_bill)
 
-        #     all_charges = house_obj.charges
+            all_charges = house_obj.charges
 
-        #     for charge in all_charges:
-        #         if charge.date.month == billing_period.month and charge.date.year == billing_period.year and not charge.reading_id:
-        #             ChargeOp.delete(charge)
+            for charge in all_charges:
+                if charge.date.month == billing_period.month and charge.date.year == billing_period.year and not charge.reading_id:
+                    ChargeOp.delete(charge)
 
-        #     tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-        #     running_bal = tenant_obj.balance
-        #     running_bal -= deductions
-        #     TenantOp.update_balance(tenant_obj,running_bal)
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            running_bal = tenant_obj.balance
+            running_bal -= deductions
+            TenantOp.update_balance(tenant_obj,running_bal)
 
 
         # # pay off the balances using deposit

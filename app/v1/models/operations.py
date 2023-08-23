@@ -3891,6 +3891,22 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             return 0.0
         return 0.0
 
+    def calculate_total_deposit(self):
+        wt = self.house.housecode.waterdep if self.house.housecode else 0.0
+        rent = self.house.housecode.rentrate if self.house.housecode else 0.0
+        elec = self.house.housecode.elecdep if self.house.housecode else 0.0
+
+        tot = wt+rent+elec
+
+        if self.tenant:
+            if self.tenant.deposit:
+                try:
+                    return f"{tot:,.1f}"
+                except:
+                    return 0.0
+            return 0.0
+        return 0.0
+
     def view_detail(self):
         
         return {
@@ -3993,7 +4009,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
             'house-alt':f'{MonthlyChargeOp.format_num(self.apartment.id)}/{self.house}',
-            
+
+            'total-deposit':MonthlyChargeOp.calculate_total_deposit(self),
+            'deposit-paid':MonthlyChargeOp.calculate_paid_deposits(self),
+            'deposit-due':MonthlyChargeOp.calculate_deposit_balance(self),
+
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),

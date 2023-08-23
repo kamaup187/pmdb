@@ -3018,7 +3018,11 @@ class GeneralRentStatement(Resource):
             else:
                 bill_item = MonthlyChargeOp.external_view(bill)
                 detailed_bills.append(bill_item)
-                template = "ajax_report_general_rent_statement.html"
+
+                if itemtype == "deposit item":
+                    template = "ajax_report_general_deposit_statement.html"
+                else:
+                    template = "ajax_report_general_rent_statement.html"
 
                 totalbbf += bill.rent_balance if bill.rent_balance else 0.0
                 totalrent += bill.rent if bill.rent else 0.0

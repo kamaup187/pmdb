@@ -2927,6 +2927,7 @@ class GeneralRentStatement(Resource):
         selected_month = request.args.get("month")
         reporttype = request.args.get("reporttype")
         datatype = request.args.get("datatype")
+        itemtype = request.args.get('itemtype')
 
 
         if not selected_apartment:
@@ -3002,16 +3003,30 @@ class GeneralRentStatement(Resource):
             house_ids.append(bill.house_id)
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
-            bill_item = MonthlyChargeOp.view_detail(bill)
+            if itemtype == "all items":
+                bill_item = MonthlyChargeOp.view_detail(bill)
+                detailed_bills.append(bill_item)
+                template = "ajax_report_general_statement.html"
 
-            detailed_bills.append(bill_item)
+                totalbbf += bill.arrears if bill.arrears else 0.0
+                totaldep += bill.deposit if bill.deposit else 0.0
+                totalrent += bill.rent if bill.rent else 0.0
+                totaldue += bill.total_bill if bill.total_bill else 0.0
+                totalpaid += bill.paid_amount if bill.paid_amount else 0.0
+                totalbcf += bill.balance if bill.balance else 0.0
 
-            totalbbf += bill.arrears if bill.arrears else 0.0
-            totaldep += bill.deposit if bill.deposit else 0.0
-            totalrent += bill.rent if bill.rent else 0.0
-            totaldue += bill.total_bill if bill.total_bill else 0.0
-            totalpaid += bill.paid_amount if bill.paid_amount else 0.0
-            totalbcf += bill.balance if bill.balance else 0.0
+            else:
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+                template = "ajax_report_general_rent_statement.html"
+
+                totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                totalrent += bill.rent if bill.rent else 0.0
+                totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
+                totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+                totalbcf += bill.rent_due if bill.rent_due else 0.0
+
+
 
         ###################################################################################################
    
@@ -3056,7 +3071,7 @@ class GeneralRentStatement(Resource):
             ratio = f"0.0 %"
 
         return Response(render_template(
-            'ajax_report_general_rent_statement.html',
+            template,
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,

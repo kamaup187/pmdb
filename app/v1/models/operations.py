@@ -3993,6 +3993,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'tenant-alt':MonthlyChargeOp.get_tenant_name(self),
             'house':self.house,
             'house-alt':f'{MonthlyChargeOp.format_num(self.apartment.id)}/{self.house}',
+            
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),

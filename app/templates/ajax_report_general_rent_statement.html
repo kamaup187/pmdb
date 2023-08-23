@@ -98,7 +98,6 @@
                       <th class="">TENANT NAME</th>
                       <th class="header-right">TYPE</th>
                       <th class="header-right">BB/F</th>
-                      <th class="header-right">DEP</th>
                       <th class="header-right">RENT</th>
                       <th class="header-right">TOTAL DUE</th>
                       <th class="header-right">TOTAL PAID</th>
@@ -113,13 +112,12 @@
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
-                      <td class="data-cell text-right">{{ bill['arrears'] }}</td>
-                      <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                      <td class="data-cell text-right">{{bill['total']}}</td>
-                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-right">{{bill['rent-total']}}</td>
+                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
-                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -128,7 +126,6 @@
                     <tr>
                       <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{deptotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
@@ -304,13 +301,11 @@
                   <th class="">TENANT NAME</th>
                   <th class="header-right">TYPE</th>
                   <th class="header-right">BB/F</th>
-                  <th class="header-right">DEP</th>
                   <th class="header-right">RENT</th>
                   <th class="header-right">TOTAL DUE</th>
                   <th class="header-right">TOTAL PAID</th>
                   <th class="header-right">DATE PAID</th>
                   <th class="header-right">BC/F</th>
-
                 </tr>
               </thead>
               <tbody>
@@ -319,13 +314,12 @@
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['desc'] }}</td>
-                  <td class="data-cell text-right">{{ bill['arrears'] }}</td>
-                  <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{bill['total']}}</td>
-                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{bill['rent-total']}}</td>
+                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
-                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                 </tr>
               {% endfor %}
 
@@ -334,7 +328,6 @@
                 <tr>
                   <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                  <td class="font-weight-bold text-right">{{deptotal}}</td>
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>

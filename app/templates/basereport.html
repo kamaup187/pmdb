@@ -472,6 +472,63 @@
     </div>
   </div>
 
+  <div class="modal fade" id="uploadMpesaModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="indicator"></div>
+        <div class="modal-header pb-0 text-center">
+          <h5 class="modal-title text-info divjust-end">
+            <span class="mr-3 smallify">Upload data</span>
+            <div>
+              <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+            </div>
+          </h5>
+          <div class="alert-msgs"></div>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="media mb-2">
+            <div class="media-body">
+              <div class="position-relative">
+                <div class="card-body modal-forms">
+                  <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+  
+                    <div class="form-group input-icons mt-3">
+                      <select class="select-css" id ="select_prop" >
+                        <option disabled selected value> -- Select till/shortcode -- </option>
+                        {% for o in shortcodes %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+  
+  
+                    <!-- <div id="templatecheck" class="dispnone fancy-checkbox-group form-control mb-2 smallify">
+                      <input type="checkbox" name="agency_management" id="cb1">
+                      <label class="mr-3 me-3" for="cb1">I have the template</label>
+  
+                      <button id="downloadtemplate" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+  
+                  </div> -->
+  
+                    <div id="fileselector" class="mt-2 form-group center-btn">
+                      <p class="text-black">Select File: <input class="ph" id="datafile" type = "file" name = "filename" /></p>
+                    </div>
+                  
+                    <div class="divbg center-btn">
+                      <button id="uploaddata" type="button" class="btn-success borderless text-white">Upload</button>
+                      <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal center-btn" id="preloaderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -897,6 +954,9 @@ button.addEventListener('click', () => {
 });
 
 </script>
+
+
+
 
 </body>
 </html>

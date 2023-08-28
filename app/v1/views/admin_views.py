@@ -918,8 +918,10 @@ class AllProperties(Resource):
             email = request.form.get("email")
             tel = request.form.get("tel")
             address = request.form.get("address")
+            mpesa = request.form.get("mpesa")
+            receipt = request.form.get("receipt")
 
-            ApartmentOp.update_contact_info(prop, email, tel, address)
+            ApartmentOp.update_contact_info(prop, email, tel, address, mpesa, receipt)
 
             return "Updated successfully" + proceed         
 

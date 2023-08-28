@@ -290,6 +290,8 @@ class Apartment(db.Model):
     email = db.Column(db.VARCHAR)
     phone = db.Column(db.VARCHAR)
     address = db.Column(db.VARCHAR)
+    mpesa = db.Column(db.String)
+    receipt = db.Column(db.String)
 
     agency_managed = db.Column(db.Boolean,default=True)
 

@@ -865,13 +865,17 @@ class ApartmentOp(Apartment,Base):
             self.location_id = location_id
         db.session.commit()
 
-    def update_contact_info(self,email,phone,address):
+    def update_contact_info(self,email,phone,address,mpesa,receipt):
         if email:
             self.email = email
         if phone:
             self.phone = phone
         if address:
             self.address = address
+        if mpesa:
+            self.mpesa = mpesa
+        if receipt:
+            self.receipt = receipt
         db.session.commit()
 
     def update_agent(self,agent_id):

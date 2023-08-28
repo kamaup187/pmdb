@@ -4942,6 +4942,19 @@ def autosend_pending_smsreceipts(payids):
                             sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
                             sms_obj.save()
 
+                        prop_obj = payment_obj.apartment
+                        tels = []
+                        if prop_obj.receipt:
+                            tels = prop_obj.receipt.split(',')
+                        for tel in tels:
+                            try:
+                                phonenum = sms_phone_number_formatter(tel)
+                                message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted KES {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
+                                sms_sender("",message,phonenum)
+
+                            except Exception as e:
+                                print("ERROR",e)
+
                     # else:
                     #     resp = africastalking_send_sms(message,phonenum,sender)
                     #     smsid = resp.get("messageId")
@@ -13885,6 +13898,20 @@ def mpesa_response(ctob_obj):
                         print(response)
                     except Exception as e:
                         print(f"Houston, we have a problem {e}")
+
+        except Exception as e:
+            print("ERROR",e)
+
+def mpesa_response2(ctob_obj):
+    prop_obj = ApartmentOp.fetch_apartment_by_shortcode(ctob_obj.shortcode)
+    tels = []
+    if prop_obj.mpesa:
+        tels = prop_obj.mpesa.split(',')
+    for tel in tels:
+        try:
+            phonenum = sms_phone_number_formatter(tel)
+            message = f"{ctob_obj.fname} has transacted KES {ctob_obj.trans_amnt} in favour of {ctob_obj.bill_ref_num} REFERENCE {ctob_obj.trans_id}"
+            sms_sender("",message,phonenum)
 
         except Exception as e:
             print("ERROR",e)

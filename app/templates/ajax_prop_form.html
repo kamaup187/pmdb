@@ -3,9 +3,9 @@
 
 <nav class="nav nav-borders">
     <a id="profile" class="nav-link pl-0 pb-0 text-info underline active ms-0" href="#">Profile</a>
-    <a id="billing" class="nav-link pb-0 text-info" href="#">Billing</a>
+    <a id="billing" class="nav-link pb-0 text-info" href="#">Billing details</a>
     <a id="notifications" class="nav-link pb-0 text-info" href="#">Landlord & Estate</a>
-    <a id="contactinfo" class="nav-link pb-0 text-info" href="#">Email & Address</a>
+    <a id="contactinfo" class="nav-link pb-0 text-info" href="#">Notification settings</a>
 </nav>
 
 <div class="" id="profile-area">
@@ -294,7 +294,7 @@
         <div class="col-xl-12">
             <!-- Account details card-->
             <div class="card mb-2 mt-1">
-                <div class="card-header">Address & Email</div>
+                <div class="card-header">Receipt address,contact & email</div>
                 <div class="card-body">
                     <form>
                         <div id="" class="">
@@ -323,6 +323,48 @@
                         </div>
 
                         <!-- Save changes button-->
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Receipt notifications (receivers)</div>
+                <div class="card-body">
+                    <form>
+                        <div id="" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="small mb-0" for="propmail">Receipt phone numbers separated by comma (,)</label>
+                        
+                                    <input class="form-control ph" type="text" id="propreceiptnotifs" value="{{prop.receiptnotifs}}" placeholder="0712345678,0787654321">
+                                </div>                        
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-2 mt-1">
+                <div class="card-header">Mpesa notifications (receivers)</div>
+                <div class="card-body">
+                    <form>
+                        <div id="" class="">
+
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="small mb-0" for="propmail">Mpesa phone numbers separated by comma (,)</label>
+                        
+                                    <input class="form-control ph" type="text" id="propmpesanotifs" value="{{prop.mpesanotifs}}" placeholder="0712345678,0787654321">
+                                </div>                        
+                            </div>
+
+                        </div>
+
+                        <!-- Save changes button-->
                         <div class="text-right">
                             <button id="savecontactinfo" class="btn btn-primary" type="button">Save changes</button>
                             <button class="reset dispnone" type="reset">reset</button>
@@ -330,6 +372,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -665,7 +708,8 @@
                 email: $("#propmail").val(),
                 tel: $("#proptel").val(),
                 address: $("#propaddr").val(),
-
+                mpesa: $("#propmpesanotifs").val(),
+                receipt: $("#propreceiptnotifs").val(),
                 target: "update prop contact info"
             },
             success: function (response) {

@@ -13903,7 +13903,7 @@ def mpesa_response(ctob_obj):
             print("ERROR",e)
 
 def mpesa_response2(ctob_obj):
-    prop_obj = ApartmentOp.fetch_apartment_by_shortcode(ctob_obj.shortcode)
+    prop_obj = ApartmentOp.fetch_apartment_by_shortcode(ctob_obj.business_shortcode)
     tels = []
     if prop_obj.mpesa:
         tels = prop_obj.mpesa.split(',')

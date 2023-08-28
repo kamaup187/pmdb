@@ -5932,7 +5932,7 @@ class CallBackUrlGassa(Resource):
 
         if not target_house:
             print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-            return {"message": "House not found"}, 404
+            # return {"message": "House not found"}, 404
 
         propid = prop.id
 
@@ -6013,7 +6013,7 @@ class CallBackUrlGrace(Resource):
 
         if not target_house:
             print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-            return {"message": "House not found"}, 404
+            # return {"message": "House not found"}, 404
 
         propid = prop.id
 
@@ -6038,7 +6038,7 @@ class CallBackUrlGrace(Resource):
             # )
 
             # CtoBop.update_status(ctob_obj,"claimed")
-            mpesa_response2(ctob_obj)
+        mpesa_response2(ctob_obj)
 
 
 

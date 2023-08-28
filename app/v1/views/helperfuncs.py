@@ -13841,7 +13841,7 @@ def mpesa_response2(ctob_obj,propid):
     for tel in tels:
         try:
             phonenum = sms_phone_number_formatter(tel)
-            message = f"{ctob_obj.fname} has transacted KES {ctob_obj.trans_amnt} in favour of {ctob_obj.bill_ref_num} REFERENCE {ctob_obj.trans_id}"
+            message = f"{ctob_obj.fname} has transacted KES {ctob_obj.trans_amnt} in favour of ACCOUNT: {ctob_obj.bill_ref_num} ({prop_obj.name}). \nRef: {ctob_obj.trans_id}"
             sms_sender("",message,phonenum)
 
         except Exception as e:

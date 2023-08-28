@@ -5938,25 +5938,25 @@ class CallBackUrlGassa(Resource):
 
         dict_array = []
 
-        if prop:
-            payperiod = prop.billing_period
+        # if prop:
+        #     payperiod = prop.billing_period
 
-            dict_obj = {
-            "housename":target_house.name,
-            "amount":trans_amnt,
-            "date":"",
-            "ref":trans_id,
-            "desc":"",
-            "comment":""
-            }
+        #     dict_obj = {
+        #     "housename":target_house.name,
+        #     "amount":trans_amnt,
+        #     "date":"",
+        #     "ref":trans_id,
+        #     "desc":"",
+        #     "comment":""
+        #     }
 
-            # dict_array.append(dict_obj)
+        #     dict_array.append(dict_obj)
 
-            # uploadsjob2 = q.enqueue_call(
-            #     func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
-            # )
+        #     uploadsjob2 = q.enqueue_call(
+        #         func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+        #     )
 
-            # CtoBop.update_status(ctob_obj,"claimed")
+        #     CtoBop.update_status(ctob_obj,"claimed")
 
 
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
@@ -6019,25 +6019,26 @@ class CallBackUrlGrace(Resource):
 
         dict_array = []
 
-        if prop:
-            payperiod = prop.billing_period
+        # if prop:
+        #     payperiod = prop.billing_period
 
-            dict_obj = {
-            "housename":target_house.name,
-            "amount":trans_amnt,
-            "date":"",
-            "ref":trans_id,
-            "desc":"",
-            "comment":""
-            }
+        #     dict_obj = {
+        #     "housename":target_house.name,
+        #     "amount":trans_amnt,
+        #     "date":"",
+        #     "ref":trans_id,
+        #     "desc":"",
+        #     "comment":""
+        #     }
 
-            # dict_array.append(dict_obj)
+        #     dict_array.append(dict_obj)
 
-            # uploadsjob2 = q.enqueue_call(
-            #     func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
-            # )
+        #     uploadsjob2 = q.enqueue_call(
+        #         func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+        #     )
 
-            # CtoBop.update_status(ctob_obj,"claimed")
+        #     CtoBop.update_status(ctob_obj,"claimed")
+        
         mpesa_response2(ctob_obj)
 
 

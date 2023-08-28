@@ -4653,6 +4653,19 @@ class TenantPayment(Resource):
 
         return render_template('ajaxreceiptfailedmpesa.html',tenant=tenant_obj.name,tel=tenant_obj.phone,response="Visa payment not supported currently")
 
+
+class TransactionStatus(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        print(data)
+
+
 class StkCallBackUrlProminance(Resource):
     def get(self):
         pass

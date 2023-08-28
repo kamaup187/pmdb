@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "2XXyIC54nEwiiIdf4JTZpfAf8WClMVD8"
-    consumer_secret = "ERdGGmitkup5Jip7"
+    consumer_key = "lul9GSu9ls12504AXAIiBKbvyu6ZsPgI"
+    consumer_secret = "oJaHERB5jLsQnpUa"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -56,4 +56,4 @@ def register_url():
     print(response.text)
 
 
-register_url()
+# register_url()

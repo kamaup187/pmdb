@@ -5913,7 +5913,7 @@ class CallBackUrlGassa(Resource):
 
 
         prop = ApartmentOp.fetch_apartment_by_id(725)
-
+        target_house = None
 
         a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""
         if a1:
@@ -5993,6 +5993,7 @@ class CallBackUrlGrace(Resource):
         ctob_obj.save()
 
         prop = ApartmentOp.fetch_apartment_by_id(724)
+        target_house = None
 
 
         a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""

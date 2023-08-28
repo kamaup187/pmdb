@@ -472,6 +472,7 @@
     </div>
   </div>
 
+
   <div class="modal fade" id="uploadMpesaModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -491,25 +492,20 @@
               <div class="position-relative">
                 <div class="card-body modal-forms">
                   <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
-  
-                    <div class="form-group input-icons mt-3">
-                      <select class="select-css" id ="select_prop" >
-                        <option disabled selected value> -- Select till/shortcode -- </option>
-                        {% for o in shortcodes %}
-                        <option value="{{ o }}">{{ o }}</option>
-                        {% endfor %}
+                    <a id="download_template" href="/download/template/mpesadata" class="dispnone">download</a>
+
+                    <div class="mt-2 mb-1 smallify">
+                      <button id="downloadtemplate" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small font-weight-bold" type="button" ><i class="fa fa-download"></i><span class="small"> get template</span></button>
+                    </div>
+
+                    <div class="form-group input-icons">
+                      <label class="text-black pt-0 mb-0">select type</label>
+                      <select class="select-css" id ="select_target" >
+                        <option selected value="claimed">Claimed</option>
+                        <option value="unclaimed">Unclaimed</option>
                       </select>
                     </div>
-  
-  
-                    <!-- <div id="templatecheck" class="dispnone fancy-checkbox-group form-control mb-2 smallify">
-                      <input type="checkbox" name="agency_management" id="cb1">
-                      <label class="mr-3 me-3" for="cb1">I have the template</label>
-  
-                      <button id="downloadtemplate" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
-  
-                  </div> -->
-  
+
                     <div id="fileselector" class="mt-2 form-group center-btn">
                       <p class="text-black">Select File: <input class="ph" id="datafile" type = "file" name = "filename" /></p>
                     </div>
@@ -955,7 +951,62 @@ button.addEventListener('click', () => {
 
 </script>
 
+<script type="text/javascript">
+  $("#downloadtemplate").click(function(){ 
+      $('#downloadtemplate').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
 
+
+      $("#download_template")[0].click();
+
+        setTimeout(function(){
+            $('#downloadtemplate').html("<i class='fas fa-file-download mr-2'></i>Template")
+        },4000);
+    });
+
+
+
+    $("#uploaddata").on('click',function(){
+      $("#uploaddata").html("Uploading...") 
+
+      url = "{{ url_for('api.mpesadataupload') }}"
+
+      var fd = new FormData();
+      var files = $('#datafile')[0].files;
+      fd.append('file',files[0]);
+      fd.append('target',$("#select_target").val());
+
+      $.ajax({
+          type: "POST",
+          url: url,
+          data:fd,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+              $(".alert-msgs").html(response);
+              $("#uploaddata").html("Uploaded") 
+
+              setTimeout(function(){
+                $("#uploaddata").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },3000)
+
+          },
+          error:function(){
+            $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+            $("#uploaddata").html("Retry") 
+
+            setTimeout(function(){
+              $("#uploaddata").html("Upload") 
+                $(".alert-msgs").empty();
+                $(".reset").click();
+                $(".closemodal").click();
+              },5000)
+          }
+      });
+  });
+</script>
 
 
 </body>

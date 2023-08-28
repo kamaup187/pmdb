@@ -14,6 +14,7 @@ version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
 api.add_resource(DataUpload,"/data/upload")
+api.add_resource(MpesaDataUpload,"/mpesadata/upload")
 
 api.add_resource(LandingPage,"/")
 api.add_resource(DbInitializer,"/restricted")

@@ -873,7 +873,7 @@ class Index(Resource):
             if company.id == 117:
                 shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166"]
             else:
-                shorts = []
+                shorts = [""]
 
             for short in shorts:
                 print("shorts",short)
@@ -4270,7 +4270,64 @@ class DataUpload(Resource):
         else:
             return '<span class=text-danger>Select property first</span>'
             
+class MpesaDataUpload(Resource):
+    """class"""
 
+    @login_required
+    def get(self):
+        pass
+
+    def post(self):
+        target = request.form.get('target')
+        file = request.files.get('file')
+
+        if file:
+            processed_data = upload_handler(file,current_user)
+        else:
+            return '<span class=text-danger>Select file first</span>'
+
+        rows,sheet = processed_data[0],processed_data[1]
+
+        data_format_error = False
+
+        if sheet:
+            if len(sheet.row_values(1)) != 6:
+                data_format_error = True
+        try:
+            if data_format_error:
+                nonexistent_item = sheet.row_values(1)[1000000]
+
+            dict_array = []
+
+            for row in rows:
+                dict_obj = {
+                "BusinessShortCode":sheet.row_values(row)[0],
+                "TransID":sheet.row_values(row)[1],
+                "TransAmount":sheet.row_values(row)[2],
+                "TransTime":sheet.row_values(row)[3],
+                "FirstName":sheet.row_values(row)[4],
+                "BillRefNumber":sheet.row_values(row)[5],
+                }
+
+                dict_array.append(dict_obj)
+
+            uploadsjob = q.enqueue_call(
+                func=read_mpesa_excel, args=(dict_array,target,current_user.id,), result_ttl=5000
+            )
+
+            return '<span class="text-success">Upload successful</span>'
+
+        except Exception as e:
+            if not sheet:
+                print("FILE FORMAT UPLOADED NOT SUPPORTED")
+                return '<span class="text-danger">File format not supported</span>'
+            elif type(e) == IndexError:
+                print("FILE DATA FIELDS INCORRECT")
+                return '<span class="text-danger">File data fields incorrect</span>'
+            else:
+                print("RARE FATAL CASE: Error occured while saving item: ",e)
+                abort(403)
+        
 class CreateHouseCode(Resource):
     """class"""
 

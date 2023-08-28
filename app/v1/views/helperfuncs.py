@@ -7117,6 +7117,97 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
     return "completed"
 
 
+def read_mpesa_excel(dict_array,target,user_id):
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
+
+    curr_user = UserOp.fetch_user_by_id(user_id)
+
+    for item in dict_array:
+        trans_id = item.get('TransID')
+        trans_time = item.get('TransTime')
+        trans_amnt = item.get('TransAmount')
+        business_shortcode = item.get('BusinessShortCode')
+        bill_ref_num = item.get('BillRefNumber')
+        fname = item.get('FirstName')
+        trans_type = ""
+        invoice_num = ""
+        msisdn = ""
+        org_acc_bal = 0.0
+        lname = ""
+
+        mode = "Mpesa"
+        company_id = curr_user.company_id
+
+        valid_amount = validate_float_inputs_to_exclude_zeros_alt(trans_amnt)
+
+        try:
+            shortcode = str(int(business_shortcode))
+        except:
+            continue
+
+        ctob_obj = CtoBop(trans_id,trans_time,valid_amount[0],trans_type,shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+        if target != "unclaimed":
+            CtoBop.update_status(ctob_obj,"claimed")
+        else:
+            prop = None
+
+            for tprop in curr_user.company.props:
+                if tprop.paymentdetails:
+                    if tprop.paymentdetails.mpesapaybill == shortcode:
+                        prop = tprop
+                        
+            target_house = None
+
+            a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""
+            if a1:
+                a2 = a1.replace("R", "")
+                a3 = a2.replace("r", "")
+                a4 = a3.replace("M", "")
+                a5 = a4.replace("m", "")
+
+                a6 = a5.upper()
+
+                for house in prop.houses:
+                    n = name_standard(house.name)
+                    if n == a6:
+                        target_house = house
+                        break
+
+            if not target_house:
+                print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+                # return {"message": "House not found"}, 404
+
+            propid = prop.id
+
+            dict_array = []
+
+            if prop and target_house:
+                payperiod = prop.billing_period
+
+                dict_obj = {
+                "housename":target_house.name,
+                "amount":valid_amount[0],
+                "date":"",
+                "ref":trans_id,
+                "desc":"",
+                "comment":""
+                }
+
+                dict_array.append(dict_obj)
+
+                uploadsjob2 = q.enqueue_call(
+                    func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+                )
+
+                CtoBop.update_status(ctob_obj,"claimed")
+
+
+    return "completed"
+
 def read_water_excel(dict_array,apartment_id,user_id):
     from app import create_app
     app = create_app()

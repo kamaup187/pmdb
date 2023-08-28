@@ -6988,7 +6988,7 @@ class MpesaStatement2(Resource):
                 second = str_t[12:14]
                 ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
             except:
-                ftime = self.post_date
+                ftime = bill.post_date
 
             if ftime > start and ftime < end:
                 total += bill.trans_amnt

@@ -4818,7 +4818,7 @@ def autosend_pending_smsreceipts(payids):
         else:
             running_bal = (f"Bal: KES {tenant_obj.balance:,}")
 
-        amount = f'Kes {payment_obj.amount:,.0f}'
+        amount = f'KES {payment_obj.amount:,.1f}'
 
         # receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
 
@@ -4949,7 +4949,7 @@ def autosend_pending_smsreceipts(payids):
                         for tel in tels:
                             try:
                                 phonenum = sms_phone_number_formatter(tel)
-                                message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted KES {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
+                                message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
                                 sms_sender("",message,phonenum)
 
                             except Exception as e:

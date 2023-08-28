@@ -871,7 +871,7 @@ class Index(Resource):
             #                 print("cbid did not find its sibling payment")
 
             if company.id == 117:
-                shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166"]
+                shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743"]
             else:
                 shorts = [""]
 
@@ -879,7 +879,7 @@ class Index(Resource):
                 print("shorts",short)
                 cbid = ShortcodeOp.fetch_shortcode_by_id(short)
                 if not cbid:
-                    cbid = ShortcodeOp(short,"general",company.id)
+                    cbid = ShortcodeOp(short,"",company.id)
                     cbid.save()
 
             # for cil in company.shortcodes:

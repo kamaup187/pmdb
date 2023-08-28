@@ -5961,7 +5961,7 @@ class CallBackUrlGassa(Resource):
 
         # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
 
-        mpesa_response2(ctob_obj)
+        mpesa_response2(ctob_obj,725)
 
 class CallBackUrlGrace(Resource):
     def get(self):
@@ -6038,8 +6038,8 @@ class CallBackUrlGrace(Resource):
         #     )
 
         #     CtoBop.update_status(ctob_obj,"claimed")
-        
-        mpesa_response2(ctob_obj)
+
+        mpesa_response2(ctob_obj,724)
 
 
 

@@ -4846,136 +4846,67 @@ def autosend_pending_smsreceipts(payids):
             raw_rem_sms = 5000
 
         tele = tenant_obj.phone
-        # name = tenant_obj.name
-        # fname = fname_extracter(name)
-        # if not fname:
-        #     fname = name
-        phonenum = sms_phone_number_formatter(tele)
 
-        # salutation = "Service Charge & Utility" if serv else "Rental"
-        # message = f"{salutation} payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
-
-        acc = tenant_obj.uid if tenant_obj.uid else f'TNT{tenant_obj.id}'
-        # message = f"Rental payment Ref {reference}, sum of {amount} confirmed. \n{running_bal} \n\n{receipt} \n\n~{end}."
-        message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
-
-        if tenant_obj.sms:
-
-            # own_shortcode = False
-
-            # if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
-            #     own_shortcode = True
-
-            # if payment_obj.apartment.company.name == "Lesama Ltd":
-            #     advanta_send_sms(message,phonenum,lesama_api_key,lesama_partner_id,"LESAMA")
-            #     PaymentOp.update_sms_status(payment_obj,"sent")
-            # elif payment_obj.apartment.company.name == "KEVMA REAL ESTATE":
-            #     advanta_send_sms(message,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-            #     PaymentOp.update_sms_status(payment_obj,"sent")
-
-            if raw_rem_sms > 0 or own_shortcode:
-                #Send the SMS
-
-                try:
-                    print("Payment sms sending initiated")
-
-                    # if target == "lasshouse":
-                    #     report = inva_send_sms(message,phonenum)
-                    #     return None
-
-
-                    # elif co.sms_provider == "Advanta":
-                    #     smsid = sms_sender(co.name,message,phonenum)
-                    #     if smsid:
-                    #         PaymentOp.update_smsid(payment_obj,smsid)
-                    # else:
-                    #     #Once this is done, that's it! We'll handle the rest
-                    #     response = sms.send(message, recipient,sender)
-                    #     print(response)
-                    #     resp = response["SMSMessageData"]["Recipients"][0]
-
-                    #     code = resp["statusCode"]
-                    #     smsid = resp["messageId"]
-                    #     if smsid:
-                    #         PaymentOp.update_smsid(payment_obj,smsid)
-
-                    #     if code == 101: # SMS WAS SENT
-
-                    #         PaymentOp.update_sms_status(payment_obj,"sent")
-                    #         raw_cost = resp["cost"]
-                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                    #         CompanyOp.set_rem_quota(co,rem_sms)
-
-                    #     elif code == 403:
-                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                    #         PaymentOp.update_sms_status(payment_obj,"fail")
-                    #     elif code == 405:
-                    #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-                    #         txt = f"{co} has depleted sms"
-                    #         response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
-                    #     elif code == 406:
-                    #         PaymentOp.update_sms_status(payment_obj,"blocked")
-                    #         print("SMS BLOCKED BY ",tenant_obj,payment_obj.house,payment_obj.apartment)
-                    #         raw_cost = resp["cost"]
-                    #         rem_sms = calculate_sms_cost(raw_rem_sms,raw_cost)
-                    #         CompanyOp.set_rem_quota(co,rem_sms)
-                    smsperiod = generate_date(payment_obj.apartment.billing_period.month, payment_obj.apartment.billing_period.year)
-
-
-                    ####################################################################################
-                    if target == "lasshouse":
-                        report = inva_send_sms(message,phonenum)
-                        if report:
-                            PaymentOp.update_smsid(payment_obj,report["msgid"])
-                            PaymentOp.update_sms_status(payment_obj,"sent")
-                            res = update_sms_units(co,message)
-                            sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
-                            sms_obj.save()
-
-                    # elif co.sms_provider == "Advanta":
-                    else:
-                        smsid = sms_sender(co.name,message,phonenum)
-                        if smsid:
-                            PaymentOp.update_smsid(payment_obj,smsid)
-                            PaymentOp.update_sms_status(payment_obj,"sent")
-                            res = update_sms_units(co,message)
-                            sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
-                            sms_obj.save()
-
-                        prop_obj = payment_obj.apartment
-                        tels = []
-                        if prop_obj.receipt:
-                            tels = prop_obj.receipt.split(',')
-                        for tel in tels:
-                            try:
-                                phonenum = sms_phone_number_formatter(tel)
-                                message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
-                                sms_sender("",message,phonenum)
-
-                            except Exception as e:
-                                print("ERROR",e)
-
-                    # else:
-                    #     resp = africastalking_send_sms(message,phonenum,sender)
-                    #     smsid = resp.get("messageId")
-                    #     code = resp.get("statusCode")
-                    #     if code:
-                    #         PaymentOp.update_smsid(payment_obj,smsid) if smsid else None
-                    #         stat = get_sms_status(code)
-                    #         PaymentOp.update_sms_status(payment_obj,stat)
-                    #         if stat == "sent":
-                    #             res = update_sms_units(co,message) 
-                    #             sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
-                    #             sms_obj.save()
-                    #####################################################################################
-                    
-                except Exception as e:
-                    print(f"Houston, we have a problem {e}")
-                    PaymentOp.update_sms_status(payment_obj,"fail")
-            else:
-                print("CLIENT HAS DEPLETED SMS",str_co)
+        if (",") in tele:
+            phonenum_list = tele.split(",")
+        elif ("/") in tele:
+            phonenum_list =  tele.split("/")
         else:
-            PaymentOp.update_sms_status(payment_obj,"off")
+            phonenum_list =  tele
+
+
+        for tele in phonenum_list:
+            phonenum = sms_phone_number_formatter(tele)
+            acc = tenant_obj.uid if tenant_obj.uid else f'TNT{tenant_obj.id}'
+            message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
+
+            if tenant_obj.sms:
+                if raw_rem_sms > 0 or own_shortcode:
+                    try:
+                        print("Payment sms sending initiated")
+                        smsperiod = generate_date(payment_obj.apartment.billing_period.month, payment_obj.apartment.billing_period.year)
+                        ####################################################################################
+                        if target == "lasshouse":
+                            report = inva_send_sms(message,phonenum)
+                            if report:
+                                PaymentOp.update_smsid(payment_obj,report["msgid"])
+                                PaymentOp.update_sms_status(payment_obj,"sent")
+                                res = update_sms_units(co,message)
+                                sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj.save()
+
+                        else:
+                            smsid = sms_sender(co.name,message,phonenum)
+                            if smsid:
+                                PaymentOp.update_smsid(payment_obj,smsid)
+                                PaymentOp.update_sms_status(payment_obj,"sent")
+                                res = update_sms_units(co,message)
+                                sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj.save()
+
+                        #####################################################################################
+                        
+                    except Exception as e:
+                        print(f"Houston, we have a problem {e}")
+                        PaymentOp.update_sms_status(payment_obj,"fail")
+                else:
+                    print("CLIENT HAS DEPLETED SMS",str_co)
+            else:
+                PaymentOp.update_sms_status(payment_obj,"off")
+
+        if target != "lasshouse":
+            prop_obj = payment_obj.apartment
+            tels = []
+            if prop_obj.receipt:
+                tels = prop_obj.receipt.split(',')
+            for tel in tels:
+                try:
+                    phonenum = sms_phone_number_formatter(tel)
+                    message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
+                    sms_sender("",message,phonenum)
+
+                except Exception as e:
+                    print("ERROR",e)
 
 def send_out_email_invoices(prop,houses,override,charge,user_id):
     from app import create_app
@@ -13902,8 +13833,8 @@ def mpesa_response(ctob_obj):
         except Exception as e:
             print("ERROR",e)
 
-def mpesa_response2(ctob_obj):
-    prop_obj = ApartmentOp.fetch_apartment_by_shortcode(ctob_obj.business_shortcode)
+def mpesa_response2(ctob_obj,propid):
+    prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
     tels = []
     if prop_obj.mpesa:
         tels = prop_obj.mpesa.split(',')

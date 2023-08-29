@@ -1555,10 +1555,13 @@ class UserLogin(Resource):
         """Handle GET request for this view. Url ---> /signin"""
 
         ################################################################################
-        # birr = ShortcodeOp.fetch_shortcode_by_id("7609902")
-        # till = "9565867"
+        # birr = ApartmentOp.fetch_apartment_by_id(149)
+        # hse = "E041"
         # if birr:
-        #     CtoBop.update_desc(birr,till)
+        #     for dd in birr.deposits:
+        #         if dd.house.name == hse:
+        #             print("VOILA: " + dd.house.name)
+        #             TenantDepositOp.delete(dd)
 
         # birr = CtoBop.fetch_record_by_ref("RFB2SO44DO")
         # import pdb; pdb.set_trace()

@@ -3821,6 +3821,24 @@ class DepositStatement(Resource):
                 totaldep += bill.total
 
 
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+
+        for vac in vacants:
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'tenant':"--VACANT--",
+                'vacancy':"text-danger",
+                'datepaid':"-",
+                'paycode':"-",
+                'status':"-",
+                'amount':0.0,
+            }
+            detailed_bills.append(new_item)
+
+
         ###################################################################################################
         if reporttype == "unrefunded":
             template = "report_unrefunded_deposit_statement.html"

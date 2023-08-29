@@ -8262,14 +8262,12 @@ class FetchPayments(Resource):
                 #     shortcode = prop.payment_bankacc
                 #     if not shortcode:
 
-                print("cooooooo",prop.company.cbids)
+                # print("cooooooo",prop.company.cbids)
                 shortcode = prop.paymentdetails.mpesapaybill
                 if shortcode == "000000":
                     raw_unclaimed = prop.company.cbids
                 else:
                     raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
-
-                import pdb; pdb.set_trace()
 
                 for r in raw_unclaimed:
                     # targets = ["532406","964399","4012401","4081687"]

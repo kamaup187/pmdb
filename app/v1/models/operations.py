@@ -3936,6 +3936,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'house':self.house,
             'desc':self.house.description,
             'rent':MonthlyChargeOp.fig_format(self.rent),
+            'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
             'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),
             'rent-due':MonthlyChargeOp.fig_format(self.rent_due),

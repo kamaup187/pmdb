@@ -1996,7 +1996,7 @@ class CombinedReport(Resource):
                 #         bcftotal -= bill.deposit_balance if bill.deposit_balance else 0.0
                 # else:
                 bcftotal += bill.balance if bill.balance > 0 else 0.0
-                bcftotal -= bill.deposit_due if bill.deposit_due else 0.0
+                bcftotal -= bill.deposit_due if bill.deposit_due > 0 else 0.0
 
             else:
                 tenant_id = bill.tenant_id

@@ -205,7 +205,7 @@
                       <!-- <th class="penalty">LPF</th> -->
                       <th class="">TOTAL</th>
                       <th class="">PAID</th>
-                      <th class="">BC/F</th>
+                      <th class="">RENT BC/F</th>
 
                     </tr>
                   </thead>
@@ -214,8 +214,8 @@
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['arrears'] }}</td>
-
+                      <!-- <td class="data-cell text-right">{{ bill['arrears'] }}</td> -->
+                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
@@ -229,7 +229,7 @@
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
                       <td class="data-cell text-right">{{bill['totaldue']}}</td>
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
-                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -389,7 +389,7 @@
                   <th class="">TOTAL</th>
                   <th class="paidedit">PAID(edit)</th>
                   <th class="">PAID</th>
-                  <th class="">BC/F</th>
+                  <th class="">RENT BC/F</th>
 
                 </tr>
               </thead>
@@ -398,7 +398,7 @@
                 <tr>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['arrears'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
@@ -412,7 +412,7 @@
                   <td class="data-cell text-right">{{bill['totaldue']}}</td>
                   <td class="data-cell text-right paidedit"> </td>
                   <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe}}</td>
-                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
                 </tr>
               {% endfor %}
 

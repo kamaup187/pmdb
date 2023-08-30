@@ -7012,6 +7012,9 @@ class TenantClearance(Resource):
         present_month_period = datetime.datetime.now().month
         bills = tenant_obj.monthly_charges
 
+        
+        target_bill = fetch_target_period_invoice(house_obj,billing_period)
+
         # balance = tenant_obj.balance
         # if balance > 0.0:
         #     checkboxtwo = True
@@ -7019,14 +7022,6 @@ class TenantClearance(Resource):
         #     month = get_str_month(billing_period.month)
         #     msg_two = f"arrears of Kshs {balance}"
 
-        for bill in bills:
-            if bill.month == billing_period.month and bill.year == billing_period.year:
-                target_bill = bill
-        #         if present_day_period < 30 and present_month_period == billing_period.month:
-        #             month = get_str_month(billing_period.month)
-        #             checkbox = True
-        #             msg_three = ""
-        #             msg_one = f"{tenant_obj}'s {month} rent bill?,"
 
         
         if runalert:

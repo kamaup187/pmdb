@@ -7013,7 +7013,8 @@ class TenantClearance(Resource):
         bills = tenant_obj.monthly_charges
 
         
-        target_bill = fetch_target_period_invoice(house_obj,billing_period)
+        # target_bill = fetch_target_period_invoice(house_obj,billing_period)
+        target_bill = fetch_latest_tenant_invoice(tenant_obj)
 
         # balance = tenant_obj.balance
         # if balance > 0.0:

@@ -1563,7 +1563,7 @@ class UserLogin(Resource):
         #             print("VOILA: " + dd.house.name)
         #             TenantDepositOp.delete(dd)
 
-        # birr = ApartmentOp.fetch_apartment_by_id(891)
+        # birr = ApartmentOp.fetch_apartment_by_id(890)
         # if birr is not None:
         #     print("VOILA: " + birr.name)
         #     meters = birr.meters

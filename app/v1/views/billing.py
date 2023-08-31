@@ -5963,6 +5963,88 @@ class CallBackUrlGassa(Resource):
 
         mpesa_response2(ctob_obj,725)
 
+
+class CallBackUrlPromised(Resource):
+    def get(self):
+        pass
+    def post(self):
+        #parse for json
+        my_data=request.data
+        my_json = my_data.decode('utf8').replace("'", '"')
+        data = json.loads(my_json)
+
+        trans_id = data.get('TransID')
+        trans_time = data.get('TransTime')
+        trans_amnt = data.get('TransAmount')
+        trans_type = data.get('TransactionType')
+        business_shortcode = data.get('BusinessShortCode')
+        bill_ref_num = data.get('BillRefNumber')
+        invoice_num = data.get('InvoiceNumber')
+        msisdn = data.get('MSISDN')
+        org_acc_bal = data.get('OrgAccountBalance')
+        fname = data.get('FirstName')
+        lname = data.get('LastName')
+
+        mode = "Mpesa"
+        company_id = 117
+
+        print("MPESA DATA RECEIEVED: ",data)
+
+        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+        ctob_obj.save()
+
+
+        prop = ApartmentOp.fetch_apartment_by_id(722)
+        target_house = None
+
+        a1 = bill_ref_num.replace(" ","") if bill_ref_num else ""
+        if a1:
+            a2 = a1.replace("R", "")
+            a3 = a2.replace("r", "")
+            a4 = a3.replace("M", "")
+            a5 = a4.replace("m", "")
+
+            a6 = a5.upper()
+
+            for house in prop.houses:
+                n = name_standard(house.name)
+                if n == a6:
+                    target_house = house
+                    break
+
+        if not target_house:
+            print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+            # return {"message": "House not found"}, 404
+
+        propid = prop.id
+
+        dict_array = []
+
+        # if prop:
+        #     payperiod = prop.billing_period
+
+        #     dict_obj = {
+        #     "housename":target_house.name,
+        #     "amount":trans_amnt,
+        #     "date":"",
+        #     "ref":trans_id,
+        #     "desc":"",
+        #     "comment":""
+        #     }
+
+        #     dict_array.append(dict_obj)
+
+        #     uploadsjob2 = q.enqueue_call(
+        #         func=read_payments_excel, args=(dict_array,payperiod,propid,1,ctob_obj.id,), result_ttl=5000
+        #     )
+
+        #     CtoBop.update_status(ctob_obj,"claimed")
+
+
+        # response = sms.send(msg, ["+254716674695"],"KIOTAPAY")
+
+        mpesa_response2(ctob_obj,722)
+
 class CallBackUrlGrace(Resource):
     def get(self):
         pass

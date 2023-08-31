@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "lul9GSu9ls12504AXAIiBKbvyu6ZsPgI"
-    consumer_secret = "oJaHERB5jLsQnpUa"
+    consumer_key = "8CO3yYT1mfG9n97Ca7x5fb1b3FJ0ttze"
+    consumer_secret = "o7ZjL0QyTfMzIhEZ"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -42,10 +42,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "7514166",
+        "ShortCode": "4119743",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://kiotapay.com/m/villa166/ins/payment",
-        "ValidationURL": "https://kiotapay.com/m/villa166/validate",
+        "ConfirmationURL": "https://kiotapay.com/m/promised/ins/payment",
+        "ValidationURL": "https://kiotapay.com/m/promised/validate",
     }
 
     try:
@@ -56,4 +56,4 @@ def register_url():
     print(response.text)
 
 
-# register_url()
+register_url()

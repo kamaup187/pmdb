@@ -6195,6 +6195,9 @@ class TenantStatementThree(Resource):
                                 cb += item.rent_due
                                 credit += abs(item.rent_due)
                         credit += x.rent_paid
+                        if x.id == 69274:
+                            credit += 1200
+                            cb -= 1200
                         cb -= x.rent_paid
                         datadict = {
                             "month":month,

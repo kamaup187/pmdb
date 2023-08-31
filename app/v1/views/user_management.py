@@ -1563,6 +1563,13 @@ class UserLogin(Resource):
         #             print("VOILA: " + dd.house.name)
         #             TenantDepositOp.delete(dd)
 
+        # birr = ApartmentOp.fetch_apartment_by_id(891)
+        # if birr is not None:
+        #     print("VOILA: " + birr.name)
+        #     meters = birr.meters
+        #     for i in meters:
+        #         MeterReadingOp.delete(i)
+
         # birr = CtoBop.fetch_record_by_ref("RFB2SO44DO")
         # import pdb; pdb.set_trace()
         

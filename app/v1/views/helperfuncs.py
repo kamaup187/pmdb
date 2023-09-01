@@ -4903,7 +4903,7 @@ def autosend_pending_smsreceipts(payids):
                 try:
                     phonenum = sms_phone_number_formatter(tel)
                     message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
-                    sms_sender("",message,phonenum)
+                    # sms_sender("",message,phonenum)
 
                 except Exception as e:
                     print("ERROR",e)

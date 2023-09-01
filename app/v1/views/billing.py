@@ -1937,8 +1937,17 @@ class SendSms(Resource):
         if payment_id:
 
             payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
+
+            # import pdb; pdb.set_trace()
             if payment_obj.voided:
                 return f'<span class="text-danger smallify ln-10 small">Failed Payment voided!</span>'
+            
+            job101 = q.enqueue_call(
+                func=autosend_pending_smsreceipts, args=([payment_obj.id],), result_ttl=5000
+            )
+
+            return f'<span class="text-success smallify ln-10">Sent successfully</span>'
+
             
             if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
                 reference = f'#{payment_obj.ref_number}'
@@ -2067,7 +2076,9 @@ class SendSms(Resource):
         if not payment_id:
             payids = []
             timenow = datetime.datetime.now()
-            payments = PaymentOp.fetch_all_payments()
+            # payments = PaymentOp.fetch_all_payments()
+            pbrop = ApartmentOp.fetch_apartment_by_id(722)
+            payments = pbrop.payment_data
             for i in payments:
                 if not i.voided and i.sms_status == "pending" and i.pay_period.month == timenow.month:
                     payids.append(i.id)

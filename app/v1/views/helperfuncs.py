@@ -4852,7 +4852,7 @@ def autosend_pending_smsreceipts(payids):
         elif ("/") in tele:
             phonenum_list =  tele.split("/")
         else:
-            phonenum_list =  tele
+            phonenum_list =  [tele]
 
 
         for tele in phonenum_list:

@@ -217,27 +217,8 @@
 
                           <fieldset class="mt-2 mb-2 prevent-select">
                             <legend class="legend">Select houses:</legend>
-                            <div class="text-left scrollable-150 pb-2">
-                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="post-delivery" value="post-delivery">
-                                    <label class="mr-3 me-3 hover-text" for="post-delivery"></label>
-                                  </div>
-                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="cancel-delivery" value="cancel-delivery">
-                                    <label class="mr-3 me-3 hover-text" for="cancel-delivery"></label>
-                                  </div>
-                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="edit-delivery" value="edit-delivery">
-                                    <label class="mr-3 me-3 hover-text" for="edit-delivery"></label>
-                                  </div>
-                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="assign-delivery" value="assign-delivery">
-                                    <label class="mr-3 me-3 hover-text" for="assign-delivery"></label>
-                                  </div>
-                                  <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="add-delivery-comments" value="add-delivery-comments">
-                                    <label class="mr-3 me-3 hover-text" for="add-delivery-comments"></label>
-                                  </div>
+                            <div id="housebed" class="text-left scrollable-150 pb-2">
+                              loading ...
                             </div>
                           </fieldset>
                         </div>
@@ -256,18 +237,9 @@
                             $("#multi_selector").addClass("dispnone")
                             $("#house_selector").removeClass("dispnone")
                           }
-                            // $.ajax({
-                            //   url: "{{ url_for('api.createhouse') }}",
-                            //   type: "get",
-                            //   data: {
-                            //         propid: $("#edit_prop_identifier").text(),
-                            //         ttype:document.querySelector('input[name="ttype"]:checked').value,
-                            //         target:"house options2"
-                            //       },
-                            //   success: function(response) {
-                            //     $("#select_house2").html(response);
-                            //   }
-                            // });
+
+
+
                           });
                         </script>
 
@@ -1256,6 +1228,21 @@
 
                   //   }
                   // });
+
+                  $.ajax({
+                    url: "{{ url_for('api.bills') }}",
+                    type: "get",
+                    data: {
+                          propid: $("#prop_identifier_main").text(),
+                          target:"houses"
+                        },
+                    success: function(response) {
+                      $("#housebed").html(response);
+                    },
+                    error: function(xhr) {
+                      alert("Error")
+                      }
+                  });
 
                 }
               });

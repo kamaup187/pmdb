@@ -3142,9 +3142,11 @@ class DepositRefundStatement(Resource):
         # [print(e.month, e.year) for e in sifted_bills]
 
         if tenant_obj.deposits:
+            num = 1
             if tenant_obj.deposits.rentdep:
                 detailed_deposits.append(
-                    {
+                    {   
+                        "no":num,
                         "item":"Rent",
                         "desc":"Rent deposit",
                         "date":TenantOp.check_in_date(tenant_obj),
@@ -3155,11 +3157,13 @@ class DepositRefundStatement(Resource):
                 )
 
                 totaldep += tenant_obj.deposits.rentdep
+                num+=1
 
             if tenant_obj.deposits.waterdep:
                 detailed_deposits.append(
                     {
                         "item":"Water",
+                        "no":num,
                         "desc":"Water deposit",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "dr": "-",
@@ -3169,11 +3173,13 @@ class DepositRefundStatement(Resource):
                 )
 
                 totaldep += tenant_obj.deposits.waterdep
+                num += 1
 
             if tenant_obj.deposits.elecdep:
                 detailed_deposits.append(
                     {
                         "item":"Electricity",
+                        "no":num,
                         "desc":"Electricity deposit",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "dr": "-",
@@ -3182,6 +3188,7 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldep += tenant_obj.deposits.elecdep
+                num+=1
 
             if tenant_obj.deposits.otherdep:
                 detailed_deposits.append(
@@ -3195,13 +3202,16 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldep += tenant_obj.deposits.otherdep
+                num += 1
 
 
         if tenant_obj.expenses:
+            num2 = 1
             if tenant_obj.expenses.repainting:
                 detailed_deductions.append(
                     {
                         "item":"Paint",
+                        "no":num2,
                         "desc":"Repainting costs",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
@@ -3210,11 +3220,13 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldeducs += tenant_obj.expenses.repainting
+                num2 += 1
 
             if tenant_obj.expenses.plumbing:
                 detailed_deductions.append(
                     {
                         "item":"Plumbing",
+                        "no":num2,
                         "desc":"Plumbing charges",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
@@ -3223,11 +3235,13 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldeducs += tenant_obj.expenses.plumbing
+                num2+=1
 
             if tenant_obj.expenses.electricals:
                 detailed_deductions.append(
                     {
                         "item":"Electricals",
+                        "no":num2,
                         "desc":"Electricals repairs",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
@@ -3236,11 +3250,13 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldeducs += tenant_obj.expenses.electricals
+                num2 += 1
 
             if tenant_obj.expenses.fixtures:
                 detailed_deductions.append(
                     {
                         "item":"Fixtures & Fittings",
+                        "no":num2,
                         "desc":"Fixtures & Fittings repairs",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
@@ -3249,11 +3265,13 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldeducs += tenant_obj.expenses.fixtures
+                num2 +=1
 
             if tenant_obj.expenses.others:
                 detailed_deductions.append(
                     {
                         "item":"Others",
+                        "no":num2,
                         "desc":"Others",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
@@ -3262,11 +3280,13 @@ class DepositRefundStatement(Resource):
                     }
                 )
                 totaldeducs += tenant_obj.expenses.others
+                num2 += 1
 
         if tenant_obj.balance:
             detailed_deductions.append(
                 {
                     "item":"Arrears",
+                    "no":num2,
                     "desc":"Rent arrears",
                     "date":TenantOp.check_in_date(tenant_obj),
                     "cr": "-",
@@ -3275,6 +3295,7 @@ class DepositRefundStatement(Resource):
                 }
             )
             totaldeducs += tenant_obj.balance
+            num2 += 1
 
         refund = totaldep-totaldeducs
 

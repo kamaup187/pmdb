@@ -80,9 +80,10 @@
 
           <div class="text-black">DEPOSITS</div>
           <div class="table-responsive">
-            <table class="table mb-4" id="dataTable1" width="100%" cellspacing="0">
+            <table class="table mb-4 table-bordered" id="dataTable1" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
+                      <th class="">NO.</th>
                       <th class="">ITEM</th>
                       <th class="">DESCRIPTION</th>
                       <th class="header-right">DATE</th>
@@ -96,11 +97,12 @@
                   <tbody>
                     {% for bill in deposits%}
                     <tr>
+                      <td class="data-cell text-center text-black">{{ bill['no'] }}.</td>
                       <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
                       <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
-                      <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
-                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                      <td class="data-cell text-right text-black"> </td>
                       <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
                       <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
                     </tr>
                   {% endfor %}
@@ -109,7 +111,7 @@
 
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="5" class="center-btn">TOTAL DEPOSITS</td>
+                      <td colspan="6" class="center-btn">TOTAL DEPOSITS</td>
                       <td class="text-right">{{totaldep}}</td>
                     </tr>
                   </tfoot>
@@ -118,9 +120,10 @@
 
                 <div class="text-black mt-4">DEDUCTIONS</div>
 
-                <table class="table" id="dataTable2" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
+                      <th class="">NO.</th>
                       <th class="">ITEM</th>
                       <th class="">DESCRIPTION</th>
                       <th class="header-right">DATE</th>
@@ -134,11 +137,12 @@
                   <tbody>
                     {% for bill in deductions%}
                     <tr>
-                      <td class="data-cell text-center text-black">{{ bill['item'] }}</td>
+                      <td class="data-cell text-center text-black">{{ bill['no'] }}.</td>
+                      <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
                       <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
-                      <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
-                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                      <td class="data-cell text-right text-black"> </td>
                       <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
                       <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
                     </tr>
                   {% endfor %}
@@ -146,7 +150,7 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="5" class="center-btn">TOTAL DEDUCTIONS</td>
+                      <td colspan="6" class="center-btn">TOTAL DEDUCTIONS</td>
                       <td class="text-right">{{totaldeducs}}</td>
                     </tr>
                   </tfoot>
@@ -157,14 +161,14 @@
 
           <div class="text-right mr-5 mb-3">
             <div class="mr-4">
-              <div class="text-black mb-3 text-110">NET amount refunded : {{refund}}</div>
+              <div class="text-black mb-3 text-110 font-weight-bold">NET amount refunded : {{refund}}</div>
             </div>
 
           </div>
 
           <div class="text-gray-900 small">
-            I, the person named above have received refund of my security deposits of <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
-            I confirm that the fore mentioned amount is correct and therefore have no other claims against {{tenant_obj.apartment.name}}
+            I, THE ABOVE-MENTIONED PERSON, HAVE RECEIVED A REFUND OF MY SECURITY DEPOSITS OF <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
+            I CONFIRM THAT THE AMOUNT MENTIONED IS CORRECT AND, AS A RESULT, I HAVE NO OTHER CLAIMS AGAINST {{tenant_obj.apartment.name}}.
           </div>
 
 
@@ -331,9 +335,10 @@
           <div class="table-responsive">
             <div class="text-black">DEPOSITS</div>
 
-            <table class="table mb-4" id="data-table1" width="100%" cellspacing="0">
+            <table class="table mb-4 table-bordered" id="data-table1" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
+                  <th class="">NO.</th>
                   <th class="">ITEM</th>
                   <th class="">DESCRIPTION</th>
                   <th class="header-right">DATE</th>
@@ -347,11 +352,12 @@
               <tbody>
                 {% for bill in deposits%}
                 <tr>
+                  <td class="data-cell text-center text-black">{{ bill['no'] }}.</td>
                   <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
                   <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
-                  <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
-                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                  <td class="data-cell text-right text-black"> </td>
                   <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
                   <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
                 </tr>
               {% endfor %}
@@ -360,7 +366,7 @@
 
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="5" class="font-weight-bold center-btn">TOTAL DEPOSITS</td>
+                  <td colspan="6" class="font-weight-bold center-btn">TOTAL DEPOSITS</td>
                   <td class="font-weight-bold text-right">{{totaldep}}</td>
                 </tr>
               </tfoot>
@@ -371,6 +377,7 @@
             <table class="table" id="data-table2" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
+                  <th class="">NO.</th>
                   <th class="">ITEM</th>
                   <th class="">DESCRIPTION</th>
                   <th class="header-right">DATE</th>
@@ -383,12 +390,13 @@
               </thead>
               <tbody>
                 {% for bill in deductions%}
-                <tr>
-                  <td class="data-cell text-center text-black">{{ bill['item'] }}</td>
+                <tr>                 
+                  <td class="data-cell text-center text-black">{{ bill['no'] }}.</td>
+                  <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
                   <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
-                  <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
-                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                  <td class="data-cell text-right text-black"> </td>
                   <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
                   <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
                 </tr>
               {% endfor %}
@@ -396,7 +404,7 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="5" class="font-weight-bold center-btn">TOTAL DEDUCTIONS</td>
+                  <td colspan="6" class="font-weight-bold center-btn">TOTAL DEDUCTIONS</td>
                   <td class="font-weight-bold text-right">{{totaldeducs}}</td>
                 </tr>
               </tfoot>
@@ -404,14 +412,14 @@
 
             <div class="text-right mr-5 mb-3">
               <div class="mr-4">
-                <div class="text-black mb-3 text-110">NET amount refunded : {{refund}}</div>
+                <div class="text-black mb-3 text-110 font-weight-bold">NET amount refunded : {{refund}}</div>
               </div>
   
             </div>
   
             <div class="text-gray-900 small">
-              I, the person named above have received refund of my security deposits of <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
-              I confirm that the fore mentioned amount is correct and therefore have no other claims against {{tenant_obj.apartment.name}}
+              I, THE ABOVE-MENTIONED PERSON, HAVE RECEIVED A REFUND OF MY SECURITY DEPOSITS OF <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
+              I CONFIRM THAT THE AMOUNT MENTIONED IS CORRECT AND, AS A RESULT, I HAVE NO OTHER CLAIMS AGAINST {{tenant_obj.apartment.name}}.
             </div>
 
             <div class="mb-2 text-gray-900 mt-3">

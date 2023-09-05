@@ -309,6 +309,8 @@ api.add_resource(MyPayments,"/payments")
 api.add_resource(Receipt,"/receipt")
 api.add_resource(UpdateBalance,"/update/balance")
 api.add_resource(UpdateDeposit,"/update/deposit")
+api.add_resource(UpdateExpenses,"/update/expenses")
+
 api.add_resource(EditPayment,"/edit/payment")
 
 api.add_resource(Reports,"/reports")
@@ -331,6 +333,8 @@ api.add_resource(GeneralRentStatement,"/generalrent/statement")
 api.add_resource(GuestStatement,"/guest/statement")
 
 api.add_resource(DepositStatement,"/deposit/statement")
+api.add_resource(DepositRefundStatement,"/depositrefund/statement")
+
 api.add_resource(ServiceStatement,"/service/statement")
 api.add_resource(WaterStatement,"/water/statement")
 api.add_resource(ListedProperties,"/listed/properties")

@@ -6944,13 +6944,15 @@ class TenantClearance(Resource):
                 "house": house_obj.name,
                 "deposits": f"{tenant_obj.deposits.total:,.1f}" if tenant_obj.deposits else "0.0",
                 "arrears": f"{tenant_obj.balance:,.1f}",
-                "repairs": "0.0",
+                "repairs": f"{tenant_obj.expenses.total:,.1f}" if tenant_obj.expenses else "0.0",
                 "others" : "0.0"
             }
 
             return tdict
         elif target == "deposit breakdown":
             return render_template("ajax_dynamic_deposits.html",dep=tenant_obj.deposits)
+        elif target == "repair breakdown":
+            return render_template("ajax_dynamic_expenses.html",dep=tenant_obj.expenses)
         else:
             bill = fetch_latest_tenant_invoice(tenant_obj)
             return render_template("ajax_dynamic_invoice.html",bill=bill)

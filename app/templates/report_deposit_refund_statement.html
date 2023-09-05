@@ -1,0 +1,705 @@
+{% extends 'basereport.html' %}
+
+{% block content %}
+
+
+<script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+<div id="reportbase" class="row">
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+            </button>
+            <script>
+              feather.replace()
+
+              button = document.getElementById('ajaxbtnDownload');
+              button.addEventListener('click', () => {
+                document.title=$("#filename").text(); 
+                window.print()
+              });
+            </script>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">SECURITY DEPOSIT REFUND FORM</span></span>
+          </div>
+
+          
+          
+          
+          <div class="divjust-end text-black mb-3">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  <span class="mr-1">TENANT: {{tenant_obj.name}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY NAME: {{tenant_obj.apartment.name}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">HOUSE : {{hse}}</span>
+                </div>
+
+              </div>
+            </div>
+                    
+          </div>
+
+          <!-- <div class="center-btn mb-4 mt-4">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div> -->
+
+          <div class="text-black">DEPOSITS</div>
+          <div class="table-responsive">
+            <table class="table mb-4" id="dataTable1" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">ITEM</th>
+                      <th class="">DESCRIPTION</th>
+                      <th class="header-right">DATE</th>
+                      <th class="header-right">DR</th>
+                      <th class="header-right">CR</th>
+                      <th class="header-right">AMOUNT</th>
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in deposits%}
+                    <tr>
+                      <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
+                      <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
+                      <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="5" class="center-btn">TOTAL DEPOSITS</td>
+                      <td class="text-right">{{totaldep}}</td>
+                    </tr>
+                  </tfoot>
+
+                </table>
+
+                <div class="text-black mt-4">DEDUCTIONS</div>
+
+                <table class="table" id="dataTable2" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">ITEM</th>
+                      <th class="">DESCRIPTION</th>
+                      <th class="header-right">DATE</th>
+                      <th class="header-right">DR</th>
+                      <th class="header-right">CR</th>
+                      <th class="header-right">AMOUNT</th>
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in deductions%}
+                    <tr>
+                      <td class="data-cell text-center text-black">{{ bill['item'] }}</td>
+                      <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
+                      <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                      <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="5" class="center-btn">TOTAL DEDUCTIONS</td>
+                      <td class="text-right">{{totaldeducs}}</td>
+                    </tr>
+                  </tfoot>
+
+                </table>
+
+          </div>
+
+          <div class="text-right mr-5 mb-3">
+            <div class="mr-4">
+              <div class="text-black mb-3 text-110">NET amount refunded : {{refund}}</div>
+            </div>
+
+          </div>
+
+          <div class="text-gray-900 small">
+            I, the person named above have received refund of my security deposits of <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
+            I confirm that the fore mentioned amount is correct and therefore have no other claims against {{tenant_obj.apartment.name}}
+          </div>
+
+
+          <div class="mb-2 text-gray-900 mt-3">
+            <div class="">
+              Signed by tenant:
+            </div>
+            <div class="row">
+              <div class="mt-2">
+                <div class="ln-10 font-weight-bold ml-3">Sign</div>
+                <div class="ln-10 ml-3">_____________________</div>
+              </div>
+              <span class="hide">space</span>
+              <div class="mt-2">
+                <div class="ln-10 font-weight-bold">Date</div>
+                <div class="ln-10">_____________________</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="divjust-end ln-16 mobile-malaysian">
+            <div class="mt-4">
+
+              <div class="mb-2">
+                <div class="">
+                  Prepared By:
+                </div>
+                <div class="row">
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold ml-3">{{name}}</div>
+                    <div class="ln-10 ml-3">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                </div>
+
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Checked By:
+                </div>
+                <div class="row">
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold ml-3"></div>
+                    <div class="ln-10 ml-3">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Approved By:
+                </div>
+                <div class="row">
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold ml-3"></div>
+                    <div class="ln-10 ml-3">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                  <span class="hide">space</span>
+                  <div class="mt-2">
+                    <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                    <div class="ln-10">_____________________</div>
+                  </div>
+                </div>
+   
+              </div>
+  
+              <div class="mt-2">
+                <div class="">
+                  Cheque No:
+                </div>
+                <div>
+                  _____________________
+                </div>
+              </div>
+  
+
+  
+  
+            </div>
+
+
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12  dispnone printdisplay text-uppercase">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+         
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">SECURITY DEPOSIT REFUND FORM</span></span>
+          </div>
+
+          <div class="divjust-end text-black mb-3">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  <span class="mr-1">TENANT: {{tenant_obj.name}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY NAME: {{tenant_obj.apartment.name}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">HOUSE : {{hse}}</span>
+                </div>
+
+              </div>
+            </div>
+                    
+          </div>
+
+          <div class="table-responsive">
+            <div class="text-black">DEPOSITS</div>
+
+            <table class="table mb-4" id="data-table1" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">ITEM</th>
+                  <th class="">DESCRIPTION</th>
+                  <th class="header-right">DATE</th>
+                  <th class="header-right">DR</th>
+                  <th class="header-right">CR</th>
+                  <th class="header-right">AMOUNT</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in deposits%}
+                <tr>
+                  <td class="data-cell text-left text-black">{{ bill['item'] }}</td>
+                  <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
+                  <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td colspan="5" class="font-weight-bold center-btn">TOTAL DEPOSITS</td>
+                  <td class="font-weight-bold text-right">{{totaldep}}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="text-black mt-4">DEDUCTIONS</div>
+
+            <table class="table" id="data-table2" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">ITEM</th>
+                  <th class="">DESCRIPTION</th>
+                  <th class="header-right">DATE</th>
+                  <th class="header-right">DR</th>
+                  <th class="header-right">CR</th>
+                  <th class="header-right">AMOUNT</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in deductions%}
+                <tr>
+                  <td class="data-cell text-center text-black">{{ bill['item'] }}</td>
+                  <td class="data-cell text-left text-black">{{ bill['desc']}}</td>
+                  <td class="data-cell text-right text-black">{{ bill['date'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['cr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['dr'] }}</td>
+                  <td class="data-cell text-right text-black">{{ bill['amount'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td colspan="5" class="font-weight-bold center-btn">TOTAL DEDUCTIONS</td>
+                  <td class="font-weight-bold text-right">{{totaldeducs}}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="text-right mr-5 mb-3">
+              <div class="mr-4">
+                <div class="text-black mb-3 text-110">NET amount refunded : {{refund}}</div>
+              </div>
+  
+            </div>
+  
+            <div class="text-gray-900 small">
+              I, the person named above have received refund of my security deposits of <span class="text-black font-weight-bold">{{refund_in_words}}.</span><br>
+              I confirm that the fore mentioned amount is correct and therefore have no other claims against {{tenant_obj.apartment.name}}
+            </div>
+
+            <div class="mb-2 text-gray-900 mt-3">
+              <div class="">
+                Signed by tenant:
+              </div>
+              <div class="row">
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold ml-3">Sign</div>
+                  <div class="ln-10 ml-3">_____________________</div>
+                </div>
+                <span class="hide">space</span>
+                <div class="mt-2">
+                  <div class="ln-10 font-weight-bold">Date</div>
+                  <div class="ln-10">_____________________</div>
+                </div>
+              </div>
+  
+            </div>
+
+            <div class="divjust-end ln-16 mobile-malaysian nobreak">
+              <div class="mt-4">
+
+                <div class="mb-2">
+                  <div class="">
+                    Prepared By:
+                  </div>
+                  <div class="row">
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold ml-3">{{name}}</div>
+                      <div class="ln-10 ml-3">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                  </div>
+  
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Checked By:
+                  </div>
+                  <div class="row">
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold ml-3"></div>
+                      <div class="ln-10 ml-3">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Approved By:
+                  </div>
+                  <div class="row">
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold ml-3"></div>
+                      <div class="ln-10 ml-3">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Sign</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                    <span class="hide">space</span>
+                    <div class="mt-2">
+                      <div class="ln-10 font-weight-bold text-black-bold">Date</div>
+                      <div class="ln-10">_____________________</div>
+                    </div>
+                  </div>
+     
+                </div>
+    
+                <div class="mt-2">
+                  <div class="">
+                    Cheque No:
+                  </div>
+                  <div>
+                    _____________________
+                  </div>
+                </div>
+    
+  
+    
+    
+              </div>
+  
+
+            </div>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $("#month").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+<!-- 
+<script>
+  $("#view_general").click(function () {
+
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "",
+          type: "get",
+          data: {
+              prop: $("#prop").val(),
+              month: $("#month").val(),
+              reporttype: $("#reporttype").val()
+          },
+          success: function (response) {
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
+
+          }
+      });
+
+  });
+</script> -->
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#dataTable1').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "ordering": false,
+      "searching":false,
+      "bLengthChange": false,
+      language : {
+        "zeroRecords": " "             
+    },
+    "info": false,
+    "bPaginate": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+
+    $(document).ready(function () {
+    $('#dataTable2').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "ordering": false,
+      "searching":false,
+      "bLengthChange": false,
+      language : {
+        "zeroRecords": " "             
+    },
+    "info": false,
+    "bPaginate": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+
+    $(document).ready(function () {
+    $('#datatable1').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "ordering": false,
+      "searching":false,
+      "bLengthChange": false,
+      language : {
+        "zeroRecords": " "             
+    },
+    "info": false,
+    "bPaginate": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+
+    $(document).ready(function () {
+    $('#data-table2').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "ordering": false,
+      "searching":false,
+      "bLengthChange": false,
+      language : {
+        "zeroRecords": " "             
+    },
+    "info": false,
+    "bPaginate": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

@@ -3916,6 +3916,48 @@ class UpdateDeposit(Resource):
 
         return f"KES {tenant_obj.deposit:,.2f}"
 
+class UpdateExpenses(Resource):
+    def post(self):
+        tenantid = request.form.get("tenant_id")
+        ttype = request.form.get("ttype")
+
+        repainting = request.form.get("repainting")
+        plumbing = request.form.get("plumbing")
+        electricals = request.form.get("electricals")
+        fixtures = request.form.get("fixtures")
+        others = request.form.get("others")
+
+        values = validate_float_inputs(repainting,plumbing,electricals,fixtures,others)
+
+        if ttype == "owner" or ttype == "resident":
+            return ""
+        else:
+            tenant_id = get_identifier(tenantid)
+            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+
+        dep = tenant_obj.expenses
+
+        total = 0.0
+
+        total += values[0] if isinstance(values[0],float) else 0.0
+        total += values[1] if isinstance(values[1],float) else 0.0
+        total += values[2] if isinstance(values[2],float) else 0.0
+        total += values[3] if isinstance(values[3],float) else 0.0
+        total += values[4] if isinstance(values[4],float) else 0.0
+
+        if dep:
+            TenantExpensesOp.update_expenses(dep,values[0],values[1],values[2],values[3],values[4],total)
+        else:
+            repainting = values[0] if isinstance(values[0],float) else 0.0
+            plumbing = values[1] if isinstance(values[1],float) else 0.0
+            electricals = values[2] if isinstance(values[2],float) else 0.0
+            fixtures = values[3] if isinstance(values[3],float) else 0.0
+            others = values[4] if isinstance(values[4],float) else 0.0
+            dep = TenantExpensesOp(repainting,plumbing,electricals,fixtures,others,total,tenant_obj.id,tenant_obj.apartment_id)
+            dep.save()
+
+        return f"{total:,.1f}"
+
 class Receipt(Resource):
     @login_required
     def get(self):

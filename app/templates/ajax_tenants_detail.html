@@ -485,9 +485,7 @@
                               
                               <span class="text-black">Deposit breakdown</span>
                               <div id="deposit_breakdown">
-                                  
                                 <div class="d-inline-block dot-elastic"></div>
-
                               </div>
 
                             </div>
@@ -500,14 +498,12 @@
                         <div class="card-body collapsible collapse">
                           <div class="form-group">
                             <div class="mb-2">
-                              <span class="text-black">Balance breakdown</span>
 
+                              <span class="text-black">Balance breakdown</span>
                               <div id="balance_breakdown">
                                 <div class="d-inline-block dot-elastic"></div>
                               </div>
                                 
-
-
                             </div>
 
                           </div>
@@ -520,11 +516,11 @@
                       <div class="card-body collapsible collapse">
                         <div class="form-group">
                           <div class="mb-2">
-                            <span class="text-black">Repairs breakdown</span>
 
+                            <!-- <div></div> -->
+                            <span class="text-black">Repairs breakdown</span> <button id="editexpenses" type="button" class="btn btn-sm btn-outline-success mt-1 mb-1 float-right"> <i class="feather-16" data-feather="check"></i> <span id="editexpenses-text">update expenses</span></button>
                             <div id="repairs_breakdown">
-                              -
-                              <!-- <div class="d-inline-block dot-elastic"></div> -->
+                              <div class="d-inline-block dot-elastic"></div>
                             </div>
                               
                           </div>
@@ -533,7 +529,7 @@
                       </div>
                   </div>
 
-                  <div class="card mb-2">
+                  <div class="card mb-2 dispnone">
                     <div id="toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold"><span id="clear_tenant_others"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
                     <div class="card-body collapsible collapse">
                       <div class="form-group">
@@ -1370,10 +1366,53 @@
           });
         }
       }
+
+      if (item == "toggle-repaircard"){
+        if($(this).next().hasClass("active")){
+          $("#repairs_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#del_tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"repair breakdown"
+                },
+            success: function(response) {
+              $("#repairs_breakdown").html(response);
+            }
+          });
+        }
+      }
  
     });
   })
 
+</script>
+
+
+<script>
+  $("#editexpenses").click(function(){   
+    $("#editexpenses-text").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updateexpenses') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#del_tenant_identifier").text(),
+                repainting: $("#repainting").val(),
+                plumbing: $("#plumbing").val(),
+                electricals: $("#electricals").val(),
+                fixtures:$("#fixtures").val(),
+                others:$("#other_expenses").val(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $("#clear_tenant_repairs").html(response)
+          $("#editexpenses-text").html("update expenses")  
+
+        }
+      });
+  });
 </script>
 
 

@@ -3103,6 +3103,209 @@ class GeneralRentStatement(Resource):
             name=current_user.name))
 
 
+class DepositRefundStatement(Resource):
+    @login_required
+    def get(self):
+        tenantid = request.args.get("tenantid")
+
+        if not tenantid:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_deposit_refund_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+        tenant_obj = TenantOp.fetch_tenant_by_id(tenantid)
+
+        ##################################################################################################
+        detailed_deposits = []
+        detailed_deductions = []
+
+        totaldep = 0.0
+        totaldeducs = 0.0
+
+        ###################################################################################################
+        db.session.expire(tenant_obj)
+
+
+        # [print(e.month, e.year) for e in monthlybills]
+        ###################################################################################################
+
+        # [print(e.month, e.year) for e in sifted_bills]
+
+        if tenant_obj.deposits:
+            if tenant_obj.deposits.rentdep:
+                detailed_deposits.append(
+                    {
+                        "item":"Rent",
+                        "desc":"Rent deposit",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "dr": "-",
+                        "cr": tenant_obj.deposits.rentdep,
+                        "amount":tenant_obj.deposits.rentdep
+                    }
+                )
+
+                totaldep += tenant_obj.deposits.rentdep
+
+            if tenant_obj.deposits.waterdep:
+                detailed_deposits.append(
+                    {
+                        "item":"Water",
+                        "desc":"Water deposit",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "dr": "-",
+                        "cr": tenant_obj.deposits.waterdep,
+                        "amount":tenant_obj.deposits.waterdep
+                    }
+                )
+
+                totaldep += tenant_obj.deposits.waterdep
+
+            if tenant_obj.deposits.elecdep:
+                detailed_deposits.append(
+                    {
+                        "item":"Electricity",
+                        "desc":"Electricity deposit",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "dr": "-",
+                        "cr": tenant_obj.deposits.elecdep,
+                        "amount":tenant_obj.deposits.elecdep
+                    }
+                )
+                totaldep += tenant_obj.deposits.elecdep
+
+            if tenant_obj.deposits.otherdep:
+                detailed_deposits.append(
+                    {
+                        "item":"Others",
+                        "desc":"Others",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "dr": "-",
+                        "cr": tenant_obj.deposits.otherdep,
+                        "amount":tenant_obj.deposits.otherdep
+                    }
+                )
+                totaldep += tenant_obj.deposits.otherdep
+
+
+        if tenant_obj.expenses:
+            if tenant_obj.expenses.repainting:
+                detailed_deductions.append(
+                    {
+                        "item":"Paint",
+                        "desc":"Repainting costs",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "cr": "-",
+                        "dr": tenant_obj.expenses.repainting,
+                        "amount":tenant_obj.expenses.repainting
+                    }
+                )
+                totaldeducs += tenant_obj.expenses.repainting
+
+            if tenant_obj.expenses.plumbing:
+                detailed_deductions.append(
+                    {
+                        "item":"Plumbing",
+                        "desc":"Plumbing charges",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "cr": "-",
+                        "dr": tenant_obj.expenses.plumbing,
+                        "amount":tenant_obj.expenses.plumbing
+                    }
+                )
+                totaldeducs += tenant_obj.expenses.plumbing
+
+            if tenant_obj.expenses.electricals:
+                detailed_deductions.append(
+                    {
+                        "item":"Electricals",
+                        "desc":"Electricals repairs",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "cr": "-",
+                        "dr": tenant_obj.expenses.electricals,
+                        "amount":tenant_obj.expenses.electricals
+                    }
+                )
+                totaldeducs += tenant_obj.expenses.electricals
+
+            if tenant_obj.expenses.fixtures:
+                detailed_deductions.append(
+                    {
+                        "item":"Fixtures & Fittings",
+                        "desc":"Fixtures & Fittings repairs",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "cr": "-",
+                        "dr": tenant_obj.expenses.fixtures,
+                        "amount":tenant_obj.expenses.fixtures
+                    }
+                )
+                totaldeducs += tenant_obj.expenses.fixtures
+
+            if tenant_obj.expenses.others:
+                detailed_deductions.append(
+                    {
+                        "item":"Others",
+                        "desc":"Others",
+                        "date":TenantOp.check_in_date(tenant_obj),
+                        "cr": "-",
+                        "dr": tenant_obj.expenses.others,
+                        "amount":tenant_obj.expenses.others
+                    }
+                )
+                totaldeducs += tenant_obj.expenses.others
+
+        if tenant_obj.balance:
+            detailed_deductions.append(
+                {
+                    "item":"Arrears",
+                    "desc":"Rent arrears",
+                    "date":TenantOp.check_in_date(tenant_obj),
+                    "cr": "-",
+                    "dr": tenant_obj.balance,
+                    "amount":tenant_obj.balance
+                }
+            )
+            totaldeducs += tenant_obj.balance
+
+        refund = totaldep-totaldeducs
+
+        p = inflect.engine()
+        int_amount = int(refund)
+        str_amount = p.number_to_words(int_amount)
+        refund_in_words = str_amount.capitalize()
+
+        ###################################################################################################
+   
+
+        return Response(render_template(
+            "report_deposit_refund_statement.html",
+            tenant_obj=tenant_obj,
+            deductions=detailed_deductions,
+            deposits=detailed_deposits,
+            totaldep = f"Kes {totaldep:,.1f}",
+            totaldeducs = f"Kes {totaldeducs:,.1f}",
+            refund = f"Kes {refund:,.1f}",
+            refund_in_words = refund_in_words,
+            paging="portrait",
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
+
 class GuestStatement(Resource):
     @login_required
     def get(self):

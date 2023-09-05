@@ -334,6 +334,8 @@ class Apartment(db.Model):
     landlordpayments = db.relationship('LandlordPayment',backref='apartment',order_by='LandlordPayment.date',cascade="all, delete-orphan")
     schedules = db.relationship('PaymentSchedule',backref='apartment', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")
     deposits = db.relationship('TenantDeposit',backref='apartment', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    t_expenses = db.relationship('TenantExpenses',backref='apartment', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+
 
     remits = db.relationship('LandlordRemittance',backref='apartment',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
 
@@ -525,6 +527,7 @@ class House(db.Model):
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
     clearrequests = db.relationship('ClearanceRequest',backref='house',order_by='ClearanceRequest.date', cascade="all, delete-orphan")
     deposits = db.relationship('TenantDeposit',backref='house', uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    t_expenses = db.relationship('TenantExpenses',backref='house',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
     owner = db.relationship('PermanentTenant',backref='house', uselist=False, cascade="all, delete-orphan")
 
@@ -742,6 +745,7 @@ class PermanentTenant(db.Model):
     sent_messages = db.relationship('SentMessages',backref='ptenant',order_by='SentMessages.date', cascade="all, delete-orphan")
     schedules = db.relationship('PaymentSchedule',backref='ptenant', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     deposits = db.relationship('TenantDeposit',backref='ptenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    expenses = db.relationship('TenantExpenses',backref='ptenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
 
     def __repr__(self):
@@ -841,7 +845,7 @@ class Tenant(db.Model):
     messages = db.relationship('InternalMessages',backref='tenant',order_by='InternalMessages.date', cascade="all, delete-orphan")
     sent_messages = db.relationship('SentMessages',backref='tenant',order_by='SentMessages.date', cascade="all, delete-orphan")
     deposits = db.relationship('TenantDeposit',backref='tenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
-
+    expenses = db.relationship('TenantExpenses',backref='tenant',uselist=False, cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
 
 
 
@@ -860,6 +864,40 @@ class TenantDeposit(db.Model):
     waterdep = db.Column(db.Float,default=0)
     elecdep = db.Column(db.Float,default=0)
     otherdep = db.Column(db.Float,default=0)
+
+    total = db.Column(db.Float,default=0)
+    paid = db.Column(db.Float,default=0)
+    balance = db.Column(db.Float,default=0)
+
+    status = db.Column(db.String,default="unrefunded")
+
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
+
+    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+    apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
+
+    def __repr__(self):
+        strhouse = str(self.id)
+
+        return strhouse
+    
+
+class TenantExpenses(db.Model):
+    """db model class"""
+
+    __tablename__ = 'tenantexpenses'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+
+    repainting = db.Column(db.Float,default=0)
+    plumbing = db.Column(db.Float,default=0)
+    electricals = db.Column(db.Float,default=0)
+    fixtures = db.Column(db.Float,default=0)
+    others = db.Column(db.Float,default=0)
 
     total = db.Column(db.Float,default=0)
     paid = db.Column(db.Float,default=0)

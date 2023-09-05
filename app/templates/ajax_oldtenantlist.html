@@ -10,7 +10,8 @@
                 <th class="text-info track-title-cell expand dispnone-alt">Email</th>
                 <th class="text-info track-title-cell">Vacated</th>
                 <th class="text-info track-title-cell">Bal</th>
-                <th class="text-info track-title-cell text-warning expand dispnone-alt">Reallot</th>
+                <th class="text-info track-title-cell text-warning">Refund form</th>
+                <th class="text-info track-title-cell text-warning">Reallot</th>
                 <th class="text-info track-title-cell text-danger expand dispnone-alt">Delete</th>
 
                 </tr>
@@ -18,12 +19,18 @@
             <tbody>
                 {% for i in items%}
                 <tr>
-                <td class="first-data-cell text-dark font-weight-bold">{{ i['name'] }}</td>
+                <td class="first-data-cell text-dark font-weight-bold">{{ i['fullname'] }}</td>
                 <td class="data-cell">{{ i['tel'] }}</td>
                 <td class="data-cell expand dispnone-alt">{{ i['email'] }}</td>
-                <td class="data-cell">{{ i['checkin'] }}</td>
+                <td class="data-cell">{{ i['checkout'] }}</td>
                 <td class="data-cell {{i['highlight']}}">{{ i['balance'] }}</td>
-                <td class="text-s data-cell expand dispnone-alt">
+
+                <td class="text-s data-cell">
+                  <div>
+                    <a class="btn btn-sm btn-light" href="/depositrefund/statement?tenantid={{i['id']}}" target="_blank">generate report</a>
+                  </div>
+                </td>
+                <td class="text-s data-cell">
                   <div>
                     <button id="{{i['allocid']}}" type="button" class="btn action-btn btn-outline-info font-weight-bold  no-wrap" data-toggle="modal" data-target="#allocateHouseModal"><i class="fas fa-house-user mr-1"></i>Reallot</button>
                   </div>

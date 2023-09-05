@@ -2934,6 +2934,34 @@ class TenantDepositOp(TenantDeposit,Base):
             'balance':TenantDepositOp.format(self.balance),
             'status':self.status
         }
+    
+class TenantExpensesOp(TenantExpenses,Base):
+    def __init__(self,repainting,plumbing,electricals,fixtures,others,total,tenant_id,apartment_id):
+        self.repainting = repainting
+        self.plumbing = plumbing
+        self.electricals = electricals
+        self.fixtures = fixtures
+        self.others = others
+        self.total = total
+        self.tenant_id = tenant_id
+        self.apartment_id = apartment_id
+
+
+    def update_expenses(self,repainting,plumbing,electricals,fixtures,others,total):
+        if repainting != "null":
+            self.repainting = repainting
+        if plumbing != "null":
+            self.plumbing = plumbing
+        if electricals != "null":
+            self.electricals = electricals
+        if fixtures != "null":
+            self.fixtures = fixtures
+        if others != "null":
+            self.others = others
+        if total:
+            self.total = total
+        db.session.commit()
+
 
 class AllocateTenantOp(Occupancy,Base):
     def __init__(self,apartment_id,house_id,tenant_id,checkin,checkout,user_id,description=None):

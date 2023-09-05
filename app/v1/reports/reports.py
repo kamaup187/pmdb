@@ -3257,7 +3257,7 @@ class DepositRefundStatement(Resource):
                     {
                         "item":"Fixtures & Fittings",
                         "no":num2,
-                        "desc":"Fixtures & Fittings repairs",
+                        "desc":"Fixtures & Fittings",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
                         "dr": tenant_obj.expenses.fixtures,

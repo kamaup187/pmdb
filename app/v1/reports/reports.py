@@ -8328,10 +8328,10 @@ class FetchStatistics(Resource):
         else:
             progress = 'Generate'
 
-        # if len(smsstatus) < 1:
-        #     invs = '<span class="text-danger font-weight-bold">not billed</span'
-        # else:
-        #     invs = len(smsstatus)
+        if len(smsstatus) < 1:
+            invs2 = '<span class="text-danger font-weight-bold">not billed</span'
+        else:
+            invs2 = len(smsstatus)
 
         invss = f'<span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
@@ -8352,7 +8352,7 @@ class FetchStatistics(Resource):
         sms = sms
         
 
-        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received,unreceived,ratio,invs]
+        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received,unreceived,ratio,invs,invs2]
 
 
 class FetchHouses(Resource):

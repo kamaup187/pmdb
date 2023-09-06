@@ -2960,6 +2960,7 @@ class GeneralRentStatement(Resource):
         totalbbf = 0.0
         totaldep = 0.0
         totalrent = 0.0
+        totalwater = 0.0
 
         totaldue = 0.0
         totalpaid = 0.0
@@ -2998,7 +2999,7 @@ class GeneralRentStatement(Resource):
                         sifted_bills.append(bill)
                     else:pass
         # [print(e.month, e.year) for e in sifted_bills]
-
+        template = "ajax_report_general_statement.html"
         for bill in sifted_bills:
             house_ids.append(bill.house_id)
             """compute subtotals"""
@@ -3006,11 +3007,11 @@ class GeneralRentStatement(Resource):
             if itemtype == "all items":
                 bill_item = MonthlyChargeOp.view_detail(bill)
                 detailed_bills.append(bill_item)
-                template = "ajax_report_general_statement.html"
-
+                
                 totalbbf += bill.arrears if bill.arrears else 0.0
                 totaldep += bill.deposit if bill.deposit else 0.0
                 totalrent += bill.rent if bill.rent else 0.0
+                totalwater += bill.water if bill.water else 0.0
                 totaldue += bill.total_bill if bill.total_bill else 0.0
                 totalpaid += bill.paid_amount if bill.paid_amount else 0.0
                 totalbcf += bill.balance if bill.balance else 0.0
@@ -3026,6 +3027,7 @@ class GeneralRentStatement(Resource):
 
                 totalbbf += bill.rent_balance if bill.rent_balance else 0.0
                 totalrent += bill.rent if bill.rent else 0.0
+                totalwater += bill.water if bill.water else 0.0
                 totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
                 totalpaid += bill.rent_paid if bill.rent_paid else 0.0
                 totalbcf += bill.rent_due if bill.rent_due else 0.0
@@ -3060,6 +3062,7 @@ class GeneralRentStatement(Resource):
         bbftotal = (f"{totalbbf:,}")
         deptotal = (f"{totaldep:,}")
         renttotal = (f"{totalrent:,}")
+        watertotal = (f"{totalwater:,}")
 
         billtotal = (f"{totaldue:,}")
         paidtotal = (f"{totalpaid:,}")
@@ -3084,6 +3087,7 @@ class GeneralRentStatement(Resource):
             timeline = timeline,
             bbftotal=bbftotal,
             renttotal=renttotal,
+            watertotal=watertotal,
             billtotal=billtotal,
             paidtotal=paidtotal,
             bcftotal=bcftotal,

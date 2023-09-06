@@ -2799,7 +2799,7 @@ class RentStatement(Resource):
 
 
             
-        netrent = totalpaid
+        netrent = totalpaid + paidll
 
         formatted_netrent = (f"{netrent:,.1f}")
         

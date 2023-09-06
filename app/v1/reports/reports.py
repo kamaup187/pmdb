@@ -3008,13 +3008,13 @@ class GeneralRentStatement(Resource):
                 bill_item = MonthlyChargeOp.view_detail(bill)
                 detailed_bills.append(bill_item)
                 
-                totalbbf += bill.arrears if bill.arrears else 0.0
+                totalbbf += bill.arrears if bill.arrears > 0 else 0.0
                 totaldep += bill.deposit if bill.deposit else 0.0
                 totalrent += bill.rent if bill.rent else 0.0
                 totalwater += bill.water if bill.water else 0.0
                 totaldue += bill.total_bill if bill.total_bill else 0.0
                 totalpaid += bill.paid_amount if bill.paid_amount else 0.0
-                totalbcf += bill.balance if bill.balance else 0.0
+                totalbcf += bill.balance if bill.balance > 0 else 0.0
 
             else:
                 bill_item = MonthlyChargeOp.external_view(bill)

@@ -4050,6 +4050,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'deposit-paid':MonthlyChargeOp.calculate_paid_deposits(self),
             'deposit-due':MonthlyChargeOp.calculate_deposit_balance(self),
 
+            'dep-arr':MonthlyChargeOp.fig_format(self.deposit_balance),
+            'dep':MonthlyChargeOp.fig_format(self.deposit),
+            'dep-total':MonthlyChargeOp.calculate_total_due(self.deposit,self.deposit_balance),
+            'dep-paid':MonthlyChargeOp.fig_format(self.deposit_paid),
+            'dep-bal':MonthlyChargeOp.fig_format(self.deposit_due),
+
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
@@ -4102,7 +4108,19 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'calc_total':MonthlyChargeOp.calculate_total(self),
             'paid':MonthlyChargeOp.calculate_paid(self),
             'date-paid':MonthlyChargeOp.get_date(self),
-            'balance':MonthlyChargeOp.calculate_bcf(self)
+            'balance':MonthlyChargeOp.calculate_bcf(self),
+
+            'arrears-no-star':f"{self.arrears:,.1f}",
+            'total':MonthlyChargeOp.fig_format(self.total_bill),
+            'totalalt':MonthlyChargeOp.calculate_total_alt_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
+            'amounttotal':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
+            'totaldue':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.garbage,self.security),
+            'paid2':MonthlyChargeOp.calculate_pbreakdown(self),
+            'paid-alt':MonthlyChargeOp.show_paid_status(self.paid_amount),
+            'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
+            'payment_date':MonthlyChargeOp.get_date(self),
+            'balance-no-star':f"{self.balance:,.1f}",
+
         }
 
 

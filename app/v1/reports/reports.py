@@ -341,17 +341,9 @@ class BalanceReport(Resource):
             print("TEXT SENT:",sms_text)
 
             if target == "lasshouse":
-                report = inva_send_sms(sms_text,tel)
-                # elif prop_obj.company.sms_provider == "Advanta":
+                inva_send_sms(sms_text,tel)
             else:
-                # sms_sender(prop_obj.company.name,sms_text,tel)
                 advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
-            # else:
-            #     try:
-            #         notify = sms.send(sms_text, recipient,sender)
-            #         print(notify)
-            #     except Exception as e:
-            #         print("sending logs failed",e)
         else:
             print("Telephone not provided")
 
@@ -2961,9 +2953,18 @@ class GeneralRentStatement(Resource):
         detailed_bills = []
 
         totalbbf = 0.0
+
         totaldep = 0.0
+        totaldeppaid = 0.0
+
         totalrent = 0.0
+        totalrentpaid = 0.0
+
+        totalserv = 0.0
+        totalservpaid = 0.0
+
         totalwater = 0.0
+        totalwaterpaid = 0.0
 
         totaldue = 0.0
         totalpaid = 0.0
@@ -3025,12 +3026,25 @@ class GeneralRentStatement(Resource):
 
                 if itemtype == "deposit item":
                     template = "ajax_report_general_deposit_statement.html"
+                if itemtype == "rent service item":
+                    template = "ajax_report_rent_service_statement.html"
                 else:
                     template = "ajax_report_general_rent_statement.html"
 
                 totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+
+                totaldep += bill.deposit if bill.deposit else 0.0
+                totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
+
                 totalrent += bill.rent if bill.rent else 0.0
+                totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+
+                totalserv += bill.maintenance if bill.maintenance else 0.0
+                totalservpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
+
                 totalwater += bill.water if bill.water else 0.0
+                totalwaterpaid += bill.water_paid if bill.water_paid else 0.0
+
                 totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
                 totalpaid += bill.rent_paid if bill.rent_paid else 0.0
                 totalbcf += bill.rent_due if bill.rent_due else 0.0
@@ -3063,9 +3077,18 @@ class GeneralRentStatement(Resource):
 
 
         bbftotal = (f"{totalbbf:,}")
+
         deptotal = (f"{totaldep:,}")
+        deppaidtotal = (f"{totaldeppaid:,}")
+
         renttotal = (f"{totalrent:,}")
+        rentpaidtotal = (f"{totalrentpaid:,}")
+
+        servtotal = (f"{totalserv:,}")
+        servpaidtotal = (f"{totalservpaid:,}")
+
         watertotal = (f"{totalwater:,}")
+        waterpaidtotal = (f"{totalwaterpaid:,}")
 
         billtotal = (f"{totaldue:,}")
         paidtotal = (f"{totalpaid:,}")
@@ -3089,12 +3112,22 @@ class GeneralRentStatement(Resource):
             tenantlist=[],
             timeline = timeline,
             bbftotal=bbftotal,
+
+            deptotal=deptotal,
+            deppaidtotal=deppaidtotal,
+
             renttotal=renttotal,
+            rentpaidtotal=rentpaidtotal,
+            
+            servtotal=servtotal,
+            servpaidtotal=servpaidtotal,
+
             watertotal=watertotal,
+            waterpaidtotal=waterpaidtotal,
+
             billtotal=billtotal,
             paidtotal=paidtotal,
             bcftotal=bcftotal,
-            deptotal=deptotal,
             ratio=ratio,
             bills=detailed_bills,
             paging="portrait",

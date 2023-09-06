@@ -344,7 +344,7 @@ class BalanceReport(Resource):
                 report = inva_send_sms(sms_text,tel)
                 # elif prop_obj.company.sms_provider == "Advanta":
             else:
-                sms_sender(prop_obj.company.name,sms_text,tel)
+                # sms_sender(prop_obj.company.name,sms_text,tel)
                 advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
             # else:
             #     try:

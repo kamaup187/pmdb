@@ -4315,7 +4315,7 @@ def generate_date_alt(month,year):
     return datetime.datetime(year, month, day)
 
 def generate_exact_date(day,month,year):
-    # print("Month",month,"Year",year)
+    print("Day",day,"Month",month,"Year",year)
     # if month == 2:
     #     day = datetime.datetime.now()
     

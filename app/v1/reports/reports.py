@@ -6936,93 +6936,89 @@ class TenantStatementFour(Resource):
 
                     ref = x.ref_number if x.ref_number else f"REF{x.id}"
 
-                    # if item.month == 8:
-                    # import pdb;
-                    # pdb.set_trace()
+                    if x.amount:
+                        cb -= x.amount
+                        datadict = {
+                            "month":month,
+                            "date":paydate,
+                            "desc":f"Payment",
+                            "ref":ref,
+                            "debit":"",
+                            "credit":f'{x.amount:,.1f}',
+                            "balance":f'{cb:,.1f}'
+                        }
+                        main.append(datadict)
 
                     # if x.rent_paid:
+                    #     credit = 0.0
+                    #     if item.rent_due:
+                    #         if item.rent_due < 0:
+                    #             cb += item.rent_due
+                    #             credit += abs(item.rent_due)
+                    #     credit += x.rent_paid
                     #     cb -= x.rent_paid
                     #     datadict = {
                     #         "month":month,
                     #         "date":paydate,
-                    #         "desc":f" Rent payment",
-                    #         "ref":x.ref_number,
+                    #         "desc":f"{x.house} {month} rent payment",
+                    #         "ref":ref,
                     #         "debit":"",
-                    #         "credit":x.rent_paid,
+                    #         "credit":f'{credit:,.1f}',
                     #         "balance":f'{cb:,.1f}'
                     #     }
                     #     main.append(datadict)
 
-                    if x.rent_paid:
-                        credit = 0.0
-                        if item.rent_due:
-                            if item.rent_due < 0:
-                                cb += item.rent_due
-                                credit += abs(item.rent_due)
-                        credit += x.rent_paid
-                        cb -= x.rent_paid
-                        datadict = {
-                            "month":month,
-                            "date":paydate,
-                            "desc":f"{x.house} {month} rent payment",
-                            "ref":ref,
-                            "debit":"",
-                            "credit":f'{credit:,.1f}',
-                            "balance":f'{cb:,.1f}'
-                        }
-                        main.append(datadict)
+                    # if x.water_paid:
+                    #     cb -= x.water_paid
+                    #     datadict = {
+                    #         "month":month,
+                    #         "date":paydate,
+                    #         "desc":f"{x.house} {month} water payment",
+                    #         "ref":ref,
+                    #         "debit":"",
+                    #         "credit":f'{x.water_paid:,.1f}',
+                    #         "balance":f'{cb:,.1f}'
+                    #     }
+                    #     main.append(datadict)
 
-                    if x.water_paid:
-                        cb -= x.water_paid
-                        datadict = {
-                            "month":month,
-                            "date":paydate,
-                            "desc":f"{x.house} {month} water payment",
-                            "ref":ref,
-                            "debit":"",
-                            "credit":f'{x.water_paid:,.1f}',
-                            "balance":f'{cb:,.1f}'
-                        }
-                        main.append(datadict)
+                    # if x.garbage_paid:
+                    #     cb -= x.garbage_paid
+                    #     datadict = {
+                    #         "month":month,
+                    #         "date":paydate,
+                    #         "desc":f"{x.house} {month} Garbage fee payment",
+                    #         "ref":ref,
+                    #         "debit":"",
+                    #         "credit":f'{x.garbage_paid:,.1f}',
+                    #         "balance":f'{cb:,.1f}'
+                    #     }
+                    #     main.append(datadict)
 
-                    if x.garbage_paid:
-                        cb -= x.garbage_paid
-                        datadict = {
-                            "month":month,
-                            "date":paydate,
-                            "desc":f"{x.house} {month} Garbage fee payment",
-                            "ref":ref,
-                            "debit":"",
-                            "credit":f'{x.garbage_paid:,.1f}',
-                            "balance":f'{cb:,.1f}'
-                        }
-                        main.append(datadict)
+                    # if x.security_paid:
+                    #     cb -= x.security_paid
+                    #     datadict = {
+                    #         "month":month,
+                    #         "date":paydate,
+                    #         "desc":f"{x.house} {month} security fee payment",
+                    #         "ref":ref,
+                    #         "debit":"",
+                    #         "credit":f'{x.security_paid:,.1f}',
+                    #         "balance":f'{cb:,.1f}'
+                    #     }
+                    #     main.append(datadict)
 
-                    if x.security_paid:
-                        cb -= x.security_paid
-                        datadict = {
-                            "month":month,
-                            "date":paydate,
-                            "desc":f"{x.house} {month} security fee payment",
-                            "ref":ref,
-                            "debit":"",
-                            "credit":f'{x.security_paid:,.1f}',
-                            "balance":f'{cb:,.1f}'
-                        }
-                        main.append(datadict)
-
-                    if x.maintenance_paid:
-                        cb -= x.maintenance_paid
-                        datadict = {
-                            "month":month,
-                            "date":paydate,
-                            "desc":f"{x.house} {month} service fee payment",
-                            "ref":ref,
-                            "debit":"",
-                            "credit":f'{x.maintenance_paid:,.1f}',
-                            "balance":f'{cb:,.1f}'
-                        }
-                        main.append(datadict)
+                    # if x.maintenance_paid:
+                    #     cb -= x.maintenance_paid
+                    #     datadict = {
+                    #         "month":month,
+                    #         "date":paydate,
+                    #         "desc":f"{x.house} {month} service fee payment",
+                    #         "ref":ref,
+                    #         "debit":"",
+                    #         "credit":f'{x.maintenance_paid:,.1f}',
+                    #         "balance":f'{cb:,.1f}'
+                    #     }
+                    #     main.append(datadict)
 
                 period = generate_date(item.month,item.year)
 

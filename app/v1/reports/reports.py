@@ -7034,7 +7034,7 @@ class TenantStatementFour(Resource):
                     "ref":"",
                     "debit":"",
                     "credit":"",
-                    "balance":f'<span class="font-weight-bold">{cb}</span>'
+                    "balance":f'<span class="font-weight-bold">{cb:,.1f}</span>'
                 }
                 main.append(datadict)
                 datadict2 = {

@@ -8329,7 +8329,7 @@ class FetchStatistics(Resource):
             progress = 'Generate'
 
         if len(smsstatus) < 1:
-            invs2 = '<span class="text-danger font-weight-bold">not billed</span'
+            invs2 = 0
         else:
             invs2 = len(smsstatus)
 

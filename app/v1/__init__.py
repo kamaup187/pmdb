@@ -308,6 +308,7 @@ api.add_resource(ClientInvoice,"/client/invoice")
 api.add_resource(MyPayments,"/payments")
 api.add_resource(Receipt,"/receipt")
 api.add_resource(UpdateBalance,"/update/balance")
+api.add_resource(ResolveInvoices,"/resolve/invoices")
 api.add_resource(UpdateDeposit,"/update/deposit")
 api.add_resource(UpdateExpenses,"/update/expenses")
 

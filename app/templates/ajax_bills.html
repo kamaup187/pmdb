@@ -95,7 +95,7 @@
                       <th class="text-primary font-weight-bold" data-orderable="true">Property</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Clients</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Action</th>
-                      <!-- <th class="text-primary font-weight-bold" data-orderable="false">Invoices</th> -->
+                      <th class="text-primary font-weight-bold" data-orderable="false">Invoices</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Send</th>
                       <th class="text-black  {{fieldshow_arr}}">Arrears</th>
                       <th class="text-black  {{fieldshow_dep}} ">Deposit</th>
@@ -144,7 +144,7 @@
                         </div>
                       </td>
         
-                      <!-- <td class="data-cell text-center text-black">{{item['invs']|safe }}</td> -->
+                      <td id="{{item['invsid']}}" class="data-cell text-center text-black invsinfo-{{item['propid']}}"><div class="dot-elastic mt-2"></div></td>
 
 
                       <td class="data-cell text-center">
@@ -390,6 +390,22 @@
               $("#"+item).html('Sent');
             }
           });
+
+        }else if(item.startsWith("invs")){
+          console.log("Clicked invs",item)
+          $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>resolving...');
+
+          $.ajax({
+            url: "/resolve/invoices",
+            type: "POST",
+            data: {
+              propid: item,
+              period:$("#target_period").text()
+            },
+            success: function(response) {
+              $("#"+item).html('all set');
+            }
+          });
                 
         }else if(item.startsWith("bill")){
           $("#bill_prop_identifier").html(item)
@@ -491,6 +507,8 @@
           $("#totalinfo-" + item ).text(response[8]);
           $("#paidinfo-" + item ).text(response[9]);
           $("#balinfo-" + item ).text(response[10]);
+          $(".invsinfo-" + item ).html(response[14]);
+
         }
       });
       }

@@ -14036,6 +14036,10 @@ def get_obj_propids(arr):
             if smsid:
                 obj_id_list.append(smsid)
 
+            invsid=req.get("invsid")
+            if invsid:
+                obj_id_list.append(invsid)
+
             propid=req.get("propid")
             if propid:
                 obj_id_list.append(propid)

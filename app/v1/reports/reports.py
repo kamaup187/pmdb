@@ -8239,9 +8239,9 @@ class FetchStatistics(Resource):
         smsstatus = []
         payments = []
 
-        # inv_arr_status = []
-        # inv_paid_status = []
-        # inv_bal_status = []
+        inv_arr_status = []
+        inv_paid_status = []
+        inv_bal_status = []
 
         for bill in filtered_bills:
             renttotal += bill.rent
@@ -8261,20 +8261,20 @@ class FetchStatistics(Resource):
 
             # print("INV STATUS for ",bill.house, prop, "SMS >>>>>",bill.sms_invoice,"Email >>>",bill.email_invoice)
 
-            # if "**" in MonthlyChargeOp.calculate_breakdown(bill):
-            #     inv_arr_status.append("error")
-            # else:
-            #     inv_arr_status.append("okay")
+            if "**" in MonthlyChargeOp.calculate_breakdown(bill):
+                inv_arr_status.append("error")
+            else:
+                inv_arr_status.append("okay")
 
-            # if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
-            #     inv_paid_status.append("error")
-            # else:
-            #     inv_paid_status.append("okay")
+            if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
+                inv_paid_status.append("error")
+            else:
+                inv_paid_status.append("okay")
 
-            # if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
-            #     inv_bal_status.append("error")
-            # else:
-            #     inv_bal_status.append("okay")
+            if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
+                inv_bal_status.append("error")
+            else:
+                inv_bal_status.append("okay")
 
             if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
                 smsstatus.append("0")
@@ -8333,9 +8333,10 @@ class FetchStatistics(Resource):
         # else:
         #     invs = len(smsstatus)
 
-        # invss = f'{invs} <span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
+        invss = f'<span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
-        # 'invs = invss,
+
+        invs = invss,
         progress = progress
         water = (f"{watertotal:,.1f} ")
         deposit = (f"{deptotal:,.1f} ")

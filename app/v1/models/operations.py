@@ -1060,6 +1060,7 @@ class ApartmentOp(Apartment,Base):
         'identity':"prp"+str(self.id),
         'billid':"bill"+str(self.id),
         'smsid':"sms"+str(self.id),
+        'invsid':"invs"+str(self.id),
         'progress':ApartmentOp.get_progress(self),
         'bill_outline':ApartmentOp.get_bill_outline(self,period),
         "name":self.name,

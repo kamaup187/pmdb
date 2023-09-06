@@ -6773,7 +6773,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":f"{item.year} {month}",
                             "date":date,
-                            "desc":f"{item.house} {prev_month} rent arrears",
+                            "desc":f"{item.house} rent arrears",
                             "ref":f'INV{item.id}',
                             "debit":item.rent_balance,
                             "credit":"",
@@ -6813,7 +6813,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} water arrears",
+                        "desc":f"{item.house} water arrears",
                         "ref":f'INV{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
@@ -6853,7 +6853,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} garbage arrears",
+                        "desc":f"{item.house} garbage arrears",
                         "ref":f'INV{item.id}',
                         "debit":item.garbage_balance,
                         "credit":"",
@@ -6879,7 +6879,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} security arrears",
+                        "desc":f"{item.house} security arrears",
                         "ref":f'INV{item.id}',
                         "debit":item.security_balance,
                         "credit":"",
@@ -6905,7 +6905,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} {prev_month} service charge arrears",
+                        "desc":f"{item.house} service charge arrears",
                         "ref":f'INV{item.id}',
                         "debit":item.maintenance_balance,
                         "credit":"",

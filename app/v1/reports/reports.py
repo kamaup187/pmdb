@@ -5975,7 +5975,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.arrears,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
                                 
@@ -5988,7 +5988,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6001,7 +6001,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":"-",
                         "credit":item.balance,
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6014,7 +6014,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6027,7 +6027,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.garbage,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6040,7 +6040,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.security,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6053,7 +6053,7 @@ class TenantStatementTwo(Resource):
                         "ref":f'{item.id}',
                         "debit":item.maintenance,
                         "credit":"-",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6071,7 +6071,7 @@ class TenantStatementTwo(Resource):
                         "ref":ref,
                         "debit":"-",
                         "credit":x.amount,
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6236,7 +6236,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.rent,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6250,7 +6250,7 @@ class TenantStatementThree(Resource):
                             "ref":f'{item.id}',
                             "debit":item.rent_balance,
                             "credit":"",
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6265,7 +6265,7 @@ class TenantStatementThree(Resource):
                                 "ref":f'{item.id}',
                                 "debit":"",
                                 "credit":item.rent_balance,
-                                "balance":cb
+                                "balance":f'{cb:,.1f}'
                             }
                             main.append(datadict)
 
@@ -6278,7 +6278,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.water,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6291,7 +6291,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6306,7 +6306,7 @@ class TenantStatementThree(Resource):
                                 "ref":f'{item.id}',
                                 "debit":item.water_balance,
                                 "credit":"",
-                                "balance":cb
+                                "balance":f'{cb:,.1f}'
                             }
                             main.append(datadict)
 
@@ -6319,7 +6319,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.garbage,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6332,7 +6332,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.garbage_balance,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6345,7 +6345,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.security,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6358,7 +6358,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.security_balance,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6371,7 +6371,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.maintenance,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6384,7 +6384,7 @@ class TenantStatementThree(Resource):
                         "ref":f'{item.id}',
                         "debit":item.maintenance_balance,
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6399,7 +6399,7 @@ class TenantStatementThree(Resource):
                             "ref":f'{item.id}',
                             "debit":item.maintenance_balance,
                             "credit":"",
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6437,7 +6437,7 @@ class TenantStatementThree(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":f'{credit:,.1f}',
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6450,7 +6450,7 @@ class TenantStatementThree(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":x.water_paid,
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6463,7 +6463,7 @@ class TenantStatementThree(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":x.garbage_paid,
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6476,7 +6476,7 @@ class TenantStatementThree(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":x.security_paid,
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6489,7 +6489,7 @@ class TenantStatementThree(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":x.maintenance_paid,
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6685,7 +6685,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":house_obj.deposits.rentdep,
                 #                 "credit":"",
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
                 #         if house_obj.deposits.waterdep:
@@ -6697,7 +6697,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":house_obj.deposits.waterdep,
                 #                 "credit":"",
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
 
@@ -6710,7 +6710,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":house_obj.deposits.elecdep,
                 #                 "credit":"",
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
 
@@ -6724,7 +6724,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":"",
                 #                 "credit":house_obj.deposits.rentdep,
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
                 #         if house_obj.deposits.waterdep:
@@ -6736,7 +6736,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":"",
                 #                 "credit":house_obj.deposits.waterdep,
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
 
@@ -6749,7 +6749,7 @@ class TenantStatementFour(Resource):
                 #                 "ref":f'INV{item.id}',
                 #                 "debit":"",
                 #                 "credit":house_obj.deposits.elecdep,
-                #                 "balance":cb
+                #                 "balance":f'{cb:,.1f}'
                 #             }
                 #             main.append(datadict)
                                 
@@ -6761,9 +6761,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} {month} RENT",
                         "ref":f'INV{item.id}',
-                        "debit":item.rent,
+                        "debit":f'{item.rent:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6775,9 +6775,9 @@ class TenantStatementFour(Resource):
                             "date":date,
                             "desc":f"{item.house} rent arrears",
                             "ref":f'INV{item.id}',
-                            "debit":item.rent_balance,
+                            "debit":f'{item.rent_balance:,.1f}',
                             "credit":"",
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6791,7 +6791,7 @@ class TenantStatementFour(Resource):
                             "ref":f'INV{item.id}',
                             "debit":"",
                             "credit":f'{abs(item.rent_balance):,.1f}',
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6802,9 +6802,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} {month} water bill",
                         "ref":f'INV{item.id}',
-                        "debit":item.water,
+                        "debit":f'{item.water:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6815,9 +6815,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} water arrears",
                         "ref":f'INV{item.id}',
-                        "debit":item.water_balance,
+                        "debit":f'{item.water_balance:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6830,8 +6830,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{item.house} water advance payment",
                             "ref":f'INV{item.id}',
                             "debit":"",
-                            "credit":item.water_due,
-                            "balance":cb
+                            "credit":f'{item.water_due:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6842,9 +6842,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} {month} garbage fee",
                         "ref":f'INV{item.id}',
-                        "debit":item.garbage,
+                        "debit":f'{item.garbage:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6855,9 +6855,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} garbage arrears",
                         "ref":f'INV{item.id}',
-                        "debit":item.garbage_balance,
+                        "debit":f'{item.garbage_balance:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6868,9 +6868,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} {month} security fee",
                         "ref":f'INV{item.id}',
-                        "debit":item.security,
+                        "debit":f'{item.security:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6881,9 +6881,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} security arrears",
                         "ref":f'INV{item.id}',
-                        "debit":item.security_balance,
+                        "debit":f'{item.security_balance:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6894,9 +6894,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} {month} service charge",
                         "ref":f'INV{item.id}',
-                        "debit":item.maintenance,
+                        "debit":f'{item.maintenance:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6907,9 +6907,9 @@ class TenantStatementFour(Resource):
                         "date":date,
                         "desc":f"{item.house} service charge arrears",
                         "ref":f'INV{item.id}',
-                        "debit":item.maintenance_balance,
+                        "debit":f'{item.maintenance_balance:,.1f}',
                         "credit":"",
-                        "balance":cb
+                        "balance":f'{cb:,.1f}'
                     }
                     main.append(datadict)
 
@@ -6923,8 +6923,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{item.house} service charge advance payment",
                             "ref":f'INV{item.id}',
                             "debit":"",
-                            "credit":item.maintenance_due,
-                            "balance":cb
+                            "credit":f'{item.maintenance_due:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6949,7 +6949,7 @@ class TenantStatementFour(Resource):
                     #         "ref":x.ref_number,
                     #         "debit":"",
                     #         "credit":x.rent_paid,
-                    #         "balance":cb
+                    #         "balance":f'{cb:,.1f}'
                     #     }
                     #     main.append(datadict)
 
@@ -6968,7 +6968,7 @@ class TenantStatementFour(Resource):
                             "ref":ref,
                             "debit":"",
                             "credit":f'{credit:,.1f}',
-                            "balance":cb
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6980,8 +6980,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{x.house} {month} water payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":x.water_paid,
-                            "balance":cb
+                            "credit":f'{x.water_paid:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -6993,8 +6993,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{x.house} {month} Garbage fee payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":x.garbage_paid,
-                            "balance":cb
+                            "credit":f'{x.garbage_paid:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -7006,8 +7006,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{x.house} {month} security fee payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":x.security_paid,
-                            "balance":cb
+                            "credit":f'{x.security_paid:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 
@@ -7019,8 +7019,8 @@ class TenantStatementFour(Resource):
                             "desc":f"{x.house} {month} service fee payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":x.maintenance_paid,
-                            "balance":cb
+                            "credit":f'{x.maintenance_paid:,.1f}',
+                            "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)
 

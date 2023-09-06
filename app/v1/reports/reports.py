@@ -2720,14 +2720,17 @@ class RentStatement(Resource):
                 detailed_bills.append(bill_item)
 
                 if bill.paidll:
-                    paidll += bill.paidll
+                    # paidll += bill.paidll
+                    if bill.rent:
+                        paidll += bill.rent
 
                 if bill.rent_balance:
                     totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
                     actual_totalbbf += bill.rent_balance
 
                 totalrent += bill.rent if bill.rent else 0.0
-                totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+                if not bill.paidll:
+                    totalpaid += bill.rent_paid if bill.rent_paid else 0.0
 
                 if bill.rent_due:
                     totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
@@ -2844,7 +2847,7 @@ class RentStatement(Resource):
         else:
             llbal = "0.0"
 
-        totalpaid -= paidll
+        # totalpaid -= paidll
         paidtotal_alt = (f"{totalpaid:,}")
         
         template_vars = {

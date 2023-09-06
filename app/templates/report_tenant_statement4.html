@@ -159,12 +159,12 @@
               <table class="table" id="dataTable" width="100%" cellspacing="0">
                     <thead class="custom-header-alt small">
                       <tr>
-                        <th class="" data-orderable="false">DATE</th>
-                        <th class="" data-orderable="false">DESCRIPTION</th>
-                        <th class="" data-orderable="false">REF</th>
-                        <th class="" data-orderable="false">DEBIT</th>
-                        <th class="" data-orderable="false">CREDIT</th>
-                        <th class="" data-orderable="false">BALANCE</th>
+                        <th class="header-left" data-orderable="false">DATE</th>
+                        <th class="header-left" data-orderable="false">DESCRIPTION</th>
+                        <th class="header-left" data-orderable="false">REF</th>
+                        <th class="header-right" data-orderable="false">DEBIT</th>
+                        <th class="header-right" data-orderable="false">CREDIT</th>
+                        <th class="header-right" data-orderable="false">BALANCE</th>
   
   
                       </tr>
@@ -174,7 +174,7 @@
                       <tr>
                         <td class="data-cell text-left text-uppercase">{{ bill['date'] |safe}}</td>
                         <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
-                        <td class="data-cell text-left">{{ bill['ref'] }}</td>
+                        <td class="data-cell text-left text-uppercase ">{{ bill['ref'] }}</td>
                         <td class="data-cell text-right">{{ bill['debit'] }}</td>
                         <td class="data-cell text-right">{{bill['credit']}}</td>
                         <td class="data-cell text-right">{{ bill['balance'] |safe }}</td>
@@ -252,12 +252,12 @@
               cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
-                  <th class="" data-orderable="false">DATE</th>
-                  <th class="" data-orderable="false">DESCRIPTION</th>
-                  <th class="" data-orderable="false">REF</th>
-                  <th class="" data-orderable="false">DEBIT</th>
-                  <th class="" data-orderable="false">CREDIT</th>
-                  <th class="" data-orderable="false">BALANCE</th>
+                  <th class="header-left" data-orderable="false">DATE</th>
+                  <th class="header-left" data-orderable="false">DESCRIPTION</th>
+                  <th class="header-left" data-orderable="false">REF</th>
+                  <th class="header-right" data-orderable="false">DEBIT</th>
+                  <th class="header-right" data-orderable="false">CREDIT</th>
+                  <th class="header-right" data-orderable="false">BALANCE</th>
 
 
                 </tr>
@@ -267,7 +267,7 @@
                 <tr>
                   <td class="data-cell text-left text-uppercase">{{ bill['date'] |safe}}</td>
                   <td class="data-cell text-left text-uppercase no-wrap">{{ bill['desc']}}</td>
-                  <td class="data-cell text-left">{{ bill['ref'] }}</td>
+                  <td class="data-cell text-left text-uppercase ">{{ bill['ref'] }}</td>
                   <td class="data-cell text-right">{{ bill['debit'] }}</td>
                   <td class="data-cell text-right">{{bill['credit']}}</td>
                   <td class="data-cell text-right">{{ bill['balance'] |safe }}</td>

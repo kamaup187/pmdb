@@ -6759,7 +6759,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} PREMISES RENT BILL",
+                        "desc":f"{item.house} {month} RENT",
                         "ref":f'INV{item.id}',
                         "debit":item.rent,
                         "credit":"",
@@ -6800,7 +6800,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} water bill",
+                        "desc":f"{item.house} {month} water bill",
                         "ref":f'INV{item.id}',
                         "debit":item.water,
                         "credit":"",
@@ -6840,7 +6840,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Garbage fee",
+                        "desc":f"{item.house} {month} garbage fee",
                         "ref":f'INV{item.id}',
                         "debit":item.garbage,
                         "credit":"",
@@ -6866,7 +6866,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} security fee",
+                        "desc":f"{item.house} {month} security fee",
                         "ref":f'INV{item.id}',
                         "debit":item.security,
                         "credit":"",
@@ -6892,7 +6892,7 @@ class TenantStatementFour(Resource):
                     datadict = {
                         "month":f"{item.year} {month}",
                         "date":date,
-                        "desc":f"{item.house} Service charge",
+                        "desc":f"{item.house} {month} service charge",
                         "ref":f'INV{item.id}',
                         "debit":item.maintenance,
                         "credit":"",
@@ -6964,7 +6964,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Rent payment",
+                            "desc":f"{x.house} {month} rent payment",
                             "ref":ref,
                             "debit":"",
                             "credit":f'{credit:,.1f}',
@@ -6977,7 +6977,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Water bill payment",
+                            "desc":f"{x.house} {month} water payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.water_paid,
@@ -6990,7 +6990,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Garbage fee payment",
+                            "desc":f"{x.house} {month} Garbage fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.garbage_paid,
@@ -7003,7 +7003,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Security fee payment",
+                            "desc":f"{x.house} {month} security fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.security_paid,
@@ -7016,7 +7016,7 @@ class TenantStatementFour(Resource):
                         datadict = {
                             "month":month,
                             "date":paydate,
-                            "desc":f"{x.house} Service fee payment",
+                            "desc":f"{x.house} {month} service fee payment",
                             "ref":ref,
                             "debit":"",
                             "credit":x.maintenance_paid,

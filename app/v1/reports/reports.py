@@ -6682,7 +6682,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} RENT DEPOSIT BILL",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":house_obj.deposits.rentdep,
                                 "credit":"",
                                 "balance":cb
@@ -6694,7 +6694,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} WATER DEPOSIT BILL",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":house_obj.deposits.waterdep,
                                 "credit":"",
                                 "balance":cb
@@ -6707,7 +6707,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} ELECTRICITY DEPOSIT BILL",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":house_obj.deposits.elecdep,
                                 "credit":"",
                                 "balance":cb
@@ -6721,7 +6721,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} RENT DEPOSIT PAYMENT",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":"",
                                 "credit":house_obj.deposits.rentdep,
                                 "balance":cb
@@ -6733,7 +6733,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} WATER DEPOSIT PAYMENT",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":"",
                                 "credit":house_obj.deposits.waterdep,
                                 "balance":cb
@@ -6746,7 +6746,7 @@ class TenantStatementFour(Resource):
                                 "month":f"{item.year} {month}",
                                 "date":date,
                                 "desc":f"{item.house} ELECTRICITY DEPOSIT PAYMENT",
-                                "ref":f'{item.id}',
+                                "ref":f'INV{item.id}',
                                 "debit":"",
                                 "credit":house_obj.deposits.elecdep,
                                 "balance":cb
@@ -6760,7 +6760,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} PREMISES RENT BILL",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.rent,
                         "credit":"",
                         "balance":cb
@@ -6774,7 +6774,7 @@ class TenantStatementFour(Resource):
                             "month":f"{item.year} {month}",
                             "date":date,
                             "desc":f"{item.house} {prev_month} rent arrears",
-                            "ref":f'{item.id}',
+                            "ref":f'INV{item.id}',
                             "debit":item.rent_balance,
                             "credit":"",
                             "balance":cb
@@ -6788,7 +6788,7 @@ class TenantStatementFour(Resource):
                             "month":f"{item.year} {month}",
                             "date":date,
                             "desc":f"{item.house} rent advance payment",
-                            "ref":f'{item.id}',
+                            "ref":f'INV{item.id}',
                             "debit":"",
                             "credit":f'{abs(item.rent_balance):,.1f}',
                             "balance":cb
@@ -6801,7 +6801,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} water bill",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.water,
                         "credit":"",
                         "balance":cb
@@ -6814,7 +6814,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} {prev_month} water arrears",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.water_balance,
                         "credit":"",
                         "balance":cb
@@ -6828,7 +6828,7 @@ class TenantStatementFour(Resource):
                             "month":f"{item.year} {month}",
                             "date":date,
                             "desc":f"{item.house} water advance payment",
-                            "ref":f'{item.id}',
+                            "ref":f'INV{item.id}',
                             "debit":"",
                             "credit":item.water_due,
                             "balance":cb
@@ -6841,7 +6841,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} Garbage fee",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.garbage,
                         "credit":"",
                         "balance":cb
@@ -6854,7 +6854,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} {prev_month} garbage arrears",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.garbage_balance,
                         "credit":"",
                         "balance":cb
@@ -6867,7 +6867,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} security fee",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.security,
                         "credit":"",
                         "balance":cb
@@ -6880,7 +6880,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} {prev_month} security arrears",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.security_balance,
                         "credit":"",
                         "balance":cb
@@ -6893,7 +6893,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} Service charge",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.maintenance,
                         "credit":"",
                         "balance":cb
@@ -6906,7 +6906,7 @@ class TenantStatementFour(Resource):
                         "month":f"{item.year} {month}",
                         "date":date,
                         "desc":f"{item.house} {prev_month} service charge arrears",
-                        "ref":f'{item.id}',
+                        "ref":f'INV{item.id}',
                         "debit":item.maintenance_balance,
                         "credit":"",
                         "balance":cb
@@ -6921,7 +6921,7 @@ class TenantStatementFour(Resource):
                             "month":f"{item.year} {month}",
                             "date":date,
                             "desc":f"{item.house} service charge advance payment",
-                            "ref":f'{item.id}',
+                            "ref":f'INV{item.id}',
                             "debit":"",
                             "credit":item.maintenance_due,
                             "balance":cb
@@ -6934,7 +6934,7 @@ class TenantStatementFour(Resource):
                 for x in that_month_payments:
                     paydate = x.pay_date.strftime("%d/%b/%y")
 
-                    ref = x.ref_number if x.ref_number else x.id
+                    ref = x.ref_number if x.ref_number else f"REF{x.id}"
 
                     # if item.month == 8:
                     # import pdb;

@@ -3872,7 +3872,7 @@ class ResolveInvoices(Resource):
 
         for bill in filtered_bills:
             try:
-                if bill.arrears:
+                if bill.arrears or bill.arrears == 0.0:
                     update_rent = bill.arrears
                     update_water = 0.0
                     update_garbage = 0.0
@@ -3934,7 +3934,7 @@ class ResolveInvoices(Resource):
 
                     MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
-                if bill.paid_amount > 0.0:
+                if bill.paid_amount > 0.0 or bill.paid_amount == 0.0  :
 
                     update_rent = bill.paid_amount
                     update_water = 0.0

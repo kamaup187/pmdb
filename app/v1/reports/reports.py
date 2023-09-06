@@ -6658,11 +6658,11 @@ class TenantStatementFour(Resource):
                 month = get_str_month(item.month)
                 prev_month = get_str_month(prev_num)
 
-                # date = item.date.strftime("%d/%b/%y")
-                rdate = generate_exact_date(item.date.day,item.month,item.year)
-                date = rdate.strftime("%d/%b/%y")
+                date = item.date.strftime("%d/%b/%y")
+                # rdate = generate_exact_date(item.date.day,item.date.month,item.date.year)
+                # date = rdate.strftime("%d/%b/%y")
 
-                print(tenant_obj.date.month, tenant_obj.date.year, "vs", item.month, item.year)
+                # print(tenant_obj.date.month, tenant_obj.date.year, "vs", item.month, item.year)
                 alloc = check_house_occupied(tenant_obj)[2]
 
                 if alloc:

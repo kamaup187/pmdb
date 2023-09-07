@@ -3034,7 +3034,7 @@ class GeneralRentStatement(Resource):
                     totalbcf += bill.deposit_due if bill.deposit_due else 0.0
 
                     template = "ajax_report_general_deposit_statement.html"
-                if itemtype == "rent service item":
+                elif itemtype == "rent service item":
                     totalbbf += bill.rent_balance if bill.rent_balance else 0.0
                     totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
                     totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0

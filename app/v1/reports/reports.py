@@ -3007,6 +3007,7 @@ class GeneralRentStatement(Resource):
         count = 0
         for bill in sifted_bills:
             if count < 17:
+                count += 1
                 continue
             house_ids.append(bill.house_id)
             """compute subtotals"""

@@ -3006,8 +3006,9 @@ class GeneralRentStatement(Resource):
         template = "ajax_report_general_statement.html"
         count = 0
         for bill in sifted_bills:
-            if count < 17:
-                count += 1
+            # if count < 17:
+            #     count += 1
+            if bill.house.name != "C1121":
                 continue
             house_ids.append(bill.house_id)
             """compute subtotals"""

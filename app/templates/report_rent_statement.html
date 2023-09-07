@@ -1,6 +1,16 @@
 {% extends 'basereport.html' %}
 
 {% block content %}
+
+<style type="text/css" media="print">
+  /* @page{
+    size:landscape;
+  } */
+  body {
+    zoom: 80%;
+  }
+</style>
+
 <span id="edit_bill_identifier" class="dispnone"></span>
 
 <span id="remitperiod" class="dispnone">{{selected_month}}</span>

@@ -3025,29 +3025,55 @@ class GeneralRentStatement(Resource):
                 detailed_bills.append(bill_item)
 
                 if itemtype == "deposit item":
+                    totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
+                    totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
+
+                    totaldep += bill.deposit if bill.deposit else 0.0
+                    totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
+
+                    totalbcf += bill.deposit_due if bill.deposit_due else 0.0
+
                     template = "ajax_report_general_deposit_statement.html"
                 if itemtype == "rent service item":
+                    totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                    totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
+                    totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
+
+                    totaldep += bill.deposit if bill.deposit else 0.0
+                    totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
+
+                    totalrent += bill.rent if bill.rent else 0.0
+                    totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+
+                    totalserv += bill.maintenance if bill.maintenance else 0.0
+                    totalservpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
+
+                    totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
+                    totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
+                    totaldue += bill.maintenance_balance + bill.maintenance if bill.maintenance_balance else bill.maintenance
+
+                    totalpaid += bill.paid_amount if bill.paid_amount else 0.0
+
+                    totalbcf += bill.deposit_due if bill.deposit_due else 0.0
+                    totalbcf += bill.rent_due if bill.deposit_due else 0.0
+                    totalbcf += bill.maintenance_due if bill.maintenance_due else 0.0
+
                     template = "ajax_report_rent_service_statement.html"
-                else:
+                elif itemtype == "rent item":
+                    totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                    totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
+                    totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+                    totalbcf += bill.rent_due if bill.rent_due else 0.0
+
                     template = "ajax_report_general_rent_statement.html"
 
-                totalbbf += bill.rent_balance if bill.rent_balance else 0.0
 
-                totaldep += bill.deposit if bill.deposit else 0.0
-                totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
 
-                totalrent += bill.rent if bill.rent else 0.0
-                totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+                # totalwater += bill.water if bill.water else 0.0
+                # totalwaterpaid += bill.water_paid if bill.water_paid else 0.0
 
-                totalserv += bill.maintenance if bill.maintenance else 0.0
-                totalservpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
+                
 
-                totalwater += bill.water if bill.water else 0.0
-                totalwaterpaid += bill.water_paid if bill.water_paid else 0.0
-
-                totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
-                totalpaid += bill.rent_paid if bill.rent_paid else 0.0
-                totalbcf += bill.rent_due if bill.rent_due else 0.0
 
 
 

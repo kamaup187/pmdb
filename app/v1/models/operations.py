@@ -3496,7 +3496,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         total = rent + bal
         return (f"{total:,}")
-
+    
     def calculate_total_alt(*args):
         tot=0.0
         for i in args:
@@ -4111,7 +4111,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'balance':MonthlyChargeOp.calculate_bcf(self),
 
             'arrears-no-star':f"{self.arrears:,.1f}",
-            'arrears-rent-dep-serv':MonthlyChargeOp.calculate_total_due(self.rent_balance,self.deposit_balance,self.maintenance_balance),
+            'arrears-rent-dep-serv':MonthlyChargeOp.calculate_total_alt(self.rent_balance,self.deposit_balance,self.maintenance_balance),
             'total':MonthlyChargeOp.fig_format(self.total_bill),
             'totalalt':MonthlyChargeOp.calculate_total_alt_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),
             'amounttotal':MonthlyChargeOp.calculate_total_alt(self.arrears,self.rent,self.water,self.maintenance,self.deposit,self.garbage,self.security),

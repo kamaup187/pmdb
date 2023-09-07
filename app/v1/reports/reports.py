@@ -3004,12 +3004,12 @@ class GeneralRentStatement(Resource):
                     else:pass
         # [print(e.month, e.year) for e in sifted_bills]
         template = "ajax_report_general_statement.html"
-        count = 0
+        # count = 0
         for bill in sifted_bills:
             # if count < 17:
             #     count += 1
-            if bill.house.name != "C1121":
-                continue
+            # if bill.house.name != "C1121":
+            #     continue
             house_ids.append(bill.house_id)
             """compute subtotals"""
             # bill_item = LandlordSummaryOp.external_view(bill)
@@ -3040,7 +3040,7 @@ class GeneralRentStatement(Resource):
 
                     template = "ajax_report_general_deposit_statement.html"
                 elif itemtype == "rent service item":
-                    count += 1
+                    # count += 1
                     totalbbf += bill.rent_balance if bill.rent_balance else 0.0
                     totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
                     totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0

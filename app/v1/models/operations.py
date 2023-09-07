@@ -4121,6 +4121,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance-no-star':f"{self.balance:,.1f}",
+            'balance-rent-dep-serv':MonthlyChargeOp.calculate_total_alt(self.rent_due,self.deposit_due,self.maintenance_due),
 
         }
 

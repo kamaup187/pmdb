@@ -3061,7 +3061,7 @@ class GeneralRentStatement(Resource):
                     totalpaid += bill.paid_amount if bill.paid_amount else 0.0
 
                     totalbcf += bill.deposit_due if bill.deposit_due else 0.0
-                    totalbcf += bill.rent_due if bill.deposit_due else 0.0
+                    totalbcf += bill.rent_due if bill.rent_due else 0.0
                     totalbcf += bill.maintenance_due if bill.maintenance_due else 0.0
 
                     template = "ajax_report_rent_service_statement.html"

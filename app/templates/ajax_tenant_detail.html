@@ -63,7 +63,7 @@
                             {% endif %}
                           </span></div>
 
-                          <div class="mb-2 ml-2">Deposit#: <span id="tenant-deposit" class="text-danger font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span><span class="update-deposit"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
+                          <div class="mb-2 ml-2">Deposit Acc: <span id="tenant-deposit" class="text-success font-weight-bold">{{ "Kshs {:,.1f}".format(tenant.deposit | float) }}</span><span class="update-deposit"><i class="fas fa-sync-alt text-success ml-2"></i></span></div>
                         </div>  
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>

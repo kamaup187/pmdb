@@ -1653,6 +1653,10 @@ class UserLogin(Resource):
                 name = f'{user.name}'
                 return render_template('ajaxloginname.html',alert=name)
             else:
+                if runcode.startswith('germaine'):
+                    return render_template('ajaxloginname.html',alert="Fraud activity detected")
+                if "recodz" in runcode:
+                    return render_template('ajaxloginname.html',alert="Fraud activity detected")
                 name = "Searching..."
                 return render_template('ajaxloginsearching.html',alert=name)
 

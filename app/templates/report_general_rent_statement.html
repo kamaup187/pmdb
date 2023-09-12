@@ -37,7 +37,7 @@
                     </div>
                   </div>
                     <form class="row bg-light">
-                      <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                      <div class="col-lg-2 form-group mb-2 pl-lg-5">
                         <label class="mb-0">Select type:</label>
                         <select name="reporttype" class="select-css" id="reporttype">
                           <option slected value="all invoices">All invoices</option>
@@ -48,7 +48,7 @@
                         </select>
                       </div>
 
-                      <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                      <div class="col-lg-2 form-group mb-2 pl-lg-5">
                         <label class="mb-0">Select item:</label>
                         <select name="reporttype" class="select-css" id="itemtype">
                           <option slected value="all items">All items</option>
@@ -73,13 +73,39 @@
                         </select>
                       </div>
                     
-                      <div class="col-lg-2 form-group mb-2 mr-lg-5">
+                      <!-- <div class="col-lg-2 form-group mb-2 mr-lg-5">
                         <label class="mb-0">Select month:</label>
                         <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                           <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                         </div>
+                      </div> -->
+
+                      <div class="col-lg-4 form-group mb-2 pr-lg-5 row">
+                        <div class="col-lg-6 form-group input-icons">
+                          <span class="divjust-end">
+                            <span class="text-danger font-weight-bold">Start</span>
+                          </span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
+  
+                          </div>
+                        </div>
+  
+                        <div class="col-lg-6 form-group input-icons">
+                          <span class="divjust-end">
+                            <span class="text-danger font-weight-bold">End</span>
+                          </span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
+  
+                          </div>
+                        </div>
                       </div>
+
+ 
+
+
                     
                       <div class="col-lg-2 form-group mb-2">
                         <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
@@ -126,13 +152,41 @@
 </script> -->
 
 <script>
-  $("#month").datepicker({ 
-    autoclose: true, 
+  // $("#month").datepicker({ 
+  //   autoclose: true, 
+  //   todayHighlight: true,
+  //   format: "mm-yyyy",
+  //   startView: "months", 
+  //   minViewMode: "months"
+  // });
+
+
+  $("#checkindate").datepicker({
+    autoclose: true,
     todayHighlight: true,
     format: "mm-yyyy",
     startView: "months", 
     minViewMode: "months"
+  }).on('changeDate', function (e) {
+    var checkin = $(this).datepicker('getDate')
+    checkin.setDate(checkin.getDate() + 1);
+    $("#checkoutdate").datepicker("setDate", checkin); //set default checkoutdate
   });
+
+  $("#checkoutdate").datepicker({
+    autoclose: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+
+
+  var date = new Date();
+  date.setDate(date.getDate());
+  $("#checkindate").datepicker("setDate", date); //set default checkindate
+
+  date.setDate(date.getDate() + 1);
+  $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
 </script>
 
 
@@ -186,7 +240,9 @@
 <script>
   $("#view_general").click(function () {
 
-    if ($("#prop").val() == "" || $("#month").val() == "") {
+    console.log("weeeeeeweeewee",$("#prop").val())
+
+    if ($("#prop").val() == "" || $("#prop").val() == null) {
       alert("Please select property and date!")
     }else{
       //pass
@@ -196,7 +252,8 @@
           type: "get",
           data: {
               prop: $("#prop").val(),
-              month: $("#month").val(),
+              start: $("#checkindate").val(),
+              end : $("#checkoutdate").val(),
               datatype: $("input[name=datatype]:checked").val(),
               reporttype: $("#reporttype").val(),
               itemtype:$("#itemtype").val(),

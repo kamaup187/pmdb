@@ -104,6 +104,7 @@
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
                       <th class="header-right">TYPE</th>
+                      <th class="header-right {{date}}">MONTH</th>
                       <th class="header-right">BB/F</th>
                       <th class="header-right">DEP</th>
                       <th class="header-right">DEP PAID</th>
@@ -124,6 +125,7 @@
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                      <td class="data-cell text-right {{date}}">{{ bill['month'] }}</td>
                       <td class="data-cell text-right">{{ bill['arrears-rent-dep-serv'] }}</td>
                       <td class="data-cell text-right">{{ bill['dep'] }}</td>
                       <td class="data-cell text-right">{{ bill['dep-paid'] }}</td>
@@ -142,6 +144,7 @@
                   <tfoot class="custom-footer-alt">
                     <tr>
                       <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right {{date}}">-</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{deptotal}}</td>
                       <td class="font-weight-bold text-right">{{deppaidtotal}}</td>
@@ -322,6 +325,7 @@
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
                   <th class="header-right">TYPE</th>
+                  <th class="header-right {{date}}">MONTH</th>
                   <th class="header-right">BB/F</th>
                   <th class="header-right">DEP</th>
                   <th class="header-right">DEP PAID</th>
@@ -342,6 +346,7 @@
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                  <td class="data-cell text-right {{date}}">{{ bill['month'] }}</td>
                   <td class="data-cell text-right">{{ bill['arrears-rent-dep-serv'] }}</td>
 
                   <td class="data-cell text-right">{{ bill['dep'] }}</td>
@@ -364,6 +369,8 @@
               <tfoot class="custom-footer-alt">
                 <tr>
                   <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold text-right {{date}}">-</td>
+
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right">{{deptotal}}</td>
                   <td class="font-weight-bold text-right">{{deppaidtotal}}</td>

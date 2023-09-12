@@ -2919,7 +2919,8 @@ class GeneralRentStatement(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("prop")
-        selected_month = request.args.get("month")
+        start_month = request.args.get("start")
+        end_month = request.args.get("end")                                                        
         reporttype = request.args.get("reporttype")
         datatype = request.args.get("datatype")
         itemtype = request.args.get('itemtype')
@@ -2939,12 +2940,20 @@ class GeneralRentStatement(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-
-        if selected_month:
-            datestring = date_formatter_alt(selected_month)
-            target_period = parse(datestring)
+        if not start_month:
+            end = datetime.datetime.now()
         else:
-            target_period = datetime.datetime.now()
+            str_start = date_formatter_alt(start_month)
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + '00:00'
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_alt(end_month)
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + '23:00'
+
+            end = parse(timestring)
 
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
 
@@ -2974,32 +2983,61 @@ class GeneralRentStatement(Resource):
         db.session.expire(apartment_obj)
 
         monthlybills = apartment_obj.monthlybills
+        billing_period = get_billing_period(apartment_obj)
+        main = []
+
+        raw_month_range = [(start.date() + datetime.timedelta(days=x)).month for x in range(0, (end-start).days+1)]
+        month_range = remove_dups(raw_month_range)
+        raw_year_range = [(start.date() + datetime.timedelta(days=x)).year for x in range(0, (end-start).days+1)]
+        year_range = remove_dups(raw_year_range)
+
+        date_visibility = "" if len(month_range) > 1 else "dispnone"
+
+        print("let me see your work ", date_visibility)
+
+        if datatype == "invdate":
+
+            for bill in monthlybills:
+
+                ftime=generate_start_date(bill.month,bill.year)
+
+                if ftime.month in month_range and ftime.year in year_range:
+                    main.append(bill)
+        else:
+            for bill in monthlybills:
+
+                ftime=bill.pay_date
+
+                if ftime.month in month_range and ftime.year in year_range:
+                    main.append(bill)
+
         sifted_bills = []
+
         # [print(e.month, e.year) for e in monthlybills]
         ###################################################################################################
         if datatype == "invdate":
 
-            for bill in monthlybills:
-                if bill.month == target_period.month and bill.year == target_period.year and reporttype == "all invoices":
+            for bill in main:
+                if reporttype == "all invoices":
                     sifted_bills.append(bill)
-                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.balance < 1:
+                elif reporttype == "paid invoices" and bill.balance < 1:
                     sifted_bills.append(bill)
-                # elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
+                # elif reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
                 #     sifted_bills.append(bill)
-                elif bill.month == target_period.month and bill.year == target_period.year and reporttype == "unpaid invoices" and bill.balance > 0:
+                elif reporttype == "unpaid invoices" and bill.balance > 0:
                     sifted_bills.append(bill)
                 else:pass
 
         else:
-            for bill in monthlybills:
+            for bill in main:
                 if bill.pay_date:
-                    if bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "all invoices":
+                    if reporttype == "all invoices":
                         sifted_bills.append(bill)
-                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "paid invoices" and bill.paid_amount:
+                    elif reporttype == "paid invoices" and bill.paid_amount:
                         sifted_bills.append(bill)
-                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
+                    elif reporttype == "paid invoices" and bill.arrears < 0 and not bill.paid_amount:
                         sifted_bills.append(bill)
-                    elif bill.pay_date.month == target_period.month and bill.pay_date.year == target_period.year and not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
+                    elif not bill.paid_amount and reporttype == "unpaid invoices" and bill.balance > 0.5*bill.rent:
                         sifted_bills.append(bill)
                     else:pass
         # [print(e.month, e.year) for e in sifted_bills]
@@ -3016,60 +3054,63 @@ class GeneralRentStatement(Resource):
             if itemtype == "all items":
                 bill_item = MonthlyChargeOp.view_detail(bill)
                 detailed_bills.append(bill_item)
-                
-                totalbbf += bill.arrears if bill.arrears > 0 else 0.0
-                totaldep += bill.deposit if bill.deposit else 0.0
-                totalrent += bill.rent if bill.rent else 0.0
-                totalwater += bill.water if bill.water else 0.0
-                totaldue += bill.total_bill if bill.total_bill else 0.0
-                totalpaid += bill.paid_amount if bill.paid_amount else 0.0
-                totalbcf += bill.balance if bill.balance > 0 else 0.0
+                if bill.month == billing_period.month and bill.year == billing_period.year or len(month_range) < 2:
+                    totalbbf += bill.arrears if bill.arrears > 0 else 0.0
+                    totaldep += bill.deposit if bill.deposit else 0.0
+                    totalrent += bill.rent if bill.rent else 0.0
+                    totalwater += bill.water if bill.water else 0.0
+                    totaldue += bill.total_bill if bill.total_bill else 0.0
+                    totalpaid += bill.paid_amount if bill.paid_amount else 0.0
+                    totalbcf += bill.balance if bill.balance > 0 else 0.0
 
             else:
                 bill_item = MonthlyChargeOp.external_view(bill)
                 detailed_bills.append(bill_item)
 
                 if itemtype == "deposit item":
-                    totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
-                    totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
+                    if bill.month == billing_period.month and bill.year == billing_period.year or len(month_range) < 2:
+                        totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
+                        totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
 
-                    totaldep += bill.deposit if bill.deposit else 0.0
-                    totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
+                        totaldep += bill.deposit if bill.deposit else 0.0
+                        totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
 
-                    totalbcf += bill.deposit_due if bill.deposit_due else 0.0
+                        totalbcf += bill.deposit_due if bill.deposit_due else 0.0
 
                     template = "ajax_report_general_deposit_statement.html"
                 elif itemtype == "rent service item":
                     # count += 1
-                    totalbbf += bill.rent_balance if bill.rent_balance else 0.0
-                    totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
-                    totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
+                    if bill.month == billing_period.month and bill.year == billing_period.year or len(month_range) < 2:
+                        totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                        totalbbf += bill.maintenance_balance if bill.maintenance_balance else 0.0
+                        totalbbf += bill.deposit_balance if bill.deposit_balance else 0.0
 
-                    totaldep += bill.deposit if bill.deposit else 0.0
-                    totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
+                        totaldep += bill.deposit if bill.deposit else 0.0
+                        totaldeppaid += bill.deposit_paid if bill.deposit_paid else 0.0
 
-                    totalrent += bill.rent if bill.rent else 0.0
-                    totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+                        totalrent += bill.rent if bill.rent else 0.0
+                        totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
 
-                    totalserv += bill.maintenance if bill.maintenance else 0.0
-                    totalservpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
+                        totalserv += bill.maintenance if bill.maintenance else 0.0
+                        totalservpaid += bill.maintenance_paid if bill.maintenance_paid else 0.0
 
-                    totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
-                    totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
-                    totaldue += bill.maintenance_balance + bill.maintenance if bill.maintenance_balance else bill.maintenance
+                        totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
+                        totaldue += bill.deposit_balance + bill.deposit if bill.deposit_balance else bill.deposit
+                        totaldue += bill.maintenance_balance + bill.maintenance if bill.maintenance_balance else bill.maintenance
 
-                    totalpaid += bill.paid_amount if bill.paid_amount else 0.0
+                        totalpaid += bill.paid_amount if bill.paid_amount else 0.0
 
-                    totalbcf += bill.deposit_due if bill.deposit_due else 0.0
-                    totalbcf += bill.rent_due if bill.rent_due else 0.0
-                    totalbcf += bill.maintenance_due if bill.maintenance_due else 0.0
+                        totalbcf += bill.deposit_due if bill.deposit_due else 0.0
+                        totalbcf += bill.rent_due if bill.rent_due else 0.0
+                        totalbcf += bill.maintenance_due if bill.maintenance_due else 0.0
 
                     template = "ajax_report_rent_service_statement.html"
                 elif itemtype == "rent item":
-                    totalbbf += bill.rent_balance if bill.rent_balance else 0.0
-                    totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
-                    totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
-                    totalbcf += bill.rent_due if bill.rent_due else 0.0
+                    if bill.month == billing_period.month and bill.year == billing_period.year or len(month_range) < 2:
+                        totalbbf += bill.rent_balance if bill.rent_balance else 0.0
+                        totaldue += bill.rent_balance + bill.rent if bill.rent_balance else bill.rent
+                        totalrentpaid += bill.rent_paid if bill.rent_paid else 0.0
+                        totalbcf += bill.rent_due if bill.rent_due else 0.0
 
                     template = "ajax_report_general_rent_statement.html"
 
@@ -3127,8 +3168,7 @@ class GeneralRentStatement(Resource):
         bcftotal = (f"{totalbcf:,}")
 
         props = fetch_all_apartments_by_user(current_user)
-        str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} / {target_period.year} -- Category : {reporttype}"
+        timeline = f"{start.day}/{start.month}/{start.year} to {end.day}/{end.month}/{end.year} -- Category : {reporttype}"
 
         try:
             ratio = (f"{(totalpaid/totaldue)*100:,.1f} %")
@@ -3140,7 +3180,6 @@ class GeneralRentStatement(Resource):
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,
-            selected_month=selected_month,
             tenantlist=[],
             timeline = timeline,
             bbftotal=bbftotal,
@@ -3162,6 +3201,7 @@ class GeneralRentStatement(Resource):
             bcftotal=bcftotal,
             ratio=ratio,
             bills=detailed_bills,
+            date=date_visibility,
             paging="portrait",
             props=props,
             apartment_name=selected_apartment,

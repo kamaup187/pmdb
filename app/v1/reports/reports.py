@@ -4,7 +4,7 @@ from dateutil.parser import parse
 from flask_login import login_required, current_user
 from flask_restful import Resource
 from flask_mail import Message
-from flask import render_template,Response,request,flash,redirect,url_for,json
+from flask import render_template,Response,request,flash,redirect,url_for,json,abort
 # from ..forms.forms import PaymentForm,AmendChargeForm
 
 from app.v1.models.operations import *
@@ -309,23 +309,38 @@ class BalanceReport(Resource):
     def get(self):
         prop = request.args.get("prop")
         contact = request.args.get("contact")
+        rtarget = request.args.get("target")
 
-        if "@" in contact:
-            print("not a valid telephone number")
-            tel = ""
+
+        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        if prop_obj is None:
+            abort(403)
+        bills = prop_obj.monthlybills
+
+        actualbills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+
+        time = datetime.datetime.now() + relativedelta(hours=3)
+
+
+
+        if rtarget == "preview":
+
+            sms_text = f"<p class='ln-14 mt-4'> Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: </p>"
+            second_line = "<p class='ln-14'>House & Balance</p>"
+            sms_text += second_line
+
+            start = 1
+            for bill in actualbills:
+                if bill.balance > 1:
+
+                    new_line = f"<p class='ln-10'>{start}. {bill.house}:  {bill.balance:,.0f}</p>"
+                    start += 1
+                    sms_text += new_line
+
+            print("TEXT SENT:",sms_text)
+            return sms_text
+
         else:
-            tel = sms_phone_number_formatter(contact)
-
-        if tel:
-            recipient = [tel]
-
-            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-            bills = prop_obj.monthlybills
-
-            actualbills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
-
-            time = datetime.datetime.now() + relativedelta(hours=3)
-
             sms_text = f"Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: "
             second_line = "\n\nHouse & Balance"
             sms_text += second_line
@@ -340,11 +355,20 @@ class BalanceReport(Resource):
 
             print("TEXT SENT:",sms_text)
 
+        if "@" in contact:
+            print("not a valid telephone number")
+            tel = ""
+        else:
+            tel = sms_phone_number_formatter(contact)
+
+        if tel:
+
             if target == "lasshouse":
                 inva_send_sms(sms_text,tel)
             else:
                 advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
         else:
+            abort(403)
             print("Telephone not provided")
 
         

@@ -3145,8 +3145,8 @@ def ctb_payment_details(arr):
 def login_details(arr):
     detailed_payments = []
     for i in arr:
-        if i.user.username.startswith("qc"):
-            continue
+        # if i.user.username.startswith("qc"):
+        #     continue
         pay_item = UserLoginDataOp.view(i)
         detailed_payments.append(pay_item)
     return detailed_payments

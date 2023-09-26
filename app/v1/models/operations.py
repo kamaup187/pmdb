@@ -3899,28 +3899,35 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             if self.tenant.deposit:
                 try:
                     deps = self.tenant.deposit
-                    # bal = deps-self.deposit_due
-                    return f"{deps:,.1f}"
+                    bal = deps-self.deposit_due
+                    return f"{bal:,.1f}"
                 except:
                     return 0.0
             return 0.0
         return 0.0
 
     def calculate_deposit_balance(self):
-        wt = self.house.housecode.waterdep if self.house.housecode else 0.0
-        rent = self.house.housecode.rentrate if self.house.housecode else 0.0
-        elec = self.house.housecode.elecdep if self.house.housecode else 0.0
+        # wt = self.house.housecode.waterdep if self.house.housecode else 0.0
+        # rent = self.house.housecode.rentrate if self.house.housecode else 0.0
+        # elec = self.house.housecode.elecdep if self.house.housecode else 0.0
 
-        tot = wt+rent+elec
+        # tot = wt+rent+elec
+
+        # if self.tenant:
+        #     if self.tenant.deposit:
+        #         try:
+        #             deps = self.tenant.deposit
+        #             bal = tot - deps
+        #             return f"{bal:,.1f}"
+        #         except:
+        #             return 0.0
+        #     return 0.0
+        # return 0.0
+
 
         if self.tenant:
-            if self.tenant.deposit:
-                try:
-                    deps = self.tenant.deposit
-                    bal = tot - deps
-                    return f"{bal:,.1f}"
-                except:
-                    return 0.0
+            if self.deposit_due:
+                return self.deposit_due
             return 0.0
         return 0.0
 

@@ -4139,8 +4139,8 @@ class UpdateDeposit(Resource):
             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
             TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
-            totalpaid = 0
 
+            totalpaid = 0.0
             totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
             totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
             totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
@@ -4148,7 +4148,7 @@ class UpdateDeposit(Resource):
 
             totalbalance = a + b + c + d
 
-            TenantDepositOp.update_paid_deposits_alt(dep,totalpaid,totalbalance)
+            TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
 
             TenantOp.update_deposit(tenant_obj,total)
 

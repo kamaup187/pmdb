@@ -2936,15 +2936,13 @@ class TenantDepositOp(TenantDeposit,Base):
             self.date = date
         if status:
             self.status = status
-        if total:
-            self.total = total
+
         db.session.commit()
 
-    def update_paid_deposits_alt(self,total,balance):
-        if total:
-            self.total_paid = total
-        if balance:
-            self.balance = balance
+    def update_paid_deposits_alt(self,total,paid,balance):
+        self.total = total
+        self.total_paid = paid
+        self.balance = balance
         db.session.commit()
 
     def get_name(self):

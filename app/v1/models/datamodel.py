@@ -865,8 +865,18 @@ class TenantDeposit(db.Model):
     elecdep = db.Column(db.Float,default=0)
     otherdep = db.Column(db.Float,default=0)
 
+    paid_rentdep = db.Column(db.Float,default=0)
+    paid_waterdep = db.Column(db.Float,default=0)
+    paid_elecdep = db.Column(db.Float,default=0)
+    paid_otherdep = db.Column(db.Float,default=0)
+
+    balance_rentdep = db.Column(db.Float,default=0)
+    balance_waterdep = db.Column(db.Float,default=0)
+    balance_elecdep = db.Column(db.Float,default=0)
+    balance_otherdep = db.Column(db.Float,default=0)
+
     total = db.Column(db.Float,default=0)
-    paid = db.Column(db.Float,default=0)
+    total_paid = db.Column(db.Float,default=0)
     balance = db.Column(db.Float,default=0)
 
     status = db.Column(db.String,default="unrefunded")

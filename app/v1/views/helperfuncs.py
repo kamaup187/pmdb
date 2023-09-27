@@ -14051,6 +14051,25 @@ def get_obj_propids(arr):
     # print("IDS ARE HERE",str_ids)
     return str_ids
 
+def get_unique_bill_ids(arr):
+    obj_id_list = []
+    for req in arr:
+        if req:
+            editid = req.get("editid")
+            if editid:
+                obj_id_list.append(editid)
+            delid = req["id"]
+            if delid:
+                obj_id_list.append(delid)
+
+    if not obj_id_list:
+        obj_id_list.append("empty")
+
+    str_ids = ','.join(map(str, obj_id_list))
+    # print("IDS ARE HERE",str_ids)
+    return str_ids
+
+
 def get_obj_ids_alt(arr):
     obj_id_list = []
     for req in arr:

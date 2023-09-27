@@ -4045,7 +4045,16 @@ class UpdateDeposit(Resource):
         if ttype == "owner" or ttype == "resident":
             return ""
         else:
-            tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+            if not tenant_id:
+                bill_id = request.args.get("billid")
+                billid = get_identifier(bill_id)
+                bill=MonthlyChargeOp.fetch_specific_bill(billid)
+                if not bill:
+                    abort(404)
+                tenant_obj = bill.tenant
+            else:
+                tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+
             house_obj = check_house_occupied(tenant_obj)[1]
 
         dep = tenant_obj.deposits
@@ -4080,9 +4089,37 @@ class UpdateDeposit(Resource):
         waterdep = request.form.get("water")
         elecdep = request.form.get("electricity")
         otherdep = request.form.get("other")
+
+        paid_rentdep = request.form.get("paidrent")
+        paid_waterdep = request.form.get("paidwater")
+        paid_elecdep = request.form.get("paidelectricity")
+        paid_otherdep = request.form.get("paidother")
+
         status = request.form.get("status")
 
         values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
+
+        values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+        
+        try:
+            a = values[0] - values2[0]
+        except:
+            a = 0
+
+        try:
+            b = values[1] - values2[1]
+        except:
+            b = 0
+
+        try:
+            c = values[2] - values2[2]
+        except:
+            c = 0
+            
+        try:
+            d = values[3] - values2[3]
+        except:
+            d = 0
 
         if ttype == "owner" or ttype == "resident":
             return ""
@@ -4090,7 +4127,6 @@ class UpdateDeposit(Resource):
             billid = get_identifier(bill_id)
             bill = MonthlyChargeOp.fetch_specific_bill(billid)
             tenant_obj = bill.tenant
-            
         else:
             tenant_id = get_identifier(tenantid)
             tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
@@ -4101,6 +4137,18 @@ class UpdateDeposit(Resource):
             TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
             total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
+            totalpaid = 0
+
+            totalpaid += dep.paid_rentdep if dep.paid_rentdep else 0.0
+            totalpaid += dep.paid_waterdep if dep.paid_waterdep else 0.0
+            totalpaid += dep.paid_elecdep if dep.paid_elecdep else 0.0
+            totalpaid += dep.paid_otherdep if dep.paid_otherdep else 0.0
+
+            totalbalance = a + b + c + d
+
+            TenantDepositOp.update_paid_deposits_alt(dep,totalpaid,totalbalance)
 
             TenantOp.update_deposit(tenant_obj,total)
 

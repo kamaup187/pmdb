@@ -6588,8 +6588,16 @@ class UpdateTenant(Resource):
         if target == "editdeposit":
             tenantid = request.args.get("tenantid")
             identity = get_identifier(tenantid)
+            if not tenantid:
+                billid  = request.args.get("billid")
+                bill_id = get_identifier(billid)
+                bill = MonthlyChargeOp.fetch_specific_bill(bill_id)
+                if not bill:
+                    abort(404)
+                tenant = bill.tenant
+            else:
+                tenant = TenantOp.fetch_tenant_by_id(identity)
 
-            tenant = TenantOp.fetch_tenant_by_id(identity)
             db.session.expire(tenant)
 
             if tenant.deposits:

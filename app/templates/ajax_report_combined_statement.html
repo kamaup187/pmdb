@@ -1,5 +1,6 @@
 
 <span id="edit_bill_identifier" class="dispnone"></span>
+<span id="unique_bill_identifier" class="dispnone"></span>
 <!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
 <span id="filename" class="dispnone">{{prop}} {{timeline}} combined statement.pdf</span>
 <span id="orientation" class="dispnone">landscape</span>
@@ -124,8 +125,8 @@
                       <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
                       <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                       <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
-                      <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
-                      <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
+                      <td class="data-cell text-right btn-outline-primary text-black {{bill['id']}} deposit" data-toggle="modal" data-target="#editDepModal">{{ bill['deposit-paid'] }}</td>
+                      <td class="data-cell text-right btn-outline-primary text-black {{bill['editid']}} deposit" data-toggle="modal" data-target="#editDepModal">{{ bill['deposit-due'] }}</td>
                       <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
                       <td class="data-cell text-right">{{bill['totaldue']}}</td>
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
@@ -409,6 +410,69 @@
 </div>
 
 
+<div class="modal fade" id="editDepModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="indicator"></div>
+      <div class="modal-header pb-0 text-center">
+        <h5 class="modal-title text-info" id="paymentDetailModalLabel">Update deposits</h5>
+        <span id="update-reloader" class="dispnone"></span>
+        <div class="alert-msgs"></div>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="media mb-2">
+          <div class="media-body">
+            <div class="position-relative">
+              <div class="card-body modal-forms">
+                <form autocomplete="off" method="POST" action="">
+ 
+                  <div id="editdepositbed" class="mt-2">
+                    <div class="d-inline-block ml-2 dot-elastic"></div>
+                  </div>
+                  
+                </form>
+                <div class="mt-3">
+                  <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                  <button id="editdeposit" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="edit-2"></i> update</span> </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("."+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+
+        }else if(item.startsWith("pay")){
+          $("#edit_pay_identifier").html(item)
+        }else if(item.startsWith("bal")){
+          $("#edit_bal_identifier").html(item)
+        }else{
+          $("#unique_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#unique_bill_identifier").html(item)
+      }
+    });
+  });
+</script>
+
+
 <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
 
 
@@ -436,6 +500,74 @@
 </script> -->
 
 
+<script>
+  $("#editDepModal").on('shown.bs.modal', function(){
+
+    $("#editdepositbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+
+    $.ajax({
+      url: "{{ url_for('api.updatetenant') }}",
+      type: "get",
+      data: {
+            billid: $("#unique_bill_identifier").text(),
+            target: "editdeposit"
+          },
+      success: function(response) {
+        $("#editdepositbed").html(response);
+      },
+      error: function(xhr) {
+        $("#editdepositbed").html(
+          '<span class="text-danger font-weight-bold h3">Vacant unit !</span>'
+        );
+        }
+    });
+  });
+
+  $("#editDepModal").on('hidden.bs.modal', function(){
+    $("#unique_bill_identifier").html("");
+  });
+
+</script>
+
+<script>
+  $("#editdeposit").click(function(){   
+    $("#editdeposit").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatedeposit') }}",
+        type: "POST",
+        data: {
+                billid: $("#unique_bill_identifier").text(),
+                rent: $("#edit_rentdep").val(),
+                water: $("#edit_waterdep").val(),
+                electricity: $("#edit_elecdep").val(),
+                other:$("#edit_otherdep").val(),
+
+                paidrent: $("#edit_prentdep").val(),
+                paidwater: $("#edit_pwaterdep").val(),
+                paidelectricity: $("#edit_pelecdep").val(),
+                paidother:$("#edit_potherdep").val(),
+
+                status: $("input[name=depstatus]:checked").val(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          // $("#tenant-deposit").html(response)
+          $("#editdeposit").html("Update")
+          $(".modal-backdrop").remove();
+          $("#view_general").click();
+
+        },
+        error:function(xhr) {
+          $("#editdepositbed").html(
+          '<span class="text-danger font-weight-bold h3">Vacant unit !</span>'
+        );
+        $("#editdeposit").html("Update")  
+        }
+      });
+  });
+</script>
+
+
 
 
 <!-- <script type="text/javascript">
@@ -461,7 +593,7 @@
 </script> -->
 
 <script>
-  let myarr = ["rent","water","garbage","security","service","deposit","penalty","paidedit"]
+  var myarr = ["rent","water","garbage","security","service","deposit","penalty","paidedit"]
 
 
   $.each(myarr, function(i,item) {

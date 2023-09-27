@@ -2913,6 +2913,39 @@ class TenantDepositOp(TenantDeposit,Base):
             self.total = total
         db.session.commit()
 
+    def update_paid_deposits(self,rentdep,waterdep,elecdep,otherdep,brentdep,bwaterdep,belecdep,botherdep,total,date,status):
+        if rentdep != "null":
+            self.paid_rentdep = rentdep
+        if waterdep != "null":
+            self.paid_waterdep = waterdep
+        if elecdep != "null":
+            self.paid_elecdep = elecdep
+        if otherdep != "null":
+            self.paid_otherdep = otherdep
+
+        if rentdep != "null":
+            self.balance_rentdep = brentdep
+        if waterdep != "null":
+            self.balance_waterdep = bwaterdep
+        if elecdep != "null":
+            self.balance_elecdep = belecdep
+        if otherdep != "null":
+            self.balance_otherdep = botherdep
+
+        if date:
+            self.date = date
+        if status:
+            self.status = status
+        if total:
+            self.total = total
+        db.session.commit()
+
+    def update_paid_deposits_alt(self,total,balance):
+        if total:
+            self.total_paid = total
+        if balance:
+            self.balance = balance
+        db.session.commit()
 
     def get_name(self):
         if self.ptenant_id:
@@ -3896,13 +3929,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def calculate_paid_deposits(self):
         if self.tenant:
-            if self.tenant.deposit:
-                try:
-                    deps = self.tenant.deposit
-                    bal = deps-self.deposit_due
-                    return f"{bal:,.1f}"
-                except:
-                    return 0.0
+            if self.tenant.deposits:
+                return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
             return 0.0
         return 0.0
 
@@ -3926,8 +3954,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
 
         if self.tenant:
-            if self.deposit_due:
-                return self.deposit_due
+            if self.tenant.deposits:
+                return f'{self.tenant.deposits.balance:,.1f}' if self.tenant.deposits.balance else 0.0
             return 0.0
         return 0.0
 

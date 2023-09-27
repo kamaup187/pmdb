@@ -2089,6 +2089,8 @@ class CombinedReport(Resource):
             if vac.name in availables:
                 continue
             new_item = {
+                "id":"",
+                "editid":"",
                 "depositpaid":0.0,
                 "depositdue":0.0,
                 'house':vac.name,
@@ -2167,6 +2169,8 @@ class CombinedReport(Resource):
         else:
             template = "ajax_report_combined_statement.html"
 
+        billids = get_unique_bill_ids(detailed_bills)
+
         return Response(render_template(
             template,
             prop=selected_apartment,
@@ -2211,7 +2215,7 @@ class CombinedReport(Resource):
             fulllogopath=logo(current_user.company)[2],
             letterhead=logo(current_user.company)[3],
             co=current_user.company,
-            billids = [],
+            billids = billids,
             # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
             printdate = datetime.datetime.now().strftime("%d/%m/%Y"),

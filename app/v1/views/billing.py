@@ -4115,7 +4115,7 @@ class UpdateDeposit(Resource):
             c = values[2] - values2[2]
         except:
             c = 0
-            
+
         try:
             d = values[3] - values2[3]
         except:
@@ -4141,10 +4141,10 @@ class UpdateDeposit(Resource):
             TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
             totalpaid = 0
 
-            totalpaid += dep.paid_rentdep if dep.paid_rentdep else 0.0
-            totalpaid += dep.paid_waterdep if dep.paid_waterdep else 0.0
-            totalpaid += dep.paid_elecdep if dep.paid_elecdep else 0.0
-            totalpaid += dep.paid_otherdep if dep.paid_otherdep else 0.0
+            totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+            totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+            totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+            totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
 
             totalbalance = a + b + c + d
 

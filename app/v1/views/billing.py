@@ -4095,29 +4095,45 @@ class UpdateDeposit(Resource):
         paid_elecdep = request.form.get("paidelectricity")
         paid_otherdep = request.form.get("paidother")
 
+        balance_rentdep = request.form.get("balancerent")
+        balance_waterdep = request.form.get("balancewater")
+        balance_elecdep = request.form.get("balanceelectricity")
+        balance_otherdep = request.form.get("balanceother")
+
         status = request.form.get("status")
 
         values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
-
         values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
-        
+        # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
         try:
-            a = values[0] - values2[0]
+            if balance_rentdep:
+                a = 0.0
+            else:
+                a = values[0] - values2[0] if values2[0] else 0.0
         except:
             a = 0
 
         try:
-            b = values[1] - values2[1]
+            if balance_waterdep:
+                b = 0.0
+            else:
+                b = values[1] - values2[1] if values2[1] else 0.0
         except:
             b = 0
 
         try:
-            c = values[2] - values2[2]
+            if balance_elecdep:
+                c = 0.0
+            else:
+                c = values[2] - values2[2] if values2[2] else 0.0
         except:
             c = 0
 
         try:
-            d = values[3] - values2[3]
+            if balance_otherdep:
+                d = 0.0
+            else:
+                d = values[3] - values2[3] if values2[3] else 0.0
         except:
             d = 0
 

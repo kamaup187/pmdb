@@ -4100,6 +4100,8 @@ def validate_float_inputs(*args):
                 results.append(new_i)
             except:
                 results.append("null")
+
+    print("Output >>>>>>>>>>", results)
     return results
 
 def validate_float_inputs_to_exclude_zeros(*args):

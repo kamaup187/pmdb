@@ -68,7 +68,7 @@
                     </div>
                     <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editTenantModal"><span class="fixed-width-prop"><i class="fas fa-user-edit mr-2"></i> edit profile</span></button>
 
-                    <button type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editDepositModal"><span class="fixed-width-prop"><i class="fas fa-edit mr-2"></i> deposits </span></button>
+                    <button id="raise-depmodal" type="button" class="btn btn-sm borderles small btn-success ml-3" data-toggle="modal" data-target="#editDepositModal"><span class="fixed-width-prop"><i class="fas fa-edit mr-2"></i> deposits </span></button>
 
 
                 </div>
@@ -1699,12 +1699,18 @@
                 paidelectricity: $("#edit_pelecdep").val(),
                 paidother:$("#edit_potherdep").val(),
 
+                balancerent: $("#edit_brentdep").val(),
+                balancewater: $("#edit_bwaterdep").val(),
+                balanceelectricity: $("#edit_belecdep").val(),
+                balanceother:$("#edit_botherdep").val(),
+
                 status: $("input[name=depstatus]:checked").val(),
                 ttype: $("#ttype").text()
             },
         success: function(response) {
           $("#tenant-deposit").html(response)
-          $("#editdeposit").html("Update")  
+          $("#editdeposit").html("Update")
+          $("#raise-depmodal").click();
 
         }
       });

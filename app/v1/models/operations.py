@@ -2923,14 +2923,19 @@ class TenantDepositOp(TenantDeposit,Base):
         if otherdep != "null":
             self.paid_otherdep = otherdep
 
-        if rentdep != "null":
-            self.balance_rentdep = brentdep
-        if waterdep != "null":
-            self.balance_waterdep = bwaterdep
-        if elecdep != "null":
-            self.balance_elecdep = belecdep
-        if otherdep != "null":
-            self.balance_otherdep = botherdep
+        # if rentdep != "null":
+        #     self.balance_rentdep = brentdep
+        # if waterdep != "null":
+        #     self.balance_waterdep = bwaterdep
+        # if elecdep != "null":
+        #     self.balance_elecdep = belecdep
+        # if otherdep != "null":
+        #     self.balance_otherdep = botherdep
+
+        self.balance_rentdep = brentdep
+        self.balance_waterdep = bwaterdep
+        self.balance_elecdep = belecdep
+        self.balance_otherdep = botherdep
 
         if date:
             self.date = date

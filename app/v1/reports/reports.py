@@ -2742,7 +2742,7 @@ class RentStatement(Resource):
                 if bill.paidll:
                     # paidll += bill.paidll
                     if bill.rent:
-                        paidll += bill.rent
+                        paidll += bill.rent_paid
 
                 if bill.rent_balance:
                     totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0

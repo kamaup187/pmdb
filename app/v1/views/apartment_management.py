@@ -685,6 +685,8 @@ class Index(Resource):
                 agenttel = agenttel,
                 caretakertel = caretakertel,
                 group=get_group_name(current_user.user_group_id),
+                logopath=logo(resp[1].apartment.company)[0],
+                mobilelogopath=logo(resp[1].apartment.company)[0],
                 name=current_user.name
             ))
 

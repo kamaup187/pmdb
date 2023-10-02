@@ -5,6 +5,9 @@
   <div class="center-btn">
     <h5 class="text-info font-weight-bold">{{apartment}}</h5>
   </div>
+
+
+  {% for bill in bills %}
   <div>
     <span class="text-white bolder">Invoice No. {{bill.id}}</span>
   </div>
@@ -52,6 +55,8 @@
         </table>
   </div>
 
+
+
   <!-- <div>
     <span class="text-white">Paid &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Kshs {{amount}}</span><br>
   </div>
@@ -67,11 +72,16 @@
   </div>
 </div>
 
+{% endfor %}
+
 <div class="card-body bg-gradient-dark desktop-malaysian">
   <div class="center-btn">
     <h5 class="text-info font-weight-bold">{{apartment}}</h5>
   </div>
   <div>
+
+
+    {% for bill in bills %}
     <span class="text-white bolder">Invoice No. {{bill.id}}</span>
   </div>
   <hr class="sidebar-divider d-md-block">
@@ -116,6 +126,8 @@
   <div class="divbg center-btn">
     <button id="close2" type="button" class="bg-gradient-light borderless text-primary"><i class="fas fa-times"></i>&nbsp;Close</button>
   </div>
+
+  {% endfor %}
   
 
 </div>

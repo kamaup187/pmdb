@@ -4837,7 +4837,7 @@ class Invoice(Resource):
         monthly_charges = tenant_obj.monthly_charges
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
-        specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,month,year)
+        specific_charge_objs = get_specific_monthly_charge_objs(monthly_charges,month,year)
         house = check_house_occupied(tenant_obj)[1]
         apartment = ApartmentOp.fetch_apartment_by_id(tenant_obj.apartment_id).name
         return render_template(
@@ -4845,7 +4845,7 @@ class Invoice(Resource):
             tenant_name=current_user.name,
             house=house,
             apartment=apartment,
-            bill=specific_charge_obj
+            bills=specific_charge_objs
         )
 
 class MyPayments(Resource):

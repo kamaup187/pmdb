@@ -2795,6 +2795,14 @@ def get_specific_monthly_charge_obj(arr,month,year):
             break
     return specific_charge
 
+def get_specific_monthly_charge_objs(arr,month,year):
+    specific_charges = []
+    for item in arr:
+        if item.month == month and item.year == year:
+            specific_charges.append(item)
+            # break
+    return specific_charges
+
 def get_specific_month_payments(arr,month):
     payments = []
     for item in arr:

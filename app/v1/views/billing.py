@@ -4104,10 +4104,11 @@ class UpdateDeposit(Resource):
 
         values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
         values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
-        # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+        values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+
         try:
             if balance_rentdep:
-                a = 0.0
+                a = values3[0]
             else:
                 a = values[0] - values2[0] if values2[0] else 0.0
         except:
@@ -4115,7 +4116,7 @@ class UpdateDeposit(Resource):
 
         try:
             if balance_waterdep:
-                b = 0.0
+                b = values3[1]
             else:
                 b = values[1] - values2[1] if values2[1] else 0.0
         except:
@@ -4123,7 +4124,7 @@ class UpdateDeposit(Resource):
 
         try:
             if balance_elecdep:
-                c = 0.0
+                c = values3[2]
             else:
                 c = values[2] - values2[2] if values2[2] else 0.0
         except:
@@ -4131,7 +4132,7 @@ class UpdateDeposit(Resource):
 
         try:
             if balance_otherdep:
-                d = 0.0
+                d = values3[3]
             else:
                 d = values[3] - values2[3] if values2[3] else 0.0
         except:

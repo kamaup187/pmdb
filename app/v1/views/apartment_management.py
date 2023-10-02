@@ -5528,7 +5528,6 @@ class AddTenant(Resource):
 
                     message = f"Welcome {tenant_obj.name}, \nkindly accept our terms and condtions below: \nhttps://kiotapay.com/guest/agreement/{tenant_obj.randid}. \n\n~Villa Park"
 
-
                     present = TenantOp.fetch_tenant_by_nat_id(national_id)
                     if present:
                         pass

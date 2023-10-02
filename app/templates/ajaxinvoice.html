@@ -6,25 +6,19 @@
     <h5 class="text-info font-weight-bold">{{apartment}}</h5>
   </div>
 
-
-  {% for bill in bills %}
-  <div>
-    <span class="text-white bolder">I: Invoice No. {{bill.id}}</span>
-  </div>
   <!-- <hr class="sidebar-divider d-none d-md-block"> -->
   <div>
     <span class="text-white">Tenant : {{tenant_name}}</span>
   </div>
-  <div>
-    <span class="text-white">House : {{bill.house}}</span>
-  </div><br>
+
 
   <div>
-    <span class="text-white">Your bill for the current month is as follows;</span>
+    <span class="text-white">Your bill(s) for the current month is as follows;</span>
   </div>
 
-  <div class="table-responsiv">
-    <table class="table bg-gradient-dark text-info table-bordere" width="100%" cellspacing="0">
+  
+  <div class="table-responsive">
+    <table class="table table-bordered " width="100%" cellspacing="0">
           <thead >
             <tr >
               <th class="text-white">Rent</th>
@@ -32,30 +26,32 @@
               <th class="text-white">Electricity</th>
               <th class="text-white">Garbage</th>
               <th class="text-white">Security</th>
-              <th class="text-white">Repairs</th>
+              <th class="text-white">Service</th>
               <th class="text-white">Arrears</th>
               <th class="text-white ">Total</th>
               <th class="text-white">Paid</th>
               <th class="text-white">Balance</th>
             </tr>
           </thead>
+          {% for bill in bills %}
             <tr>
-              <td>{{ bill.rent}}</td>
-              <td>{{ bill.water }}</td>
-              <td>{{ bill.electricity }}</td>
-              <td>{{ bill.garbage }}</td>
-              <td>{{ bill.security }}</td>
-              <td>{{ bill.maintenance }}</td>
-              <td>{{ bill.arrears }}</td>
-              <td>{{ bill.total_bill }}</td>
-              <td>{{ bill.paid_amount }}</td>
-              <td>{{ bill.balance }}</td>
+              <td class="text-white">{{ bill.rent}}</td>
+              <td class="text-white">{{ bill.water }}</td>
+              <td class="text-white">{{ bill.electricity }}</td>
+              <td class="text-white">{{ bill.garbage }}</td>
+              <td class="text-white">{{ bill.security }}</td>
+              <td class="text-white">{{ bill.maintenance }}</td>
+              <td class="text-white">{{ bill.arrears }}</td>
+              <td class="text-white">{{ bill.total_bill }}</td>
+              <td class="text-white">{{ bill.paid_amount }}</td>
+              <td class="text-white">{{ bill.balance }}</td>
             </tr>
+            {% endfor %}
          
         </table>
   </div>
 
-  {% endfor %}
+  
 
 
 
@@ -81,15 +77,15 @@
     <h5 class="text-info font-weight-bold">{{apartment}}</h5>
   </div>
 
-  {% for bill in bills %}
-  <div>
-    <span class="text-white bolder">i: Invoice No. {{bill.id}}</span>
-  </div>
-  <hr class="sidebar-divider d-md-block">
-
   <div>
     <span class="text-white">Tenant : {{tenant_name}}</span>
   </div>
+
+  {% for bill in bills %}
+  <div>
+    <span class="text-white bolder">Invoice No. {{bill.id}}</span>
+  </div>
+  <hr class="sidebar-divider d-md-block">
   <div>
     <span class="text-white">House : {{bill.house}}</span>
   </div><br>
@@ -104,7 +100,7 @@
     <span class="text-white">Garbage : Kshs {{bill.garbage}}</span>
   </div>
   <div>
-    <span class="text-white">Repairs : Kshs {{bill.maintenance}}</span>
+    <span class="text-white">Service : Kshs {{bill.maintenance}}</span>
   </div>
   <div>
     <span class="text-white">Arrears : Kshs {{bill.arrears}}</span>
@@ -123,7 +119,6 @@
     <span class="text-white">Paid for: {{chargetype}}</span><br>
   </div> -->
   <hr class="sidebar-divider d-md-block">
-  <br>
   
   {% endfor %}  
   <div class="divbg center-btn">

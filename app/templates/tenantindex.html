@@ -44,7 +44,7 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle" id="accordionSidebar">
+    <ul class="navbar-nav sidebar-bg sidebar sidebar-dark accordion mobile-toggle dispnone" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand bg-gradient-light d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
@@ -158,8 +158,18 @@
 
 
         <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light topbar-bg topbar mb-4 static-top shadow mobile-malaysian">
-          <!-- <span class="mobile-malaysian floating-apartment-desktop kiota-col">{{propertyname}} - <span class="kiota-col"> {{house}}</span></span> -->
+        <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow mobile-malaysian">
+          <!-- <span class="mobile-malaysian floating-apartment-desktop text-black">{{propertyname}} - <span class="text-black"> {{house}}</span></span> -->
+
+                <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
+        <div class="sidebar-brand-icon rotate-n-0">
+          <!-- <i class="fas fa-home"></i> -->
+          <img class="mobile-malaysian" src="{{logopath}}" alt="">
+          <img class="desktop-malaysian" src="{{mobilelogopath}}" alt="">
+        </div>
+        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
+      </a>
 
           <!-- Topbar Search -->
           <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -167,7 +177,7 @@
               <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
                 <button class="btn btn-light" type="button">
-                  <i class="fas fa-search fa-sm kiota-col"></i>
+                  <i class="fas fa-search fa-sm text-black"></i>
                 </button>
               </div>
             </div>
@@ -178,7 +188,7 @@
             <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw text-white"></i>
+                <i class="fas fa-bell fa-fw text-black"></i>
                 <!-- Counter - Alerts -->
                 <span class="badge badge-info badge-counter">1</span>
               </a>
@@ -190,23 +200,23 @@
                 <a class="dropdown-item d-flex align-items-center" href="#">
                   <div class="mr-3">
                     <div class="icon-circle bg-info">
-                      <i class="fas fa-file-alt text-white"></i>
+                      <i class="fas fa-file-alt text-black"></i>
                     </div>
                   </div>
                   <div>
-                    <div class="small text-gray-500">September 22, 2020</div>
+                    <div class="small text-black">September 22, 2020</div>
                     <span class="font-weight-bold">Remember to set a secure password!</span>
                   </div>
                 </a>
 
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-black" href="#">Show All Alerts</a>
               </div>
             </li>
 
             <!-- Nav Item - Messages -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-envelope fa-fw text-white"></i>
+                <i class="fas fa-envelope fa-fw text-black"></i>
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter">{{unread_num}}</span>
               </a>
@@ -225,13 +235,13 @@
                   
                   <div class="font-weight-bold">
                     <div class="text-truncate">{{msg.txt}}</div>
-                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                    <div class="small text-black">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
                   </div>
                 </a>
                 {% endfor %}
 
 
-                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+                <a class="dropdown-item text-center small text-black" href="#">You have no more messages</a>
               </div>
             </li>
 
@@ -240,11 +250,11 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <div class="text-gray-400 mr-2">
+                <div class="text-black mr-2">
                   {{group}}
                 </div>
                 <div class="topbar-divider d-none d-sm-block"></div>
-                <span class="mr-2 d-none d-lg-inline text-gray-100 font-weight-bold">{{name}}</span>
+                <span class="mr-2 d-none d-lg-inline text-black font-weight-bold">{{name}}</span>
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0">
                   <i class="fas fa-user text-secondary"></i>
@@ -253,20 +263,20 @@
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
                   Profile ({{name}})
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-black"></i>
                   Settings
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-black"></i>
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
                   Logout
                 </a>
               </div>
@@ -282,7 +292,7 @@
 
 
         <nav class="navbar navbar-expand navbar-light topbar-b bg-white bg-gradient-ligh topbar mb-4 static-top shadow desktop-malaysian">
-           <!-- <span class="desktop-malaysian floating-apartment-mobile text-xs font-weight-bold mb-0 text-gray-500">{{house}} <span class="text-primary">-</span>{{propertyname}}</span> -->
+           <!-- <span class="desktop-malaysian floating-apartment-mobile text-xs font-weight-bold mb-0 text-black">{{house}} <span class="text-primary">-</span>{{propertyname}}</span> -->
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTopa" class="btn btn-link d-md-none rounded-circle mr-0 text-info">
             <i id = "myi"class="fa fa-bars"></i>
@@ -301,7 +311,7 @@
               <input type="text" class="form-control topbar-bg border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
                 <button class="btn btn-light" type="button">
-                  <i class="fas fa-search fa-sm kiota-col"></i>
+                  <i class="fas fa-search fa-sm text-black"></i>
                 </button>
               </div>
             </div>
@@ -311,7 +321,7 @@
             <!-- Nav Item - Alerts -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell fa-fw kiota-col"></i>
+                <i class="fas fa-bell fa-fw text-black"></i>
                 <!-- Counter - Alerts -->
                 <span class="badge badge-info badge-counter">1</span>
               </a>
@@ -323,23 +333,23 @@
                 <a class="dropdown-item d-flex align-items-center" href="#">
                   <div class="mr-3">
                     <div class="icon-circle bg-info">
-                      <i class="fas fa-file-alt text-white"></i>
+                      <i class="fas fa-file-alt text-black"></i>
                     </div>
                   </div>
                   <div>
-                    <div class="small text-gray-500">February 12, 2022</div>
+                    <div class="small text-black">February 12, 2022</div>
                     <span class="font-weight-bold">Remember to set a secure password!</span>
                   </div>
                 </a>
 
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-black" href="#">Show All Alerts</a>
               </div>
             </li>
 
             <!-- Nav Item - Messages -->
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-envelope fa-fw kiota-col"></i>
+                <i class="fas fa-envelope fa-fw text-black"></i>
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter">{{unread_num}}</span>
               </a>
@@ -358,13 +368,13 @@
                   
                   <div class="font-weight-bold">
                     <div class="text-truncate">{{msg.txt}}</div>
-                    <div class="small text-gray-500">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
+                    <div class="small text-black">{{msg.tenant}} · {{msg.date.strftime("%Y-%m-%d %H:%M:%S")}}</div>
                   </div>
                 </a>
                 {% endfor %}
 
 
-                <a class="dropdown-item text-center small text-gray-500" href="#">You have no more messages</a>
+                <a class="dropdown-item text-center small text-black" href="#">You have no more messages</a>
               </div>
             </li>
 
@@ -373,33 +383,34 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <div class="text-gray-500 mr-2">
+                <div class="text-black mr-2">
                   {{group}}
                 </div>
                 <div class="topbar-divider d-none d-sm-block"></div>
-                <span class="mr-2 d-none d-lg-inline kiota-col small">{{name}}</span>
+                <span class="mr-2 d-none d-lg-inline text-black small">qqqqqqq{{name}}</span>
                 <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
                 <div class="sidebar-brand-icon rotate-n-0">
-                  <i class="fas fa-user kiota-col"></i>
+                  <i class="fas fa-user text-black"></i>
                 </div>
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                <!-- <a class="dropdown-item" href="{{ url_for('api.updatetenant') }}"> -->
+                  <a class="dropdown-item" href="">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
                   Profile ({{name}})
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-black"></i>
                   Settings
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-list fa-sm fa-fw mr-2 text-black"></i>
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
                   Logout
                 </a>
               </div>
@@ -418,7 +429,7 @@
               
               <span>
                 <div>
-                  <span><span id="greetings" class="h6 text-gray-600 mr-2"></span><span class="kiota-col">{{tenantname}}</span></span>
+                  <span><span id="greetings" class="h6 text-gray-600 mr-2"></span><span class="text-black">{{tenantname}}</span></span>
                 </div>
                 <div>
                   <span class="text-xs mb-0 text-danger "><span class="text-gray-800">Balance</span> Kshs {{my_balance}}</span>
@@ -883,7 +894,7 @@
                               </div>
 
                               <div class="col">
-                                <a href="{{ url_for('api.checkvacancy') }}">
+                                <a href="">
                                   <button class="btn btn-outline-success text-gray-700 borderles mb-2 fixed-width-btn2">
                                     <div><img src="../static/img/64/search.png"></div>
                                     <span class="small mobile-malaysian sss">Check Vacancy</span>
@@ -974,7 +985,7 @@
                             </div>
 
                             <div class="fixed-width-btn">
-                              <a href="{{ url_for('api.checkvacancy') }}">
+                              <a href="">
                                 <button class="bt text-gray-600 bg-white shadow borderless my-width mb-1">
                                   <div><img src="../static/img/40/search_40x40.png"></div>
                                   <span class="small mobile-malaysian sss">Check Vacancy</span>
@@ -1026,7 +1037,7 @@
                           <h6 class="m-0 font-weight-bold text-primary"></h6>
                       </div>
                       <div class="card-body ad-h bg-light">
-                          <!-- <p class="small text-gray-400">ads.</p> -->
+                          <!-- <p class="small text-black">ads.</p> -->
                           <!-- <i class="fas fa-ad"></i> -->
                       </div>
                   </div>

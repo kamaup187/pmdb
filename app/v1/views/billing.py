@@ -4833,7 +4833,8 @@ class Invoice(Resource):
 
     @login_required
     def post(self):
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
+
         monthly_charges = tenant_obj.monthly_charges
         month = datetime.datetime.now().month
         year = datetime.datetime.now().year
@@ -4868,7 +4869,7 @@ class MyPayments(Resource):
         # else:
         disp_month = f'in {get_str_month(month)}'
         
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         payments = tenant_obj.payments
 
         mypayments = get_specific_month_payments(payments,month)
@@ -4891,7 +4892,7 @@ class TenantPayment(Resource):
         pass
     @login_required
     def post(self):
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         tenant_id = tenant_obj.id
         
         #################################################################################################
@@ -8799,7 +8800,7 @@ class ConsumeMpesaData(Resource):
         pass
     @login_required
     def post(self):
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
 
         tenant_id = tenant_obj.id
         mpesarequests = tenant_obj.mpesarequests
@@ -8947,7 +8948,7 @@ class QueryMpesaTrans(Resource):
     @login_required
     def post(self):
 
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
 
         tenant_id = tenant_obj.id
         mpesarequests = tenant_obj.mpesarequests

@@ -622,7 +622,7 @@ class Index(Resource):
 
         if user_group == "Tenant":
             #tenant user is connected to tenant obj by national id
-            tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+            tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
 
             resp = check_house_occupied(tenant_obj)
             if resp[0] == "Resident":
@@ -667,6 +667,12 @@ class Index(Resource):
                     caretakertel = user.phone
                 else:
                     caretakertel = ApartmentOp.fetch_apartment_by_id(tenant_obj.apartment_id).owner.phone
+            try:
+                logopath=logo(resp[1].apartment.company)[0]
+                mobilelogopath=logo(resp[1].apartment.company)[0]
+            except:
+                logopath = ""
+                mobilelogopath = ""
 
             return Response(render_template(
                 'tenantindex.html',
@@ -685,8 +691,8 @@ class Index(Resource):
                 agenttel = agenttel,
                 caretakertel = caretakertel,
                 group=get_group_name(current_user.user_group_id),
-                logopath=logo(resp[1].apartment.company)[0],
-                mobilelogopath=logo(resp[1].apartment.company)[0],
+                logopath=logopath,
+                mobilelogopath=mobilelogopath,
                 name=current_user.name
             ))
 
@@ -6622,7 +6628,7 @@ class UpdateTenant(Resource):
         
         #scan_for_tenant_user
         if str(current_user.user_group) == "Tenant":
-            tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+            tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
             tenant_id = "edit" + str(tenant_obj.id)
             return Response(render_template('self_update_tenant.html',tenant_id=tenant_id,tenant=tenant_obj,name=current_user.name))
 
@@ -8390,7 +8396,7 @@ class TenantHouseRequest(Resource):
         if not title:
             return render_template("ajax_request_fail.html",status="Failed, title required")
         
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         check = check_house_occupied(tenant_obj)
         if check[0] != "Resident":
             return render_template("ajax_request_fail.html",status="Seems you've moved out")
@@ -8415,7 +8421,7 @@ class HouseTransferRequest(Resource):
         if not trans_house:
             return render_template("ajax_transferrequest_fail.html",status="Failed, Please specify house")
 
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         check = check_house_occupied(tenant_obj)
         if check[0] != "Resident":
             return render_template("ajax_transferrequest_fail.html",status="Non resident. Please use check vacancy option")
@@ -8449,7 +8455,7 @@ class HouseClearanceRequest(Resource):
         if not clr_month:
             return render_template("ajax_clearancerequest_fail.html",status="Failed, Please specify month")
 
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         check = check_house_occupied(tenant_obj)
         if check[0] != "Resident":
             return render_template("ajax_clearancerequest_fail.html",status="Seems you've moved out")
@@ -8538,7 +8544,7 @@ class DeleteRequest(Resource):
         request_obj = TenantRequestOp.fetch_a_request_by_id(req_id)
         TenantRequestOp.delete(request_obj)
 
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
 
         my_requests = []
         myrequests = fetch_active_requests(tenant_obj)
@@ -9122,7 +9128,7 @@ class ContactManagement(Resource):
 
     @login_required
     def post(self):
-        tenant_obj = TenantOp.fetch_tenant_by_nat_id(current_user.national_id)
+        tenant_obj = TenantOp.fetch_tenant_by_tel(current_user.phone)
         check = check_house_occupied(tenant_obj)
         if check[0] != "Resident":
             return render_template("ajax_request_fail.html",status="Seems you've moved out")

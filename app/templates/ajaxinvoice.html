@@ -9,7 +9,7 @@
 
   {% for bill in bills %}
   <div>
-    <span class="text-white bolder">Invoice No. {{bill.id}}</span>
+    <span class="text-white bolder">I: Invoice No. {{bill.id}}</span>
   </div>
   <!-- <hr class="sidebar-divider d-none d-md-block"> -->
   <div>
@@ -55,6 +55,8 @@
         </table>
   </div>
 
+  {% endfor %}
+
 
 
   <!-- <div>
@@ -72,17 +74,16 @@
   </div>
 </div>
 
-{% endfor %}
+
 
 <div class="card-body bg-gradient-dark desktop-malaysian">
   <div class="center-btn">
     <h5 class="text-info font-weight-bold">{{apartment}}</h5>
   </div>
+
+  {% for bill in bills %}
   <div>
-
-
-    {% for bill in bills %}
-    <span class="text-white bolder">Invoice No. {{bill.id}}</span>
+    <span class="text-white bolder">i: Invoice No. {{bill.id}}</span>
   </div>
   <hr class="sidebar-divider d-md-block">
 
@@ -123,12 +124,11 @@
   </div> -->
   <hr class="sidebar-divider d-md-block">
   <br>
+  
+  {% endfor %}  
   <div class="divbg center-btn">
     <button id="close2" type="button" class="bg-gradient-light borderless text-primary"><i class="fas fa-times"></i>&nbsp;Close</button>
   </div>
-
-  {% endfor %}
-  
 
 </div>
 

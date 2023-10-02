@@ -83,6 +83,17 @@ class Base():
         except:
             decor_fig = f"{fig}"
         return decor_fig
+    
+    def fig_format_ll(fig,ll_status):
+        try:
+            decor_fig = (f"{fig:,.1f}")
+        except:
+            decor_fig = f"{fig}"
+
+        if ll_status:
+            return f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
+
+        return decor_fig
         
     def format(amount):
         """method to format amount"""
@@ -4097,7 +4108,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
-            'rent-paid':MonthlyChargeOp.fig_format(self.rent_paid),
+            'rent-paid':MonthlyChargeOp.fig_format_ll(self.rent_paid,self.paidll),
             'rent-bal':MonthlyChargeOp.fig_format(self.rent_due),
 
             'water-arr':MonthlyChargeOp.fig_format(self.water_balance),

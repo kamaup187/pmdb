@@ -198,7 +198,7 @@
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-paid']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                     </tr>
@@ -449,7 +449,7 @@
                   <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
                   <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-paid'] | safe}}</td>
                   <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                 </tr>

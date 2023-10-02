@@ -2785,7 +2785,7 @@ class RentStatement(Resource):
 
         totalbill = actual_totalbbf + totalrent
         billtotal = (f"{totalbill:,}")
-        paidtotal = (f"{totalpaid:,}")
+        paidtotal = (f"{(paidll + totalpaid):,}")
         bcftotal = (f"{totalbcf:,}")
 
         expense_list = []

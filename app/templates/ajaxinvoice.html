@@ -21,6 +21,7 @@
     <table class="table table-bordered " width="100%" cellspacing="0">
           <thead >
             <tr >
+              <th class="text-white">House</th>
               <th class="text-white">Rent</th>
               <th class="text-white">Water</th>
               <th class="text-white">Electricity</th>
@@ -35,6 +36,7 @@
           </thead>
           {% for bill in bills %}
             <tr>
+              <td class="text-white">{{ bill.house}}</td>
               <td class="text-white">{{ bill.rent}}</td>
               <td class="text-white">{{ bill.water }}</td>
               <td class="text-white">{{ bill.electricity }}</td>

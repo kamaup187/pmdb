@@ -155,7 +155,7 @@ class TopUpSms(Resource):
 
             # units = ctob_obj.trans_amnt * 1.25
             try:
-                units = int(ri) / 0.75
+                units = int(ri) / 0.65
             except:
                 return None
 
@@ -626,7 +626,10 @@ class DownloadInvoice(Resource):
 
             html_out = template.render(template_vars)
             filename = f"app/temp/inv_{rand_id}.pdf"
-            HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
+            try:
+                HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css"])
+            except:
+                pass
 
             path = f"temp/inv_{rand_id}.pdf"
 
@@ -642,7 +645,8 @@ class DownloadInvoice(Resource):
             try:
                 return send_file(path, as_attachment=True)
             except Exception as e:
-                return "This receipt is longer available on our server "+ str(e)
+                return ""
+                # return "This receipt is longer available on our server "+ str(e)
 
 class DeleteReceipt(Resource):
     def get(self,propid):

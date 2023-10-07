@@ -487,7 +487,10 @@ class DownloadReceipt(Resource):
 
             html_out = template.render(template_vars)
             filename = f"app/temp/receipt_{rand_id}.pdf"
-            HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css","app/static/receipt.css"])
+            try:
+                HTML(string=html_out,base_url=os.path.abspath(os.path.dirname(__file__))).write_pdf(filename,stylesheets=["app/static/myfonts.css","app/static/eapartment-min.css","app/static/kiotapay.css","app/static/receipt.css"])
+            except:
+                pass
 
             path = f"temp/receipt_{rand_id}.pdf"
 
@@ -503,7 +506,8 @@ class DownloadReceipt(Resource):
             try:
                 return send_file(path, as_attachment=True)
             except Exception as e:
-                return "This receipt is longer available on our server "+ str(e)
+                return ""
+                # return "This receipt is longer available on our server "+ str(e)
 
 class DownloadInvoice(Resource):
     """class"""

@@ -8474,7 +8474,7 @@ class FetchStatistics(Resource):
 
         invss = f'<span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
-        deps = f'<span class="text-danger small">(A {dep_inv_status.count("ones")}) (D {dep_arr_status.count("twos")})</span'
+        deps = f'<span class="text-danger small">(D {dep_inv_status.count("ones")}) (A {dep_arr_status.count("twos")})</span'
 
 
         invs = invss,

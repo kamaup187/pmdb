@@ -96,6 +96,7 @@
                       <th class="text-primary font-weight-bold" data-orderable="false">Clients</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Action</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Invoices</th>
+                      <th class="text-primary font-weight-bold" data-orderable="false">DepCT</th>
                       <th class="text-primary font-weight-bold" data-orderable="false">Send</th>
                       <th class="text-black  {{fieldshow_arr}}">Arrears</th>
                       <th class="text-black  {{fieldshow_dep}} ">Deposit</th>
@@ -146,6 +147,7 @@
         
                       <td id="{{item['invsid']}}" class="data-cell text-center text-black invsinfo-{{item['propid']}}"><div class="dot-elastic mt-2"></div></td>
 
+                      <td id="{{item['depsid']}}" class="data-cell text-center text-black depsinfo-{{item['propid']}}"><div class="dot-elastic mt-2"></div></td>
 
                       <td class="data-cell text-center">
                         <div>
@@ -508,6 +510,7 @@
           $("#paidinfo-" + item ).text(response[9]);
           $("#balinfo-" + item ).text(response[10]);
           $(".invsinfo-" + item ).html(response[14]);
+          $(".depsinfo-" + item ).html(response[16]);
 
         }
       });

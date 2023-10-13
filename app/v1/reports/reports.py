@@ -8372,6 +8372,9 @@ class FetchStatistics(Resource):
         inv_paid_status = []
         inv_bal_status = []
 
+        dep_arr_status = []
+        dep_inv_status = []
+
         for bill in filtered_bills:
             renttotal += bill.rent
             watertotal += bill.water
@@ -8394,6 +8397,13 @@ class FetchStatistics(Resource):
                 inv_arr_status.append("error")
             else:
                 inv_arr_status.append("okay")
+
+            if "**" in MonthlyChargeOp.find_deposit_balance(bill):
+                dep_arr_status.append("twos")
+            elif "*" in MonthlyChargeOp.find_deposit_balance(bill):
+                dep_inv_status.append("ones")
+            else:
+                pass
 
             if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
                 inv_paid_status.append("error")
@@ -8464,6 +8474,8 @@ class FetchStatistics(Resource):
 
         invss = f'<span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
+        deps = f'<span class="text-danger small">(A {dep_inv_status.count("ones")}) (D {dep_arr_status.count("twos")})</span'
+
 
         invs = invss,
         progress = progress
@@ -8481,7 +8493,7 @@ class FetchStatistics(Resource):
         sms = sms
         
 
-        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received,unreceived,ratio,invs,invs2]
+        return [clients,sms,arrears,deposit,rent,water,others,fine,total,paid,bal,received,unreceived,ratio,invs,invs2,deps]
 
 
 class FetchHouses(Resource):

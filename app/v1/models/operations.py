@@ -1072,6 +1072,7 @@ class ApartmentOp(Apartment,Base):
         'billid':"bill"+str(self.id),
         'smsid':"sms"+str(self.id),
         'invsid':"invs"+str(self.id),
+        'depsid':"deps"+str(self.id),
         'progress':ApartmentOp.get_progress(self),
         'bill_outline':ApartmentOp.get_bill_outline(self,period),
         "name":self.name,
@@ -3814,6 +3815,23 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             }
         return f'{switcher.get(month)},{year}'
 
+    def find_deposit_balance(self):
+        breaks = 0.0
+        breakss = 0.0
+
+        stars = ""
+
+
+        breaks += self.deposit if self.deposit else 0.0
+        breakss += self.deposit_balance if self.deposit_balance else 0.0
+
+        if breaks:
+            stars += "*"
+        if breakss:
+            stars += "*"
+
+        return stars
+        
     def calculate_breakdown(self):
         arrears = self.arrears
         breaks = 0.0
@@ -4028,6 +4046,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
+            'fdep':MonthlyChargeOp.find_deposit_balance(self),
             'deposit-paid':MonthlyChargeOp.calculate_paid_deposits(self),
             'deposit-due':MonthlyChargeOp.calculate_deposit_balance(self),
 

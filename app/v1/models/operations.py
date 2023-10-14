@@ -3817,18 +3817,26 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     def find_deposit_balance(self):
         breaks = 0.0
-        breakss = 0.0
 
         stars = ""
 
 
-        breaks += self.deposit if self.deposit else 0.0
-        breakss += self.deposit_balance if self.deposit_balance else 0.0
+        breaks += self.deposit_balance if self.deposit_balance else 0.0
 
         if breaks:
-            stars += "*"
-        if breakss:
-            stars += "*"
+            stars += "~"
+
+        return stars
+    
+    def find_deposit_invoice(self):
+        breaks = 0.0
+
+        stars = ""
+
+        breaks += self.deposit if self.deposit else 0.0
+
+        if breaks:
+            stars += "~"
 
         return stars
         
@@ -3851,8 +3859,6 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == arrears:
             return f"{arrears:,.1f}"
-            # elif self.month == 9:
-            #     return f"{arrears:,.1f}"
         else:
             return f"{arrears:,.1f} **"
 
@@ -3871,8 +3877,6 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == arrears:
             return f"{arrears:,.1f}"
-            # elif self.month == 9:
-            #     return f"{arrears:,.1f}"
         else:
             return f"{arrears:,.1f} **"
 
@@ -3895,8 +3899,6 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         if breaks == paid:
             return f"{paid:,.1f}"
-            # elif self.month == 9:
-            #     return f"{paid:,.1f}"
         else:
             return f"{paid:,.1f} **"
 
@@ -3918,10 +3920,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         breaks += self.penalty_due if self.penalty_due else 0.0
 
         if breaks == bal:
-            return f"{bal:,.1f}"
-        elif self.month == 9:
+            if self.deposit_due:
+                return f"{bal:,.1f} ~"
             return f"{bal:,.1f}"
         else:
+            if self.deposit_due:
+                return f"{bal:,.1f} ** ~"
             return f"{bal:,.1f} **"
 
     def calculate_dbreakdown_no_dep(self):
@@ -3938,8 +3942,6 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         breaks += self.penalty_due if self.penalty_due else 0.0
 
         if breaks == bal:
-            return f"{bal:,.1f}"
-        elif self.month == 9:
             return f"{bal:,.1f}"
         else:
             return f"{bal:,.1f} **"
@@ -4046,7 +4048,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'service':MonthlyChargeOp.fig_format(self.maintenance), #TODO #################### REFACTOR
             'agreement':self.agreement,
             'deposit':self.deposit,
-            'fdep':MonthlyChargeOp.find_deposit_balance(self),
+            'baldep':MonthlyChargeOp.find_deposit_balance(self),
+            'invdep':MonthlyChargeOp.find_deposit_invoice(self),
             'deposit-paid':MonthlyChargeOp.calculate_paid_deposits(self),
             'deposit-due':MonthlyChargeOp.calculate_deposit_balance(self),
 

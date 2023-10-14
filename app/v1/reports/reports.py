@@ -8395,25 +8395,18 @@ class FetchStatistics(Resource):
 
             if "**" in MonthlyChargeOp.calculate_breakdown(bill):
                 inv_arr_status.append("error")
-            else:
-                inv_arr_status.append("okay")
 
-            if "**" in MonthlyChargeOp.find_deposit_balance(bill):
-                dep_arr_status.append("twos")
-            elif "*" in MonthlyChargeOp.find_deposit_balance(bill):
-                dep_inv_status.append("ones")
-            else:
-                pass
+            if "~" in MonthlyChargeOp.find_deposit_balance(bill):
+                dep_arr_status.append("+")
+
+            if "~" in MonthlyChargeOp.find_deposit_invoice(bill):
+                dep_inv_status.append("+")
 
             if "**" in MonthlyChargeOp.calculate_pbreakdown(bill):
                 inv_paid_status.append("error")
-            else:
-                inv_paid_status.append("okay")
 
             if "**" in MonthlyChargeOp.calculate_dbreakdown(bill):
                 inv_bal_status.append("error")
-            else:
-                inv_bal_status.append("okay")
 
             if bill.sms_invoice == "pending" or bill.sms_invoice == "waiting" or bill.sms_invoice == "fail":
                 smsstatus.append("0")
@@ -8474,7 +8467,7 @@ class FetchStatistics(Resource):
 
         invss = f'<span class="text-danger small">(A {inv_arr_status.count("error")}) (P {inv_paid_status.count("error")}) (B  {inv_bal_status.count("error")})</span'
 
-        deps = f'<span class="text-danger small">(D {dep_inv_status.count("ones")}) (A {dep_arr_status.count("twos")})</span'
+        deps = f'<span class="text-danger small">(D {dep_inv_status.count("+")}) (A {dep_arr_status.count("+")})</span'
 
 
         invs = invss,

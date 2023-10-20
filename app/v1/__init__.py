@@ -22,6 +22,8 @@ api.add_resource(RegisterUserGroup,"/add/usergroup")
 api.add_resource(DeleteUserGroup,"/remove/usergroup")
 api.add_resource(CompanyGroup,"/company/group")
 api.add_resource(Users,"/users")
+api.add_resource(FetchActivity,"/fetch/activity")
+
 api.add_resource(SwitchCompany,"/switch/company")
 api.add_resource(RegisterUser,"/add/user")
 api.add_resource(SignUpCategory,"/signup")

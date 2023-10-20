@@ -45,6 +45,8 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom_spinner.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='timeline.css') }}">
+
 
 
   <style type="text/css" media="print">
@@ -199,6 +201,50 @@
     }
 
 
+
+/* .flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+} */
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* text-align: center; */
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* .flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+} */
+
+.flip-card.hovercard .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  /* background-color: #bbb;
+  color: black; */
+}
+
+.flip-card-back {
+  /* background-color: #2980b9;
+  color: white; */
+  transform: rotateY(180deg);
+}
 
     </style>
 
@@ -729,7 +775,7 @@
                 <i class="feather-18 text-black font-weight-bold" data-feather="bell"></i>
 
                 <!-- Counter - Alerts -->
-                <span class="badge badge-info badge-counter">{{unread_nots}}</span>
+                <span class="badge badge-info badge-counter"><span id="badge-counter">0</span></span>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -747,6 +793,18 @@
                     <span class="font-weight-bold">A new monthly report is ready for download</span>
                   </div>
                 </a> -->
+
+                <style>
+                  .status-indicator{
+                    position: absolute;
+                    top:14px !important;
+                    right:0 !important;
+                  }
+                </style>
+
+                <div id="notifications-panel">
+                  <span class="ml-3">loading notifications ...</span>
+                </div>
 
                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
               </div>
@@ -1083,7 +1141,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw kiota-col"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-info badge-counter">{{unread_nots}}</span>
+                <span class="badge badge-info badge-counter">0</span>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -1850,7 +1908,7 @@
 
               <!-- Area Chart -->
               <div id="performance-graph-area" class="col-lg-5">
-                <div class="card shadow mb-1 bg-white">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i>
@@ -1868,8 +1926,8 @@
                 </div>
             </div>
 
-            <div id="sms-graph-area" class="col-lg-4">
-                <div class="card shadow mb-1 bg-white">
+            <div id="sms-graph-area" class="col-lg-4 flip-card hovercard">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i> Sent sms: <span
@@ -1891,8 +1949,8 @@
                 </div>
             </div>
 
-            <div id="occupancy-pie-area" class="col-lg-3">
-                <div class="card shadow mb-1 bg-white">
+            <div id="occupancy-pie-area" class="col-lg-3 flip-card hovercard">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i> Occupancy: <span class="font-weight-bold font-italic hide">placeholder placeholder</span></div>
@@ -5632,6 +5690,51 @@ $(".proratecb").change(function (e) {
         }
       });
   });
+  </script>
+
+  <script>
+    var dashtimer = setInterval(function() {
+    $(".flip-card").toggleClass("hovercard")
+  },5000)
+
+
+  $('.flip-card').hover(function(ev){
+    clearInterval(dashtimer);
+  }, function(ev){
+    dashtimer = setInterval(function() {
+    $(".flip-card").toggleClass("hovercard")}, 5000);
+    });
+
+
+    function getActivities(){
+      $.ajax({
+              url: "/fetch/activity",
+              type: "get",
+              data: {},
+              success: function (response) {
+                $("#activity-panel").html(response[0])
+                $("#notifications-panel").html(response[1])
+                $("#badge-counter").text(response[2])
+
+                let old = localStorage.getItem('notification_counter')
+                // console.log("oooollld ",old)
+                // console.log("neeeeww ",response[2])
+
+                // console.log(typeof(old), " and ", typeof(response[2]))
+                // console.log("compareee ",old==response[2])
+                // console.log("deeeep comparee ",old===response[2])
+                if (old == response[2]){}else{
+                  audio_url = "../static/notification.mp3"
+                  const audio = new Audio(audio_url);
+                  audio.play();
+                }
+                localStorage.setItem('notification_counter',response[2]);
+                setTimeout(getActivities, 5000); //RECURSIVE FUNCTION CALL
+              }
+          });
+    }
+
+    getActivities(); //DISABLED FUNCTION CALL
   </script>
 
 

@@ -1116,6 +1116,30 @@ class Index(Resource):
                 name=current_user.name
             ))
 
+
+class FetchActivity(Resource):
+    @login_required
+    def get(self):
+        
+        activities = current_user.company.activities
+        unsorted_activities = []
+        for activity in activities:
+            unsorted_activities.append(activity)
+
+        r_sorted_activities  = sorted(unsorted_activities, key=lambda x: x.id, reverse = True)
+        sorted_activities = r_sorted_activities[:]
+
+        return [
+            render_template(
+            "activities.html",
+            relativedelta=relativedelta,
+            activities=sorted_activities),
+            render_template(
+            "notifications.html",
+            relativedelta=relativedelta,
+            activities=sorted_activities[:4]),
+            str(len(sorted_activities))
+        ]
 class PropData(Resource):
     @login_required
     def get(self):      
@@ -6280,6 +6304,8 @@ class AddTenant(Resource):
                 tenant_obj = TenantOp(name,phone,nat_id,email,float_arrears,"",apartment_id,created_by)
                 tenant_obj.save()
 
+
+
                 if house_num:
                     house_list = filter_out_occupied_houses(tenant_obj.apartment.name)
 
@@ -6304,6 +6330,7 @@ class AddTenant(Resource):
 
                     allocate_tenant_obj = AllocateTenantOp(apartment_id,house_id,tenant_id,checkin,checkout,created_by,description=None)
                     allocate_tenant_obj.save()
+                    create_activity(current_user,f"added tenant {name} to house: {house_num}")
                     TenantOp.update_status(tenant_obj,"Resident")
                     if bool_migrate:
                         TenantOp.update_residency(tenant_obj,"New")

@@ -656,6 +656,13 @@ class UserLoginDataOp(UserLoginData,Base):
                 "frequency":self.frequency
             }
 
+
+class ActivityOp(Activity,Base):
+    def __init__(self,activity,user_id,company_id):
+        self.activity_name=activity
+        self.user_id=user_id
+        self.company_id=company_id
+
 class OwnerOp(Owner,Base):
     """class"""
     def __init__(self,name,phone,email,uniquename,created_by):

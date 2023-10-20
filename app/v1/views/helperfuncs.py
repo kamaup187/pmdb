@@ -1229,12 +1229,20 @@ def update_login_history(location,user):
     if not todays_login:
         new_login = UserLoginDataOp(user.id)
         new_login.save()
+
+        create_activity(current_user,"logged in")
+
         title = f'{(new_login.logged_on + relativedelta(hours=3)).strftime("%d/%b")} logins'
         try:
             txt = f"{user.name} of {user.company.name} has logged in at {(new_login.logged_on + relativedelta(hours=3)).strftime('%H:%M %p')}"
             send_internal_email_notifications(title,txt)
         except:
             pass
+
+def create_activity(user,message):
+    activity_obj = ActivityOp(f'{user.name} has {message}',user.id,user.company_id)
+    activity_obj.save()
+
 
 def advanta_sms_delivery(apikey,partnerid,msgid):
     from app import create_app

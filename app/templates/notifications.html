@@ -1,0 +1,14 @@
+
+
+{%for a in activities%}
+<a class="dropdown-item d-flex align-items-center" href="#">
+    <div class="dropdown-list-image mr-3">
+        <!-- <i class="feather-18 pb-2 text-success" data-feather="star"></i> -->
+        <div class="status-indicator bg-success"></div>
+    </div>
+    <div class="font-weight-bold">
+        <div class="text-truncate small">{{a.activity_name}}.</div>
+        <div class="small text-gray-500">Posted · {{(a.date + relativedelta(hours=3)).strftime('%a, %d-%b-%y %H:%M %p')}}</div>
+    </div>
+  </a>
+  {%endfor%}

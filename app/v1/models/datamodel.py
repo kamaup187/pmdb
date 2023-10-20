@@ -68,6 +68,9 @@ class Company(db.Model):
     reps = db.relationship('SalesRep', backref='company',order_by='SalesRep.username', cascade="all, delete-orphan")
     leads = db.relationship('Lead', backref='company',order_by='Lead.name', cascade="all, delete-orphan")
 
+    activities = db.relationship('Activity', backref='company', order_by='Activity.id', cascade="all, delete-orphan")
+
+
     shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
     # houses = db.relationship('House', backref='company', order_by='House.name' ,cascade="all, delete-orphan")
@@ -158,6 +161,9 @@ class User(db.Model,UserMixin):
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
 
+    activities = db.relationship('Activity', backref='user', order_by='Activity.id', cascade="all, delete-orphan")
+
+
     owners = db.relationship('Owner', backref='user', cascade="all, delete-orphan")
 
     apartments = db.relationship("Apartment",secondary=apartment_table,backref=db.backref('users'))
@@ -187,6 +193,25 @@ class UserLoginData(db.Model):
     report_frequency = db.Column(db.Integer,default=0)
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+class Activity(db.Model):
+    """db model class"""
+
+    __tablename__ = 'activities'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    activity_name = db.Column(db.String)
+
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+
+
+
+    def __repr__(self):
+        return self.activity_name
     
 class AssignGroupRole(db.Model):#has no children of her own
     """db model class"""

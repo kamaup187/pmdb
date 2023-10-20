@@ -1564,6 +1564,8 @@ class EditBill(Resource):
 
                 total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
                 MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+                
+                create_activity(current_user,f"edited invoice no. {bill.id} of house: {bill.house.name} in {bill.apartment}")
 
                 # if bill.rent_balance:
 
@@ -3128,6 +3130,8 @@ class ReceivePayment(Resource):
         
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
+
+        create_activity(current_user,f"added payment no. {payment_obj.id} for house: {payment_obj.house.name} in {payment_obj.apartment}")
 
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)

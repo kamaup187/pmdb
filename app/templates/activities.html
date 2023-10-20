@@ -1,0 +1,7 @@
+
+{%for a in activities%}
+<li class="tm">
+  <div class="time">{{(a.date + relativedelta(hours=3)).strftime('%a, %d-%b-%y %H:%M %p')}}</div>
+  <p class="tm small">{{a.activity_name}}. 📌</p>
+</li>
+{%endfor%}

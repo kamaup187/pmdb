@@ -663,6 +663,9 @@ class ActivityOp(Activity,Base):
         self.user_id=user_id
         self.company_id=company_id
 
+    def fetch_all_activities():
+        return Activity.query.order_by(Activity.id.asc()).all()
+
 class OwnerOp(Owner,Base):
     """class"""
     def __init__(self,name,phone,email,uniquename,created_by):

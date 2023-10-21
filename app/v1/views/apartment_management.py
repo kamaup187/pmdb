@@ -1107,6 +1107,8 @@ class Index(Resource):
             return Response(render_template(
                 'adminindex.html',
                 username = "Admin",
+                cpwfavi = 'img',
+                cpw = "KiotaPay",
                 unread_num = unread_num,
                 unread_msgs = unread_messages,
                 chartstring="",
@@ -1120,8 +1122,12 @@ class Index(Resource):
 class FetchActivity(Resource):
     @login_required
     def get(self):
-        
-        activities = current_user.company.activities
+
+        if current_user.username == "admin":
+            activities = ActivityOp.fetch_all_activities()
+        else:
+            activities = current_user.company.activities
+            
         unsorted_activities = []
         for activity in activities:
             unsorted_activities.append(activity)

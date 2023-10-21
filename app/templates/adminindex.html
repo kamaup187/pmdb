@@ -40,11 +40,14 @@
 
 
   <!-- <link rel="stylesheet" href="../static/style.css"> -->
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink-uptodate2.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink-uptodate3.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='preloader-alt2.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='custom_spinner.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='timeline.css') }}">
+
+
 
 
   <style type="text/css" media="print">
@@ -185,8 +188,64 @@
 
     }
 
+    .prevent-select {
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+
+    .scrollable-150{
+      height: auto;
+      max-height: 150px;
+      overflow-x:hidden !important;
+      overflow-y: auto !important;
+    }
 
 
+
+/* .flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+} */
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* text-align: center; */
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* .flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+} */
+
+.flip-card.hovercard .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  /* background-color: #bbb;
+  color: black; */
+}
+
+.flip-card-back {
+  /* background-color: #2980b9;
+  color: white; */
+  transform: rotateY(180deg);
+}
 
     </style>
 
@@ -1562,7 +1621,7 @@
 
               <!-- Area Chart -->
               <div id="performance-graph-area" class="col-lg-5">
-                <div class="card shadow mb-1 bg-white">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i>
@@ -1580,8 +1639,8 @@
                 </div>
             </div>
 
-            <div id="sms-graph-area" class="col-lg-4">
-                <div class="card shadow mb-1 bg-white">
+            <div id="sms-graph-area" class="col-lg-4 flip-card hovercard">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i> Sent sms: <span
@@ -1603,8 +1662,8 @@
                 </div>
             </div>
 
-            <div id="occupancy-pie-area" class="col-lg-3">
-                <div class="card shadow mb-1 bg-white">
+            <div id="occupancy-pie-area" class="col-lg-3 flip-card hovercard">
+                <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <div class="m-0 text-black smallify targetprop title-loading"><i class="feather-16 pb-1" data-feather="bar-chart-2"></i> Occupancy: <span class="font-weight-bold font-italic hide">placeholder placeholder</span></div>
@@ -1659,7 +1718,10 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> {{cpw}} All Rights Reserved</p>
+            <p>Copyright &copy; <span id="copyright_date"></span> {{cpw}} All Rights Reserved</p>
+            <script>
+              document.getElementById("copyright_date").innerHTML = new Date().getFullYear()
+            </script>          
           </div>
         </div>
           <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -4592,6 +4654,51 @@ $("#closemodule").on('click',function(){
     $(this).addClass("dispnone")
     $("#mpesapayments").removeClass("dispnone")
     });
+</script>
+
+<script>
+  var dashtimer = setInterval(function() {
+  $(".flip-card").toggleClass("hovercard")
+},5000)
+
+
+$('.flip-card').hover(function(ev){
+  clearInterval(dashtimer);
+}, function(ev){
+  dashtimer = setInterval(function() {
+  $(".flip-card").toggleClass("hovercard")}, 5000);
+  });
+
+
+  function getActivities(){
+    $.ajax({
+            url: "/fetch/activity",
+            type: "get",
+            data: {},
+            success: function (response) {
+              $("#activity-panel").html(response[0])
+              $("#notifications-panel").html(response[1])
+              $("#badge-counter").text(response[2])
+
+              let old = localStorage.getItem('notification_counter')
+              // console.log("oooollld ",old)
+              // console.log("neeeeww ",response[2])
+
+              // console.log(typeof(old), " and ", typeof(response[2]))
+              // console.log("compareee ",old==response[2])
+              // console.log("deeeep comparee ",old===response[2])
+              if (old == response[2]){}else{
+                audio_url = "../static/notification.mp3"
+                const audio = new Audio(audio_url);
+                audio.play();
+              }
+              localStorage.setItem('notification_counter',response[2]);
+              setTimeout(getActivities, 5000); //RECURSIVE FUNCTION CALL
+            }
+        });
+  }
+
+  getActivities(); //DISABLED FUNCTION CALL
 </script>
 
 

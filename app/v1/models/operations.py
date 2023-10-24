@@ -4332,6 +4332,64 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'balance':MonthlyChargeOp.calculate_dbreakdown_no_dep(self),
         }
+    
+class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
+    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,invoice_id,created_by):
+        self.month = month
+        self.year=year
+        self.water=water
+        self.total_bill=total_amount
+        self.arrears = arrears
+        self.rent = rent
+        self.garbage=garbage
+        self.security=security
+        self.electricity = electricity
+        self.deposit = deposit
+        self.agreement = agreement
+        # not implemented at the moment
+        self.maintenance=maintenance
+        # self.miscellaneous=miscellaneous
+        self.penalty=penalty
+        # foreign keys
+        self.apartment_id=apartment_id
+        self.house_id=house_id
+        self.tenant_id=tenant_id
+        self.invoice_id=invoice_id
+        self.user_id = created_by
+
+    def update_dues(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.rent_due = rent
+        self.water_due = water
+        self.electricity_due =electricity
+        self.garbage_due = garbage
+        self.security_due = security
+        self.maintenance_due = service
+        self.penalty_due = penalty
+        self.deposit_due = deposit
+        self.agreement_due = agreement
+
+        self.updated = True
+
+        print("UPDATE DONE")
+
+        db.session.commit()
+
+    def update_balances(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
+        self.rent_balance = rent
+        self.water_balance = water
+        self.electricity_balance =electricity
+        self.garbage_balance = garbage
+        self.security_balance = security
+        self.maintenance_balance = service
+        self.penalty_balance = penalty
+        self.deposit_balance = deposit
+        self.agreement_balance = agreement
+
+        self.updated = True
+
+        print("UPDATE DONE")
+
+        db.session.commit()
 
 class PaymentScheduleOp(PaymentSchedule,Base):
     def __init__(self,name,arrears,amount,total,rbal,date,apartment_id,house_id,ptenant_id):
@@ -4420,64 +4478,6 @@ class PaymentScheduleOp(PaymentSchedule,Base):
             'paytype':self.paytype if self.paytype else "-",
             'paydate':PaymentScheduleOp.get_pay_date(self)
         }
-
-# class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
-#     def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,invoice_id,created_by):
-#         self.month = month
-#         self.year=year
-#         self.water=water
-#         self.total_bill=total_amount
-#         self.arrears = arrears
-#         self.rent = rent
-#         self.garbage=garbage
-#         self.security=security
-#         self.electricity = electricity
-#         self.deposit = deposit
-#         self.agreement = agreement
-#         # not implemented at the moment
-#         self.maintenance=maintenance
-#         # self.miscellaneous=miscellaneous
-#         self.penalty=penalty
-#         # foreign keys
-#         self.apartment_id=apartment_id
-#         self.house_id=house_id
-#         self.tenant_id=tenant_id
-#         self.invoice_id=invoice_id
-#         self.user_id = created_by
-
-#     def update_dues(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
-#         self.rent_due = rent
-#         self.water_due = water
-#         self.electricity_due =electricity
-#         self.garbage_due = garbage
-#         self.security_due = security
-#         self.maintenance_due = service
-#         self.penalty_due = penalty
-#         self.deposit_due = deposit
-#         self.agreement_due = agreement
-
-#         self.updated = True
-
-#         print("UPDATE DONE")
-
-#         db.session.commit()
-
-#     def update_balances(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
-#         self.rent_balance = rent
-#         self.water_balance = water
-#         self.electricity_balance =electricity
-#         self.garbage_balance = garbage
-#         self.security_balance = security
-#         self.maintenance_balance = service
-#         self.penalty_balance = penalty
-#         self.deposit_balance = deposit
-#         self.agreement_balance = agreement
-
-#         self.updated = True
-
-#         print("UPDATE DONE")
-
-#         db.session.commit()
 
 class LandlordSummaryOp(LandlordSummary,Base):
     def __init__(self,year,month,rent,water,garbage,security,electricity,deposit,bbf,total_amount,paid,bcf,apartment_id,house_id,tenant_id,created_by):

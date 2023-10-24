@@ -1949,7 +1949,7 @@
                 </div>
             </div>
 
-            <div id="occupancy-pie-area" class="col-lg-3 flip-card hovercard">
+            <div id="occupancy-pie-area" class="col-lg-3 flip-cardd hovercardd">
                 <div class="card shadow mb-1 bg-white h-100">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -5708,36 +5708,6 @@ $(".proratecb").change(function (e) {
     $(".flip-card").toggleClass("hovercard")}, 5000);
     });
 
-
-    function getActivities(){
-      $.ajax({
-              url: "/fetch/activity",
-              type: "get",
-              data: {},
-              success: function (response) {
-                $("#activity-panel").html(response[0])
-                $("#notifications-panel").html(response[1])
-                $("#badge-counter").text(response[2])
-
-                let old = localStorage.getItem('notification_counter')
-                // console.log("oooollld ",old)
-                // console.log("neeeeww ",response[2])
-
-                // console.log(typeof(old), " and ", typeof(response[2]))
-                // console.log("compareee ",old==response[2])
-                // console.log("deeeep comparee ",old===response[2])
-                if (old == response[2]){}else{
-                  audio_url = "../static/notification.mp3"
-                  const audio = new Audio(audio_url);
-                  audio.play();
-                }
-                localStorage.setItem('notification_counter',response[2]);
-                setTimeout(getActivities, 1800000); //RECURSIVE FUNCTION CALL
-              }
-          });
-    }
-
-    getActivities(); //DISABLED FUNCTION CALL
   </script>
 
 

@@ -8901,7 +8901,7 @@ class FetchPayments(Resource):
             year = period.year if period.month != 1 else period.year - 1
 
             filtered_payments = fetch_last_months_payments(month,year,payments)
-            print(">>>>>",payments)
+            # print(">>>>>",payments)
 
             detailed_payments_list = payment_details(filtered_payments)
 

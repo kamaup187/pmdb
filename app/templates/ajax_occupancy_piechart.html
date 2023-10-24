@@ -18,9 +18,13 @@
                     data-feather="bar-chart-2"></i> Current activity
                   </div>
 
+                  <div class="switchpie">
+                    <i class="feather-24 pb-1 text-black" data-feather="repeat"></i>
+                  </div>
+
               </div>
               <!-- Card Body -->
-              <div class="card-body ">
+              <div class="card-body add-skeleton-sms">
 
                 <div class="custom_card">
 
@@ -117,6 +121,12 @@
 </script>
 
 <script>
+
+
+
+
+
+
       function getActivities(){
       $.ajax({
               url: "/fetch/activity",
@@ -124,6 +134,11 @@
               data: {},
               success: function (response) {
                 $("#activity-panel").html(response[0])
+                $('.add-skeleton-sms').removeClass("title-loading");
+
+                $(".switchpie").html('<i class="feather-24 pb-1 text-black" data-feather="repeat"></i>')
+                feather.replace()
+
                 $("#notifications-panel").html(response[1])
                 $("#badge-counter").text(response[2])
 
@@ -144,6 +159,29 @@
               }
           });
     }
+
+
+  $(document).ready(function() {
+    $(".switchpie").on('click',function(){
+
+        $(this).html('<i class="fas fa-sync-alt fa-spin ml-2"></i>')
+        $('.add-skeleton-sms').addClass("title-loading");
+        
+        getActivities(); //DISABLED FUNCTION CALL
+
+
+        // $("#linegraph").toggleClass("dispnone");
+        // $("#piechart").toggleClass("dispnone");
+
+        // setTimeout(function(){
+        //   $('.add-skeleton-sms').removeClass("title-loading"),6000
+        // })
+
+
+      })
+
+      $(".switchpie")[0].click();
+    })
 
     getActivities(); //DISABLED FUNCTION CALL
 </script>

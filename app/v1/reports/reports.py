@@ -2959,6 +2959,7 @@ class GeneralRentStatement(Resource):
         if not selected_apartment:
 
             apartment_list = fetch_all_apartments_by_user(current_user)
+            apartment_list.append("All")
 
             if target == "unpaid":
                 target = "unpaid"
@@ -2991,8 +2992,14 @@ class GeneralRentStatement(Resource):
 
             end = parse(timestring)
 
-        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        if selected_apartment == "All":
+            props = fetch_all_apartments_by_user(current_user)
+            return "Work in progress"
+        # else:
+        #     apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
 
+        
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         ##################################################################################################
         house_ids = []
         detailed_bills = []

@@ -2994,7 +2994,7 @@ class GeneralRentStatement(Resource):
 
         if selected_apartment == "All":
             props = fetch_all_apartments_by_user(current_user)
-            return "Work in progress"
+            return "    Work in progress"
         # else:
         #     apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
 

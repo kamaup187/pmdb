@@ -1193,13 +1193,14 @@ class PropSearchData(Resource):
         props = fetch_all_apartments_by_user(current_user)
 
         raw_tenancy = [tenantauto(prop.id) for prop in props]
-        raw_units = [prop.houses for prop in props]
+        # raw_units = [prop.houses for prop in props]
         raw_residents = [prop.ptenants for prop in props]
    
         ############################################################
         tenancy = flatten(raw_tenancy)
         residents = flatten(raw_residents)
-        houses = flatten(raw_units)
+        # houses = flatten(raw_units)
+        houses = []
 
 
         suggestions = generate_suggestions_alt(props,houses,tenancy,residents)

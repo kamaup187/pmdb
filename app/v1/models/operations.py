@@ -4018,7 +4018,29 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                     return 0.0
             return 0.0
         return 0.0
+    
+    def get_house(self):
+        hh = self.house
 
+        if self.tenant:
+            tt = self.tenant
+        else:
+            tt = self.house.owner
+
+        t_current_house = None
+
+        house_alloc_objs = tt.house_allocated
+        if house_alloc_objs:
+            for house_alloc in house_alloc_objs:
+                if house_alloc.active:
+                    t_current_house = house_alloc.house
+        if t_current_house:
+            if t_current_house.name == hh.name:
+                return hh.name
+            else:
+                return f"{t_current_house.name}-(formerly {hh.name})"
+        return f"{hh.name}(Vacated)"
+            
     def view_detail(self):
         
         return {
@@ -4041,7 +4063,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'hsetenant':MonthlyChargeOp.combine_house_tenant(self),
             'hst':MonthlyChargeOp.combine_house_tenant_alt(self),
             'idno':self.tenant.national_id if self.tenant else "-",
-            'house':self.house,
+            'house':MonthlyChargeOp.get_house(self),
             'desc':self.house.description,
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),

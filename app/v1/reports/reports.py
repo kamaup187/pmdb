@@ -2953,16 +2953,24 @@ class GeneralRentStatement(Resource):
         datatype = request.args.get("datatype")
         itemtype = request.args.get('itemtype')
 
+        target = request.args.get('target')
+
 
         if not selected_apartment:
 
             apartment_list = fetch_all_apartments_by_user(current_user)
+
+            if target == "unpaid":
+                target = "unpaid"
+            else:
+                target = "all"
 
             return Response(render_template(
                 'report_general_rent_statement.html',
                 tenantlist=[],
                 prop_obj=None,
                 props=apartment_list,
+                target = target,
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
                 co=current_user.company,
@@ -3021,7 +3029,7 @@ class GeneralRentStatement(Resource):
 
         date_visibility = "" if len(month_range) > 1 else "dispnone"
 
-        print("let me see your work ", date_visibility)
+        # print("let me see your work ", date_visibility)
 
         if datatype == "invdate":
 

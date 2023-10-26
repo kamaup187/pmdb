@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<span class="dispnone" id="target-report">{{target}}</span>
+
 
 <button id="btnDownload" class="btn btn-success btn-sm dispnone">
   <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
@@ -40,7 +42,7 @@
                       <div class="col-lg-2 form-group mb-2 pl-lg-5">
                         <label class="mb-0">Select type:</label>
                         <select name="reporttype" class="select-css" id="reporttype">
-                          <option slected value="all invoices">All invoices</option>
+                          <option selected value="all invoices">All invoices</option>
                           <option value="paid invoices">Paid invoices</option>
                           <option value="unpaid invoices">Unpaid invoices</option>
                           <option value="vacant units">Vacant units</option>
@@ -51,7 +53,7 @@
                       <div class="col-lg-2 form-group mb-2 pl-lg-5">
                         <label class="mb-0">Select item:</label>
                         <select name="reporttype" class="select-css" id="itemtype">
-                          <option slected value="all items">All items</option>
+                          <option selected value="all items">All items</option>
                           <option value="deposit item">Deposit</option>
                           <option value="rent item">Rent only</option>
                           <option value="rent service item">Rent & Service</option>
@@ -238,6 +240,11 @@
 
 
 <script>
+
+  if($("#target-report").text() == "unpaid"){
+    $("#reporttype option:eq('2')").attr("selected", "selected");
+  }
+
   $("#view_general").click(function () {
 
     console.log("weeeeeeweeewee",$("#prop").val())

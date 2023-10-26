@@ -1366,37 +1366,6 @@
               <button id="closemodule" class="btn borderless"><div class="x-large xbutton"><i class="fas fa-times"></i></div></button>
             </div>
             <div class="center-btn">Select Apartment</div>
-            <div class="row">
-              <div class="col-xl-12 col-md-12 mb-1">
-                  <div class="card shadow h-0 py-0">
-                      <div class="card-body bg-white titanic-iceberg-top">
-                          <div class="row no-gutters align-items-cente divbg">
-                            
-            
-            
-                              {% if props %}
-                                
-                                {% for prop in props%}                   
-            
-                                  <div class="image-wrap">
-                                    <button id="{{prop.id}}" class="btn btn-outline-success  borderles mb-2 fixed-width-prop no-margin divcol">
-                                      <img class="img-prop text-xs" src="{{ prop.image_url }}" alt="--no image--"/>
-                                      <!-- <span class="small  text-ss">{{prop.name}}</span> -->
-                                      <span class="small desktop-malaysia"><h6 class="text-black ln-14 font-weight-bold titanic-iceberg sss">{{prop.name}}</h6></span>
-                                      <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
-                                    </button>
-                                  </div>
-            
-                                {% endfor %}
-            
-                              {% endif %}
-            
-                          </div>
-            
-                      </div>
-                  </div>
-              </div>
-            </div>
           </div>
 
 
@@ -1629,7 +1598,9 @@
                             <div class="d-inline-block ml-2 dot-elastic"></div>
                             <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
-                          <div class="nonpaybtn text-gray-300">unpaid invoices</div>
+                          <div class="nonpaybtnn text-gray-300">
+                            <a href="/generalrent/statement?target=unpaid" class="text-black" target="_blank">unpaid invoices</a>
+                            </div>
                         </div>
                     </div>
                     </div>

@@ -282,9 +282,15 @@ class ViewReceipt(Resource):
                     "tel":"0735267087",
                     "email":"bizlineinvestment@gmail.com"
                 }
+        auth = os.getenv("TARGET") or TARGET
+        if auth == "lasshouse":
+            template = "user_receipt_inva.html"
+        else:
+            template = "user_receipt.html"
+
 
         return Response(render_template(
-            'user_receipt.html',
+            template,
             voided = "dispnone",
             tenant = tenant.name,
             house= payment_obj.house,

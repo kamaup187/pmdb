@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Receipt</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico/site.webmanifest">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='myfonts.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='kiotapay.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='receipt.css') }}">
+
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div class="mb-2 hide center-btn">
+    Official receipt
+  </div>
+  <div id="invoice">
+    <div id="invoice-POS">
+
+      <div class="r-border">
+        <div class="center-btn svg underline">
+          <div class="svg-child">
+            <div class="logo">
+              <span><img src={{logopath}} alt="logo"></span>
+            </div>
+            <!-- <div class="info text-black"> 
+              <span>{{company}}</span>
+            </div> -->
+
+            <div class="center-btn"><strong class="text-black">~ {{prop.name.title()}} ~</strong></div>
+
+            {%if not address%}
+            <div class="center-btn mb-3 ln-10 text-black"> 
+              <div class="small mt-2">Address : {{company.street_address}}</div>
+              <div class="small">PO BOX : {{company.mail_box}}</div>
+              <div class="small">Tel : {{company.phone}}</div>
+              <div class="small">Email: {{company.email}}</div>
+            </div>
+            {% endif %}
+
+            {%if address%}
+            <div class="center-btn mb-3 ln-10 text-black"> 
+              <div class="small mt-2">Address : {{address.address}}</div>
+              <div class="small">Tel : {{address.tel}}</div>
+              <div class="small">Email: {{address.email}}</div>
+            </div>
+            {% endif%}
+              
+          </div>
+        </div>
+      
+        <div class="svg">
+          <div class="svg-child text-left">
+            <div class="row">
+              <span class="col-6 small">Date: <strong class="text-black font-weight-bold">{{paydate}}</strong></span>
+              <span class="col-6 small text-right">Time: <strong class="text-black font-weight-bold pr-3">{{paytime}}</strong></span>
+            </div>
+            <div class="center-btn underline font-weight-bold text-primary">
+                OFFICIAL PAYMENT RECEIPT
+            </div>
+        
+            <span class="{{voided}} watermark">VOIDED</span>
+
+            <div class="row small">
+                <span class="col-6 text-black">Receipt No. <strong class="text-danger font-weight-bold">{{receiptno}}</strong></span>
+                <span class="col-6 text-right text-black">Ref: <span class="text-info font-weight-bold pr-3">{{refnum}}</span></span>
+            </div>
+            <span class="text-gray-600 small mb-1">Received from:</span><br>
+            <div class="underline no-padding center-btn">
+              <div class="ln-10 text-black pb-1">{{tenant}}</div>
+            </div>
+          </div>
+        </div>
+  
+  
+    
+        <div class="svg underline">
+          <div class="svg-child text-left">
+            <div class="row service mb-1 pb-1">
+              <div class="col-8 itemtext text-black font-weight-bold mt-2"><div class="text-gray-500 center-btn mb-1">(words)</div> {{str_amount}} shillings only.</div>
+              <div class="col-4 itemtext text-black font-weight-bold mt-2 border-left-semidark"><div class="text-gray-500 mb-1">(figures)</div> {{amount}}</div>
+            </div> 
+            <div class="row service mb-1 pb-1">
+              <span class="col-8 itemtext mt-0"><div class="text-gray-500 center-btn">Flat/Apartment/Estate:</div><div class="text-black">{{prop}}</div></span>
+              <span class="col-4 itemtext mt-0 border-left-semidark"><div class="text-gray-500">House</div> <div class="text-black">{{house}}</div></span>
+            </div>
+            <div class="service mb-1 pb-1 itemtext center-btn">Being payment for the month of <strong class="text-black font-weight-bold">{{str_month}}</strong></div>       
+            <div class="service mb-1 pb-1 itemtext center-btn">Paid for; <strong>{{chargetype}}</strong></div>
+          </div>
+        </div>
+  
+        <div class="svg">
+          <div class="svg-child">
+
+            <div class="row service mb-1 pb-1">
+              <div class="col-6 itemtext text-black font-weight-bold mt-2 pl-5">Amount due</div>
+              <div class="col-6 itemtext text-black font-weight-bold mt-2 border-left-semidark text-right pr-5">Kes {{bill}}</div>
+            </div> 
+
+            <div class="row service mb-1 pb-1">
+              <div class="col-6 itemtext text-info font-weight-bold mt-2 pl-5">Paid</div>
+              <div class="col-6 itemtext text-info font-weight-bold mt-2 border-left-semidark text-right pr-5">{{amount}}</div>
+            </div> 
+
+            <div class="row service mb-1 pb-1">
+              <div class="col-6 itemtext {{outline}} font-weight-bold mt-2 pl-5">{{baltitle}}</div>
+              <div class="col-6 itemtext {{outline}} font-weight-bold mt-2 border-left-semidark text-right pr-5">{{balance}}</div>
+            </div> 
+
+          </div>
+        </div>
+  
+        <div class="svg">
+          <div class="small service mb-1 pb-1 svg-child">
+              <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
+              <div class="center-btn"><strong class="small">{{prop.name.title()}}</strong>.</div>
+              <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
+          </div>
+        </div>
+  
+      </div>
+      </div>
+
+  </div>
+
+  <a id="downbtn" href="/download/receipt/{{randid}}" class="dispnone">download</a>
+
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+
+  <!-- <script type="text/javascript">
+      $(window).on('load', function() {
+        $("#downbtn")[0].click();
+      })
+    // $(document).ready(function () {
+    //   $("#downbtn")[0].click();
+    // });
+  </script> -->
+
+
+</body>

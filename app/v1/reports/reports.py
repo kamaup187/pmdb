@@ -2087,7 +2087,14 @@ class CombinedReport(Resource):
 
         for vac in vacants:
             if vac.name in availables:
-                continue
+                house_alloc_objs = vac.tenant_allocated
+                if house_alloc_objs:
+                    for house_alloc in house_alloc_objs:
+                        if house_alloc.active:
+                            continue
+
+
+                # continue
             new_item = {
                 "id":"",
                 "editid":"",

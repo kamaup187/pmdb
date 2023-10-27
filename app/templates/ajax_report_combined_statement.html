@@ -1,5 +1,6 @@
 
 <span id="edit_bill_identifier" class="dispnone"></span>
+<span id="del_bill_identifier" class="dispnone"></span>
 <span id="unique_bill_identifier" class="dispnone"></span>
 <!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
 <span id="filename" class="dispnone">{{prop}} {{timeline}} combined statement.pdf</span>
@@ -113,7 +114,7 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-center btn-outline-primary text-black {{bill['delid']}}" data-toggle="modal" data-target="#discardBillModal">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
 
@@ -445,6 +446,30 @@
 </div>
 
 
+<div class="modal fade center-btn" id="discardBillModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+      </div>
+      <div class="text-info payment-info"></div>
+
+      <!-- of <span id="invhouse"> loading...</span> -->
+
+      <div id="confirmation" class="dispnone">
+        <div class="modal-body text-danger">Confirm delete invoice</div>
+        <span class="text-gray-700 small mb-2 mr-2 ml-2">This action cannot be <span class="text-danger">REVERSED</span> Continue?</span>
+      </div>
+
+      <div class="has-margin-bottom divbg mt-2">
+          <button id="delete_payment" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+          <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
   var rawIds = "{{ billids|safe }}";
   var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
@@ -671,8 +696,55 @@
   });
   $('.dataTables_length').addClass('bs-select');
 
+
 </script>
 
+<script>
+  $("#discardBillModal").on('shown.bs.modal', function(){
+    $("#confirmation").removeClass("dispnone");
+    $(".payment-info").empty();
+  });
+
+</script>
+
+<script>
+    
+  $("#delete_payment").on('click',function(){   
+    
+    $('#delete_payment').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...');
+    $("#invhouse").text($(this).text())
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            billid:$("#del_bill_identifier").text(),
+            target:"bill discard"
+          },
+      success: function(response) {
+        $(".closemodal").click();
+        $(".payment-info").html("<span class='text-success'>Bill deleted successfully</span>");  
+        $('#delete_payment').html('Discard !');
+        $("#invhouse").text("loading ...")
+
+        $(".modal-backdrop").remove();
+        $("#view_general").click();
+
+        // getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
+        
+      },
+      error: function(xhr) {
+        $("#confirmation").addClass("dispnone");
+        $('#delete_payment').html('Discard !');
+        $("#invhouse").text("loading ...")
+
+        $(".payment-info").html('<span class="text-danger font-weight-bold">Error deleting the bill');
+        }
+    });
+  });
+  
+  </script>
 
 
 

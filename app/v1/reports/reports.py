@@ -2087,6 +2087,9 @@ class CombinedReport(Resource):
 
         for vac in vacants:
             if vac.name in availables:
+
+                # latest_bill = max(vac.monthlybills, key=lambda x: x.id)
+
                 house_alloc_objs = vac.tenant_allocated
                 if house_alloc_objs:
                     for house_alloc in house_alloc_objs:
@@ -2098,6 +2101,7 @@ class CombinedReport(Resource):
             new_item = {
                 "id":"",
                 "editid":"",
+                "delid":"",
                 "depositpaid":0.0,
                 "depositdue":0.0,
                 'house':vac.name,

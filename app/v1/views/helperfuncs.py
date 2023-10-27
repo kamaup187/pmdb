@@ -14083,6 +14083,9 @@ def get_unique_bill_ids(arr):
             delid = req["id"]
             if delid:
                 obj_id_list.append(delid)
+            ddelid = req["delid"]
+            if ddelid:
+                obj_id_list.append(ddelid)
 
     if not obj_id_list:
         obj_id_list.append("empty")

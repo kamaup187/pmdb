@@ -251,18 +251,23 @@ def afrinet_send_sms(txt,tel,apikey,partnerid,shortcode):
 
 def inva_send_sms(text,tel):
 
-    url = "https://vas.bulk.ke/api/PushSMS"
+    url = 'https://api.bulk.ke/sms/sendsms'
 
-    payload = {
-        "username": "invap_api",
-        "password": "kX3RXvn5xCdePhKos4ZHYmpdiyXhLqVm",
-        "shortcode": "INVA_PAY",
+    headers = {
+        'h_api_key': '2e0d1d50d2af82c3c32f3316cd2395693d6231a1cdda323232dec8a84ce83432',
+        'Content-Type': 'application/json'
+    }
+
+    data = {
         "mobile": tel,
+        "response_type": "json",
+        "sender_name": "INVA_PAY",
+        "service_id": 0,
         "message": text
     }
 
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=data, headers=headers)
         print("ADVANTA sms sending successful")
     except Exception as e:
         response = ""
@@ -270,13 +275,16 @@ def inva_send_sms(text,tel):
 
     try:
         print(response.json())
-        msgid = response.json()['referenceid']
+        msgid = response.json()[0]['message_id']
         print("ADVANTA sms response success")
     except Exception as e:
         print("ADVANTA sms response error",e)
         msgid = ""
 
+    # import pdb; pdb.set_trace()
+
     if msgid:
+        print("msgid available: " + str(msgid))
         respdict = {
         "apikey":"",
         "partnerID":"",
@@ -284,8 +292,10 @@ def inva_send_sms(text,tel):
         }
     else:
         respdict = None
+        print("msgid not available")
 
     return respdict
+
 
 
 def africastalking_send_sms(message,recipient,sender):

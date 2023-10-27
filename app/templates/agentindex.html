@@ -1585,23 +1585,35 @@
             <div class="col-xl-3 col-md-6 mb-1 ">
                 <div class="card border-left-dark shadow-alt h-100 py-2 card-b {{card_theme}}">
                     <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-1 pr-1 border-right-warning">
-                        <div class="title-loading bal-sloader text-xs font-weight-bold text-white text-uppercase mb-1">Balance</div>
-                        <div class="title-loading bal-sloader h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
-                          Kes <div class="d-inline-block ml-2 dot-elastic"></div>
-                          <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
+                    <div class="row">
+                        <div class="col-6 border-right-warning">
+                          <a href="/generalrent/statement?target=unpaid&item=rent" class="text-black" target="_blank">
+                          <div class="title-loading bal-sloader text-xs font-weight-bold text-white text-uppercase mb-1">Rent Balance (<span class="text-warning" id="balancestats2"></span> unpaid)</div>
+                          <div class="title-loading bal-sloader h5 mb-0 font-weight-bold text-warning addloader" id="balancestats">
+                            Kes <div class="d-inline-block ml-2 dot-elastic"></div>
+                            <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
+                          </div>
+                          </a>
                         </div>
+                        <div class="col-6">
+                          <a href="/generalrent/statement?target=unpaid&item=deposit" class="text-black" target="_blank">
+                          <div class="title-loading bal-sloader text-xs font-weight-bold text-white text-uppercase mb-1">Deposit Balance (<span class="text-warning" id="depbalancestats2"></span> unpaid)</div>
+                          <div class="title-loading bal-sloader h5 mb-0 font-weight-bold text-warning addloader" id="depbalancestats">
+                            Kes <div class="d-inline-block ml-2 dot-elastic"></div>
+                            <!-- Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span> -->
+                          </div>
+                          </a>
                         </div>
-                        <div class="balancebtn col-auto border-left-warnin">
+                        
+                        <!-- <div class="balancebtnn col-6 border-left-warnin">
                           <span class="text-gray-300"><span class="text-xx text-warning ln-10 addloader-alt" id="balancestats2">
                             <div class="d-inline-block ml-2 dot-elastic"></div>
-                            <!-- <div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div> -->
                           </span></span>
                           <div class="nonpaybtnn text-gray-300">
                             <a href="/generalrent/statement?target=unpaid" class="text-black" target="_blank">unpaid invoices</a>
                             </div>
-                        </div>
+                        </div> -->
+
                     </div>
                     </div>
                 </div>
@@ -4259,6 +4271,9 @@ function badSnack() {
         success: function(data) {
             $('#balancestats').text(data[0]);
             $('#balancestats2').text(data[1]);
+
+            $('#depbalancestats').text(data[2]);
+            $('#depbalancestats2').text(data[3]);
             $(".bal-sloader").removeClass("title-loading")
         },
     });

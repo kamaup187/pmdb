@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<span class="dispnone" id="target-report">{{target}}</span>
+<span class="dispnone" id="target-report">{{rtarget}}</span>
 
 
 <button id="btnDownload" class="btn btn-success btn-sm dispnone">
@@ -241,7 +241,11 @@
 
 <script>
 
-  if($("#target-report").text() == "unpaid"){
+  if($("#target-report").text() == "unpaid rent"){
+    $("#reporttype option:eq('2')").attr("selected", "selected");
+    $("#itemtype option:eq('2')").attr("selected", "selected");
+  }else if ($("#target-report").text() == "unpaid deposit"){
+    $("#itemtype option:eq('1')").attr("selected", "selected");
     $("#reporttype option:eq('2')").attr("selected", "selected");
   }
 

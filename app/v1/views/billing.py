@@ -1310,13 +1310,16 @@ class EditBill(Resource):
                         for schedule in bill.house.schedules:
                             PaymentScheduleOp.delete(schedule)
 
+                    create_activity(current_user,f"deleted invoice no. {bill.id} of house: {bill.house.name} in {bill.apartment}")
                     MonthlyChargeOp.delete(bill)
+
                 else:
 
                     if bill.house.schedules:
                         for schedule in bill.house.schedules:
                             PaymentScheduleOp.delete(schedule)
 
+                    create_activity(current_user,f"deleted invoice no. {bill.id} of house: {bill.house.name} in {bill.apartment}")
                     MonthlyChargeOp.delete(bill)
 
 

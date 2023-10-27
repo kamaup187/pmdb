@@ -2113,6 +2113,9 @@ class Dashboard(Resource):
             total_balances = 0
             defaulters = 0
 
+            deptotal_balances = 0
+            depdefaulters = 0
+
             # props = run_props(prop,current_user)
 
             if request.args.get("admin") == "admin":
@@ -2123,10 +2126,18 @@ class Dashboard(Resource):
                 monthly_bills = apartment.monthlybills
                 for item in monthly_bills:
                     if item.month == period.month and item.year == period.year:
-                        total_balances += item.balance if item.balance > 0 else 0
+                        total_balances += item.rent_due if item.rent_due > 0 else 0
 
                         # if not item.paid_amount:
-                        defaulters += 1 if item.balance > 1 else 0
+                        if item.rent_due:
+                            defaulters += 1 if item.rent_due > 1 else 0
+
+                        if item.tenant:
+                            if item.tenant.deposits:
+                                deptotal_balances += item.tenant.deposits.balance if item.tenant.deposits.balance > 0 else 0.0
+
+                                if item.tenant.deposits.balance:
+                                    depdefaulters += 1 if item.tenant.deposits.balance > 1 else 0
 
             if datetime.datetime.now().day < 6:
                 defaulters = "--"
@@ -2136,7 +2147,7 @@ class Dashboard(Resource):
             if current_user.company_user_group.name == "Field":
                 return ["N/A",'-']
 
-            return [f'Kes {total_balances:,.1f}',f'{defaulters}']
+            return [f'Kes {total_balances:,.1f}',f'{defaulters}',f'Kes {deptotal_balances:,.1f}',f'{depdefaulters}']
 
         if target == "propstats":
             return len(props)

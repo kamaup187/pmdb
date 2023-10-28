@@ -4225,6 +4225,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance-no-star':f"{self.balance:,.1f}",
             'balance-rent-dep-serv':MonthlyChargeOp.calculate_total_alt(self.rent_due,self.deposit_due,self.maintenance_due),
+            'prop':self.apartment.name
 
         }
 

@@ -245,17 +245,27 @@
     $("#reporttype option:eq('2')").attr("selected", "selected");
     $("#itemtype option:eq('2')").attr("selected", "selected");
     $('#prop option:last').attr("selected", "selected");
-  }else if ($("#target-report").text() == "unpaid deposit"){
-    $("#itemtype option:eq('1')").attr("selected", "selected");
-    $("#reporttype option:eq('2')").attr("selected", "selected");
-    $('#prop option:last').attr("selected", "selected");
-  }
 
     $(document).ready(function() {
       setTimeout(function(){
         $("#view_general").click()
         ,1000});
     });
+
+
+  }else if ($("#target-report").text() == "unpaid deposit"){
+    $("#itemtype option:eq('1')").attr("selected", "selected");
+    $("#reporttype option:eq('2')").attr("selected", "selected");
+    $('#prop option:last').attr("selected", "selected");
+
+    $(document).ready(function() {
+      setTimeout(function(){
+        $("#view_general").click()
+        ,1000});
+    });
+
+  }
+
 
   $("#view_general").click(function () {
 

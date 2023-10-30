@@ -244,14 +244,20 @@
   if($("#target-report").text() == "unpaid rent"){
     $("#reporttype option:eq('2')").attr("selected", "selected");
     $("#itemtype option:eq('2')").attr("selected", "selected");
+    $('#prop option:last').attr("selected", "selected");
   }else if ($("#target-report").text() == "unpaid deposit"){
     $("#itemtype option:eq('1')").attr("selected", "selected");
     $("#reporttype option:eq('2')").attr("selected", "selected");
+    $('#prop option:last').attr("selected", "selected");
   }
 
-  $("#view_general").click(function () {
+    $(document).ready(function() {
+      setTimeout(function(){
+        $("#view_general").click()
+        ,1000});
+    });
 
-    console.log("weeeeeeweeewee",$("#prop").val())
+  $("#view_general").click(function () {
 
     if ($("#prop").val() == "" || $("#prop").val() == null) {
       alert("Please select property and date!")

@@ -4028,8 +4028,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             tt = self.house.owner
 
         t_current_house = None
-
-        house_alloc_objs = tt.house_allocated
+        try:
+            house_alloc_objs = tt.house_allocated
+        except:
+            return self.house.name
+        
         if house_alloc_objs:
             for house_alloc in house_alloc_objs:
                 if house_alloc.active:

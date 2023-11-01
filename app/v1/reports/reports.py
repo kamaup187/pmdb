@@ -3011,7 +3011,7 @@ class GeneralRentStatement(Resource):
             props = fetch_all_apartments_by_user(current_user)
         else:
             apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
-            props [apartment_obj]
+            props = [apartment_obj]
 
         
         apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)

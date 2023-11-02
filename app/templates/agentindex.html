@@ -4112,7 +4112,6 @@ function animateHH(element) {
       let propvar = $("#select_prop").val();
 
       localStorage.setItem('propvar',propvar);
-
       // $(".addloader").html('Kshs <span class="spinner-border spinner-border-sm ml-2 text-white vertical-align-middle" role="status" aria-hidden="true"></span>')
       // $(".fixloader").html('<span class="spinner-border spinner-border-sm ml-2 text-warning vertical-align-middle" role="status" aria-hidden="true"></span>')
       // $(".addloader-alt").html('<div class="fountainG-small d-inline mr-1"><div class="fountainG_1s fountainG-s"></div><div class="fountainG_2s fountainG-s"></div><div class="fountainG_3s fountainG-s"></div></div>')
@@ -4480,23 +4479,27 @@ function badSnack() {
 
     }
 
-  getCurrentProp()
-  getExpectedStats()
-  getCollectionStats()
-  getBalanceStats()
-  getPropStats()
-  getHouseStats()
-  getPTenantStats()
-  getTenantStats()
-  getVacantStats()
+    var propvar = localStorage.getItem('propvar')
+    if (propvar == "All properties"){
+      localStorage.clear();
+    }else{}
 
-  // getGraphStats()
-  getPerformanceGraph()
-  getSmsGraph()
-  getOccupancyPie()
+    getCurrentProp()
+    getExpectedStats()
+    getCollectionStats()
+    getBalanceStats()
+    getPropStats()
+    getHouseStats()
+    getPTenantStats()
+    getTenantStats()
+    getVacantStats()
 
+    // getGraphStats()
+    getPerformanceGraph()
+    getSmsGraph()
+    getOccupancyPie()
 
-  getWalletBalance()
+    getWalletBalance()
 
 </script>
 

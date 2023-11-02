@@ -1935,7 +1935,7 @@ class Dashboard(Resource):
             if current_user.company_user_group.name == "Field":
                 collection_string = "0"
                 bill_string = "0"
-                
+   
             return Response(render_template(
                 'ajax_performance_graph.html',
                 targetprop = prop,

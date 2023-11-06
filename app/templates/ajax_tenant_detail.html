@@ -402,6 +402,18 @@
                     <form autocomplete="off" method="POST" action="">
 
                       <div id="clearance_notifications"></div>
+
+                      <div id="tenant_vacate_type" class="fancy-checkbox-group form-control mb-2 divjust">
+                        <div>
+                          <input type="radio" id="immediate-type" name="vacatetype" value="immediate" checked/>
+                          <label for="immediate-type">Immediate vacate</label>
+                        </div>
+
+                        <div>
+                          <input type="radio" id="planned-type" name="vacatetype" value="planned" disabled/>
+                          <label for="planned-type">Planned vacate</label>
+                        </div>   
+                      </div>
                    
                       <div class="divbg center-btn">
                         <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>

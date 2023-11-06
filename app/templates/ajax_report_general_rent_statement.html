@@ -3,10 +3,9 @@
     size:landscape;
   } */
   body {
-    zoom: 80%;
+    zoom: 78%;
   }
 </style>
-
 <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
 <span id="urlpattern" class="dispnone">/rent/statement</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
@@ -96,12 +95,17 @@
             <img class="" src="{{letterhead}}" alt="--no image--"/>
           </div> -->
 
-                    
+          {%if prop%}
+          <span class="mr-1 text-black">PROPERTY: {{prop}}</span>
+          {%endif%}
+ 
           <div class="table-responsive">
             <table class="table" id="dataTable" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
+                      {%if not prop%}
                       <th class="">PROP</th>
+                      {%endif%}
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
                       <th class="header-right">BB/F</th>
@@ -116,7 +120,9 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
+                      {%if not prop%}
                       <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                      {%endif%}
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
@@ -131,7 +137,10 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                      {%if not prop%}
+                      <td class="font-weight-bold"></td>
+                      {%endif%}
+                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
@@ -300,11 +309,17 @@
           </div>
           {%endif%} -->
 
+          {%if prop%}
+          <span class="mr-1 text-black">PROPERTY: {{prop}}</span>
+          {%endif%}
+
           <div class="table-responsive">
             <table class="table" id="data-table" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
+                  {%if not prop%}
                   <th class="">PROP</th>
+                  {%endif%}
                   <th class="">PNO</th>
                   <th class="">TENANT NAME</th>
                   <th class="header-right">BB/F</th>
@@ -318,7 +333,9 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
+                  {%if not prop%}
                   <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                  {%endif%}
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
@@ -333,7 +350,10 @@
               </tbody>
               <tfoot class="custom-footer-alt">
                 <tr>
-                  <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                  {%if not prop%}
+                  <td class="font-weight-bold"></td>
+                  {%endif%}
+                  <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>

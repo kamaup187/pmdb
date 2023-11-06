@@ -3009,12 +3009,14 @@ class GeneralRentStatement(Resource):
 
         if selected_apartment == "All":
             props = fetch_all_apartments_by_user(current_user)
+            prop = ""
         else:
             apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
             props = [apartment_obj]
+            prop = selected_apartment
 
         
-        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        # apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         ##################################################################################################
         house_ids = []
         detailed_bills = []
@@ -3102,6 +3104,7 @@ class GeneralRentStatement(Resource):
                         else:pass
             # [print(e.month, e.year) for e in sifted_bills]
             template = "ajax_report_general_statement.html"
+
             # count = 0
             for bill in sifted_bills:
                 # if count < 17:
@@ -3235,9 +3238,12 @@ class GeneralRentStatement(Resource):
         except:
             ratio = f"0.0 %"
 
+
+        print("templatoooooooooo",template)
+
         return Response(render_template(
             template,
-            prop=selected_apartment,
+            prop=prop,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,
             tenantlist=[],

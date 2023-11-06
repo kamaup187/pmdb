@@ -646,6 +646,48 @@
             <i id = "hamlg"class="fa fa-bars"></i>
           </button> -->
           <!-- Topbar Search -->
+
+          <li class="nav-item dropdown no-caret d-none d-md-block me-3">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownDocs" href="javascript:void(0);" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="text-black"><i class="fas fa-search fa-fw text-black mr-2"></i><span class="text-black">Search by</span></div>
+                <!-- <i class="fas fa-chevron-right dropdown-arrow"></i> -->
+            </a>
+            <div style="min-width: 240px;" class="dropdown-menu dropdown-menu-end py-0 me-sm-n15 me-lg-0 o-hidden animated--fade-in-up"
+                aria-labelledby="navbarDropdownDocs">
+
+                <a class="dropdown-item py-1" id="search_by_name" href="#">
+                  <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="disc"></i></div>
+                  <div>
+                      <div class="small text-gray-500">Search by tenant name</div>
+                      <div class="text-black font-weight-bold">Tenant name</div>
+                  </div>
+              </a>
+
+                <div class="dropdown-divider m-0"></div>
+
+                <a class="dropdown-item py-1" id="search_by_unit" href="#">
+                  <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="disc"></i></div>
+                  <div class="">
+                      <div class="small text-gray-500">Search by unit/house</div>
+                      <div class="text-black font-weight-bold">House number</div>
+                  </div>
+              </a>
+
+                <div class="dropdown-divider m-0"></div>
+                
+                <a class="dropdown-item py-1" id="search_by_mobile" href="#">
+                  <div class="icon-stack bg-primary-soft text-primary mr-3"><i data-feather="disc"></i></div>
+                  <div>
+                      <div class="small text-gray-500">Search by tenant mobile</div>
+                      <div class="text-black font-weight-bold">Mobile number</div>
+                  </div>
+              </a>
+
+            </div>
+          </li>
+
+
           <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" autocomplete="off"> 
             <div class="input-group">
                 <input id="searchInput" type="text" class="form-control bg-light border-0 small" placeholder="Search is starting..." aria-label="Search" aria-describedby="basic-addon2">
@@ -2951,15 +2993,19 @@
     var monthyr = mm_arr[mth] + "-" + yr;
     localStorage.setItem('monthvar',monthyr);
 
-    function getFeed() {
+    function getFeed(target) {
+      $("#searchInput").addClass("ph")
       $("#searchInput").attr("placeholder", "Please wait...");
         $.ajax({
             url: "{{ url_for('api.propsearchdata') }}",
             type: 'get',
+            data:{
+              "target":target
+            },
             success: function(data) {
                 // $('#dynamic-content').html(data);
                 $('#dynamic-search').html(data);
-                $("#searchInput").attr("placeholder", "Search for...");
+                $("#searchInput").attr("placeholder", "Search by " + target);
                 // $('#searchInput').append('<style>.my_class::placeholder{color:red}</style>')
             },
             error:function(xhr) {
@@ -3020,7 +3066,17 @@
     // }
 
 
-    getFeed();
+    getFeed("tenant name");
+
+    $("#search_by_name").click(function(){
+      getFeed("tenant name");
+    })
+    $("#search_by_unit").click(function(){
+      getFeed("house number");
+    })
+    $("#search_by_mobile").on("click",function(){
+      getFeed("mobile");
+    })
 
     // $(document).ready(function() {
     //     setTimeout(getFeed,1);
@@ -5651,7 +5707,7 @@ $(".proratecb").change(function (e) {
 
           snack(response);
 
-          getFeed();
+          getFeed("tenant");
 
 
           if (migrate_onboard2 == "True"){

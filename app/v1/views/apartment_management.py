@@ -1185,27 +1185,45 @@ class FetchSentSms(Resource):
 
 class PropSearchData(Resource):
     @login_required
-    def get(self):      
+    def get(self):
 
-        raw_tenancy =[]
-        raw_units=[]
+        target = request.args.get('target')
 
         props = fetch_all_apartments_by_user(current_user)
 
-        raw_tenancy = [tenantauto(prop.id) for prop in props]
-        # raw_units = [prop.houses for prop in props]
-        raw_residents = [prop.ptenants for prop in props]
-   
-        ############################################################
-        tenancy = flatten(raw_tenancy)
-        residents = flatten(raw_residents)
-        # houses = flatten(raw_units)
-        houses = []
+        if target == "tenant name":
+            raw_tenancy = [tenantauto(prop.id) for prop in props]    
+            ############################################################
+            tenancy = flatten(raw_tenancy)
+            residents = []
+            houses = []
+            suggestions = generate_suggestions_tnames(props,houses,tenancy,residents)
+
+            print("returned names")
 
 
-        suggestions = generate_suggestions_alt(props,houses,tenancy,residents)
+        elif target == "house number":
+            raw_units = [prop.houses for prop in props]    
+            ############################################################
+            tenancy = []
+            residents = []
+            houses = flatten(raw_units)
+            suggestions = generate_suggestions_houses(props,houses,tenancy,residents)
 
-        # print(suggestions) 
+            print("returned houses")
+
+        else:
+            raw_tenancy = [tenantauto(prop.id) for prop in props]    
+            ############################################################
+            tenancy = flatten(raw_tenancy)
+            residents = []
+            houses = []
+            suggestions = generate_suggestions_mobile(props,houses,tenancy,residents)
+
+            print("returned iaaaaxxxzzws",suggestions)
+
+
+
 
         return Response(render_template(
             'ajax_load_searchdata.html',

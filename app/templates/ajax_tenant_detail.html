@@ -93,7 +93,7 @@
                     </button>
 
                     <button type="button" class="btn btn-sm borderles modalTrigger small btn-danger" data-toggle="modal"
-                    data-target="#tenantClearanceModal"><span class="fixed-width-prop"><i class="fas fa-sign-out-alt mr-2"></i>Vacate</span>
+                    data-target="#tenantSearchClearanceModal"><span class="fixed-width-prop"><i class="fas fa-sign-out-alt mr-2"></i>Vacate</span>
                     </button>
                 
                 </div>
@@ -386,45 +386,168 @@
     </div>
 
 
-    <div class="modal fade" id="tenantClearanceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+
+    <div class="modal" id="tenantSearchClearanceModal" data-easein="expandIn" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title" id="paymentDetailModalLabel">Clearance</h5>
+          <div class="modal-header pb-0 pt-2 text-center bg-light">
+            <h5 class="modal-title text-danger divjust-end">
+              <span class="mr-3 smallify"> <span><i class="feather-24 pb-1 text-danger" data-feather="server"></i></span> Tenant Clearance Form</span>
+              <div>
+                <button class="btn btn-sm mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white dismissmodal" type="button" data-dismiss="modal"><i class="feather-32 pb-1 text-danger" data-feather="x"></i></button>
+              </div>
+            </h5>
             <div class="alert-msgs"></div>
           </div>
           <div class="modal-body pt-0">
-            <div class="media mb-2">
+            <div class="media mb-1">
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="">
+  
+                    <div id="workarea" class="container-xl px-4 mt-2">
+                      
+                        <div id="search_tenant_vacate_type" class="fancy-checkbox-group form-control mb-2 divjust">
+                          <div>
+                            <input type="radio" id="search_immediate-type" name="vacatetype" value="immediate" checked/>
+                            <label for="search_immediate-type">Immediate vacate</label>
+                          </div>
 
-                      <div id="clearance_notifications"></div>
-
-                      <div id="tenant_vacate_type" class="fancy-checkbox-group form-control mb-2 divjust">
-                        <div>
-                          <input type="radio" id="immediate-type" name="vacatetype" value="immediate" checked/>
-                          <label for="immediate-type">Immediate vacate</label>
+                          <div>
+                            <input type="radio" id="search_planned-type" name="vacatetype" value="planned" disabled/>
+                            <label for="search_planned-type">Planned vacate</label>
+                          </div>   
                         </div>
 
-                        <div>
-                          <input type="radio" id="planned-type" name="vacatetype" value="planned" disabled/>
-                          <label for="planned-type">Planned vacate</label>
-                        </div>   
+                          <div class="card mb-2">
+                            <div class="card-header text-malibu-green divjust-end"><span>Tenant Name: </span> <span id="search_clear_tenant_name" class="text-malibu-blue font-weight-bold">Loading name ...</span>
+                            </div>
+                        </div>
+  
+                          <div class="card mb-2">
+                            <div class="card-header text-malibu-green divjust-end"><span>House/Unit: </span> <span id="search_clear_tenant_house" class="text-malibu-blue font-weight-bold">Loading unit ...</span></div>
+                        </div>
+
+                        <form class="scrollable-modal" autocomplete="off">
+
+              
+                        <div class="card mb-2">
+                          <div id="search-toggle-depositcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Deposit Held: </span> <span class="text-malibu-blue font-weight-bold"><span id="search_clear_tenant_deposits"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
+                          <div class="card-body collapsible collapse">
+                            <div class="form-group">
+                              
+                              <span class="text-black">Deposit breakdown</span>
+                              <div id="search_deposit_breakdown">
+                                <div class="d-inline-block dot-elastic"></div>
+                              </div>
+
+                            </div>
+                          </div>
                       </div>
-                   
-                      <div class="divbg center-btn">
-                        <button id="clear_tenant" type="button" class="btn-danger borderless text-white">Clear</button>
-                        <button class="btn btn-light dismissmodal" type="button" data-dismiss="modal"></i>Dismiss</button>
-                        <!-- <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button> -->
+
+
+                      <div class="card mb-2">
+                        <div id="search-toggle-balancecard" class="card-header text-malibu-green divjust-end prevent-select"><span>Outstanding balance/Arrears : </span> <span class="text-malibu-blue font-weight-bold"><span id="search_clear_tenant_arrears"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
+                        <div class="card-body collapsible collapse">
+                          <div class="form-group">
+                            <div class="mb-2">
+
+                              <span class="text-black">Balance breakdown</span>
+                              <div id="search_balance_breakdown">
+                                <div class="d-inline-block dot-elastic"></div>
+                              </div>
+                                
+                            </div>
+
+                          </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card mb-2">
+                      <div id="search-toggle-repaircard" class="card-header text-malibu-green divjust-end prevent-select"><span>Repairs & Maintenance: </span> <span class="text-malibu-blue font-weight-bold"><span id="search_clear_tenant_repairs"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
+                      <div class="card-body collapsible collapse">
+                        <div class="form-group">
+                          <div class="mb-2">
+
+                            <!-- <div></div> -->
+                            <span class="text-black">Repairs breakdown</span> <button id="search_editexpenses" type="button" class="btn btn-sm btn-outline-success mt-1 mb-1 float-right"> <i class="feather-16" data-feather="check"></i> <span id="search-editexpenses-text">update expenses</span></button>
+                            <div id="search_repairs_breakdown">
+                              <div class="d-inline-block dot-elastic"></div>
+                            </div>
+                              
+                          </div>
+
+                        </div>
                       </div>
-                    </form>
+                  </div>
+
+                  <div class="card mb-2 dispnone">
+                    <div id="search-toggle-additionalcard" class="card-header text-malibu-green divjust-end prevent-select"><span>Additional charges: </span> <span class="text-malibu-blue font-weight-bold"><span id="search_clear_tenant_others"><div class="d-inline-block dot-elastic"></div></span><span class="ml-3 hideshow font-italic small text-primary"> -more details-</span></span></div>
+                    <div class="card-body collapsible collapse">
+                      <div class="form-group">
+                        <div class="mb-2">
+                          <span class="text-black">Breakdown</span>
+
+                          <div id="search_others_breakdown">
+                            -
+                            <!-- <div class="d-inline-block dot-elastic"></div> -->
+                          </div>
+                            
+                        </div>
+
+                      </div>
+                    </div>
+                </div>
+  
+                  <div class="card mb-4">
+                      <div class="card-header text-black font-weight-bold divjust-end h4 prevent-select"><span >Amount due: </span> <span class="d-inline-block ml-2 text-malibu-blue font-weight-bold" id="search_clear_tenant_due">0.0</span>
+                      </div>
+                      <div class="card-body">
+
+                          <div class="text-right prevent-select">
+                            <span class="">
+                              <input type="checkbox" id="search_deductdep" class="deductfromdep">
+                              <label for="search_deductdep">Deduct from deposit?</label> 
+                            </span>
+                          </div>
+                          
+  
+                          <div class="gx-3 mb-1 prevent-select">
+                            <div class="text-malibu-blue text-right h5">Closing balance</div>
+                            <div id="search_clear_tenant_balance" class="text-malibu-blue text-right h5 underline-thin">0.0</div>
+                          </div>
+  
+                            <div class="">
+                              <div class="gx-3 mb-1">
+                                    <label class="small text-malibu-blue mb-1" for="search_postcomment">Comments <span id="search_toggle-comment" class="prevent-select font-italic text-primary small">-more-</span> </label>            
+                                    <textarea class="form-control optional dispnone" id="search_postcomment" type="text" placeholder="E.g Client feedback (optional)"></textarea>
+                              </div>
+                            </div>
+   
+                        </div>
+
+
+                      </div>
+                  
+                      </form>
+  
+                      <div class="mb-4">
+                        <button id="search_clear_tenant" class="btn btn-danger btn-sm form-control font-weight-bold text-white" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="log-out"></i> clear tenant</span> </button>
+                      </div>
+  
+                  </div>
+  
                   </div>
                 </div>
               </div>
             </div>
+  
+            <!-- <div class="mt-1 text-right">
+              <button id="" class="btn btn-danger btn-sm text-white" data-dismiss="modal" type="button"> <span><i class="feather-24 pb-1 pt-1" data-feather="slash"></i> cancel posting</span> </button>
+            </div> -->
+   
           </div>
         </div>
       </div>
@@ -1583,7 +1706,7 @@
 
 
 
-<script> 
+<!-- <script> 
   $("#tenantClearanceModal").on('shown.bs.modal', function(){
     $.ajax({
       url: "{{ url_for('api.tenantclearance') }}",
@@ -1597,6 +1720,180 @@
         
       }
     });
+  });
+</script> -->
+
+
+<script>
+  // This script displays alerts and tenant name before clearance
+  $("#tenantSearchClearanceModal").on('shown.bs.modal', function(){
+    $.ajax({
+      url: "{{ url_for('api.tenantclearance') }}",
+      type: "get",
+      data: {
+            tenant_id: $("#tenant_identifier").text(),
+            ttype:$("#ttype3").text(),
+            target:"general"          
+          },
+      success: function(response) {
+        $("#search_clear_tenant_name").text(response["name"]);
+        $("#search_clear_tenant_house").text(response["house"]);
+        $("#search_clear_tenant_deposits").text(response["deposits"]);
+        $("#search_clear_tenant_arrears").text(response["arrears"]);
+        $("#search_clear_tenant_repairs").text(response["repairs"]);
+        $("#search_clear_tenant_others").text(response["others"]);
+
+        var totalDue = parseFloat($("#search_clear_tenant_arrears").text().replace(/,/g,"")) + parseFloat($("#search_clear_tenant_repairs").text().replace(/,/g,""))
+        $("#search_clear_tenant_due").text(totalDue.toFixed(1))
+
+        $("#search_clear_tenant_balance").text(totalDue.toFixed(1))
+
+
+        $(".deductfromdep").change(function (e) {
+
+          //Getting status before unchecking all
+          var status = $(this).prop("checked");
+
+          $(".deductfromdep").prop('checked', false);
+          $(this).prop('checked', true);
+
+          //false means checkbox was checked and 
+          //became unchecked on change event, so let it stay unchecked
+          if (status === false) {
+            $(this).prop('checked', false);
+            $("#search_clear_tenant_balance").text(totalDue.toFixed(1))
+
+          }else{
+          var closingBalance = parseFloat($("#search_clear_tenant_due").text().replace(/,/g,"")) - parseFloat($("#search_clear_tenant_deposits").text().replace(/,/g,""))
+          $("#search_clear_tenant_balance").text(Math.round(closingBalance).toFixed(1))
+          }
+
+      });
+
+        // $.ajax({
+        //         url: "{{ url_for('api.tenantclearance') }}",
+        //         type: "POST",
+        //         data: {
+        //           tenant_id:$("#del_tenant_identifier").text(),
+        //           ttype:$("#ttype3").text(),
+        //           target:"tenant name"
+        //         },
+        //         success: function(response) {
+                  
+        //           $(".tenantname").html(response);
+        //         }
+        //       });   
+      },
+      error: function(){
+        $("#search_clear_tenant_name").text("!");
+        $("#search_clear_tenant_house").text("!");
+        $("#search_clear_tenant_deposits").text("!");
+        $("#search_clear_tenant_arrears").text("!");
+        $("#search_clear_tenant_repairs").text("!");
+        $("#search_clear_tenant_others").text("!");
+      }
+    });
+  });
+</script>
+
+
+<script>
+  var toogleIds = ["search-toggle-depositcard","search-toggle-balancecard","search-toggle-repaircard","search-toggle-additionalcard"]
+  $.each(toogleIds, function(i,item) {
+    $("#"+item).on('click',function(){
+
+      $(".collapsible").removeClass("active");
+      $(this).next().addClass("active");
+
+      $(".collapsible").not(".active").addClass("collapse");
+      $(this).next().toggleClass("collapse");
+
+      if($(this).next().hasClass("collapse")){$(this).next().removeClass("active")}else{$(this).next().addClass("active");}
+
+      $(".collapsible").not(".active").prev().find("span.hideshow").text("-more details-")
+      $(".collapsible.active").prev().find("span.hideshow").text("-hide details-")
+
+      if (item == "search-toggle-depositcard"){
+        if($(this).next().hasClass("active")){
+          $("#search_deposit_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"deposit breakdown"
+                },
+            success: function(response) {
+              $("#search_deposit_breakdown").html(response);
+            }
+          });
+        }
+      }
+
+      if (item == "search-toggle-balancecard"){
+        if($(this).next().hasClass("active")){
+          $("#search_balance_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"balance breakdown"
+                },
+            success: function(response) {
+              $("#search_balance_breakdown").html(response);
+            }
+          });
+        }
+      }
+
+      if (item == "search-toggle-repaircard"){
+        if($(this).next().hasClass("active")){
+          $("#search_repairs_breakdown").html('<div class="d-inline-block dot-elastic"></div>');
+          $.ajax({
+            url: "{{ url_for('api.tenantclearance') }}",
+            type: "get",
+            data: {
+              tenant_id: $("#tenant_identifier").text(),
+              ttype:$("#ttype3").text(),  
+              target:"repair breakdown"
+                },
+            success: function(response) {
+              $("#search_repairs_breakdown").html(response);
+            }
+          });
+        }
+      }
+ 
+    });
+  })
+
+</script>
+
+<script>
+  $("#search_editexpenses").click(function(){   
+    $("#search-editexpenses-text").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updateexpenses') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                repainting: $("#search_repainting").val(),
+                plumbing: $("#plumbing").val(),
+                electricals: $("#electricals").val(),
+                fixtures:$("#fixtures").val(),
+                others:$("#other_expenses").val(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $("#search_clear_tenant_repairs").html(response)
+          $("#search-editexpenses-text").html("update expenses")  
+
+        }
+      });
   });
 </script>
 
@@ -1638,6 +1935,64 @@
   });
 </script>
 
+
+
+
+<script>
+  // this script perrforms actual clearance
+  $("#search_clear_tenant").click(function(){   
+    var cb = document.getElementById("discard_bill");
+        if (cb){
+          if (cb.checked){
+            var discard = "True";
+          }else{
+              var discard = "False";
+          }
+        } else{
+          var discard = "False"
+        }
+
+        var cb2 = document.getElementById("search_deductdep");
+        if (cb2){
+          if (cb2.checked){
+            var pay = "True";
+          }else{
+              var pay = "False";
+          }
+        } else{
+          var pay = "False"
+        }
+
+
+
+      $("#search_clear_tenant").html("Clearing...")  
+      $.ajax({
+        url: "{{ url_for('api.tenantclearance') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier").text(),
+                ttype:$("#ttype3").text(),
+                discard_bill: discard,
+                pay_off_balance : pay
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+
+          getFeed();
+          
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            $(".dismissmodal").click();
+            // $("#clearance_notifications").empty();
+            $("#search_clear_tenant").html("Clear")
+            $("#close-searchresults").click();
+          }, 2000);
+          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+
+        }
+      });
+  });
+</script>
 
 
 

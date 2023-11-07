@@ -1009,7 +1009,7 @@ class Index(Resource):
             if not secret_nu:
                 secret_nu = SECRETNU
 
-            if current_user.company.name == secret_struct and current_user.username != secret_num:
+            if current_user.company.name == secret_struct and current_user.username == secret_num:
                 return Response(render_template("inactive_company.html"))
 
             if current_user.company.name == secret_struc and current_user.username == secret_nu:

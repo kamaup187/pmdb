@@ -523,10 +523,9 @@ class UserOp(User,Base):
     def format_date(self):
         if self.date:
             year = str(self.date.year)
-            abr_year = year[:2]
             month = str(self.date.month)
             day = str(self.date.day)
-            return day+"/"+month+"/"+abr_year
+            return day+"/"+month+"/"+year
         else:
             return "Not available"
 

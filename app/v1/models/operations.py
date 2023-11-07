@@ -2645,6 +2645,11 @@ class TenantOp(Tenant,Base):
         self.email = mail
         db.session.commit()
 
+    def update_vacate_date(self,date):
+        self.vacate_date = date
+        db.session.commit()
+
+
     def get_houseno(self):
         """method to get tenant name from tenant alloc id"""
         house_alloc_objs = self.house_allocated

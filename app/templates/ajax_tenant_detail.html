@@ -1,5 +1,5 @@
 <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
-<span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
+<span id="tenant_identifier" class="dispnon">{{tenant.id}}</span>
 <span id="ttype" class="dispnone">{{tenant.tenant_type}}</span>
 <span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="del_tenant_identifier" class="dispnone"></span>
@@ -408,16 +408,27 @@
   
                     <div id="workarea" class="container-xl px-4 mt-2">
                       
-                        <div id="search_tenant_vacate_type" class="fancy-checkbox-group form-control mb-2 divjust">
+                        <div class="fancy-checkbox-group form-control mb-2 divjust mt-3">
                           <div>
                             <input type="radio" id="search_immediate-type" name="vacatetype" value="immediate" checked/>
                             <label for="search_immediate-type">Immediate vacate</label>
                           </div>
 
                           <div>
-                            <input type="radio" id="search_planned-type" name="vacatetype" value="planned" disabled/>
+                            <input type="radio" id="search_planned-type" name="vacatetype" value="planned"/>
                             <label for="search_planned-type">Planned vacate</label>
                           </div>   
+                        </div>
+
+                        <div id="vacate_datepicker" class="mb-3 dispnone">
+                          <div class="form-group mt-1 mb-1 date" data-date-format="dd-mm-yyyy">
+                            <label for="search_vacate_date" class="small text-black">Vacating date</label>
+                            <input id="search_vacate_date" class="form-control ph" type="text" placeholder="Select date of vacation" readonly />
+                          </div>
+
+                          <div class="small text-black">
+                            Days : <span id="remaining_days"> - </span>
+                          </div>
                         </div>
 
                           <div class="card mb-2">
@@ -1725,6 +1736,38 @@
 
 
 <script>
+
+  $("#search_vacate_date").datepicker({ 
+      autoclose: true, 
+      todayHighlight: true,
+      format: "dd-mm-yyyy"
+    }).on('changeDate', function (e) {
+    $.ajax({
+    url: "{{ url_for('api.tenantclearance') }}",
+    type: "get",
+    data: {
+          tenant_id: $("#tenant_identifier").text(),
+          vacatedate:$("#search_vacate_date").val(),
+          target:"remaining days"
+        },
+    success: function(response) {
+      $("#remaining_days").text(response);
+    },
+    error: function(xhr) {
+      $("#remaining_days").text("check date!");
+      }
+  });
+  });;
+
+
+  $('input[type=radio][name=vacatetype]').change(function () {
+      if (this.value == 'immediate') {
+          $("#vacate_datepicker").addClass("dispnone")
+      }else{
+          $("#vacate_datepicker").removeClass("dispnone")
+      }
+  });
+
   // This script displays alerts and tenant name before clearance
   $("#tenantSearchClearanceModal").on('shown.bs.modal', function(){
     $.ajax({
@@ -1898,44 +1941,6 @@
 </script>
 
 
-<script>
-  $("#clear_tenant").click(function(){   
-    var cb = document.getElementById("discard_bill");
-        if (cb){
-          if (cb.checked){
-            var discard = "True";
-          }else{
-              var discard = "False";
-          }
-        } else{
-          var discard = "False"
-        }
-
-    $("#clear_tenant").html("Clearing...")  
-      $.ajax({
-        url: "{{ url_for('api.tenantclearance') }}",
-        type: "POST",
-        data: {
-                tenant_id: $("#tenant_identifier").text(),
-                discard_bill: discard
-            },
-        success: function(response) {
-          $(".alert-msgs").html(response);
-
-          getFeed();
-          
-          setTimeout(function(){
-            $(".alert-msgs").empty();
-            $(".dismissmodal").click();
-            $("#clearance_notifications").empty();
-            $("#clear_tenant").html("Clear")
-          }, 2000);
-        }
-      });
-  });
-</script>
-
-
 
 
 <script>
@@ -1966,11 +1971,14 @@
 
 
       $("#search_clear_tenant").html("Clearing...")  
+
       $.ajax({
         url: "{{ url_for('api.tenantclearance') }}",
         type: "POST",
         data: {
                 tenant_id: $("#tenant_identifier").text(),
+                vacatetype :$("input[name=vacatetype]:checked").val(),
+                vacatedate :$("#search_vacate_date").val(),
                 ttype:$("#ttype3").text(),
                 discard_bill: discard,
                 pay_off_balance : pay
@@ -1987,7 +1995,7 @@
             $("#search_clear_tenant").html("Clear")
             $("#close-searchresults").click();
           }, 2000);
-          getTenants($("#prop_identifier").text(), $("#current-reloader").text())
+          // getTenants($("#prop_identifier").text(), $("#current-reloader").text())
 
         }
       });

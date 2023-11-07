@@ -840,6 +840,7 @@ class Tenant(db.Model):
     deposit = db.Column(db.Float,default=0)
     accumulated_fine = db.Column(db.Float,default=0)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    vacate_date = db.Column(db.DateTime)
 
     accepted_terms = db.Column(db.Boolean,default=False)
     status = db.Column(db.String,default="Booked")

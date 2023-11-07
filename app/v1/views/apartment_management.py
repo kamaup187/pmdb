@@ -7001,9 +7001,16 @@ class TenantClearance(Resource):
     def get(self):
         tenantid = request.args.get('tenant_id')
         tenant_id = get_identifier(tenantid)
+        vacatedate = request.args.get('vacatedate') 
         ttype = request.args.get("ttype")
         target = request.args.get("target")
 
+
+        try:
+            billdate = date_formatter(vacatedate)
+            vacate_date = parse(billdate)
+        except:
+            vacate_date = None
 
 
         if ttype == "owner" or ttype == "resident":
@@ -7013,6 +7020,14 @@ class TenantClearance(Resource):
             
         if tenant_obj.multiple_houses:
             abort(403)
+
+        if target == "remaining days":
+            # tenant_invoices = tenant_obj.monthly_charges
+            curr_inv = fetch_latest_tenant_invoice(tenant_obj)
+            end_date = generate_start_date(curr_inv.month,curr_inv.year)
+            diff = vacate_date - end_date
+            remaining_days = diff.days + 1
+            return remaining_days
 
         if target == "general":
 
@@ -7042,9 +7057,17 @@ class TenantClearance(Resource):
         tenantid = request.form.get('tenant_id')
         discard_bill = request.form.get('discard_bill')
         pay_off_balance = request.form.get('pay_off_balance')
+        vacatedate = request.form.get('vacatedate')
+        vacatetype = request.form.get('vacatetype')
         ttype = request.form.get("ttype")
         runalert = request.form.get('runalert')
         target = request.form.get('target')
+
+        try:
+            billdate = date_formatter(vacatedate)
+            vacate_date = parse(billdate)
+        except:
+            vacate_date = None
 
         tenant_id = get_identifier(tenantid)
 
@@ -7062,9 +7085,14 @@ class TenantClearance(Resource):
                 
             return proceed + "ready to remove"
 
-
         else:
             tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+
+        if vacatetype == "planned":
+            if vacate_date:
+                TenantOp.update_vacate_date(tenant_obj,vacate_date)
+                return proceed + "updated successfully"
+            return err + "date not set"
 
         if tenant_obj.multiple_houses:
             return "Cannot clear, tenant occupies multiple units"

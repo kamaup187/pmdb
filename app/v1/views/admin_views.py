@@ -155,7 +155,7 @@ class TopUpSms(Resource):
 
             # units = ctob_obj.trans_amnt * 1.25
             try:
-                units = int(ri) / 0.65
+                units = int(ri) / 0.50
             except:
                 return None
 
@@ -165,19 +165,11 @@ class TopUpSms(Resource):
             CompanyOp.set_rem_quota(co,int(new_units))
 
             if co:
+                message = f"Dear {current_user.name.split(' ')[0].title()}, \nyour account has been successfully credited with {int(units)} sms units for payment of KES {ri}. \nAvailable sms units: {new_units}  \n\nThank you."
+                sms_sender(co.name,message,"+254716674695")
+                sms_sender(co.name,message,phonenum)
 
-                message = f"Hi {current_user.name}, \n{co.name} has been successfully credited with {int(units)} sms units for payment of KES {ri}. \nAvailable sms units: {new_units}  \n\nThank you."
-                sresponse = sms.send(message, ["+254716674695"], sender)
 
-                if co.sms_provider == "Advanta":
-                    sms_sender(co.name,message,phonenum)
-                else:
-                    try:
-                        recipient = [phonenum]                
-                        response = sms.send(message, recipient, sender)
-                        print(response)
-                    except Exception as e:
-                        print(f"Houston, we have a problem {e}")
             
         
   

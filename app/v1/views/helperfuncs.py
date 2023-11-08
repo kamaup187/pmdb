@@ -12944,7 +12944,9 @@ def filtered_house_list_alt(apartment_id,readdate=None):
     # return unread_houses
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
-    house_list = filter_in_metered_houses(prop.name)
+    house_list = filter_in_metered_houses_alt(prop.name) # FIXED BUGG
+
+    print("tugegegegegggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggeegs", house_list)
     
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period

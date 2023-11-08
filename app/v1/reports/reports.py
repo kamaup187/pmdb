@@ -3015,6 +3015,73 @@ class GeneralRentStatement(Resource):
             props = [apartment_obj]
             prop = selected_apartment
 
+
+        if datatype == "rentalincome":
+            if selected_apartment == "All":
+                return "Select One Property"
+
+            template = "ajax_report_rental_income.html"
+
+            mainarray = []
+            renttotal = 0.0
+            paidtotal = 0.0
+
+            houses = houseauto(apartment_obj.id)
+            for h in houses:
+                rentpaid = 0.0
+                raw_month_range = [(start.date() + datetime.timedelta(days=x)).month for x in range(0, (end-start).days+1)]
+                month_range = remove_dups(raw_month_range)
+                raw_year_range = [(start.date() + datetime.timedelta(days=x)).year for x in range(0, (end-start).days+1)]
+                year_range = remove_dups(raw_year_range)
+
+                # print("let me see your work ", date_visibility)
+                bills = h.monthlybills
+
+                for bill in bills:
+                    ftime=generate_start_date(bill.month,bill.year)
+                    if ftime.month in month_range and ftime.year in year_range:
+                        rentpaid += bill.paid_amount
+                        paidtotal += bill.paid_amount
+
+                housedict = {
+                    "house": h.name,
+                    "rent" : f'{h.housecode.rentrate:,.1f}',
+                    "paid": f'{rentpaid:,.1f}',
+                }
+
+                mainarray.append(housedict)
+                try:
+                    renttotal += h.housecode.rentrate
+                except:
+                    pass
+
+            timeline = f"{start.day}/{start.month}/{start.year} to {end.day}/{end.month}/{end.year} -- Category : {reporttype}"
+
+            return Response(render_template(
+                template,
+                prop=prop,
+                propid=apartment_obj.id,
+                prop_obj=apartment_obj,
+
+                timeline = timeline,
+
+                renttotal = f'{renttotal:,.1f}',
+                paidtotal = f'{paidtotal:,.1f}',
+
+                bills=mainarray,
+
+                paging="portrait",
+
+                apartment_name=selected_apartment,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company,
+                billids = [],
+                reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+                name=current_user.name))
+
         
         # apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
         ##################################################################################################

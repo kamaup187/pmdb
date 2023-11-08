@@ -1,0 +1,367 @@
+<style type="text/css" media="print">
+  /* @page{
+    size:landscape;
+  } */
+  body {
+    zoom: 78%;
+  }
+</style>
+<span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
+<span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+            </button>
+            <script>
+              feather.replace()
+
+              button = document.getElementById('ajaxbtnDownload');
+              button.addEventListener('click', () => {
+                document.title=$("#filename").text(); 
+                window.print()
+              });
+            </script>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">RENTAL INCOME FOR {{timeline}}</span></span>
+          </div>
+
+          
+          
+          
+          <!-- {%if prop_obj%}
+          <div class="divjust-end text-black">
+            <div>
+              <div class="mb-2 mt-1">
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+                </div>
+                <div class="ln-16">
+                  <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.landlord%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+                  {% endif %}
+                </div>
+                <div class="ln-16">
+                  {% if prop_obj.location_id%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+                  {%else%}
+                  <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          
+            <div class="mt-5 mr-2">
+              <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
+            </div>
+          
+          </div>
+          {%endif%} -->
+
+          <!-- <div class="center-btn mb-4 mt-4">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div> -->
+
+          {%if prop%}
+          <span class="mr-1 text-black">PROPERTY: {{prop}}</span>
+          {%endif%}
+ 
+          <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">HOUSE</th>
+                      <th class="header-right">MONTHLY RENT</th>
+                      <th class="header-right">TOTAL PAID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-right">{{bill['rent']}}</td>
+                      <td class="data-cell text-right">{{ bill['paid']}}</td>
+
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12  dispnone printdisplay text-uppercase">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+         
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">RENTAL INCOME FOR {{timeline}}</span></span>
+          </div>
+
+          <!-- {%if prop_obj%}
+          <div class="divjust-end">
+          <div class="mb-2 mt-1">
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+            </div>
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.landlord%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+              {% endif %}
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.location_id%}
+              <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mt-5 mr-2">
+            <span class="font-weight-bold text-dark">Collection percentage: {{ratio}}</span>
+          </div>
+
+          </div>
+          {%endif%} -->
+
+          {%if prop%}
+          <span class="mr-1 text-black">PROPERTY: {{prop}}</span>
+          {%endif%}
+
+          <div class="table-responsive">
+            <table class="table" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="">HOUSE</th>
+                  <th class="header-right">RENT</th>
+                  <th class="header-right">PAID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bill in bills%}
+                <tr>
+
+                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-right">{{bill['rent']}}</td>
+                  <td class="data-cell text-right">{{ bill['paid']}}</td>
+
+                </tr>
+              {% endfor %}
+
+              </tbody>
+              <tfoot class="custom-footer-alt">
+                <tr>
+                  <td class="font-weight-bold">TOTALS ...</td>
+                  <td class="font-weight-bold text-right">{{renttotal}}</td>
+                  <td class="font-weight-bold text-right">{{paidtotal}}</td>
+
+                </tr>
+              </tfoot>
+            </table>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+      $("#reportbtns").addClass("dispnone")
+  
+      $('#dataTable').DataTable({
+        dom: '<"dt-buttons"Bf><"clear">lirtp',
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        autoWidth: true,
+        buttons: [
+          "colvis",
+          "copyHtml5",
+          "csvHtml5",
+          "excelHtml5",
+          "pdfHtml5",
+          "print"
+        ],
+        // "bPaginate": false, //hide pagination control
+        // "bFilter": false, //hide filter control
+        // "searching":false,
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+        // "targets": 'no-sort',
+        // "bSort": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        // "info" : false,
+        "order": [[0, "asc"]],
+        // "bLengthChange": false
+        dom: 'Bfrtip',
+        buttons: [
+            { extend: 'copyHtml5', footer: true },
+            { extend: 'excelHtml5', footer: true },
+            { extend: 'csvHtml5', footer: true },
+            { extend: 'pdfHtml5', footer: true }
+        ]
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  
+  
+  </script>
+<script>
+  
+
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "bPaginate": false, //hide pagination control
+      "bFilter": false, //hide filter control
+      "searching": false,
+      "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { targets: 0, type: 'natural' } ],
+      "info": false,
+      "order": [[0, "asc"]],
+      "bLengthChange": false,
+      dom: 'Bfrtip',
+      buttons: [
+          { extend: 'copyHtml5', footer: true },
+          { extend: 'excelHtml5', footer: true },
+          { extend: 'csvHtml5', footer: true },
+          { extend: 'pdfHtml5', footer: true }
+      ]
+    });
+    $('.dataTables_length').addClass('bs-select');
+  
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

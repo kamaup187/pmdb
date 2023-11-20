@@ -2661,6 +2661,11 @@ class ReceivePayment(Resource):
                 # print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
                 # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
                 # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
+                try:
+                    dep = tenant_obj.deposits
+                except:
+                    dep = None
+
 
                 if crm(current_user):
                     edit = "dispnone"
@@ -2707,7 +2712,7 @@ class ReceivePayment(Resource):
                         "elec":9
                         }
 
-                    return render_template('ajax_bill_breakdown_test.html',order=order,bill=bill,edit=edit)
+                    return render_template('ajax_bill_breakdown_test.html',order=order,dep=dep,bill=bill,edit=edit)
 
                 return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
 
@@ -2743,6 +2748,21 @@ class ReceivePayment(Resource):
         penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
+
+        rentdep = request.form.get("deprent")
+        waterdep = request.form.get("depwater")
+        elecdep = request.form.get("depelectricity")
+        otherdep = request.form.get("depother")
+
+        paid_rentdep = request.form.get("deprentpaid")
+        paid_waterdep = request.form.get("depwaterpaid")
+        paid_elecdep = request.form.get("depelectricitypaid")
+        paid_otherdep = request.form.get("depotherpaid")
+
+        balance_rentdep = request.form.get("depbalancerent")
+        balance_waterdep = request.form.get("depbalancewater")
+        balance_elecdep = request.form.get("depbalanceelectricity")
+        balance_otherdep = request.form.get("depbalanceother")
 
         cbid = request.form.get("cbid")
 
@@ -3135,6 +3155,66 @@ class ReceivePayment(Resource):
         payment_obj.save()
 
         create_activity(current_user,f"added payment no. {payment_obj.id} for house: {payment_obj.house.name} in {payment_obj.apartment}")
+
+        values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
+        values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+        values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+
+        try:
+            if balance_rentdep:
+                a = values3[0]
+            else:
+                a = values[0] - values2[0] if values2[0] else 0.0
+        except:
+            a = 0
+
+        try:
+            if balance_waterdep:
+                b = values3[1]
+            else:
+                b = values[1] - values2[1] if values2[1] else 0.0
+        except:
+            b = 0
+
+        try:
+            if balance_elecdep:
+                c = values3[2]
+            else:
+                c = values[2] - values2[2] if values2[2] else 0.0
+        except:
+            c = 0
+
+        try:
+            if balance_otherdep:
+                d = values3[3]
+            else:
+                d = values[3] - values2[3] if values2[3] else 0.0
+        except:
+            d = 0
+
+
+        dep = tenant_obj.deposits
+
+        if dep:
+            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+            total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+            TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
+
+            totalpaid = 0.0
+            totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+            totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+            totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+            totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+            totalbalance = a + b + c + d
+
+            TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+
+            TenantOp.update_deposit(tenant_obj,total)
+
+
 
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)

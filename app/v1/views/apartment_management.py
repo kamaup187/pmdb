@@ -1199,7 +1199,7 @@ class PropSearchData(Resource):
             houses = []
             suggestions = generate_suggestions_tnames(props,houses,tenancy,residents)
 
-            print("returned names")
+            # print("returned names")
 
 
         elif target == "house number":
@@ -1210,7 +1210,7 @@ class PropSearchData(Resource):
             houses = flatten(raw_units)
             suggestions = generate_suggestions_houses(props,houses,tenancy,residents)
 
-            print("returned houses")
+            # print("returned houses")
 
         else:
             raw_tenancy = [tenantauto(prop.id) for prop in props]    
@@ -1220,7 +1220,7 @@ class PropSearchData(Resource):
             houses = []
             suggestions = generate_suggestions_mobile(props,houses,tenancy,residents)
 
-            print("returned iaaaaxxxzzws",suggestions)
+            # print("returned iaaaaxxxzzws",suggestions)
 
 
 

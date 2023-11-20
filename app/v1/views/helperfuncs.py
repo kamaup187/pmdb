@@ -14424,7 +14424,7 @@ def build_search_phone(tenant_item):
         "prop" : f'-{ smart_truncate(tenant_item.apartment.name)}'
     }
 
-    print("mimimi nido ", dict_item)
+    # print("mimimi nido ", dict_item)
     return dict_item
 
 def generate_suggestions_mobile(props,houses,tenants,ptenants):

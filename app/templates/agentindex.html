@@ -284,43 +284,10 @@
     <!-- Sidebar -->
     <ul class="navbar-nav {{sidebar_theme}} sidebar sidebar-dark shadow-alt accordion mobile-malaysian dispnone noprint" id="accordionSidebar">
 
-      <!-- Sidebar - Brand -->
-      <!-- <a class="sidebar-brand {{logobg}} d-flex align-items-center justify-content-center" href="{{ url_for('api.index') }}">
-        <div class="sidebar-brand-icon rotate-n-0">
-          <img id="logolg" class="mobile-malaysian" src={{logopath}} alt="">
-          <img id="logosm" class="desktop-malaysian" src={{mobilelogopath}} alt="">
-        </div>
-        <span class="sidebar-brand-text mx-0"><span class="dispnone">eapa</span></span>
-      </a> -->
 
-      <!-- Divider -->
       <hr style="visibility: hidden;" class="sidebar-divider my-2">
 
-      <!-- Heading -->
-      <!-- <div class="sidebar-heading">
-        Configuration
-      </div> -->
 
-      <!-- Nav Item - Pages Collapse Menu -->
-      <!-- <li class="nav-item">
-        <a class="nav-link user-management collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-users-cog text-white"></i>
-          <span>Users</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-
-            <a class="collapse-item" href="{{ url_for('api.registeruser') }}"><span><i class="fas fa-fw fa-user-plus mr-2"></i></span>New user</a>
-            
-          </div>
-        </div>
-      </li> -->
-      <!-- <li class="nav-item">
-        <a class="nav-link access-control" href="{{ url_for('api.modifyaccessright') }}">
-          <i class="fas fa-fw fa-wrench text-white"></i>
-          <span>Access</span>
-        </a>
-      </li> -->
 
       <!-- Heading -->
       <div class="sidebar-heading">
@@ -361,74 +328,8 @@
           <span class="font-weight-bold text-white no-wrap text-105">Payments</span>
         </a>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseProperty" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-building"></i>
-          <span>Properties</span>
-        </a>
-        <div id="collapseProperty" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Property management:</h6>
-
-            <a class="collapse-item mylinks" href="{{ url_for('api.propertymanagement') }}"><span><i class="fas fa-fw fa-building"></i></span>&nbsp;Manage Property</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createhousecode') }}"><span><i class="fas fa-fw fa-hashtag"></i></span>&nbsp;HouseCodes</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createhouse') }}"><span><i class="fas fa-fw fa-house-user"></i></span>&nbsp;Add houses</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
 
 
-      <!-- Nav Item - Tables -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMeters" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-clock"></i>
-          <span>Meters</span>
-        </a>
-        <div id="collapseMeters" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Manage meters:</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createmeter') }}"><span><i class="fas fa-fw fa-clock"></i></span>&nbsp;Add meters</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.allocatemeters') }}"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Allocation</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.meterremoval') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Deallocation</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
-
-
-      <!-- Nav Item - Tables -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTenants" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user-friends"></i>
-          <span>Tenants</span>
-        </a>
-        <div id="collapseTenants" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Tenants:</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.addtenant') }}"><span><i class="fas fa-fw fa-person-booth"></i></span>&nbsp;Add tenant</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.updatetenant') }}"><span><i class="fas fa-fw fa-user-edit"></i></span>&nbsp;Update tenant</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.allocatetenants') }}"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Allocation</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.tenantclearance') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Clearance</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-coins"></i>
-          <span>Billing</span>
-        </a>
-        <div id="collapseBilling" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Billing</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.billing') }}"><span><i class="fas fa-fw fa-dollar-sign"></i></span>&nbsp;Bill tenants</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li>
 
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('api.reports') }}">
@@ -461,31 +362,7 @@
       <!-- Divider -->
       <hr style="visibility: hidden;" class="sidebar-divider my-2">
 
-      <!-- Heading -->
-      <!-- <div class="sidebar-heading">
-        Configuration
-      </div> -->
 
-      <!-- Nav Item - Pages Collapse Menu -->
-      <!-- <li class="nav-item">
-        <a class="nav-link user-management collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-users-cog text-white"></i>
-          <span>Users</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-
-            <a class="collapse-item" href="{{ url_for('api.registeruser') }}"><span><i class="fas fa-fw fa-user-plus mr-2"></i></span>New user</a>
-            
-          </div>
-        </div>
-      </li> -->
-      <!-- <li class="nav-item">
-        <a class="nav-link access-control" href="{{ url_for('api.modifyaccessright') }}">
-          <i class="fas fa-fw fa-wrench text-white"></i>
-          <span>Access</span>
-        </a>
-      </li> -->
 
       <!-- Heading -->
       <div class="sidebar-heading">
@@ -526,82 +403,10 @@
           <span class="font-weight-bold text-white no-wrap text-105">Payments</span>
         </a>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseProperty" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-building"></i>
-          <span>Properties</span>
-        </a>
-        <div id="collapseProperty" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Property management:</h6>
-
-            <a class="collapse-item mylinks" href="{{ url_for('api.propertymanagement') }}"><span><i class="fas fa-fw fa-building"></i></span>&nbsp;Manage Property</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createhousecode') }}"><span><i class="fas fa-fw fa-hashtag"></i></span>&nbsp;HouseCodes</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createhouse') }}"><span><i class="fas fa-fw fa-house-user"></i></span>&nbsp;Add houses</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
 
 
-      <!-- Nav Item - Tables -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseMeters" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-clock"></i>
-          <span>Meters</span>
-        </a>
-        <div id="collapseMeters" class="collapse shw" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Manage meters:</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.createmeter') }}"><span><i class="fas fa-fw fa-clock"></i></span>&nbsp;Add meters</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.allocatemeters') }}"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Allocation</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.meterremoval') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Deallocation</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
 
 
-      <!-- Nav Item - Tables -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTenants" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user-friends"></i>
-          <span>Tenants</span>
-        </a>
-        <div id="collapseTenants" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Tenants:</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.addtenant') }}"><span><i class="fas fa-fw fa-person-booth"></i></span>&nbsp;Add tenant</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.updatetenant') }}"><span><i class="fas fa-fw fa-user-edit"></i></span>&nbsp;Update tenant</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.allocatetenants') }}"><span><i class="fas fa-fw fa-pen"></i></span>&nbsp;Allocation</a>
-            <a class="collapse-item mylinks" href="{{ url_for('api.tenantclearance') }}"><span><i class="fas fa-fw fa-list-alt"></i></span>&nbsp;Clearance</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li> -->
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseBilling" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-coins"></i>
-          <span>Billing</span>
-        </a>
-        <div id="collapseBilling" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-gradient-light py-2 collapse-inner rounded">
-            <h6 class="collapse-header text-info">Billing</h6>
-            <a class="collapse-item mylinks" href="{{ url_for('api.billing') }}"><span><i class="fas fa-fw fa-dollar-sign"></i></span>&nbsp;Bill tenants</a>
-            <div class="collapse-divider"></div>
-          </div>
-        </div>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('api.reports') }}">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Reports</span>
-        </a>
-      </li>
-    
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -617,14 +422,6 @@
 
       <!-- Main Content -->
       <div id="content">
-
-
-
-
-
-
-
-
 
 
 
@@ -5752,6 +5549,16 @@ $(".proratecb").change(function (e) {
     dashtimer = setInterval(function() {
     $(".flip-card").toggleClass("hovercard")}, 5000);
     });
+
+
+    // $('[id]').each(function(){
+    //   var id = $('[id="'+this.id+'"]');
+    //   if(id.length>1 && id[0]==this) {
+    //     console.log('Duplicate id '+this.id);
+    //     alert('duplicate found');
+    //   }
+    // });
+
 
   </script>
 

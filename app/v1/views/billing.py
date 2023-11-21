@@ -3196,11 +3196,11 @@ class ReceivePayment(Resource):
         dep = tenant_obj.deposits
 
         if dep:
-            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
             total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
+            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,None)
 
             totalpaid = 0.0
             totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0

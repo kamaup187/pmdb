@@ -1839,7 +1839,7 @@
     let agreementdue = parseInt($("#agreementdue").val())
 
 
-    if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
+    // if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
 
     if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
     if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
@@ -1857,14 +1857,77 @@
     if (bal >= electricitydue) {$("#electricitypaid").val(electricitydue);bal -= electricitydue}else if (bal < electricitydue && bal > 0) {$("#electricitypaid").val(bal);bal = 0}else {$("#electricitypaid").val(0.0)}
 
     if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
+    
+    var pay_remainder = 0;
+    var pay_deposit = 0;
 
     if(bal){
       $("#advancepay").removeClass("dispnone")
-      $("#advance_pay").val(bal)
+
+      console.log("advancepay....",bal)
+
+      $("#advance_pay_text").text(bal)
+
+      pay_remainder = bal
+
+        if (parseInt($("#bdepmemory").val()) > 0){
+
+          if (bal > parseInt($("#bdepmemory").val())){
+
+            pay_remainder = bal-parseInt($("#bdepmemory").val())
+
+            $("#deposit_pay_text").text($("#bdepmemory").val())
+            $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
+
+            pay_deposit = $("#bdepmemory").val()
+            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
+
+            $("#edit_rentdep").val($("#depmemory").val())
+            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + parseInt($("#bdepmemory").val() ))
+            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()))
+          }
+          else{
+
+            pay_remainder = 0
+            pay_deposit = bal
+
+            $("#deposit_pay_text").text(bal)
+            $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
+
+            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
+
+            $("#edit_rentdep").val($("#depmemory").val())
+            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + bal)
+            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - bal )
+          }
+        }
     }else{
+
+      pay_remainder = 0
+      pay_deposit = 0
+
+      console.log("no bal no dep paid")
+
       $("#advancepay").addClass("dispnone")
       $("#advance_pay").val(0.0)
+      $("#advance_pay_text").text("0.0")
+
+      $("#deposit_pay").val(0.0)
+      $("#deposit_pay_text").text("0.0")
+      $("#total_deposit_pay_text").text("0.0")
+
+      $("#deposit_bal").val("0.0")
+      $("#deposit_bal_text").text("0.0")
+
+      $("#edit_rentdep").val($("#depmemory").val())
+      $("#edit_prentdep").val($("#pdepmemory").val())
+      $("#edit_brentdep").val($("#bdepmemory").val())
+      
     }
+
+
+    $("#advance_pay").val(pay_remainder)
+    $("#deposit_pay").val(pay_deposit)
 
   })
 
@@ -1929,7 +1992,19 @@
                 servicepaid : ($("#servicepaid").val()),
                 penaltypaid : ($("#penaltypaid").val()),
                 depositpaid : ($("#depositpaid").val()),
+                depositpaidalt :$("#deposit_pay").val(),
                 agreementpaid :($("#agreementpaid").val()),
+
+                deprent: $("#edit_rentdep").val(),
+                depwater: $("#edit_waterdep").val(),
+                depelectricity: $("#edit_elecdep").val(),
+                depother:$("#edit_otherdep").val(),
+
+                deprentpaid: $("#edit_prentdep").val(),
+                depwaterpaid: $("#edit_pwaterdep").val(),
+                depelectricitypaid: $("#edit_pelecdep").val(),
+                depotherpaid:$("#edit_potherdep").val(),
+
                 paidamount:$("#paidamount").val(),
                 overpayment:$("#advance_pay").val(),
                 housecheck:$("#housecheck").text()

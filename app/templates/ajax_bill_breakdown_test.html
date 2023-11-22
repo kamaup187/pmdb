@@ -235,9 +235,16 @@
         class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
         value="" disabled /> <br>
 
+        <input id="deposit_pay"
+        class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
+        value="" disabled /> <br>
+
     <span class="text-black font-weight-bold">Initial unpaid deposit</span> : <span class="text-black text-125">{{dep.balance_rentdep}}</span><br>
 
-    <span class="text-black font-weight-bold">Deposit payment</span> : <span class="text-black text-125" id="deposit_pay_text">...</span><br>
+    <span class="text-black font-weight-bold">Initial payment</span> : <span class="text-black text-125">{{dep.paid_rentdep}}</span> <br>
+    <span class="text-black font-weight-bold">Current payment</span> : <span class="text-black text-125" id="deposit_pay_text">...</span><br>
+    <span class="text-black font-weight-bold">Total deposit payment</span> : <span class="text-black text-125" id="total_deposit_pay_text">...</span><br>
+
 
     <span class="text-black font-weight-bold">Deposit balance</span> : <span class="text-black text-125" id="deposit_bal_text">...</span> <br>
 

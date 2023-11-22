@@ -1570,7 +1570,7 @@
     let due3 = parseInt($("#due3").val())
     let due4 = parseInt($("#due4").val())
     let due5 = parseInt($("#due5").val())
-    let due6 = parseInt($("#due6").val())
+    // let due6 = parseInt($("#due6").val())
     let due7 = parseInt($("#due7").val())
     let due8 = parseInt($("#due8").val())
     let due9 = parseInt($("#due9").val())
@@ -1581,7 +1581,7 @@
     if (bal >= due3) {$("#paid3").val(due3);bal -= due3}else if (bal < due3 && bal > 0) {$("#paid3").val(bal);bal = 0}else {$("#paid3").val(0.0)}
     if (bal >= due4) {$("#paid4").val(due4);bal -= due4}else if (bal < due4 && bal > 0) {$("#paid4").val(bal);bal = 0}else {$("#paid4").val(0.0)}
     if (bal >= due5) {$("#paid5").val(due5);bal -= due5}else if (bal < due5 && bal > 0) {$("#paid5").val(bal);bal = 0}else {$("#paid5").val(0.0)}
-    if (bal >= due6) {$("#paid6").val(due6);bal -= due6}else if (bal < due6 && bal > 0) {$("#paid6").val(bal);bal = 0}else {$("#paid6").val(0.0)}
+    // if (bal >= due6) {$("#paid6").val(due6);bal -= due6}else if (bal < due6 && bal > 0) {$("#paid6").val(bal);bal = 0}else {$("#paid6").val(0.0)}
     if (bal >= due7) {$("#paid7").val(due7);bal -= due7}else if (bal < due7 && bal > 0) {$("#paid7").val(bal);bal = 0}else {$("#paid7").val(0.0)}
     if (bal >= due8) {$("#paid8").val(due8);bal -= due8}else if (bal < due8 && bal > 0) {$("#paid8").val(bal);bal = 0}else {$("#paid8").val(0.0)}
     if (bal >= due9) {$("#paid9").val(due9);bal -= due9}else if (bal < due9 && bal > 0) {$("#paid9").val(bal);bal = 0}else {$("#paid9").val(0.0)}
@@ -1592,6 +1592,7 @@
     if (bal >= addfeedue) {$("#addfeedue").val(addfeedue);bal -= addfeedue} else if (bal < addfeedue && bal > 0) {$("#addfeedue").val(bal);bal = 0}else {$("#addfeedue").val(0.0)}
 
     var pay_remainder = 0;
+    var pay_deposit = 0;
 
     if(bal){
       $("#advancepay").removeClass("dispnone")
@@ -1604,8 +1605,11 @@
           if (bal > parseInt($("#bdepmemory").val())){
 
             pay_remainder = bal-parseInt($("#bdepmemory").val())
+            pay_deposit = $("#bdepmemory").val()
 
             $("#deposit_pay_text").text($("#bdepmemory").val())
+            $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
+
             $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
 
             $("#edit_rentdep").val($("#depmemory").val())
@@ -1615,8 +1619,11 @@
           else{
 
             pay_remainder = 0
+            pay_deposit = bal
 
             $("#deposit_pay_text").text(bal)
+            $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
+
             $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
 
             $("#edit_rentdep").val($("#depmemory").val())
@@ -1627,14 +1634,13 @@
     }else{
 
       pay_remainder = 0
+      pay_deposit = 0
 
       console.log("no bal no dep paid")
 
       $("#advancepay").addClass("dispnone")
-      $("#advance_pay").val(0.0)
       $("#advance_pay_text").text("0.0")
 
-      $("#deposit_pay").val(0.0)
       $("#deposit_pay_text").text("0.0")
 
       $("#deposit_bal").val("0.0")
@@ -1647,6 +1653,7 @@
     }
 
     $("#advance_pay").val(pay_remainder)
+    $("#deposit_pay").val(pay_deposit)
 
   })
 
@@ -1722,6 +1729,7 @@
                 servicepaid : ($(".servicepaid").val()),
                 penaltypaid : ($(".finepaid").val()),
                 depositpaid : ($(".depositpaid").val()),
+                depositpaidalt :$("#deposit_pay").val(),
                 agreementpaid :($(".agrepaid").val()),
 
                 deprent: $("#edit_rentdep").val(),
@@ -1733,11 +1741,6 @@
                 depwaterpaid: $("#edit_pwaterdep").val(),
                 depelectricitypaid: $("#edit_pelecdep").val(),
                 depotherpaid:$("#edit_potherdep").val(),
-
-                depbalancerent: $("#edit_brentdep").val(),
-                depbalancewater: $("#edit_bwaterdep").val(),
-                depbalanceelectricity: $("#edit_belecdep").val(),
-                depbalanceother:$("#edit_botherdep").val(),
 
                 paidamount:$("#paidamount").val(),
                 overpayment:$("#advance_pay").val(),

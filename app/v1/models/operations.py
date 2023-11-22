@@ -3398,6 +3398,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.fine_status = status
         db.session.commit()
 
+    def update_dep_journal(self,status):
+        self.dep_journal = status
+        db.session.commit()
+
     def update_paidll(self,amount):
         self.paidll = amount
         db.session.commit()

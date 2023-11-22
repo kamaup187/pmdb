@@ -1072,6 +1072,7 @@ class MonthlyCharge(db.Model):
     smsid = db.Column(db.VARCHAR)
 
     arrears_updated = db.Column(db.Boolean,default=False)
+    dep_journal = db.Column(db.Boolean,default=False)
     updated = db.Column(db.Boolean,default=False)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
@@ -1174,6 +1175,7 @@ class MonthlyChargeHistory(db.Model):
     smsid = db.Column(db.VARCHAR)
 
     arrears_updated = db.Column(db.Boolean,default=False)
+    dep_journal = db.Column(db.Boolean,default=False)
     updated = db.Column(db.Boolean,default=False)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))

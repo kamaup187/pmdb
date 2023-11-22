@@ -2667,6 +2667,13 @@ class ReceivePayment(Resource):
                     dep = None
 
 
+                if dep:
+                    if not bill.dep_journal:
+                        dep_bal = bill.deposit_due + dep.balance_rentdep if dep.balance_rentdep else 0.0
+                        MonthlyChargeOp.update_dues(bill,"null","null","null","null","null","null","null","null","null","null",dep_bal,"null")
+                        MonthlyChargeOp.update_dep_journal(bill,True)
+
+
                 if crm(current_user):
                     edit = "dispnone"
                 else:
@@ -2701,20 +2708,20 @@ class ReceivePayment(Resource):
                         }
                     else:
                         order = {
-                        "dep":1,
-                        "rent":2,
-                        "garb":3,
-                        "water":4,
-                        "sec":6,
-                        "serv":7,
-                        "fine":5,
-                        "agre":8,
-                        "elec":9
+                            "dep":1,
+                            "rent":2,
+                            "garb":3,
+                            "water":4,
+                            "sec":6,
+                            "serv":7,
+                            "fine":5,
+                            "agre":8,
+                            "elec":9
                         }
 
                     return render_template('ajax_bill_breakdown_test.html',order=order,dep=dep,bill=bill,edit=edit)
 
-                return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
+                return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
 
@@ -2747,6 +2754,7 @@ class ReceivePayment(Resource):
         servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
         penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
+        depositpaidalt = int(request.form.get('depositpaidalt')) if request.form.get('depositpaidalt') else 0
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
         rentdep = request.form.get("deprent")
@@ -2758,11 +2766,6 @@ class ReceivePayment(Resource):
         paid_waterdep = request.form.get("depwaterpaid")
         paid_elecdep = request.form.get("depelectricitypaid")
         paid_otherdep = request.form.get("depotherpaid")
-
-        balance_rentdep = request.form.get("depbalancerent")
-        balance_waterdep = request.form.get("depbalancewater")
-        balance_elecdep = request.form.get("depbalanceelectricity")
-        balance_otherdep = request.form.get("depbalanceother")
 
         cbid = request.form.get("cbid")
 
@@ -2776,6 +2779,8 @@ class ReceivePayment(Resource):
         sec = "Security" if securitypaid else ""
         arr = ""
         dep = "Deposit" if depositpaid else ""
+        if not dep:
+            dep = "Deposit" if depositpaidalt else ""
         serv = "Service" if servicepaid else ""
 
         narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
@@ -3156,66 +3161,6 @@ class ReceivePayment(Resource):
 
         create_activity(current_user,f"added payment no. {payment_obj.id} for house: {payment_obj.house.name} in {payment_obj.apartment}")
 
-        values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
-        values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
-        values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
-
-        try:
-            if balance_rentdep:
-                a = values3[0]
-            else:
-                a = values[0] - values2[0] if values2[0] else 0.0
-        except:
-            a = 0
-
-        try:
-            if balance_waterdep:
-                b = values3[1]
-            else:
-                b = values[1] - values2[1] if values2[1] else 0.0
-        except:
-            b = 0
-
-        try:
-            if balance_elecdep:
-                c = values3[2]
-            else:
-                c = values[2] - values2[2] if values2[2] else 0.0
-        except:
-            c = 0
-
-        try:
-            if balance_otherdep:
-                d = values3[3]
-            else:
-                d = values[3] - values2[3] if values2[3] else 0.0
-        except:
-            d = 0
-
-
-        dep = tenant_obj.deposits
-
-        if dep:
-            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
-            total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
-            TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
-
-            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,None)
-
-            totalpaid = 0.0
-            totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
-            totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
-            totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
-            totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
-
-            totalbalance = a + b + c + d
-
-            TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
-
-            TenantOp.update_deposit(tenant_obj,total)
-
-
-
         if cbid:
             cb = CtoBop.fetch_record_by_id(cbid)
             CtoBop.update_status(cb,"claimed")
@@ -3250,8 +3195,12 @@ class ReceivePayment(Resource):
                         awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
                         return "Payment could not be processed at this time! Try again later"
 
+        if depositpaidalt:
+            valid_amount -= float(depositpaidalt)
+
         tenant_bal = tenant_obj.balance
         tenant_bal -= valid_amount
+
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             PermanentTenantOp.update_balance(tenant_obj,tenant_bal)
         else:
@@ -3370,12 +3319,16 @@ class ReceivePayment(Resource):
                     MonthlyChargeOp.update_paidll(specific_charge_obj,update_paidll)
 
                 db.session.expire(specific_charge_obj)
-                bala = specific_charge_obj.balance
+                bala = specific_charge_obj.balance     
                 bala-=valid_amount
+
                 MonthlyChargeOp.update_balance(specific_charge_obj,bala)
 
                 paid_amount = specific_charge_obj.paid_amount
-                cumulative_pay = paid_amount + valid_amount
+                if depositpaidalt:
+                    cumulative_pay = paid_amount + valid_amount + float(depositpaidalt)
+                else:
+                    cumulative_pay = paid_amount + valid_amount 
                 MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
                 MonthlyChargeOp.update_payment_date(specific_charge_obj,pay_date)
 
@@ -3418,11 +3371,17 @@ class ReceivePayment(Resource):
                             if specific_charge_obj.house.housecode.servicerate:
                                 service_paid += overpayment
 
-                deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+                if depositpaidalt:
+                    deposit_paid = depositpaid + depositpaidalt + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+                else:
+                    deposit_paid = depositpaid + specific_charge_obj.deposit_paid if specific_charge_obj.deposit_paid is not None else 0
+
+                # import pdb; pdb.set_trace()
+
                 agreement_paid = agreementpaid + specific_charge_obj.agreement_paid if specific_charge_obj.agreement_paid is not None else 0
 
                 MonthlyChargeOp.update_payments(specific_charge_obj,booking_paid,instalment_paid,addfee_paid,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,service_paid,penalty_paid,deposit_paid,agreement_paid)
-                PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,depositpaid,agreementpaid)
+                PaymentOp.update_payments(payment_obj,bookingpaid,instalmentpaid,addfeepaid,rentpaid,waterpaid,electricitypaid,garbagepaid,securitypaid,servicepaid,penaltypaid,deposit_paid,agreement_paid)
 
                 try:
                     bookbal = specific_charge_obj.booking_due - bookingpaid if specific_charge_obj.booking_due else 0.0
@@ -3438,7 +3397,12 @@ class ReceivePayment(Resource):
                     penaltybal = specific_charge_obj.penalty_due - penaltypaid
                     securitybal = specific_charge_obj.security_due - securitypaid
                     garbagebal = specific_charge_obj.garbage_due - garbagepaid
-                    depositbal = specific_charge_obj.deposit_due - depositpaid
+
+                    if depositpaidalt:
+                        depositbal = specific_charge_obj.deposit_due - depositpaidalt - depositpaid
+                    else:
+                        depositbal = specific_charge_obj.deposit_due - depositpaid
+
                     agreementbal = specific_charge_obj.agreement_due - agreementpaid
                     if overpayment > 1:
                         if specific_charge_obj.tenant_id:
@@ -3453,6 +3417,37 @@ class ReceivePayment(Resource):
                 except Exception as e:
                     print("PAID TO LEGACY BILL")
                     print("ERROR >>",e)
+
+
+                values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
+                values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+
+                a = values[0] - values2[0]
+                b = values[1] - values2[1]
+                c = values[2] - values2[2]
+                d = values[3] - values2[3]
+
+
+                dep = tenant_obj.deposits
+
+                if dep:
+                    TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
+                    total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                    TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+                    TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,None)
+
+                    totalpaid = 0.0
+                    totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                    totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                    totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                    totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+                    totalbalance = a + b + c + d
+
+                    TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+
+                    TenantOp.update_deposit(tenant_obj,total)
 
             # elif not specific_charge_obj and not current_period_payment:
             #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
@@ -4176,54 +4171,55 @@ class UpdateDeposit(Resource):
         waterdep = request.form.get("water")
         elecdep = request.form.get("electricity")
         otherdep = request.form.get("other")
-
         paid_rentdep = request.form.get("paidrent")
         paid_waterdep = request.form.get("paidwater")
         paid_elecdep = request.form.get("paidelectricity")
         paid_otherdep = request.form.get("paidother")
 
-        balance_rentdep = request.form.get("balancerent")
-        balance_waterdep = request.form.get("balancewater")
-        balance_elecdep = request.form.get("balanceelectricity")
-        balance_otherdep = request.form.get("balanceother")
-
         status = request.form.get("status")
 
-        values = validate_float_inputs(rentdep,waterdep,elecdep,otherdep)
-        values2 = validate_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
-        values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+        values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
+        values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+        # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
 
-        try:
-            if balance_rentdep:
-                a = values3[0]
-            else:
-                a = values[0] - values2[0] if values2[0] else 0.0
-        except:
-            a = 0
+        # try:
+        #     if balance_rentdep:
+        #         a = values3[0]
+        #     else:
+        #         a = values[0] - values2[0] if values2[0] else 0.0
+        # except:
+        #     a = 0
 
-        try:
-            if balance_waterdep:
-                b = values3[1]
-            else:
-                b = values[1] - values2[1] if values2[1] else 0.0
-        except:
-            b = 0
+        # try:
+        #     if balance_waterdep:
+        #         b = values3[1]
+        #     else:
+        #         b = values[1] - values2[1] if values2[1] else 0.0
+        # except:
+        #     b = 0
 
-        try:
-            if balance_elecdep:
-                c = values3[2]
-            else:
-                c = values[2] - values2[2] if values2[2] else 0.0
-        except:
-            c = 0
+        # try:
+        #     if balance_elecdep:
+        #         c = values3[2]
+        #     else:
+        #         c = values[2] - values2[2] if values2[2] else 0.0
+        # except:
+        #     c = 0
 
-        try:
-            if balance_otherdep:
-                d = values3[3]
-            else:
-                d = values[3] - values2[3] if values2[3] else 0.0
-        except:
-            d = 0
+        # try:
+        #     if balance_otherdep:
+        #         d = values3[3]
+        #     else:
+        #         d = values[3] - values2[3] if values2[3] else 0.0
+        # except:
+        #     d = 0
+
+
+        a = values[0] - values2[0]
+        b = values[1] - values2[1]
+        c = values[2] - values2[2]
+        d = values[3] - values2[3]
+
 
         if ttype == "owner" or ttype == "resident":
             return ""

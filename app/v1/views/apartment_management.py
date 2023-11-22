@@ -184,6 +184,11 @@ class Index(Resource):
 
         print(len(coss)," companies found")
 
+        # pps = PaymentOp.fetch_all_payments()
+        # for pp in pps:
+        #     if pp.balance == None:
+        #         print("Payment mk Failed")
+
 
         # propu = ApartmentOp.fetch_apartment_by_name("Villa House")
 

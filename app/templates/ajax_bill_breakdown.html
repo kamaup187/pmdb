@@ -68,7 +68,7 @@
         {% endif %}
 
         {%if bill.deposit_due%}
-        <div class="row">
+        <div class="row dispnone">
             <div class="form-group col-6 no-paddin input-icons">
                 <span>Deposit due</span>
                 <input id="depositdue"
@@ -223,10 +223,68 @@
 
 
 <div id="advancepay" class="form-group dispnone no-paddin input-icons">
-    <span class="text-danger font-weight-bold">Overpayment/Advance/Prepayment</span>
+    <span class="text-danger font-weight-bold">Overpayment/Advance/Prepayment</span> : Kes <span class="text-black text-125" id="advance_pay_text">...</span>
     <input id="advance_pay"
-        class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
-        value="" disabled />
+        class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
+        value="" disabled /> <br>
+
+        <input id="deposit_pay"
+        class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
+        value="" disabled /> <br>
+
+    <span class="text-black font-weight-bold">Invoice deposit</span> : <span class="text-black text-125">{{bill.deposit_due}}</span><br>
+    <span class="text-black font-weight-bold">Initial unpaid deposit</span> : <span class="text-black text-125">{{dep.balance_rentdep}}</span><br>
+
+    <span class="text-black font-weight-bold">Initial payment</span> : <span class="text-black text-125">{{dep.paid_rentdep}}</span> <br>
+    <span class="text-black font-weight-bold">Current payment</span> : <span class="text-black text-125" id="deposit_pay_text">...</span><br>
+    <span class="text-black font-weight-bold">Total deposit payment</span> : <span class="text-black text-125" id="total_deposit_pay_text">...</span><br>
+
+
+    <span class="text-black font-weight-bold">Deposit balance</span> : <span class="text-black text-125" id="deposit_bal_text">...</span> <br>
+
+    <div class="dispnone">
+        <div>
+            <input id="depmemory" value="{{dep.rentdep}}">
+            <input id="pdepmemory" value="{{dep.paid_rentdep}}">
+            <input id="bdepmemory" value="{{dep.balance_rentdep}}">
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-3 border-0 semi-small">Rent deposit</div>
+            <div class="col-3"><input id="edit_rentdep" class="form-control ph" type="text" value="{{dep.rentdep}}"></div>
+            <div class="col-3"><input id="edit_prentdep" class="form-control ph" type="text" value="{{dep.paid_rentdep}}"></div>
+            <div class="col-3"><input id="edit_brentdep" class="form-control ph" type="text" placeholder="{{dep.balance_rentdep}}"></div>
+        </div>
+        
+        <div class="row mb-2">
+            <div class="col-3 border-0 semi-small">Water deposit</div>
+            <div class="col-3"><input id="edit_waterdep" class="form-control ph" type="text" value="{{dep.waterdep}}"></div>
+            <div class="col-3"><input id="edit_pwaterdep" class="form-control ph" type="text" value="{{dep.paid_waterdep}}"></div>
+            <div class="col-3"><input id="edit_bwaterdep" class="form-control ph" type="text" placeholder="{{dep.balance_waterdep}}"></div>
+        </div>
+        
+        <div class="row mb-2">
+            <div class="col-3 border-0 semi-small">Elec deposit</div>
+            <div class="col-3"><input id="edit_elecdep" class="form-control ph" type="text" value="{{dep.elecdep}}"></div>
+            <div class="col-3"><input id="edit_pelecdep" class="form-control ph" type="text" value="{{dep.paid_elecdep}}"></div>
+            <div class="col-3"><input id="edit_belecdep" class="form-control ph" type="text" placeholder="{{dep.balance_elecdep}}"></div>
+        </div>
+        
+        <div class="row mb-2">
+            <div class="col-3 border-0 semi-small">Other deposits</div>
+            <div class="col-3"><input id="edit_otherdep" class="form-control ph" type="text" value="{{dep.otherdep}}"></div>
+            <div class="col-3"><input id="edit_potherdep" class="form-control ph" type="text" value="{{dep.paid_otherdep}}"></div>
+            <div class="col-3"><input id="edit_botherdep" class="form-control ph" type="text" placeholder="{{dep.balance_otherdep}}"></div>
+        </div>
+        
+        <div class="row underline-top pt-2">
+            <div class="col-3 border-0 text-black semi-small">TOTAL</div>
+            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.total}}" disabled></div>
+            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.total_paid}}" disabled></div>
+            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.balance}}" disabled></div>
+        </div>
+    </div>
+
 </div>
 
 <!-- <script>

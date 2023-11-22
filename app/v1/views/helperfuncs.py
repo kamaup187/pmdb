@@ -4120,6 +4120,29 @@ def validate_float_inputs(*args):
     print("Output >>>>>>>>>>", results)
     return results
 
+def validate_deposit_float_inputs(*args):
+    print("Args>>>>>>>>",args)
+    results = []
+    for i in args:
+        if i is None:
+            results.append(0.0)
+            continue
+
+        ii = i.replace(',', '')
+        print(len(ii))
+
+        if len(ii) == 0:
+            results.append(0.0)
+        else:
+            try:
+                new_i = float(ii)
+                results.append(new_i)
+            except:
+                results.append(0.0)
+
+    print("Output >>>>>>>>>>", results)
+    return results
+
 def validate_float_inputs_to_exclude_zeros(*args):
     print("INPUT", args)
 

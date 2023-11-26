@@ -797,7 +797,7 @@ class Index(Resource):
             try:
                 companyname = company.name.split(" ")[0].title() if len(company.name) > 15 else company.name
             except:
-                txt = "COMPANY NAME IS FAILING"
+                txt = "COMPANY NAME IS FAILING !"
                 send_internal_email_notifications(current_user.company.name,txt)
                 companyname = "Company"
 

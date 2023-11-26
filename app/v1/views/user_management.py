@@ -1619,7 +1619,7 @@ class UserLogin(Resource):
 
         auth = os.getenv("TARGET") or TARGET
 
-        loginpage = "login2.html" if auth == "lasshouse" else "login.html"
+        loginpage = "login2.html" if auth == "lasshouse" else "rentlib_login.html"
 
         return Response(render_template(loginpage))
 

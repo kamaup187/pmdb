@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>RentLib</title>
+
+  <!-- Custom fonts-->
+  <!-- <link rel="icon" type="image/png" href="../static/img/smkiota14.png"/> -->
+  <!-- <link href="../static/img/kiota.ico" rel="shortcut icon" type="image/x-icon" /> -->
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico-r/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico-r/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico-r/favicon-16x16.png">
+  <link rel="manifest" href="../static/img/favico-r/site.webmanifest">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='eapartment-min.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink-uptodate3.css') }}">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='login.css') }}">
+
+
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <div id="bg"></div>
+
+
+  <form method="POST" action="/signin" >
+    <div class="h1 mb-4 text-white">RENTLIB</div>
+
+    <div class="login_form">
+      <div class="form-field">
+        <input type="text" placeholder="Email / Username" name="identifier" required />
+      </div>
+
+      <div class="form-field">
+        <input type="password" placeholder="Password" name="password" required />
+      </div>
+
+      <div class="form-field">
+        <button id="signin" class="btn" type="submit">Log in</button>
+      </div>
+    </div>
+  </form>
+  <!-- partial -->
+
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
+<!-- 
+  <script>
+    $("#code").keyup(function(){
+    
+        $.ajax({
+          url: "{{ url_for('api.userlogin') }}",
+          type: "POST",
+          data: {
+                  identifier: $("#code").val(),
+                  runcode : "somestring"
+              },
+          success: function(response) {
+            $("#username").html(response);
+          },
+          error: function(xhr) {
+            //alert(xhr);
+          }
+        });
+    });
+    </script> -->
+
+<script>
+
+    $("#signin").on('click',function(){
+    //   $('#signin').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Signin in...');
+    $('#signin').html('<i class="fa fa-spinner fa-spin mr-2"></i>Signin in...');
+    })
+</script>
+
+</body>
+
+</html>

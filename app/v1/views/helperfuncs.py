@@ -1168,11 +1168,11 @@ def logo(co):
                 # CompanyOp.update_sms_provider(co,"Advanta")
                 ##################################################
 
-                logopath = "../static/img/logos/kiotapay/l-logo.png"
-                mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
-                fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
-                letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
-                sign = "../static/img/logos/kiotapay/sign.png"
+                logopath = "../static/img/logos/rentlib/l-logo.png"
+                mobilelogopath = "../static/img/logos/rentlib/s-logo.png"
+                fulllogopath = "../static/img/logos/rentlib/full-logo.jpg"
+                letterhead = "../static/img/logos/rentlib/letterhead.jpg"
+                sign = "../static/img/logos/rentlib/sign.png"
 
     except Exception as e:
         print("failing big time",e)

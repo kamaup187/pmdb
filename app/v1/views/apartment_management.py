@@ -4238,25 +4238,11 @@ class TenantSms(Resource):
                     if target == "lasshouse":
                         report = inva_send_sms(message,phonenum)
                         return render_template('ajaxproceed.html',alert=msg)            
-
-                    elif co.sms_provider == "Advanta":
-                        sms_sender(co.name,sms_text,phonenum)
-
-                        msg = "Message sent successfully"
-                        return render_template('ajaxproceed.html',alert=msg)            
-
                     else:
-                        if sender == "AFRICASTKNG":
-                            response = sms.send(message, recipient)
-                        else:
-                            response = sms.send(message, recipient,sender)
-                        
-                    print(response)
-                    rem_sms -= 1
-                    CompanyOp.set_rem_quota(co,rem_sms)
-                    msg = "Message sent successfully"
-                    return render_template('ajaxproceed.html',alert=msg)
-
+                        sms_sender(co.name,sms_text,phonenum)
+                        msg = "Message sent successfully"
+                        return render_template('ajaxproceed.html',alert=msg)  
+                             
                 except Exception as e:
                     print(f"Houston, we have a problem {e}")
                     msg = "Sending failed!"

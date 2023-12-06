@@ -111,8 +111,8 @@ else:
 from .advanta import *
 
 
-kiotapay_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
-kiotapay_partner_id = 3886
+kiotapay_api_key = "c60dc99dedf85f85ee872a6bbec4a39d"
+kiotapay_partner_id = 8929
 
 lesama_api_key = "cfc7c4382ae6d4277d8c09419a897c9e"
 lesama_partner_id = 3895
@@ -857,7 +857,7 @@ def logo(co):
     try:
         if str_name_company == "Chaise River Properties":
             coc = CompanyOp.fetch_company_by_name("Chaise River Properties")
-            CompanyOp.update_sms_provider(coc,"KIOTAPAY")
+            CompanyOp.update_sms_provider(coc,"RENTLIB")
             ##################################################
             logopath = "../static/img/logos/chase/l-logo.png"
             mobilelogopath = "../static/img/logos/chase/s-logo.png"
@@ -1411,7 +1411,7 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
                     # response = sms.send(message, recipient, sender)
 
-                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
                     # resp = response["SMSMessageData"]["Recipients"][0]
                     # raw_cost = resp["cost"]
@@ -1506,7 +1506,7 @@ def sms_sender(company,sms_text,phonenum):
     #########################################################################################
     else:
         # report = None
-        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
         
     if report:
         param1 = report["apikey"]
@@ -4561,7 +4561,7 @@ def send_statement(tenantid):
                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                 
             elif code == 405:
-                response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                response = sms.send("Messages have been depleted!", ["+254716674695"],"RENTLIB")
                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                 
             elif code == 406:
@@ -4681,7 +4681,7 @@ def send_bulk_sms(propid,temp_txt):
                     #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
                     #     elif code == 405:
-                    #         response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                    #         response = sms.send("Messages have been depleted!", ["+254716674695"],"RENTLIB")
                     #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
                     #     elif code == 406:
@@ -4803,7 +4803,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal):
                     #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX Invalid number", phonenum, " XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
                     #     elif code == 405:
-                    #         response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                    #         response = sms.send("Messages have been depleted!", ["+254716674695"],"RENTLIB")
                     #         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                             
                     #     elif code == 406:
@@ -6011,7 +6011,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             MonthlyChargeOp.update_sms_status(bill,"fail")
                     else:
                         txt = f"{co} has depleted sms"
-                        # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                        # response = sms.send(txt, ["+254716674695"],"RENTLIB")
                         send_internal_email_notifications(co.name,txt)
                         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",txt)
                 else:
@@ -6138,7 +6138,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             MonthlyChargeOp.update_sms_status(bill,"fail")
                     else:
                         txt = f"{co} has depleted sms"
-                        # response = sms.send(txt, ["+254716674695"],"KIOTAPAY")
+                        # response = sms.send(txt, ["+254716674695"],"RENTLIB")
                         send_internal_email_notifications(co.name,txt)
                         print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",txt)
                 else:
@@ -6240,7 +6240,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 
                             elif code == 405:
                                 MeterReadingOp.update_sms_status(bill,"waiting")
-                                # response = sms.send("Messages have been depleted!", ["+254716674695"],"KIOTAPAY")
+                                # response = sms.send("Messages have been depleted!", ["+254716674695"],"RENTLIB")
                                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN SMS DEPLETED XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                                 
                             elif code == 406:
@@ -6331,7 +6331,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 message = f"Dear {tenant.name}, \nYour {str_month} electricity bill reading is as follows: \n\nLast reading: {smslastreading} \nCurrent reading: {smscurrentreading} \nUnits: {smsunits} \nBill: {smsbill} \n\n~{str_co}"
                                 
                             response = sms.send(message, recipient, sender)
-                            # response = sms.send(message, ["+254716674695","+254717121612"], "KIOTAPAY")
+                            # response = sms.send(message, ["+254716674695","+254717121612"], "RENTLIB")
                             print(response)
                             rem_sms -= 1
                             CompanyOp.set_rem_quota(co,rem_sms)
@@ -9706,7 +9706,7 @@ def penalty_calculator(param):
             print(txtx)
             cophone = sms_phone_number_formatter(co.sphone) if co.sphone else "0"
             # try:
-            #     notify = sms.send(txtx, ["+254716674695",cophone],"KIOTAPAY")
+            #     notify = sms.send(txtx, ["+254716674695",cophone],"RENTLIB")
             # except:
             #     pass
         else:
@@ -13856,7 +13856,7 @@ def auto_consume_ctob(ctob_obj):
                 print(f"Houston, we have a problem {e}")
 
 def auto_consume_ctob2(ctob_obj):
-    print("C2B C2B KIOTAPAY C2B C2B")
+    print("C2B C2B RENTLIB C2B C2B")
 
     print("REF>>>>",ctob_obj.bill_ref_num)
 

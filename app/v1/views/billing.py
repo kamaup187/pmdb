@@ -4125,7 +4125,7 @@ class ResolveDeposits(Resource):
 
         prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
 
-        if current_user.username.startswith("qc") or localenv or 'director' in current_user.company_user_group.name.lower():
+        if current_user.username.startswith("qc") or localenv: #or 'director' in current_user.company_user_group.name.lower():
             pass
         else:
             print("Not allowed to resolve invoices")

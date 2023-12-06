@@ -88,7 +88,11 @@
             <table class="table" id="dataTable" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
-                      <th class="">PNO</th>
+
+                      {%if not prop%}
+                      <th class="">PLOT</th>
+                      {%endif%}
+                      <th class="">HOUSE</th>
                       <th class="">TENANT NAME</th>
 
                       <!-- <th class="deposit">TOTAL DEPOSIT</th> -->
@@ -100,6 +104,9 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
+                      {%if not prop%}
+                      <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                      {%endif%}
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
 
@@ -169,7 +176,10 @@
             <table class="table" id="data-table" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
-                  <th class="">PNO</th>
+                  {%if not prop%}
+                  <th class="">PLOT</th>
+                  {%endif%}
+                  <th class="">HOUSE</th>
                   <th class="">TENANT NAME</th>
 
                   <!-- <th class="deposit">TOTAL DEPOSIT</th> -->
@@ -181,6 +191,9 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
+                  {%if not prop%}
+                  <td class="data-cell text-left">{{ bill['prop'] }}</td>
+                  {%endif%}
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
 

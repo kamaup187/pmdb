@@ -2755,10 +2755,16 @@ clear: both;
   /* height: 50% !important; */
   height: 100px !important;
 }
-.card-bg {
+.card-bgg {
   /* background:linear-gradient(rgb(46, 4, 85),rgb(6, 103, 133) ) !important; */
   /* background:linear-gradient(180deg,#443952 10%,#258391 100%); */
   background: linear-gradient(rgb(5, 187, 219), rgb(3, 101, 126)) !important;
+}
+
+.card-bg {
+  /* background:linear-gradient(rgb(46, 4, 85),rgb(6, 103, 133) ) !important; */
+  /* background:linear-gradient(180deg,#443952 10%,#258391 100%); */
+  background: linear-gradient(rgb(22, 22, 22), rgb(27, 48, 53)) !important;
 }
 
 .premier-card-theme {

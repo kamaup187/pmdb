@@ -4866,7 +4866,7 @@ def autosend_pending_smsreceipts(payids):
         if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
             receiptlink = f"https://{INV}/r/{payment_obj.rand_id}"
         else:
-            receiptlink = f"https://kiotapay.com/r/{payment_obj.rand_id}"
+            receiptlink = f"https://rentlib.com/r/{payment_obj.rand_id}"
 
         receipt = f"Receipt: {receiptlink}"
 

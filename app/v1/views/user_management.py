@@ -577,7 +577,7 @@ class Users(Resource):
             user_id = get_identifier(userid)
             del_user = UserOp.fetch_user_by_id(user_id)
             if del_user.phone:
-                targeturl = f"https://kiotapay.com/passwordupdate/{del_user.phone}"
+                targeturl = f"https://rentlib.com/passwordupdate/{del_user.phone}"
                 message1 = f"Greetings {del_user.name}. \nKindly click on the link below to reset your password. \n\n{targeturl}"
 
                 tele = sms_phone_number_formatter(del_user.phone)
@@ -623,10 +623,10 @@ class Users(Resource):
                         try:
                             del_usr = del_user.name
                             UserOp.delete(del_user)
-                            response = sms.send(f"{current_user.name} has deleted {del_usr}", ["+254716674695"],"KIOTAPAY")
+                            response = sms.send(f"{current_user.name} has deleted {del_usr}", ["+254716674695"],"RENTLIB")
                         except Exception as e:
                             db.session.rollback()
-                            response = sms.send(f"{current_user.name} failed to delete {del_usr} due to {e}", ["+254716674695"],"KIOTAPAY")
+                            response = sms.send(f"{current_user.name} failed to delete {del_usr} due to {e}", ["+254716674695"],"RENTLIB")
                             # UserOp.delete_user(del_user,True)
                             print(e)
                 return proceed
@@ -769,7 +769,7 @@ class Users(Resource):
 
             if new_user.phone:
                 if os.getenv('TARGET') == 'lasshouse' or TARGET:
-                    targeturl = f"https://kiotapay.com/passwordupdate/{new_user.phone}"
+                    targeturl = f"https://rentlib.com/passwordupdate/{new_user.phone}"
                 else:
                     targeturl = f"https://inva.properties/passwordupdate/{new_user.phone}"
                     
@@ -1169,7 +1169,7 @@ class RequestDemo(Resource):
         message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has requested for a demo."
 
         try:
-            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
+            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"RENTLIB")
             response = sms.send(message1, ["+254716674695"],sender)
         except:
             pass
@@ -1254,7 +1254,7 @@ class SelfUserRegisterAgent(Resource):
 
         message1 = f"{fname} {lname} of Phone: {phone} & Email: {email} has just signed up as an agent({company_name}). \nPlease follow up immediately."
         try:
-            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"KIOTAPAY")
+            # response = sms.send(message1, ["+254716674695","+254725538750","+254796247957"],"RENTLIB")
             response = sms.send(message1, ["+254716674695","+25410349851"],sender)
         except:
             pass
@@ -1358,7 +1358,7 @@ class SelfUserRegisterOwner(Resource):
             response = sms.send(message1, ["+254716674695","+25410349851"],sender)
 
             recipient = [sms_phone_number_formatter(phone)]
-            message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nKiotaPay Customer relations manager."
+            message2 = f"Dear {fname} {lname}, \nThank you for registering with us. We will be in touch as soon as possible. \nRentlib Customer relations manager."
             response = sms.send(message2, recipient,sender)
 
         except:
@@ -1462,7 +1462,7 @@ class LandingPage(Resource):
         elif os.getenv("HOMEPAGE") or HOMEPAGE == "False":
             return redirect(url_for('api.index'))
         else:
-            return redirect("https://kiotapay.co.ke")
+            return redirect("https://rentlib.com")
         # else:
         #     # return Response(render_template("home.html"))
         #     return redirect(url_for('api.userlogin'))
@@ -1594,7 +1594,7 @@ class UserLogin(Resource):
         # else:
         #     print("no invoice,no receipt")
 
-            # advanta_sms_delivery2(kiotapay_api_key,kiotapay_partner_id,birr.smsid)
+            # advanta_sms_delivery2(rentlib_api_key,rentlib_partner_id,birr.smsid)
         # birr = TenantOp.fetch_tenant_by_id(18277)
         # if birr:
         #     print("birr one is patikana")
@@ -1609,7 +1609,7 @@ class UserLogin(Resource):
 
         # import pdb; pdb.set_trace()
 
-        # response = sms.send("Good morning Peter, we have updated sms balance. ~ Peter", ["+254726770158"],"KIOTAPAY")
+        # response = sms.send("Good morning Peter, we have updated sms balance. ~ Peter", ["+254726770158"],"rentlib")
 
         # cwq = CompanyOp.fetch_company_by_id(8)
         # if cwq:
@@ -1677,7 +1677,7 @@ class UserLogin(Resource):
 class TenantDemoLogin(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
-        response = sms.send("Tenant Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"KIOTAPAY")
+        response = sms.send("Tenant Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"rentlib")
         user = UserOp.fetch_user_by_national_id("12341234")
         remember = False
         login_user(user, remember=remember)
@@ -1686,7 +1686,7 @@ class TenantDemoLogin(Resource):
 class LandlordDemoLogin(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
-        response = sms.send("Agent/Landlord Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"KIOTAPAY")
+        response = sms.send("Agent/Landlord Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"rentlib")
         user = UserOp.fetch_user_by_national_id("12345678")
         remember = False
         login_user(user, remember=remember)
@@ -1695,7 +1695,7 @@ class LandlordDemoLogin(Resource):
 class DemoLogin(Resource):
     def get(self):
         print("XXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXXX DEMO HIT XXXXXXXXXXXXXXXXX DEMO HIT XXXXX")
-        # response = sms.send("Agent/Landlord Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"KIOTAPAY")
+        # response = sms.send("Agent/Landlord Demo account has been accessed by ycombinator",["+254716674695","+254725538750"],"rentlib")
         user = UserOp.fetch_user_by_national_id("12344321")
         remember = False
         if user:

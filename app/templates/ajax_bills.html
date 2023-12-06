@@ -408,6 +408,22 @@
               $("#"+item).html('all set');
             }
           });
+          
+        }else if(item.startsWith("deps")){
+          console.log("Clicked invs",item)
+          $("#"+item).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>resolving...');
+
+          $.ajax({
+            url: "/resolve/deposits",
+            type: "POST",
+            data: {
+              propid: item,
+              period:$("#target_period").text()
+            },
+            success: function(response) {
+              $("#"+item).html('all set');
+            }
+          });
                 
         }else if(item.startsWith("bill")){
           $("#bill_prop_identifier").html(item)

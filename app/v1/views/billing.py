@@ -4118,6 +4118,38 @@ class ResolveInvoices(Resource):
             except:
                 pass
 
+class ResolveDeposits(Resource):
+    def post(self):
+
+        prop_id = request.form.get("propid")
+
+        prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+
+        if current_user.username.startswith("qc") or localenv or 'director' in current_user.company_user_group.name.lower():
+            pass
+        else:
+            print("Not allowed to resolve invoices")
+            return None
+
+        tenants = tenantauto(prop.id)
+
+        for tenant_obj in tenants:
+
+            dep = tenant_obj.deposits
+
+            if dep:
+                TenantDepositOp.update_deposits(dep,0.0,0.0,0.0,0.0,None,None,'')
+                total = 0.0
+                TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+                TenantDepositOp.update_paid_deposits(dep,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,None,None,'')
+
+                totalbalance = 0.0
+
+                TenantDepositOp.update_paid_deposits_alt(dep,total,0.0,totalbalance)
+
+                TenantOp.update_deposit(tenant_obj,total)
+
 class UpdateDeposit(Resource):
     @login_required
     def get(self):

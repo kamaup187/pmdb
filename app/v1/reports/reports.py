@@ -1937,6 +1937,7 @@ class CombinedReport(Resource):
         renttotal = 0.0
         watertotal = 0.0
         garbagetotal = 0.0
+        electricitytotal = 0.0
         securitytotal = 0.0
         servicetotal = 0.0
         penaltytotal = 0.0
@@ -2072,6 +2073,7 @@ class CombinedReport(Resource):
             renttotal += bill.rent
             watertotal += bill.water
             garbagetotal += bill.garbage
+            electricitytotal += bill.electricity
             securitytotal += bill.security
             servicetotal += bill.maintenance
             deposittotal += bill.deposit
@@ -2126,6 +2128,7 @@ class CombinedReport(Resource):
         trent = (f"{renttotal:,}")
         twater = (f"{watertotal:,}")
         tgarbage= (f"{garbagetotal:,}")
+        telectricity= (f"{electricitytotal:,}")
         tsecurity = (f"{securitytotal:,}")
         tservice = (f"{servicetotal:,}")
         tdeposit = (f"{deposittotal:,}")
@@ -2200,12 +2203,17 @@ class CombinedReport(Resource):
             renttotal=trent,
             watertotal=twater,
             garbagetotal=tgarbage,
+            electricitytotal=telectricity,
             securitytotal=tsecurity,
             servicetotal=tservice,
             deposittotal=tdeposit,
             depositptotal=tdepositp,
             depositdtotal=tdepositd,
             penaltytotal=tpenalty,
+
+            garbage = "" if garbagetotal else "dispnone",
+            electricity = "" if electricitytotal else "dispnone",
+            water = "" if watertotal else "dispnone",
 
             billtotal=tbill,
             amounttotal=tamount,

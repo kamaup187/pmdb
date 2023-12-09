@@ -11,9 +11,9 @@
   /* @page{
     size:landscape;
   } */
-  /* body {
+  body {
     zoom: 80%;
-  } */
+  }
 </style>
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
@@ -99,6 +99,7 @@
 
                       <th class="water">WATER</th>
                       <th class="garbage">GARBAGE</th>
+                      <th class="electricity">ELECTRICITY</th>
                       <th class="security dispnone">SECURITY</th>
                       <th class="service dispnone">SERVICE</th>
                       <th class="deposit">D PAID</th>
@@ -124,6 +125,7 @@
 
                       <td class="data-cell text-right water">{{ bill['water'] }}</td>
                       <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
+                      <td class="data-cell text-right electricity">{{ bill['electricity'] }}</td>
                       <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                       <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
                       <td class="data-cell text-right btn-outline-primary text-black {{bill['id']}} deposit" data-toggle="modal" data-target="#editDepModal">{{ bill['deposit-paid'] }}</td>
@@ -145,6 +147,7 @@
                       <td class="font-weight-bold text-right rent">-</td>
                       <td class="font-weight-bold text-right water">{{watertotal}}</td>
                       <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
+                      <td class="font-weight-bold text-right electricity">{{electricitytotal}}</td>
                       <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                       <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
                       <td class="font-weight-bold text-right deposit">-</td>
@@ -283,6 +286,7 @@
 
                   <th class="water">WATER</th>
                   <th class="garbage">GARBAGE</th>
+                  <th class="electricity">ELECTRICITY</th>
                   <th class="security dispnone">SECURITY</th>
                   <th class="service dispnone">SERVICE</th>
                   <th class="deposit">D PAID</th>
@@ -307,6 +311,7 @@
 
                   <td class="data-cell text-right water">{{ bill['water'] }}</td>
                   <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
+                  <td class="data-cell text-right electricity">{{ bill['electricity'] }}</td>
                   <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                   <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
                   <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
@@ -328,6 +333,7 @@
                   <td class="font-weight-bold text-right rent">-</td>
                   <td class="font-weight-bold text-right water">{{watertotal}}</td>
                   <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
+                  <td class="font-weight-bold text-right electricity">{{electricitytotal}}</td>
                   <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                   <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
                   <td class="font-weight-bold text-right deposit">-</td>

@@ -2187,6 +2187,10 @@ class CombinedReport(Resource):
             template = "ajax_report_combined_statement.html"
 
         billids = get_unique_bill_ids(detailed_bills)
+        
+        disp_garbage = "" if garbagetotal else "dispnone",
+        disp_electricity = "" if electricitytotal else "dispnone",
+        disp_water = "" if watertotal else "dispnone",
 
         return Response(render_template(
             template,
@@ -2211,9 +2215,9 @@ class CombinedReport(Resource):
             depositdtotal=tdepositd,
             penaltytotal=tpenalty,
 
-            garbage = "" if garbagetotal else "dispnone",
-            electricity = "" if electricitytotal else "dispnone",
-            water = "" if watertotal else "dispnone",
+            disp_garbage = disp_garbage,
+            disp_electricity = disp_electricity,
+            disp_water = disp_water,
 
             billtotal=tbill,
             amounttotal=tamount,

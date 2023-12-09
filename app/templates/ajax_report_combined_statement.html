@@ -97,9 +97,9 @@
                       <th class="rent">RENT DUE</th>
                       <th class="rent">RENT PAID</th>
 
-                      <th class="water">WATER</th>
-                      <th class="garbage">GARBAGE</th>
-                      <th class="electricity">ELECTRICITY</th>
+                      <th class="water {{disp_water}}">WATER</th>
+                      <th class="garbage {{disp_garbage}}">GARBAGE</th>
+                      <th class="electricity {{disp_electricity}}">ELECTRICITY</th>
                       <th class="security dispnone">SECURITY</th>
                       <th class="service dispnone">SERVICE</th>
                       <th class="deposit">D PAID</th>
@@ -123,9 +123,9 @@
                       <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                       <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
 
-                      <td class="data-cell text-right water">{{ bill['water'] }}</td>
-                      <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
-                      <td class="data-cell text-right electricity">{{ bill['electricity'] }}</td>
+                      <td class="data-cell text-right water {{disp_water}}">{{ bill['water'] }}</td>
+                      <td class="data-cell text-right garbage {{disp_garbage}}">{{ bill['garbage'] }}</td>
+                      <td class="data-cell text-right electricity {{disp_electricity}}">{{ bill['electricity'] }}</td>
                       <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                       <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
                       <td class="data-cell text-right btn-outline-primary text-black {{bill['id']}} deposit" data-toggle="modal" data-target="#editDepModal">{{ bill['deposit-paid'] }}</td>
@@ -145,9 +145,9 @@
                       <td class="font-weight-bold text-right rent">{{renttotal}}</td>
                       <td class="font-weight-bold text-right rent">-</td>
                       <td class="font-weight-bold text-right rent">-</td>
-                      <td class="font-weight-bold text-right water">{{watertotal}}</td>
-                      <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
-                      <td class="font-weight-bold text-right electricity">{{electricitytotal}}</td>
+                      <td class="font-weight-bold text-right water {{disp_water}}">{{watertotal}}</td>
+                      <td class="font-weight-bold text-right garbage {{disp_garbage}}">{{garbagetotal}}</td>
+                      <td class="font-weight-bold text-right electricity {{disp_electricity}}">{{electricitytotal}}</td>
                       <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                       <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
                       <td class="font-weight-bold text-right deposit">-</td>
@@ -284,9 +284,9 @@
                   <th class="rent">RENT DUE</th>
                   <th class="rent">RENT PAID</th>
 
-                  <th class="water">WATER</th>
-                  <th class="garbage">GARBAGE</th>
-                  <th class="electricity">ELECTRICITY</th>
+                  <th class="water {{disp_water}}">WATER</th>
+                  <th class="garbage {{disp_garbage}}">GARBAGE</th>
+                  <th class="electricity {{disp_electricity}}">ELECTRICITY</th>
                   <th class="security dispnone">SECURITY</th>
                   <th class="service dispnone">SERVICE</th>
                   <th class="deposit">D PAID</th>
@@ -309,9 +309,9 @@
                   <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
 
-                  <td class="data-cell text-right water">{{ bill['water'] }}</td>
-                  <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
-                  <td class="data-cell text-right electricity">{{ bill['electricity'] }}</td>
+                  <td class="data-cell text-right water {{disp_water}}">{{ bill['water'] }}</td>
+                  <td class="data-cell text-right garbage {{disp_garbage}}">{{ bill['garbage'] }}</td>
+                  <td class="data-cell text-right electricity {{disp_electricity}}">{{ bill['electricity'] }}</td>
                   <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
                   <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
                   <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
@@ -331,9 +331,9 @@
                   <td class="font-weight-bold text-right rent">{{renttotal}}</td>
                   <td class="font-weight-bold text-right rent">-</td>
                   <td class="font-weight-bold text-right rent">-</td>
-                  <td class="font-weight-bold text-right water">{{watertotal}}</td>
-                  <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
-                  <td class="font-weight-bold text-right electricity">{{electricitytotal}}</td>
+                  <td class="font-weight-bold text-right water {{disp_water}}">{{watertotal}}</td>
+                  <td class="font-weight-bold text-right garbage {{disp_garbage}}">{{garbagetotal}}</td>
+                  <td class="font-weight-bold text-right electricity {{disp_electricity}}">{{electricitytotal}}</td>
                   <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                   <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
                   <td class="font-weight-bold text-right deposit">-</td>

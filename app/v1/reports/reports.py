@@ -2018,7 +2018,10 @@ class CombinedReport(Resource):
                 tenant_id = bill.tenant_id
 
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
-                house_obj = check_house_occupied(tenant_obj)[1]
+                try:
+                    house_obj = check_house_occupied(tenant_obj)[1]
+                except:
+                    continue
 
                 dep = tenant_obj.deposits
                 if not dep:
@@ -2036,8 +2039,8 @@ class CombinedReport(Resource):
                             total = rentdep+waterdep+elecdep
 
                             print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
-                            dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant_obj.id,None,house_obj.id,house_obj.apartment_id)
-                            dep.save()
+                            # dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant_obj.id,None,house_obj.id,house_obj.apartment_id)
+                            # dep.save()
                             TenantOp.update_deposit(tenant_obj,total)
 
 

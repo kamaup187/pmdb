@@ -1,0 +1,310 @@
+<style type="text/css" media="print">
+  /* @page{
+    size:landscape;
+  } */
+  /* body {
+    zoom: 100%;
+  } */
+</style>
+<span id="filename" class="dispnone">{{prop}} {{timeline}} client invoice.pdf</span>
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+
+
+          <div class="ln-14 divjust-end noprint">
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+            </button>
+            <script>
+              feather.replace()
+
+              button = document.getElementById('ajaxbtnDownload');
+              button.addEventListener('click', () => {
+                document.title=$("#filename").text(); 
+                window.print()
+              });
+            </script>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">OCTOBER -DECEMBER Q4 INVOICE</span></span>
+          </div>
+
+          
+          
+
+
+          <div id="inv" class="justify-content-cente text-black m-2">
+            <div class="row">
+                <div class="col-12 no-padding-sm">
+                    <div class="car">
+        
+                        <div class="card-body no-padding-sm">
+                            <div class="row pl-2">
+        
+        
+                                <div class="col-lg-4">
+                                    <div class="mb-4 ">
+                                        <div class="text-left">
+                                            <h4 class="invoice-color mb-2 mt-md-2">Invoice</h4>
+                                            <!-- <ul class="list list-unstyled mb-0">
+                                                <li>Date: <span class="font-weight-semibold">June 20th, 2021</span></li>
+                                                <li>Due date: <span class="font-weight-semibold">July 1st, 2021</span></li>
+                                            </ul> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divjust-end smallify pl-2">
+                                <div class="">
+                                    <div class="mb-0 mb-md-2 text-left small"> <span class="text-muted">Invoice To:</span>
+                                        <ul class="list list-unstyled mb-0">
+                                            <li>
+                                                <h5 class="my-2 font-weight-bold">{{client.name}}</h5>
+                                            </li>
+                                            <li>{{client.street_address}}</li>
+                                            <li>{{client.mail_box}}</li>
+                                            {%if client.region%}
+                                            <li>{{client.region}}</li>
+                                            {%endif%}
+                                            <li>{{client.phone}}</li>
+                                            <li type="email" class="text-primary">{{client.email}}</li>
+                                        </ul>
+                                    </div>
+            
+                                </div>
+        
+                                <div class="row">
+                                    <div class="col-5">
+                                        <div class="mb-0 mb-md-2 text-right pt-1"> 
+                                            <ul class="list list-unstyled ln-14">    
+                                                <li class="font-weight-bold">Invoice date</li>
+                                                <li>{{invdate}}</li>
+            
+                                                <li class="mt-2 font-weight-bold">Due date</li>
+                                                <li>{{invdue}}</li>
+        
+                                                <li class="mt-2 font-weight-bold">Invoice number</li>
+                                                <li class="text-danger">#{{invnum}}</li>
+                                            </ul>
+                                        </div>
+                
+                                    </div>
+                                    <div class="col-7 border-left-semidark">
+                                        <div class="mb-0 mb-md-2 text-left">
+                                            <ul class="list list-unstyled mb-0">
+                                              <img class="" src={{logo}} alt="RENTLIB">
+                                                <li>{{rentlib.street_address}}</li>
+                                                <li>{{rentlib.mail_box}}</li>
+                                                <li>Email: <span class="text-primary">{{rentlib.email}}</span></li>
+                                                <li>Tel: {{rentlib.phone}}</li>
+                                                <li>Website: <span class="text-primary">rentlib.com</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+                                        <th class="no-wrap mobile-malaysian">Unit Price</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span class="mb-0">{{bill.description}}</span>
+                                        </td>
+                                        <td>1</td>
+                                        <td class="mobile-malaysian">{{sub}}</td>
+                                        <td><span class="font-weight-bold mr-5">{{sub}}</span></td>
+                                    </tr>
+                                    {%if bill.arrears%}
+                                    <tr>
+                                        <td>
+                                            <span class="mb-0">Arrears</span>
+                                        </td>
+                                        <td></td>
+                                        <td class="mobile-malaysian"></td>
+                                        <td><span class="font-weight-bold mr-5">{{bill.arrears}}</span></td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6 hide">hide</div>
+        
+                                    <div class="col-6">
+                                        <div class="">
+                                            <table class="table">
+                                                <tbody>   
+                                                    <tr>
+                                                        <th class="text-left">Total:</th>
+                                                        <td class="text-right text-primary">
+                                                            <h5 class="font-weight-bold mr-5">Kes {{total}}</h5>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="text-muted">
+                                Payment will be done on Cheque, funds transfer or Mobile money to:
+                            </span>
+                            <p class="small text-muted">
+                                BANK: ABSA BANK KENYA PLC<br>
+                                BRANCH: WESTGATE<br>
+                                ACCOUNT NAME: PETER KOECH<br>
+                                ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">2045019023</span><br>
+                            </p>
+                            <p class="small text-muted">
+                                Please do not hesitate to contact the undersigned for any enquiries<br>
+                                Peter Koech 0716674695 Email: peter.koech@rentlib.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+      $("#reportbtns").addClass("dispnone")
+  
+      $('#dataTable').DataTable({
+        dom: '<"dt-buttons"Bf><"clear">lirtp',
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        autoWidth: true,
+        buttons: [
+          "colvis",
+          "copyHtml5",
+          "csvHtml5",
+          "excelHtml5",
+          "pdfHtml5",
+          "print"
+        ],
+        // "bPaginate": false, //hide pagination control
+        // "bFilter": false, //hide filter control
+        // "searching":false,
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+        // "targets": 'no-sort',
+        // "bSort": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        // "info" : false,
+        "order": [[0, "asc"]],
+        // "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  
+  
+  </script>
+<script>
+  
+
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "bPaginate": false, //hide pagination control
+      "bFilter": false, //hide filter control
+      "searching": false,
+      "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { targets: 0, type: 'natural' } ],
+      "info": false,
+      "order": [[0, "asc"]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+  
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

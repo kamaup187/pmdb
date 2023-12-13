@@ -435,7 +435,10 @@ class ClientBilling(Resource):
     def get(self):
         rawbills = []
         timenow = datetime.datetime.now()
-        clients = CompanyOp.fetch_all_active_companies()
+        clients = []
+        # clients = CompanyOp.fetch_all_active_companies()
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
+        clients.append(cl)
         for c in clients:
             current_month_bill = fetch_current_billing_period_bills(timenow,c.bills)
 
@@ -446,10 +449,11 @@ class ClientBilling(Resource):
 
             if not current_month_bill:
                 try:
-                    total = c.balance + c.subscription
+                    # total = c.balance + c.subscription
+                    total = 9000.0
                 except:
                     total = 0
-                bill = ClientBillOp(timenow.year,timenow.month,c.subscription,0.0,0.0,0.0,c.balance,total,c.id)
+                bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,total,c.id)
                 bill.save()
                 rawbills.append([bill])
                 # continue
@@ -466,15 +470,70 @@ class ClientBilling(Resource):
             billids=billids
             )
             
+# class ClientInvoice(Resource):
+#     """class"""
+#     def get(self):
+#         # return render_template(
+#         #     "ajax_client_invoice.html"
+#         #     )
+#         clientbill_id = request.args.get("clientbillid")
+#         clientbillid = get_identifier(clientbill_id)
+#         bill = ClientBillOp.fetch_specific_bill(clientbillid)
+#         client = bill.company
+#         invnum = bill.id + 13285
+#         # invnum = 
+
+#         timenow = datetime.datetime.now()
+        
+#         # diff = timenow.day - 2
+#         # invdate = bill.date - relativedelta(days = diff)
+#         invdate = generate_start_date(timenow.month,timenow.year)
+#         inv_date = invdate.strftime("%d/%b/%y")
+
+#         invdue = invdate + relativedelta(days=4)
+#         inv_due = invdue.strftime("%d/%b/%y")
+
+#         return render_template(
+#             "ajax_client_invoice.html",
+#             bill=bill,
+#             sub = f"{bill.subscription:,}",
+#             total=f"{bill.total:,}",
+#             invdate=inv_date,
+#             invdue=inv_due,
+#             client=client,
+#             kiotapay=current_user.company,
+#             invnum=invnum,
+#             logo=logo(current_user.company)[2]
+#             )
+
 class ClientInvoice(Resource):
     """class"""
     def get(self):
         # return render_template(
         #     "ajax_client_invoice.html"
         #     )
-        clientbill_id = request.args.get("clientbillid")
-        clientbillid = get_identifier(clientbill_id)
-        bill = ClientBillOp.fetch_specific_bill(clientbillid)
+        comm = request.args.get("comm")
+        if not comm:
+            return Response(render_template(
+                'report_client_invoice.html',
+                tenantlist=[],
+                prop_obj=None,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
+
+        mycomm = CompanyOp.fetch_company_by_name('KiotaPay')
+        if mycomm:
+            CompanyOp.update_details(mycomm,"Rentlib","Agriculture House, Harambee Avenue","Nairobi","Central Business District","00100-312321","info@rentlib.com","0747-674695")
+
+        bills = comm.bills
+        bill = max(bills, key=lambda x: x.id) if bills else None
+
+        # bill = ClientBillOp.fetch_specific_bill(clientbillid)
+
         client = bill.company
         invnum = bill.id + 13285
         # invnum = 
@@ -490,17 +549,18 @@ class ClientInvoice(Resource):
         inv_due = invdue.strftime("%d/%b/%y")
 
         return render_template(
-            "ajax_client_invoice.html",
+            "ajax_new_client_invoice.html",
             bill=bill,
             sub = f"{bill.subscription:,}",
             total=f"{bill.total:,}",
             invdate=inv_date,
             invdue=inv_due,
             client=client,
-            kiotapay=current_user.company,
+            rentlib= CompanyOp.fetch_company_by_name('Rentlib'),
             invnum=invnum,
-            logo=logo(current_user.company)[2]
+            logo=logo(CompanyOp.fetch_company_by_name('Rentlib'))[1]
             )
+    
 class CreateWaterCharge(Resource):
     """class"""
     def post(self):

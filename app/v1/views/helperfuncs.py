@@ -1177,10 +1177,10 @@ def logo(co):
     except Exception as e:
         print("failing big time",e)
         if os.getenv("TARGET") != "lasshouse":
-            logopath = "../static/img/logos/kiotapay/l-logo.png"
-            mobilelogopath = "../static/img/logos/kiotapay/s-logo.png"
-            fulllogopath = "../static/img/logos/kiotapay/full-logo.png"
-            letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+            logopath = "../static/img/logos/rentlib/l-logo.png"
+            mobilelogopath = "../static/img/logos/rentlib/s-logo.png"
+            fulllogopath = "../static/img/logos/rentlib/full-logo.png"
+            letterhead = "../static/img/logos/rentlib/letterhead.jpg"
         else:
             logopath = "../static/img/logos/spry/l-logo.png"
             mobilelogopath = "../static/img/logos/spry/s-logo.png"

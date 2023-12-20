@@ -440,34 +440,22 @@ class ClientBilling(Resource):
         cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         clients.append(cl)
         for c in clients:
-            current_month_bill = fetch_current_billing_period_bills(timenow,c.bills)
+            result = fetch_current_billing_period_bills(timenow,c.bills)
+            current_month_bill = result[0] if result else None
+
+            print("weeeeeee ",current_month_bill)
 
             if current_month_bill:
-                # ClientBillOp.delete(current_month_bill)
-                # continue
-                pass
-
-            if not current_month_bill:
-                try:
-                    # total = c.balance + c.subscription
-                    total = 9000.0
-                except:
-                    total = 0
-                bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,total,c.id)
-                bill.save()
-                rawbills.append([bill])
-                # continue
+                ClientBillOp.delete(current_month_bill)
             else:
-                rawbills.append(current_month_bill)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
+                current_month_bill.save()
 
-        bills = flatten(rawbills)
-        items = bill_details_alt(bills)
-        billids = get_obj_ids(items)
+        items = bill_details_alt([current_month_bill])
 
         return render_template(
             "ajax_client_bills.html",
-            bills=items,
-            billids=billids
+            bills=items
             )
             
 # class ClientInvoice(Resource):
@@ -525,9 +513,9 @@ class ClientInvoice(Resource):
 
         comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
 
-        mycomm = CompanyOp.fetch_company_by_name('KiotaPay')
+        mycomm = CompanyOp.fetch_company_by_name('Rentlib')
         if mycomm:
-            CompanyOp.update_details(mycomm,"Rentlib","Agriculture House, Harambee Avenue","Nairobi","Central Business District","00100-312321","info@rentlib.com","0747-674695")
+            CompanyOp.update_details(mycomm,"KiotaPay","Agriculture House, Harambee Avenue","Nairobi","Central Business District","00100-312321","info@kiotapay.com","0747-674695")
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
@@ -556,9 +544,9 @@ class ClientInvoice(Resource):
             invdate=inv_date,
             invdue=inv_due,
             client=client,
-            rentlib= CompanyOp.fetch_company_by_name('Rentlib'),
+            rentlib= CompanyOp.fetch_company_by_name('KiotaPay'),
             invnum=invnum,
-            logo=logo(CompanyOp.fetch_company_by_name('Rentlib'))[1]
+            logo=logo(CompanyOp.fetch_company_by_name('KiotaPay'))[1]
             )
     
 class CreateWaterCharge(Resource):
@@ -2814,7 +2802,7 @@ class ReceivePayment(Resource):
         servicepaid = int(request.form.get('servicepaid')) if request.form.get('servicepaid') else 0
         penaltypaid = int(request.form.get('penaltypaid')) if request.form.get('penaltypaid') else 0
         depositpaid = int(request.form.get('depositpaid')) if request.form.get('depositpaid') else 0
-        depositpaidalt = int(request.form.get('depositpaidalt')) if request.form.get('depositpaidalt') else 0
+        depositpaidalt = int(float(request.form.get('depositpaidalt'))) if request.form.get('depositpaidalt') else 0
         agreementpaid = int(request.form.get('agreementpaid')) if request.form.get('agreementpaid') else 0
 
         rentdep = request.form.get("deprent")

@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
+        cl = CompanyOp.fetch_company_by_name("Malibu Pharmacy Ltd")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -448,7 +448,7 @@ class ClientBilling(Resource):
             if current_month_bill:
                 ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,23500.0,0.0,0.0,0.0,0.0,23500.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -511,11 +511,13 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
+        comm = CompanyOp.fetch_company_by_name('Malibu Pharmacy Ltd')
 
-        mycomm = CompanyOp.fetch_company_by_name('Rentlib')
+        mycomm = CompanyOp.fetch_company_by_name('Rentlibb')
+
+        # import pdb; pdb.set_trace()
         if mycomm:
-            CompanyOp.update_details(mycomm,"KiotaPay","Agriculture House, Harambee Avenue","Nairobi","Central Business District","00100-312321","info@kiotapay.com","0747-674695")
+            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES","Madonna House, Mpaka Rd","Nairobi","Westlands","00100-312321","info@rentlib.com","0747-674695")
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
@@ -523,17 +525,17 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 13285
+        invnum = bill.id + 14285
         # invnum = 
 
         timenow = datetime.datetime.now()
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_start_date(timenow.month,timenow.year)
+        invdate = generate_exact_date(27,timenow.month,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
-        invdue = invdate + relativedelta(days=4)
+        invdue = invdate + relativedelta(days=1)
         inv_due = invdue.strftime("%d/%b/%y")
 
         return render_template(
@@ -544,9 +546,9 @@ class ClientInvoice(Resource):
             invdate=inv_date,
             invdue=inv_due,
             client=client,
-            rentlib= CompanyOp.fetch_company_by_name('KiotaPay'),
+            rentlib= CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES'),
             invnum=invnum,
-            logo=logo(CompanyOp.fetch_company_by_name('KiotaPay'))[1]
+            logo=logo(CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES'))[1]
             )
     
 class CreateWaterCharge(Resource):

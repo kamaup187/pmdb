@@ -44,6 +44,7 @@ heroku run python manage.py db stamp head --app kiotapay-prod
 
 kill -9 $(ps -A | grep python | awk '{print $1}')
 
+psycopg2.errors.IdleInTransactionSessionTimeout: terminating connection due to idle-in-transaction timeout
 
 IlcPPVkyc0mKe3jeufo9bjII6Mwa
 Def5yXFOSgKNJAzJshxDE8YkvSca

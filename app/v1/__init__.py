@@ -16,6 +16,8 @@ api = Api(version_one)
 api.add_resource(DataUpload,"/data/upload")
 api.add_resource(MpesaDataUpload,"/mpesadata/upload")
 
+api.add_resource(LoginHit, "/login-hit/<string:name>")
+
 api.add_resource(LandingPage,"/")
 api.add_resource(DbInitializer,"/restricted")
 api.add_resource(RegisterUserGroup,"/add/usergroup")

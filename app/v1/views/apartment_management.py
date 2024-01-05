@@ -123,6 +123,11 @@ class MonitorActivity(Resource):
                 logins = len(UserLoginDataOp.fetch_logins_by_day(time))
             ))
 
+class LoginHit(Resource):
+    def get(self,name):
+        advanta_send_sms(f"{name} is attempting to login","+254716674695",kiotapay_api_key,kiotapay_partner_id,"Rentlib")
+        return "OK"
+
 class Scripts(Resource):
     def get(self):
         propids = []

@@ -127,6 +127,13 @@ class LoginHit(Resource):
     def get(self,name):
         advanta_send_sms(f"{name} is attempting to login","+254716674695",kiotapay_api_key,kiotapay_partner_id,"Rentlib")
         return "OK"
+    
+# class BulkSmsHandler(Resource):
+#     def get(self):
+#         clients = []
+#         companies = CompanyOp.fetch_all_companies()
+#         for company in companies:
+#             print("Found", company.users)
 
 class Scripts(Resource):
     def get(self):
@@ -168,6 +175,19 @@ class Index(Resource):
     """class"""
     @login_required
     def get(self):
+
+        # userss = []
+
+        # companies = CompanyOp.fetch_all_companies()
+        # for company in companies:
+        #     for uss in company.users:
+        #         userss.append(uss)
+
+        # for usr in userss:
+        #     if usr.phone:
+        #         print("User", usr.username, "tell", usr.phone, "company", usr.company.name)
+
+            
 
         
         # coss = CompanyOp.fetch_all_companies()

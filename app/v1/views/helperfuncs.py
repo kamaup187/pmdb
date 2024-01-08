@@ -5931,8 +5931,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                         elif bill.house.housecode.billfrequency == 6:
                             str_month = f"Semi-annually"
                         else:
-                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(get_prev_month(billing_period.month)) 
+                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(get_prev_month(billing_period.month))
                         tname = fname_extracter(tenant.name)
 
                         if bill.house.watertarget:
@@ -6041,8 +6041,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                         elif bill.house.housecode.billfrequency == 6:
                             str_month = f"Semi-annually"
                         else:
-                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
-                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(billing_period.month-1) # URGENT TODO : TAKE CARE OF JANUARY
+                            str_month = get_str_month(billing_period.month) if smssev else get_str_month(get_prev_month(billing_period.month))
+                            str_month = get_str_month(billing_period.month) if smsrent else get_str_month(get_prev_month(billing_period.month))
 
                         tname = fname_extracter(tenant2.name)
 

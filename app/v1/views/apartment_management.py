@@ -1417,7 +1417,6 @@ class ComGraphStats(Resource):
 
             try:
                 co_smsspent = client.smsquota - client.remainingsms
-                # co_smsspent += 50 #URGENT TODO REMOVE THIS 50
                 sms_spent += co_smsspent
                 actual_spent = co_smsspent * 0.8
                 actual_cost += actual_spent
@@ -3996,7 +3995,7 @@ class Expenses(Resource):
         else:
             int_month = get_numeric_month(month)
             # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
-            expense_period = generate_date_alt(int_month,2023) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
        
         db.session.expire(prop_obj)
 

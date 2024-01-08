@@ -3273,9 +3273,17 @@ class GeneralRentStatement(Resource):
 
 
             ###################################################################################################
+            property_name = ""
     
             if reporttype == "vacant units":
                 vacants = filter_out_occupied_houses(apartment_obj.name)
+
+                template = "ajax_report_vacant_statement.html"
+
+                if selected_apartment == "All":
+                    property_name = "All properties"
+                else:
+                    property_name = apartment_obj.name
 
                 for vac in vacants:
                     if vac.id in house_ids:
@@ -3284,6 +3292,7 @@ class GeneralRentStatement(Resource):
                         'id':"0",
                         'delid':"0",
                         'editid':"0",
+                        'property':vac.apartment.name,
                         'house':vac.name,
                         'tenant-alt':"--VACANT--",
                         'vacancy':"text-danger",
@@ -3324,11 +3333,12 @@ class GeneralRentStatement(Resource):
             ratio = f"0.0 %"
 
 
-        print("templatoooooooooo",template)
+        print("templatoooooooooo",template,"prrrrrroooop",property_name)
 
         return Response(render_template(
             template,
             prop=prop,
+            property_name=property_name,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,
             tenantlist=[],

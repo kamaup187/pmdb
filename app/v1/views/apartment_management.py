@@ -187,8 +187,10 @@ class Index(Resource):
         #     if usr.phone:
         #         print("User", usr.username, "tell", usr.phone, "company", usr.company.name)
 
+        # ttr = PermanentTenantOp.fetch_tenant_by_id(3931)
+        # if ttr:
+        #     PermanentTenantOp.delete(ttr)
             
-
         
         # coss = CompanyOp.fetch_all_companies()
         coss = []

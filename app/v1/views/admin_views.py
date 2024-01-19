@@ -686,7 +686,9 @@ class Clients(Resource):
 
         # import pdb; pdb.set_trace()
 
-        lst_items = items.split(",")
+        # lst_items = items.split(",")
+        lst_items = ""
+
 
         # print("heeeeeeeeeeeeeeee",lst_items)
 

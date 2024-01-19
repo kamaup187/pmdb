@@ -173,7 +173,7 @@ api.add_resource(QueryMpesaTrans,"/query")
 api.add_resource(ConsumeMpesaData,"/mpesa/payment")
 api.add_resource(ResetAllMpesaData,"/restricted/datareset")
 
-#c2b urls
+# c2b urls
 api.add_resource(CallBackUrlProminance,"/promitech/payment")
 api.add_resource(CallBackUrlKiotapay,"/kiotapay/payment")
 api.add_resource(CallBackUrlLatitude,"/latitude/payment") # to be deprecated

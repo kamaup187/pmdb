@@ -448,7 +448,7 @@ class ClientBilling(Resource):
             if current_month_bill:
                 ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,23500.0,0.0,0.0,0.0,0.0,23500.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,48000.0,0.0,0.0,0.0,0.0,48000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -517,7 +517,7 @@ class ClientInvoice(Resource):
 
         # import pdb; pdb.set_trace()
         if mycomm:
-            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES","Madonna House, Mpaka Rd","Nairobi","Westlands","00100-312321","info@rentlib.com","0747-674695")
+            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES",", Ronald Ngala Avenue","Nairobi","CBD","00100-312321","info@rentlib.com","0747-674695")
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
@@ -532,7 +532,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(27,timenow.month,timenow.year)
+        invdate = generate_exact_date(15,timenow.month,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)

@@ -3997,7 +3997,10 @@ class Expenses(Resource):
         else:
             int_month = get_numeric_month(month)
             # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
-            expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            if current_user.company.name == "Adorable Properties":
+                expense_period = generate_date_alt(int_month,2023) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            else:
+                expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
        
         db.session.expire(prop_obj)
 

@@ -114,6 +114,9 @@ from .advanta import *
 kiotapay_api_key = "c60dc99dedf85f85ee872a6bbec4a39d"
 kiotapay_partner_id = 8929
 
+kevma_api_key = "f16edddd5e53dc3242f9fb9ad904ee5e"
+kevma_partner_id = 3886
+
 lesama_api_key = "cfc7c4382ae6d4277d8c09419a897c9e"
 lesama_partner_id = 3895
 
@@ -1486,7 +1489,7 @@ def sms_sender(company,sms_text,phonenum):
     ################################## OWN SENDER IDS ##################################
 
     elif company.upper() == "KEVMA REAL ESTATE":
-        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")

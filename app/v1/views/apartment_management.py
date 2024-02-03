@@ -176,6 +176,16 @@ class Index(Resource):
     @login_required
     def get(self):
 
+
+        # ccompany = CompanyOp.fetch_company_by_name("Vista Own Services")
+
+        # pp = ApartmentOp.fetch_apartment_by_name("Mary Onyiego  P/811")
+        # ApartmentOp.update_company(pp,ccompany.id)
+        # company_users = ccompany.users
+        # for i in company_users:
+        #     ApartmentOp.relate(pp,i)
+        #     print(i,"user added to ",str(pp))
+
         # userss = []
 
         # companies = CompanyOp.fetch_all_companies()

@@ -6263,7 +6263,7 @@ class AddTenant(Resource):
                         prop_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)
                         codes = prop_obj.housecodes
                         for code in codes:
-                            if int(code.rentrate) == int(group):
+                            if int(code.rentrate) == int(new_group):
                                 code_obj = code
                                 break
 

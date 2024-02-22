@@ -6251,7 +6251,8 @@ class AddTenant(Resource):
 
                 if group != "" and group != None:
                     if isinstance(group,str):
-                        housecode = "G-" + str(int(group))
+                        new_group = group.replace(',','')
+                        housecode = "G-" + str(int(remove_special_characters(new_group)))
                     else:
                         housecode = group
 

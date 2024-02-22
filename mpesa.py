@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "UufwYknOiZrBqQX5zFWnXjtzZw0bgZiQ"
-    consumer_secret = "wvfAkYziq88sW65k"
+    consumer_key = "llA7BjF4ppTkO1xjsU7dIrU0v6mClJg4gJzMtTjNgjs7omzl"
+    consumer_secret = "f4n3GKem67FoGNmctrmQfiQbTQTXOgsTBYs6Tr5QiUZGOrNe9BgVf5O1DSOT3Cuu"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -42,10 +42,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4119821",
+        "ShortCode": "6107400",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://rentlib.com/m/promised2/ins/payment",
-        "ValidationURL": "https://rentlib.com/m/promised2/validate",
+        "ConfirmationURL": "https://malibupharmacy.co.ke/mlb/store",
+        "ValidationURL": "https://malibupharmacy.co.ke/mlb/store",
     }
 
     try:

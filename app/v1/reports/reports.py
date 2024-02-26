@@ -3543,9 +3543,9 @@ class DepositRefundStatement(Resource):
             if tenant_obj.expenses.others:
                 detailed_deductions.append(
                     {
-                        "item":"Others",
+                        "item":"Labour",
                         "no":num2,
-                        "desc":"Others",
+                        "desc":"Labour",
                         "date":TenantOp.check_in_date(tenant_obj),
                         "cr": "-",
                         "dr": tenant_obj.expenses.others,

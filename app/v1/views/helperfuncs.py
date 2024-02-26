@@ -3440,7 +3440,9 @@ def check_house_occupied(tenant_obj):
         if found:
             return "Resident",house,active_alloc
         else:
-            return "Vacated",None,next(reversed(house_allocs))
+            # return "Vacated",None,next(reversed(house_allocs))
+            return "C821"
+
 
     return "booked",None,None
 

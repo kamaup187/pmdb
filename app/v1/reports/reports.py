@@ -2884,7 +2884,7 @@ class RentStatement(Resource):
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
         try:
-            ratio = (f"{(totalpaid/totalbill)*100:,.1f} %")
+            ratio = (f"{(totalpaid+paidll/totalbill)*100:,.1f} %")
         except:
             ratio = f"0.0 %"
 

@@ -3584,7 +3584,7 @@ class DepositRefundStatement(Resource):
             "report_deposit_refund_statement.html",
             tenant_obj=tenant_obj,
             # vacate_house=check_house_occupied(tenant_obj)[2].house.name,
-            vacate_house="C821",
+            vacate_house="C1121",
             deductions=detailed_deductions,
             deposits=detailed_deposits,
             totaldep = f"Kes {totaldep:,.1f}",

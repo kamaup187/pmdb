@@ -3862,6 +3862,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         arrears = self.arrears
         breaks = 0.0
 
+        if self.deposit_balance:
+            star = "#"
+        else:
+            star = ""
+
         breaks += self.booking_balance if self.booking_balance else 0.0
         breaks += self.instalment_balance if self.instalment_balance else 0.0
         breaks += self.addfee_balance if self.addfee_balance else 0.0
@@ -3878,7 +3883,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         if breaks == arrears:
             return f"{arrears:,.1f}"
         else:
-            return f"{arrears:,.1f} **"
+            return f"{arrears:,.1f} {star}**"
 
     def calculate_breakdown_no_dep(self):
         arrears = self.arrears - self.deposit_balance

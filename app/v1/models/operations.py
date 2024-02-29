@@ -3881,7 +3881,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         breaks += self.penalty_balance if self.penalty_balance else 0.0
 
         if breaks == arrears:
-            return f"{arrears:,.1f}"
+            return f"{arrears:,.1f} {star}"
         else:
             return f"{arrears:,.1f} {star}**"
 

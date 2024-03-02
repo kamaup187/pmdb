@@ -1308,8 +1308,9 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
 
             db.session.expire(invoice_obj)
-            if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "UserInBlacklist" or invoice_obj.sms_invoice == "AbsentSubscriber":
-                MonthlyChargeOp.update_sms_status(invoice_obj,"success-alt")
+            if resp1 == "blocked":
+            # if invoice_obj.sms_invoice == "UserInBlackList" or invoice_obj.sms_invoice == "UserInBlacklist" or invoice_obj.sms_invoice == "AbsentSubscriber":
+                MonthlyChargeOp.update_sms_status(invoice_obj,"Success")
 
                 if invoice_obj.ptenant:
                     tenant = invoice_obj.ptenant

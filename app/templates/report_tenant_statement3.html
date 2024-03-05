@@ -1,6 +1,16 @@
-{% extends 'reports.html' %}
+{% extends 'basereport.html' %}
 
-{% block child %}
+{% block content %}
+
+<style type="text/css" media="print">
+  /* @page{
+    size:landscape;
+  } */
+  body {
+    zoom: 80%;
+  }
+</style>
+
 <span id="statement" class="dispnone">tenant statement3</span>
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="collapseid" class="dispnone">{{prop}}</span>
@@ -353,7 +363,7 @@
 </script>
 
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   $(document).ready(function () {
     
     $("#reportbtns").addClass("dispnone")
@@ -375,7 +385,7 @@
     });
     $('.dataTables_length').addClass('bs-select');
     });
-</script>
+</script> -->
 
 
 <!-- <script type="text/javascript">
@@ -402,14 +412,14 @@
     });
 </script> -->
 
-<script>
+<!-- <script>
   button = document.getElementById('btnDownload');
 
   button.addEventListener('click', () => {
   document.title="tenant statement"; 
   window.print()
 });
-</script>
+</script> -->
 
 
 {% endblock %}

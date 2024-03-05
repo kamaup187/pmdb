@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-lg-12 ">
         <div class="formwrapper">
-            <div class="card shadow">
+            <div class="card shadow noprint">
               <!-- Card Header - Accordion -->
               <div class="divjust-end bg-white underline">
                 
@@ -124,15 +124,21 @@
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
   <div class="col-lg-12 ">
-    <div class="card shadow mb-0">
+    <div class="card shadow noprint text-uppercase mb-0">
       <!-- Card Header - Accordion -->
 
       <!-- Card Content - Collapse -->
       <div class="collapse show" id="collapseCardExample2">
         <div class="card-body pt-0">
-          <div class="text-right mt-1">
+          <!-- <div class="text-right mt-1">
             <button class="btn btn-success btn-sm shadow" data-toggle="modal" data-target="#downloadModal">
               <i class="text-white feather-16 font-weight-bold" data-feather="download"></i><span class="ml-1 mobile-malaysian text-white">download</span>
+            </button>
+          </div> -->
+
+          <div class="mr-3 mb-1">
+            <button id="btnDownload" class="btn btn-success btn-sm curve">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 mobile-malaysian text-white">print</span>
             </button>
           </div>
 
@@ -205,7 +211,7 @@
   </div>
 
 
-  <div id="invoice" class="col-lg-12  dispnone">
+  <div id="invoice" class="col-lg-12 dispnone printdisplay text-uppercase">
     <div class="">
       <!-- Card Header - Accordion -->
       <div class="collapse show" id="collapseCardExample3">
@@ -395,6 +401,15 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script> -->
+
+<script>
+  button = document.getElementById('btnDownload');
+
+  button.addEventListener('click', () => {
+  document.title="tenant statement"; 
+  window.print()
+});
+</script>
 
 
 {% endblock %}

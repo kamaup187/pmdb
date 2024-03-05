@@ -39,6 +39,37 @@
 
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+
+
+  <style type="text/css" media="print">
+
+    /* @page{
+      size:landscape;
+    } */
+
+   
+    .printdisplay{
+      display: block !important;
+    }
+
+    .noprint {
+      display: none;
+    }
+  
+    .bg-aviv {
+      background-color: #4a0544d4 !important;
+      -webkit-print-color-adjust: exact;
+    }
+  
+  
+    .bg-aviv span {
+      color: white !important;
+    }
+  
+    table tfoot {
+      display: table-row-group;
+    }
+  </style>
 <!-- 
   <script>
     $( function() {

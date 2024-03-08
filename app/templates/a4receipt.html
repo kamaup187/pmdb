@@ -81,24 +81,17 @@
 
                             <div class="col-lg-6 svg-child">
 
-                                <div class="invoice-logo"><img width="100" src="{{logopath}}" alt="Invoice logo"></div>
-                            </div>
-
-                            <div class="col-lg-6 svg-child">
-
                                 <div class="invoice-from">
-                                    <ul class="list-unstyled text-right">
-                                        <li>~ {{company.name.title()}} ~</li>
-
+                                    <div class="center-btn font-weight-bold text-primary">
+                                        ~ {{company.name.title() | upper}} ~
+                                    </div>
+                                    <ul class="list-unstyled center-btn">
                                         {%if not address%}
-                                        <li class="small mt-2">Address : {{company.street_address}}</li>
-                                        <li class="small">PO BOX : {{company.mail_box}}</li>
                                         <li class="small">Tel : {{company.phone}}</li>
                                         <li class="small">Email: {{company.email}}</li>
                                         {% endif %}
 
                                         {%if address%}
-                                        <li class="small mt-2">Address : {{address.address}}</li>
                                         <li class="small">Tel : {{address.tel}}</li>
                                         <li class="small">Email: {{address.email}}</li>
                                         {% endif%}
@@ -122,10 +115,7 @@
                                         <ul class="list-unstyled mb0">
                                             <li><strong>Receipt No.</strong>{{receiptno}}</li>
                                             <li><strong>Reference #</strong>{{refnum}}</li>
-                                            <li><strong>Payment date:</strong>{{paydate}} {{paytime}}</li>
-                                            <li><strong>Receipt date:</strong>{{rdate}}</li>
-
-                                            <li><strong>Status:</strong> <span class="label label-success">APPROVED</span>
+                                            <li><strong>Payment date:</strong>{{paydate}}</li>
                                             </li>
                                         </ul>
                                     </div>
@@ -133,8 +123,8 @@
                                 <div class="invoice-to mt25">
                                     <ul class="list-unstyled">
                                         <li><strong>Received from:</strong></li>
-                                        <li>{{tenant}},</li>
-                                        <li>{{house}},</li>
+                                        <li class="font-weight-bold">{{tenant}},</li>
+                                        <li>House: {{house}},</li>
                                         <li>{{prop}}</li>
                                     </ul>
                                 </div>
@@ -143,31 +133,29 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th class="per25 text-center">Amount paid in words</th>
-                                                    <th class="per5 text-center">Figures</th>
+                                                    <th class="per25 text-center">Amount paid</th>
 
                                                     <th class="per70 text-center">Particulars</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>{{str_amount}} shillings only.</td>
                                                     <td class="text-right">{{amount}}</td>
-                                                    <td >Paid for; {{chargetype}}</td>
+                                                    <td >{{chargetype}}</td>
                                                 </tr>
 
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="2" class="text-right">AMOUNT DUE:</th>
+                                                    <th class="text-right">AMOUNT DUE:</th>
                                                     <th class="text-right">{{bill}}</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="2" class="text-right">PAID</th>
+                                                    <th class="text-right">PAID</th>
                                                     <th class="text-right">{{amount}}</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="2" class="text-right">BALANCE</th>
+                                                    <th class="text-right">BALANCE</th>
                                                     <th class="text-right">{{balance}}</th>
                                                 </tr>
 
@@ -177,9 +165,8 @@
                                 </div>
 
                                 <div class="">
-                                    <div class="small service mb-1 pb-1">
+                                    <div class="service mb-1 pb-1">
                                         <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
-                                        <div class="center-btn"><strong class="small">{{prop.name.title()}}</strong>.</div>
                                         <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
                                     </div>
                                   </div>

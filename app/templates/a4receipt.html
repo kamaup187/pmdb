@@ -12,13 +12,6 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='maink.css') }}">
 
     <style type="text/css">
-        .well{
-            padding: 0px !important;
-            margin-bottom: 0px !important;
-        }
-        .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
-            padding: 2px !important;
-        }
         body {
             margin-top: 10px;
             background: #eee;
@@ -86,10 +79,10 @@
                     <div class="panel-body p30">
                         <div class="row svg">
 
-                            <!-- <div class="col-lg-6 svg-child">
+                            <div class="col-lg-6 svg-child">
 
                                 <div class="invoice-logo"><img width="100" src="{{logopath}}" alt="Invoice logo"></div>
-                            </div> -->
+                            </div>
 
                             <div class="col-lg-6 svg-child">
 
@@ -98,8 +91,8 @@
                                         <li>~ {{company.name.title()}} ~</li>
 
                                         {%if not address%}
-                                        <!-- <li class="small mt-2">Address : {{company.street_address}}</li> -->
-                                        <!-- <li class="small">PO BOX : {{company.mail_box}}</li> -->
+                                        <li class="small mt-2">Address : {{company.street_address}}</li>
+                                        <li class="small">PO BOX : {{company.mail_box}}</li>
                                         <li class="small">Tel : {{company.phone}}</li>
                                         <li class="small">Email: {{company.email}}</li>
                                         {% endif %}
@@ -124,23 +117,24 @@
                                     OFFICIAL PAYMENT RECEIPT
                                 </div>
 
-                                <div class="invoice-details mt25-disable">
+                                <div class="invoice-details mt25">
                                     <div class="well">
                                         <ul class="list-unstyled mb0">
                                             <li><strong>Receipt No.</strong>{{receiptno}}</li>
                                             <li><strong>Reference #</strong>{{refnum}}</li>
-                                            <!-- <li><strong>Payment date:</strong>{{paydate}} {{paytime}}</li> -->
-                                            <li><strong>Payment date:</strong>{{paydate}}</li>
-                                            <!-- <li><strong>Status:</strong> <span class="label label-success">APPROVED</span> -->
+                                            <li><strong>Payment date:</strong>{{paydate}} {{paytime}}</li>
+                                            <li><strong>Receipt date:</strong>{{rdate}}</li>
+
+                                            <li><strong>Status:</strong> <span class="label label-success">APPROVED</span>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="invoice-to mt25-disable">
+                                <div class="invoice-to mt25">
                                     <ul class="list-unstyled">
                                         <li><strong>Received from:</strong></li>
                                         <li>{{tenant}},</li>
-                                        <li>House: {{house}},</li>
+                                        <li>{{house}},</li>
                                         <li>{{prop}}</li>
                                     </ul>
                                 </div>
@@ -183,12 +177,10 @@
                                 </div>
 
                                 <div class="">
-                                    <div class="service mb-1 pb-1">
+                                    <div class="small service mb-1 pb-1">
                                         <!-- <div class="center-btn"><strong class="small">With Thanks</strong>.</div> -->
                                         <div class="center-btn"><strong class="small">{{prop.name.title()}}</strong>.</div>
-                                        <!-- <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div> -->
-                                        <div class="text-danger font-weight-bold center-btn text-125" style="font-style: oblique;">Payment once made is not refundable</div>
-
+                                        <div class="text-danger itemtext center-btn" style="font-style: oblique;">Payment once made is not refundable</div>
                                     </div>
                                   </div>
                             </div>

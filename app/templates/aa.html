@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Receipt</title>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 
@@ -123,6 +124,22 @@
             text-align: center;
             margin-top: 10px;
             font-size: 14px;
+        }
+
+        @media print {
+            @page {
+                size: auto; /* auto is the default value */
+                margin: 0; /* this will remove the default margin */
+            }
+
+            /* Specify that headers and footers should not be printed */
+            @page :first {
+                /* This will remove the header */
+                header { display: none; }
+
+                /* This will remove the footer */
+                footer { display: none; }
+            }
         }
 
     </style>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt Sample</title>
+    <title>Tenant Receipt</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 
@@ -90,6 +90,41 @@
             text-align: center;
             text-transform: uppercase;
         }
+        /* Additional styles */
+        .additional-info {
+            margin-bottom: 10px;
+        }
+
+        .additional-info ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .additional-info ul li {
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+
+        .received-from {
+            margin-bottom: 10px;
+        }
+
+        .received-from ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .received-from ul li {
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+        .refund-message {
+            font-style: oblique;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
     </style>
 </head>
 <body>
@@ -97,59 +132,61 @@
 <div class="container">
     
     <div class="receipt_header">
-        <h1>Receipt of Sale <span>Shop Name</span></h1>
-        <h2>Address: Lorem Ipsum, 1234-5 <span>Tel: +1 012 345 67 89</span></h2>
+        <h1>OFFICIAL PAYMENT RECEIPT <span>~ {{company.name.title() | upper}} ~</span></h1>
+        <h2>Tel: {{company.phone}} <span>Email: {{company.email}}</span></h2>
     </div>
     
     <div class="receipt_body">
+
+
+
+        <div class="additional-info">
+            <ul>
+                <li><strong>Receipt No.</strong>{{receiptno}}</li>
+                <li><strong>Reference #</strong>{{refnum}}</li>
+                <li><strong>Payment date:</strong>{{paydate}}</li>
+            </ul>
+        </div>
+
+        <div class="received-from">
+            <ul>
+                <li><strong>Received from:</strong></li>
+                <li>{{tenant}},</li>
+                <li>House: {{house}},</li>
+                <li>{{prop}}</li>
+            </ul>
+        </div>
+
         <table>
             <thead>
                 <tr>
-                    <th>QTY</th>
-                    <th>ITEM</th>
-                    <th>AMT</th>
+                    <th>PARTICULARS</th>
+                    <th>-</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>1</td>
-                    <td>Lorem ipsum</td>
-                    <td>2.3</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Lorem ipsum</td>
-                    <td>2.3</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Lorem ipsum</td>
-                    <td>2.3</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Lorem ipsum</td>
-                    <td>2.3</td>
+                    <td>{{chargetype}}</td>
+                    <td>-</td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total</td>
-                    <td></td>
-                    <td>32.1</td>
+                    <td>Amount due</td>
+                    <td>{{bill}}</td>
                 </tr>
                 <tr>
                     <td>Cash</td>
-                    <td></td>
-                    <td>32.1</td>
+                    <td>{{amount}}</td>
                 </tr>
                 <tr>
-                    <td>Change</td>
-                    <td></td>
-                    <td>32.1</td>
+                    <td>Balance</td>
+                    <td>{{balance}}</td>
                 </tr>
             </tfoot>
         </table>
+        <div class="refund-message">Payment once made is not refundable</div>
+
     </div>
 
     <h3>Thank You!</h3>

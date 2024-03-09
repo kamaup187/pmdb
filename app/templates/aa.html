@@ -211,6 +211,16 @@
 </div>
 
 <script type="text/javascript">
+
+    // Function to close the window after printing
+    function closeWindowAfterPrint() {
+        // Close the window
+        window.close();
+    }
+
+    // Add event listener for the afterprint event
+    window.addEventListener('afterprint', closeWindowAfterPrint);
+
     window.onload = function() { window.print(); }
 </script>
 

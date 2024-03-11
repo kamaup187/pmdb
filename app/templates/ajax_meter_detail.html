@@ -283,6 +283,55 @@
       </div>
     </div>
 
+    <div class="modal fade" id="boreReadingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <!-- <h5 class="modal-title text-info">Electricity readings <span class="ml-5"><button id="switch-water" class="borderless btn btn-outline-info" data-toggle="modal" data-target="#meterReadingModal"><i class="fas fa-exchange-alt"></i></button></span></h5> -->
+            <h5 class="modal-title text-info">Borehole readings <span class="ml-5"><button id="switch-borehole" class="borderless btn btn-outline-info" data-toggle="modal" data-target="#elecReadingModal"><i class="fas fa-exchange-alt"></i></button></span></h5>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+
+                      <div class="form-group input-icons mt-2">
+                        <i class="fa fa-caret-down icon text-info"></i>
+                        <select name="house" class="form-control" id ="select_house_alt-alt" >
+                          <option disabled selected value> -- Select House -- </option>
+                          {% for o in items %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="center-btn mb-1" id="alerts-meterreading-alt-alt"></div>
+                      <div id="dynamic_div_alt-alt">
+                        <div class="form-group">
+                          <input id="reading-alt-alt" class="form-control" type="text" name="rentrate" placeholder="type reading here" disabled>
+                        </div>
+                      </div>
+                      <div id="units_consumed_alt-alt"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="capture-alt-alt" type="button" class="btn-secondary borderless text-white" disabled>Capture</button>
+                        <button id="close-elec-alt" class="btn btn-danger" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="elecReadingModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -461,8 +510,10 @@
                       <div class="form-group">
                         <select class="form-control" id="metertype">
                           <option disabled selected value> -- Select meter type -- </option>
-                          <option value="water">Water</option>
+                          <option value="water">Water(Council)</option>
                           <option value="electricity">Electricity</option>
+                          <option value="borehole">Water(Borehole)</option>
+
                         </select>
                         <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
                       </div>
@@ -1904,6 +1955,13 @@ $("#select_house_alt").on('change',function(){
   $("#switch-water").click(function(){   
     // $("#edithouse").html("")
     $("#close-elec").click();
+  });
+</script>
+
+<script>
+  $("#switch-borehole").click(function(){   
+    // $("#edithouse").html("")
+    $("#close-borehole").click();
   });
 </script>
 

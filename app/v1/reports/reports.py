@@ -8845,6 +8845,17 @@ class FetchPayments(Resource):
             prop = ApartmentOp.fetch_apartment_by_id(propid)
             sifted = []
 
+
+            today = prop.billing_period
+
+            # Calculate one month ago and one month into the future
+            one_month_ago = today - timedelta(days=30)
+            one_month_future = today + timedelta(days=30)
+
+            # Generate date range from one month ago to one month into the future
+            date_range = [one_month_ago + timedelta(days=i) for i in range((one_month_future - one_month_ago).days)]
+
+
             try:
                 shortcode = prop.paymentdetails.mpesapaybill
                 if shortcode == "000000":
@@ -8852,7 +8863,8 @@ class FetchPayments(Resource):
                 else:
                     raw_unclaimed = CtoBop.fetch_all_records_by_shortcode(shortcode)
                 for r in raw_unclaimed:
-                    if r.status == "claimed" and r.post_date.month == prop.billing_period.month and r.post_date.year == prop.billing_period.year:
+                    if r.status == "claimed" and r.post_date in date_range:
+                    # if r.status == "claimed" and r.post_date.month == prop.billing_period.month and r.post_date.year == prop.billing_period.year:
                         sifted.append(r)
             except:
                 pass

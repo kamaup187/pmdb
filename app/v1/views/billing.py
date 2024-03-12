@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("MULTIDIME AGENCIES")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,6000.0,0.0,0.0,0.0,0.0,6000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,5000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -512,7 +512,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('MULTIDIME AGENCIES')
 
         mycomm = CompanyOp.fetch_company_by_name('Rentlibb')
 
@@ -522,11 +522,11 @@ class ClientInvoice(Resource):
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
-
+ 
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 1485
+        invnum = bill.id + 1486
         # invnum = 
 
         timenow = datetime.datetime.now()
@@ -7822,14 +7822,15 @@ class CallBackUrlLes(Resource):
     def get(self):
         pass
     def post(self):
-        # response = sms.send("Lesama prod has sent data", ["+254716674695"],"KIOTAPAY")
+
+        response = sms.send("Lesama prod has sent data", ["+254716674695"],"KIOTAPAY")
 
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
         # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
         # ww = f"{my_json},PROD LESAMA has sent data"
-        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
             # print("#####################################COOP COOP COOP############################################")

@@ -7823,14 +7823,15 @@ class CallBackUrlLes(Resource):
         pass
     def post(self):
 
-        response = sms.send("Lesama prod has sent data", ["+254716674695"],"KIOTAPAY")
+        advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
         # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
-        # ww = f"{my_json},PROD LESAMA has sent data"
-        response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        ww = f"{my_json},PROD LESAMA has sent data"
+        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
             # print("#####################################COOP COOP COOP############################################")
@@ -7894,8 +7895,7 @@ class CallBackUrlLes(Resource):
 
             # auto_consume_ctob(ctob_obj)
         except Exception as e:
-            sms.send(f"PROD LESAMA COOP has error data >>> {e}", ["+254716674695"],"KIOTAPAY")
-
+            advanta_send_sms("PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
             print ("It failed, Bank integration has an error",e)
 
         response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}

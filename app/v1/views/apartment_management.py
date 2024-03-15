@@ -192,9 +192,10 @@ class Index(Resource):
 
 
 
+        # # cdds = current_user.company.cbids
+        # # import pdb; pdb.set_trace()
 
-
-        # cbid = CtoBop.fetch_record_by_id(84405)
+        # cbid = CtoBop.fetch_record_by_id(84413)
         # company_id = 45
 
         # com = CompanyOp.fetch_company_by_id(company_id)
@@ -251,8 +252,8 @@ class Index(Resource):
                         
 
         # if not target_house:
-        #     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-        #     advanta_send_sms(f"fail, PROD LESAMA Did not find house for {cbid.bill_ref_num} and extracted {bill_ref_num2} specific being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        #     print(f"NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>> fail, PROD LESAMA Did not find house for {cbid.bill_ref_num} and extracted {bill_ref_num2} prop being {part1_part2[1]} specific hse being {part1_part2[0]}")
+        #     advanta_send_sms(f"fail, PROD LESAMA Did not find house for {cbid.bill_ref_num} and extracted {bill_ref_num2} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         # else:
         #     propid = prop.id if prop else None

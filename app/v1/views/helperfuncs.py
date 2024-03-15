@@ -2550,7 +2550,8 @@ def split_text_by_keywords(extracted_text, keywords):
     # Iterate through the keywords
     for keyword in keywords:
         # Check if the keyword is in the extracted text
-        if keyword in extracted_text:
+        # if keyword in extracted_text:
+        if extracted_text.endswith(keyword):
             # Split the extracted text into two parts based on the keyword
             parts = extracted_text.split(keyword)
             part1 = parts[0].strip()  # Remove any leading or trailing whitespace

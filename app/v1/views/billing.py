@@ -7893,6 +7893,91 @@ class CallBackUrlLes(Resource):
                 data_obj.save()
                 response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
 
+
+                com = CompanyOp.fetch_company_by_id(company_id)
+                props = com.props
+
+                prop = None
+                target_house = None
+                multiple_units = []
+
+                if bill_ref_num:
+                    bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
+                    formatted_ref = name_standard(bill_ref_num2)
+
+                    part1_part2 = split_text_by_keywords(formatted_ref)
+
+                    prop_code = part1_part2[1]
+                    if prop_code:
+                        prop_name = switch_property_code(prop_code)
+                        prop = ApartmentOp.fetch_apartment_by_name(prop_name)
+                        if prop:
+                            target_house = get_specific_house_obj(prop.id)
+                        else:
+                            for prp in props:
+                                for house in prp.houses:
+                                    n = name_standard(house.name)
+                                    n_units = [part1_part2[0]]
+                                    if n in n_units:
+                                        # prop = house.apartment
+                                        target_house = house
+                                        break
+                    else:
+                        for prp in props:
+                            for house in prp.houses:
+                                n = name_standard(house.name)
+                                n_units = [part1_part2[0]]
+                                if n in n_units:
+                                    prop = house.apartment
+                                    target_house = house
+                                    break
+
+                    # if "," in formatted_ref:
+                    #     n_units = formatted_ref.split(",")
+                    # else:
+                    #     n_units = [formatted_ref]
+
+                    
+
+
+
+                    # for prp in props:
+                    #     for house in prp.houses:
+                    #         n = name_standard(house.name)
+                    #         if n in n_units:
+                    #             multiple_units.append(n)
+                                
+
+                if not target_house:
+                    print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+                    advanta_send_sms(f"fail, PROD LESAMA Did not find house for {bill_ref_num} and extracted {bill_ref_num2}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+                else:
+                    propid = prop.id if prop else None
+                    dict_array = []
+                    if prop:
+                        payperiod = prop.billing_period
+
+                        dict_obj = {
+                        "housename":target_house.name,
+                        "amount":trans_amnt,
+                        "date":"",
+                        "ref":trans_id,
+                        "desc":"",
+                        "comment":""
+                        }
+
+                        dict_array.append(dict_obj)
+
+                        uploadsjob2 = q.enqueue_call(
+                            func=read_payments_excel, args=(dict_array,payperiod,propid,1,data_obj.id,), result_ttl=5000
+                        )
+
+                        CtoBop.update_status(data_obj,"claimed")
+
+                        advanta_send_sms(f"success, PROD LESAMA Did find house for {bill_ref_num} and extracted {bill_ref_num2}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+
             # auto_consume_ctob(ctob_obj)
         except Exception as e:
             advanta_send_sms("PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")

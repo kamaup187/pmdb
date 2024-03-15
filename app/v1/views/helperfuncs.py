@@ -2521,6 +2521,63 @@ def string_formatter(item):
 def string_formatter_alt(item):
     return (f"{item}") if item else ""
 
+def switch_property_code(value):
+    cases = {
+        "KH": "Karurumo House",
+        "LA": "Lenta Apartments",
+        "KA": "Kileleshwa Apartment C1",
+        "LY": "Lynmarie Apartments",
+        "MGA": "Mga",
+        "MVA": "Mountain View",
+        "MU": "Mutitu Apartments",
+        "NC": "Nima Court",
+        "PA": "Paneila",
+        "SV": "Simba Villa B8",
+        "SC": "The Scarlet",
+        "TA": "Triumph Apartments"
+    }
+    return cases.get(value, None)
+
+def split_text_by_keywords(extracted_text, keywords):
+    # Convert the extracted text and keywords to lowercase for case insensitivity
+    extracted_text = extracted_text.lower()
+    keywords = [keyword.lower() for keyword in keywords]
+
+    # Initialize variables to store the two parts
+    part1 = ""
+    part2 = ""
+
+    # Iterate through the keywords
+    for keyword in keywords:
+        # Check if the keyword is in the extracted text
+        if keyword in extracted_text:
+            # Split the extracted text into two parts based on the keyword
+            parts = extracted_text.split(keyword)
+            part1 = parts[0].strip()  # Remove any leading or trailing whitespace
+            part2 = keyword  # The keyword itself is part2
+            break  # Stop iterating once the keyword is found
+        else:
+            part1 = extracted_text
+            part2 = None
+
+    return [part1, part2]
+
+def extract_text_after_hashtag(input_string):
+    # Define the regular expression pattern
+    pattern = r'#([^~]+)'
+
+    # Use re.search to find the first match
+    match = re.search(pattern, input_string)
+
+    # Check if a match is found
+    if match:
+        # Extract the text after '#'
+        extracted_text = match.group(1)
+        return extracted_text
+    else:
+        # Return None if no match is found
+        return "no match"
+
 def get_numeric_month(month):
     switcher = {
         "January":1,

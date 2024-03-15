@@ -123,23 +123,61 @@
 #         respdict = None
 
 #     return respdict
-def name_standard(name):
-    try:
-        n1 = name.replace(" ","")
-        n2 = n1.upper()
-    except:
-        n2 = name
-    return n2
+# def name_standard(name):
+#     try:
+#         n1 = name.replace(" ","")
+#         n2 = n1.upper()
+#     except:
+#         n2 = name
+#     return n2
 
-n = name_standard("b211,b210")
+# n = name_standard("b211,b210")
 
-print(n)
+# print(n)
 
-if "," in n:
-    n_units = n.split(",")
-else:
-    n_units = [n]
+# if "," in n:
+#     n_units = n.split(",")
+# else:
+#     n_units = [n]
 
 
-print("yoyoyo",n_units)
+# print("yoyoyo",n_units)
+
+
+
+
+
+
+
+
+
+def split_text_by_keywords(extracted_text, keywords):
+    # Convert the extracted text and keywords to lowercase for case insensitivity
+    extracted_text_lower = extracted_text.lower()
+    keywords_lower = [keyword.lower() for keyword in keywords]
+
+    # Initialize variables to store the two parts
+    part1 = ""
+    part2 = ""
+
+    # Iterate through the keywords
+    for keyword in keywords_lower:
+        # Check if the keyword appears in the extracted text
+        if keyword in extracted_text_lower:
+            # Find the index of the keyword in the extracted text
+            index = extracted_text_lower.find(keyword)
+            if index != -1:
+                # Split the text into two parts at the position of the keyword
+                part1 = extracted_text[:index + len(keyword)].strip()
+                part2 = keyword
+                break
+
+    return [part1, part2]
+
+# Example usage:
+extracted_text = "SC101SC"
+keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
+result = split_text_by_keywords(extracted_text, keywords)
+print("Result:", result)
+
 

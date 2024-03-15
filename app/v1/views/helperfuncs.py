@@ -2531,7 +2531,7 @@ def switch_property_code(value):
         "MVA": "Mountain View",
         "MU": "Mutitu Apartments",
         "NC": "Nima Court",
-        "PA": "Paneila",
+        "PA": "Paneilla",
         "SV": "Simba Villa B8",
         "SC": "The Scarlet",
         "TA": "Triumph Apartments"

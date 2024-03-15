@@ -214,7 +214,7 @@ class Index(Resource):
         #         prop_name = switch_property_code(prop_code)
         #         prop = ApartmentOp.fetch_apartment_by_name(prop_name)
         #         if prop:
-        #             target_house = get_specific_house_obj(prop.id)
+        #             target_house = get_specific_house_obj(prop.id,part1_part2[0])
         #         else:
         #             for prp in props:
         #                 for house in prp.houses:

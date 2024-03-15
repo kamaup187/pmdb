@@ -7899,13 +7899,14 @@ class CallBackUrlLes(Resource):
 
                 prop = None
                 target_house = None
-                multiple_units = []
 
                 if bill_ref_num:
                     bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
                     formatted_ref = name_standard(bill_ref_num2)
 
-                    part1_part2 = split_text_by_keywords(formatted_ref)
+                    keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
+
+                    part1_part2 = split_text_by_keywords(formatted_ref,keywords)
 
                     prop_code = part1_part2[1]
                     if prop_code:
@@ -7980,7 +7981,7 @@ class CallBackUrlLes(Resource):
 
             # auto_consume_ctob(ctob_obj)
         except Exception as e:
-            advanta_send_sms("PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            advanta_send_sms(f"PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
             print ("It failed, Bank integration has an error",e)
 
         response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}

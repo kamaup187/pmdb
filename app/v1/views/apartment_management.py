@@ -188,6 +188,111 @@ class Index(Resource):
 
         # userss = []
 
+
+
+
+
+
+
+        # cbid = CtoBop.fetch_record_by_id(84405)
+        # company_id = 45
+
+        # com = CompanyOp.fetch_company_by_id(company_id)
+        # props = com.props
+
+        # prop = None
+        # target_house = None
+
+        # if cbid.bill_ref_num:
+        #     bill_ref_num2 = extract_text_after_hashtag(cbid.bill_ref_num)
+        #     formatted_ref = name_standard(bill_ref_num2)
+        #     keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
+        #     part1_part2 = split_text_by_keywords(formatted_ref,keywords)
+
+        #     prop_code = part1_part2[1]
+        #     if prop_code:
+        #         prop_name = switch_property_code(prop_code)
+        #         prop = ApartmentOp.fetch_apartment_by_name(prop_name)
+        #         if prop:
+        #             target_house = get_specific_house_obj(prop.id)
+        #         else:
+        #             for prp in props:
+        #                 for house in prp.houses:
+        #                     n = name_standard(house.name)
+        #                     n_units = [part1_part2[0]]
+        #                     if n in n_units:
+        #                         # prop = house.apartment
+        #                         target_house = house
+        #                         break
+        #     else:
+        #         for prp in props:
+        #             for house in prp.houses:
+        #                 n = name_standard(house.name)
+        #                 n_units = [part1_part2[0]]
+        #                 if n in n_units:
+        #                     prop = house.apartment
+        #                     target_house = house
+        #                     break
+
+        #     # if "," in formatted_ref:
+        #     #     n_units = formatted_ref.split(",")
+        #     # else:
+        #     #     n_units = [formatted_ref]
+
+            
+
+
+
+        #     # for prp in props:
+        #     #     for house in prp.houses:
+        #     #         n = name_standard(house.name)
+        #     #         if n in n_units:
+        #     #             multiple_units.append(n)
+                        
+
+        # if not target_house:
+        #     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+        #     advanta_send_sms(f"fail, PROD LESAMA Did not find house for {cbid.bill_ref_num} and extracted {bill_ref_num2} specific being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+        # else:
+        #     propid = prop.id if prop else None
+        #     dict_array = []
+        #     if prop:
+        #         payperiod = prop.billing_period
+
+        #         dict_obj = {
+        #         "housename":target_house.name,
+        #         "amount":cbid.trans_amnt,
+        #         "date":"",
+        #         "ref":cbid.trans_id,
+        #         "desc":"",
+        #         "comment":""
+        #         }
+
+        #         dict_array.append(dict_obj)
+
+        #         uploadsjob2 = q.enqueue_call(
+        #             func=read_payments_excel, args=(dict_array,payperiod,propid,1,cbid.id,), result_ttl=5000
+        #         )
+
+        #         # CtoBop.update_status(cbid,"claimed")
+
+        #         advanta_send_sms(f"success, PROD LESAMA Did find house for {cbid.bill_ref_num} and extracted {bill_ref_num2}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # companies = CompanyOp.fetch_all_companies()
         # for company in companies:
         #     for uss in company.users:

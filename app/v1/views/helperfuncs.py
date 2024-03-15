@@ -2540,8 +2540,8 @@ def switch_property_code(value):
 
 def split_text_by_keywords(extracted_text, keywords):
     # Convert the extracted text and keywords to lowercase for case insensitivity
-    extracted_text = extracted_text.lower()
-    keywords = [keyword.lower() for keyword in keywords]
+    extracted_text = extracted_text.upper()
+    keywords = [keyword.upper() for keyword in keywords]
 
     # Initialize variables to store the two parts
     part1 = ""

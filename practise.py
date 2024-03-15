@@ -150,34 +150,45 @@
 
 
 
-
 def split_text_by_keywords(extracted_text, keywords):
-    # Convert the extracted text and keywords to lowercase for case insensitivity
-    extracted_text_lower = extracted_text.lower()
-    keywords_lower = [keyword.lower() for keyword in keywords]
+    # Convert the extracted text and keywords to uppercase for case insensitivity
+    extracted_text_upper = extracted_text.upper()
+    keywords_upper = [keyword.upper() for keyword in keywords]
 
     # Initialize variables to store the two parts
     part1 = ""
     part2 = ""
 
     # Iterate through the keywords
-    for keyword in keywords_lower:
+    for keyword in keywords_upper:
         # Check if the keyword appears in the extracted text
-        if keyword in extracted_text_lower:
+        if keyword in extracted_text_upper:
             # Find the index of the keyword in the extracted text
-            index = extracted_text_lower.find(keyword)
+            index = extracted_text_upper.find(keyword)
             if index != -1:
                 # Split the text into two parts at the position of the keyword
-                part1 = extracted_text[:index + len(keyword)].strip()
+                part1 = extracted_text[:index].strip()
                 part2 = keyword
                 break
 
     return [part1, part2]
 
 # Example usage:
-extracted_text = "SC101SC"
+extracted_text_1 = "101SC"
+extracted_text_2 = "SC101"
 keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
-result = split_text_by_keywords(extracted_text, keywords)
-print("Result:", result)
+
+result_1 = split_text_by_keywords(extracted_text_1, keywords)
+result_2 = split_text_by_keywords(extracted_text_2, keywords)
+
+print("Result for extracted_text_1:", result_1)
+print("Result for extracted_text_2:", result_2)
+
+
+
+
+
+
+
 
 

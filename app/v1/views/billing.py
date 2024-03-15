@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("MULTIDIME AGENCIES")
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,5000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -512,7 +512,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('MULTIDIME AGENCIES')
+        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
 
         mycomm = CompanyOp.fetch_company_by_name('Rentlibb')
 
@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(5,3,timenow.year)
+        invdate = generate_exact_date(14,3,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)
@@ -7823,14 +7823,14 @@ class CallBackUrlLes(Resource):
         pass
     def post(self):
 
-        advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
         # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
-        ww = f"{my_json},PROD LESAMA has sent data"
-        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # ww = f"{my_json},PROD LESAMA has sent data"
+        # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
         # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
@@ -8834,8 +8834,8 @@ class CallBackUrlFamily(Resource):
 
         auth = request.headers.get("Authorization")
 
-        ww = f"{my_json} auth > {auth},TEST FAMILY has sent data"
-        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+        # ww = f"{my_json} auth > {auth},TEST FAMILY has sent data"
+        # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
         # resp = sms.send(ww, ["+254716674695"],"KIOTAPAY")
 
         # resp = sms.send("TEST MERIT has sent data", ["+254716674695"],"KIOTAPAY")

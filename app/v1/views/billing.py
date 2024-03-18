@@ -7904,8 +7904,6 @@ class CallBackUrlLes(Resource):
                     bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
                     formatted_ref = name_standard(bill_ref_num2)
 
-                    keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
-
                     part1_part2 = split_text_by_keywords(formatted_ref,keywords)
 
                     prop_code = part1_part2[1]

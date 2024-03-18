@@ -185,30 +185,44 @@
 # print("Result for extracted_text_2:", result_2)
 
 
-def remove_keyword_prefix(word, keyword):
-    # Convert word and keyword to uppercase for case insensitivity
-    word_upper = word.upper()
-    keyword_upper = keyword.upper()
+def split_text_by_keywords(extracted_text, keywords):
+    # Convert the extracted text and keywords to uppercase for case insensitivity
+    extracted_text_upper = extracted_text.upper()
+    extracted_text = extracted_text.replace("HSE", "")
+    extracted_text = extracted_text.replace("HS", "")
+    keywords_upper = [keyword.upper() for keyword in keywords]
 
-    # Check if the word starts with the keyword
-    if word_upper.startswith(keyword_upper):
-        # Remove the keyword from the beginning of the word
-        modified_word = word[len(keyword):].lstrip(' -')
-    else:
-        modified_word = word
+    # Initialize variables to store the two parts
+    part1 = ""
+    part2 = ""
 
-    return modified_word
+    # Iterate through the keywords
+    for keyword in keywords_upper:
+        # Check if the keyword appears in the extracted text
+        if keyword in extracted_text_upper:
+            # Find the index of the keyword in the extracted text
+            index = extracted_text_upper.find(keyword)
+            if index != -1:
+                # Check if the keyword is at the beginning of the extracted text
+                if index == 0:
+                    part1 = extracted_text[len(keyword):].strip()  # Remove keyword from part1
+                else:
+                    part1 = extracted_text[:index].strip()
+                part2 = keyword
+                break
+
+    return [part1, part2]
 
 # Example usage:
-word_1 = "MU5"
-word_2 = "5MU"
-keyword = "MU"
+extracted_text_1 = "kh17"
+extracted_text_2 = "17kh"
+keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
 
-result_1 = remove_keyword_prefix(word_1, keyword)
-result_2 = remove_keyword_prefix(word_2, keyword)
+result_1 = split_text_by_keywords(extracted_text_1, keywords)
+result_2 = split_text_by_keywords(extracted_text_2, keywords)
 
-print("Result for word_1:", result_1)
-print("Result for word_2:", result_2)
+print("Result for extracted_text_1:", result_1)
+print("Result for extracted_text_2:", result_2)
 
 
 

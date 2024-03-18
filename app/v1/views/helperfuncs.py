@@ -137,6 +137,8 @@ err = '<i class="fas fa-fw fa-times-circle text-danger mr-1"></i>'
 success = '<div id="snackbar" class="success"> <i class="fas fa-check"></i> Operation successful<div>'
 failure = '<div id="snackbar" class="error small"><i class="fas fa-exclamation-circle"></i> Failed! operation unsuccessful<div>'
 
+keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA","NF","MUTITU","NIMA","PANEILLA"]
+
 flatten = lambda l: [item for sublist in l for item in sublist]
 get_initials = lambda xx: ''.join(i[0] for i in xx.split())
 

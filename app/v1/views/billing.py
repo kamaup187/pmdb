@@ -7918,8 +7918,11 @@ class CallBackUrlLes(Resource):
                             for prp in props:
                                 for house in prp.houses:
                                     n = name_standard(house.name)
+
+                                    clean_n = remove_keywords_prefix(n,keywords)
+                                    
                                     n_units = [part1_part2[0]]
-                                    if n in n_units:
+                                    if clean_n in n_units:
                                         # prop = house.apartment
                                         target_house = house
                                         break
@@ -7927,8 +7930,10 @@ class CallBackUrlLes(Resource):
                         for prp in props:
                             for house in prp.houses:
                                 n = name_standard(house.name)
+                                clean_n = remove_keywords_prefix(n,keywords)
+
                                 n_units = [part1_part2[0]]
-                                if n in n_units:
+                                if clean_n in n_units:
                                     prop = house.apartment
                                     target_house = house
                                     break

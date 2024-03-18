@@ -2538,28 +2538,48 @@ def switch_property_code(value):
     }
     return cases.get(value, None)
 
+def remove_keywords_prefix(word, keywords):
+    # Convert word and keywords to uppercase for case insensitivity
+    word_upper = word.upper()
+    keywords_upper = [keyword.upper() for keyword in keywords]
+
+    # Iterate through the keywords
+    for keyword in keywords_upper:
+        # Check if the word starts with the keyword
+        if word_upper.startswith(keyword):
+            # Remove the keyword from the beginning of the word
+            modified_word = word[len(keyword):].lstrip(' -')
+            return modified_word
+
+    # If no keyword was found, return the original word
+    return word
+
+
 def split_text_by_keywords(extracted_text, keywords):
-    # Convert the extracted text and keywords to lowercase for case insensitivity
-    extracted_text = extracted_text.upper()
-    keywords = [keyword.upper() for keyword in keywords]
+    # Convert the extracted text and keywords to uppercase for case insensitivity
+    extracted_text_upper = extracted_text.upper()
+    extracted_text = extracted_text.replace("HSE", "")
+    extracted_text = extracted_text.replace("HS", "")
+    keywords_upper = [keyword.upper() for keyword in keywords]
 
     # Initialize variables to store the two parts
     part1 = ""
     part2 = ""
 
     # Iterate through the keywords
-    for keyword in keywords:
-        # Check if the keyword is in the extracted text
-        if keyword in extracted_text:
-        # if extracted_text.endswith(keyword):
-            # Split the extracted text into two parts based on the keyword
-            parts = extracted_text.split(keyword)
-            part1 = parts[0].strip()  # Remove any leading or trailing whitespace
-            part2 = keyword  # The keyword itself is part2
-            break  # Stop iterating once the keyword is found
-        else:
-            part1 = extracted_text
-            part2 = None
+    for keyword in keywords_upper:
+        # Check if the keyword appears in the extracted text
+        if keyword in extracted_text_upper:
+            # Find the index of the keyword in the extracted text
+            index = extracted_text_upper.find(keyword)
+            if index != -1:
+                # Check if the keyword is at the beginning of the extracted text
+                if index == 0:
+                    part1 = extracted_text[len(keyword):].strip()  # Remove keyword from part1
+                else:
+                    part1 = extracted_text[:index].strip()
+                part2 = keyword
+                break
 
     return [part1, part2]
 

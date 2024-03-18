@@ -150,39 +150,66 @@
 
 
 
-def split_text_by_keywords(extracted_text, keywords):
-    # Convert the extracted text and keywords to uppercase for case insensitivity
-    extracted_text_upper = extracted_text.upper()
-    keywords_upper = [keyword.upper() for keyword in keywords]
+# def split_text_by_keywords(extracted_text, keywords):
+#     # Convert the extracted text and keywords to uppercase for case insensitivity
+#     extracted_text_upper = extracted_text.upper()
+#     keywords_upper = [keyword.upper() for keyword in keywords]
 
-    # Initialize variables to store the two parts
-    part1 = ""
-    part2 = ""
+#     # Initialize variables to store the two parts
+#     part1 = ""
+#     part2 = ""
 
-    # Iterate through the keywords
-    for keyword in keywords_upper:
-        # Check if the keyword appears in the extracted text
-        if keyword in extracted_text_upper:
-            # Find the index of the keyword in the extracted text
-            index = extracted_text_upper.find(keyword)
-            if index != -1:
-                # Split the text into two parts at the position of the keyword
-                part1 = extracted_text[:index].strip()
-                part2 = keyword
-                break
+#     # Iterate through the keywords
+#     for keyword in keywords_upper:
+#         # Check if the keyword appears in the extracted text
+#         if keyword in extracted_text_upper:
+#             # Find the index of the keyword in the extracted text
+#             index = extracted_text_upper.find(keyword)
+#             if index != -1:
+#                 # Split the text into two parts at the position of the keyword
+#                 part1 = extracted_text[:index].strip()
+#                 part2 = keyword
+#                 break
 
-    return [part1, part2]
+#     return [part1, part2]
+
+# # Example usage:
+# extracted_text_1 = "101SC"
+# extracted_text_2 = "SC101"
+# keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
+
+# result_1 = split_text_by_keywords(extracted_text_1, keywords)
+# result_2 = split_text_by_keywords(extracted_text_2, keywords)
+
+# print("Result for extracted_text_1:", result_1)
+# print("Result for extracted_text_2:", result_2)
+
+
+def remove_keyword_prefix(word, keyword):
+    # Convert word and keyword to uppercase for case insensitivity
+    word_upper = word.upper()
+    keyword_upper = keyword.upper()
+
+    # Check if the word starts with the keyword
+    if word_upper.startswith(keyword_upper):
+        # Remove the keyword from the beginning of the word
+        modified_word = word[len(keyword):].lstrip(' -')
+    else:
+        modified_word = word
+
+    return modified_word
 
 # Example usage:
-extracted_text_1 = "101SC"
-extracted_text_2 = "SC101"
-keywords = ["KH", "LA", "KA", "LY", "MGA", "MVA", "MU", "NC", "PA", "SV", "SC", "TA"]
+word_1 = "MU5"
+word_2 = "5MU"
+keyword = "MU"
 
-result_1 = split_text_by_keywords(extracted_text_1, keywords)
-result_2 = split_text_by_keywords(extracted_text_2, keywords)
+result_1 = remove_keyword_prefix(word_1, keyword)
+result_2 = remove_keyword_prefix(word_2, keyword)
 
-print("Result for extracted_text_1:", result_1)
-print("Result for extracted_text_2:", result_2)
+print("Result for word_1:", result_1)
+print("Result for word_2:", result_2)
+
 
 
 

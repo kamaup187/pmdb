@@ -192,7 +192,12 @@ class Index(Resource):
 
 
 
-        # # cdds = current_user.company.cbids
+        # cdds = current_user.company.cbids
+        # for cid in cdds:
+        #     if cid.post_date.year == 2023:
+        #         print(" deleting chhoooypt COMPANY: ",cid.company.name," ",cid.post_date.month,"/",cid.post_date.year)
+        #         CtoBop.delete(cid)
+        
         # # import pdb; pdb.set_trace()
 
         # cbid = CtoBop.fetch_record_by_id(84413)

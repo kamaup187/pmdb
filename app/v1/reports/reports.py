@@ -366,7 +366,7 @@ class BalanceReport(Resource):
             if target == "lasshouse":
                 inva_send_sms(sms_text,tel)
             else:
-                advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+                advanta_send_sms(sms_text,tel,kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
         else:
             abort(403)
             print("Telephone not provided")
@@ -3120,6 +3120,9 @@ class GeneralRentStatement(Resource):
         totalwater = 0.0
         totalwaterpaid = 0.0
 
+        totalgarbage = 0.0
+        totalgarbagepaid = 0.0
+
         totaldue = 0.0
         totalpaid = 0.0
         totalbcf = 0.0
@@ -3207,6 +3210,7 @@ class GeneralRentStatement(Resource):
                         totaldep += bill.deposit if bill.deposit else 0.0
                         totalrent += bill.rent if bill.rent else 0.0
                         totalwater += bill.water if bill.water else 0.0
+                        totalgarbage += bill.garbage if bill.garbage else 0.0
                         totaldue += bill.total_bill if bill.total_bill else 0.0
                         totalpaid += bill.paid_amount if bill.paid_amount else 0.0
                         totalbcf += bill.balance if bill.balance > 0 else 0.0
@@ -3320,6 +3324,9 @@ class GeneralRentStatement(Resource):
         watertotal = (f"{totalwater:,}")
         waterpaidtotal = (f"{totalwaterpaid:,}")
 
+        garbagetotal = (f"{totalgarbage:,}")
+        garbagepaidtotal = (f"{totalgarbagepaid:,}")
+
         billtotal = (f"{totaldue:,}")
         paidtotal = (f"{totalpaid:,}")
         bcftotal = (f"{totalbcf:,}")
@@ -3356,6 +3363,9 @@ class GeneralRentStatement(Resource):
 
             watertotal=watertotal,
             waterpaidtotal=waterpaidtotal,
+
+            garbagetotal=garbagetotal,
+            garbagepaidtotal=garbagepaidtotal,
 
             billtotal=billtotal,
             paidtotal=paidtotal,

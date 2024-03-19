@@ -989,6 +989,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/rowam/full-logo.png"
             letterhead = "../static/img/logos/rowam/letterhead.jpg"
 
+        elif str_name_company == "colmar estate management":
+            ##################################################
+            logopath = "../static/img/logos/colmar/l-logo.png"
+            mobilelogopath = "../static/img/logos/colmar/s-logo.png"
+            fulllogopath = "../static/img/logos/colmar/full-logo.png"
+            letterhead = "../static/img/logos/colmar/letterhead.jpg"
+
         elif str_name_company == "Rightway Properties Agency":
             ##################################################
             logopath = "../static/img/logos/rightway/l-logo.png"

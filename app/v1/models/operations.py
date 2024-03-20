@@ -5262,7 +5262,29 @@ class CtoBop(CtoB,Base):
 
         return status
 
+    def extract_text_after_hashtag(input_string):
+        import re
+        # Define the regular expression pattern
+        pattern = r'#([^~]+)'
+
+        # Use re.search to find the first match
+        match = re.search(pattern, input_string)
+
+        # Check if a match is found
+        if match:
+            # Extract the text after '#'
+            extracted_text = match.group(1)
+            return extracted_text
+        else:
+            # Return None if no match is found
+            return "no match"
+
     def view(self):
+        try:
+            billref = CtoBop.extract_text_after_hashtag(self.bill_ref_num)
+        except:
+            billref = self.bill_ref_num
+
         return {
             'id':self.id,
             'editid':CtoBop.generate_editid(self),
@@ -5270,7 +5292,7 @@ class CtoBop(CtoB,Base):
             'transid':self.trans_id,
             'amount':self.trans_amnt,
             'paybill':self.business_shortcode,
-            'billref':self.bill_ref_num,
+            'billref':billref,
             'phone':self.msisdn,
             'fname':self.fname,
             'lname':self.lname,
@@ -5279,7 +5301,6 @@ class CtoBop(CtoB,Base):
             'stamp':CtoBop.get_timestamp(self),
             'time':CtoBop.get_time(self)
         }
-
 
 
 class LandlordRemittanceOp(LandlordRemittance,Base):

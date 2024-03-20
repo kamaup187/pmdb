@@ -62,7 +62,12 @@ class Base():
         """method to get created by"""
         user_obj = User.query.filter_by(id=self.user_id).first()
         fname = user_obj.name.split()[0]
-        return fname
+        if fname.lower() == "admin":
+            return "auto"
+        elif fname.lower() == "qc":
+            return "auto"
+        else:
+            return fname
 
     def get_housename(self):
         """method to get house name from house id"""

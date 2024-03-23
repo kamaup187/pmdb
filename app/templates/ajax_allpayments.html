@@ -308,8 +308,8 @@
                         <div class="ms-3 ml-3 form-group">
                           <div>
                             <span class="">
-                              <input type="checkbox" id="printinvoice" class="check-bt" name="chargetype1" value="Rent">
-                              <label for="printinvoice">Print invoice</label>
+                              <input type="checkbox" id="printinvoicecheck" class="check-bt" name="chargetype1" value="Rent">
+                              <label for="printinvoicecheck">Print invoice</label>
                             </span>
                           </div>
                         </div>
@@ -2078,7 +2078,7 @@
 
                 // $(".printr")[0].click();
 
-                var printinv = document.getElementById("printinvoice");
+                var printinv = document.getElementById("printinvoicecheck");
                 if (printinv.checked){
                   console.log("Printing invoice...");
                   setTimeout(function() {

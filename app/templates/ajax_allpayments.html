@@ -305,6 +305,15 @@
    
                         </div>
 
+                        <div class="ms-3 ml-3 form-group">
+                          <div>
+                            <span class="">
+                              <input type="checkbox" id="printinvoice" class="check-bt" name="chargetype1" value="Rent">
+                              <label for="printinvoice">Print invoice</label>
+                            </span>
+                          </div>
+                        </div>
+
 
                       </fieldset>
 
@@ -2069,9 +2078,15 @@
 
                 // $(".printr")[0].click();
 
-                setTimeout(function() {
+                var printinv = document.getElementById("printinvoice");
+                if (printinv.checked){
+                  console.log("Printing invoice...");
+                  setTimeout(function() {
                     $(".printr")[0].click(); // Trigger click on the first element with class 'printr' after 500ms
                 }, 500);
+                }
+
+
 
 
 

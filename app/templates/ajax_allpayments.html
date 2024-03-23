@@ -643,7 +643,7 @@
             <div class="header-elements divbg mb-2 pt-2">
               <!-- <button type="button" class="savebtn btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button>  -->
               <!-- <button type="button" class="printbtn mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button> -->
-              <a class="printr btn btn-light btn-sm" href="#" target="_blank"><i class="fa fa-print text-primary mr-2"></i>Print</a>
+              <a class="printr btn btn-light btn-sm" href="" target="_blank"><i class="fa fa-print text-primary mr-2"></i>Auto Print</a>
             </div>
           </div>
           <div class="modal-body no-padding">
@@ -2066,6 +2066,12 @@
                 $("#ctb_item_ref").empty();
                 $("#prop_selector").addClass("dispnone")
                 $("#receipt-payment-bed").html(response);
+
+                // $(".printr")[0].click();
+
+                setTimeout(function() {
+                    $(".printr")[0].click(); // Trigger click on the first element with class 'printr' after 500ms
+                }, 500);
 
 
 

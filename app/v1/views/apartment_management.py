@@ -176,6 +176,8 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        # return Response(render_template("mayai.html"))
+
 
         # ccompany = CompanyOp.fetch_company_by_name("Vista Own Services")
 

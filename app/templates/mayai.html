@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatic Printing</title>
+<script>
+// Function to trigger automatic printing
+function autoPrint() {
+    // Check if browser supports automatic printing without dialog
+    if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        if (mediaQueryList.matches) {
+            // Browser supports automatic printing without dialog
+            window.print();
+        } else {
+            // Browser does not support automatic printing without dialog
+            console.log('Automatic printing not supported. Please configure your browser settings.');
+        }
+    } else {
+        // Browser does not support matchMedia
+        console.log('Browser does not support matchMedia.');
+    }
+}
+
+// Call autoPrint function after a sale is made
+function makeSale() {
+    // Code to handle sale event
+    // Call autoPrint function to trigger automatic printing
+    autoPrint();
+}
+</script>
+</head>
+<body>
+<!-- Your HTML content for the sale page goes here -->
+<button onclick="makeSale()">Make Sale</button>
+</body>
+</html>

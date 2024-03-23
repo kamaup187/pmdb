@@ -3729,6 +3729,7 @@ class ReceivePayment(Resource):
             str_month=str_month,
             paydate=paydate.strftime("%d/%b/%y"),
             paytime=paydate.strftime("%X"),
+            rlink=f"/printreceipt/{payment_obj.id}",
             bill=bill,
             baltitle=baltitle,
             outline=outline,

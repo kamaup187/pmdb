@@ -2023,7 +2023,6 @@
                 $('#paybtn_alt').html('Submit');
                 $('#paybtn_alt').addClass("dispnone")
                 // $('#pay-date').attr("type","text")
-                $(".reset").click();
                 $('#billdatepicker').addClass("dispnone")
                 // $(".closemodal").click();
 
@@ -2078,15 +2077,18 @@
 
                 // $(".printr")[0].click();
 
-                // var printinv = document.getElementById("printinvoicecheck");
-                // if (printinv.checked){
-                //   console.log("Printing invoice...");
-                //   setTimeout(function() {
-                //     $(".printr")[0].click(); // Trigger click on the first element with class 'printr' after 500ms
-                // }, 500);
-                // }else{
-                //   console.log("Not printing invoice...")
-                // }
+                var printinv = document.getElementById("printinvoicecheck");
+                if (printinv.checked){
+                  console.log("Printing invoice...");
+                  setTimeout(function() {
+                    $(".printr")[0].click(); // Trigger click on the first element with class 'printr' after 500ms
+                }, 500);
+                }else{
+                  console.log("Not printing invoice...")
+                }
+
+                $(".reset").click();
+
 
 
 

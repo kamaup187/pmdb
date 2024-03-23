@@ -2101,6 +2101,9 @@ class CombinedReport(Resource):
                         if house_alloc.active:
                             continue
 
+            if vac.name in availables:
+                continue
+
 
                 # continue
             new_item = {

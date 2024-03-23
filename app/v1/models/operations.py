@@ -4060,7 +4060,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 return hh.name
             else:
                 return f"{t_current_house.name}-(formerly {hh.name})"
-        return f"{hh.name}(Vacated)"
+        # return f"{hh.name}(Vacated)"
+        return f"{hh.name}"
             
     def view_detail(self):
         

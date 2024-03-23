@@ -5281,7 +5281,10 @@ class CtoBop(CtoB,Base):
 
     def view(self):
         try:
-            billref = CtoBop.extract_text_after_hashtag(self.bill_ref_num)
+            if "#" in self.bill_ref_num:
+                billref = CtoBop.extract_text_after_hashtag(self.bill_ref_num)
+            else:
+                billref = self.bill_ref_num
         except:
             billref = self.bill_ref_num
 

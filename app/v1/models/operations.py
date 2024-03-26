@@ -3862,6 +3862,14 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             stars += "~"
 
         return stars
+
+    def get_balance_badge(arr):
+        if arr == 0.0:
+            return "text-black"
+        elif arr > 0.0:
+            return "text-danger"
+        else:
+            return "text-success"
         
     def calculate_breakdown(self):
         arrears = self.arrears
@@ -4134,6 +4142,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'active':"",
             'viewable':"text-primary",
             'editoutline':"text-primary",
+            'balance-badge':MonthlyChargeOp.get_balance_badge(self.arrears),
             'new':MonthlyChargeOp.current_badge(self),
             'billedby':MonthlyChargeOp.get_name(self)
         }
@@ -4246,6 +4255,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'paid-alt-alt':MonthlyChargeOp.show_ll_status(self),
             'payment_date':MonthlyChargeOp.get_date(self),
             'balance-no-star':f"{self.balance:,.1f}",
+            'balance-badge':MonthlyChargeOp.get_balance_badge(self.arrears),
             'balance-rent-dep-serv':MonthlyChargeOp.calculate_total_alt(self.rent_due,self.deposit_due,self.maintenance_due),
             'prop':self.apartment.name
 

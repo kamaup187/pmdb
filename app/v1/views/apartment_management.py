@@ -178,7 +178,12 @@ class Index(Resource):
 
         # return Response(render_template("mayai.html"))
 
-
+        # mayai_mtu = UserOp.fetch_user_by_name("Joseph Muriuki")
+        # if mayai_mtu:
+        #     print("Found mayai")
+        #     import pdb; pdb.set_trace()
+        # else:
+        #     print("Could not find mayai")
         # ccompany = CompanyOp.fetch_company_by_name("Vista Own Services")
 
         # pp = ApartmentOp.fetch_apartment_by_name("Mary Onyiego  P/811")

@@ -3946,7 +3946,6 @@ class UpdateBalance(Resource):
                 total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
                 MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
 
-                print("NEW TOTAL :",total_amount,"OLD TOTAL :",original_amount)
 
                 diff = total_amount - original_amount
 

@@ -52,7 +52,7 @@
                 <td class="data-cell expand dispnone-alt {{fieldshow_dep}}">{{ i['deposit'] }}</td>
                 <td class="data-cell expand dispnone-alt {{fieldshow_arg}}">{{ i['agreement'] }}</td>
                 <td class="data-cell expand dispnone-alt {{fieldshow_fine}}">{{ i['fine'] }}</td>
-                <td class="data-cell {{fieldshow_arr}} expand dispnone-alt text-danger">{{ i['arrears'] }}</td>
+                <td class="data-cell {{fieldshow_arr}} expand dispnone-alt {{i['balance-badge']}}">{{ i['arrears'] }}</td>
                 <td class="data-cell ">{{ i['total'] }}</td>
                 <td id="{{i['payid']}}" class="data-cell underline"  data-toggle="modal" data-target="#editPayModal">{{ i['paid'] }}</td>
                 <td class="data-cell expand dispnone-alt">{{ i['payment_date'] }}</td>

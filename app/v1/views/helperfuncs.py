@@ -1815,6 +1815,15 @@ def fetch_prev_billing_period_payments(billing_period,arr):
             prev_billling_period_data.append(i)
     return prev_billling_period_data
 
+def fetch_prev_billing_period_invoice(billing_period,arr):
+    prev_billling_period_data = []
+    prev_month = get_prev_month(billing_period.month)
+    prev_year = get_prev_year(billing_period.month,billing_period.year)
+    for i in arr:
+        if i.pay_period.month == prev_month and i.pay_period.year == prev_year:
+            prev_billling_period_data.append(i)
+    return prev_billling_period_data
+
 def fetch_current_billing_period_voided_payments(billing_period,arr):
     current_billling_period_data = []
     for i in arr:

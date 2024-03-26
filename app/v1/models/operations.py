@@ -16,6 +16,31 @@ def smart_truncate(content, length=20, suffix='...'):
         return content
     else:
         return ' '.join(content[:length+1].split(' ')[0:-1]) + suffix
+
+def get_prev_month_year(month,year):
+    if month == 1:
+        prev_month = 12
+        target_year = year -1 
+    else:
+        prev_month = month - 1
+        target_year = year
+
+    return prev_month,target_year
+
+def get_prev_year(month,year):
+    if month == 1:
+        target_year = year -1 
+    else:
+        target_year = year
+
+    return target_year
+
+def get_prev_month(month):
+    if month == 1:
+        prev_month = 12
+    else:
+        prev_month = month - 1
+    return prev_month
 class Base():
     """base class"""
     def save(self):
@@ -3872,6 +3897,27 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             return "text-success"
         
     def calculate_breakdown(self):
+        try:
+            arrs = self.tenant.monthly_charges
+        except:
+            arrs = self.ptenant.monthly_charges
+
+        arrears_correctness = ""
+
+        prev_bill = None
+        prev_month = get_prev_month(self.month)
+        prev_year = get_prev_year(self.month,self.year)
+        for i in arrs:
+            if i.month == prev_month and i.year == prev_year:
+                prev_bill = i
+                break
+
+        if prev_bill:
+            if prev_bill.balance == self.arrears:
+                arrears_correctness = ""
+            else:
+                arrears_correctness = "#"
+
         arrears = self.arrears
         breaks = 0.0
 
@@ -3894,9 +3940,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         breaks += self.penalty_balance if self.penalty_balance else 0.0
 
         if breaks == arrears:
-            return f"{arrears:,.1f} {star}"
+            return f"{arrears_correctness} {arrears:,.1f} {star}"
         else:
-            return f"{arrears:,.1f} {star}**"
+            return f"{arrears_correctness} {arrears:,.1f} {star}**"
 
     def calculate_breakdown_no_dep(self):
         arrears = self.arrears - self.deposit_balance

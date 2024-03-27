@@ -184,7 +184,11 @@ class Index(Resource):
         #     import pdb; pdb.set_trace()
         # else:
         #     print("Could not find mayai")
-        # ccompany = CompanyOp.fetch_company_by_name("Vista Own Services")
+        # ccompany = CompanyOp.fetch_company_by_name("Shinesway Property")
+        # if ccompany:
+        #     print("Found company")
+        #     print("--------------------------------",ccompany.users)
+        #     import pdb; pdb.set_trace()
 
         # pp = ApartmentOp.fetch_apartment_by_name("Mary Onyiego  P/811")
         # ApartmentOp.update_company(pp,ccompany.id)

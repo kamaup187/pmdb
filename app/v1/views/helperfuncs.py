@@ -10945,7 +10945,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         fines_due = fines
 
                     if prev_bill[0].deposit_due:
-                        deposit_bal = prev_bill[0].deposit_due
+                        # deposit_bal = prev_bill[0].deposit_due # MAJOR UPDATE TO DIABLE DEPOSIT BILLING FROM PREVIOUS BILL
+                        deposit_bal = 0.0
                         deposit_due = deposit_bal + deposit
                     else:
                         deposit_due = deposit
@@ -11220,7 +11221,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                         fines_due = fines
 
                     if prev_bill[0].deposit_due:
-                        deposit_bal = prev_bill[0].deposit_due
+                        # deposit_bal = prev_bill[0].deposit_due
+                        deposit_bal = 0.0
                         deposit_due = deposit_bal + deposit
                     else:
                         deposit_due = deposit

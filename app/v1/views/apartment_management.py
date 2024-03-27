@@ -5343,7 +5343,7 @@ class SmsDelivery(Resource):
 
                     # response = sms.send(message, recipient, sender)
 
-                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+                    advanta_send_sms(txt, sms_phone_number_formatter(co.sphone) if co.sphone else "+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
                     # resp = response["SMSMessageData"]["Recipients"][0]
                     # raw_cost = resp["cost"]

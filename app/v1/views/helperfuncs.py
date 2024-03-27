@@ -1282,6 +1282,8 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
     if resp == "DeliveredToTerminal":
         resp1 = "Success"
+    elif resp == "Sent":
+        resp1 = "sent"
     else:
         resp1 = "blocked"
 

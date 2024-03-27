@@ -1499,7 +1499,7 @@ def sms_sender(company,sms_text,phonenum):
     ################################## OWN SENDER IDS ##################################
 
     elif company.upper() == "KEVMA REAL ESTATE":
-        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KEVMAREAL")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
@@ -1508,7 +1508,7 @@ def sms_sender(company,sms_text,phonenum):
         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"Bizline")
 
     elif company.title() == "Malibu Pharmacy Ltd":
-        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"MALIBU PHAR")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"MALIBU")
 
     elif company.title() == "Sirenga Investments Ltd":
         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")

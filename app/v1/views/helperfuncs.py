@@ -11683,7 +11683,7 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
 
                     if prev_bill[0].deposit_due:
                         deposit_bal = prev_bill[0].deposit_due
-                        deposit_due = deposit_bal + deposit
+                        deposit_due = deposit
                     else:
                         deposit_due = deposit
 
@@ -11978,7 +11978,7 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
 
                     if prev_bill[0].deposit_due:
                         deposit_bal = prev_bill[0].deposit_due
-                        deposit_due = deposit_bal + deposit
+                        deposit_due = deposit
                     else:
                         deposit_due = deposit
 
@@ -12447,8 +12447,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                         fines_due = fines
 
                     if prev_bill[0].deposit_due:
-                        deposit_bal = prev_bill[0].deposit_due
-                        deposit_due = deposit_bal + deposit
+                        # deposit_bal = prev_bill[0].deposit_due
+                        deposit_due = deposit
                     else:
                         deposit_due = deposit
 
@@ -12733,8 +12733,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                         fines_due = fines
 
                     if prev_bill[0].deposit_due:
-                        deposit_bal = prev_bill[0].deposit_due
-                        deposit_due = deposit_bal + deposit
+                        # deposit_bal = prev_bill[0].deposit_due
+                        deposit_due = deposit
                     else:
                         deposit_due = deposit
 

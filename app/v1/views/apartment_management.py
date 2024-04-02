@@ -300,7 +300,7 @@ class Index(Resource):
 
 
 
-        propidss = [800000000000]
+        propidss = [800]
 
         # propidss = [91,92,484,93]
         for n in propidss:
@@ -328,6 +328,30 @@ class Index(Resource):
                             if (rent_paid + water_paid + garbage_paid + security_paid + electricity_paid + maintenance_paid + agreement_paid + deposit_paid + penalty_paid) == amount_paid:
                                 MonthlyChargeOp.update_payments(tt,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,maintenance_paid,penalty_paid,deposit_paid,agreement_paid)
                                 MonthlyChargeOp.update_dues(tt,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
+                    elif tt.balance < 0.0 and tt.paid_amount > 0.0:
+
+                        rent_paid = tt.rent_balance + tt.rent
+                        water_paid = tt.water_balance + tt.water
+                        garbage_paid = tt.garbage_balance + tt.garbage
+                        security_paid = tt.security_balance + tt.security
+                        electricity_paid = tt.electricity_balance + tt.electricity
+                        maintenance_paid = tt.maintenance_balance + tt.maintenance
+                        agreement_paid = tt.agreement_balance + tt.agreement
+                        deposit_paid = tt.deposit_balance + tt.deposit
+                        penalty_paid = tt.penalty_balance + tt.penalty
+
+                        overpayment = tt.paid_amount - (rent_paid + water_paid + garbage_paid + security_paid + electricity_paid + maintenance_paid + agreement_paid + deposit_paid + penalty_paid)
+
+                        rent_paid += overpayment
+
+                        MonthlyChargeOp.update_payments(tt,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,maintenance_paid,penalty_paid,deposit_paid,agreement_paid)
+                        rent_due = (tt.rent_balance + tt.rent) - rent_paid
+                        MonthlyChargeOp.update_dues(tt,0.0,0.0,0.0,rent_due,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
+                    else:
+                        pass
+
 
 
 

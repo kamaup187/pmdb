@@ -300,7 +300,7 @@ class Index(Resource):
 
 
 
-        propidss = [800]
+        propidss = [800000000000000000000]
 
         # propidss = [91,92,484,93]
         for n in propidss:

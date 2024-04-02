@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(14,3,timenow.year)
+        invdate = generate_exact_date(8,3,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)
@@ -4170,6 +4170,27 @@ class ResolveInvoices(Resource):
 
             except:
                 pass
+
+            tt = bill
+            if tt.balance == 0:
+                # fully paid
+                print(tt.house)
+                if tt.paid_amount > 0:
+                    amount_paid = tt.paid_amount
+
+                    rent_paid = tt.rent_balance + tt.rent
+                    water_paid = tt.water_balance + tt.water
+                    garbage_paid = tt.garbage_balance + tt.garbage
+                    security_paid = tt.security_balance + tt.security
+                    electricity_paid = tt.electricity_balance + tt.electricity
+                    maintenance_paid = tt.maintenance_balance + tt.maintenance
+                    agreement_paid = tt.agreement_balance + tt.agreement
+                    deposit_paid = tt.deposit_balance + tt.deposit
+                    penalty_paid = tt.penalty_balance + tt.penalty
+
+                    if (rent_paid + water_paid + garbage_paid + security_paid + electricity_paid + maintenance_paid + agreement_paid + deposit_paid + penalty_paid) == amount_paid:
+                        MonthlyChargeOp.update_payments(tt,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,maintenance_paid,penalty_paid,deposit_paid,agreement_paid)
+                        MonthlyChargeOp.update_dues(tt,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
 
 class ResolveDeposits(Resource):
     def post(self):

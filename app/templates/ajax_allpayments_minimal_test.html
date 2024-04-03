@@ -243,6 +243,15 @@
    
                         </div>
 
+                        <div class="ms-3 ml-3 form-group">
+                          <div>
+                            <span class="">
+                              <input type="checkbox" id="printinvoicecheck" class="check-bt" name="printinvoicecheck" value="printinvoicecheck">
+                              <label for="printinvoicecheck">Print receipt</label>
+                            </span>
+                          </div>
+                        </div>
+
 
                       </fieldset>
 
@@ -437,7 +446,7 @@
             <div class="header-elements divbg mb-2 pt-2">
               <!-- <button type="button" class="savebtn btn btn-light btn-sm"><i class="fa fa-file-download text-primary mr-2"></i>Save</button>  -->
               <!-- <button type="button" class="printbtn mobile-malaysian btn btn-light btn-sm"><i class="fa fa-print text-primary mr-2"></i>Print</button> -->
-              <a class="printr btn btn-light btn-sm" href="#" target="_blank"><i class="fa fa-print text-primary mr-2"></i>Print</a>
+              <a class="printr btn btn-light btn-sm" href="" target="_blank"><i class="fa fa-print text-primary mr-2"></i>Auto Print</a>
             </div>
           </div>
           <div class="modal-body no-padding">
@@ -1790,7 +1799,7 @@
                 $('#paybtn_alt').html('Submit');
                 $('#paybtn_alt').addClass("dispnone")
                 // $('#pay-date').attr("type","text")
-                $(".reset").click();
+                // $(".reset").click();
                 $('#billdatepicker').addClass("dispnone")
                 // $(".closemodal").click();
 
@@ -1830,6 +1839,17 @@
                 $("#prop_selector").addClass("dispnone")
                 $("#receipt-payment-bed").html(response);
 
+                var printinv = document.getElementById("printinvoicecheck");
+                if (printinv.checked){
+                  console.log("Printing invoice...");
+                  setTimeout(function() {
+                    $(".printr")[0].click(); // Trigger click on the first element with class 'printr' after 500ms
+                }, 500);
+                }else{
+                  console.log("Not printing invoice...")
+                }
+
+                $(".reset").click();
 
 
                 var rawIds = "{{ propids|safe }}";

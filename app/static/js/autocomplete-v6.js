@@ -2,6 +2,7 @@
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
+    // console.log("arr length",arr.length,"arr enyewe",arr);
     var currentFocus;
     var idholder = document.getElementById("id-holder")
     /*execute a function when someone writes in the text field:*/

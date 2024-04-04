@@ -1502,6 +1502,8 @@ def sms_sender(company,sms_text,phonenum):
 
     elif company.upper() == "KEVMA REAL ESTATE":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+        if not report:
+            report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")
@@ -1515,13 +1517,24 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Sirenga Investments Ltd":
         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
 
+
     elif company.title() == "Lymax Properties":
-        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
+        report = None
+        # report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
+
+    elif company.title() == "Mutie":
+        # report = None
+        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
+
+        # report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
 
     #########################################################################################
     else:
         # report = None
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        if not report:
+            if company.title() == "Colmar Estate Management":
+                report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
         
     if report:
         param1 = report["apikey"]
@@ -14081,7 +14094,7 @@ def mpesa_response2(ctob_obj,propid):
         try:
             phonenum = sms_phone_number_formatter(tel)
             message = f"{ctob_obj.fname} has transacted KES {ctob_obj.trans_amnt} in favour of ACCOUNT: {ctob_obj.bill_ref_num} ({prop_obj.name}). \nRef: {ctob_obj.trans_id}"
-            sms_sender("",message,phonenum)
+            sms_sender("mutie",message,phonenum)
 
         except Exception as e:
             print("ERROR",e)

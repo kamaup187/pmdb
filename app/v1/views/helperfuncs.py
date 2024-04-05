@@ -1522,7 +1522,7 @@ def sms_sender(company,sms_text,phonenum):
         report = None
         # report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
 
-    elif company.title() == "Mutie":
+    elif company.title() == "Mutiee":
         # report = None
         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
 

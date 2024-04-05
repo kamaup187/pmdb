@@ -7871,12 +7871,17 @@ class CallBackUrlLes(Resource):
         # advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         #parse for json
-        my_data=request.data
-        my_json = my_data.decode('utf8').replace("'", '"')
-        # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
-        # ww = f"{my_json},PROD LESAMA has sent data"
-        # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
-        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        try:
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+        except Exception as e:
+            advanta_send_sms(f"PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+            # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
+            # ww = f"{my_json},PROD LESAMA has sent data"
+            # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+            
         try:
             data = json.loads(my_json)
             # print("#####################################COOP COOP COOP############################################")

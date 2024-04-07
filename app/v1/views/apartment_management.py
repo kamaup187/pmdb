@@ -1100,15 +1100,38 @@ class Index(Resource):
             #                 print("cbid did not find its sibling payment")
 
             if company.id == 117:
-                shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743","4119821"]
-            else:
-                shorts = [""]
+                # shorts = ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743","4119821"]
+                shorts = {
+                    "6740346":"4162018",
+                    "6740345":"4162016",
+                    "6740344":"4162014",
+                    "6740343":"4162012",
+                    "6740336":"4159272",
+                    "6740337":"4159274",
+                    "6740338":"4159276",
+                    "6740339":"4159278",
+                    "6740340":"4159280",
+                    "6740341":"4162008",
+                    "6740342":"4162010",
+                    "6740347":"4162020",
+                    }
 
-            for short in shorts:
-                print("shorts",short)
-                cbid = ShortcodeOp.fetch_shortcode_by_id(short)
+            else:
+                shorts = {}
+
+            # for short in shorts:
+            #     print("shorts",short)
+            #     cbid = ShortcodeOp.fetch_shortcode_by_id(short)
+            #     # import pdb; pdb.set_trace()
+            #     if not cbid:
+            #         cbid = ShortcodeOp(short,"",company.id)
+            #         cbid.save()
+
+            for shortcode, till in shorts.items():
+                print("shorts:", shortcode, till)
+                cbid = ShortcodeOp.fetch_shortcode_by_id(shortcode)
                 if not cbid:
-                    cbid = ShortcodeOp(short,"",company.id)
+                    cbid = ShortcodeOp(shortcode, till, company.id)
                     cbid.save()
 
             # for cil in company.shortcodes:

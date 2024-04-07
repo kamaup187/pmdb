@@ -7123,7 +7123,7 @@ class CallBackUrlVillaPark(Resource):
 
         ww = f"{ri} has sent data"
 
-        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')

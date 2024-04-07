@@ -215,6 +215,8 @@ api.add_resource(CallBackUrlVilla902,"/m/villa904/ins/payment")
 api.add_resource(CallBackUrlVilla904,"/m/villa166/ins/payment")
 api.add_resource(CallBackUrlVilla166,"/m/villa898/ins/payment")
 
+api.add_resource(CallBackUrlVillaPark,"/villapark/<string:ri>")
+
 
 api.add_resource(CallBackUrlImani,"/m/kalinaw/ins/payment")
 api.add_resource(CallBackUrlSkyview,"/m/skyview/ins/payment")

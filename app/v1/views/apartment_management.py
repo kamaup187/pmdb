@@ -6604,7 +6604,7 @@ class AddTenant(Resource):
                     if bool_migrate:
                         TenantOp.update_residency(tenant_obj,"New")
                     else:
-                        TenantOp.update_residency(tenant_obj,"Old")
+                        TenantOp.update_residency(tenant_obj,"New")
             
             #     msg = "Client added successfully"
             # return msg + proceed

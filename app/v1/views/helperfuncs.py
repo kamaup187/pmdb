@@ -10200,7 +10200,7 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
             all_charges = ChargeOp.fetch_charges_by_house_id(house.id)
             rent_charges = []
             for charge in all_charges:
-                if str(charge) == "Rent" and charge.date.month == month and charge.date.year == year:
+                if str(charge) == "Rent" and charge.date.month == month and charge.date.year == year and charge.amount != 0.0:
                     checker = "exists"
                     break
 

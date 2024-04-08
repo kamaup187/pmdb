@@ -13049,7 +13049,7 @@ def filtered_house_list(apartment_id,readdate=None):
 
     return unread_houses
 
-def filtered_house_list_alt(apartment_id,readdate=None):
+def filtered_house_list_alt(apartment_id,readdate=None,*args):
     """Filtering out read houses"""
     # unread_houses = []
     # prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
@@ -13150,10 +13150,10 @@ def filtered_house_list_alt(apartment_id,readdate=None):
         # prev_reading_obj = fetch_last_reading(active_meter.id)
         prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
         # print("Prev reading period",prev_reading_obj.reading_period.month,"")
-
-        if not prev_reading_obj:
+        if "force" in args:
             unread_houses.append(house)
-
+        elif not prev_reading_obj:
+            unread_houses.append(house)
         elif prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
             if prev_reading_obj.description == "actual electricity reading":
                 pass

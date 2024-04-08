@@ -8015,7 +8015,11 @@ class CaptureReading(Resource):
             house_list = filtered_house_list(apartment_id,readdate)
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select water meter")
         elif run == "houselist-alt":
-            house_list = filtered_house_list_alt(apartment_id,readdate)
+            if readperiod == "current":
+                house_list = filtered_house_list_alt(apartment_id,readdate,"force")
+            else:
+                house_list = filtered_house_list_alt(apartment_id,readdate)
+
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select electricity meter")
         ##################################################################################################
         if not house:

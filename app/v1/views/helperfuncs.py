@@ -3207,7 +3207,8 @@ def new_tenants_injector_alt(apartment_id):
     may_epoch = generate_exact_date(27,5,2023)
     for alloc in tenants:
         # if alloc.tenant.residency == "New" and alloc.date > may_epoch:
-        if alloc.tenant.residency == "New":
+                if alloc.tenant.residency == "New":
+
             new_list.append(alloc.tenant)
     return new_list
 
@@ -10200,7 +10201,7 @@ def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
             all_charges = ChargeOp.fetch_charges_by_house_id(house.id)
             rent_charges = []
             for charge in all_charges:
-                if str(charge) == "Rent" and charge.date.month == month and charge.date.year == year and charge.amount != 0.0:
+                if str(charge) == "Rent" and charge.date.month == month and charge.date.year == year:
                     checker = "exists"
                     break
 

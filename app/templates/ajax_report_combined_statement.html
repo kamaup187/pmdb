@@ -109,6 +109,8 @@
                       <th class="">TOTAL</th>
                       <th class="">PAID</th>
                       <th class="">RENT BC/F</th>
+                      <th class="">TOTAL BC/F</th>
+
 
                     </tr>
                   </thead>
@@ -134,6 +136,8 @@
                       <td class="data-cell text-right">{{bill['totaldue']}}</td>
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+
                     </tr>
                   {% endfor %}
 
@@ -156,8 +160,8 @@
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                       <td class="font-weight-bold text-right">{{amounttotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
-                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
-                    </tr>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">{{bcftotal}}</td>                    </tr>
                   </tfoot>
                 </table>
 

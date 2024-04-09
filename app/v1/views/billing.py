@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
+        cl = CompanyOp.fetch_company_by_name("LaCasa")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -512,13 +512,13 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
+        comm = CompanyOp.fetch_company_by_name('LaCasa')
 
-        mycomm = CompanyOp.fetch_company_by_name('Rentlibb')
+        mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
         # import pdb; pdb.set_trace()
         if mycomm:
-            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES",", Ronald Ngala Avenue","Nairobi","CBD","00100-312321","info@rentlib.com","0747-674695")
+            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES",", Ronald Ngala Avenue","Nairobi","CBD","00100-312321","info@rentlib.com","0716-674695")
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(8,3,timenow.year)
+        invdate = generate_exact_date(8,4,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)

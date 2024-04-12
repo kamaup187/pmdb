@@ -7426,6 +7426,11 @@ class MpesaStatement2(Resource):
         begin_t = request.args.get("begin")
         end_t = request.args.get("end")
 
+        till_arget = request.args.get("target")
+        print(till_arget)
+
+        # permissible_tills = fetch_permissible_tills(current_user)
+
         shortcodes = co.shortcodes
 
         tills = []

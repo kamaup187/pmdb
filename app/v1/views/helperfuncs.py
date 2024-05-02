@@ -378,6 +378,8 @@ def ins_api_account_subscription(ckey,skey,account,password):
     else:
         print("Invalid token passed")
 
+def get_group_elements(group,elements):
+    return elements.get(group, [])
 
 def sendgrid_mail_sender(from_email, to_email, subject,txt,filename=None):
     message = Mail(
@@ -13151,7 +13153,7 @@ def filtered_house_list_alt(apartment_id,readdate=None,*args):
         # prev_reading_obj = fetch_last_reading(active_meter.id)
         prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
         # print("Prev reading period",prev_reading_obj.reading_period.month,"")
-        if "force" in args:
+        if "fforce" in args:
             unread_houses.append(house)
         elif not prev_reading_obj:
             unread_houses.append(house)

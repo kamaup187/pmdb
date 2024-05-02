@@ -1128,11 +1128,12 @@ class Index(Resource):
             #         cbid.save()
 
             for shortcode, till in shorts.items():
-                print("shorts:", shortcode, till)
-                cbid = ShortcodeOp.fetch_shortcode_by_id(shortcode)
-                if not cbid:
-                    cbid = ShortcodeOp(shortcode, till, company.id)
-                    cbid.save()
+                pass
+                # print("shorts:", shortcode, till)
+                # cbid = ShortcodeOp.fetch_shortcode_by_id(shortcode)
+                # if not cbid:
+                #     cbid = ShortcodeOp(shortcode, till, company.id)
+                #     cbid.save()
 
             # for cil in company.shortcodes:
             #     rgs = ["7031325","7514112"]

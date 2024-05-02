@@ -7426,27 +7426,52 @@ class MpesaStatement2(Resource):
         begin_t = request.args.get("begin")
         end_t = request.args.get("end")
 
-        till_arget = request.args.get("target")
-        print(till_arget)
+        target = request.args.get("target")
+        till_group = request.args.get("shortcode_group")
 
-        # permissible_tills = fetch_permissible_tills(current_user)
 
-        shortcodes = co.shortcodes
-
+        # shortcodes = co.shortcodes
         tills = []
-
-        for code in shortcodes:
-            if code.description:
-                if code.description != "general":
-                    tills.append(code.description)
-                else:
-                    tills.append(code.shortcode)
-            else:
-                tills.append(code.shortcode)
+        # for code in shortcodes:
+        #     if code.description:
+        #         if code.description != "general":
+        #             tills.append(code.description)
+        #         else:
+        #             tills.append(code.shortcode)
+        #     else:
+        #         tills.append(code.shortcode)
 
         # tills = [shortcode.shortcode for shortcode in shortcodes]
 
-        tills.append("All")
+        
+
+
+        if target == "tills":
+            print(till_group)
+            
+            elements = {
+                "cv": ["4162018", "4162016", "4162014", "4162012", "4159272", "4159274", "4159276", "4159278", "4159280", "4162008", "4162010", "4162020"],
+                "vp": ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743","4119821"],
+                "rt": ["4119821", "4119743", "4108655", "4108653"]
+            }
+
+            # Example: Get elements for group "vp"
+            if till_group == "vp":
+                print("getting vp")
+                tills = get_group_elements("vp",elements)
+            elif till_group == "cv":
+                print("getting cv")
+                tills = get_group_elements("cv",elements)
+            else:
+                print("getting rt")
+                tills = get_group_elements("rt",elements)
+
+            # tills.append("All")
+
+            return render_template('ajax_multivariable.html',items=tills,placeholder="select below")
+
+
+        # permissible_tills = fetch_permissible_tills(current_user)
 
         if not shortcode_id:
 

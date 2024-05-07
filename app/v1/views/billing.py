@@ -3899,7 +3899,7 @@ class PrintActualReceipt(Resource):
                 balance=bal,
                 chargetype=payment_obj.payment_name,
                 receiptno=receiptno,
-                refnum=payment_obj.ref_number,
+                refnum="N/A",
                 paymode=payment_obj.paymode,
                 logopath=logo(current_user.company)[0],
                 company=current_user.company,

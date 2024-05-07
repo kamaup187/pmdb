@@ -3890,7 +3890,7 @@ class PrintActualReceipt(Resource):
                 amount=paid,
                 str_amount=stramount,
                 str_month=get_str_month(payperiod.month),
-                paydate="N/A",
+                paydate=str_month,
                 paytime="N/A",
                 rdate = "N/A",
                 bill=bill,

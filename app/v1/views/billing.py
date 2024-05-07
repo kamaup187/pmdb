@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("LaCasa")
+        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -512,7 +512,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('LaCasa')
+        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(8,4,timenow.year)
+        invdate = generate_exact_date(2,5,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)
@@ -3783,111 +3783,239 @@ class PrintActualReceipt(Resource):
 
         pay_id = get_identifier(ri)
 
-        payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
-        db.session.expire(payment_obj)
-        if payment_obj.voided:
-            disp = ""
-        else:
-            disp = "dispnone"
+        target = request.args.get('target')
 
-        p = inflect.engine()
-        int_amount = int(payment_obj.amount)
-        str_amount = p.number_to_words(int_amount)
-        stramount = str_amount.capitalize()
+        if target == "combined":
+            payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
+            db.session.expire(payment_obj)
 
-        paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
-        payperiod = payment_obj.pay_period if payment_obj.pay_period else payment_obj.date
+            total_paid = 0.0
+            receiptno = ""
+
+            tenant_obj = payment_obj.tenant
+            tenant_payments = tenant_obj.payments
+            pay_period = payment_obj.pay_period
+
+            all_payments = fetch_current_billing_period_payments(pay_period,tenant_payments)
+
+            for rr in all_payments:
+                total_paid += rr.amount
+
+                if rr.receipt_num:
+                    receiptno += f"{rr.receipt_num}#, "
+                else:
+                    receiptno += f"{rr.id}#, "
 
 
-        if payment_obj.charged_amount < 1:
-            bill = "KES 0.0"
-        else:
-            bill = f"KES {payment_obj.charged_amount:,.0f}"
+            if payment_obj.voided:
+                disp = ""
+            else:
+                disp = "dispnone"
 
-        paid = f'KES {payment_obj.amount:,.0f}'
+            p = inflect.engine()
+            int_amount = int(total_paid)
+            str_amount = p.number_to_words(int_amount)
+            stramount = str_amount.capitalize()
 
-        if payment_obj.balance:
-            if payment_obj.balance > -1:
+            paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+            payperiod = payment_obj.pay_period if payment_obj.pay_period else payment_obj.date
+
+
+            curr_tenant_invoice = fetch_latest_tenant_invoice(tenant_obj)
+
+
+            if curr_tenant_invoice.total_bill < 1:
+                bill = "KES 0.0"
+            else:
+                bill = f"KES {curr_tenant_invoice.total_bill:,.0f}"
+
+            paid = f'KES {curr_tenant_invoice.paid_amount:,.0f}'
+
+            if curr_tenant_invoice.balance:
+                if curr_tenant_invoice.balance > -1:
+                    baltitle = "Balance"
+                    outline = "text-danger"
+                    bal = f"KES {curr_tenant_invoice.balance:,.0f}"
+                else:
+                    baltitle = "Advance"
+                    outline = "text-success"
+                    bal = f"KES {curr_tenant_invoice.balance*-1:,.0f}"
+
+            else:
                 baltitle = "Balance"
-                outline = "text-danger"
-                bal = f"KES {payment_obj.balance:,.0f}"
+                outline = "text-black"
+                bal = f"Kes 0.0"
+
+            server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+
+            co = current_user.company
+
+            prop = payment_obj.apartment
+
+            address = None
+
+            if payment_obj.apartment.company.name == "LaCasa":
+
+                if prop.address:
+
+                    address = {
+                        "address":prop.address,
+                        "tel":prop.phone,
+                        "email":prop.email
+                    }
+
+                else:
+                    address = {
+                        "address":"Mwiki, Kasarani",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+
+            if payment_obj.ptenant:
+                tenant = payment_obj.ptenant
             else:
-                baltitle = "Advance"
-                outline = "text-success"
-                bal = f"KES {payment_obj.balance*-1:,.0f}"
+                tenant = payment_obj.tenant
+
+            # template = "pos_receipt2.html"
+
+            # template = "a4receipt.html"
+            template = "aa.html"
+
+
+            return Response(render_template(
+                template,
+                voided = disp,
+                tenant = tenant.name,
+                house= payment_obj.house.name,
+                amount=paid,
+                str_amount=stramount,
+                str_month=get_str_month(payperiod.month),
+                paydate="N/A",
+                paytime="N/A",
+                rdate = "N/A",
+                bill=bill,
+                baltitle=baltitle,
+                outline=outline,
+                balance=bal,
+                chargetype=payment_obj.payment_name,
+                receiptno=receiptno,
+                refnum=payment_obj.ref_number,
+                paymode=payment_obj.paymode,
+                logopath=logo(current_user.company)[0],
+                company=current_user.company,
+                address=address,
+                user=current_user.company if current_user.company == "MojaMbili Homes" else server,
+                prop=prop,
+                randid=payment_obj.rand_id if payment_obj.rand_id else "a"
+            ))
 
         else:
-            baltitle = "Balance"
-            outline = "text-black"
-            bal = f"Kes 0.0"
 
-        server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+            payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
+            db.session.expire(payment_obj)
+            if payment_obj.voided:
+                disp = ""
+            else:
+                disp = "dispnone"
 
-        co = current_user.company
+            p = inflect.engine()
+            int_amount = int(payment_obj.amount)
+            str_amount = p.number_to_words(int_amount)
+            stramount = str_amount.capitalize()
 
-        if payment_obj.receipt_num:
-            receiptno = payment_obj.receipt_num
-        else:
-            receiptno = payment_obj.id
+            paydate = payment_obj.pay_date if payment_obj.pay_date else payment_obj.date
+            payperiod = payment_obj.pay_period if payment_obj.pay_period else payment_obj.date
 
-        prop = payment_obj.apartment
 
-        address = None
+            if payment_obj.charged_amount < 1:
+                bill = "KES 0.0"
+            else:
+                bill = f"KES {payment_obj.charged_amount:,.0f}"
 
-        if payment_obj.apartment.company.name == "LaCasa":
+            paid = f'KES {payment_obj.amount:,.0f}'
 
-            if prop.address:
-
-                address = {
-                    "address":prop.address,
-                    "tel":prop.phone,
-                    "email":prop.email
-                }
+            if payment_obj.balance:
+                if payment_obj.balance > -1:
+                    baltitle = "Balance"
+                    outline = "text-danger"
+                    bal = f"KES {payment_obj.balance:,.0f}"
+                else:
+                    baltitle = "Advance"
+                    outline = "text-success"
+                    bal = f"KES {payment_obj.balance*-1:,.0f}"
 
             else:
-                address = {
-                    "address":"Mwiki, Kasarani",
-                    "tel":"0735267087",
-                    "email":"bizlineinvestment@gmail.com"
-                }
+                baltitle = "Balance"
+                outline = "text-black"
+                bal = f"Kes 0.0"
 
-        if payment_obj.ptenant:
-            tenant = payment_obj.ptenant
-        else:
-            tenant = payment_obj.tenant
+            server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 
-        # template = "pos_receipt2.html"
+            co = current_user.company
 
-        # template = "a4receipt.html"
-        template = "aa.html"
+            if payment_obj.receipt_num:
+                receiptno = payment_obj.receipt_num
+            else:
+                receiptno = payment_obj.id
+
+            prop = payment_obj.apartment
+
+            address = None
+
+            if payment_obj.apartment.company.name == "LaCasa":
+
+                if prop.address:
+
+                    address = {
+                        "address":prop.address,
+                        "tel":prop.phone,
+                        "email":prop.email
+                    }
+
+                else:
+                    address = {
+                        "address":"Mwiki, Kasarani",
+                        "tel":"0735267087",
+                        "email":"bizlineinvestment@gmail.com"
+                    }
+
+            if payment_obj.ptenant:
+                tenant = payment_obj.ptenant
+            else:
+                tenant = payment_obj.tenant
+
+            # template = "pos_receipt2.html"
+
+            # template = "a4receipt.html"
+            template = "aa.html"
 
 
-        return Response(render_template(
-            template,
-            voided = disp,
-            tenant = tenant.name,
-            house= payment_obj.house.name,
-            amount=paid,
-            str_amount=stramount,
-            str_month=get_str_month(payperiod.month),
-            paydate=paydate.strftime("%d %B, %Y"),
-            paytime=paydate.strftime("%X"),
-            rdate = payment_obj.date.strftime("%d %B, %Y"),
-            bill=bill,
-            baltitle=baltitle,
-            outline=outline,
-            balance=bal,
-            chargetype=payment_obj.payment_name,
-            receiptno=receiptno,
-            refnum=payment_obj.ref_number,
-            paymode=payment_obj.paymode,
-            logopath=logo(current_user.company)[0],
-            company=current_user.company,
-            address=address,
-            user=current_user.company if current_user.company == "MojaMbili Homes" else server,
-            prop=prop,
-            randid=payment_obj.rand_id if payment_obj.rand_id else "a"
-        ))
+            return Response(render_template(
+                template,
+                voided = disp,
+                tenant = tenant.name,
+                house= payment_obj.house.name,
+                amount=paid,
+                str_amount=stramount,
+                str_month=get_str_month(payperiod.month),
+                paydate=paydate.strftime("%d %B, %Y"),
+                paytime=paydate.strftime("%X"),
+                rdate = payment_obj.date.strftime("%d %B, %Y"),
+                bill=bill,
+                baltitle=baltitle,
+                outline=outline,
+                balance=bal,
+                chargetype=payment_obj.payment_name,
+                receiptno=receiptno,
+                refnum=payment_obj.ref_number,
+                paymode=payment_obj.paymode,
+                logopath=logo(current_user.company)[0],
+                company=current_user.company,
+                address=address,
+                user=current_user.company if current_user.company == "MojaMbili Homes" else server,
+                prop=prop,
+                randid=payment_obj.rand_id if payment_obj.rand_id else "a"
+            ))
 
 class UpdateBalance(Resource):
     def get(self):
@@ -4559,6 +4687,7 @@ class Receipt(Resource):
             outline=outline,
             balance=bal,
             rlink=f"/printreceipt/{payment_obj.id}",
+            rlink2=f"/printreceipt/{payment_obj.id}?target=combined",
             chargetype=payment_obj.payment_name,
             receiptno=receiptno,
             refnum=payment_obj.ref_number,

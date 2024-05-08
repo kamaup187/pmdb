@@ -7450,9 +7450,9 @@ class MpesaStatement2(Resource):
             print(till_group)
             
             elements = {
-                "cv": ["4162018", "4162016", "4162014", "4162012", "4159272", "4159274", "4159276", "4159278", "4159280", "4162008", "4162010", "4162020"],
-                "vp": ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743","4119821"],
-                "rt": ["4119821", "4119743", "4108655", "4108653"]
+                "cv": ["4162018", "4162016", "4162014", "4162012", "4159272", "4159274", "4159276", "4159278", "4159280", "4162008", "4162010", "4162020","All"],
+                "vp": ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","4119743","4119821","All"],
+                "rt": ["4119821", "4119743", "4108655", "4108653","All"]
             }
 
             # Example: Get elements for group "vp"
@@ -7521,7 +7521,42 @@ class MpesaStatement2(Resource):
         narr = ""
 
         if shortcode_id == "All":
-            cbids = co.cbids
+            
+            elements = {
+                "cv": ["4162018", "4162016", "4162014", "4162012", "4159272", "4159274", "4159276", "4159278", "4159280", "4162008", "4162010", "4162020","All"],
+                "vp": ["7514162","7031355","7140107","7140109","7514164","7514160","7609898","7609900","7609902","7609904","7514166","All"],
+                "rt": ["4119821", "4119743", "4108655", "4108653","All"]
+            }
+
+            # Example: Get elements for group "vp"
+            if till_group == "vp":
+                print("getting vp")
+                tills = get_group_elements("vp",elements)
+            elif till_group == "cv":
+                print("getting cv")
+                tills = get_group_elements("cv",elements)
+            else:
+                print("getting rt")
+                tills = get_group_elements("rt",elements)
+
+            raw_cbids = []
+
+            for till in tills:
+                shortcode_obj = ShortcodeOp.fetch_shortcode_by_till(till)
+                if shortcode_obj:
+                    cbid_data = CtoBop.fetch_all_records_by_shortcode(shortcode_obj.shortcode)
+                    raw_cbids.append(cbid_data)
+                else:
+                    shortcode_obj = ShortcodeOp.fetch_shortcode_by_id(till)
+                    if shortcode_obj:
+                        cbid_data = CtoBop.fetch_all_records_by_shortcode(till)
+                        raw_cbids.append(cbid_data)
+                    else:
+                        cbid_data = []
+
+            
+            cbids = flatten(raw_cbids)
+
         else:
             shortcode_obj = ShortcodeOp.fetch_shortcode_by_till(shortcode_id)
             if shortcode_obj:

@@ -60,7 +60,7 @@
 
                       <div class="col-lg-2 form-group mb-2">
                         <label class="mb-0">Select Group:</label>
-                        <select name="shortcode" class="select-css" id="shortcode_group">
+                        <select name="shortcode_group" class="select-css" id="shortcode_group">
                           <option disabled selected value> select till/paybill group </option>
                           <option value="cv">ClubVilla</option>
                           <option value="vp">VillaPark</option>
@@ -72,7 +72,7 @@
                       <div class="col-lg-2 form-group mb-2">
                         <label class="mb-0">Select Till/Paybill:</label>
                         <select name="shortcode" class="select-css" id="shortcode" required>
-                          <option disabled selected value> loading... </option>
+                          <option disabled selected value> select group first! </option>
                         </select>
                       </div>
                     
@@ -560,6 +560,7 @@
 
 <script>
   $("#shortcode_group").on('change',function(){
+    $("#shortcode").html('<span>fetching tills...</span>');
       
       $.ajax({
               type: "get",

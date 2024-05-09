@@ -3877,10 +3877,8 @@ class PrintActualReceipt(Resource):
                 tenant = payment_obj.tenant
 
             # template = "pos_receipt2.html"
-
             # template = "a4receipt.html"
             template = "aa.html"
-
 
             return Response(render_template(
                 template,

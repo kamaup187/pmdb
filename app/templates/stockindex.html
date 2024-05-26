@@ -565,7 +565,7 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
-                                            <div class="small fw-bold text-primary mb-1">Cash</div>
+                                            <div class="small fw-bold text-primary mb-1">Cash sales</div>
                                             <div class="h5 fixloader2" id="expectedstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
                                             </div>
@@ -605,7 +605,7 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
-                                            <div class="small fw-bold text-danger mb-1">PDQ </div>
+                                            <div class="small fw-bold text-danger mb-1">PDQ sales</div>
                                             <div class="h5 fixloader2" id="balancestats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
                                             </div>
@@ -625,12 +625,12 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
-                                            <div class="small fw-bold text-success mb-1">Total</div>
+                                            <div class="small fw-bold text-success mb-1">Total sales</div>
                                             <div class="h5 fixloader2" id="collectionstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
                                             </div>
                                             <div class="text-xs fw-bold text-success d-inline-flex align-items-center">
-                                                <i class="me-1" data-feather="trending-up"></i>
+                                                <i class="me-1" data-feather="dollar"></i>
                                                 0%
                                             </div>
                                         </div>
@@ -1063,7 +1063,7 @@
         </div>
       </div>
 
-      <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal fade" id="messageModaltodo" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-kubwa-sana" role="document">
           <div class="modal-content">
             <div class="indicator"></div>
@@ -2170,7 +2170,7 @@
         data: {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sept","Oct","Nov","Dec"],
         datasets: [{
-        label: "Expected collection",
+        label: "Unpaid bills",
         data: [],
         backgroundColor: [
         'rgb(135,206,250',
@@ -2178,7 +2178,7 @@
         borderWidth: 2
         },
         {
-        label: "Actual collection",
+        label: "Paid bills",
         data: [],
         backgroundColor: [
         'rgb(136, 240, 147)',

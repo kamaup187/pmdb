@@ -248,7 +248,7 @@
                         <!-- Sidenav Heading (Custom)-->
                         <div class="sidenav-menu-heading pb-1 pt-2">MAIN MENU</div>
                         <!-- Sidenav Accordion (Pages)-->
-                        <a class="nav-link collapsed propbtn" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed propbtnmayai" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="nav-link-icon"><i data-feather="slack"></i></div>
                             Departments
@@ -256,7 +256,7 @@
                         </a>
 
                         <!-- Sidenav Accordion (Applications)-->
-                        <a class="nav-link collapsed housebtn" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed housebtnmayai" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseApps" aria-expanded="false" aria-controls="collapseApps">
                             <div class="nav-link-icon"><i data-feather="shopping-bag"></i></div>
                         Items
@@ -264,7 +264,7 @@
                         </a>
 
                         <!-- Sidenav Accordion (Flows)-->
-                        <a class="nav-link collapsed repsbtn" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseFlows"
+                        <a class="nav-link collapsed repsbtnmayai" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseFlows"
                             aria-expanded="false" aria-controls="collapseFlows">
                             <div class="nav-link-icon"><i data-feather="truck"></i></div>
                             Purchases
@@ -272,7 +272,7 @@
                         </a>
 
                         <!-- Sidenav Accordion (Flows)-->
-                        <a class="nav-link collapsed tenantbtn" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed tenantbtnmayai" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseFlows" aria-expanded="false" aria-controls="collapseFlows">
                             <div class="nav-link-icon"><i data-feather="trending-down"></i></div>
                             Damages
@@ -1783,7 +1783,7 @@
         });
 
 
-        $(".repsbtn#").on('click',function(){
+        $(".repsbtnmayai").on('click',function(){
             // $("#body-block").addClass("dispnone")
             // $("#preloader-btn").click();
             $("#barloader").removeClass("dispnone")
@@ -1810,7 +1810,7 @@
             });
         });
 
-        $(".tenantbtnn#").on('click', function () {
+        $(".tenantbtnnmayai").on('click', function () {
             $("#barloader").removeClass("dispnone")
             setTimeout(function () {
                 $("#barloader").addClass("dispnone")
@@ -1841,7 +1841,7 @@
     </script>
 
 <script>
-    $(".housebtn#").on('click',function(){
+    $(".housebtnmayai").on('click',function(){
         // $("#body-block").addClass("dispnone")
         // $("#preloader-btn").click();
         $("#barloader").removeClass("dispnone")
@@ -1898,13 +1898,13 @@
                 $("#propdisp").html(response);
             }
         });
-    });
+    
   </script>
   
 
 
 <script>
-    $(".userbtn#").on('click',function(){
+    $(".userbtnmayai").on('click',function(){
         // $("#body-block").addClass("dispnone")
         // $("#preloader-btn").click();
         $("#barloader").removeClass("dispnone")
@@ -1948,7 +1948,7 @@
     })
   </script>
 <script>
-    $("#setreminder#").on('click',function(){
+    $("#setremindermayai").on('click',function(){
       // $("#closemodal").click();
   
         url2 = "{{ url_for('api.bulksms') }}";

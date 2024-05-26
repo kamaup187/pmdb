@@ -176,6 +176,8 @@ class Index(Resource):
     @login_required
     def get(self):
 
+        if current_user.username == "juliegachengo":
+            return redirect(url_for("api.stockmodule"))
         # return Response(render_template("mayai.html"))
 
         # mayai_mtu = UserOp.fetch_user_by_name("Joseph Muriuki")
@@ -9565,6 +9567,10 @@ class HouseData(Resource):
                     }
 
         return payload
+    
+class StockModule(Resource):
+    def get(self):
+        return Response(render_template("stockindex.html",co="set"))
 
 
 

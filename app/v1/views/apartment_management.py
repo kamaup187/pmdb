@@ -176,7 +176,7 @@ class Index(Resource):
     @login_required
     def get(self):
 
-        if current_user.username == "juliegachengo":
+        if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
         # return Response(render_template("mayai.html"))
 

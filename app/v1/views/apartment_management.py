@@ -9573,7 +9573,67 @@ class StockModule(Resource):
         return Response(render_template("stockindex.html",co="set"))
 
 
+class StockDataUpload(Resource):
+    """class"""
 
+    @login_required
+    def get(self):
+        pass
+
+    def get(self):
+        print("now printing to console")
+        file_path = "products.xls"
+
+        if file_path:
+            processed_data = local_upload_handler(file_path)
+        else:
+            return '<span class=text-danger>Select file first</span>'
+
+
+        rows,sheet = processed_data[0],processed_data[1]
+
+        data_format_error = False
+
+        if sheet:
+            if len(sheet.row_values(1)) != 2:
+                data_format_error = True
+        # try:
+        if data_format_error:
+            nonexistent_item = sheet.row_values(1)[1000000]
+
+        dict_array = []
+
+        for row in rows:
+            dict_obj = {
+            "name":sheet.row_values(row)[0],
+            "description":sheet.row_values(row)[1],
+            }
+
+            dict_array.append(dict_obj)
+
+        print(dict_array)
+
+        for ii in dict_array:
+            checking_for_item_duplicates = ItemOp.fetch_item_by_name(ii["name"])
+            if checking_for_item_duplicates:
+                print(f'Item {ii["name"]} already exists')
+                continue
+            item_op = ItemOp(ii["name"], ii["description"])
+            item_op.save()
+            print(f'Created item: {item_op}')
+
+        items = ItemOp.fetch_all_items()
+        for item in items:
+            opening_stock = 300
+            existing_stock = StockOp.fetch_existing_stock(item.id)
+            if existing_stock:
+                print(f'Stock for {item.name} already exists')
+                continue
+
+            new_stock = StockOp(item.id,opening_stock)
+            new_stock.save()
+
+        
 
 
 

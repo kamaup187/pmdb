@@ -5836,3 +5836,64 @@ class SentMessagesOp(SentMessages,Base):
             'status':self.status,
             'date':SentMessagesOp.date_format(self.date)
         }
+
+class ItemOp(Item, Base):
+    """Class to house item operations"""
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    @staticmethod
+    def fetch_item_by_id(item_id):
+        return Item.query.get(item_id)
+
+    @staticmethod
+    def fetch_item_by_name(name):
+        return Item.query.filter_by(name=name).first()
+    @staticmethod
+    def fetch_all_items():
+        return Item.query.all()
+
+class StockOp(Stock, Base):
+    """Class to house stock operations"""
+
+    def __init__(self, item_id, opening_stock):
+        self.item_id = item_id
+        self.opening_stock = opening_stock
+        self.closing_stock = opening_stock
+
+    def fetch_existing_stock(item_id):
+        date_today = datetime.datetime.now().date()
+        return Stock.query.filter_by(item_id=item_id, date=date_today).first()
+
+    @staticmethod
+    def record_opening_stock(item_id, quantity):
+        date_today = datetime.datetime.now()
+        new_stock = Stock(item_id=item_id, opening_stock=quantity, closing_stock=quantity, date=date_today)
+        new_stock.save()
+        return new_stock
+
+    @staticmethod
+    def record_sale(item_id, quantity_sold):
+        import datetime as dt
+        date_today = dt.datetime.now()
+        stock = Stock.query.filter_by(item_id=item_id, date=date_today).first()
+        if stock:
+            new_sale = Sale(stock_id=stock.id, quantity_sold=quantity_sold)
+            stock.closing_stock -= quantity_sold
+            new_sale.save()
+            stock.save()
+            return new_sale
+        else:
+            return None
+
+    @staticmethod
+    def fetch_closing_stock(item_id):
+        import datetime as dt
+        date_today = dt.datetime.now()
+        stock = Stock.query.filter_by(item_id=item_id, date=date_today).first()
+        if stock:
+            return stock.closing_stock
+        else:
+            return None

@@ -1845,3 +1845,41 @@ class SentMessages(db.Model):
     ptenant_id = db.Column(db.Integer, db.ForeignKey(PermanentTenant.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+
+class Item(db.Model):
+    """Item model to store product information"""
+
+    __tablename__ = 'items'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+    description = db.Column(db.String)
+    stocks = db.relationship('Stock', backref='item', cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'<Item {self.name}>'
+    
+
+class Stock(db.Model):
+    """Stock model to record stock levels"""
+
+    __tablename__ = 'stocks'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
+    opening_stock = db.Column(db.Integer, nullable=False)
+    closing_stock = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime,default=db.func.current_timestamp())
+
+    sales = db.relationship('Sale', backref='stock', cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'<Stock {self.opening_stock} for Item ID {self.item_id} on {self.date}>'
+
+class Sale(db.Model):
+    __tablename__ = 'sales'
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id'), nullable=False)
+    quantity_sold = db.Column(db.Integer, nullable=False)
+    sale_time = db.Column(db.DateTime,default=db.func.current_timestamp())

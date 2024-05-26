@@ -434,6 +434,8 @@ api.add_resource(DeleteReceipt,"/del/r/prop/<string:propid>")
 api.add_resource(DownloadTemplate,"/download/template/<string:file>")
 
 api.add_resource(StockModule,"/stock/module")
+api.add_resource(StockDataUpload,"/stock/data/upload")
+
 
 
 

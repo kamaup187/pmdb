@@ -13,10 +13,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
     <link rel="manifest" href="../static/images/favico/site.webmanifest"> -->
     
-    <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
+    <!-- <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
-    <link rel="manifest" href="../static/img/favico/site.webmanifest">
+    <link rel="manifest" href="../static/img/favico/site.webmanifest"> -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico-r/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico-r/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico-r/favicon-16x16.png">
+    <link rel="manifest" href="../static/img/favico-r/site.webmanifest">
 
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
@@ -244,23 +249,23 @@
                         <!-- Sidenav Accordion (Pages)-->
                         <a class="nav-link collapsed propbtn" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <div class="nav-link-icon"><i data-feather="grid"></i></div>
-                            Projects
+                            <div class="nav-link-icon"><i data-feather="slack"></i></div>
+                            Departments
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
                         <!-- Sidenav Accordion (Applications)-->
                         <a class="nav-link collapsed housebtn" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseApps" aria-expanded="false" aria-controls="collapseApps">
-                            <div class="nav-link-icon"><i data-feather="home"></i></div>
-                        Products
+                            <div class="nav-link-icon"><i data-feather="shopping-bag"></i></div>
+                        Items
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
                         <!-- Sidenav Accordion (Flows)-->
                         <a class="nav-link collapsed repsbtn" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseFlows"
                             aria-expanded="false" aria-controls="collapseFlows">
-                            <div class="nav-link-icon"><i data-feather="users"></i></div>
+                            <div class="nav-link-icon"><i data-feather="truck"></i></div>
                             Purchases
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -268,7 +273,7 @@
                         <!-- Sidenav Accordion (Flows)-->
                         <a class="nav-link collapsed tenantbtn" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseFlows" aria-expanded="false" aria-controls="collapseFlows">
-                            <div class="nav-link-icon"><i data-feather="users"></i></div>
+                            <div class="nav-link-icon"><i data-feather="trending-down"></i></div>
                             Damages
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -276,7 +281,7 @@
 
 
                         <!-- Sidenav Heading (UI Toolkit)-->
-                        <div class="sidenav-menu-heading pt-1 pb-1">Billing & Receipting</div>
+                        <div class="sidenav-menu-heading pt-1 pb-1">Sales & Receipting</div>
                         <!-- Sidenav Accordion (Layout)-->
 
                         <!-- Sidenav Accordion (Components)-->
@@ -284,7 +289,7 @@
                             data-target="#collapseComponents" aria-expanded="false"
                             aria-controls="collapseComponents">
                             <div class="nav-link-icon"><i data-feather="file-text"></i></div>
-                            Invoices
+                            Sales
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 
@@ -304,7 +309,7 @@
                             Expenses
                         </a>
                         <!-- Sidenav Link (Tables)-->
-                        <a class="nav-link" href="{{ url_for('api.reportstwo') }}">
+                        <a class="nav-link" href="#">
                             <div class="nav-link-icon"><i data-feather="bar-chart-2"></i></div>
                             Reports
                         </a>
@@ -433,7 +438,7 @@
                                     placeholder="Select apartment..." /> -->
 
                                 <select name="property" class="form-control ps-0" id ="select_prop">
-                                    <option disabled selected value> -- Select property -- </option>
+                                    <option disabled selected value> -- Select department -- </option>
                                     {% for o in props%}
                                     <option value="{{ o }}">{{ o }}</option>
                                     {% endfor %}
@@ -471,12 +476,12 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">Available stock</div>
+                                            <div class="text-white-75 small">Items</div>
                                             <div class="text-lg fw-bold fixloader" id="propstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="grid"></i>
+                                        <i class="feather-xl text-white-50" data-feather="shopping-bag"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
@@ -497,7 +502,7 @@
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="home"></i>
+                                        <i class="feather-xl text-white-50" data-feather="shopping-cart"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
@@ -513,14 +518,14 @@
                                         <div class="me-3">
                                             
                                                 <div class="text-white-75 small d-inline">Purchases</div>
-                                                <div class="text-white-75 small d-inline ms-4">Clients</div>
+                                                <div class="text-white-75 small d-inline ms-4">Returns</div>
                                        
 
                                             <div class="text-lg fw-bold fixloader" id="clientstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="users"></i>
+                                        <i class="feather-xl text-white-50" data-feather="truck"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
@@ -535,14 +540,14 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
                                             <div class="text-white-75 small d-inline">Damages</div>
-                                            <div class="text-white-75 small d-inline ms-4">Sold</div>
+                                            <div class="text-white-75 small d-inline ms-4">Short</div>
 
 
                                             <div class="text-lg fw-bold fixloader" id="unitstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="message-circle"></i>
+                                        <i class="feather-xl text-white-50" data-feather="trending-down"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">

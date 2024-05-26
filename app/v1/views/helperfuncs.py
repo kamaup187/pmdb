@@ -2304,6 +2304,28 @@ class CreateRoles():
     #             else:
     #                 print("Roles already auto assigned")
 
+def local_upload_handler(uniquefilename):
+
+    try:
+        loc = "app/uploads/" + uniquefilename
+        wb = xlrd.open_workbook(loc)
+        sheet = wb.sheet_by_index(0)
+        # sheet.cell_value(0, 0)
+
+        # Extracting number of rows
+        num_of_rows =sheet.nrows
+        print("ROWS: ",num_of_rows-1)
+        rows = [*range(1, num_of_rows, 1)]
+
+        # os.remove(loc)
+    except Exception as e:
+        print("Error reading file ",e)
+        rows=[1]
+        sheet=None
+        # os.remove(loc)
+
+    return [rows,sheet]
+
 class MakeRegions():
     def make_regions(self):
         present1 = LocationOp.fetch_location("Ruiru")

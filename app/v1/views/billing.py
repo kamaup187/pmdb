@@ -3877,8 +3877,8 @@ class PrintActualReceipt(Resource):
                 depbaltitle = "Other balances"
             else:
                 tenant = payment_obj.tenant
-                if tenant.dep:
-                    depbal = f"Kes {tenant.dep.balance:,.0f}"
+                if tenant.deposits:
+                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
                 else:
                     depbal = f"Kes 0.0"
@@ -3993,8 +3993,8 @@ class PrintActualReceipt(Resource):
                 depbaltitle = "Other balances"
             else:
                 tenant = payment_obj.tenant
-                if tenant.dep:
-                    depbal = f"Kes {tenant.dep.balance:,.0f}"
+                if tenant.deposits:
+                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
                 else:
                     depbal = f"Kes 0.0"
@@ -5278,8 +5278,8 @@ class Receipt(Resource):
             depbaltitle = "Other balances"
         else:
             tenant = payment_obj.tenant
-            if tenant.dep:
-                depbal = f"Kes {tenant.dep.balance:,.0f}"
+            if tenant.deposits:
+                depbal = f"Kes {tenant.deposits.balance:,.0f}"
                 depbaltitle = "Deposit balance"
             else:
                 depbal = f"Kes 0.0"

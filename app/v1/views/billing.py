@@ -4392,18 +4392,18 @@ class ResolveInvoices(Resource):
                             dep.save()
                             TenantOp.update_deposit(bill.tenant,total)
 
-                    if dep:
-                        TenantDepositOp.update_deposits(dep,0.0,0.0,0.0,0.0,None,None,'')
-                        total = 0.0
-                        TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+                    # if dep:
+                    #     TenantDepositOp.update_deposits(dep,0.0,0.0,0.0,0.0,None,None,'')
+                    #     total = 0.0
+                    #     TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                        TenantDepositOp.update_paid_deposits(dep,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,None,None,'')
+                    #     TenantDepositOp.update_paid_deposits(dep,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,None,None,'')
 
-                        totalbalance = 0.0
+                    #     totalbalance = 0.0
 
-                        TenantDepositOp.update_paid_deposits_alt(dep,total,0.0,totalbalance)
+                    #     TenantDepositOp.update_paid_deposits_alt(dep,total,0.0,totalbalance)
 
-                        TenantOp.update_deposit(bill.tenant,total)
+                    #     TenantOp.update_deposit(bill.tenant,total)
                 else:
                     continue
                 if bill.arrears or bill.arrears == 0.0:

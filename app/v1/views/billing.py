@@ -3997,7 +3997,7 @@ class PrintActualReceipt(Resource):
                 if tenant.deposits:
                     depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
-                    bal = f"KES {(curr_tenant_invoice.balance-tenant.deposits.balance):,.0f}"
+                    bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
 
                 else:
                     depbal = f"Kes 0.0"

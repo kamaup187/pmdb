@@ -4471,14 +4471,14 @@ class ResolveInvoices(Resource):
                 if bill.paid_amount > 0.0 or bill.paid_amount == 0.0  :
 
                     working_balance = bill.paid_amount
-                    if working_balance > (bill.rent + update_rent - bill.rent_paid):
-                        update_rent = (bill.rent + update_rent - bill.rent_paid)
+                    if working_balance > (bill.rent + update_rent):
+                        update_rent = (bill.rent + update_rent)
                         working_balance -= update_rent
                     else:
                         update_rent = working_balance
                         working_balance = 0.0
-                    if working_balance > (bill.deposit + update_deposit - bill.deposit_paid):
-                        update_deposit = (bill.deposit + update_deposit - bill.deposit_paid)
+                    if working_balance > (bill.deposit + update_deposit):
+                        update_deposit = (bill.deposit + update_deposit)
                         working_balance -= update_deposit
                         update_rent += working_balance
                     else:

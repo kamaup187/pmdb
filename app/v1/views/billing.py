@@ -4470,18 +4470,30 @@ class ResolveInvoices(Resource):
 
                 if bill.paid_amount > 0.0 or bill.paid_amount == 0.0  :
 
-                    update_rent = bill.paid_amount
+                    working_balance = bill.paid_amount
+                    if working_balance > (bill.rent + update_rent - bill.rent_paid):
+                        update_rent = (bill.rent + update_rent - bill.rent_paid)
+                        working_balance -= update_rent
+                    else:
+                        update_rent = working_balance
+                        working_balance = 0.0
+                    if working_balance > (bill.deposit + update_deposit - bill.deposit_paid)
+                        update_deposit = (bill.deposit + update_deposit - bill.deposit_paid)
+                        working_balance -= update_deposit
+                        update_rent += working_balance
+                    else:
+                        update_deposit = working_balance
+                        working_balance = 0.0
+
                     update_water = 0.0
                     update_garbage = 0.0
                     update_security = 0.0
                     update_fine = 0.0
                     update_agreement = 0.0
-                    update_deposit = 0.0
                     update_electricity = 0.0
                     update_maintenance = 0.0
                     
                     MonthlyChargeOp.update_payments(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
-
 
                     # if bill.rent_balance:
                     if bill.rent_balance:

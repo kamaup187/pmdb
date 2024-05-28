@@ -3873,8 +3873,16 @@ class PrintActualReceipt(Resource):
 
             if payment_obj.ptenant:
                 tenant = payment_obj.ptenant
+                depbal = f"Kes 0.0"
+                depbaltitle = "Other balances"
             else:
                 tenant = payment_obj.tenant
+                if tenant.dep:
+                    depbal = f"Kes {tenant.dep.balance:,.0f}"
+                    depbaltitle = "Deposit balance"
+                else:
+                    depbal = f"Kes 0.0"
+                    depbaltitle = "Deposit balance"
 
             # template = "pos_receipt2.html"
             # template = "a4receipt.html"
@@ -3893,8 +3901,10 @@ class PrintActualReceipt(Resource):
                 rdate = "N/A",
                 bill=bill,
                 baltitle=baltitle,
+                depbaltitle=depbaltitle,
                 outline=outline,
                 balance=bal,
+                depbalance=depbal,
                 chargetype=payment_obj.payment_name,
                 receiptno=receiptno,
                 refnum="N/A",
@@ -3979,8 +3989,16 @@ class PrintActualReceipt(Resource):
 
             if payment_obj.ptenant:
                 tenant = payment_obj.ptenant
+                depbal = f"Kes 0.0"
+                depbaltitle = "Other balances"
             else:
                 tenant = payment_obj.tenant
+                if tenant.dep:
+                    depbal = f"Kes {tenant.dep.balance:,.0f}"
+                    depbaltitle = "Deposit balance"
+                else:
+                    depbal = f"Kes 0.0"
+                    depbaltitle = "Deposit balance"
 
             # template = "pos_receipt2.html"
 
@@ -4001,8 +4019,10 @@ class PrintActualReceipt(Resource):
                 rdate = payment_obj.date.strftime("%d %B, %Y"),
                 bill=bill,
                 baltitle=baltitle,
+                depbaltitle=depbaltitle,
                 outline=outline,
                 balance=bal,
+                depbalance=depbal,
                 chargetype=payment_obj.payment_name,
                 receiptno=receiptno,
                 refnum=payment_obj.ref_number,
@@ -4700,7 +4720,7 @@ class ResolveInvoices2(Resource):
                 pass
 
 
-            
+
 
 
         prop_id = request.form.get("propid")
@@ -5254,8 +5274,16 @@ class Receipt(Resource):
 
         if payment_obj.ptenant:
             tenant = payment_obj.ptenant
+            depbal = f"Kes 0.0"
+            depbaltitle = "Other balances"
         else:
             tenant = payment_obj.tenant
+            if tenant.dep:
+                depbal = f"Kes {tenant.dep.balance:,.0f}"
+                depbaltitle = "Deposit balance"
+            else:
+                depbal = f"Kes 0.0"
+                depbaltitle = "Deposit balance"
 
         if request.args.get("target") == "custom":
             template = "ajax_custom_receiptpay.html"
@@ -5274,8 +5302,10 @@ class Receipt(Resource):
             paytime=paydate.strftime("%X"),
             bill=bill,
             baltitle=baltitle,
+            depbaltitle=depbaltitle,
             outline=outline,
             balance=bal,
+            depbalance=depbal,
             rlink=f"/printreceipt/{payment_obj.id}",
             rlink2=f"/printreceipt/{payment_obj.id}?target=combined",
             chargetype=payment_obj.payment_name,

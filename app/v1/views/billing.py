@@ -4621,7 +4621,7 @@ class ResolveInvoices(Resource):
                             total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
                             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                            TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,status)
+                            TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
 
                             totalpaid = 0.0
                             totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
@@ -4682,7 +4682,7 @@ class ResolveInvoices(Resource):
                         total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
                         TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                        TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,status)
+                        TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
 
                         totalpaid = 0.0
                         totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0

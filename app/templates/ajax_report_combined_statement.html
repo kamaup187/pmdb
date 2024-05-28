@@ -108,8 +108,8 @@
                       <!-- <th class="penalty">LPF</th> -->
                       <th class="">TOTAL</th>
                       <th class="">PAID</th>
-                      <th class="">R BC/F</th>
-                      <th class="">T BC/F</th>
+                      <th class="">Rent BC/F</th>
+                      <!-- <th class="">T BC/F</th> -->
 
 
                     </tr>
@@ -136,7 +136,7 @@
                       <td class="data-cell text-right">{{bill['totaldue']}}</td>
                       <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
-                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                      <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
 
                     </tr>
                   {% endfor %}
@@ -161,7 +161,7 @@
                       <td class="font-weight-bold text-right">{{amounttotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">-</td>
-                      <td class="font-weight-bold text-right">{{bcftotal}}</td>                    </tr>
+                      <!-- <td class="font-weight-bold text-right">{{bcftotal}}</td>                    </tr> -->
                   </tfoot>
                 </table>
 
@@ -299,8 +299,8 @@
                   <th class="">TOTAL</th>
                   <th class="paidedit">PAID(edit)</th>
                   <th class="">PAID</th>
-                  <th class="">R BC/F</th>
-                  <th class="">T BC/F</th>
+                  <th class="">Rent BC/F</th>
+                  <!-- <th class="">T BC/F</th> -->
 
 
                 </tr>
@@ -326,7 +326,7 @@
                   <td class="data-cell text-right paidedit"> </td>
                   <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe}}</td>
                   <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
-                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
 
                 </tr>
               {% endfor %}
@@ -351,7 +351,7 @@
                   <td class="text-right paidedit"> - </td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
                   <td class="font-weight-bold text-right">-</td>
-                  <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                  <!-- <td class="font-weight-bold text-right">{{bcftotal}}</td> -->
 
                 </tr>
               </tfoot>

@@ -4699,6 +4699,243 @@ class ResolveInvoices2(Resource):
             else:
                 pass
 
+
+            
+
+
+        prop_id = request.form.get("propid")
+
+        prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+
+        period_target = request.form.get("period")
+
+        if current_user.username.startswith("qc") or localenv:
+            pass
+        else:
+            print("Not allowed to resolve invoices")
+            return None
+
+        if period_target:
+            datestring = date_formatter_alt(period_target)
+            target_period = parse(datestring)
+        else:
+            target_period = current_user.company.billing_period
+
+        monthlybills = prop.monthlybills
+
+        filtered_bills = fetch_current_billing_period_bills(target_period,monthlybills)
+
+        for bill in filtered_bills:
+            try:
+                if bill.arrears or bill.arrears == 0.0:
+                    update_rent = bill.arrears
+                    update_water = 0.0
+                    update_garbage = 0.0
+                    update_security = 0.0
+                    update_fine = 0.0
+                    update_agreement = 0.0
+                    update_deposit = 0.0
+                    update_electricity = 0.0
+                    update_maintenance = 0.0
+                    
+                    MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+
+                    # if bill.rent_balance:
+                    if bill.rent_paid:
+                        rentbal = bill.rent + update_rent - bill.rent_paid
+                    else:
+                        rentbal = bill.rent + update_rent
+
+                    if bill.water_paid:
+                        waterbal = bill.water + update_water - bill.water_paid 
+                    else:
+                        waterbal = bill.water + update_water
+
+                    if bill.electricity_paid:
+                        electricitybal = bill.electricity + update_electricity - bill.electricity_paid
+                    else:
+                        electricitybal = bill.electricity + update_electricity
+
+                    if bill.maintenance_paid:
+                        servicebal = bill.maintenance + update_maintenance - bill.maintenance_paid
+                    else:
+                        servicebal = bill.maintenance + update_maintenance
+
+                    if bill.penalty_paid:
+                        penaltybal = bill.penalty + update_fine - bill.penalty_paid
+                    else:
+                        penaltybal = bill.penalty + update_fine
+
+                    if bill.security_paid:
+                        securitybal = bill.security + update_security - bill.security_paid
+                    else:
+                        securitybal = bill.security + update_security
+
+                    if bill.garbage_paid:
+                        garbagebal = bill.garbage + update_garbage - bill.garbage_paid
+                    else:
+                        garbagebal = bill.garbage + update_garbage
+
+
+                    if bill.deposit_paid:
+                        depositbal = bill.deposit + update_deposit - bill.deposit_paid
+                    else:
+                        depositbal = bill.deposit + update_deposit
+
+                    if bill.agreement_paid:
+                        agreementbal = bill.agreement + update_agreement - bill.agreement_paid
+                    else:
+                        agreementbal = bill.agreement + update_agreement
+
+                    MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+
+                if bill.paid_amount > 0.0 or bill.paid_amount == 0.0  :
+
+                    update_rent = bill.paid_amount
+                    update_water = 0.0
+                    update_garbage = 0.0
+                    update_security = 0.0
+                    update_fine = 0.0
+                    update_agreement = 0.0
+                    update_deposit = 0.0
+                    update_electricity = 0.0
+                    update_maintenance = 0.0
+                    
+                    MonthlyChargeOp.update_payments(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
+
+
+                    # if bill.rent_balance:
+                    if bill.rent_balance:
+                        rentbal = bill.rent + bill.rent_balance - bill.rent_paid
+                    else:
+                        rentbal = bill.rent - bill.rent_paid
+
+                    if bill.water_balance:
+                        waterbal = bill.water + bill.water_balance - bill.water_paid 
+                    else:
+                        waterbal = bill.water - bill.water_paid
+
+                    if bill.electricity_balance:
+                        electricitybal = bill.electricity + bill.electricity_balance - bill.electricity_paid
+                    else:
+                        electricitybal = bill.electricity - bill.electricity_paid
+
+                    if bill.maintenance_balance:
+                        servicebal = bill.maintenance + bill.maintenance_balance - bill.maintenance_paid
+                    else:
+                        servicebal = bill.maintenance - bill.maintenance_paid
+
+                    if bill.penalty_balance:
+                        penaltybal = bill.penalty + bill.penalty_balance - bill.penalty_paid
+                    else:
+                        penaltybal = bill.penalty - bill.penalty_paid
+
+                    if bill.security_balance:
+                        securitybal = bill.security + bill.security_balance - bill.security_paid
+                    else:
+                        securitybal = bill.security - bill.security_paid
+
+                    if bill.garbage_balance:
+                        garbagebal = bill.garbage + bill.garbage_balance - bill.garbage_paid
+                    else:
+                        garbagebal = bill.garbage - bill.garbage_paid
+
+
+                    if bill.deposit_balance:
+                        depositbal = bill.deposit + bill.deposit_balance - bill.deposit_paid
+                    else:
+                        depositbal = bill.deposit - bill.deposit_paid
+
+                    if bill.agreement_balance:
+                        agreementbal = bill.agreement + bill.agreement_balance - bill.agreement_paid
+                    else:
+                        agreementbal = bill.agreement - bill.agreement_paid
+
+                    MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
+
+                values = validate_float_inputs("","","","","","","","","","")
+
+                agreement = bill.agreement if bill.agreement else 0.0
+                deposit = bill.deposit if bill.deposit else 0.0
+
+
+                update_rent = values[0] if values[0] != "null" else bill.rent
+                update_water = values[1] if values[1] != "null" else bill.water
+                update_garbage = values[2] if values[2] != "null" else bill.garbage
+                update_security = values[3] if values[3] != "null" else bill.security
+                update_fine = values[4] if values[4] != "null" else bill.penalty
+                update_agreement = values[7] if values[7] != "null" else agreement
+                update_deposit = values[5] if values[5] != "null" else deposit
+                update_arrears = values[6] if values[6] != "null" else bill.arrears
+                update_maintenance = values[9] if values[9] != "null" else bill.maintenance
+
+                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
+                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+
+                if bill.paid_amount:
+                    if bill.paid_amount < 0:
+                        MonthlyChargeOp.update_payment(bill,0.0)
+                        bal = total_amount
+                    else:
+                        bal = total_amount - bill.paid_amount
+                else:
+                    bal = total_amount
+
+                MonthlyChargeOp.update_balance(bill,bal)
+
+                db.session.expire(bill)
+                
+                bill_balance += bill.balance
+                print(bill.month,bill.year,"KES",bill.balance)
+
+            except:
+                pass
+
+            tt = bill
+            if tt.balance == 0:
+                # fully paid
+                print(tt.house)
+                if tt.paid_amount > 0:
+                    amount_paid = tt.paid_amount
+
+                    rent_paid = tt.rent_balance + tt.rent
+                    water_paid = tt.water_balance + tt.water
+                    garbage_paid = tt.garbage_balance + tt.garbage
+                    security_paid = tt.security_balance + tt.security
+                    electricity_paid = tt.electricity_balance + tt.electricity
+                    maintenance_paid = tt.maintenance_balance + tt.maintenance
+                    agreement_paid = tt.agreement_balance + tt.agreement
+                    deposit_paid = tt.deposit_balance + tt.deposit
+                    penalty_paid = tt.penalty_balance + tt.penalty
+
+                    if (rent_paid + water_paid + garbage_paid + security_paid + electricity_paid + maintenance_paid + agreement_paid + deposit_paid + penalty_paid) == amount_paid:
+                        MonthlyChargeOp.update_payments(tt,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,maintenance_paid,penalty_paid,deposit_paid,agreement_paid)
+                        MonthlyChargeOp.update_dues(tt,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
+
+            elif tt.balance < 0.0 and tt.paid_amount > 0.0:
+
+                rent_paid = tt.rent_balance + tt.rent
+                water_paid = tt.water_balance + tt.water
+                garbage_paid = tt.garbage_balance + tt.garbage
+                security_paid = tt.security_balance + tt.security
+                electricity_paid = tt.electricity_balance + tt.electricity
+                maintenance_paid = tt.maintenance_balance + tt.maintenance
+                agreement_paid = tt.agreement_balance + tt.agreement
+                deposit_paid = tt.deposit_balance + tt.deposit
+                penalty_paid = tt.penalty_balance + tt.penalty
+
+                overpayment = tt.paid_amount - (rent_paid + water_paid + garbage_paid + security_paid + electricity_paid + maintenance_paid + agreement_paid + deposit_paid + penalty_paid)
+
+                rent_paid += overpayment
+
+                MonthlyChargeOp.update_payments(tt,0.0,0.0,0.0,rent_paid,water_paid,electricity_paid,garbage_paid,security_paid,maintenance_paid,penalty_paid,deposit_paid,agreement_paid)
+                rent_due = (tt.rent_balance + tt.rent) - rent_paid
+                MonthlyChargeOp.update_dues(tt,0.0,0.0,0.0,rent_due,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
+            else:
+                pass
+
 class ResolveDeposits(Resource):
     def post(self):
 

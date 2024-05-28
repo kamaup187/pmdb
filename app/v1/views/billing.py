@@ -4477,7 +4477,7 @@ class ResolveInvoices(Resource):
                     else:
                         update_rent = working_balance
                         working_balance = 0.0
-                    if working_balance > (bill.deposit + update_deposit - bill.deposit_paid)
+                    if working_balance > (bill.deposit + update_deposit - bill.deposit_paid):
                         update_deposit = (bill.deposit + update_deposit - bill.deposit_paid)
                         working_balance -= update_deposit
                         update_rent += working_balance

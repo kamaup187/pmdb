@@ -6605,7 +6605,29 @@ class AddTenant(Resource):
                     create_activity(current_user,f"added tenant {name} to house: {house_num}")
                     TenantOp.update_status(tenant_obj,"Resident")
                     if bool_migrate:
-                        TenantOp.update_residency(tenant_obj,"New")
+                        TenantOp.update_residency(tenant_obj,"New tenant")
+
+                        dep = tenant_obj.deposits
+
+                        if not dep:
+                            try:
+                                dt = check_house_occupied(tenant_obj)[2].checkin_date
+                            except:
+                                dt = tenant_obj.date
+
+                            if house_obj.housecode:
+                                status = "unrefunded"
+                                rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
+                                waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
+                                elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
+
+                                total = rentdep+waterdep+elecdep
+
+                                print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+                                dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant_obj.id,None,house_obj.id,house_obj.apartment_id)
+                                dep.save()
+                                TenantOp.update_deposit(tenant_obj,total)
+
                     else:
                         TenantOp.update_residency(tenant_obj,"Old")
             

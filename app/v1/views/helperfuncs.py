@@ -3220,7 +3220,7 @@ def new_tenants_injector(apartment_id,month,year):
 
     tenants = filter_in_tenant_allocs(apartment_id)
     for alloc in tenants:
-        if alloc.date.month == month and alloc.date.year == year and alloc.tenant.residency == "New":
+        if alloc.date.month == month and alloc.date.year == year and alloc.tenant.residency == "New tenant":
             new_list.append(alloc.tenant)
     return new_list
 
@@ -3231,7 +3231,7 @@ def new_tenants_injector_alt(apartment_id):
     may_epoch = generate_exact_date(27,5,2023)
     for alloc in tenants:
         # if alloc.tenant.residency == "New" and alloc.date > may_epoch:
-        if alloc.tenant.residency == "New":
+        if alloc.tenant.residency == "New tenant":
             new_list.append(alloc.tenant)
     return new_list
 

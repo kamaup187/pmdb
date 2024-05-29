@@ -5668,6 +5668,7 @@ class AddTenant(Resource):
 
     @login_required
     def post(self):
+        depstatus = "~"
         if erp(current_user):
 
             target = request.form.get('target')
@@ -6605,6 +6606,7 @@ class AddTenant(Resource):
                     create_activity(current_user,f"added tenant {name} to house: {house_num}")
                     TenantOp.update_status(tenant_obj,"Resident")
                     if bool_migrate:
+                        depstatus = "deposit"
                         TenantOp.update_residency(tenant_obj,"New tenant")
 
                         dep = tenant_obj.deposits
@@ -6629,6 +6631,7 @@ class AddTenant(Resource):
                                 TenantOp.update_deposit(tenant_obj,total)
 
                     else:
+                        depstatus = "no deposit"
                         TenantOp.update_residency(tenant_obj,"Old")
             
             #     msg = "Client added successfully"
@@ -6636,7 +6639,7 @@ class AddTenant(Resource):
 
             try:
                 if current_user.company.id == 114:
-                    txt = f"Mugambi has added tenant {name} to house {house_obj.name} of property {prop.name}"
+                    txt = f"Mugambi has added tenant {name} to house {house_obj.name} of property {prop.name} with {depstatus}"
                     advanta_send_sms(txt,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
             except:
                 pass

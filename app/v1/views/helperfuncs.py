@@ -7204,7 +7204,7 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
             for t in tenants:
                 if t.name.lower() == tenant.lower() and tenantphone == "0":
                     print("SIMILAR TENANT EXISTS: ",t.name,tenant)
-                    similar = True
+                    # similar = True
 
             present = TenantOp.fetch_tenant_by_nat_id(nat_id)
             if present:

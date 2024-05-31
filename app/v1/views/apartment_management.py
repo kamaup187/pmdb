@@ -178,6 +178,18 @@ class Index(Resource):
 
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
+
+
+        # prop = ApartmentOp.fetch_apartment_by_id(492)
+
+        # company = CompanyOp.fetch_company_by_name("Premier Realty")
+        # ApartmentOp.update_company(prop,company.id)
+        # company_users = company.users
+        # for i in company_users:
+        #     ApartmentOp.relate(prop,i)
+        #     print(i,"user added to ",str(prop))
+
+        # import pdb; pdb.set_trace()
         # return Response(render_template("mayai.html"))
 
         # mayai_mtu = UserOp.fetch_user_by_name("Joseph Muriuki")

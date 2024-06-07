@@ -9641,7 +9641,7 @@ class StockModule(Resource):
             existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
 
             if existing_stock:
-                continue
+                StockOp.delete(existing_stock)
             else:
                 new_stock = StockOp(opening_stock,price,item.id)
                 new_stock.save()

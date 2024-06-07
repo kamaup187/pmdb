@@ -179,7 +179,7 @@ class Index(Resource):
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
 
-        return redirect(url_for("api.stockmodule"))
+        # return redirect(url_for("api.stockmodule"))
 
         # import pdb; pdb.set_trace()
         # prop = ApartmentOp.fetch_apartment_by_id(492)

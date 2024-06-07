@@ -477,7 +477,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">Items</div>
+                                            <div class="text-white-75 small">Departments</div>
                                             <div class="text-lg fw-bold fixloader" id="propstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
@@ -496,8 +496,8 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small d-inline">Today's</div> sales
-                                            <div class="text-white-75 small d-inline ms-4"></div>
+                                            <div class="text-white-75 small d-inline">Items</div>
+                                            <div class="text-white-75 small d-inline ms-4">Sales</div>
 
                                             <div class="text-lg fw-bold fixloader" id="housestats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
@@ -1434,7 +1434,7 @@
 
         function getPropStats() {
         $.ajax({
-            url: "{{ url_for('api.propoverview') }}",
+            url: "{{ url_for('api.stockpropoverview') }}",
             type: 'get',
             data: {
                     prop: localStorage.getItem('propvar')
@@ -1451,7 +1451,7 @@
   
     function getHouseStats() {
         $.ajax({
-            url: "{{ url_for('api.houseoverview') }}",
+            url: "{{ url_for('api.stockhouseoverview') }}",
             type: 'get',
             data: {
                     prop: localStorage.getItem('propvar')

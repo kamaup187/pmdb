@@ -50,7 +50,12 @@ api.add_resource(PropSearchData,"/fetch/searchdata")
 api.add_resource(PropStats,"/fetch/propstats")
 
 api.add_resource(PropOverview,"/get/props")
+api.add_resource(StockPropOverview,"/get/stockprops")
+
 api.add_resource(HouseOverview,"/get/units")
+api.add_resource(StockHouseOverview,"/get/stockunits")
+
+
 api.add_resource(TenantOverview,"/get/tenants")
 api.add_resource(OccupancyOverview,"/get/occupancy")
 api.add_resource(InvoiceOverview,"/get/invoices")

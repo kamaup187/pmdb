@@ -2463,6 +2463,13 @@ class PropOverview(Resource):
         prop = request.args.get('prop')
         return len(run_props(prop,current_user))
 
+class StockPropOverview(Resource):
+    @login_required
+    def get(self):
+        # prop = request.args.get('prop')
+        departments = DepartmentOp.fetch_all_departments()
+        return len(departments)
+
 def get_status(arr,status):
     return [x for x in arr if x.status == status]
 
@@ -2496,6 +2503,21 @@ class HouseOverview(Resource):
         available = len((flatten([ get_status(prop.houses,"available") for prop in props])))
 
         return f'<span class="me-5">{all}</span> <span class="ms-5">{available}</span>' 
+    
+class StockHouseOverview(Resource):
+    @login_required
+    def get(self):
+        # prop = request.args.get('prop')
+        # props = run_props(prop,current_user)
+
+        departments = DepartmentOp.fetch_all_departments()
+
+        all = len(flatten([prop.items for prop in departments]))
+
+        # import pdb; pdb.set_trace()
+        # available = len((flatten([ get_status(prop.houses,"available") for prop in props])))
+
+        return f'<span class="me-5">{all}</span> <span class="ms-5">-</span>' 
 
 class TenantOverview(Resource):
     @login_required

@@ -9635,13 +9635,19 @@ class StockModule(Resource):
         items = ItemOp.fetch_all_items()
 
         for item in items:
-            price = 0.0
-            opening_stock =0.0
+            if item.stocks:
+                prev_stock = item.stocks
+                price = prev_stock[0].selling_price
+                opening_stock =prev_stock[0].opening_stock
+            else:
+                price = 0.0
+                opening_stock =0.0
+                
             date = datetime.datetime.now().date()
             existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
 
             if existing_stock:
-                StockOp.delete(existing_stock)
+                continue
             else:
                 new_stock = StockOp(opening_stock,price,item.id)
                 new_stock.save()

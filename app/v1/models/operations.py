@@ -9,7 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 from flask_login import current_user
 
-ROWS_PER_PAGE = 10
+ROWS_PER_PAGE = 30
 
 def smart_truncate(content, length=20, suffix='...'):
     if len(content) <= length:

@@ -9635,8 +9635,8 @@ class StockModule(Resource):
         items = ItemOp.fetch_all_items()
 
         for item in items:
-            price = 100
-            opening_stock = 100
+            price = 0.0
+            opening_stock =0.0
             date = datetime.datetime.now().date()
             existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
 

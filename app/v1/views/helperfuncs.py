@@ -2933,6 +2933,15 @@ def get_specific_code_obj(apartment_id,housecode):
         if str(code) == housecode:
             code_obj = code
     return code_obj
+
+def get_specific_item_obj(apartment_id,housecode):
+    prop_obj = DepartmentOp.fetch_department_by_id(apartment_id)
+    code_list_compare = prop_obj.items
+    code_obj = None
+    for code in code_list_compare:
+        if code.name == housecode:
+            code_obj = code
+    return code_obj
     
 def get_specific_monthly_charge_obj(arr,month,year):
     specific_charge = None
@@ -3383,6 +3392,14 @@ def house_details(arr):
     houselist = []
     for i in arr:
         new_i = HouseOp.view(i)
+        houselist.append(new_i)
+
+    return houselist
+
+def item_details(arr):
+    houselist = []
+    for i in arr:
+        new_i = ItemOp.view(i)
         houselist.append(new_i)
 
     return houselist

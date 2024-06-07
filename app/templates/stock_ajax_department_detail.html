@@ -1,0 +1,1612 @@
+
+
+    <!--================Contact Area =================-->
+    <section class="contact_area section_gap">
+        <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
+        <span id="house_identifier" class="dispnone"></span>
+        <span id="edit_house_identifier" class="dispnone"></span>
+        <span id="del_house_identifier" class="dispnone"></span>
+        <span id="group_identifier" class="dispnone"></span>
+        <span id="edit_group_identifier" class="dispnone"></span>
+        <span id="del_group_identifier" class="dispnone"></span>
+  
+        <span id="currentunitpage" class="dispnone">1</span>
+  
+  
+        <a id="download_units" href="/download/template/units" class="dispnone">download</a>
+  
+  
+        <div class="pb-2 bg-white divjust-end">
+          <span id="backbtn" class="btn btn-sm btn-light text-primary font-weight-bold">
+            <!-- <i class="me-1" data-feather="user-plus"></i> -->
+            <i class="fas fa-long-arrow-alt-left me-2 font-weight-bold"></i>
+            back
+          </span>
+  
+          <div class="dispnon">
+            <nav class="nav nav-borders">
+              <!-- <div>
+                <label class="me-2"><input type="checkbox" value="cb1" class="chb" checked/> Plots / units</label>
+                <label class="me-2"><input type="checkbox" value="cb2" class="chb"/> Sizes / rates</label>
+              </div> -->
+            </nav>
+          </div>
+  
+          <div class="">
+  
+            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseCodeModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Add
+            </span>
+
+            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#buyModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Buy
+            </span>
+
+            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#sellModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Sell
+            </span>
+  
+            <!-- <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Add units/plots
+            </span> -->
+  
+            <!-- <span class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#uploadTenantExcelModal">
+              <i class="me-1" data-feather="user-plus"></i>
+              Import data
+            </span> -->
+  
+            <!-- <span class="navbar-drr d-inline-block">
+              <span class="dropdown-dr">
+                <span class="dropbtn text-black mt-2">Reports
+                  <i class="fa fa-caret-down"></i>
+                </span>
+                <span class="dropdown-content">
+                  <a href="/tenant/listing?target=direct&propid={{prop.id}}" target="_blank">Tenants listings</a>
+                  <a href="/deposit/statement?target=direct&propid={{prop.id}}" target="_blank">Tenants deposits</a>
+                </span>
+              </span>               
+            </span> -->
+  
+            <div class="dropdown d-inline dropstart d-none">
+              <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Reports
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <!-- <li><a class="dropdown-item" href="/tenant/listing?target=direct&propid={{prop.id}}">Client listing</a></li>
+                <li><a class="dropdown-item" href="/deposit/statement?target=direct&propid={{prop.id}}">Client performance</a></li> -->
+  
+                <li><a class="dropdown-item" href="#">Units listing</a></li>
+              </ul>
+            </div>
+  
+          </div>
+  
+  
+  
+        </div>
+      
+  
+      <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
+        <div class="bar-alt"></div>
+        <div class="bar-alt"></div>
+        <div class="bar-alt"></div>
+      </div>
+      
+      <div id="child-result-view" class="row">
+  
+      </div>
+  </section>
+  
+  
+      <div class="text-center">
+  
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="indicator"></div>
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upload property photo</h5>
+              </div>
+              <div class="modal-body">
+                <div class="media mb-2">
+                  <div class="media-body">
+  
+                    <div class="position-relative">
+                      <form class="divbg" action="/change/prop/image" method="POST" enctype="multipart/form-data">
+                          <input type="file" name="image" id="file-1" class="inputfile inputfile-1 d-none" data-multiple-caption="{count} files selected" multiple required/>
+                          <label for="file-1"><span>Choose an image&hellip;</span></label>
+                          <input type="text" name="propid" class="d-none" value="{{prop.id}}">
+                          <input type="submit" class="borderless bg-danger" value="Upload">
+                      </form>
+  
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foote">
+                <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal fade" id="newHouseCodeModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info divjust-end">
+                <span class="mr-3 smallify">Add new items</span>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+              </h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="/create/housecode">
+                        <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Item name <span class="text-danger">*</span></span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="enter_house_code" class="form-control ph" type="text">
+                            <span class="fa field-icon text-info iconotifications">--</span>
+                          </div>
+                        </div>
+  
+  
+                        <div class="row dispnone">
+                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Size/Type</span></div>
+                          <div class="form-group col-9 no-paddin input-icons">
+                            <select class="select-css" id ="size" required>
+                              <option disabled selected value> Select size/type </option>
+  
+                              <option value="ST">Studio</option>
+                              <option value="1B">One bedroom</option>
+                              <option value="2B">Two bedroom</option>
+  
+                              
+                            </select>
+                            <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                          </div>
+                        </div>
+  
+                        <div class="row dispnone">
+                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Price <span class="text-danger">*</span></span></div>
+                          <div class="form-group col-9 no-paddin input-icons">
+                            <input id="rentrate" class="form-control ph" type="text">
+                          </div>
+                        </div>
+                     
+                        <div class="divbg center-btn">
+                          <button id="addhousecode" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                          <!-- <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fas fa-upload mr-1 text-success"></i><span class="smallify text-success">Upload</span></button> -->
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+  
+      <div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-kubwa" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 pt-2 text-center bg-light">
+              <h5 class="modal-title text-info divjust-end underline-thin-fade">
+                <span class="mr-3 smallify font-weight-bold">Add/Update Group</span>
+                <div>
+                  <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fa fa-upload"></i></button>
+                  <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger dismissModal" type="button" data-dismiss="modal">X</button>
+                </div>
+              </h5>
+              <div class="alert-msgs font-weight-bold"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+    
+                      <div id="groupModalBed"></div>
+    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <div class="modal fade" id="uploadGroupExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-black mb-2" id="paymentDetailModalLabel">Upload excel groups</h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+       
+                        <div class="mt-2 form-group center-btn">
+                          <p class="text-black">Excel File: <input class="ph" id="groupfile" type = "file" name = "filename" /></p>
+                        </div>
+                      
+                        <div class="divbg center-btn">
+                          <button id="uploadgroup" type="button" class="btn-secondary borderless text-white">Upload</button>
+                          <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <!-- <div class="modal fade" id="editGroupModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info mb-2" id="paymentDetailModalLabel">Update Rates</h5>
+              <div class="alert-msgs mb-1"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="">
+  
+  
+                        <div class="row mt-2">
+                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Adjust size </span></span></div>
+                          <div class="form-group col-9 no-paddin input-icons">
+                            <input id="edit_house_code" class="form-control ph" type="text" placeholder="E.g 1 Bedroom">
+                            <span class="fa field-icon text-info iconotifications">--</span>
+                          </div>
+                        </div>
+          
+                        <div id="dynamic_div">
+                          <div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>'
+                        </div>
+                      
+                        <div class="divbg center-btn">
+                          <button id="editgroup" type="button" class="btn-danger borderless text-white">Update</button>
+                          <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+  
+      <div class="modal fade center-btn" id="deleteHouseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal</h5>
+            </div>
+            <div class="text-info payment-info"></div>
+            <div class="modal-body text-gray-900">
+              <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to permanently delete this unit?</span>
+            </div>
+            <div class="has-margin-bottom divbg">
+                <button id="del_house" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+                <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <div class="modal fade center-btn" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabe" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-danger" id="exampleModalLabe">Confirm Removal</h5>
+            </div>
+            <div class="text-info payment-info"></div>
+            <div class="modal-body text-gray-900">
+              <span class="text-primary small mb-3 mr-2 ml-2"><span class="text-danger small">WARNING!</span>: Do you really want to delete this group?</span>
+            </div>
+            <div class="has-margin-bottom divbg">
+                <button id="del_group" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+                <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+  
+  
+      <div class="modal fade" id="newHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <!-- <h5 class="modal-title text-info" id="paymentDetailModalLabel"></h5> -->
+              <h5 class="modal-title text-info divjust-end underline-thin-fade">
+                <span class="mr-3 smallify">Add new unit <span id="code" class="var-heading text-warning"></span></span>
+                <div>
+                  <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-success" type="button" data-toggle="modal" data-target="#uploadHouseExcelModal"><i class="fa fa-upload"></i></button>
+                  <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal">X</button>
+                </div>
+              </h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="">
+  
+                        <div class="row mt-2">
+                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Unit<span class="text-danger">*</span></span></div>
+                          <div class="form-group col-9 no-paddin input-icons">
+                            <input id="enter_housename" class="form-control ph" type="text" placeholder="E.g Unit 1">
+                            <span class="fa field-icon text-info iconotifications">--</span>
+                          </div>
+                        </div>
+  
+                        <div class="row">
+                          <div class="col-3 no-padding text-right"><span class="form-control border-0">Size/Unit type <span class="text-danger">*</span></span></div>
+                          <div class="form-group col-9 no-paddin input-icons">
+                            <select class="select-css" id ="select_housecode2" required>
+                              <option disabled selected value> -- Select size/type -- </option>
+                              {% for o in items %}
+                              <option value="{{ o }}">{{ o }}</option>
+                              {% endfor %}
+                            </select>
+                            <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
+                          </div>
+                        </div>
+  
+                        <span class="dispnone" id="text-code"></span>
+                      
+                        <div class="divbg center-btn">
+                          <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal fade" id="uploadHouseExcelModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info divjust-end underline-thin-fade">
+                <span class="mr-3 smallify">Upload units</span>
+                <div>
+                  <button id="downloadunits" class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-primary small" type="button" ><i class="fa fa-download"></i><span class="small"> template</span></button>
+                  <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 text-danger" type="button" data-dismiss="modal">X</button>
+                </div>
+              </h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+       
+                        <div class="mt-2 form-group center-btn">
+                          <p class="text-black">Excel File: <input class="ph" id="housefile" type = "file" name = "filename" /></p>
+                        </div>
+                      
+                        <div class="divbg center-btn">
+                          <button id="uploadhouse" type="button" class="btn-success borderless text-white">Upload</button>
+                          <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                        
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <div class="modal fade" id="editHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info" id="paymentDetailModalLabel">Ammend stock</h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="">
+  
+            
+                        <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Opening stock </span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="opening_stock" class="form-control ph" type="text">
+                          </div>
+                        </div>
+          
+                        <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Added stock </span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="added_stock" class="form-control ph" type="text">
+                          </div>
+                        </div>
+
+                        <!-- <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Sold stock </span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="sold_stock" class="form-control ph" type="text">
+                          </div>
+                        </div> -->
+
+                        <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Selling price </span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="selling_price" class="form-control ph" type="text">
+                          </div>
+                        </div>
+                      
+                        <div class="divbg center-btn">
+                          <button id="edithouse" type="button" class="btn-success borderless text-white">Submit</button>
+                          <button class="btn btn-light" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal fade" id="updateHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info mb-3" id="paymentDetailModalLabel">Reassign Group</h5>
+              <div class="alert-msgs mb-3"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="">
+  
+                        <div class="form-group input-icons">
+                          <i class="fa fa-caret-down icon text-info"></i>
+                          <select class="form-control" id ="select_group" >
+                            <option disabled selected value> -- Select new group -- </option>
+                            {% for o in items %}
+                            <option value="{{ o }}">{{ o }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      
+                        <div class="divbg center-btn">
+                          <button id="updatehouse" type="button" class="btn-danger borderless text-white" disabled>Update</button>
+                          <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+      <div class="text-center">
+        <div class="modal fade" id="paymentDetailModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+              <div class="indicator"></div>
+              <div class="modal-header">
+                <h5 class="modal-title" id="paymentDetailModalLabel">Update property info</h5>
+              </div>
+              <div class="modal-body">
+                <div class="media mb-2">
+                  <div class="media-body">
+                    <div class="position-relative">
+                      <form class="" action="/update/propinfo" method="POST">
+                        <span class="small text-danger">Note: Fill in fields that you are updating only</span>
+                          <div class="form-group dispnone">
+                            <input type="text" name="shortcode" class="form-control" placeholder="Paybill: {{prop.name}}" >
+                          </div>
+                
+                          <div class="form-group dispnone">
+                            <input type="text" name="consumer_key" class="form-control" placeholder="Consumer key">
+                          </div>
+  
+                          <div class="form-group dispnone">
+                            <input type="text" name="consumer_secret" class="form-control" placeholder="Consumer secret" >
+                          </div>
+  
+                          <div class="form-group">
+                            <input type="text" name="agreement" class="form-control" placeholder="Agreement fee: {{prop.agreement_fee}}" >
+                          </div>
+                
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-sm-0">
+                                <input class="form-control" type="text" name="commission" placeholder="Commission %: {{prop.commission}}">
+                            </div>
+                            <div class="col-sm-6 mb-sm-0">
+                              <input class="form-control" type="text" name="int_commission" placeholder="Static commission: {{prop.int_commission}}">
+                          </div>
+                          </div>
+  
+                          <div class="form-group row">
+                            <div class="col-sm-6 mb-sm-0">
+                                <input class="form-control" type="text" name="prop_garb" placeholder="Garbage collector: {{prop.garbage_collector}}">
+                            </div>
+                            <div class="col-sm-6 mb-sm-0">
+                              <input class="form-control" type="text" name="prop_garb_tel" placeholder="Garbage collector contact: {{prop.garbage_collector_tel}}">
+                          </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" name="prop_garbbank" placeholder="Garbage collector Bank: {{prop.garbage_collector_bank}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="prop_garbaccname" placeholder="AccName" disabled>
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="prop_garbacc" placeholder="AccNo: {{prop.garbage_collector_bankacc}}">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" name="prop_bank" placeholder="Tenant payment: {{prop.payment_bank}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="prop_accname" placeholder="AccName: {{prop.payment_bankaccname}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="prop_accno" placeholder="AccNo: {{prop.payment_bankacc}}">
+                            </div>
+                          </div>
+  
+                          <div class="form-group row">
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" name="lb" placeholder="Landlord Bank I: {{prop.landlord_bank}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="lbaccname" placeholder="AccName: {{prop.landlord_bankaccname}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="lbaccno" placeholder="AccNo: {{prop.landlord_bankacc}}">
+                            </div>
+                          </div>
+  
+                          <div class="form-group row">
+                            <div class="col-sm-4">
+                                <input class="form-control" type="text" name="lbtwo" placeholder="(Loan Deposit) Landlord Bank II: {{prop.landlord_banktwo}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="lbaccnametwo" placeholder="AccName: {{prop.landlord_bankaccname_two}}">
+                            </div>
+                            <div class="col-sm-4">
+                              <input class="form-control" type="text" name="lbaccnotwo" placeholder="AccNo: {{prop.landlord_bankacc_two}}">
+                            </div>
+                          </div>
+  
+                          <input id="prop_id2" type="text" name="propid" class="d-none" value="{{prop.id}}">
+                          <hr>
+                          <div class="divbg center-btn">
+                            <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  
+  
+  
+  
+    <!-- <script src="{{ url_for('static', filename='modal.js') }}"></script> -->
+    <script>
+      var url = "{{ url_for('static', filename='upload.js') }}";
+      $.getScript(url);
+    </script>
+  
+  
+  <script type="text/javascript">
+    $("#backbtn").click(function () {
+      $("#result-view").removeClass("dispnone");
+      $("#child-view").addClass("dispnone")
+      $("#activeprop").empty();
+    })
+  </script>
+  
+  <script>
+        function getUnits(propid, target, page) {
+          showSpin();
+          $("#barloader-alt").removeClass("dispnone")
+          // $("#current-reloader").html(target);
+          $.ajax({
+            url: "{{ url_for('api.itemview') }}",
+            type: "get",
+            start_time: new Date().getTime(),
+            data: { 
+              propid:propid,
+              target:target,
+              form_target:"fetch_items",
+              page:page
+             },
+            success: function (response) {
+              $("#barloader-alt").addClass("dispnone")
+              $("#child-result-view").html(response);
+            },
+            complete: function(data) {
+              $("#domtimeload").text((new Date().getTime() - this.start_time));
+            }
+          });
+        }
+  
+        function getRates(propid, target, page) {
+          showSpin();
+          // $("#current-reloader").html(target);
+          $.ajax({
+            url: "{{ url_for('api.fetchrates') }}",
+            type: "get",
+            data: { 
+              propid:propid,
+              target:target,
+              page:page
+             },
+            success: function (response) {
+  
+              $("#child-result-view").html(response);
+            }
+          });
+        }
+  </script>
+  
+  
+  <!-- <script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "processing": true,
+        "paging": false,
+        "info" : false,
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+  </script> -->
+  
+  
+  <!-- <script>
+    var rawIds = "{{ houseids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_house_identifier").html(item)
+          }else{
+            $("#edit_house_identifier").html(item)
+          }
+          
+        }else{
+          $("#house_identifier").html(item)
+        }
+      });
+    });
+  </script> -->
+  
+  <!-- <script>
+    var pages = range(1, $("#pages").text())
+  
+    function loader(item) {
+      getUnits($("#prop_identifier").text(), "", item)
+      $("#currenthousepage").text(item)
+    }
+  
+    $.each(pages, function (i, item) {
+      $("#num" + item).on('click', function () {
+        loader(item)
+      })
+    })
+    $.each(pages, function (i, item) {
+      $("#next" + item).on('click', function () {
+        loader(item)
+      })
+    })
+    $.each(pages, function (i, item) {
+      $("#prev" + item).on('click', function () {
+        loader(item)
+      })
+    })
+  </script>  -->
+  
+  
+  <script type="text/javascript">
+      getUnits($("#prop_identifier").text(), "", 1)
+    // function refresh() {
+    //   $.ajax({
+    //         url: "{{ url_for('api.fetchhouses') }}",
+    //         type: "get",
+    //         data: {
+    //           propid:  $("#prop_identifier").text(),
+    //         },
+    //         success: function(response) {
+    //           $("#barloader-alt").addClass("dispnone")
+    //           $("#child-result-view").html(response);
+    //         }
+    //       });
+    // }
+    
+    // $(document).ready(function() {
+    //   $("#barloader-alt").removeClass("dispnone")
+    //     setTimeout(refresh,10);
+    // });
+    </script>
+  
+  
+  
+  <script>
+    
+    $("#reporttoggle").on('change',function(){
+      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      var cb = document.getElementById("reporttoggle");
+      if (cb.checked){
+        var cb2 = document.getElementById("reporttoggle2");
+        cb2.checked = false;
+        var cb3 = document.getElementById("reporttoggle3");
+        cb3.checked = false;
+  
+        $.ajax({
+                  url: "{{ url_for('api.fetchtenants') }}",
+                  type: "get",
+                  data: {propid:  $("#prop_identifier").text()},
+                  success: function(response) {
+                    
+                    $("#result-view").html(response);
+                  }
+                });
+      }
+    
+    });
+    
+  
+    $(".chb").change(function (e) {
+          //Getting status before unchecking all
+          var status = $(this).prop("checked");
+  
+          $(".chb").prop('checked', false);
+          $(this).prop('checked', true);
+  
+          //false means checkbox was checked and 
+          //became unchecked on change event, so let it stay unchecked
+          if (status === false) {
+            $(this).prop('checked', false);
+          }else{
+  
+            if ($(this).val() == "cb1"){
+              getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+            }else{
+              getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+            }
+          }
+  
+        });
+  
+  
+    $("#reporttoggle2").on('change',function(){
+      $("#result-view").html('<div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>')
+      var cb2 = document.getElementById("reporttoggle2");
+      if (cb2.checked){
+        var cb = document.getElementById("reporttoggle");
+        cb.checked = false;
+        var cb3 = document.getElementById("reporttoggle3");
+        cb3.checked = false;
+  
+        getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+        // $.ajax({
+        //           url: "{{ url_for('api.fetchhouses') }}",
+        //           type: "get",
+        //           data: {propid:  $("#prop_identifier").text()},
+        //           success: function(response) {
+                    
+        //             $("#result-view").html(response);
+        //           }
+        //         });
+      }
+    
+    });
+  
+  
+  
+  </script>
+  
+  
+  <script>
+    $("#downloadunits").click(function(){ 
+        $('#downloadunits').html('<i class="fas fa-spinner fa-spin mr-1"></i>Downloading...');
+  
+  
+        $("#download_units")[0].click();
+  
+          setTimeout(function(){
+              $('#downloadunits').html("<i class='fas fa-file-download mr-2'></i>Template")
+          },8000);
+      });
+  </script>
+  
+  
+    <script>
+      // this script gives focus
+      $(document).ready(function(){
+        $("#newHouseCodeModal").on('shown.bs.modal', function(){
+          $(this).find('#enter_house_code').focus();
+          $(".iconotifications").html('--');
+  
+        });
+      });
+    </script>
+  
+    <script>
+      $("#enter_house_code").keyup(function(){  
+        $(".iconotifications").html('<i class="fas fa-spinner fa-spin"></i>');
+        var empty = false;
+      
+        if ($('#enter_house_code').val() == "") {
+            empty = true;
+        }
+  
+        if (empty) {
+            $('#addhousecode').attr('disabled', 'disabled');
+            $('#addhousecode').removeClass('btn-success')
+            $('#addhousecode').addClass('btn-secondary')
+        } else {
+          $('#addhousecode').removeAttr('disabled');
+          $('#addhousecode').removeClass('btn-secondary')
+          $('#addhousecode').addClass('btn-success')
+        }    
+          $.ajax({
+            url: "{{ url_for('api.itemview') }}",
+            type: "POST",
+            data: {
+                    propid: $("#prop_identifier").text(),
+                    housecode: $("#enter_house_code").val(),
+                    target: "check duplicate"
+                },
+            success: function(response) {
+              $(".iconotifications").html(response);
+              // setTimeout(function(){
+              //   $("#iconotifications").empty();
+              // }, 2000);
+            }
+          });
+      });
+      </script>
+  
+  <script>
+    $("#addhousecode").click(function(){   
+      $("#addhousecode").html("saving...")  
+        $.ajax({
+          url: "{{ url_for('api.itemview') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  housecode: $("#enter_house_code").val(),
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+  
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //     url: "{{ url_for('api.fetchrates') }}",
+            //     type: "get",
+            //     data: {propid:  $("#prop_identifier").text()},
+            //     success: function(response) {
+                  
+            //       $("#result-view").html(response);
+            //     }
+            //   });
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $(".iconotifications").html('--');
+              $('#addhousecode').attr('disabled', 'disabled');
+              $('#addhousecode').removeClass('btn-success')
+              $('#addhousecode').addClass('btn-secondary')
+              $("#addhousecode").html("submit")
+            }, 2000);
+          }
+        });
+    });
+  </script>
+  
+  <script>
+        
+    $("#uploadGroupExcelModal").on('shown.bs.modal', function(){
+      $(".dismissparent").click();
+    });
+  
+  </script>
+  
+  
+  <script>
+    $("#uploadgroup").on('click',function(){
+        $("#uploadgroup").html("Uploading...") 
+  
+        url = "{{ url_for('api.createhousecode') }}"
+  
+        var fd = new FormData();
+        var files = $('#groupfile')[0].files;
+        fd.append('file',files[0]);
+        fd.append('target',"excelupload");
+        fd.append('propid',$("#prop_identifier").text());
+  
+        $.ajax({
+            type: "POST",
+            url: url,
+            data:fd,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // $("#postloader-btn").click();
+                // $("#body-block").addClass("dispnone")
+                // $("#dynamic-content").removeClass("dispnone")
+                $("#uploadgroup").html("Uploaded") 
+                $(".alert-msgs").html(response);
+  
+                setTimeout(function(){
+                  $("#uploadgroup").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },3000)
+  
+                setTimeout(function(){
+                  getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+                  // $.ajax({
+                  //   url: "{{ url_for('api.fetchrates') }}",
+                  //   type: "get",
+                  //   data: {propid:  $("#prop_identifier").text()},
+                  //   success: function(response) {
+                      
+                  //     $("#result-view").html(response);
+                  //   }
+                  // });
+                },5000);
+  
+            },
+            error:function(){
+              $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+              $("#uploadgroup").html("Retry") 
+  
+              setTimeout(function(){
+                  $("#uploadgroup").html("Upload")
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },5000)
+            }
+        });
+    });
+  </script>
+  
+  <!-- 
+  <script>
+        
+    $("#editGroupModal").on('shown.bs.modal', function(){
+      $.ajax({
+        url: "{{ url_for('api.edithousecode') }}",
+        type: "get",
+        data: {
+              groupid: $("#edit_group_identifier").text(),
+              target:"groupname"
+            },
+        success: function(response) {
+          $(".alert-msgs").html(response);
+          $.ajax({
+            url: "{{ url_for('api.edithousecode') }}",
+            type: "get",
+            data: {
+                  groupid: $("#edit_group_identifier").text(),
+                  target:"default"
+                },
+            success: function(response) {
+              $("#dynamic_div").html(response);
+              
+            }
+          });
+        }
+      });
+    });
+  
+  </script> -->
+  
+  
+  <script>
+    $("#groupModal").on('shown.bs.modal', function(){
+  
+      $.ajax({
+        url: "{{ url_for('api.createhousecode') }}",
+        type: "get",
+        data: {
+          groupid:  $("#group_identifier").text(),
+        },
+        success: function(response) {
+          $("#groupModalBed").html(response); 
+        }
+      });
+  
+    });
+  </script>
+  
+  
+  <script>
+    $("#groupModal").on('hidden.bs.modal', function(){
+  
+      $("#groupModalBed").html("empty"); 
+  
+    });
+  
+    </script>
+  
+  
+  <script>
+    $("#editgroup").click(function(){   
+      $("#editgroup").html("updating...")  
+        $.ajax({
+          url: "{{ url_for('api.edithousecode') }}",
+          type: "POST",
+          data: {
+                  groupid: $("#edit_group_identifier").text(),
+                  codename:$("#edit_house_code").val(),
+                  rentrate: $("#edit_rentrate").val(),
+                  waterrate: $("#edit_waterrate").val(),
+                  unitrate: $("#edit_unitrate").val(),
+                  elecunitrate: $("#edit_elecunitrate").val(),
+                  garbagerate: $("#edit_garbagerate").val(),
+                  securityrate: $("#edit_securityrate").val(),
+                  waterdep: $("#edit_waterdep").val(),
+                  elecdep: $("#edit_elecdep").val(),
+                  finerate: $("#edit_finerate").val()
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //     url: "{{ url_for('api.fetchrates') }}",
+            //     type: "get",
+            //     data: {propid:  $("#prop_identifier").text()},
+            //     success: function(response) {
+                  
+            //       $("#result-view").html(response);
+            //     }
+            //   });
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $(".closemodal").click();
+              $("#editgroup").html("update")
+            }, 2000);
+          }
+        });
+    });
+  </script>
+  
+  <script>
+        
+    $("#del_house").on('click',function(){   
+      $('#del_house').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>removing...'); 
+      $.ajax({
+        url: "{{ url_for('api.edithouse') }}",
+        type: "POST",
+        data: {
+              houseid:$("#del_house_identifier").text(),
+              target:"delete"
+            },
+        success: function(response) {
+          // $(".payment-info").html(response);  
+          
+          setTimeout(function(){
+            $('#del_house').html('Delete');
+            $(".closemodal").click();
+              }, 1500);
+          setTimeout(function(){
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //     url: "{{ url_for('api.fetchhouses') }}",
+            //     type: "get",
+            //     data: {propid:  $("#prop_identifier").text()},
+            //     success: function(response) {
+                  
+            //       $("#result-view").html(response);
+            //     }
+            //   });
+  
+              }, 3000);  
+          
+        }
+      });
+    });
+    
+    </script>
+  
+  <script>
+        
+    $("#del_group").on('click',function(){   
+      $('#del_group').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...'); 
+      $.ajax({
+        url: "{{ url_for('api.edithousecode') }}",
+        type: "POST",
+        data: {
+              groupid:$("#del_group_identifier").text(),
+              target:"delete"
+            },
+        success: function(response) {
+          // $(".payment-info").html(response);  
+          
+          setTimeout(function(){
+            $('#del_group').html('Delete');
+            $(".closemodal").click();
+              }, 1500);
+          setTimeout(function(){
+            getRates($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //     url: "{{ url_for('api.fetchrates') }}",
+            //     type: "get",
+            //     data: {propid:  $("#prop_identifier").text()},
+            //     success: function(response) {
+                  
+            //       $("#result-view").html(response);
+            //     }
+            //   });
+  
+              }, 3000);  
+          
+        }
+      });
+    });
+    
+    </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <script> 
+    $("#newHouseModal").on('shown.bs.modal', function(){
+      $(".iconotifications").html('--');
+  
+      $.ajax({
+        url: "{{ url_for('api.createhouse') }}",
+        type: "POST",
+        data: {
+              propid: $("#prop_identifier").text(),
+              runcode:"somestring"
+            },
+        success: function(response) {
+          $("#select_housecode2").html(response);
+          
+        }
+      });
+    });
+  </script>
+  
+  <script>
+        
+    $("#uploadHouseExcelModal").on('shown.bs.modal', function(){
+      $(".dismissparent").click();
+    });
+  
+  </script>
+  
+  <script>
+    $("#uploadhouse").on('click',function(){
+      $("#uploadhouse").html("Uploading...") 
+  
+        url = "{{ url_for('api.createhouse') }}"
+  
+        var fd = new FormData();
+        var files = $('#housefile')[0].files;
+        fd.append('file',files[0]);
+        fd.append('target',"excelupload");
+        fd.append('type',"crm");
+        fd.append('propid',$("#prop_identifier").text());
+  
+        $.ajax({
+            type: "POST",
+            url: url,
+            data:fd,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $(".alert-msgs").html(response);
+                $("#uploadhouse").html("Uploaded") 
+  
+                setTimeout(function(){
+                  $("#uploadhouse").html("Upload") 
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },3000)
+  
+                setTimeout(function(){
+                  getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+                  // $.ajax({
+                  //   url: "{{ url_for('api.fetchhouses') }}",
+                  //   type: "get",
+                  //   data: {propid:  $("#prop_identifier").text()},
+                  //   success: function(response) {
+                      
+                  //     $("#result-view").html(response);
+                  //   }
+                  // });
+                },5000);
+  
+            },
+            error:function(){
+              $(".alert-msgs").html('<span class="text-danger">Upload unsuccessful</span>');
+              $("#uploadhouse").html("Retry") 
+  
+              setTimeout(function(){
+                $("#uploadhouse").html("Upload")
+                  $(".alert-msgs").empty();
+                  $(".reset").click();
+                  $(".closemodal").click();
+                },5000)
+            }
+        });
+    });
+  </script>
+  
+  
+  <script>
+    $("#select_housecode2").on('change',function(){
+  
+      $.ajax({
+        url: "{{ url_for('api.createhouse') }}",
+        type: "POST",
+        data: {
+              propid: $("#prop_identifier").text(),
+              housecode: $("#select_housecode2").val(),
+              runcodechange:"somestring"
+            },
+        success: function(response) {
+          $("#code").html(response);
+          $("#text-code").html($("#select_housecode2").val());
+          
+        }
+      });
+    });
+  </script>
+  
+  <script>
+    $("#enter_housename").keyup(function(){  
+      var empty = false;
+      // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+      if ($('#enter_housename').val() == "" ) {
+          empty = true;
+      }
+  
+      if (empty) {
+          $('#addhouse').attr('disabled', 'disabled');
+          $('#addhouse').removeClass('btn-success')
+          $('#addhouse').addClass('btn-secondary')
+      } else {
+        $('#addhouse').removeAttr('disabled');
+        $('#addhouse').removeClass('btn-secondary')
+        $('#addhouse').addClass('btn-success')
+      }    
+      // console.log($("#code").text().length);
+      // console.log($("#code").text())
+        $.ajax({
+          url: "{{ url_for('api.createhouse') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  housecode: $("#text-code").text(),
+                  house: $("#enter_housename").val(),
+                  runalert: "run"
+              },
+          success: function(response) {
+            $(".iconotifications").html(response);
+            // setTimeout(function(){
+            //   $("#notifications2").empty();
+            // }, 4000);
+          }
+        });
+    });
+    </script>
+  
+  <script>
+    $("#edit_housename").keyup(function(){  
+      var empty = false;
+      // if ($('#enter_housename').val() == "" || $('#desc').val() == null ) {
+      // if ($('#edit_housename').val() == "" ) {
+      //     empty = true;
+      // }
+  
+      // if (empty) {
+      //     $('#edithouse').attr('disabled', 'disabled');
+      //     $('#edithouse').removeClass('btn-success')
+      //     $('#edithouse').addClass('btn-secondary')
+      // } else {
+      //   $('#edithouse').removeAttr('disabled');
+      //   $('#edithouse').removeClass('btn-secondary')
+      //   $('#edithouse').addClass('btn-success')
+      // }    
+      // console.log($("#code").text().length);
+      // console.log($("#code").text())
+        $.ajax({
+          url: "{{ url_for('api.edithouse') }}",
+          type: "get",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  housecode: "",
+                  house: $("#edit_housename").val(),
+                  target: "checkdups"
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            // setTimeout(function(){
+            //   $("#notifications2").empty();
+            // }, 4000);
+          }
+        });
+    });
+    </script>
+  
+  <script>
+    $("#addhouse").click(function(){   
+      $("#addhouse").html("saving...")  
+        $.ajax({
+          url: "{{ url_for('api.createhouse') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  housecode: $("#text-code").text(),
+                  house: $("#enter_housename").val(),
+                  desc: $("#desc").val()
+              },
+          success: function(response) {
+            // $(".alert-msgs").html(response);
+            snack(response);
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //       url: "{{ url_for('api.fetchhouses') }}",
+            //       type: "get",
+            //       data: {propid:  $("#prop_identifier").text()},
+            //       success: function(response) {
+                    
+            //         $("#result-view").html(response);
+            //       }
+            //     });
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $(".iconotifications").html('--');
+              $('#addhouse').attr('disabled', 'disabled');
+              $('#addhouse').removeClass('btn-success')
+              $('#addhouse').addClass('btn-secondary')
+              $("#addhouse").html("submit")
+            }, 2000);
+          }
+        });
+    });
+  </script>
+  
+  
+  
+  
+  
+  
+  
+  
+  <script> 
+    $("#updateHouseModal").on('shown.bs.modal', function(){
+      $.ajax({
+        url: "{{ url_for('api.edithouse') }}",
+        type: "get",
+        data: {
+              propid: $("#prop_identifier").text(),
+              target:"listhouses"
+            },
+        success: function(response) {
+          $("#select_group").html(response);
+          $.ajax({
+            url: "{{ url_for('api.edithouse') }}",
+            type: "get",
+            data: {
+                  houseid: $("#house_identifier").text(),
+                  target:"houseinfo"
+                },
+            success: function(response) {
+              $(".alert-msgs").html(response);
+            }
+          });
+        }
+      });
+    });
+  </script>
+  
+  
+
+  
+  
+  <script>
+    $("#select_group").on('change',function(){
+  
+        $('#updatehouse').removeAttr('disabled');
+    
+    });
+  </script>
+  
+  <script>
+    $("#updatehouse").click(function(){   
+      $("#updatehouse").html("updating...")  
+        $.ajax({
+          url: "{{ url_for('api.edithouse') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  houseid: $("#house_identifier").text(),
+                  group: $("#select_group").val(),
+                  target:"edit house group"
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $(".closemodal").click();
+              $('#updatehouse').attr('disabled', 'disabled');
+              $("#updatehouse").html("Update")
+            }, 2000);
+  
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //       url: "{{ url_for('api.fetchhouses') }}",
+            //       type: "get",
+            //       data: {propid:  $("#prop_identifier").text()},
+            //       success: function(response) {
+                    
+            //         $("#result-view").html(response);
+            //       }
+            //     });
+          }
+        });
+    });
+  </script>
+  
+  <script>
+    $("#edithouse").click(function(){   
+      $("#edithouse").html("updating...")  
+        $.ajax({
+          url: "{{ url_for('api.itemview') }}",
+          type: "POST",
+          data: {
+                  propid: $("#prop_identifier").text(),
+                  itemid: $("#edit_house_identifier").text(),
+                  opening: $("#opening_stock").val(),
+                  added: $("#added_stock").val(),
+                  // sold: $("#sold_stock").val(),
+                  selling: $("#selling_price").val(),
+                  target:"edit item stock"
+              },
+          success: function(response) {
+            $(".alert-msgs").html(response);
+            
+            setTimeout(function(){
+              $(".alert-msgs").empty();
+              $(".reset").click();
+              $(".closemodal").click();
+              // $('#edithouse').attr('disabled', 'disabled');
+              $("#edithouse").html("Update")
+            }, 2000);
+            getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+  
+            // $.ajax({
+            //       url: "{{ url_for('api.fetchhouses') }}",
+            //       type: "get",
+            //       data: {propid:  $("#prop_identifier").text()},
+            //       success: function(response) {
+                    
+            //         $("#result-view").html(response);
+            //       }
+            //     });
+          }
+        });
+    });
+  </script>
+  
+  
+  
+  

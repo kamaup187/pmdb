@@ -5837,12 +5837,34 @@ class SentMessagesOp(SentMessages,Base):
             'date':SentMessagesOp.date_format(self.date)
         }
 
+class DepartmentOp(Department, Base):
+    """Class to house item operations"""
+
+    def __init__(self, name, description, company_id, created_by):
+        self.name = name
+        self.description = description
+        self.company_id = company_id
+        self.created_by = created_by
+
+    @staticmethod
+    def fetch_department_by_id(item_id):
+        return Department.query.get(item_id)
+
+    @staticmethod
+    def fetch_department_by_name(name):
+        return Department.query.filter_by(name=name).first()
+    @staticmethod
+    def fetch_all_departments():
+        return Department.query.all()
+
+
 class ItemOp(Item, Base):
     """Class to house item operations"""
 
-    def __init__(self, name, description):
+    def __init__(self, name, description,department_id):
         self.name = name
         self.description = description
+        self.department_id = department_id
 
     @staticmethod
     def fetch_item_by_id(item_id):
@@ -5855,17 +5877,83 @@ class ItemOp(Item, Base):
     def fetch_all_items():
         return Item.query.all()
 
+    def get_opening_stock(self):
+        if self.stocks:
+            return self.stocks[0].opening_stock
+        else:
+            return 0.0
+        
+    def get_added_stock(self):
+        if self.stocks:
+            return self.stocks[0].added_stock
+        else:
+            return 0.0
+        
+    def get_closing_stock(self):
+        if self.stocks:
+            return self.stocks[0].closing_stock
+        else:
+            return 0.0
+        
+    def get_total_stock(self):
+        if self.stocks:
+            return (self.stocks[0].opening_stock + (self.stocks[0].added_stock if self.stocks[0].added_stock else 0.0))
+        else:
+            return 0.0
+        
+    def get_total_sales(self):
+        if self.stocks:
+            if self.stocks[0].sales:
+                return len(self.stocks[0].sales)
+            return 0
+        return 0
+    
+    def get_price(self):
+        if self.stocks:
+            return self.stocks[0].selling_price
+        else:
+            return 0.0
+        
+    def get_amount(self):
+        sales = ItemOp.get_total_sales(self)
+        if sales:
+            return sales * ItemOp.get_price(self)
+
+    def view(self):
+            return {
+                'id':self.id,
+                'editid':ItemOp.generate_editid(self),
+                'delid':ItemOp.generate_delid(self),
+                'item':self.name,
+                'description':self.description,
+                'opening':ItemOp.get_opening_stock(self),
+                'added':ItemOp.get_added_stock(self),
+                'total':ItemOp.get_total_stock(self),
+                'closing':ItemOp.get_closing_stock(self),
+                'sales':ItemOp.get_total_sales(self),
+                'price':ItemOp.get_price(self),
+                'amount':ItemOp.get_amount(self),
+            }
+
+
 class StockOp(Stock, Base):
     """Class to house stock operations"""
 
-    def __init__(self, item_id, opening_stock):
-        self.item_id = item_id
+    def __init__(self, opening_stock, selling_price, item_id, ):
         self.opening_stock = opening_stock
-        self.closing_stock = opening_stock
+        self.selling_price = selling_price
+        self.item_id = item_id
 
     def fetch_existing_stock(item_id):
         date_today = datetime.datetime.now().date()
         return Stock.query.filter_by(item_id=item_id, date=date_today).first()
+
+    def update_stock(self,opening,added,price):
+        self.opening_stock = opening
+        self.added_stock = added
+        self.selling_price = price
+
+        db.session.commit()
 
     @staticmethod
     def record_opening_stock(item_id, quantity):

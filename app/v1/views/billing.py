@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(2,5,timenow.year)
+        invdate = generate_exact_date(3,6,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)

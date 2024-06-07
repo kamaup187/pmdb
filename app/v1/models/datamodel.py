@@ -1846,6 +1846,21 @@ class SentMessages(db.Model):
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
+class Department(db.Model):
+    """db model class"""
+
+    __tablename__ = 'departments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+    description = db.Column(db.String)
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+    created_by = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    items = db.relationship('Item', backref='department', lazy=True, cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f'<Department {self.name}>'
 
 class Item(db.Model):
     """Item model to store product information"""
@@ -1855,7 +1870,9 @@ class Item(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     description = db.Column(db.String)
-    stocks = db.relationship('Stock', backref='item', cascade="all, delete-orphan")
+
+    stocks = db.relationship('Stock', backref='item', order_by='Stock.id', cascade="all, delete-orphan")
+    department_id = db.Column(db.Integer, db.ForeignKey(Department.id))
 
     def __repr__(self):
         return f'<Item {self.name}>'
@@ -1867,10 +1884,14 @@ class Stock(db.Model):
     __tablename__ = 'stocks'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
-    opening_stock = db.Column(db.Integer, nullable=False)
-    closing_stock = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime,default=db.func.current_timestamp())
+    
+    opening_stock = db.Column(db.Integer, nullable=False)
+    added_stock = db.Column(db.Integer)
+    selling_price = db.Column(db.Float)
+    closing_stock = db.Column(db.Integer)
+
+    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
 
     sales = db.relationship('Sale', backref='stock', cascade="all, delete-orphan")
 

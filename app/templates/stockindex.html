@@ -248,7 +248,7 @@
                         <!-- Sidenav Heading (Custom)-->
                         <div class="sidenav-menu-heading pb-1 pt-2">MAIN MENU</div>
                         <!-- Sidenav Accordion (Pages)-->
-                        <a class="nav-link collapsed propbtnmayai" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed propbtn" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="nav-link-icon"><i data-feather="slack"></i></div>
                             Departments
@@ -256,7 +256,7 @@
                         </a>
 
                         <!-- Sidenav Accordion (Applications)-->
-                        <a class="nav-link collapsed housebtnmayai" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed housebtn" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseApps" aria-expanded="false" aria-controls="collapseApps">
                             <div class="nav-link-icon"><i data-feather="shopping-bag"></i></div>
                         Items
@@ -1656,12 +1656,12 @@
 
 
     <script>
-        $(".propbtnx").on('click', function () {
+        $(".propbtn").on('click', function () {
             // $("#body-block").addClass("dispnone")
             // $("#preloader-btn").click();
             $("#barloader").removeClass("dispnone")
 
-            url = "{{ url_for('api.allproperties') }}"
+            url = "{{ url_for('api.departmentview') }}"
 
             $.ajax({
                 type: "get",
@@ -1684,8 +1684,9 @@
             });
         });
     </script>
+
     <script type="text/javascript">
-        $(".housebtnnx").on('click', function () {
+        $(".housebtnn").on('click', function () {
             $("#barloader").removeClass("dispnone")
             setTimeout(function () {
                 $("#barloader").addClass("dispnone")
@@ -1841,18 +1842,18 @@
     </script>
 
 <script>
-    $(".housebtnmayai").on('click',function(){
+    $(".housebtn").on('click',function(){
         // $("#body-block").addClass("dispnone")
         // $("#preloader-btn").click();
         $("#barloader").removeClass("dispnone")
   
-        url = "{{ url_for('api.allproperties') }}"
+        url = "{{ url_for('api.departmentview') }}"
   
         $.ajax({
             type: "get",
             url: url,
             data: {
-              target:"units"
+              target:"items"
             },
             success: function(response) {
                 // if (!$('#content-area').hasClass("isopen") && !$("#list-area").hasClass("isopen") && !$('#search-area').hasClass("isopen")){

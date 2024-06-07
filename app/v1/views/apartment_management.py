@@ -179,7 +179,9 @@ class Index(Resource):
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
 
+        return redirect(url_for("api.stockmodule"))
 
+        # import pdb; pdb.set_trace()
         # prop = ApartmentOp.fetch_apartment_by_id(492)
 
         # company = CompanyOp.fetch_company_by_name("Premier Realty")
@@ -9607,6 +9609,21 @@ class HouseData(Resource):
     
 class StockModule(Resource):
     def get(self):
+
+        items = ItemOp.fetch_all_items()
+
+        for item in items:
+            price = 100
+            opening_stock = 100
+            date = datetime.datetime.now().date()
+            existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
+
+            if existing_stock:
+                continue
+            else:
+                new_stock = StockOp(opening_stock,price,item.id)
+                new_stock.save()
+
         return Response(render_template("stockindex.html",co="set"))
 
 
@@ -9669,6 +9686,138 @@ class StockDataUpload(Resource):
 
             new_stock = StockOp(item.id,opening_stock)
             new_stock.save()
+
+class DepartmentView(Resource):
+    def get(self):
+
+        form_target = request.args.get("target")
+        if form_target == "fetch items":
+
+            prop_id = request.args.get("propid")
+            propid = get_identifier(prop_id)
+
+            prop_obj = DepartmentOp.fetch_department_by_id(propid)
+            db.session.expire(prop_obj)
+
+            template = "stock_ajax_department_detail.html"
+
+            return render_template(
+                template,
+                prop=prop_obj,
+                )
+
+        props = DepartmentOp.fetch_all_departments()
+        items = []
+        prop_ids = []
+
+        if form_target == "items":
+            template = "stock_ajax_items.html"
+        else:
+            template = "stock_ajax_departments.html"
+        for prop in props:
+
+            dict_obj = {
+                'id':prop.id,
+                'identity':"prp"+str(prop.id),
+                'editid':"edit"+str(prop.id),
+                'delid':"del"+str(prop.id),
+                'name':prop.name,
+                'houses':len(prop.items),
+                'createdby':prop.created_by,
+            }
+
+            items.append(dict_obj)
+            # prop_names.append(prop_name_dict)
+            prop_ids.append(prop.id)
+            prop_ids.append("prp"+str(prop.id))
+            prop_ids.append("edit"+str(prop.id))
+            prop_ids.append("del"+str(prop.id))
+
+        propids = ','.join(map(str, prop_ids))
+
+        return render_template(template,propids=propids,props=props,prop=None,items=items,company=current_user.company)
+
+    def post(self):
+
+        department = request.form.get("department")
+
+        present = DepartmentOp.fetch_department_by_name(department.title())
+        if present:
+            # DepartmentOp.delete(present)
+            print("SIMILAR DEPARTMENT EXISTS >> ",present.name)
+            return failure + "similar department exists"
+
+        department_obj = DepartmentOp(department.title(),"description",current_user.company.id,current_user.id)
+        department_obj.save()
+
+
+class ItemView(Resource):
+    @timer
+    @login_required
+    def get(self):
+        
+        prop_id = request.args.get('propid')
+        propid = get_identifier(prop_id)
+
+        pg = None
+
+        page = request.args.get('page', 1, type=int)
+        pg = Item.query.filter_by(department_id=propid).order_by(Item.id.asc()).paginate(page=page, per_page=ROWS_PER_PAGE)
+
+        houselist = item_details(pg.items)
+
+
+        houseids = get_obj_ids(houselist)
+
+        template = "stock_ajax_items_detail.html" 
+        return render_template(template,items=houselist,houseids=houseids,pg=pg)
+
+
+    def post(self):
+        form_target = request.form.get('target')
+
+        if form_target == "edit item stock":
+            item_id = request.form.get('itemid')
+            opening = request.form.get('opening')
+            added = request.form.get('added')
+            price = request.form.get('price')
+
+            itemid = get_identifier(item_id)
+
+            item_obj = ItemOp.fetch_item_by_id(itemid)
+            db.session.expire(item_obj)
+            if item_obj.stocks:
+                item_stock = item_obj.stocks[0]
+                StockOp.update_stock(item_stock,opening,added,price)
+                return render_template('ajaxproceed.html',alert="Stock updated")
+
+        apartment_id = request.form.get('propid')
+
+        house_code = request.form.get('housecode')
+        form_target = request.form.get('target')
+
+        housecode = house_code.upper()
+        code_obj = get_specific_item_obj(apartment_id,housecode)
+        
+        if form_target == "check duplicate":
+            if code_obj:
+                msg = "unavailable"
+                return msg + err
+            if housecode:
+                msg = "Name accepted"
+                return msg + proceed
+            return None
+
+        if code_obj:
+            msg = "exist already"
+            return err + msg
+        else:
+            new_item = ItemOp(housecode,"description",apartment_id)
+            new_item.save()
+
+            msg = "Item added"
+            return render_template('ajaxproceed.html',alert=msg)
+
 
         
 

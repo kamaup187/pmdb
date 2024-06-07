@@ -1,0 +1,147 @@
+
+<div class="col-lg-12 no-padding">
+    <div id="reqdata" class="table-responsive">
+        <table id="tenantData" class="table shadow" width="100%" cellspacing="0">
+            <thead class="custom-header">
+                <tr>
+                    <th class="text-black">Item</th>
+                    <th class="text-black">Opening</th>
+                    <th class="text-black">Added</th>
+                    <th class="text-black">Total</th>
+                    <th class="text-black">Closing</th>
+                    <th class="text-black">Sales</th>
+                    <th class="text-black">Price</th>
+                    <th class="text-black">Amount</th>
+                    <th class="text-black">Ammend</th>
+
+                
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items%}
+                <tr>
+                    <td class="first-data-cell text-dark font-weight-bold">{{ i['item'] }}</td>
+                    <td class="data-cell">{{ i['opening'] }}</td>
+                    <td class="data-cell text-right">{{ i['added'] }}</td>
+                    <td class="data-cell">{{ i['total'] }}</td>
+                    <td class="data-cell">{{ i['closing']}}</td>
+                    <td class="data-cell">{{ i['sales']}}</td>
+                    <td class="data-cell">{{ i['price']}}</td>
+                    <td class="data-cell">{{ i['amount']}}</td>
+                    <td class="data-cell text-center">
+                        <div class="dropdown no-arrow">
+                          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-danger font-weight-bold ellipsis-btn"></i>
+                          </a>
+                          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header underline">Item: <span class="text-info font-weight-bold">{{i['item']}}</span></div>
+                
+                            <!-- <div class="text-center">
+                              <button id="{{i['id']}}" type="button" class="btn btn-sm btn-outline-primary ellipsis borderless text-left" data-toggle="modal" data-target="#updateHouseModal"><i class="fas fa-random"></i> ChangeGroup</span>
+                            </div> -->
+                            <div class="mt-2">
+                              <button id="{{i['editid']}}" type="button" class="btn btn-sm btn-outline-primary ellipsis borderless text-left" data-toggle="modal" data-target="#editHouseModal"><i class="fas fa-edit"></i>Ammend</span>
+                            </div>
+                            <br>
+                            <div class="">
+                              <button id="{{i['delid']}}" type="button" class="btn btn-sm btn-outline-danger ellipsis borderless text-left" data-toggle="modal" data-target="#deleteHouseModal"><i class="fas fa-trash-alt"></i>Delete</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+                      </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+                        <!-- Pagination Links-->
+                        <div class="text-right">
+                          <button id="prev{{pg.prev_num}}" class="btn btn-outline-dark 
+                          {% if pg.page == 1 %}disabled{% endif %}">&laquo;</button>
+                          <!-- Loop through the number of pages to display a link for each-->
+                          {% for page_num in pg.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                              {% if page_num %}
+                                <!-- Check for the active page and set the link to "Active"-->
+                                {% if pg.page == page_num %}
+                                    <button id="num{{page_num}}" class="btn btn-dark">{{ page_num }}</button>
+                                {% else %}
+                                    <button id="num{{page_num}}" class="btn btn-outline-dark">{{ page_num }}</button>
+                                {% endif %}
+                              {% else %}
+                                ...
+                              {% endif %}
+                          {% endfor %}
+                          <button id="next{{pg.next_num}}" class="btn btn-outline-dark 
+                          {% if pg.page == pg.pages %}disabled{% endif %}">&raquo;
+                          </button>
+                        </div>
+                        <p class="text-right mt-3">
+                          <span id="pages" class="dispnone">{{pg.pages}}</span>
+                          Total items:{{ pg.total }}, showing page {{ pg.page }} of {{ pg.pages }}
+                        </p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#tenantData').DataTable({
+        "processing": true,
+        "paging": false,
+        "info" : false,
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        "searching":false,
+        columnDefs: [ { targets: 0, type: 'natural' } ],
+        "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+      });
+</script>
+
+<script>
+    var rawIds = "{{ houseids|safe }}";
+    var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+    console.log(ids)
+    $.each(ids, function(i,item) {
+    
+      $("#"+item).on('click',function(){
+        console.log("clicked",item)
+        if( isNaN(parseInt(item)) ){
+          if(item.startsWith("del")){
+            $("#del_house_identifier").html(item)
+          }else{
+            $("#edit_house_identifier").html(item)
+          }
+          
+        }else{
+          $("#house_identifier").html(item)
+        }
+      });
+    });
+  </script>
+
+<script>
+  var pages = range(1, $("#pages").text())
+
+  function loader(item) {
+    getUnits($("#prop_identifier").text(), "", item)
+    $("#currentunitpage").text(item)
+  }
+
+  $.each(pages, function (i, item) {
+    $("#num" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#next" + item).on('click', function () {
+      loader(item)
+    })
+  })
+  $.each(pages, function (i, item) {
+    $("#prev" + item).on('click', function () {
+      loader(item)
+    })
+  })
+</script> 

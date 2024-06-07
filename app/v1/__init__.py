@@ -435,6 +435,8 @@ api.add_resource(DownloadTemplate,"/download/template/<string:file>")
 
 api.add_resource(StockModule,"/stock/module")
 api.add_resource(StockDataUpload,"/stock/data/upload")
+api.add_resource(DepartmentView,"/stock/departments")
+api.add_resource(ItemView,"/stock/items")
 
 
 

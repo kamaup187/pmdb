@@ -3681,6 +3681,27 @@ function animateHH(element) {
     });
   })
 
+
+  $("#balancecat").on("change",function(){
+    $('#bal-bed').html("loading...");
+
+    if ($("#balanceprop").val()){
+
+    $.ajax({
+      url: "{{ url_for('api.balancereport') }}",
+      type: "get",
+      data: {
+        category:$("#balancecat").val(),
+        prop:$("#balanceprop").val(),
+        target:"preview"
+      },
+      success: function(response) {
+        $('#bal-bed').html(response);
+      },
+    });
+  }
+  })
+
   $("#sendbalance").on('click',function(){
     $("#sendbalance").html("sending...")
     // $("#closemodal").click();

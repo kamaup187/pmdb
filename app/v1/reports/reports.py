@@ -308,6 +308,7 @@ class BalanceReport(Resource):
     """class"""
     def get(self):
         prop = request.args.get("prop")
+        category = request.args.get("category")
         contact = request.args.get("contact")
         rtarget = request.args.get("target")
 
@@ -331,11 +332,17 @@ class BalanceReport(Resource):
 
             start = 1
             for bill in actualbills:
-                if bill.balance > 1:
+                if category == "rent":
+                    if bill.rent_due:
+                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.rent_due:,.0f}</p>"
+                        start += 1
+                        sms_text += new_line
 
-                    new_line = f"<p class='ln-10'>{bill.house}:  {bill.rent_due:,.0f}</p>"
-                    start += 1
-                    sms_text += new_line
+                else:
+                    if bill.balance > 1:
+                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.balance:,.0f}</p>"
+                        start += 1
+                        sms_text += new_line
 
             print("TEXT SENT:",sms_text)
             return sms_text
@@ -347,11 +354,17 @@ class BalanceReport(Resource):
 
             start = 1
             for bill in actualbills:
-                if bill.balance > 1:
+                if category == "rent":
+                    if bill.rent_due:
+                        new_line = f"\n{bill.house}:  {bill.rent_due:,.0f}"
+                        start += 1
+                        sms_text += new_line
 
-                    new_line = f"\n{bill.house}:  {bill.balance:,.0f}"
-                    start += 1
-                    sms_text += new_line
+                else:
+                    if bill.balance > 1:
+                        new_line = f"\n{bill.house}:  {bill.balance:,.0f}"
+                        start += 1
+                        sms_text += new_line
 
             print("TEXT SENT:",sms_text)
 

@@ -2454,6 +2454,17 @@
                 
                   <div id="balancetexts" class="dispnone row">
                     <form class="col-6">
+
+
+                      <div class="form-group">
+                        <label class="text-black small">Select category.</label>
+
+                        <select name="category" class="select-css" id="balancecat">
+                          <option disabled selected value> -- Select category -- </option>
+                          <option value="rent">Rent only</option>
+                          <option value="all">All balances</option>
+                        </select>
+                      </div>
                 
                       <div class="form-group">
                         <label class="text-black small">Select property to view balances.</label>
@@ -3660,6 +3671,7 @@ function animateHH(element) {
       url: "{{ url_for('api.balancereport') }}",
       type: "get",
       data: {
+        category:$("#balancecat").val(),
         prop:$("#balanceprop").val(),
         target:"preview"
       },
@@ -3678,6 +3690,7 @@ function animateHH(element) {
             type: "get",
             url: url2,
             data: {
+              category:$("#balancecat").val(),
               prop:$("#balanceprop").val(),
               contact:$("#telnum").val(),
               target:"general"

@@ -443,6 +443,8 @@ api.add_resource(StockDataUpload,"/stock/data/upload")
 api.add_resource(DepartmentView,"/stock/departments")
 api.add_resource(ItemView,"/stock/items")
 
+api.add_resource(AI,"/api/tenants")
+
 
 
 

@@ -271,6 +271,31 @@
   s1.setAttribute('crossorigin','*');
   s0.parentNode.insertBefore(s1,s0);
   })();
+
+
+  Tawk_API.onLoad = function() {
+            Tawk_API.onChatMessage = function(message) {
+                if (message.text.toLowerCase() === 'fetch tenants') {
+                    fetchTenants();
+                }
+            };
+        };
+
+        function fetchTenants() {
+            fetch('/api/tenants?propid=762')
+                .then(response => response.json())
+                .then(data => {
+                    let tenantsList = "Tenants:\n";
+                    data.forEach(tenant => {
+                        tenantsList += `Name: ${tenant.name}, Balance: ${tenant.balance}\n`;
+                    });
+                    Tawk_API.addMessage({
+                        message: tenantsList,
+                        type: 'chat'
+                    });
+                })
+                .catch(error => console.error('Error fetching tenants:', error));
+        }
   </script>
   <!--End of Tawk.to Script-->
 

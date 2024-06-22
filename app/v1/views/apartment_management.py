@@ -27,7 +27,7 @@ from cloudinary.utils import cloudinary_url
 from flask_mail import Message
 from flask_login import login_required, current_user
 from flask_restful import Resource, abort
-from flask import render_template,Response,request,flash,redirect,url_for
+from flask import render_template,Response,request,flash,redirect,url_for,jsonify
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import exc
 from app.v1.models.operations import *
@@ -9628,6 +9628,23 @@ class HouseData(Resource):
                     }
 
         return payload
+
+class AI(Resource):
+    def get(self):
+        propid = request.args.get('propid')
+        tenants = tenantauto(propid)
+        json_tenants = []
+
+        wqq = sms_phone_number_formatter("0716674695")
+
+        advanta_send_sms("AI is getting tenants for njege",wqq,kiotapay_api_key,kiotapay_partner_id,"MALIBU")
+
+        for tt in tenants:
+            tenant = [
+                {'name': tt.name, 'balance': tt.balance},
+            ]
+            json_tenants.append(tenant)
+        return jsonify(json_tenants)
     
 class StockModule(Resource):
     def get(self):

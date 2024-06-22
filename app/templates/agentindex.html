@@ -273,13 +273,46 @@
   })();
 
 
-  Tawk_API.onLoad = function() {
-            Tawk_API.onChatMessage = function(message) {
-                if (message.text.toLowerCase() === 'fetch tenants') {
-                    fetchTenants();
-                }
-            };
-        };
+  // Tawk_API.onLoad = function() {
+  //   console.log('AIIIIIIIIIIIIII');
+  //           Tawk_API.onChatMessage = function(message) {
+  //               if (message.text.toLowerCase() == 'fetch tenants') {
+  //                   fetchTenants();
+  //               }
+  //               else{
+  //                 console.log('mayai tu')
+  //               }
+  //           };
+  //       };
+
+
+  Tawk_API.onLoad = function() { 
+     console.log('Tawk.to widget loaded'); 
+      
+     Tawk_API.onChatMessage = function(message) { 
+         console.log('Message received:', message);    
+     }; 
+ }; 
+ 
+ // Ensure the Tawk_API object is defined before setting the event 
+ if (typeof Tawk_API !== 'undefined') {
+  console.log('Tawk.to widget loaded again');
+     Tawk_API.onLoad(); 
+ } 
+
+  
+  // Tawk_API.onLoad = function() {
+  //           console.log('Tawk.to widget loaded');
+  //           Tawk_API.onChatMessage = function(message) {
+  //               console.log('Message received:', message);
+  //               if (message.text.toLowerCase() === 'fetch tenants') {
+  //                   console.log('Fetching tenants command detected');
+  //                   fetchTenants();
+  //               } else {
+  //                   console.log('Unrecognized command:', message.text);
+  //               }
+  //           };
+  //       };
 
         function fetchTenants() {
             fetch('/api/tenants?propid=762')

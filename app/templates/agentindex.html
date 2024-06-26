@@ -2885,7 +2885,7 @@ window.Tawk_API.onChatMessageVisitor = function(message){
         <div class="indicator"></div>
         <div class="modal-header pb-0 pt-2 text-center bg-light">
           <h5 class="modal-title text-info divjust-end underline-thin-fade">
-            <span class="mr-3 smallify font-weight-bold h4">My wallet</span>
+            <span class="mr-3 smallify font-weight-bold h4">Account manager</span>
             <div>
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-danger" type="button" data-dismiss="modal">X</button>
             </div>
@@ -2905,14 +2905,14 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                   </div>
 
                   <div class="card mb-4 mt-3">
-                    <div class="card-header h5 font-weight-bold">Initiate mpesa withdrawal</div>
+                    <div class="card-header h5 font-weight-bold">Add accounts</div>
                     <div class="card-body">
                         <form autocomplete="off">
 
                           <div class="row gx-3 mb-3">
                             <!-- Form Group (last name)-->
                             <div class="col-md-6">
-                                <label class="small mb-1" for="inputStatus">Choose account</label>
+                                <label class="small mb-1" for="inputStatus">Choose account type</label>
                                 <select id="inputAccount" class="form-control" aria-label="Default select example">
                                     <option selected disabled  value="">choose</option>
                                     <option value="primary">Primary account</option>
@@ -2920,10 +2920,22 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                             </div>
 
                             <div class="col-md-6">
-                              <label class="small mb-1" for="inputStatus">Beneficiary </label>
+                              <label class="small mb-1" for="inputStatus">Select Bank </label>
                               <select id="inputBeneficiary" class="form-control" aria-label="Default select example">
-                                  <option selected disabled  value="">choose</option>
-                                  <option value="0716674695">0716xxx695</option>
+                                  <option selected disabled  value="">choose bank</option>
+                                  <option value="0716674695">NCBA</option>
+                                  <option value="0716674695">KCB</option>
+                                  <option value="0716674695">Co-op</option>
+                                  <option value="0716674695">StanChart</option>
+                                  <option value="0716674695">Absa</option>
+                                  <option value="0716674695">Equity</option>
+                                  <option value="0716674695">I&M</option>
+                                  <option value="0716674695">Bank of Africa</option>
+                                  <option value="0716674695">Stanbic</option>
+                                  <option value="0716674695">Family</option>
+                                  <option value="0716674695">National Bank</option>
+                                  <option value="0716674695">Other</option>
+
                               </select>
                           </div>
                         </div>
@@ -2931,16 +2943,24 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                         <!-- Form Row-->
                         <div class="gx-3 mb-3">
                           <!-- Form Group (first name)-->
-                          <label class="small mb-1" for="inputAmount">Amount</label>
-                          <input class="form-control" id="inputAmount" type="text" placeholder="amount" />
+                          <label class="small mb-1" for="inputAmount">Account name</label>
+                          <input class="form-control" id="inputAmount" type="text" placeholder="Deposit account" />
                           
                       </div>
+
+                                              <!-- Form Row-->
+                                              <div class="gx-3 mb-3">
+                                                <!-- Form Group (first name)-->
+                                                <label class="small mb-1" for="inputAmount">Account Number</label>
+                                                <input class="form-control" id="inputAmount" type="text" placeholder="123XXX678XXX" />
+                                                
+                                            </div>
 
 
 
                         <!-- Submit button-->
                         <div class="text-center">
-                            <button id="withdrawrequest" class="btn btn-primary" type="button">Request</button>
+                            <button id="withdrawrequest" class="btn btn-primary" type="button">Submit</button>
                         </div>
                         </form>
                     </div>

@@ -9637,14 +9637,18 @@ class AI(Resource):
 
         wqq = sms_phone_number_formatter("0716674695")
 
-        advanta_send_sms("AI is getting tenants for njege",wqq,kiotapay_api_key,kiotapay_partner_id,"MALIBU")
+        # advanta_send_sms("AI is getting tenants for njege",wqq,kiotapay_api_key,kiotapay_partner_id,"MALIBU")
 
         for tt in tenants:
             tenant = [
-                {'name': tt.name, 'balance': tt.balance},
+                tt.name
+                # {'name': tt.name, 'balance': tt.balance},
             ]
             json_tenants.append(tenant)
-        return jsonify(json_tenants)
+        # return jsonify(json_tenants)
+        return json_tenants
+        # return "json_tenants"
+
     
 class StockModule(Resource):
     def get(self):

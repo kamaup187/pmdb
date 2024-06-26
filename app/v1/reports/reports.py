@@ -7649,7 +7649,8 @@ class Financials(Resource):
         begin_t = request.args.get("begin")
         end_t = request.args.get("end")
 
-        props = fetch_all_apartments_by_user(current_user)
+        # props = fetch_all_apartments_by_user(current_user)
+        props = []
 
         # tills = [shortcode.shortcode for shortcode in shortcodes]
 

@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: Tenant Management API
+  description: API to manage tenants in a property management system
+  version: 1.0.0
+
+paths:
+  /api/tenants:
+    get:
+      summary: Fetch Tenants by Property ID
+      description: Retrieve a list of tenants associated with a specific property.
+      parameters:
+        - name: propid
+          in: query
+          description: ID of the property to fetch tenants for
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: A list of tenants retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Tenant ID
+                    name:
+                      type: string
+                      description: Tenant name
+                    email:
+                      type: string
+                      description: Tenant email address
+                    phone:
+                      type: string
+                      description: Tenant phone number
+        '400':
+          description: Invalid request format or missing required parameters
+        '404':
+          description: Property with the specified ID not found
+        '500':
+          description: Internal server error
+

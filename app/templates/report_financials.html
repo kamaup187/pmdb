@@ -48,10 +48,20 @@
                     <form class="row bg-light" method="GET" action="/financials">
 
                     
-                      <div class="col-lg-3 form-group mb-2">
+                      <!-- <div class="col-lg-3 form-group mb-2">
                         <label class="mb-0">Select Property:</label>
                         <select name="prop" class="select-css" id="prop" required>
                           <option disabled selected value> select property </option>
+                          {% for o in props %}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div> -->
+
+                      <div class="col-lg-3 form-group mb-2">
+                        <label class="mb-0">Select Account:</label>
+                        <select name="prop" class="select-css" id="prop" required>
+                          <option disabled selected value> Select Account </option>
                           {% for o in props %}
                           <option value="{{ o }}">{{ o }}</option>
                           {% endfor %}

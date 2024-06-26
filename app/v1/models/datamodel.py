@@ -1846,15 +1846,15 @@ class SentMessages(db.Model):
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
-class Accounts(db.Model):
-    """class"""
+# class Accounts(db.Model):
+#     """class"""
 
-    __tablename__ = 'accounts'
+#     __tablename__ = 'accounts'
 
-    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
-    date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    account_name = db.Column(db.String)
-    account_number = db.Column(db.String)
+#     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+#     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+#     account_name = db.Column(db.String)
+#     account_number = db.Column(db.String)
 
 class Department(db.Model):
     """db model class"""

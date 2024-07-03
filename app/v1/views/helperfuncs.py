@@ -1516,6 +1516,9 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Malibu Pharmacy Ltd":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"MALIBU")
 
+    elif company.title() == "Colmar Estate Management":
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"COLMAR")
+
     elif company.title() == "Sirenga Investments Ltd":
         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
 

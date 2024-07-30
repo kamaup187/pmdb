@@ -229,7 +229,3 @@ print("Result for extracted_text_2:", result_2)
 
 
 
-
-
-
-

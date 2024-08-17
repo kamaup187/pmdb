@@ -469,10 +469,10 @@ class Index(Resource):
         #         func=show_me, args=("changed it",current_user.id,), result_ttl=5000
         #     )
 
-        # tnt_url = "https://kiotapay.com/query/tnt534"
+        # tnt_url = "https://malibupharmacy.co.ke"
 
         # imgg = qrcode.make(tnt_url)
-        # imgg.save("greatwallqr.png")
+        # imgg.save("malibuqr.png")
 
         # todel = ApartmentOp.fetch_apartment_by_id(490)
         # if todel:

@@ -370,6 +370,10 @@ class ShortcodeOp(Shortcode,Base):
     def fetch_shortcode_by_till(till):
         return Shortcode.query.filter_by(description=till).first()
 
+    def update_till(self,till):
+        self.description = till
+        db.session.commit()
+
 class GroupRoleOp(GroupRole,Base):
     """class"""
     def __init__(self,name):

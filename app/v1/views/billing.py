@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("LaCasa")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
                 current_month_bill.save()
 
         items = bill_details_alt([current_month_bill])
@@ -512,7 +512,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('LaCasa')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -8360,9 +8360,10 @@ class CallBackUrlSentomEquity(Resource):
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
-        # ww = f"{my_json},PROD SENTOM Equity has sent data"
-        # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
-        # response2 = sms.send(ww, ["+254725538750"],"KIOTAPAY")
+        ww = f"{my_json},PROD LESAMA Equity has sent data"
+
+        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
 
 
         try:
@@ -8399,7 +8400,9 @@ class CallBackUrlSentomEquity(Resource):
 
 
         except Exception as e:
-            sms.send("PROD sentom Equity has error data", ["+254716674695"],"KIOTAPAY")
+            ww = f"PROD Lesama Equity has error data {e}"
+            advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
             response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
             print ("It failed, Bank integration has an error")
 
@@ -8411,11 +8414,14 @@ class CallBackUrlTestSentomEquity(Resource):
     def get(self):
         pass
     def post(self):
-        response = sms.send("TEST SENTOM Equity has sent data", ["+254716674695"],"KIOTAPAY")
-
         #parse for json
         my_data=request.data
         my_json = my_data.decode('utf8').replace("'", '"')
+
+        ww = f"{my_json},PROD LESAMA Equity has sent data"
+
+        advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
+
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>EQUITY EQUITY>>>>>>>>>",my_json)
         try:
             data = json.loads(my_json)
@@ -8451,7 +8457,8 @@ class CallBackUrlTestSentomEquity(Resource):
 
 
         except Exception as e:
-            sms.send("TEST SENTOM Equity has error data", ["+254716674695"],"KIOTAPAY")
+            ww = f"PROD Lesama Equity has error data {e}"
+            advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"Bizline")
             response = {"responseCode": "OK","responseMessage": "UNSUCCESSFUL","errorMessage":f'{e}'}
             print ("It failed, Bank integration has an error")
 

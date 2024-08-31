@@ -9677,6 +9677,9 @@ class StockModule(Resource):
 
         return Response(render_template("stockindex.html",co="set"))
 
+class GardenRestaurant(Resource):
+    def get(self):
+        return Response(render_template("garden_index.html"))
 
 class StockDataUpload(Resource):
     """class"""

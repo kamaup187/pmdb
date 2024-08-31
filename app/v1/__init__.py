@@ -13,6 +13,7 @@ from .views.admin_views import *
 version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
+api.add_resource(GardenRestaurant,"/garden")
 api.add_resource(DataUpload,"/data/upload")
 api.add_resource(MpesaDataUpload,"/mpesadata/upload")
 

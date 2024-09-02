@@ -1944,7 +1944,7 @@ class MeterReadingOp(MeterReading,Base):
                         MeterReading.apartment_id == propid,
                         extract('month', MeterReading.reading_period)  == period.month,
                         extract('year', MeterReading.reading_period) == period.year,
-                        MeterReading.status.not_ilike(pattern)
+                        MeterReading.description.not_ilike(pattern)
                 ))
         
         return query.all()

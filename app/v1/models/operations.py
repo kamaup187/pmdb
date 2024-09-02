@@ -4,7 +4,7 @@
 
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
-from sqlalchemy import extract,or_
+from sqlalchemy import extract,or_,not_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 from flask_login import current_user
@@ -1944,7 +1944,7 @@ class MeterReadingOp(MeterReading,Base):
                         MeterReading.apartment_id == propid,
                         extract('month', MeterReading.reading_period)  == period.month,
                         extract('year', MeterReading.reading_period) == period.year,
-                        MeterReading.description.not_ilike(pattern)
+                        not_(MeterReading.description.ilike(pattern))
                 ))
         
         return query.all()

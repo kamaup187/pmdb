@@ -1942,8 +1942,8 @@ class MeterReadingOp(MeterReading,Base):
 
         query = (MeterReading.query.filter(
                         MeterReading.apartment_id == propid,
-                        MeterReading.reading_period.month == period.month,
-                        MeterReading.reading_period.year ==period.year,
+                        extract('month', MeterReading.reading_period)  == period.month,
+                        extract('year', MeterReading.reading_period) == period.year,
                         MeterReading.status.not_ilike(pattern)
                 ))
         

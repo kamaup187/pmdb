@@ -1937,6 +1937,18 @@ class MeterReadingOp(MeterReading,Base):
             return f'<span class="text-danger">{units}</span>'
         return f'<span class="text-black">{units}</span>'
 
+    def fetch_meter_readings(propid,period,status):
+        pattern = f"%{status}%"
+
+        query = (MeterReading.query.filter(
+                        MeterReading.apartment_id == propid,
+                        MeterReading.reading_period.month == period.month,
+                        MeterReading.reading_period.year ==period.year,
+                        MeterReading.status.not_ilike(pattern)
+                ))
+        
+        return query.all()
+
     def view(self):
         return {
             'id':self.id,

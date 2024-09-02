@@ -3064,20 +3064,25 @@ def meterauto(apartment_id):
     return meter_list
 
 def readingsauto(period,prop):
-    readinglist = []
 
-    db.session.expire(prop)
-    readings = prop.meter_readings
-    
-    month = period.month
-    year = period.year
 
-    for reading in readings:
-        if reading.reading_period:
-            if reading.reading_period.month == month and reading.reading_period.year == year and reading.description != "initial reading":
-                readinglist.append(reading)
+    # readinglist = []
+
+    # db.session.expire(prop)
+    # readings = prop.meter_readings
     
-    return readinglist
+    # month = period.month
+    # year = period.year
+
+    # for reading in readings:
+    #     if reading.reading_period:
+    #         if reading.reading_period.month == month and reading.reading_period.year == year and reading.description != "initial reading":
+    #             readinglist.append(reading)
+    
+    # return readinglist
+
+    items = MeterReadingOp.fetch_meter_readings(prop.id,period,"initial reading")
+    return items
 
 def readingsauto_new(period,prop):
     readinglist = []

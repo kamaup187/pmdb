@@ -8467,6 +8467,7 @@ class FetchReadings(Resource):
             str_month = get_str_month(next_billing_month)
             readings = readingsauto(billing_period,prop_obj)
             readinglist = reading_details(readings)
+            # import pdb; pdb.set_trace()
             readingids = get_obj_ids(readinglist)
             return render_template("ajax_oldreadings.html",period=str_month,items=readinglist,readingids=readingids)
         else:

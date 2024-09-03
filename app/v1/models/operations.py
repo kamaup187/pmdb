@@ -1882,9 +1882,9 @@ class MeterReadingOp(MeterReading,Base):
 
     def view_amount(self):
         if self.charged:
-            charge_obj = ChargeOp.fetch_charge_by_reading_id(self.id)
-            if charge_obj:
-                return f"{charge_obj.amount:,.2f}"
+            # charge_obj = ChargeOp.fetch_charge_by_reading_id(self.id)
+            if self.charge:
+                return f"{self.charge.amount:,.2f}"
             return 0.0
         return 0.0
 
@@ -1955,7 +1955,7 @@ class MeterReadingOp(MeterReading,Base):
             'editid':MeterReadingOp.generate_editid(self),
             'delid':MeterReadingOp.generate_delid(self),
             'highlight':MeterReadingOp.highlight_charge_status(self),
-            'status':MeterReadingOp.check_originality(self),
+            # 'status':MeterReadingOp.check_originality(self),
             'house':self.house,
             'meter':self.meter,
             'date':self.date.date(),
@@ -1967,9 +1967,9 @@ class MeterReadingOp(MeterReading,Base):
             'charged':MeterReadingOp.charge_status(self),
             'amount':MeterReadingOp.view_amount(self),
             'description':self.description,
-            'smsstatus':MeterReadingOp.get_sms_status(self),
-            'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "primary",
-            'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
+            # 'smsstatus':MeterReadingOp.get_sms_status(self),
+            # 'smsoutline': "" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "primary",
+            # 'smsactive': "disabled" if self.sms_invoice == "sent" or self.sms_invoice == "Success" or self.sms_invoice == "success-alt" else "",
             'readby':MeterReadingOp.get_name(self)
         }
 

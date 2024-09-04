@@ -9681,6 +9681,10 @@ class GardenRestaurant(Resource):
     def get(self):
         return Response(render_template("garden_index.html"))
 
+class KikuyuCouncilOfElders(Resource):
+    def get(self):
+        return Response(render_template("kce_index.html"))
+
 class StockDataUpload(Resource):
     """class"""
 

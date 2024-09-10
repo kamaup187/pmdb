@@ -2414,10 +2414,10 @@ class Dashboard(Resource):
 
                         if item.tenant:
                             if item.tenant.deposits:
-                                deptotal_balances += item.tenant.deposits.balance if item.tenant.deposits.balance > 0 else 0.0
+                                deptotal_balances += 0 #item.tenant.deposits.balance if item.tenant.deposits.balance > 0 else 0.0
 
                                 if item.tenant.deposits.balance:
-                                    depdefaulters += 1 if item.tenant.deposits.balance > 1 else 0
+                                    depdefaulters += 0  #1 if item.tenant.deposits.balance > 1 else 0
 
             if datetime.datetime.now().day < 6:
                 defaulters = "--"

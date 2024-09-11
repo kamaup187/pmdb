@@ -2725,7 +2725,8 @@ class BasicStatement(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("prop")
-        selected_month = request.args.get("month")
+        start_month = request.args.get("start")
+        end_month = request.args.get("end")  
 
         if not selected_apartment:
 
@@ -2744,15 +2745,52 @@ class BasicStatement(Resource):
 
         if selected_apartment == "All":
             props = fetch_all_apartments_by_user(current_user)
-            prop = ""
+            apartment_obj = props[0]
+            prop = props[0].name
+            
         else:
             apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
             props = [apartment_obj]
             prop = selected_apartment
 
+        if not start_month:
+            end = datetime.datetime.now()
+        else:
+            str_start = date_formatter_alt(start_month)
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + '00:00'
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_alt(end_month)
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + '23:00'
+
+            end = parse(timestring)
+
+        bills = MonthlyChargeOp.fetch_bills_by(apartment_obj.id,start)
+        totalrent = 0
+        totaldeposit = 0
+        totalwater = 0
+        totalgarbage = 0
+
+        for bill in bills:
+            totalrent += bill.rent
+            totalwater += bill.water
+            totalgarbage += bill.garbage
+            totaldeposit += bill.deposit
+        totalbills = totalrent + totalwater + totaldeposit + totalgarbage
 
         return Response(render_template(
             "ajax_report_basic_statement.html",
+            bills=bills,
+            totalrent=totalrent,
+            totalwater=totalwater,
+            totaldeposit=totaldeposit,
+            totalgarbage=totalgarbage,
+            totalbills=totalbills,
+            strmonth = get_str_month(start.month),
+            year=start.year,
             prop=prop,
             property_name=apartment_obj.name,
             propid=apartment_obj.id,
@@ -2773,7 +2811,6 @@ class RentStatement(Resource):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
         target = request.args.get("target")
-
 
         if not selected_apartment:
 

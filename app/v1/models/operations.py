@@ -3291,6 +3291,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def fetch_monthlycharge_by_smsid(smsid):
         return MonthlyCharge.query.filter(MonthlyChargeOp.smsid==smsid).first()
 
+    def fetch_bills_by(propid,start):
+        return MonthlyCharge.query.filter(
+            MonthlyCharge.apartment_id==propid,
+            MonthlyCharge.month == start.month,
+            MonthlyCharge.year == start.year
+            ).all()
 
     def update_balances(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         if booking != "null":

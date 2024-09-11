@@ -2779,6 +2779,12 @@ class BasicStatement(Resource):
             totalwater += bill.water
             totalgarbage += bill.garbage
             totaldeposit += bill.deposit
+
+            if not bill.house.floor:
+                bill.flr = "-"
+            else:
+                bill.flr = get_floor_description(bill.house.floor)
+
         totalbills = totalrent + totalwater + totaldeposit + totalgarbage
 
         return Response(render_template(

@@ -526,6 +526,8 @@ class House(db.Model):
     status = db.Column(db.String, default="available")
 
     description = db.Column(db.String)
+    floor = db.Column(db.String)
+
     billable = db.Column(db.Boolean,default=True)
     payment_bank = db.Column(db.VARCHAR)
     payment_bankacc = db.Column(db.VARCHAR)

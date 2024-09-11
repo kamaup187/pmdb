@@ -204,7 +204,7 @@
                 {% for bill in bills%}
                 <tr>
                   <td class="data-cell text-left">{{ bill['house'] }}</td>
-                  <td class="data-cell text-left">{{ bill['floor'] }}</td>
+                  <td class="data-cell text-left">{{ bill['flr'] }}</td>
                   <td class="data-cell text-right">{{ bill['house']['description']}}</td>
                   <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['rent']|float) }}</td>
                   <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['deposit']|float)  }}</td>

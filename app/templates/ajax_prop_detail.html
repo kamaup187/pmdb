@@ -557,6 +557,30 @@
                         </select>
                       </div>
 
+
+                      <div class="form-group mt-1 mb-3 input-icons">
+                        <span class="text-black">Select floor <span class="text-primary small">(optional)</span></span>
+                        <select class="select-css " id ="edit_floor" >
+                          <option disabled selected value> -- Select floor -- </option>
+                          <option value="-1">Basement</option>
+                          <option value="0">Ground floor</option>
+                          <option value="1">1st floor</option>
+                          <option value="2">2nd floor</option>
+                          <option value="3">3rd floor</option>
+                          <option value="4">4th floor</option>
+                          <option value="5">5th floor</option>
+                          <option value="6">6th floor</option>
+                          <option value="7">7th floor</option>
+                          <option value="8">8th flooor</option>
+                          <option value="9">9th floor</option>
+                          <option value="10">10th floor</option>
+                          <option value="11">11th shop</option>
+                          <option value="12">12th floor</option>
+                          <option value="00">Rooftop</option>
+                          <option value="-11">Other</option>                      
+                        </select>
+                      </div>
+
                       <div class="form-group mt-2 input-icons">
                         <span class="text-black">Bank name <span class="text-danger small">*</span></span>
                         <input id="edit_bank" class="form-control" type="text" placeholder="H1"/>
@@ -1511,6 +1535,7 @@
                 acc:$("#edit_accname").val(),
                 bank:$("#edit_bank").val(),
                 desc: $("#edit_desc").val(),
+                floor:$("#edit_floor").val(),
                 target:"edit house detail"
             },
         success: function(response) {

@@ -2598,6 +2598,29 @@ def switch_property_code(value):
     }
     return cases.get(value, None)
 
+def get_floor_description(value):
+    switcher = {
+        "-1": "Basement",
+        "0": "Ground floor",
+        "1": "1st floor",
+        "2": "2nd floor",
+        "3": "3rd floor",
+        "4": "4th floor",
+        "5": "5th floor",
+        "6": "6th floor",
+        "7": "7th floor",
+        "8": "8th floor",
+        "9": "9th floor",
+        "10": "10th floor",
+        "11": "11th shop",
+        "12": "12th floor",
+        "00": "Rooftop",
+        "-11": "Other"
+    }
+    
+    # Return the description or a default message if the value is not in the dictionary
+    return switcher.get(value, "N/A")
+
 def remove_keywords_prefix(word, keywords):
     # Convert word and keywords to uppercase for case insensitivity
     word_upper = word.upper()

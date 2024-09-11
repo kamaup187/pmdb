@@ -5202,6 +5202,7 @@ class EditHouse(Resource):
         bank = request.form.get('bank')
 
         desc = request.form.get('desc')
+        floor =  request.form.get('floor')
         group = request.form.get('group')
 
         target = request.form.get("target")
@@ -5235,6 +5236,9 @@ class EditHouse(Resource):
 
                 HouseOp.update_details(house_obj,name,desc)
                 HouseOp.update_billing_details(house_obj,watertarget,servicetarget)
+
+                if floor:
+                    HouseOp.update_floor(house_obj,floor)
 
                 if acc:
                     HouseOp.update_bank(house_obj,bank,acc)

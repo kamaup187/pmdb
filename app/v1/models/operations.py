@@ -1408,6 +1408,10 @@ class HouseOp(House,Base):
         self.payment_bankacc = acc
         db.session.commit()
 
+    def update_floor(self,flr):
+        self.floor = flr
+        db.session.commit()
+
     def update_housecode_id(self,housecode_id):
         self.housecode_id = housecode_id
         db.session.commit()

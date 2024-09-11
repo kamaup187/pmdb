@@ -2721,6 +2721,52 @@ class ServiceStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+class BasicStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_basic_statement.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+        if selected_apartment == "All":
+            props = fetch_all_apartments_by_user(current_user)
+            prop = ""
+        else:
+            apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+            props = [apartment_obj]
+            prop = selected_apartment
+
+
+        return Response(render_template(
+            "ajax_report_basic_statement.html",
+            prop=prop,
+            property_name=apartment_obj.name,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name
+        ))
+
 class RentStatement(Resource):
     @login_required
     def get(self):
@@ -3354,9 +3400,6 @@ class GeneralRentStatement(Resource):
             ratio = (f"{(totalpaid/totaldue)*100:,.1f} %")
         except:
             ratio = f"0.0 %"
-
-
-        print("templatoooooooooo",template,"prrrrrroooop",property_name)
 
         return Response(render_template(
             template,

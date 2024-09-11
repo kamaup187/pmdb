@@ -85,8 +85,8 @@
             <table class="table" id="dataTable" width="100%" cellspacing="0">
                   <thead class="custom-header-alt small">
                     <tr>
-                      <th class="">FL</th>
                       <th class="">HNO</th>
+                      <th class="">FL</th>
                       <th class="">TYPE</th>
                       <th class="header-right">RENT RATE</th>
                       <th class="header-right">DEPOSIT</th>
@@ -99,8 +99,8 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-left">{{ bill['floor'] }}</td>
                       <td class="data-cell text-left">{{ bill['house'] }}</td>
+                      <td class="data-cell text-left">{{ bill['floor'] }}</td>
                       <td class="data-cell text-right">{{ bill['house']['description']}}</td>
                       <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['rent']|float) }}</td>
                       <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['deposit']|float)  }}</td>
@@ -189,8 +189,8 @@
             <table class="table" id="data-table" width="100%" cellspacing="0">
               <thead class="custom-header-alt small">
                 <tr>
-                  <th class="">FL</th>
                   <th class="">HNO</th>
+                  <th class="">FL</th>
                   <th class="">TYPE</th>
                   <th class="header-right">RENT RATE</th>
                   <th class="header-right">DEPOSIT</th>
@@ -203,8 +203,8 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
-                  <td class="data-cell text-left">{{ bill['floor'] }}</td>
                   <td class="data-cell text-left">{{ bill['house'] }}</td>
+                  <td class="data-cell text-left">{{ bill['floor'] }}</td>
                   <td class="data-cell text-right">{{ bill['house']['description']}}</td>
                   <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['rent']|float) }}</td>
                   <td class="data-cell text-right">{{ "{:0,.1f}".format(bill['deposit']|float)  }}</td>

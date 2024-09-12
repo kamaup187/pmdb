@@ -17,6 +17,7 @@ api.add_resource(GardenRestaurant,"/garden")
 api.add_resource(KikuyuCouncilOfElders,"/kce")
 api.add_resource(KceLogin,"/kce/login")
 api.add_resource(KceRegister,"/kce/register")
+api.add_resource(KceHome,"/kce/dashboard")
 
 api.add_resource(DataUpload,"/data/upload")
 api.add_resource(MpesaDataUpload,"/mpesadata/upload")

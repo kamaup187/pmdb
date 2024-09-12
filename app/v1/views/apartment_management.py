@@ -9688,6 +9688,12 @@ class GardenRestaurant(Resource):
 class KikuyuCouncilOfElders(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
+        return Response(render_template("web.html"))
+
+class KceHome(Resource):
+    @login_required
+    def get(self):
+        # return Response(render_template("kce_index.html"))
         return Response(render_template("home.html"))
 
 class KceLogin(Resource):
@@ -9696,11 +9702,66 @@ class KceLogin(Resource):
         return Response(render_template("login2.html"))
     
     def post(self):
-        # return Response(render_template("kce_index.html"))
+        from flask_login import login_user
+        identity = request.form.get('identifier')
+        password = request.form.get('password')
+        downtime = False
+
+        if identity:
+            try:
+                user = fetch_user(identity)
+            except Exception as e:
+                user = None
+                downtime = True
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
+        else:
+            user = None
+
+        if downtime:
+            db.session.rollback()
+
+        if user:
+            if UserOp.password_is_valid(user,password):
+                login_user(user, remember=False)
+                return Response(render_template("home.html",co="set"))
+            return Response(render_template("login2.html"))
         return Response(render_template("login2.html"))
 
 class KceRegister(Resource):
     def post(self):
+
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        national_id = request.form.get('national_id')
+        phone = request.form.get('phone')
+        email = None
+        pass1 = request.form.get('pass')
+
+        company = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
+
+        usercode = usercode_generator()
+        is_present  = UserOp.fetch_user_by_usercode(usercode)
+        if is_present:
+            usercode = usercode_generator()#generate code again
+            is_present  = UserOp.fetch_user_by_usercode(usercode)
+            if is_present:
+                usercode = usercode_generator()#generate code again
+
+        national_id_present = UserOp.fetch_user_by_national_id(national_id)
+        if national_id_present:
+            return "id taken"
+        phone_is_present = UserOp.fetch_user_by_phone(phone)
+        if phone_is_present:
+            return "tel taken"
+        name = fname + " " + lname
+        username = usercode + national_id
+
+        try:
+            new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,None,company.id,1)
+            new_user.save()
+        except:
+            return "failed to register"
+
         return "success"
 
 

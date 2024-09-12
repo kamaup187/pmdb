@@ -9694,7 +9694,9 @@ class KceHome(Resource):
     @login_required
     def get(self):
         # return Response(render_template("kce_index.html"))
-        return Response(render_template("home.html"))
+        # return Response(render_template("home.html"))
+        return Response(render_template("home.html",co="set"))
+
 
 class KceLogin(Resource):
     def get(self):
@@ -9723,7 +9725,7 @@ class KceLogin(Resource):
         if user:
             if UserOp.password_is_valid(user,password):
                 login_user(user, remember=False)
-                return Response(render_template("home.html",co="set"))
+                return redirect(url_for('api.kcehome'))
             return Response(render_template("login2.html"))
         return Response(render_template("login2.html"))
 

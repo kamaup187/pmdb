@@ -12,10 +12,12 @@
   <meta name="author" content="Untree.co">
   <!-- <link rel="shortcut icon" href="favicon.png"> -->
 
-  <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
+  <!-- <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favico/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
-  <link rel="manifest" href="../static/images/favico/site.webmanifest">
+  <link rel="manifest" href="../static/images/favico/site.webmanifest"> -->
+
+  <link href="../static/kce/img/favicon.ico" rel="icon">
 
 
   <!-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -41,7 +43,7 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css3/home.css') }}">
 
 
-  <title>Inva Properties</title>
+  <title>Kikuyu - Council of Elders</title>
 </head>
 <body>
 
@@ -68,23 +70,23 @@
     <nav class="site-nav">
       <div class="row align-items-center">
 
-        <div class="col-6 col-sm-6 col-lg-3">
+        <div class="col-8 col-sm-6 col-lg-3">
           <span>
-            <a class="desktop-malaysian" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/inva/s-logo.png" alt=""></a>
-            <a class="d-none d-lg-inline" href="{{ url_for('api.landingpage') }}"><img src="../static/img/logos/inva/l-logo.png" alt=""></a>
+            <a class="desktop-malaysian" href="/kce"><img src="../static/kce/img/elders.png" width="60" height="60" alt=""> <span class="text-kodi-alt font-weight-bold">Kikuyu Council of Elders</span></a>
+            <a class="d-none d-lg-inline" href="/kce"><img src="../static/kce/img/elders.png" width="80" height="80" alt=""> <span class="text-kodi-alt font-weight-bold">Kikuyu Council of Elders</span></a>
           </span>
 
           <!-- <h1><a href="index.html">Active<span class="text-primary">.</span> </h1> -->
           </div>
 
-          <div class="col-6 col-sm-6 col-lg-9 site-navigation text-right">
+          <div class="col-4 col-sm-6 col-lg-9 site-navigation text-right">
             <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu">
               <li class="active"><a href="#">Home</a></li>
               <li class="has-children">
-                <a href="#">Solutions</a>
+                <a href="#">Events</a>
                 <ul class="dropdown">
-                  <li><a href="#">Property management</a></li>
-                  <li><a href="#">Property Search</a></li>
+                  <li><a href="#"></a></li>
+                  <li><a href="#"></a></li>
                   <!-- <li class="has-children">
                     <a href="#">Menu Two</a>
                     <ul class="dropdown">
@@ -98,13 +100,12 @@
               
               <!-- <li><a href="#">Portfolio</a></li> -->
               <li><a href="#">FAQs</a></li>
-              <li><a href="#">Pricing</a></li>
               <li><a href="#">About</a></li>
 
               <li><a href="#">Contact us</a></li>
 
-              <li class="cta-button"><a class="signin" href="{{ url_for('api.userlogin') }}" target="_blank">Log In</a></li>
-              <li class="cta-button"><a href="#" data-toggle="modal" data-target="#signUpModal">Sign Up Now</a></li>
+              <li class="cta-button"><a class="signin" href="/kce/login" target="_blank">Log In</a></li>
+              <li class="cta-button"><a href="#" data-toggle="modal" data-target="#signUpModal">Join us now</a></li>
 
             </ul>
 
@@ -130,10 +131,10 @@
 
 
 
-            <div class="owl-single dots-absolute owl-carousel">
+            <div class="owl-single dots-absolute owl-carousel mobile-malaysian">
               <!-- <img src="../static/images/pic11.png" alt="Image" class="img-fluid"> -->
-              <img src="../static/images/bg22.png" alt="Image" class="img-fluid">
-              <img src="../static/images/pic2.png" alt="Image" class="img-fluid">
+              <img src="../static/kce/img/kce-bg.jpg" alt="Image" class="img-fluid">
+              <img src="../static/kce/img/kce-bg.jpg" alt="Image" class="img-fluid">
               <!-- <img src="../static/images/img_h_8.jpg" alt="Image" class="img-fluid"> -->
               
             </div>
@@ -141,191 +142,27 @@
           </div>
           <div class="col-lg-4 order-lg-1">
             <!-- <span class="section-subtitle" data-aos="fade-up" data-aos="">Welcome</span> -->
-            <h1 class="text-black mb-4" data-aos="fade-up" data-aos="100">InvaPay</h1>
+            <h1 class="text-white font-weight-bold mb-4 mt-4" data-aos="fade-up" data-aos="100">Kikuyu Council of Elders</h1>
 
-            <h3 class="text-black mb-4" data-aos="fade-up" data-aos="200">Simple but powerful property management software</h3>
+            <h3 class="text-white font-weight-bold mb-4" data-aos="fade-up" data-aos="200">One united community</h3>
             
-            <p class="text-black" data-aos="fade-up" data-aos="300">Focus on growing your business while we handle your accounting, reporting, and other time consuming tasks.</p>
-            <p class="mt-5" data-aos="fade-up" data-aos="400"><a href="#" class="btn btn-primary btn-primary-hover-outline" data-toggle="modal" data-target="#demoModal">Request Demo</a></p>
+            <p class="text-white font-weight-bold" data-aos="fade-up" data-aos="300">Togetherness is power.</p>
+            <p class="mt-5" data-aos="fade-up" data-aos="400"><a href="#" class="btn btn-primary btn-primary-hover-outline" data-toggle="modal" data-target="#demoModal">Upcoming events</a></p>
           </div>
 
         </div>
       </div>
     </div>
 
-
-
-    <div class="section-grey">
+    <div class="site-section bg-gray d-none">
       <div class="container">
-
-        <div class="block">
-          <div class="row justify-content-center">
-
-            <div class="col-sm-12 col-md-5 col-lg-4 col-xl-4 order-lg-2 offset-xl-1 mb-4">
-              <div class="img-wrap text-center text-md-left" data-aos="fade-up">
-                <div class="img">
-                  <video width="160" height="120" autoplay muted loop>
-                    <source src="../static/images/vid.mp4" type="video/mp4">
-                  </video> 
-                  <!-- <img src="../static/images/cottages.jpg" alt="Statue" class="img-fluid"> -->
-                </div>
-
-                <div class="img">
-                  <video width="160" height="120" autoplay muted loop>
-                    <source src="../static/images/vid2.mp4" type="video/mp4">
-                  </video> 
-                  <!-- <img src="../static/images/cottages.jpg" alt="Statue" class="img-fluid"> -->
-                </div>
-              </div>
-            </div>
-
-            <div class="offset-md-0 offset-lg-1 col-sm-12 col-md-5 col-lg-5 col-xl-4">
-              <div class="px-3">
-
-
-                <span class="section-subtitle text-black">FEATURES</span>
-                <div class="">
-                  <ul class="list-unstyled list-check primary">
-                    <li>Automated payment reconciliations</li>
-                    <li>Mobile money & Bank integrations</li>
-                    <li>Tenant statements</li>
-                    <li>Vacancy & prospect tracking</li>
-                    <li>Invoice generation & dispatch</li>
-                    <li>Online maintenance request & tracking</li>
-                    <li>Email & text messaging</li>
-                    <li>Manage tenants ​and lease information</li>
-                    <li>Track income ​and expenses</li>
-
-
-                  </ul>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="block-2">
-          <div class="row">
-
-            <div class="col-md-4 col-lg-4 offset-md-1 order-md-2">
-              <span class="section-subtitle">Why Us</span>
-              <h2 class="section-title">Simple and easy setup,</h2>
-              <p class="lead">Timely reports and automatic payments entry and reconciliations</p>
-              <!-- <p class="mb-5">There live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p> -->
-              <div class="row mb-5 count-numbers">
-                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="100">
-                  <span class="number" data-number="129"></span>
-                  <span class="d-block">Clients</span>
-                </div>
-                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="200">
-                  <span class="number" data-number="421"></span>
-                  <span class="d-block">Apartments managed</span>
-                </div>
-                <div class="col-4 counter" data-aos="fade-up" data-aos-delay="300">
-                  <span class="number" data-number="3914"></span>
-                  <span class="d-block">Onboarded Tenants</span>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-5 col-lg-5 offset-md-1">
-              <div class="images-overlap">
-                <img src="../static/images/apartment.jpg" alt="student" class="img-fluid img-1" data-aos="fade-up">
-                
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-
-
-
-    <div class="site-section bg-gray">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 js-custom-dots">
-            <a href="#" class="service link horizontal d-flex active" data-aos="fade-left" data-aos-delay="0">
-              <div class="service-icon color-1 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
-                </svg>
-              </div>
-              <div class="service-contents">
-                <h3>Residential apartments</h3>
-                <p>Property owners and managers can manage their properties with ease.</p>
-              </div>
-            </a> <!-- /.service -->
-
-            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="100">
-              <div class="service-icon color-2 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
-                </svg>
-              </div> <!-- /.icon -->
-              <div class="service-contents">
-                <h3>Commercial properties</h3>
-              </div> <!-- /.service-contents-->
-            </a> <!-- /.service -->
-
-
-            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="200">
-              <div class="service-icon color-3 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
-                </svg>
-              </div> <!-- /.icon -->
-              <div class="service-contents">
-                <h3>Warehouses and godowns</h3>
-              </div> <!-- /.service-contents-->
-            </a> <!-- /.service -->
-
-            <a href="#" class="service link horizontal d-flex" data-aos="fade-left" data-aos-delay="300">
-              <div class="service-icon color-4 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check-fill" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zm-.646 5.354a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
-                </svg>
-              </div> <!-- /.icon -->
-              <div class="service-contents">
-                <h3>Bring Ideas to Life</h3>
-              </div> <!-- /.service-contents-->
-            </a> <!-- /.service -->
-          </div>
-
-          <div class="col-lg-8">
-            <div class="owl-single-2 no-dots owl-carousel">
-              <div class="item">
-                <img src="../static/images/img_h_1.jpg" alt="Image" class="img-fluid">
-              </div>
-              <div class="item">
-                <img src="../static/images/img_h_2.jpg" alt="Image" class="img-fluid">
-              </div>
-              <div class="item">
-                <img src="../static/images/img_h_3.jpg" alt="Image" class="img-fluid">
-              </div>
-              <div class="item">
-                <img src="../static/images/img_h_4.jpg" alt="Image" class="img-fluid">
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="site-section bg-gray">
-      <div class="container">
-        <div class="row justify-content-center d-none">
+        <div class="row justify-content-center">
           <div class="col-lg-7 text-center">
             <span class="section-subtitle">Plans</span>
             <h2 class="section-title">Pricing Table</h2>
           </div>
         </div>
-        <div class="row d-none">
+        <div class="row">
           <div class="col-6 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
             <div class="pricing-table text-center">
               <h3 class="text-black">Free</h3>
@@ -451,45 +288,57 @@
       <div class="container">
         <div class="row">
           <div class="col-12 text-center">
-            <span class="section-subtitle">Happy Clients</span>
-            <h2 class="section-title">Testimonials</h2>
+            <span class="section-subtitle">Gallery</span>
+            <h2 class="section-title">Explore our gallery</h2>
           </div>
         </div>
         <div class="row justify-content-center">
           <div class="col-lg-7">
-
             <div class="owl-single owl-carousel">
-              <div class="testimonial mx-auto">
-                <figure class="img-wrap">
-                  <!-- <img src="../static/images/person_.jpg" alt="Image" class="img-fluid"> -->
-                  <!-- <i class="fa fa-user"></i> -->
-                  <i class="feather-18 text-black font-weight-bold" data-feather="user"></i>
-                </figure>
-                <h3 class="name">Kelvin Mwangi</h3>
-                <blockquote>
-                  <p>&ldquo;InvaPay is backed  by exceptional team we find brilliant. This software has saved me time within my job as a property manager&rdquo;</p>
-                </blockquote>
-              </div>
+              <div class="testimonial-item text-center">
+                <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/stadium2.jpeg" style="width: 320px; height: 320px;">
+                <h5 class="mb-0">Image 1</h5>
+            </div>
+              <div class="testimonial-item text-center">
+                <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman1.jpeg" style="width: 320px; height: 320px;">
+                <h5 class="mb-0">Image 2</h5>
+            </div>
 
-              <div class="testimonial mx-auto">
-                <figure class="img-wrap">
-                  <i class="feather-18 text-black font-weight-bold" data-feather="home"></i>
-                </figure>
-                <h3 class="name">CornerStone Properties</h3>
-                <blockquote>
-                  <p>&ldquo;With growing competition in every industry in every aspect — from price to technology to innovation — CornerStone believes the way to differentiate your brand is through improving customer experience. This exactly what we have achieved through InvaPay&rdquo;</p>
-                </blockquote>
-              </div>
+              <div class="testimonial-item text-center">
+                <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/uhuru1.jpeg" style="width: 320px; height: 320px;">
+                <h5 class="mb-0">Image 3</h5>
+            </div>
 
-              <div class="testimonial mx-auto">
-                <figure class="img-wrap">
-                  <i class="feather-18 text-black font-weight-bold" data-feather="users"></i>
-                </figure>
-                <h3 class="name">Martin Juma</h3>
-                <blockquote>
-                  <p>&ldquo;Simple system and yet so powerful. All my tenants get timely invoices and receipts, thanks to InvaPay.&rdquo;</p>
-                </blockquote>
-              </div>
+            <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/raila1.jpeg" style="width: 320px; height: 320px;">
+              <h5 class="mb-0">Image 4</h5>
+          </div>
+
+            <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman2.jpeg" style="width: 320px; height: 320px;">
+              
+              <h5 class="mb-0">Image 5</h5>
+          </div>
+          <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman3.jpeg" style="width: 320px; height: 320px;">
+              
+              <h5 class="mb-0">Image 6</h5>
+          </div>
+          <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman4.jpeg" style="width: 320px; height: 320px;">
+              
+              <h5 class="mb-0">Image 7</h5>
+          </div>
+          <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman5.jpeg" style="width: 320px; height: 320px;">
+              
+              <h5 class="mb-0">Image 8</h5>
+          </div>
+          <div class="testimonial-item text-center">
+              <img class="bg-light  p-2 mx-auto mb-3" src="../static/kce/img/kce/chairman6.jpeg" style="width: 320px; height: 320px;">
+              
+              <h5 class="mb-0">Image 9</h5>
+          </div>
 
             </div>
 
@@ -506,7 +355,7 @@
           <div class="col-md-6 col-lg-3">
             <div class="widget">
               <h3 class="widget-heading">About Us</h3>
-              <p>We are a cloud based property management software company.</p>
+              <p>We are a community united by our beliefs and strong culture.</p>
               <p class="mb-0"><a href="#" class="btn btn-primary btn-primary-hover-outline">Learn more</a></p>
             </div>
           </div>
@@ -516,14 +365,14 @@
               <ul class="list-unstyled float-left mr-5">
                 <li><a href="#">Overview</a></li>
                 <li><a href="#">About Us</a></li>
-                <li><a href="#">Find Buyers</a></li>
+                <li><a href="#">Find Us</a></li>
                 
 
               </ul>
               <ul class="list-unstyled float-left">
                 <li><a href="#">Overview</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Solutions</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Events</a></li>
                 
 
               </ul>
@@ -534,12 +383,12 @@
               <h3 class="widget-heading">Recent Posts</h3>
               <ul class="list-unstyled footer-blog-entry">
                 <li>
-                  <span class="d-block date">March 13, 2022</span>
-                  <a href="#">Ensuring great tenant satisfaction</a>
+                  <span class="d-block date">October 13, 2024</span>
+                  <a href="#">Planned convention</a>
                 </li>
                 <li>
-                  <span class="d-block date">March 17, 2022</span>
-                  <a href="#">Conservation of the environment</a>
+                  <span class="d-block date">January 17, 2025</span>
+                  <a href="#">Elders meeting</a>
                 </li>
 
               </ul>
@@ -574,7 +423,7 @@
 
         <div class="row copyright">
           <div class="col-lg-9 ">
-            <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; &bullet;
+            <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>.Kikuyu Council of Elders. All Rights Reserved. &mdash; &bullet;
             </p>
           </div>
           
@@ -606,7 +455,7 @@
                 <nav class="nav nav-borders mb-1 mt-2">
                   <button id="personal" type="button" class="btn borderless pl-0 pb-0 text-kodi underline active ms-0"
                     disabled>Profile</button>
-                  <button id="company" type="button" class="btn borderless pb-0 text-kodi" disabled>Company</button>
+                  <button id="company" type="button" class="d-none btn borderless pb-0 text-kodi" disabled>Company</button>
                   <button id="finish" type="button" class="btn borderless pb-0 text-kodi" disabled>Finish</button>
                 </nav>
     
@@ -642,7 +491,7 @@
                             <div class="col-sm-6">
                               <label class="small mb-1" for="email">Email</label>
     
-                              <input class="form-control kodi-input" type="email" id="email" name="email" value="">
+                              <input class="form-control kodi-input" type="text" id="email" name="email" value="">
                             </div>
     
                           </div>
@@ -660,6 +509,31 @@
                             </div>
     
                           </div>
+
+                          <div class="form-group row">
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="age_bracket">Age Bracket</label>
+                              <select class="form-control kodi-input" id="age_bracket" name="age_bracket">
+                                <option value="">Select Age Bracket</option>
+                                <option value="18-25">18-25</option>
+                                <option value="26-35">26-35</option>
+                                <option value="36-45">36-45</option>
+                                <option value="46-60">46-60</option>
+                                <option value="60+">60+</option>
+                              </select>
+                            </div>
+                          
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="gender">Gender</label>
+                              <select class="form-control kodi-input" id="gender" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+                          </div>
+                          
     
     
                           <!-- Save changes button-->
@@ -762,8 +636,8 @@
     
                             <button type="reset" class="btn btn-outline-danger" type="button">Reset</button>
     
-                            <button id="register" class="btn btn-primary dispnone" type="button">Finish and submit</button>
-                            <button class="next register btn btn-primary" type="button">Finish and submit</button>
+                            <button id="register" class="btn btn-primary dispnone" type="button">Finish</button>
+                            <button class="next register btn btn-primary" type="button">Finish</button>
     
                           </div>
     
@@ -790,7 +664,7 @@
       <div class="modal-content">
         <div class="modal-header pb-0 pt-2 text-center bg-light">
           <h5 class="modal-title divjust-end">
-            <span class="mr-3 mb-1 smallify text-kodi-alt">Request a demo</span>
+            <span class="mr-3 mb-1 smallify text-kodi-alt">Events calendar</span>
             <div>
               <button class="btn btn-sm btn-warning mb-1 pt-0 pb-0 pl-3 pr-3 font-weight-bold text-white" type="button"
                 data-dismiss="modal">X</button>
@@ -801,7 +675,8 @@
         <div class="modal-body pt-0 text-gray-900">
           <div id="feedback2" class="center-btn dispnone p-3"></div>
           <div id="regbed2" class="">
-            <form id="msform2">
+            <p>There currently no upcomming events. Stay tuned for updates.</p>
+            <form id="msform2" class="d-none">
   
                 <div class="row">
                   <div class="col-xl-12">
@@ -898,13 +773,13 @@
       })
   
       $(".gotocompany").click(function(){
-          $("#company").addClass("underline")
+          $("#finish").addClass("underline")
           $("#personal").removeClass("underline")
-          $("#finish").removeClass("underline")
+          $("#company").removeClass("underline")
   
-          $("#company-area").removeClass("dispnone")
+          $("#finish-area").removeClass("dispnone")
+          $("#company-area").addClass("dispnone")
           $("#personal-area").addClass("dispnone")
-          $("#finish-area").addClass("dispnone")
       })
   
       $("#gotofinish").click(function(){
@@ -922,7 +797,7 @@
     $("#register").on('click', function () {
       $('.register').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
     $.ajax({
-      url: "{{ url_for('api.selfuserregisteragent') }}",
+      url: "/kce/register",
       type: "POST",
       data: {
         fname: $("#fname").val(),

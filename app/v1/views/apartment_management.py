@@ -9687,7 +9687,22 @@ class GardenRestaurant(Resource):
 
 class KikuyuCouncilOfElders(Resource):
     def get(self):
-        return Response(render_template("kce_index.html"))
+        # return Response(render_template("kce_index.html"))
+        return Response(render_template("home.html"))
+
+class KceLogin(Resource):
+    def get(self):
+        # return Response(render_template("kce_index.html"))
+        return Response(render_template("login2.html"))
+    
+    def post(self):
+        # return Response(render_template("kce_index.html"))
+        return Response(render_template("login2.html"))
+
+class KceRegister(Resource):
+    def post(self):
+        return "success"
+
 
 class StockDataUpload(Resource):
     """class"""

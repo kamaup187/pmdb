@@ -33,10 +33,10 @@ $(document).ready(function () {
                     maxlength: 10,
 
                 },
-                company: {
-                    required: true,
-                    minlength: 3,
-                },
+                // company: {
+                //     required: true,
+                //     minlength: 3,
+                // },
                 fname: {
                     required: true,
                     minlength: 3,
@@ -45,14 +45,14 @@ $(document).ready(function () {
                     required: true,
                     minlength: 3,
                 },
-                email: {
-                    required: true,
-                    minlength: 3,
-                },
-                addr1: {
-                    required: true,
-                    minlength: 3,
-                },
+                // email: {
+                //     required: true,
+                //     minlength: 3,
+                // },
+                // addr1: {
+                //     required: true,
+                //     minlength: 3,
+                // },
                 terms: {
                     required: true,
                 },
@@ -69,9 +69,9 @@ $(document).ready(function () {
                 //     required: "Password required",
                 //     equalTo: "Passwords don't match",
                 // },
-                company: {
-                    required: "Company name is required",
-                },
+                // company: {
+                //     required: "Company name is required",
+                // },
                 fname: {
                     required: "First name is required",
                 },
@@ -81,12 +81,12 @@ $(document).ready(function () {
                 phone: {
                     required: "Valid phone number is required",
                 },
-                email: {
-                    required: "Valid email is required",
-                },
-                addr1: {
-                    required: "Address is required",
-                },
+                // email: {
+                //     required: "Valid email is required",
+                // },
+                // addr1: {
+                //     required: "Address is required",
+                // },
                 terms: {
                     required: "You must agree to terms and conditions !",
                 },
@@ -108,7 +108,7 @@ $(document).ready(function () {
         if ($('#company').hasClass("underline")) {
             next_fs = $('#gotopersonal');
         } else if ($('#finish').hasClass("underline")) {
-            next_fs = $('.gotocompany');
+            next_fs = $('#gotopersonal');
         }
         next_fs.click();
     });
@@ -143,10 +143,10 @@ $(document).ready(function () {
                     required: true,
                     minlength: 3,
                 },
-                email: {
-                    required: true,
-                    minlength: 3,
-                }
+                // email: {
+                //     required: true,
+                //     minlength: 3,
+                // }
 
             },
             messages: {
@@ -159,9 +159,9 @@ $(document).ready(function () {
                 phone: {
                     required: "Valid phone number is required",
                 },
-                email: {
-                    required: "Valid email is required",
-                }
+                // email: {
+                //     required: "Valid email is required",
+                // }
             }
         });
         if (form2.valid() === true) {

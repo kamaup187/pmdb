@@ -16,7 +16,7 @@
 } */
 
 .bg-primary-custom{
-    background-color: #f5ac24;
+    background-color: #916540;
   }
   
   .text-kodi{
@@ -24,7 +24,7 @@
   }
 
   .text-kodi-alt{
-    color: #f5ac24
+    color: #916540
   }
   
   table.dataTable thead th {
@@ -1350,8 +1350,8 @@
     margin-left: 20px;
   }
   .debug {
-    /* background-color: #f5ac24 !important; */
-    background-color: #f5ac2498 !important;
+    /* background-color: #916540 !important; */
+    background-color: #91654098 !important;
 
   }
   .debugg {
@@ -3163,7 +3163,7 @@
   
   .underline {
     border-bottom: 3px solid currentColor;
-    color: #f5ac24;
+    color: #916540;
   }
   
   .underline-thin {
@@ -3530,7 +3530,7 @@
   }
   
   .btn.back-btn {
-    border: 2px solid #f5ac24;
+    border: 2px solid #916540;
     background: transparent;
     color: #0e2353;
   }

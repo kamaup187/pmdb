@@ -10,7 +10,10 @@ from __future__ import print_function
 from oauth2client.service_account import ServiceAccountCredentials
 from httplib2 import Http
 import os
-from apiclient import discovery
+try:
+    from apiclient import discovery
+except:
+    from googleapiclient import discovery
     
 # from ast import Pass
 # from mimetypes import init

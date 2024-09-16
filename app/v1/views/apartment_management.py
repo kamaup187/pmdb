@@ -9795,6 +9795,12 @@ class KikuyuCouncilOfElders(Resource):
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("web.html",counties=counties))
 
+class KikuyuCouncilOfEldersJoin(Resource):
+    def get(self):
+        # return Response(render_template("kce_index.html"))
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("web_join.html",counties=counties))
+
 class KceHome(Resource):
     @login_required
     def get(self):

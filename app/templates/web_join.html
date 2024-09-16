@@ -106,6 +106,7 @@
 
               <li class="cta-button"><a class="signin" href="/kce/login" target="_blank">Log In</a></li>
               <li class="cta-button"><a href="/join/kce">Join us now</a></li>
+              <button id="join-us" class="d-none" data-toggle="modal" data-target="#signUpModal"></button>
             </ul>
 
             <a href="#" class="burger ml-auto site-menu-toggle js-menu-toggle d-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
@@ -987,6 +988,12 @@
     $(".site-mobile-menu-close").click();
   })
 </script> -->
+
+<script>
+  $(document).ready(function(){
+    $("#join-us").click();
+  })
+</script>
 
   </body>
   </html>

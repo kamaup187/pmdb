@@ -2697,17 +2697,22 @@ class CreateLocation(Resource):
         region_obj = LocationOp(location_name,description)
         region_obj.save()
 
+class FetchSubcounties(Resource):
+    def get(self):
+        county_code = request.args.get('countycode')
+        county_obj = CountyOp.fetch_county_by_code(county_code)
+        if county_obj:
+            return render_template('ajax_multivariable.html',items=county_obj.subcounties,placeholder="select county")
+
+class FetchWards(Resource):
+    def get(self):
+        subcounty_code = request.args.get('subcountycode')
+        subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
+        if subcounty_obj:
+            return render_template('ajax_multivariable.html',items=subcounty_obj.wards,placeholder="select ward")
+        
 class UploadCounties(Resource):
     def get(self):
-
-
-        # categories = CountyOp.fetch_all_counties()
-
-        # for p in categories:
-        #     CountyOp.delete(p)
-
-        # return "neiba"
-
 
         file_path = "main.xls"
 
@@ -2792,6 +2797,12 @@ class UploadCounties(Resource):
                         ward_obj.save()
                         print (f"message: Ward {wardname} added of Subcounty {ward_obj.subcounty} of County {ward_obj.subcounty.county}")
     
+
+
+        wards = WardOp.fetch_all_wards()
+
+        return f"Total wards : {len(wards)}"
+
 
 class RegisterOwner(Resource):
     """This class registers an owner."""
@@ -9781,7 +9792,8 @@ class GardenRestaurant(Resource):
 class KikuyuCouncilOfElders(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
-        return Response(render_template("web.html"))
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("web.html",counties=counties))
 
 class KceHome(Resource):
     @login_required

@@ -499,54 +499,38 @@
                           <div class="form-group row">
                             <div class="col-sm-6">
                               <label class="small mb-1" for="natid">National Id</label>
-    
                               <input class="form-control kodi-input" type="text" id="natid" name="natid" value="">
                             </div>
+
                             <div class="col-sm-6">
-                              <label class="small mb-1" for="addr1">City of residence</label>
-    
-                              <input class="form-control kodi-input" type="text" id="addr1" name="addr1" value="">
-                            </div>
-    
-                          </div>
+                              <label class="small mb-1" for="age_bracket">County</label>
+                              <select class="form-control kodi-input" id="select_county" name="age_bracket">
+                                <option disabled selected>Select county</option>
+                                {% for o in counties%}
+                                <option value="{{ o.code }}">{{ o.name }}</option>
+                                {% endfor %}
 
-
-
-
-
-
-
-                          <div class="form-group row"></div>
-                            <div class="col-sm-6">
-                              <label class="small mb-1" for="tel1">Country</label>
-    
-                              <input class="form-control kodi-input" type="text" id="tel1222" name="tel1222" value="">
-                            </div>
-                            <div class="col-sm-6">
-                              <label class="small mb-1" for="email">County</label>
-    
-                              <input class="form-control kodi-input" type="text" id="email" name="email" value="">
+                              </select>
                             </div>
     
                           </div>
 
                           <div class="form-group row">
                             <div class="col-sm-6">
-                              <label class="small mb-1" for="tel1">Sub county</label>
-    
-                              <input class="form-control kodi-input" type="text" id="tel111" name="tel111" value="">
+                              <label class="small mb-1" for="age_bracket">Subcounty</label>
+                              <select class="form-control kodi-input" id="select_subcounty" name="age_bracket">
+                                <option disabled selected>Select Sub county</option>
+                              </select>
                             </div>
-                            <div class="col-sm-6">
-                              <label class="small mb-1" for="email">Ward</label>
-    
-                              <input class="form-control kodi-input" type="text" id="email" name="email" value="">
-                            </div>
-    
-                          </div>
-
-
-
                           
+                            <div class="col-sm-6">
+                              <label class="small mb-1" for="gender">Ward</label>
+                              <select class="form-control kodi-input" id="select_ward" name="gender">
+                                <option disabled selected value="">Select Ward</option>
+
+                              </select>
+                            </div>
+                          </div>
 
                           <div class="form-group row">
                             <div class="col-sm-6">
@@ -955,6 +939,38 @@
 
     }
   });
+  })
+</script>
+
+<script>
+  $("#select_county").on("change", function(){
+    var county_code = $("#select_county").val();
+    $.ajax({
+      url: "/fetch/subcounties",
+      type: "get",
+      data: {
+        countycode: county_code
+      },
+      success: function (response) {
+        $("#select_subcounty").html(response);
+      }
+    });
+  })
+</script>
+
+<script>
+  $("#select_subcounty").on("change", function(){
+    var subcounty_code = $("#select_subsubcounty").val();
+    $.ajax({
+      url: "/fetch/wards",
+      type: "get",
+      data: {
+        subcountycode: subcounty_code
+      },
+      success: function (response) {
+        $("#select_ward").html(response);
+      }
+    });
   })
 </script>
 

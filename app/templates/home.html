@@ -41,6 +41,12 @@
         crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js"
         crossorigin="anonymous"></script>
+
+        <style>
+            .bg-warning{
+                background: #916540 !important;
+            }
+        </style>
 </head>
 
 <body class="nav-fixed {{sidebar}}">
@@ -248,15 +254,9 @@
                         <!-- Sidenav Heading (Custom)-->
                         <div class="sidenav-menu-heading pb-1 pt-2">MAIN MENU</div>
                         <!-- Sidenav Accordion (Pages)-->
-                        <a class="nav-link collapsed propbtn" href="javascript:void(0);" data-toggle="collapse"
-                            data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                            <div class="nav-link-icon"><i data-feather="slack"></i></div>
-                            Events
-                            <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
 
                         <!-- Sidenav Accordion (Applications)-->
-                        <a class="nav-link collapsed housebtn" href="javascript:void(0);" data-toggle="collapse"
+                        <a class="nav-link collapsed housebtnmayai" href="javascript:void(0);" data-toggle="collapse"
                             data-target="#collapseApps" aria-expanded="false" aria-controls="collapseApps">
                             <div class="nav-link-icon"><i data-feather="shopping-bag"></i></div>
                         Counties
@@ -415,12 +415,6 @@
                                     document.write(month + " " + date + "," + year)
                                 </script> 
 
-                                <span class="text-primary small" id="proponfocus">
-                                 >>
-                                <script>
-                                    document.write(localStorage.getItem('propvar'))
-                                </script> 
-                                </span>
                             </div>
                         </div>
                         <!-- <div class="input-group input-group-joined border-0 shadow" style="width: 16.5rem">
@@ -626,7 +620,7 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
-                                            <div class="small fw-bold text-success mb-1">Total sales</div>
+                                            <div class="small fw-bold text-success mb-1">Total signups</div>
                                             <div class="h5 fixloader2" id="collectionstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
                                             </div>
@@ -643,7 +637,7 @@
                     </div>
 
                     <!-- Example Charts for Dashboard Demo-->
-                    <div id="graph-area" class="row">
+                    <div id="graph-area" class="row d-none">
                         <!-- <div class="col-xl-6 mb-4">
                             <div class="card card-header-actions h-100">
                                 <div class="card-header">
@@ -670,7 +664,7 @@
                                 </div>
                             </div>
                         </div> -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 d-none">
                             <div class="card shadow mb-1 bg-white">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-2 text-center">
@@ -679,15 +673,15 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                 <div class="chart-are">
-                                    <p id="theInput" class="dispnone">{{billstring}}</p>
-                                    <p id="theInput2" class="dispnone">{{collectionstring}}</p>
+                                    <p id="theInput222" class="dispnone">{{billstring}}</p>
+                                    <p id="theInput222" class="dispnone">{{collectionstring}}</p>
                                     <!-- <canvas id="myAreaChart"></canvas> -->
                                     <canvas id="lineChart"></canvas>
                                 </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 d-none">
                             <div class="card shadow mb-1 bg-white">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-2 text-center">
@@ -696,7 +690,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                 <div class="chart-are">
-                                    <p id="theInput3" class="dispnone">{{billstring}}</p>
+                                    <p id="theInput3222" class="dispnone">{{billstring}}</p>
                                     <canvas id="barChart"></canvas>
                                 </div>
                                 </div>
@@ -927,7 +921,7 @@
                 </div>
                 <div class="modal-body">Ready to Leave?</div>
                 <div class="has-margin-bottom divbg">
-                    <a class="btn btn-danger" href="{{ url_for('api.userlogout') }}"> <i
+                    <a class="btn btn-danger" href="/kce/login"> <i
                             class="fas fa-sign-out-alt mr-2"></i>Logout</a>
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"><i
                             class="fas fa-smile mr-2"></i>Cancel</button>
@@ -1784,7 +1778,7 @@
         });
 
 
-        $(".repsbtnmayai").on('click',function(){
+        $(".repsbtnmayaii").on('click',function(){
             // $("#body-block").addClass("dispnone")
             // $("#preloader-btn").click();
             $("#barloader").removeClass("dispnone")

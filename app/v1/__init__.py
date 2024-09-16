@@ -86,6 +86,7 @@ api.add_resource(AssignRole,"/assign/role")
 api.add_resource(ModifyAccessRight,"/modify/access")
 
 api.add_resource(CreateLocation,"/add/location")
+api.add_resource(UploadCounties,"/upload/counties")
 api.add_resource(RegisterOwner,"/add/owner")
 api.add_resource(CreateApartment,"/add/apartment")
 api.add_resource(Bills,"/bills")

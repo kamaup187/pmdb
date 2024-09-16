@@ -758,6 +758,47 @@ class LocationOp(Location,Base):
     def fetch_all_locations():
         return Location.query.order_by(Location.id.asc()).all()
 
+class CountyOp(County,Base):
+    def __init__(self,code,name):
+        self.code = code
+        self.name = name
+
+    @staticmethod
+    def fetch_county_by_code(code):
+        return County.query.filter_by(code=code).first()
+
+    @staticmethod
+    def fetch_all_counties():
+        return County.query.order_by(County.name.asc()).all()
+    
+class SubcountyOp(Subcounty,Base):
+    def __init__(self,code,name,county_id):
+        self.code = code
+        self.name = name
+        self.county_id = county_id
+
+    @staticmethod
+    def fetch_subcounty_by_code(code):
+        return Subcounty.query.filter_by(code=code).first()
+
+    @staticmethod
+    def fetch_all_subcounties():
+        return Subcounty.query.order_by(County.name.asc()).all()
+    
+class WardOp(Ward,Base):
+    def __init__(self,code,name,subcounty_id):
+        self.code = code
+        self.name = name
+        self.subcounty_id = subcounty_id
+
+    @staticmethod
+    def fetch_ward_by_code(code):
+        return Ward.query.filter_by(code=code).first()
+
+    @staticmethod
+    def fetch_all_wards():
+        return Ward.query.order_by(Ward.name.asc()).all()
+
 class LandlordPaymentOp(LandlordPayment,Base):
     """class"""
     def __init__(self,arrears,amount,paid,balance,date,apartment_id):

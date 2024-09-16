@@ -2697,8 +2697,101 @@ class CreateLocation(Resource):
         region_obj = LocationOp(location_name,description)
         region_obj.save()
 
-        
+class UploadCounties(Resource):
+    def get(self):
 
+
+        # categories = CountyOp.fetch_all_counties()
+
+        # for p in categories:
+        #     CountyOp.delete(p)
+
+        # return "neiba"
+
+
+        file_path = "main.xls"
+
+        if file_path:
+            processed_data = local_upload_handler(file_path)
+        else:
+            return '<span class=text-danger>Select file first</span>'
+
+        rows,sheet = processed_data[0],processed_data[1]
+
+        data_format_error = False
+
+        if sheet:
+            if len(sheet.row_values(1)) != 6:
+                data_format_error = True
+        # try:
+        if data_format_error:
+            nonexistent_item = sheet.row_values(1)[1000000]
+
+        dict_array = []
+
+        for row in rows:
+            dict_obj = {
+            "countycode":sheet.row_values(row)[0],
+            "countyname":sheet.row_values(row)[1],
+            "subcountycode":sheet.row_values(row)[2],
+            "subcountyname":sheet.row_values(row)[3],
+            "wardcode":sheet.row_values(row)[4],
+            "wardname":sheet.row_values(row)[5],
+            }
+
+            dict_array.append(dict_obj)
+
+        print("LEN of DICT ARRAY: " + str(len(dict_array)))
+
+        count = 1
+
+        for item in dict_array:
+            print(f">>>>>>>>>>>>>>>>>>>>PROCESSING location {item['wardname']} of code {item['wardcode']}")
+            county_code = int(item["countycode"])
+            county_name = item["countyname"]
+            subcounty_code = int(item["subcountycode"])
+            subcounty_name = item["subcountyname"]
+            ward_code = int(item["wardcode"])
+            ward_name = item["wardname"]
+
+
+            try:
+                countyname = county_name.title()
+            except:
+                countyname = county_name
+
+            try:
+                subcountyname = subcounty_name.title()
+            except:
+                subcountyname = subcounty_name
+
+            try:
+                wardname = ward_name.title()
+            except:
+                wardname = wardname
+
+            county_obj = CountyOp.fetch_county_by_code(county_code)
+            if county_obj:
+                pass
+            else:
+                county_obj = CountyOp(county_code, countyname)
+                county_obj.save()
+            if county_obj:
+                subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
+                if subcounty_obj:
+                    pass
+                else:
+                    subcounty_obj = SubcountyOp(subcounty_code, subcountyname,county_obj.id)
+                    subcounty_obj.save()
+                if subcounty_obj:
+                    ward_obj = WardOp.fetch_ward_by_code(ward_code)
+                    if ward_obj:
+                        print (f"message: Ward {wardname} exists already of Subcounty {ward_obj.subcounty} of County {ward_obj.subcounty.county}")
+                    else:
+                        ward_obj = WardOp(ward_code, wardname, subcounty_obj.id)
+                        ward_obj.save()
+                        print (f"message: Ward {wardname} added of Subcounty {ward_obj.subcounty} of County {ward_obj.subcounty.county}")
+    
 
 class RegisterOwner(Resource):
     """This class registers an owner."""

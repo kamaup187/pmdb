@@ -823,6 +823,24 @@
 
   <script>
     $("#register").on('click', function () {
+
+      county_code = $("#select_county").val()
+      if (!county_code){
+        alert("Please select a county");
+        return false;
+      }
+
+        subcounty_code = $("#select_subcounty").val()
+        if (!subcounty_code){
+          alert("Please select a subcounty");
+          return false;
+        }
+        ward_code = $("#select_ward").val()
+        if (!ward_code){
+          alert("Please select a ward");
+          return false;
+        }
+
       $('.register').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
     $.ajax({
       url: "/kce/register",
@@ -842,6 +860,10 @@
 
         email2:$('#email2').val(),
         tel2 : $('#tel2').val(),
+
+        county_code : $("#select_county").val(),
+        subcounty_code : $("#select_subcounty").val(),
+        ward_code : $("#select_ward").val(),
 
         pass1 : $('#pass1').val()
       },

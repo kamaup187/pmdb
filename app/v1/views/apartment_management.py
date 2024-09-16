@@ -9849,6 +9849,7 @@ class KceRegister(Resource):
         phone = request.form.get('phone')
         email = None
         pass1 = request.form.get('pass')
+        ward_code = request.form.get('ward_code')
 
         company = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -9869,9 +9870,15 @@ class KceRegister(Resource):
         name = fname + " " + lname
         username = usercode + national_id
 
+        ward_obj = WardOp.fetch_ward_by_code(ward_code)
+
         try:
-            new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,None,company.id,1)
-            new_user.save()
+            if ward_obj:
+                new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,None,company.id,1)
+                new_user.save()
+                UserOp.update_user_ward(ward_obj.id)
+            else:
+                return "failed to register"
         except:
             return "failed to register"
 

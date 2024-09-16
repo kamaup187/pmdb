@@ -492,7 +492,11 @@ class UserOp(User,Base):
     def relate_house(user,house):
         user.houses.append(house)
         db.session.commit()
-    
+
+    def update_user_ward(self,ward_id):
+        self.ward_id = ward_id
+        db.session.commit()
+        
     def update_user(self,name=None,phone=None,national_id=None,email=None,password=None,user_group_id=None,company_id=None,modified_by=None):
         if name and name != "None":
             self.name = name

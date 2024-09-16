@@ -9845,13 +9845,13 @@ class KceRegister(Resource):
 
         fname = request.form.get('fname')
         lname = request.form.get('lname')
-        national_id = request.form.get('national_id')
-        phone = request.form.get('phone')
-        email = None
-        pass1 = request.form.get('pass')
+        national_id = request.form.get('natid')
+        phone = request.form.get('tel1')
+        email = request.form.get('email')
+        pass1 = request.form.get('pass1')
         ward_code = request.form.get('ward_code')
 
-        company = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
+        company = CompanyOp.fetch_company_by_name('Rentlib Company')
 
         usercode = usercode_generator()
         is_present  = UserOp.fetch_user_by_usercode(usercode)
@@ -9863,23 +9863,34 @@ class KceRegister(Resource):
 
         national_id_present = UserOp.fetch_user_by_national_id(national_id)
         if national_id_present:
+            print("id taken by ", national_id_present.name, "natid being ",national_id)
             return "id taken"
+        email_is_present = UserOp.fetch_user_by_email(email)
+        if email_is_present:
+            print("email taken")
+            return "email taken"
         phone_is_present = UserOp.fetch_user_by_phone(phone)
         if phone_is_present:
+            print("tel taken")
             return "tel taken"
         name = fname + " " + lname
         username = usercode + national_id
 
+
         ward_obj = WardOp.fetch_ward_by_code(ward_code)
+        print("warddddd code is ", ward_code, "object itself ",ward_obj, "company ", company)
 
         try:
             if ward_obj:
                 new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,None,company.id,1)
                 new_user.save()
-                UserOp.update_user_ward(ward_obj.id)
+                UserOp.update_user_ward(new_user,ward_obj.id)
+                print("User created succeessfuly")
             else:
+                print("no ward error")
                 return "failed to register"
-        except:
+        except Exception as e:
+            print("error",e)
             return "failed to register"
 
         return "success"

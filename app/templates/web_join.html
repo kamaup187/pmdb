@@ -890,6 +890,14 @@
           }, 5000);
           $('.register').html('Finish and submit');
 
+        }else if(response === "email taken"){
+          $("#feedback").removeClass("dispnone")
+          $("#feedback").html("<h6 class='text-danger'>Registration failed: Email address already in use</h6>");
+          setTimeout(function () {
+            $("#feedback").addClass("dispnone")
+          }, 5000);
+          $('.register').html('Finish and submit');
+
         }else if(response === "co taken"){
           $("#feedback").removeClass("dispnone")
           $("#feedback").html("<h6 class='text-danger'>Registration failed: Company name is not available</h6>");

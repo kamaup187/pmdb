@@ -299,3 +299,21 @@
         #     print("PROPLEMATIC BILL>>>>>",bill.apartment,bill.house,bill.total_bill,bill.paid_amount,"rent",bill.rent,"rent arrears",bill.rent_balance,"rentpaid",bill.rent_paid,"bal",bill.rent_due)
         #     MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
         #     MonthlyChargeOp.update_dues(bill,bill.rent,bill.water,bill.electricity,bill.garbage,bill.security,bill.maintenance,bill.penalty,bill.deposit,bill.agreement)
+
+
+import psycopg2
+
+try:
+    conn = psycopg2.connect(
+        dbname="maindb",
+        user="doadmin",
+        password="AVNS_mkXV0cjvPdXAeho00m7",
+        host="db-postgresql-nyc1-45362-may-28-backup-do-user-14457444-0.c.db.ondigitalocean.com",
+        port="25060"
+    )
+    print("Connection successful")
+except Exception as e:
+    print(f"Error: {e}")
+finally:
+    if conn:
+        conn.close()

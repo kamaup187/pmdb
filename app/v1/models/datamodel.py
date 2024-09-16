@@ -272,6 +272,47 @@ class Location(db.Model):
 
     def __repr__(self):
         return self.name
+    
+
+class County(db.Model):
+
+    __tablename__ = 'counties'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+    code = db.Column(db.Integer,unique=True)
+
+    subcounties = db.relationship('Subcounty', backref='county', cascade="all, delete-orphan", lazy=True)
+
+    def __repr__(self):
+        return self.name
+
+class Subcounty(db.Model):
+
+    __tablename__ = 'subcounties'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+    code = db.Column(db.Integer,unique=True)
+    county_id = db.Column(db.Integer, db.ForeignKey(County.id))
+
+    wards = db.relationship('Ward', backref='subcounty', cascade="all, delete-orphan", lazy=True)
+
+    def __repr__(self):
+        return self.name
+    
+class Ward(db.Model):
+
+    __tablename__ = 'wards'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(50))
+    code = db.Column(db.Integer,unique=True)
+    subcounty_id = db.Column(db.Integer, db.ForeignKey(Subcounty.id))
+
+    def __repr__(self):
+        return self.name
+
 
 class Apartment(db.Model):
     """db model class"""

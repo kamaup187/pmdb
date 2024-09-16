@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import *
 from flask_talisman import Talisman
+from flask_migrate import Migrate
 
 import jwt
 from flask_cors import CORS
@@ -25,6 +26,7 @@ from global_functions import *
 
 db = SQLAlchemy()
 mail = Mail()
+migrate = Migrate()
 # rq = RQ()
 
 
@@ -94,7 +96,8 @@ def create_app(*args):
     with app.app_context():
         # Initialize globals/extensions in app context
         # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL','HEROKU_POSTGRESQL_AQUA_URL')
-        db.init_app(app)    
+        db.init_app(app)
+        migrate.init_app(app, db)  
 
         login_manager = LoginManager()
         login_manager.login_view = 'api.userlogin'

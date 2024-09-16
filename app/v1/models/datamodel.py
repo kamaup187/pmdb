@@ -51,7 +51,7 @@ class Ward(db.Model):
     code = db.Column(db.Integer,unique=True)
     subcounty_id = db.Column(db.Integer, db.ForeignKey(Subcounty.id))
 
-    users = db.relationship('Users', backref='ward', cascade="all, delete-orphan", lazy=True)
+    users = db.relationship('User', backref='ward', cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
         return self.name

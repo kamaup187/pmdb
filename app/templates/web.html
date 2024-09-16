@@ -944,6 +944,8 @@
 
 <script>
   $("#select_county").on("change", function(){
+    $("#select_subcounty").html("<option disabled selected value> -- select subcounty -- </option>");
+    $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
     var county_code = $("#select_county").val();
     $.ajax({
       url: "/fetch/subcounties",
@@ -960,6 +962,7 @@
 
 <script>
   $("#select_subcounty").on("change", function(){
+    $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
     var subcounty_code = $("#select_subcounty").val();
     $.ajax({
       url: "/fetch/wards",

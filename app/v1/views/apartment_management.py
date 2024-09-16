@@ -2702,14 +2702,14 @@ class FetchSubcounties(Resource):
         county_code = request.args.get('countycode')
         county_obj = CountyOp.fetch_county_by_code(county_code)
         if county_obj:
-            return render_template('ajax_multivariable.html',items=county_obj.subcounties,placeholder="select county")
+            return render_template('ajax_multivariable_alt.html',items=county_obj.subcounties,placeholder="select county")
 
 class FetchWards(Resource):
     def get(self):
         subcounty_code = request.args.get('subcountycode')
         subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
         if subcounty_obj:
-            return render_template('ajax_multivariable.html',items=subcounty_obj.wards,placeholder="select ward")
+            return render_template('ajax_multivariable_alt.html',items=subcounty_obj.wards,placeholder="select ward")
         
 class UploadCounties(Resource):
     def get(self):

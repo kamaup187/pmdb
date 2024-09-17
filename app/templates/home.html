@@ -8,6 +8,8 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
+    <!-- <meta name="color-scheme" content="dark" /> -->
+
     <!-- <link rel="apple-touch-icon" sizes="180x180" href="../static/images/favico/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../static/images/favico/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../static/images/favico/favicon-16x16.png">
@@ -18,10 +20,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico/favicon-16x16.png">
     <link rel="manifest" href="../static/img/favico/site.webmanifest"> -->
 
-    <link rel="apple-touch-icon" sizes="180x180" href="../static/img/favico-r/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../static/img/favico-r/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico-r/favicon-16x16.png">
-    <link rel="manifest" href="../static/img/favico-r/site.webmanifest">
+    <link href="../static/kce/img/favicon.ico" rel="icon">
+
 
     <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
@@ -61,10 +61,9 @@
         <!-- * * Tip * * You can use text or an image for your navbar brand.-->
         <!-- * * * * * * When using an image, we recommend the SVG format.-->
         <!-- * * * * * * Dimensions: Maximum height: 32px, maximum width: 240px-->
-        <a class="" href="{{ url_for('api.index') }}">
-            <!-- <img id="logol" class="mobile-malaysian" src={{logopath}} alt="Rever Logo">
-            <img id="logos" class="desktop-malaysian ms-4" src={{mobilelogopath}} alt="RV"> -->
-            Kikuyu Council of Elders
+        <a class="" href="/kce/dashboard">
+            <img id="logol" class="mobile-malaysian" src="../static/kce/img/elders.png" width="65" height="65" alt="" alt="Kikuyu Elders Council">
+            <img id="logos" class="desktop-malaysian ms-4" src="../static/kce/img/elders.png" width="60" height="60" alt="" alt="RV">
         </a>
         <!-- Navbar Search Input-->
         <!-- * * Note: * * Visible only on and above the lg breakpoint-->
@@ -350,53 +349,16 @@
                         <div class="x-large xbutton"><i class="fas fa-times"></i></div>
                     </button>
                 </div>
-                <div class="center-btn">Select Project</div>
-                <div class="row">
-                    <div class="col-xl-12 col-md-12 mb-1">
-                        <div class="card shadow h-0 py-0">
-                            <div class="card-body bg-white titanic-iceberg-top">
-                                <div class="row no-gutters align-items-cente divbg">
-
-
-
-                                    {% if props %}
-
-                                    {% for prop in props%}
-
-                                    <div class="image-wrap">
-                                        <button id="{{prop.id}}"
-                                            class="btn btn-outline-success  borderles mb-2 fixed-width-prop no-margin divcol">
-                                            <img class="img-prop text-xs" src="{{ prop.image_url }}"
-                                                alt="--no image--" />
-                                            <!-- <span class="small mobile-malaysia text-ss">{{prop.name}}</span> -->
-                                            <span class="small desktop-malaysia">
-                                                <h6 class="text-black ln-14 font-weight-bold titanic-iceberg sss">
-                                                    {{prop.name}}</h6>
-                                            </span>
-                                            <!-- <span class="small desktop-malaysian"><h6 class="small titanic-iceberg sss">Request repairs</h6></span> -->
-                                        </button>
-                                    </div>
-
-                                    {% endfor %}
-
-                                    {% endif %}
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <main id="body-block" class="">
                 <span id="module" class="dispnone"></span>
 
                 <!-- Main page content-->
-                <div class="container-xl px-4 mt-5">
+                <div class="container-xl px-4 mt-2">
                     <!-- Custom page header alternative example-->
-                    <div class="d-flex justify-content-between align-items-sm-center flex-column flex-sm-row mb-4">
-                        <div class="me-4 mb-3 mb-sm-0">
-                            <h1 class="mb-0">Dash board</h1>
+                    <div class="d-flex justify-content-between align-items-sm-center flex-column flex-sm-row mb-1">
+                        <div class="me-4 mb-1 mb-sm-0">
+                            <h1 class="mb-0">Dashboard</h1>
                             <div class="small">
                                 <span class="fw-500 text-primary">
                                     <script>
@@ -417,29 +379,8 @@
 
                             </div>
                         </div>
-                        <!-- <div class="input-group input-group-joined border-0 shadow" style="width: 16.5rem">
-                            <span class="input-group-text"><i data-feather="calendar"></i></span>
-                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
-                                placeholder="Select date range..." />
-                        </div> -->
 
-
-                        <div class="divjust-end-lg">
-                            
-                            <span class="input-group input-group-joined border-0 shadow dashboard-input-alt mb-3 mb-lg-0">
-                                <span class="input-group-text"><i data-feather="home"></i></span>
-
-                                <!-- <input class="form-control ps-0 pointer" id="targetprop"
-                                    placeholder="Select apartment..." /> -->
-
-                                <select name="property" class="form-control ps-0" id ="select_prop">
-                                    <option disabled selected value> -- Select region -- </option>
-                                    {% for o in props%}
-                                    <option value="{{ o }}">{{ o }}</option>
-                                    {% endfor %}
-                                </select>
-                            </span>
-                            
+                        <div class="divjust-end-lg mobile-malaysian">                           
                             <span class="ms-lg-4 input-group input-group-joined border-0 shadow dashboard-input">
                                 <span class="input-group-text"><i data-feather="calendar"></i></span>
                                 <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
@@ -471,16 +412,16 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small">Regions</div>
+                                            <div class="text-white-75 small">Total members</div>
                                             <div class="text-lg fw-bold fixloader" id="propstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="shopping-bag"></i>
+                                        <i class="feather-xl text-white-50" data-feather="users"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link {{pbtn}}" href="#!">View</a>
+                                    <a class="text-primary stretched-link" href="#!">View</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -490,18 +431,17 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small d-inline">Counties</div>
-                                            <div class="text-white-75 small d-inline ms-4">Sales</div>
+                                            <div class="text-white-75 small d-inline">New members</div>
 
                                             <div class="text-lg fw-bold fixloader" id="housestats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="shopping-cart"></i>
+                                        <i class="feather-xl text-white-50" data-feather="user-plus"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link housebtn" href="#!">View</a>
+                                    <a class="text-primary stretched-link housebtqqqqqn" href="#!">View</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -512,19 +452,18 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
                                             
-                                                <div class="text-white-75 small d-inline">Sub-counties</div>
-                                                <div class="text-white-75 small d-inline ms-4">Wards</div>
+                                                <div class="text-white-75 small d-inline">Upcoming events</div>
                                        
 
                                             <div class="text-lg fw-bold fixloader" id="clientstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="truck"></i>
+                                        <i class="feather-xl text-white-50" data-feather="calendar"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link tenantbtn" href="#!">View</a>
+                                    <a class="text-primary stretched-link tenantbtaan" href="#!">View</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
@@ -534,198 +473,26 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-3">
-                                            <div class="text-white-75 small d-inline">Elders</div>
-                                            <div class="text-white-75 small d-inline ms-4">Youth</div>
-
+                                            <div class="text-white-75 small d-inline">Wards represented</div>
 
                                             <div class="text-lg fw-bold fixloader" id="unitstats">
                                                 <span class="spinner-border spinner-border-sm mr-2 text-white" role="status" aria-hidden="true"></span>
                                             </div>
                                         </div>
-                                        <i class="feather-xl text-white-50" data-feather="trending-down"></i>
+                                        <i class="feather-xl text-white-50" data-feather="map-pin"></i>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex align-items-center justify-content-between small pt-1 pb-1 bg-white">
-                                    <a class="text-primary stretched-link housebtn" href="#!">Open</a>
+                                    <a class="text-primary stretched-link housebtnqqqq" href="#!">Open</a>
                                     <div class="text-primary"><i class="fas fa-angle-right"></i></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row {{toggle}}">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <!-- Dashboard info widget 1-->
-                            <div class="card border-start-lg border-start-primary h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <div class="small fw-bold text-primary mb-1">Events</div>
-                                            <div class="h5 fixloader2" id="expectedstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-                                            </div>
-                                            <div class="text-xs fw-bold text-dark d-inline-flex align-items-center">
-                                                <i class="me-1" data-feather="activity"></i>
-                                                0%
-                                            </div>
-                                        </div>
-                                        <div class="ms-2"><i class="fas fa-dollar-sign fa-2x text-gray-200"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <!-- Dashboard info widget 2-->
-                            <div class="card border-start-lg border-start-success h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <div class="small fw-bold text-success mb-1">Planned meetings</div>
-                                            <div class="h5 fixloader2" id="paidstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-                                            </div>
-                                            <div class="text-xs fw-bold text-success d-inline-flex align-items-center">
-                                                <i class="me-1" data-feather="trending-up"></i>
-                                                0%
-                                            </div>
-                                        </div>
-                                        <div class="ms-2"><i class="fas fa-shopping-cart fa-2x text-gray-200"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <!-- Dashboard info widget 3-->
-                            <div class="card border-start-lg border-start-danger h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <div class="small fw-bold text-danger mb-1">Conventions</div>
-                                            <div class="h5 fixloader2" id="balancestats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-                                            </div>
-                                            <div class="text-xs fw-bold text-kiota d-inline-flex align-items-center">
-                                                <i class="me-1" data-feather="trending-down"></i>
-                                                0%
-                                            </div>
-                                        </div>
-                                        <div class="ms-2"><i class="fas fa-tag fa-2x text-gray-200"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <!-- Dashboard info widget 4-->
-                            <div class="card border-start-lg border-start-success h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <div class="small fw-bold text-success mb-1">Total signups</div>
-                                            <div class="h5 fixloader2" id="collectionstats">
-                                                <span class="spinner-border spinner-border-sm mr-2 text-kodi-alt" role="status" aria-hidden="true"></span>
-                                            </div>
-                                            <div class="text-xs fw-bold text-success d-inline-flex align-items-center">
-                                                <i class="me-1" data-feather="dollar"></i>
-                                                0%
-                                            </div>
-                                        </div>
-                                        <div class="ms-2"><i class="fas fa-percentage fa-2x text-gray-200"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Example Charts for Dashboard Demo-->
-                    <div id="graph-area" class="row d-none">
-                        <!-- <div class="col-xl-6 mb-4">
-                            <div class="card card-header-actions h-100">
-                                <div class="card-header">
-                                    Monthly expenditures
-                                    <div class="dropdown no-caret">
-                                        <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                            id="areaChartDropdownExample" type="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                data-feather="more-vertical"></i></button>
-                                        <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                            aria-labelledby="areaChartDropdownExample">
-                                            <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                            <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                            <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                            <a class="dropdown-item" href="#!">This Month</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#!">Custom Range</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-area"><canvas id="myAreaChart" width="100%" height="30"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <div class="col-lg-6 d-none">
-                            <div class="card shadow mb-1 bg-white">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-2 text-center">
-                                    <span class="spinner-border spinner-border-sm mr-2 text-primary" role="status" aria-hidden="true"></span>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                <div class="chart-are">
-                                    <p id="theInput222" class="dispnone">{{billstring}}</p>
-                                    <p id="theInput222" class="dispnone">{{collectionstring}}</p>
-                                    <!-- <canvas id="myAreaChart"></canvas> -->
-                                    <canvas id="lineChart"></canvas>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 d-none">
-                            <div class="card shadow mb-1 bg-white">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-2 text-center">
-                                    <span class="spinner-border spinner-border-sm mr-2 text-primary" role="status" aria-hidden="true"></span>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                <div class="chart-are">
-                                    <p id="theInput3222" class="dispnone">{{billstring}}</p>
-                                    <canvas id="barChart"></canvas>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-xl-6 mb-4">
-                            <div class="card card-header-actions h-100">
-                                <div class="card-header">
-                                    Monthly income
-                                    <div class="dropdown no-caret">
-                                        <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                            id="areaChartDropdownExample" type="button" data-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                data-feather="more-vertical"></i></button>
-                                        <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                            aria-labelledby="areaChartDropdownExample">
-                                            <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                            <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                            <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                            <a class="dropdown-item" href="#!">This Month</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#!">Custom Range</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-bar"><canvas id="myBarChart" width="100%" height="30"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                    </div>
-
-                    <div class="row dispnone">
-                        <div class="col-xxl-8">
+                    <div class="row">
+                        <div class="col-12">
                             <!-- Tabbed dashboard card example-->
                             <div class="card mb-4">
                                 <div class="card-header border-bottom">
@@ -733,7 +500,7 @@
                                     <ul class="nav nav-tabs card-header-tabs" id="dashboardNav" role="tablist">
                                         <li class="nav-item me-1"><a class="nav-link active" id="overview-pill"
                                                 href="#overview" data-toggle="tab" role="tab"
-                                                aria-controls="overview" aria-selected="true">Overview</a></li>
+                                                aria-controls="overview" aria-selected="true">Members</a></li>
                                         <li class="nav-item"><a class="nav-link" id="activities-pill" href="#activities"
                                                 data-toggle="tab" role="tab" aria-controls="activities"
                                                 aria-selected="false">Activities</a></li>
@@ -744,8 +511,50 @@
                                         <!-- Dashboard Tab Pane 1-->
                                         <div class="tab-pane fade show active" id="overview" role="tabpanel"
                                             aria-labelledby="overview-pill">
-                                            <div class="chart-area mb-4 mb-lg-0" style="height: 20rem"><canvas
-                                                    id="myAreaChart2" width="100%" height="30"></canvas></div>
+                                            <!-- <div class="chart-area mb-4 mb-lg-0" style="height: 20rem"><canvas
+                                                    id="myAreaChart2" width="100%" height="30"></canvas></div> -->
+
+
+                                                    <div id="props" class="table-responsive">
+                                                        <table id="tenantPaymentData" class="table shadow mb-1" width="100%" cellspacing="0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="text-black font-weight-bold pl-0">MemberNo</th>
+                                                                    <th class="text-black font-weight-bold">Name</th>
+                                                                    <th class="text-black font-weight-bold">Country</th>
+                                            
+                                                                    <th class="text-black font-weight-bold ">County</th>
+                                                                    <th class="text-black font-weight-bold ">Subcounty</th>
+                                                                    <th class="text-black font-weight-bold ">Ward</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for item in items%}
+                                                                <tr>
+                                            
+                                            
+                                                                    <td class="data-cell">
+                                                                        <div>
+                                                                            <span id="{{item['id']}}" type="button" class="btn btn-sm text-primary text-left no-wrap">{{item['name']}}</span>
+                                                                        </div>
+                                                                    </td>
+                                                        
+                                                                    <td class="data-cell">{{ item['houses'] }}</td>
+                                                                    <td class="data-cell">{{ item['ptenants'] }}</td> 
+                                            
+                                                                    <td class="data-cell">{{ item['available'] }}</td>
+                                                                    <td class="data-cell">{{ item['booked'] }}</td>
+                                                                    <td class="data-cell">{{ item['sold'] }}</td>
+                                            
+                                                        
+                                                                </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                      </div>
+
+
+
                                         </div>
                                         <!-- Dashboard Tab Pane 2-->
                                         <div class="tab-pane fade" id="activities" role="tabpanel"
@@ -767,132 +576,32 @@
                                                 </tfoot>
                                                 <tbody>
                                                     <tr>
-                                                        <td>01/13/20</td>
+                                                        <td>01/13</td>
                                                         <td>
-                                                            <i class="me-2 text-green" data-feather="zap"></i>
-                                                            Server online
+                                                            <i class="me-2 text-green" data-feather="user-plus"></i>
+                                                            New member registered
                                                         </td>
                                                         <td>1:21 AM</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>01/13/20</td>
+                                                        <td>01/13</td>
                                                         <td>
-                                                            <i class="me-2 text-red" data-feather="zap-off"></i>
-                                                            Server restarted
+                                                            <i class="me-2 text-red" data-feather="calendar"></i>
+                                                            Event added
                                                         </td>
                                                         <td>1:00 AM</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>01/12/20</td>
+                                                        <td>01/12</td>
                                                         <td>
                                                             <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
+                                                                data-feather="star"></i>
+                                                            Upcoming meeting
                                                             <a href="#!">1126550</a>
                                                         </td>
                                                         <td>5:45 AM</td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>01/12/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-blue" data-feather="user"></i>
-                                                            Valerie Luna submitted
-                                                            <a href="#!">quarter four report</a>
-                                                        </td>
-                                                        <td>4:23 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/12/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-yellow" data-feather="database"></i>
-                                                            Database backup created
-                                                        </td>
-                                                        <td>3:51 AM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/12/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
-                                                            <a href="#!">1126549</a>
-                                                        </td>
-                                                        <td>1:22 AM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/11/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-blue" data-feather="user-plus"></i>
-                                                            New user created:
-                                                            <a href="#!">Sam Malone</a>
-                                                        </td>
-                                                        <td>4:18 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/11/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
-                                                            <a href="#!">1126548</a>
-                                                        </td>
-                                                        <td>4:02 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/11/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
-                                                            <a href="#!">1126547</a>
-                                                        </td>
-                                                        <td>3:47 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/11/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-green" data-feather="zap"></i>
-                                                            Server online
-                                                        </td>
-                                                        <td>1:19 AM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/11/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-red" data-feather="zap-off"></i>
-                                                            Server restarted
-                                                        </td>
-                                                        <td>1:00 AM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/10/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
-                                                            <a href="#!">1126547</a>
-                                                        </td>
-                                                        <td>5:31 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/10/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-purple"
-                                                                data-feather="shopping-cart"></i>
-                                                            New order placed! Order #
-                                                            <a href="#!">1126546</a>
-                                                        </td>
-                                                        <td>12:13 PM</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>01/10/20</td>
-                                                        <td>
-                                                            <i class="me-2 text-blue" data-feather="user"></i>
-                                                            Diane Chambers submitted
-                                                            <a href="#!">quarter four report</a>
-                                                        </td>
-                                                        <td>10:56 AM</td>
-                                                    </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1434,7 +1143,7 @@
                     prop: localStorage.getItem('propvar')
                   },
             success: function(data) {
-                $('#propstats').text(data);
+                $('#propstats').text(24);
   
             },
             complete:function(data) {
@@ -1451,7 +1160,7 @@
                     prop: localStorage.getItem('propvar')
                   },
             success: function(data) {
-                $('#housestats').html(data);
+                $('#housestats').html(3);
   
             },
             complete:function(data) {
@@ -1469,7 +1178,7 @@
                     target:"unit status"
                   },
             success: function(data) {
-                $('#unitstats').html(data);
+                $('#unitstats').html(12);
   
             },
             complete:function(data) {
@@ -1487,7 +1196,7 @@
                     target:"client status"
                   },
             success: function(data) {
-                $('#clientstats').html(data);
+                $('#clientstats').html(2);
   
             },
             complete:function(data) {

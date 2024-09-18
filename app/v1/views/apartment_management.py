@@ -1292,9 +1292,14 @@ class Index(Resource):
                 cpw = r_cpw
                 cpwfavi = r_cpwfavi
 
-            if current_user.company_user_group.name == "Sales":
+            try:
+
+                if current_user.company_user_group.name == "Sales":
+                    sidebar = "sidebar-toggled sidenav-toggled"
+                    toggle= "dispnone"
+            except:
                 sidebar = "sidebar-toggled sidenav-toggled"
-                toggle= "dispnone"
+                toggle = "dispnone"
 
             else:
                 sidebar = ""

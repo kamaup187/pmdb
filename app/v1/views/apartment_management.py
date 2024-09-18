@@ -1341,7 +1341,7 @@ class Index(Resource):
                 previousbillingmonth = get_str_month(get_next_month(company.billing_period.month)),
                 props=apartment_list,
                 propids=propids,
-                group=current_user.company_user_group.name,
+                group=current_user.company_user_group.name if current_user.company_user_group.name else "",
                 logopath=logo(current_user.company)[0],
                 mobilelogopath=logo(current_user.company)[1],
                 name=current_user.name,

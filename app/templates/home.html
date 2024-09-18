@@ -533,18 +533,14 @@
                                                                 <tr>
                                             
                                             
-                                                                    <td class="data-cell">
-                                                                        <div>
-                                                                            <span id="{{item['id']}}" type="button" class="btn btn-sm text-primary text-left no-wrap">{{item['name']}}</span>
-                                                                        </div>
-                                                                    </td>
+                                                                    <td class="data-cell">{{ item['id'] }}</td>
                                                         
-                                                                    <td class="data-cell">{{ item['houses'] }}</td>
-                                                                    <td class="data-cell">{{ item['ptenants'] }}</td> 
-                                            
-                                                                    <td class="data-cell">{{ item['available'] }}</td>
-                                                                    <td class="data-cell">{{ item['booked'] }}</td>
-                                                                    <td class="data-cell">{{ item['sold'] }}</td>
+                                                                    <td class="data-cell">{{ item['name']}}</td>
+                                                                    
+                                                                    <td class="data-cell">Kenya</td>
+                                                                    <td class="data-cell">{{ item['ward']['subcounty']['county'] }}</td> 
+                                                                    <td class="data-cell">{{ item['ward']['subcounty'] }}</td>
+                                                                    <td class="data-cell">{{ item['ward'] }}</td>                                                                    
                                             
                                                         
                                                                 </tr>

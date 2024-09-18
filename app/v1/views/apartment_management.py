@@ -2755,6 +2755,17 @@ class UploadCounties(Resource):
 
         count = 1
 
+        counties = CountyOp.fetch_all_counties()
+        for county in counties:
+            CountyOp.delete(county)
+        subcounties = SubcountyOp.fetch_all_subcounties()
+        for subcounty in subcounties:
+            SubcountyOp.delete(subcounty)
+        wards = WardOp.fetch_all_wards()
+        for ward in wards:
+            WardOp.delete(ward)
+
+
         for item in dict_array:
             print(f">>>>>>>>>>>>>>>>>>>>PROCESSING location {item['wardname']} of code {item['wardcode']}")
             county_code = int(item["countycode"])
@@ -9811,7 +9822,9 @@ class KceHome(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
         # return Response(render_template("home.html"))
-        return Response(render_template("home.html",co="set"))
+        c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+        users = c_data.users
+        return Response(render_template("home.html",co="set",items=users))
 
 
 class KceLogin(Resource):

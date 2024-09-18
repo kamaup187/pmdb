@@ -2755,15 +2755,15 @@ class UploadCounties(Resource):
 
         count = 1
 
-        counties = CountyOp.fetch_all_counties()
-        for county in counties:
-            CountyOp.delete(county)
-        subcounties = SubcountyOp.fetch_all_subcounties()
-        for subcounty in subcounties:
-            SubcountyOp.delete(subcounty)
-        wards = WardOp.fetch_all_wards()
-        for ward in wards:
-            WardOp.delete(ward)
+        # counties = CountyOp.fetch_all_counties()
+        # for county in counties:
+        #     CountyOp.delete(county)
+        # subcounties = SubcountyOp.fetch_all_subcounties()
+        # for subcounty in subcounties:
+        #     SubcountyOp.delete(subcounty)
+        # wards = WardOp.fetch_all_wards()
+        # for ward in wards:
+        #     WardOp.delete(ward)
 
 
         for item in dict_array:

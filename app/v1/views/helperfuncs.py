@@ -486,11 +486,15 @@ def erp(user):
     
 def erp_index(user):
     allowed_categories = ["Director Rooms", "Manager Rooms"]
-    if user.company_user_group.name in allowed_categories:
-        return ["agentindex4.html",""]
-    elif user.company_user_group.name == 'Reception Rooms':
-        return ["agentindex4.html","reception"]
-    else:
+    try:
+        if user.company_user_group.name in allowed_categories:
+            return ["agentindex4.html",""]
+        elif user.company_user_group.name == 'Reception Rooms':
+            return ["agentindex4.html","reception"]
+        else:
+            return ["agentindex.html",""]
+    except:
+        print("Error in erp_index")
         return ["agentindex.html",""]
 
 def mbogi():

@@ -787,7 +787,7 @@ class SubcountyOp(Subcounty,Base):
 
     @staticmethod
     def fetch_all_subcounties():
-        return Subcounty.query.order_by(County.name.asc()).all()
+        return Subcounty.query.order_by(Subcounty.name.asc()).all()
     
 class WardOp(Ward,Base):
     def __init__(self,code,name,subcounty_id):

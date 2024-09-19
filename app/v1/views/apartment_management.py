@@ -9824,7 +9824,8 @@ class KceHome(Resource):
         # return Response(render_template("home.html"))
         c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
         users = c_data.users
-        return Response(render_template("home.html",co="set",items=users))
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("home.html",co="set",counties=counties,items=users))
 
 
 class KceLogin(Resource):

@@ -511,6 +511,43 @@
                                         <!-- Dashboard Tab Pane 1-->
                                         <div class="tab-pane fade show active" id="overview" role="tabpanel"
                                             aria-labelledby="overview-pill">
+
+
+                                            <div>
+                                              <div class="form-group row">
+                                                <div class="col-sm-3">
+                                                  <label class="small mb-1" for="gender">Country</label>
+                                                  <select class="form-control kodi-input" id="country" name="county">
+                                                    <option selected value="Kenya">Kenya</option>
+                                                  </select>
+                                                </div>
+                                              <div class="col-sm-3">
+                                                <label class="small mb-1" for="age_bracket">County</label>
+                                                <select class="form-control kodi-input" id="select_county" name="age_bracket">
+                                                  <option disabled selected>Select county</option>
+                                                  {% for o in counties%}
+                                                  <option value="{{ o.code }}">{{ o.name }}</option>
+                                                  {% endfor %}
+                                                </select>
+                                              </div>
+                                              <div class="col-sm-3">
+                                                <label class="small mb-1" for="age_bracket">Subcounty</label>
+                                                <select class="form-control kodi-input" id="select_subcounty" name="age_bracket">
+                                                  <option disabled selected>Select Sub county</option>
+                                                </select>
+                                              </div>
+                                            
+                                              <div class="col-sm-3">
+                                                <label class="small mb-1" for="gender">Ward</label>
+                                                <select class="form-control kodi-input" id="select_ward" name="gender">
+                                                  <option disabled selected value="">Select Ward</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div class="mt-2">
+                                              <button type="button" class="btn btn-primary btn-sm">View report</button>
+                                            </div>
+                                            </div>
                                             <!-- <div class="chart-area mb-4 mb-lg-0" style="height: 20rem"><canvas
                                                     id="myAreaChart2" width="100%" height="30"></canvas></div> -->
 
@@ -1572,6 +1609,41 @@
         });
     });
   </script>
+
+<script>
+  $("#select_county").on("change", function(){
+    $("#select_subcounty").html("<option disabled selected value> -- select subcounty -- </option>");
+    $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
+    var county_code = $("#select_county").val();
+    $.ajax({
+      url: "/fetch/subcounties",
+      type: "get",
+      data: {
+        countycode: county_code
+      },
+      success: function (response) {
+        $("#select_subcounty").html(response);
+      }
+    });
+  })
+</script>
+
+<script>
+  $("#select_subcounty").on("change", function(){
+    $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
+    var subcounty_code = $("#select_subcounty").val();
+    $.ajax({
+      url: "/fetch/wards",
+      type: "get",
+      data: {
+        subcountycode: subcounty_code
+      },
+      success: function (response) {
+        $("#select_ward").html(response);
+      }
+    });
+  })
+</script>
 
 <!-- <script>
         url = "{{ url_for('api.allproperties') }}"

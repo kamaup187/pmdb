@@ -9824,6 +9824,8 @@ class KceHome(Resource):
         # return Response(render_template("home.html"))
         c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
         users = c_data.users
+        for user in users:
+            user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("home.html",co="set",counties=counties,items=users))
 
@@ -9857,6 +9859,7 @@ class KceReport(Resource):
             
             for user in users:
                 if user.ward.subcounty.county.code == ajax_county_code and user.ward.subcounty.code == ajax_subcounty_code and user.ward.code == ajax_ward_code:
+                    user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
                     items.append(user)
 
             return Response(render_template(

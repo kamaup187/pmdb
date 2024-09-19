@@ -9836,9 +9836,14 @@ class KceReport(Resource):
         subcounty_code = request.args.get("subcounty_code")
         ward_code = request.args.get("ward_code")
 
-        ajax_county_code = int(request.args.get("ajax_county_code"))
-        ajax_subcounty_code = int(request.args.get("ajax_subcounty_code"))
-        ajax_ward_code = int(request.args.get("ajax_ward_code"))
+        try:
+            ajax_county_code = int(request.args.get("ajax_county_code"))
+            ajax_subcounty_code = int(request.args.get("ajax_subcounty_code"))
+            ajax_ward_code = int(request.args.get("ajax_ward_code"))
+        except:
+            ajax_county_code = None
+            ajax_subcounty_code = None
+            ajax_ward_code = None
 
         if not ajax_ward_code:
             counties = CountyOp.fetch_all_counties()

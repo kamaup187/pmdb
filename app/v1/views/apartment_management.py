@@ -9830,8 +9830,36 @@ class KceHome(Resource):
 class KceReport(Resource):
     @login_required
     def get(self):
-        counties = CountyOp.fetch_all_counties()
-        return Response(render_template("kce_report.html",counties=counties))
+
+
+        county_code = request.args.get("county_code")
+        subcounty_code = request.args.get("subcounty_code")
+        ward_code = request.args.get("ward_code")
+
+        ajax_county_code = int(request.args.get("ajax_county_code"))
+        ajax_subcounty_code = int(request.args.get("ajax_subcounty_code"))
+        ajax_ward_code = int(request.args.get("ajax_ward_code"))
+
+        if not ajax_ward_code:
+            counties = CountyOp.fetch_all_counties()
+            report_url = f"/api/reports?ajax_county_code={county_code}&ajax_subcounty_code={subcounty_code}&ajax_ward_code={ward_code}"
+            print("report urlllll", report_url)
+            return Response(render_template("kce_report.html",counties=counties,report_url=report_url))
+        else:
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            items = []
+            
+            for user in users:
+                if user.ward.subcounty.county.code == ajax_county_code and user.ward.subcounty.code == ajax_subcounty_code and user.ward.code == ajax_ward_code:
+                    items.append(user)
+
+            return Response(render_template(
+                'ajax_kce_report.html',
+                items=items,
+                paging="portrait",
+                reportdate = (datetime.datetime.now()+ relativedelta(hours=3)).strftime("%d/%m/%Y"),
+                name=current_user.name))
 
 
 class KceLogin(Resource):

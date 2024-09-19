@@ -1,6 +1,6 @@
 
 
-<span id="urlpattern" class="dispnone">/delivery/statement</span>
+<span id="urlpattern" class="dispnone">/member/statement</span>
 <span id="filename" class="dispnone">member report.pdf</span>
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
   <div class="col-lg-12 noprint text-uppercase">
@@ -16,7 +16,7 @@
           <div class="center-btn">
             <div class="mb-1 text-black">
               <div class="">
-                <img class="" src="../static/kce/img/elders.png" alt="" />
+                <img class="" src="../static/kce/img/elders.png" width="60" height="60" alt="" />
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@
 
           <div class="center-btn mt-2 overline underline malibu-card-theme">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">DELIVERY REPORT {{timeline | safe}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">MEMBER REPORT</span></span>
           </div>
 
           <!-- <div class="center-btn mb-4 mt-4">
@@ -49,70 +49,37 @@
                     
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead class="custom-header-alt small">
+                <thead>
                     <tr>
-                      <th class="text-black">DATE</th>
-                      <th class="text-black">TYPE</th>
-                      <th class="text-black">FROM</th>
-                      <th class="text-black">TO</th>
-                      <th class="text-black">POSTED</th>
-                      <th class="text-black">DELIVERED</th>
-                      <th class="text-black">TIME</th>
-                      <th class="text-black">RECIPIENT</th>
-                      <th class="text-black">COST</th>
-                      <th class="text-black">RIDER</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for item in bills%}
-                    <tr>
-                      <td class="data-cell">{{ item['date'] }}</td>
-                      <td class="data-cell">{{ item['type'] }}</td>
-                      <td class="data-cell">{{ item['from'] }}</td>
-                      <td class="data-cell">{{ item['to'] }}</td>
-                      <td class="data-cell">{{ item['posted'] }}</td>
-                      <td class="data-cell">{{ item['delivered'] }}</td>
-                      <td class="data-cell">{{ item['duration'] }}</td>
-                      <td class="data-cell">{{ item['client'] }}</td>
-                      <td class="data-cell">{{ item['cost'] }}</td>
-                      <td class="data-cell">{{ item['rider'] }}</td>
-                    </tr>
-                  {% endfor %}
+                        <th class="text-black font-weight-bold pl-0">MemberNo</th>
+                        <th class="text-black font-weight-bold">Name</th>
+                        <th class="text-black font-weight-bold">Country</th>
 
-                  </tbody>
+                        <th class="text-black font-weight-bold ">County</th>
+                        <th class="text-black font-weight-bold ">Subcounty</th>
+                        <th class="text-black font-weight-bold ">Ward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items%}
+                    <tr>
 
-                  <tfoot>
-                    <tr>
-                      <th colspan="10" class="bolden text-black">Summary</th>
-    
+
+                        <td class="data-cell">{{ item['id'] }}</td>
+            
+                        <td class="data-cell">{{ item['name']}}</td>
+                        
+                        <td class="data-cell">Kenya</td>
+                        <td class="data-cell">{{ item['ward']['subcounty']['county'] }}</td> 
+                        <td class="data-cell">{{ item['ward']['subcounty'] }}</td>
+                        <td class="data-cell">{{ item['ward'] }}</td>                                                                    
+
+            
                     </tr>
-    
-                    <tr>
-                      <th class="bolden text-black">Total Deliveries</th>
-                      <th class="bolden text-black">{{totaldeliveries}}</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                    </tr>
-    
-                    <tr>
-                      <th class="bolden text-black">Invoice amounts</th>
-                      <th class="bolden text-black">{{invoiceamounts}}</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                      <th class=" bolden text-white">-</th>
-                    </tr>
-                  </tfoot>
+                    {% endfor %}
+                </tbody>
+
+
 
                 </table>
 
@@ -133,11 +100,8 @@
          
           <div class="center-btn">
             <div class="mb-1 text-black">
-              <div class="font-weight-bold">
-                {{co.name.upper()}}
-              </div>
               <div class="">
-                <img class="" src="{{logopath}}" alt={{co.name}} />
+                <img class="" src="../static/kce/img/elders.png" width="60" height="60" alt="" />
               </div>
             </div>
           </div>
@@ -149,76 +113,41 @@
 
           <div class="center-btn mt-2 overline underline malibu-card-theme">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">DELIVERY REPORT {{timeline | safe}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">MEMBER REPORT</span></span>
           </div>
 
 
           <div class="table-responsive">
             <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
-              <thead class="custom-header-alt small">
-                <tr>
-                  <th class="text-black">DATE</th>
-                  <th class="text-black">TYPE</th>
-                  <th class="text-black">FROM</th>
-                  <th class="text-black">TO</th>
-                  <th class="text-black">POSTED</th>
-                  <th class="text-black">DELIVERED</th>
-                  <th class="text-black">TIME</th>
-                  <th class="text-black">RECIPIENT</th>
-                  <th class="text-black">COST</th>
-                  <th class="text-black">RIDER</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in bills%}
-                <tr>
-                  <td class="data-cell">{{ item['date'] }}</td>
-                  <td class="data-cell">{{ item['type'] }}</td>
-                  <td class="data-cell">{{ item['from'] }}</td>
-                  <td class="data-cell">{{ item['to'] }}</td>
-                  <td class="data-cell">{{ item['posted'] }}</td>
-                  <td class="data-cell">{{ item['delivered'] }}</td>
-                  <td class="data-cell">{{ item['duration'] }}</td>
-                  <td class="data-cell">{{ item['client'] }}</td>
-                  <td class="data-cell">{{ item['cost'] }}</td>
-                  <td class="data-cell">{{ item['rider'] }}</td>
-                </tr>
-              {% endfor %}
+                <thead>
+                    <tr>
+                        <th class="text-black font-weight-bold pl-0">MemberNo</th>
+                        <th class="text-black font-weight-bold">Name</th>
+                        <th class="text-black font-weight-bold">Country</th>
 
-              </tbody>
+                        <th class="text-black font-weight-bold ">County</th>
+                        <th class="text-black font-weight-bold ">Subcounty</th>
+                        <th class="text-black font-weight-bold ">Ward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items%}
+                    <tr>
 
-              <tfoot>
-                <tr>
-                  <th colspan="10" class="bolden text-black">Summary</th>
 
-                </tr>
+                        <td class="data-cell">{{ item['id'] }}</td>
+            
+                        <td class="data-cell">{{ item['name']}}</td>
+                        
+                        <td class="data-cell">Kenya</td>
+                        <td class="data-cell">{{ item['ward']['subcounty']['county'] }}</td> 
+                        <td class="data-cell">{{ item['ward']['subcounty'] }}</td>
+                        <td class="data-cell">{{ item['ward'] }}</td>                                                                    
 
-                <tr>
-                  <th class="bolden text-black">Total Deliveries</th>
-                  <th class="bolden text-black">{{totaldeliveries}}</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                </tr>
-
-                <tr>
-                  <th class="bolden text-black">Invoice amounts</th>
-                  <th class="bolden text-black">{{invoiceamounts}}</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                  <th class=" bolden text-white">-</th>
-                </tr>
-              </tfoot>
+            
+                    </tr>
+                    {% endfor %}
+                </tbody>
 
             </table>        
         </div>

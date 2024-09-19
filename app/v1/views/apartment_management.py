@@ -9827,6 +9827,12 @@ class KceHome(Resource):
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("home.html",co="set",counties=counties,items=users))
 
+class KceReport(Resource):
+    @login_required
+    def get(self):
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("kce_report.html",counties=counties))
+
 
 class KceLogin(Resource):
     def get(self):

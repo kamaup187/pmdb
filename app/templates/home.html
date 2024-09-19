@@ -545,7 +545,7 @@
                                               </div>
                                             </div>
                                             <div class="mt-2">
-                                              <button type="button" class="btn btn-primary btn-sm">View report</button>
+                                              <a id="goto_reports" type="button" href="#" class="btn btn-primary btn-sm">View report</a>
                                             </div>
                                             </div>
                                             <!-- <div class="chart-area mb-4 mb-lg-0" style="height: 20rem"><canvas
@@ -1643,7 +1643,22 @@
       }
     });
   })
+
+
+  $("#select_ward").on("change", function(){
+
+      var county_code = $("#select_county").val();
+      var subcounty_code = $("#select_subcounty").val();
+      var ward_code = $("#select_ward").val();
+
+        // Build the URL
+      var url_report = "/api/reports?county_code=" + county_code + "&subcounty_code=" + subcounty_code + "&ward_code=" + ward_code;
+
+    $("#goto_reports").attr("href", url_report);
+  })
 </script>
+
+
 
 <!-- <script>
         url = "{{ url_for('api.allproperties') }}"

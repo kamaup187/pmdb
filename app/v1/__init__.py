@@ -20,6 +20,7 @@ api.add_resource(KikuyuCouncilOfEldersJoin,"/join/kce")
 api.add_resource(KceLogin,"/kce/login")
 api.add_resource(KceRegister,"/kce/register")
 api.add_resource(KceHome,"/kce/dashboard")
+api.add_resource(KceReport,"/api/reports")
 
 api.add_resource(DataUpload,"/data/upload")
 api.add_resource(MpesaDataUpload,"/mpesadata/upload")

@@ -1,0 +1,370 @@
+{% extends 'kce_basereport.html' %}
+
+{% block content %}
+
+
+
+    <div class="col-lg-12 ">
+        <div class="formwrapper">
+            <div class="card bt-none">
+              <!-- Card Header - Accordion -->
+
+              <div class="divjust-end bg-light underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">Member report</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                  </div>
+                </a>
+                                
+
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="noprint" id="collapseCardExample">
+                <div class="card-body p-0">
+
+
+                        
+                            <div class="row form-group">
+                              <div class="col-sm-3">
+                                <label class="small mb-1" for="gender">Country</label>
+                                <select class="form-control kodi-input" id="country" name="county">
+                                  <option selected value="Kenya">Kenya</option>
+                                </select>
+                              </div>
+                            <div class="col-sm-3">
+                              <label class="small mb-1" for="age_bracket">County</label>
+                              <select class="form-control kodi-input" id="select_county" name="age_bracket">
+                                <option disabled selected>Select county</option>
+                                {% for o in counties%}
+                                <option value="{{ o.code }}">{{ o.name }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                            <div class="col-sm-3">
+                              <label class="small mb-1" for="age_bracket">Subcounty</label>
+                              <select class="form-control kodi-input" id="select_subcounty" name="age_bracket">
+                                <option disabled selected>Select Sub county</option>
+                              </select>
+                            </div>
+                          
+                            <div class="col-sm-3">
+                              <label class="small mb-1" for="gender">Ward</label>
+                              <select class="form-control kodi-input" id="select_ward" name="gender">
+                                <option disabled selected value="">Select Ward</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="mt-2">
+                            <a id="goto_reports" type="button" href="#" class="btn btn-primary btn-sm">View report</a>
+                          </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+
+    <div id="reportbase">
+
+    </div>
+
+    <!-- <div class="ln-14 divjust-end noprint">
+      <button id="ajaxbtnDownload" class="btn btn-success btn-sm mb-2 mt-1">
+        <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+      </button>
+      <script>
+        feather.replace()
+
+        button = document.getElementById('ajaxbtnDownload');
+        button.addEventListener('click', () => {
+          document.title=$("#filename").text(); 
+          window.print()
+        });
+      </script>
+    </div>
+
+    <div id="" class="row">
+      <div id="" class="col-lg-12 ">
+        <div class="card border-left-malibu-blue shadow h-100 py-2g">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <div class="m-0 text-malibu-blue font-weight-bold smallify targetprop add-skeleton-sms"><i
+                class="feather-24 pb-1" data-feather="bar-chart-2"></i>
+                  Top riders >> <span class="timeline_range ml-1">...</span>
+            </div>
+
+          </div>
+          <div class="card-body">
+            <div class="custom_card">
+
+              <div class="divjust-end mb-3">
+                <span class="text-black bolden">Total deliveries</span>
+                <span class="text-black bolden" id="totaldeliveries">...</span>
+              </div>
+
+              <div id="reportbase">
+                click view to generate report
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> -->
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  function runDates() {
+
+    console.log("starting................")
+    var date = new Date();
+    var dateFormat = "d M, y",
+      from = $( "#checkindate" )
+        .datepicker({
+          dateFormat: "d M, y",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          format: "DD, dd-mm-yyyy",
+          autoclose: true
+        }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+        .on( "changeDate", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+          $(".addloader").html('<div class="d-inline-block ml-2 mr-4 dot-elastic2"></div>')
+
+          runStats()
+
+        }),
+        
+      to = $( "#checkoutdate" ).datepicker({
+        dateFormat: "d M, y",
+        format: "DD, dd-mm-yyyy",
+        defaultDate: "+1w",
+        changeMonth: true,
+        numberOfMonths: 1,
+        autoclose: true, 
+      }).datepicker("setDate", new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+      .on( "changeDate", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+        $(".addloader").html('<div class="d-inline-block ml-2 mr-4 dot-elastic2"></div>')
+
+        runStats()
+
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+ 
+      return date;
+    }
+  };
+
+  runDates();
+  </script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+<!-- 
+<script>
+  $("#view_general").click(function () {
+
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "",
+          type: "get",
+          data: {
+              prop: $("#prop").val(),
+              month: $("#month").val(),
+              reporttype: $("#reporttype").val()
+          },
+          success: function (response) {
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
+
+          }
+      });
+
+  });
+</script> -->
+
+<script>
+  $("#region").on("change", function(){
+    $.ajax({
+          url: "{{ url_for('api.users') }}",
+          type: "get",
+          data: {
+              region: $("#region").val(),
+              target: "riders all"
+          },
+          success: function (response) {
+              $("#select_rider").html(response);
+              // $("#select_dashboard_branch option:eq('1')").attr("selected", "selected");
+              // runStats()
+
+          }
+      });
+  })
+</script>
+
+
+
+<script>
+  $("#view_general").click(function () {
+
+
+  //pass
+  $("#preloader-btn").click();
+  $.ajax({
+      url: "/rider/report2",
+      type: "post",
+      data: {
+          r_type: $("#report_type").val(),
+          branch: $("#select_branch").val(),
+          rider: $("#select_rider").val(),
+          start: $("#checkindate").val(),
+          end : $("#checkoutdate").val(),
+      },
+      success: function (response) {
+        $("#reportbase").html(response)
+          // $("#reportbase").html(response[0])
+          // $(".timeline_range").html(response[1])
+          // $("#totaldeliveries").html(response[2])
+          $("#postloader-btn").click();
+
+      }
+  });
+    
+  });
+  
+</script>
+
+
+<script>
+    $("#select_county").on("change", function(){
+      $("#select_subcounty").html("<option disabled selected value> -- select subcounty -- </option>");
+      $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
+      var county_code = $("#select_county").val();
+      $.ajax({
+        url: "/fetch/subcounties",
+        type: "get",
+        data: {
+          countycode: county_code
+        },
+        success: function (response) {
+          $("#select_subcounty").html(response);
+        }
+      });
+    })
+  </script>
+  
+  <script>
+    $("#select_subcounty").on("change", function(){
+      $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
+      var subcounty_code = $("#select_subcounty").val();
+      $.ajax({
+        url: "/fetch/wards",
+        type: "get",
+        data: {
+          subcountycode: subcounty_code
+        },
+        success: function (response) {
+          $("#select_ward").html(response);
+        }
+      });
+    })
+  
+  
+    $("#select_ward").on("change", function(){
+  
+        var county_code = $("#select_county").val();
+        var subcounty_code = $("#select_subcounty").val();
+        var ward_code = $("#select_ward").val();
+  
+          // Build the URL
+        var url_report = "/api/reports?county_code=" + county_code + "&subcounty_code=" + subcounty_code + "&ward_code=" + ward_code;
+  
+      $("#goto_reports").attr("href", url_report);
+    })
+  </script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

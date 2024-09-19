@@ -1,0 +1,339 @@
+
+
+<span id="urlpattern" class="dispnone">/delivery/statement</span>
+<span id="filename" class="dispnone">member report.pdf</span>
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint text-uppercase">
+    <div class="card shadow mb-0">
+      <!-- Card Header - Accordion -->
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        
+        <div class="card-body pt-0">
+
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="">
+                <img class="" src="../static/kce/img/elders.png" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
+              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+            </button>
+            <script>
+              feather.replace()
+
+              button = document.getElementById('ajaxbtnDownload');
+              button.addEventListener('click', () => {
+                document.title=$("#filename").text(); 
+                window.print()
+              });
+            </script>
+            <span>Printed : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline malibu-card-theme">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">DELIVERY REPORT {{timeline | safe}}</span></span>
+          </div>
+
+          <!-- <div class="center-btn mb-4 mt-4">
+            <img class="" src="{{letterhead}}" alt="--no image--"/>
+          </div> -->
+
+                    
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="text-black">DATE</th>
+                      <th class="text-black">TYPE</th>
+                      <th class="text-black">FROM</th>
+                      <th class="text-black">TO</th>
+                      <th class="text-black">POSTED</th>
+                      <th class="text-black">DELIVERED</th>
+                      <th class="text-black">TIME</th>
+                      <th class="text-black">RECIPIENT</th>
+                      <th class="text-black">COST</th>
+                      <th class="text-black">RIDER</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in bills%}
+                    <tr>
+                      <td class="data-cell">{{ item['date'] }}</td>
+                      <td class="data-cell">{{ item['type'] }}</td>
+                      <td class="data-cell">{{ item['from'] }}</td>
+                      <td class="data-cell">{{ item['to'] }}</td>
+                      <td class="data-cell">{{ item['posted'] }}</td>
+                      <td class="data-cell">{{ item['delivered'] }}</td>
+                      <td class="data-cell">{{ item['duration'] }}</td>
+                      <td class="data-cell">{{ item['client'] }}</td>
+                      <td class="data-cell">{{ item['cost'] }}</td>
+                      <td class="data-cell">{{ item['rider'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+                      <th colspan="10" class="bolden text-black">Summary</th>
+    
+                    </tr>
+    
+                    <tr>
+                      <th class="bolden text-black">Total Deliveries</th>
+                      <th class="bolden text-black">{{totaldeliveries}}</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                    </tr>
+    
+                    <tr>
+                      <th class="bolden text-black">Invoice amounts</th>
+                      <th class="bolden text-black">{{invoiceamounts}}</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                      <th class=" bolden text-white">-</th>
+                    </tr>
+                  </tfoot>
+
+                </table>
+
+          </div>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div id="invoice" class="col-lg-12  dispnone printdisplay text-uppercase">
+    <div class="">
+      <!-- Card Header - Accordion -->
+      <div class="collapse show" id="collapseCardExample3">
+        <div class="card-body report-body">
+         
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Printed : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline malibu-card-theme">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">DELIVERY REPORT {{timeline | safe}}</span></span>
+          </div>
+
+
+          <div class="table-responsive">
+            <table class="table table-bordered" id="data-table" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th class="text-black">DATE</th>
+                  <th class="text-black">TYPE</th>
+                  <th class="text-black">FROM</th>
+                  <th class="text-black">TO</th>
+                  <th class="text-black">POSTED</th>
+                  <th class="text-black">DELIVERED</th>
+                  <th class="text-black">TIME</th>
+                  <th class="text-black">RECIPIENT</th>
+                  <th class="text-black">COST</th>
+                  <th class="text-black">RIDER</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in bills%}
+                <tr>
+                  <td class="data-cell">{{ item['date'] }}</td>
+                  <td class="data-cell">{{ item['type'] }}</td>
+                  <td class="data-cell">{{ item['from'] }}</td>
+                  <td class="data-cell">{{ item['to'] }}</td>
+                  <td class="data-cell">{{ item['posted'] }}</td>
+                  <td class="data-cell">{{ item['delivered'] }}</td>
+                  <td class="data-cell">{{ item['duration'] }}</td>
+                  <td class="data-cell">{{ item['client'] }}</td>
+                  <td class="data-cell">{{ item['cost'] }}</td>
+                  <td class="data-cell">{{ item['rider'] }}</td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+
+              <tfoot>
+                <tr>
+                  <th colspan="10" class="bolden text-black">Summary</th>
+
+                </tr>
+
+                <tr>
+                  <th class="bolden text-black">Total Deliveries</th>
+                  <th class="bolden text-black">{{totaldeliveries}}</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                </tr>
+
+                <tr>
+                  <th class="bolden text-black">Invoice amounts</th>
+                  <th class="bolden text-black">{{invoiceamounts}}</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                  <th class=" bolden text-white">-</th>
+                </tr>
+              </tfoot>
+
+            </table>        
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+      $("#reportbtns").addClass("dispnone")
+  
+      $('#dataTable').DataTable({
+        dom: '<"dt-buttons"Bf><"clear">lirtp',
+        "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+        "pageLength": 100,
+        autoWidth: true,
+        buttons: [
+          "colvis",
+          "copyHtml5",
+          "csvHtml5",
+          "excelHtml5",
+          "pdfHtml5",
+          "print"
+        ],
+        // "bPaginate": false, //hide pagination control
+        // "bFilter": false, //hide filter control
+        // "searching":false,
+        // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+        // "targets": 'no-sort',
+        // "bSort": false,
+        columnDefs: [{ targets: 0, type: 'natural' }],
+        // "info" : false,
+        "order": [[0, "asc"]],
+        // "bLengthChange": false
+      });
+      $('.dataTables_length').addClass('bs-select');
+    });
+  
+  
+  </script>
+<script>
+  
+
+    $('#data-table').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      "bPaginate": false, //hide pagination control
+      "bFilter": false, //hide filter control
+      "searching": false,
+      "aoColumnDefs": [{ "bSortable": false, "aTargets": ["_all"], type: 'natural' }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      // columnDefs: [ { targets: 0, type: 'natural' } ],
+      "info": false,
+      "order": [[0, "asc"]],
+      "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+  
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

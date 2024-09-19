@@ -509,18 +509,32 @@
                             </div>
 
                             <div class="col-sm-6">
+                              <label class="small mb-1" for="gender">Gender</label>
+                              <select class="form-control kodi-input" id="gender" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                              <div class="col-sm-6">
+                                <label class="small mb-1" for="gender">Country</label>
+                                <select class="form-control kodi-input" id="country" name="county">
+                                  <option selected value="Kenya">Kenya</option>
+                                </select>
+                              </div>
+                            <div class="col-sm-6">
                               <label class="small mb-1" for="age_bracket">County</label>
                               <select class="form-control kodi-input" id="select_county" name="age_bracket">
                                 <option disabled selected>Select county</option>
                                 {% for o in counties%}
                                 <option value="{{ o.code }}">{{ o.name }}</option>
                                 {% endfor %}
-
                               </select>
                             </div>
-    
                           </div>
-
                           <div class="form-group row">
                             <div class="col-sm-6">
                               <label class="small mb-1" for="age_bracket">Subcounty</label>
@@ -541,7 +555,7 @@
                           <div class="form-group row">
                             <div class="col-sm-6">
                               <label class="small mb-1" for="age_bracket">Age Bracket</label>
-                              <select class="form-control kodi-input" id="age_bracket" name="age_bracket">
+                              <select class="form-control kodi-input" id="select_age_bracket" name="age_bracket">
                                 <option value="">Select Age Bracket</option>
                                 <option value="18-25">18-25</option>
                                 <option value="26-35">26-35</option>
@@ -552,12 +566,12 @@
                             </div>
                           
                             <div class="col-sm-6">
-                              <label class="small mb-1" for="gender">Gender</label>
-                              <select class="form-control kodi-input" id="gender" name="gender">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                              <label class="small mb-1" for="gender">Category</label>
+                              <select class="form-control kodi-input" id="select_category" name="category">
+                                <option selected disabled value="">Select Category</option>
+                                <option value="elders">Elders</option>
+                                <option value="youth">Youth League</option>
+                                <option value="women">Women League</option>
                               </select>
                             </div>
                           </div>

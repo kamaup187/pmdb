@@ -2707,7 +2707,7 @@ class FetchSubcounties(Resource):
         county_code = request.args.get('countycode')
         county_obj = CountyOp.fetch_county_by_code(county_code)
         if county_obj:
-            return render_template('ajax_multivariable_alt.html',items=county_obj.subcounties,placeholder="select county")
+            return render_template('ajax_multivariable_alt.html',items=county_obj.subcounties,placeholder="select subcounty")
 
 class FetchWards(Resource):
     def get(self):
@@ -9883,10 +9883,11 @@ class KceRegister(Resource):
         if national_id_present:
             print("id taken by ", national_id_present.name, "natid being ",national_id)
             return "id taken"
-        email_is_present = UserOp.fetch_user_by_email(email)
-        if email_is_present:
-            print("email taken")
-            return "email taken"
+        if email:
+            email_is_present = UserOp.fetch_user_by_email(email)
+            if email_is_present:
+                print("email taken")
+                return "email taken"
         phone_is_present = UserOp.fetch_user_by_phone(phone)
         if phone_is_present:
             print("tel taken")

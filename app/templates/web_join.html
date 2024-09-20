@@ -523,6 +523,9 @@
                                 <label class="small mb-1" for="gender">Country</label>
                                 <select class="form-control kodi-input" id="country" name="county">
                                   <option selected value="Kenya">Kenya</option>
+                                  {% for o in countries%}
+                                  <option value="{{ o }}">{{ o }}</option>
+                                  {% endfor %}
                                 </select>
                               </div>
                             <div class="col-sm-6">

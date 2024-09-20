@@ -53,6 +53,8 @@
                     <tr>
                         <th class="text-black font-weight-bold pl-0">MemberNo</th>
                         <th class="text-black font-weight-bold">Name</th>
+                        <th class="text-black font-weight-bold ">Category</th>
+
                         <th class="text-black font-weight-bold">Country</th>
 
                         <th class="text-black font-weight-bold ">County</th>
@@ -68,7 +70,8 @@
                         <td class="data-cell font-italic">{{ item['mem_id'] }}</td>
             
                         <td class="data-cell">{{ item['name']}}</td>
-                        
+                        <td class="data-cell">Youth League</td>
+
                         <td class="data-cell">Kenya</td>
                         <td class="data-cell">{{ item['ward']['subcounty']['county'] }}</td> 
                         <td class="data-cell">{{ item['ward']['subcounty'] }}</td>

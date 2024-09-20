@@ -9815,7 +9815,7 @@ class KikuyuCouncilOfEldersJoin(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("web_join.html",counties=counties))
+        return Response(render_template("web_join.html",countries=countries,counties=counties))
 
 class KceHome(Resource):
     @login_required
@@ -9827,7 +9827,7 @@ class KceHome(Resource):
         for user in users:
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("home.html",co="set",counties=counties,items=users))
+        return Response(render_template("home.html",co="set",countries=countries,counties=counties,items=users))
 
 class KceReport(Resource):
     @login_required
@@ -9851,7 +9851,7 @@ class KceReport(Resource):
             counties = CountyOp.fetch_all_counties()
             report_url = f"/api/reports?ajax_county_code={county_code}&ajax_subcounty_code={subcounty_code}&ajax_ward_code={ward_code}"
             print("report urlllll", report_url)
-            return Response(render_template("kce_report.html",counties=counties,report_url=report_url))
+            return Response(render_template("kce_report.html",countries=countries,counties=counties,report_url=report_url))
         else:
             c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
             users = c_data.users

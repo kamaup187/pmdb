@@ -2477,6 +2477,14 @@ class StockPropOverview(Resource):
         departments = DepartmentOp.fetch_all_departments()
         return len(departments)
 
+# class StockPropOverview(Resource):
+#     @login_required
+#     def get(self):
+#         # prop = request.args.get('prop')
+#         co = CompanyOp.fetch_company_by_name(RentLib Company)
+#         users = DepartmentOp.fetch_all_departments()
+#         return len(departments)
+
 def get_status(arr,status):
     return [x for x in arr if x.status == status]
 
@@ -5332,6 +5340,10 @@ class EditHouse(Resource):
                 house_id = get_identifier(houseid)
                 print(house_id)
                 house_obj = HouseOp.fetch_house_by_id(house_id)
+                if house_obj:
+                    deposits = house_obj.deposits
+                    if deposits:
+                        TenantDepositOp.delete(deposits)
                 HouseOp.delete(house_obj)
                 return None
             return None

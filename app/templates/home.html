@@ -1174,13 +1174,13 @@
 
         function getPropStats() {
         $.ajax({
-            url: "{{ url_for('api.stockpropoverview') }}",
+            url: "/get/members",
             type: 'get',
             data: {
                     prop: localStorage.getItem('propvar')
                   },
             success: function(data) {
-                $('#propstats').text(24);
+                $('#propstats').text(23);
   
             },
             complete:function(data) {

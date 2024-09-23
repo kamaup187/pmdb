@@ -2568,7 +2568,10 @@ def fetch_user(varying_id):
                     fifth_try = UserOp.fetch_user_by_phone(varying_id)
                     if not fifth_try:
                         print("reachinh extereme end because of ...")
-                        return None
+                        sixth_try = UserOp.fetch_user_by_id(varying_id)
+                        if not sixth_try:
+                            print("No user found")
+                        return sixth_try
                     return fifth_try
                 return fourth_try
             return third_try

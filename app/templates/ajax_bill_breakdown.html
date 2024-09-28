@@ -1,7 +1,41 @@
 <span id="edit_bill_identifier" class="dispnone">{{bill.id}}</span>
 
 <div class="container">
+
+
+    <div id="depositbed" class="row dispnone">
+        <div class="form-group col-6 no-paddin input-icons">
+            <span>Unpaid deposit</span>
+            <input id="newdepositdue"
+                class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                type="text" value="{{dep.balance_rentdep}}" disabled />
+        </div>
+        <div class="form-group col-6 no-paddin input-icons">
+            <span>Deposit allocation </span>
+            <input id="newdepositpaid"
+                class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                placeholder="0.0" value="" />
+        </div>
+
+        <div class="form-group col-6 no-paddin input-icons hide">
+            <span>Placeholder</span>
+            <input id=""
+                class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
+                type="text" value="" disabled />
+        </div>
+        <div class="form-group col-6 no-paddin input-icons">
+            <span>Available allocation </span>
+            <input id="available_bal"
+                class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
+                placeholder="0.0" value="" disabled/>
+        </div>
+      </div>
+
     <div class="form-group mb-1 text-right {{edit}}">
+        <span class="">
+            <input type="checkbox" id="paydeposit" class="check-bt" name="paydeposit" value="paydeposit">
+            <label for="paydeposit">Pay deposit?</label>
+        </span>
         <span class="">
             <input type="checkbox" id="paidll" class="check-bt" name="paidll" value="paidll">
             <label for="paidll">Paid to landlord?</label>
@@ -24,7 +58,7 @@
                     type="text" value="{{bill.booking_due}}" disabled />
             </div>
             <div class="form-group col-md-6">
-                <span>Deposit paid </span>
+                <span>Deposit allocation </span>
                 <input id="bookingpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -42,7 +76,7 @@
                     type="text" value="{{bill.instalment_due}}" disabled />
             </div>
             <div class="form-group col-6">
-                <span>Instalment paid </span>
+                <span>Instalment allocation </span>
                 <input id="instalmentpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -76,7 +110,7 @@
                     type="text" value="{{bill.deposit_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Deposit paid </span>
+                <span>Deposit allocation </span>
                 <input id="depositpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -93,7 +127,7 @@
                     type="text" value="{{bill.rent_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Rent paid </span>
+                <span>Rent allocation </span>
                 <input id="rentpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -110,7 +144,7 @@
                     type="text" value="{{bill.penalty_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Penalty paid </span>
+                <span>Penalty allocation </span>
                 <input id="penaltypaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -126,7 +160,7 @@
                     type="text" value="{{bill.maintenance_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Service paid </span>
+                <span>Service allocation </span>
                 <input id="servicepaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -143,10 +177,10 @@
                     type="text" value="{{bill.garbage_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Garbage paid </span>
+                <span>Garbage allocation </span>
                 <input id="garbagepaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
-                    placeholder="0.0" value="" />
+                    placeholder="0.0" value="" disabled />
             </div>
         </div>
 
@@ -160,7 +194,7 @@
                     type="text" value="{{bill.security_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Security paid </span>
+                <span>Security allocation </span>
                 <input id="securitypaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -177,7 +211,7 @@
                     type="text" value="{{bill.water_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Water paid </span>
+                <span>Water allocation </span>
                 <input id="waterpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -193,7 +227,7 @@
                     type="text" value="{{bill.electricity_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Electricity paid </span>
+                <span>Electricity allocation </span>
                 <input id="electricitypaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -210,7 +244,7 @@
                     type="text" value="{{bill.agreement_due}}" disabled />
             </div>
             <div class="form-group col-6 no-paddin input-icons">
-                <span>Agreement paid </span>
+                <span>Agreement allocation </span>
                 <input id="agreementpaid"
                     class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                     placeholder="0.0" value="" disabled />
@@ -310,3 +344,240 @@
     }
     }
 </script> -->
+
+<script>
+    $("#available_bal").on('change',function(){
+
+      let newpaid = parseInt($("#available_bal").val().replace(/,/g, ''));
+
+    let bal = newpaid
+
+    let bookingdue = parseInt($("#bookingdue").val())
+    let instalmentdue = parseInt($("#instalmentdue").val())
+    let addfeedue = parseInt($("#addfeedue").val())
+
+    let rentdue = parseInt($("#rentdue").val())
+
+    let waterdue = parseInt($("#waterdue").val())
+    if (waterdue < 0){
+      waterdue = 0
+    }
+    let electricitydue = parseInt($("#electricitydue").val())
+    let garbagedue = parseInt($("#garbagedue").val())
+    let securitydue = parseInt($("#securitydue").val())
+    let servicedue = parseInt($("#servicedue").val())
+    let penaltydue = parseInt($("#penaltydue").val())
+    let depositdue = parseInt($("#depositdue").val())
+    let agreementdue = parseInt($("#agreementdue").val())
+
+
+    // if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
+
+    if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
+    if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
+    if (bal >= addfeedue) {$("#addfeedue").val(addfeedue);bal -= addfeedue} else if (bal < addfeedue && bal > 0) {$("#addfeedue").val(bal);bal = 0}else {$("#addfeedue").val(0.0)}
+
+
+    if (bal >= rentdue) {$("#rentpaid").val(rentdue);bal -= rentdue}else if (bal < rentdue && bal > 0) {$("#rentpaid").val(bal);bal = 0}else {$("#rentpaid").val(0.0)}
+    if (bal >= penaltydue) {$("#penaltypaid").val(penaltydue);bal -= penaltydue}else if (bal < penaltydue && bal > 0) {$("#penaltypaid").val(bal);bal = 0}else {$("#penaltypaid").val(0.0)}
+
+    if (bal >= garbagedue) {$("#garbagepaid").val(garbagedue);bal -= garbagedue}else if (bal < garbagedue && bal > 0) {$("#garbagepaid").val(bal);bal = 0}else {$("#garbagepaid").val(0.0)}
+    if (bal >= securitydue) {$("#securitypaid").val(securitydue);bal -= securitydue}else if (bal < securitydue && bal > 0) {$("#securitypaid").val(bal);bal = 0}else {$("#securitypaid").val(0.0)}
+    if (bal >= servicedue) {$("#servicepaid").val(servicedue);bal -= servicedue}else if (bal < servicedue && bal > 0) {$("#servicepaid").val(bal);bal = 0}else {$("#servicepaid").val(0.0)}
+
+    if (bal >= waterdue) {$("#waterpaid").val(waterdue);bal -= waterdue}else if (bal < waterdue && bal > 0) {$("#waterpaid").val(bal);bal = 0}else {$("#waterpaid").val(0.0)}
+    if (bal >= electricitydue) {$("#electricitypaid").val(electricitydue);bal -= electricitydue}else if (bal < electricitydue && bal > 0) {$("#electricitypaid").val(bal);bal = 0}else {$("#electricitypaid").val(0.0)}
+
+    if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
+    
+    var pay_remainder = 0;
+    var pay_deposit = 0;
+
+    if(bal){
+      $("#advancepay").removeClass("dispnone")
+
+      console.log("advancepay....",bal)
+
+      $("#advance_pay_text").text(bal)
+
+      pay_remainder = bal
+
+        if (parseInt($("#bdepmemory").val()) > 0){
+
+          if (bal > parseInt($("#bdepmemory").val())){
+
+            pay_remainder = bal-parseInt($("#bdepmemory").val())
+
+            $("#deposit_pay_text").text($("#bdepmemory").val())
+            $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
+
+            pay_deposit = $("#bdepmemory").val()
+            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
+
+            $("#edit_rentdep").val($("#depmemory").val())
+            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + parseInt($("#bdepmemory").val() ))
+            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()))
+          }
+          else{
+
+            pay_remainder = 0
+            pay_deposit = bal
+
+            $("#deposit_pay_text").text(bal)
+            $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
+
+            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
+
+            $("#edit_rentdep").val($("#depmemory").val())
+            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + bal)
+            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - bal )
+          }
+        }
+    }else{
+
+      pay_remainder = 0
+      pay_deposit = 0
+
+      console.log("no bal no dep paid")
+
+      $("#advancepay").addClass("dispnone")
+      $("#advance_pay").val(0.0)
+      $("#advance_pay_text").text("0.0")
+
+      $("#deposit_pay").val(0.0)
+      $("#deposit_pay_text").text("0.0")
+      $("#total_deposit_pay_text").text("0.0")
+
+      $("#deposit_bal").val("0.0")
+      $("#deposit_bal_text").text("0.0")
+
+      $("#edit_rentdep").val($("#depmemory").val())
+      $("#edit_prentdep").val($("#pdepmemory").val())
+      $("#edit_brentdep").val($("#bdepmemory").val())
+      
+    }
+
+
+    $("#advance_pay").val(pay_remainder)
+    $("#deposit_pay").val(pay_deposit)
+
+  })
+
+  </script>
+
+<script>
+    $("#paidamount").on('keyup',function(){
+    var empty = false;
+    if ($('#paidamount').val() == "") {
+      empty = true;
+    }
+    
+    var contents =  $("#access").text();
+
+    if (contents != ""){
+      empty = true;
+    }
+
+    if (empty) {
+        $("#fieldset3").addClass("dispnone")
+        // $('#paybtn_alt').addClass("dispnone");
+    } else {
+        // $('#paybtn_alt').removeClass("dispnone")
+        $("#fieldset3").removeClass("dispnone")
+
+    }
+
+    let paid = parseInt($("#paidamount").val().replace(/,/g, ''));
+    let dpaid = parseInt($("#newdepositpaid").val().replace(/,/g, ''));
+
+    if(paid){
+
+        if (dpaid) {
+
+            if (dpaid < paid){
+                $("#available_bal").val(paid - dpaid);
+            }else{
+                $("#available_bal").val(paid);
+                $("#newdepositpaid").val(0.0);
+            }
+        } else {
+            $("#available_bal").val(paid);
+        }
+
+    }else{
+        $("#available_bal").val(0.0);
+        $("#newdepositpaid").val(0.0);
+    }
+    $("#available_bal").change();
+
+  });
+</script>
+
+<script>
+    $("#newdepositpaid").on('keyup',function(){
+
+    let paid = parseInt($("#paidamount").val().replace(/,/g, ''));
+    let dpaid = parseInt($("#newdepositpaid").val().replace(/,/g, ''));
+    let undpaid = parseInt($("#newdepositdue").val().replace(/,/g, ''));
+
+    if (dpaid){
+        if (paid >= dpaid){
+
+            if (undpaid){
+                if (dpaid <= undpaid){
+                    $("#available_bal").val(paid-dpaid);
+                }else{
+                    $("#newdepositpaid").val(undpaid);
+                    $("#available_bal").val(paid-undpaid);
+                }
+            }else{
+                $("#newdepositpaid").val(0.0);
+                $("#available_bal").val(paid);
+            }
+
+            
+        }else{
+
+            if (undpaid){
+                if (dpaid < undpaid){
+                    $("#newdepositpaid").val(paid);
+                    $("#available_bal").val(0.0); 
+                }else{
+                    if (undpaid <= paid){
+                        $("#newdepositpaid").val(undpaid);
+                        $("#available_bal").val(paid-undpaid);
+                    }else{
+                        $("#newdepositpaid").val(0.0);
+                        $("#available_bal").val(paid);
+                    }
+
+
+                }
+            }else{
+                $("#newdepositpaid").val(0.0);
+                $("#available_bal").val(paid);
+            }
+
+        }
+    }else {
+        $("#available_bal").val(paid);
+
+    }
+
+    $("#available_bal").change();
+
+  });
+
+
+
+
+  $('#paydeposit').on('change', function() {
+            if ($(this).is(':checked')) {
+                // Checkbox is checked, show the deposit section
+                $('#depositbed').removeClass("dispnone");
+            } else {
+                // Checkbox is unchecked, hide the deposit section
+                $('#depositbed').addClass("dispnone");
+            }
+        });
+</script>

@@ -2733,19 +2733,21 @@ class ReceivePayment(Resource):
                     edit = ""
 
                 if target2 == "minimal":
-                # if localenv:
-                    # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
-                    # order = {
-                    #     "rent":1,
-                    #     "garb":2,
-                    #     "dep":6,
-                    #     "water":4,
-                    #     "sec":5,
-                    #     "serv":7,
-                    #     "fine":3,
-                    #     "agre":8,
-                    #     "elec":9
-                    # }
+                    return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit)
+
+                    # if localenv:
+                        # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
+                        # order = {
+                        #     "rent":1,
+                        #     "garb":2,
+                        #     "dep":6,
+                        #     "water":4,
+                        #     "sec":5,
+                        #     "serv":7,
+                        #     "fine":3,
+                        #     "agre":8,
+                        #     "elec":9
+                        # }
 
                     if current_user.company_id == 114:
                         order = {
@@ -2890,6 +2892,7 @@ class ReceivePayment(Resource):
 
 
         overpayment = int(request.form.get('overpayment')) if request.form.get('overpayment') else 0
+        # overpayment = 0 #override
 
 
         valid_amount = validate_input(amount)
@@ -3398,7 +3401,7 @@ class ReceivePayment(Resource):
                 security_paid = securitypaid+ specific_charge_obj.security_paid if specific_charge_obj.security_paid is not None else 0
                 service_paid = servicepaid + specific_charge_obj.maintenance_paid if specific_charge_obj.maintenance_paid is not None else 0
 
-                if specific_charge_obj.apartment.company_id == 114:
+                if specific_charge_obj.apartment.company_id == 11444444444444:  #mugambi
                     tenant_dep_deficit = calculate_deposit_balance(specific_charge_obj)
                     if tenant_dep_deficit:
                         if overpayment > tenant_dep_deficit:

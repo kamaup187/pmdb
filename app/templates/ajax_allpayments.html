@@ -320,30 +320,37 @@
                       <fieldset id="fieldset2" class="mb-2 dispnone">
                         <legend class="legend smallify">Bill breakdown(inclusive of respective arrears)</legend>
 
+
+
+                        <div class="container">
+                          <div id="totalbed" class="row">
+                            <div class="form-group col-6 no-paddin input-icons">
+                                <span class="text-danger">TOTAL DUE</span>
+                                <div id="totaldue">
+                                  <div class="fountainG-small d-inline ml-3">
+                                    <div class="fountainG_1s fountainG-s"></div>
+                                    <div class="fountainG_2s fountainG-s"></div>
+                                    <div class="fountainG_3s fountainG-s"></div>
+                                  </div>
+                                </div>
+                                <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+                            </div>
+                            <div class="form-group col-6 no-paddin input-icons">
+                              <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
+                                <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
+                                <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
+                            </div>
+                          </div>
+
+                        </div>
+
+
+
                         <div id="billbreakdown">
                           <div class="fountainG-small d-inline ml-3">
                             <div class="fountainG_1s fountainG-s"></div>
                             <div class="fountainG_2s fountainG-s"></div>
                             <div class="fountainG_3s fountainG-s"></div>
-                          </div>
-                        </div>
-
-                        <div id="totalbed" class="row">
-                          <div class="form-group col-6 no-paddin input-icons">
-                              <span class="text-danger">TOTAL DUE</span>
-                              <div id="totaldue">
-                                <div class="fountainG-small d-inline ml-3">
-                                  <div class="fountainG_1s fountainG-s"></div>
-                                  <div class="fountainG_2s fountainG-s"></div>
-                                  <div class="fountainG_3s fountainG-s"></div>
-                                </div>
-                              </div>
-                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
-                          </div>
-                          <div class="form-group col-6 no-paddin input-icons">
-                            <span class="font-weight-bold text-danger">TOTAL PAID: <span class="text-danger">*</span></span>
-                              <input id="paidamount" class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center" type="text" placeholder="0.0"/>
-                              <!-- <span class="input-group-addon field-icon-two"><i class="fas fa-fw text-info">kes</i></span> -->
                           </div>
                         </div>
     
@@ -1842,145 +1849,8 @@
 
 </script>
 
-<script>
-
-  $("#paidamount").on('keyup',function(){
-    var empty = false;
-    if ($('#paidamount').val() == "") {
-      empty = true;
-    }
-    
-    var contents =  $("#access").text();
-
-    if (contents != ""){
-      empty = true;
-    }
-
-    if (empty) {
-        $("#fieldset3").addClass("dispnone")
-        // $('#paybtn_alt').addClass("dispnone");
-    } else {
-        // $('#paybtn_alt').removeClass("dispnone")
-        $("#fieldset3").removeClass("dispnone")
-
-    }
 
 
-    let paid = parseInt($("#paidamount").val().replace(/,/g, ''));
-    let bal = paid
-
-    let bookingdue = parseInt($("#bookingdue").val())
-    let instalmentdue = parseInt($("#instalmentdue").val())
-    let addfeedue = parseInt($("#addfeedue").val())
-
-    let rentdue = parseInt($("#rentdue").val())
-
-    let waterdue = parseInt($("#waterdue").val())
-    if (waterdue < 0){
-      waterdue = 0
-    }
-    let electricitydue = parseInt($("#electricitydue").val())
-    let garbagedue = parseInt($("#garbagedue").val())
-    let securitydue = parseInt($("#securitydue").val())
-    let servicedue = parseInt($("#servicedue").val())
-    let penaltydue = parseInt($("#penaltydue").val())
-    let depositdue = parseInt($("#depositdue").val())
-    let agreementdue = parseInt($("#agreementdue").val())
-
-
-    // if (bal >= depositdue) {$("#depositpaid").val(depositdue);bal -= depositdue}else if (bal < depositdue && bal > 0) {$("#depositpaid").val(bal);bal = 0}else {$("#depositpaid").val(0.0)}
-
-    if (bal >= bookingdue) {$("#bookingpaid").val(bookingdue);bal -= bookingdue}else if (bal < bookingdue && bal > 0) {$("#bookingpaid").val(bal);bal = 0}else {$("#bookingpaid").val(0.0)}
-    if (bal >= instalmentdue) {$("#instalmentpaid").val(instalmentdue);bal -= instalmentdue}else if (bal < instalmentdue && bal > 0) {$("#instalmentpaid").val(bal);bal = 0}else {$("#instalmentpaid").val(0.0)}
-    if (bal >= addfeedue) {$("#addfeedue").val(addfeedue);bal -= addfeedue} else if (bal < addfeedue && bal > 0) {$("#addfeedue").val(bal);bal = 0}else {$("#addfeedue").val(0.0)}
-
-
-    if (bal >= rentdue) {$("#rentpaid").val(rentdue);bal -= rentdue}else if (bal < rentdue && bal > 0) {$("#rentpaid").val(bal);bal = 0}else {$("#rentpaid").val(0.0)}
-    if (bal >= penaltydue) {$("#penaltypaid").val(penaltydue);bal -= penaltydue}else if (bal < penaltydue && bal > 0) {$("#penaltypaid").val(bal);bal = 0}else {$("#penaltypaid").val(0.0)}
-
-    if (bal >= garbagedue) {$("#garbagepaid").val(garbagedue);bal -= garbagedue}else if (bal < garbagedue && bal > 0) {$("#garbagepaid").val(bal);bal = 0}else {$("#garbagepaid").val(0.0)}
-    if (bal >= securitydue) {$("#securitypaid").val(securitydue);bal -= securitydue}else if (bal < securitydue && bal > 0) {$("#securitypaid").val(bal);bal = 0}else {$("#securitypaid").val(0.0)}
-    if (bal >= servicedue) {$("#servicepaid").val(servicedue);bal -= servicedue}else if (bal < servicedue && bal > 0) {$("#servicepaid").val(bal);bal = 0}else {$("#servicepaid").val(0.0)}
-
-    if (bal >= waterdue) {$("#waterpaid").val(waterdue);bal -= waterdue}else if (bal < waterdue && bal > 0) {$("#waterpaid").val(bal);bal = 0}else {$("#waterpaid").val(0.0)}
-    if (bal >= electricitydue) {$("#electricitypaid").val(electricitydue);bal -= electricitydue}else if (bal < electricitydue && bal > 0) {$("#electricitypaid").val(bal);bal = 0}else {$("#electricitypaid").val(0.0)}
-
-    if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
-    
-    var pay_remainder = 0;
-    var pay_deposit = 0;
-
-    if(bal){
-      $("#advancepay").removeClass("dispnone")
-
-      console.log("advancepay....",bal)
-
-      $("#advance_pay_text").text(bal)
-
-      pay_remainder = bal
-
-        if (parseInt($("#bdepmemory").val()) > 0){
-
-          if (bal > parseInt($("#bdepmemory").val())){
-
-            pay_remainder = bal-parseInt($("#bdepmemory").val())
-
-            $("#deposit_pay_text").text($("#bdepmemory").val())
-            $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
-
-            pay_deposit = $("#bdepmemory").val()
-            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
-
-            $("#edit_rentdep").val($("#depmemory").val())
-            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + parseInt($("#bdepmemory").val() ))
-            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()))
-          }
-          else{
-
-            pay_remainder = 0
-            pay_deposit = bal
-
-            $("#deposit_pay_text").text(bal)
-            $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
-
-            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
-
-            $("#edit_rentdep").val($("#depmemory").val())
-            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + bal)
-            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - bal )
-          }
-        }
-    }else{
-
-      pay_remainder = 0
-      pay_deposit = 0
-
-      console.log("no bal no dep paid")
-
-      $("#advancepay").addClass("dispnone")
-      $("#advance_pay").val(0.0)
-      $("#advance_pay_text").text("0.0")
-
-      $("#deposit_pay").val(0.0)
-      $("#deposit_pay_text").text("0.0")
-      $("#total_deposit_pay_text").text("0.0")
-
-      $("#deposit_bal").val("0.0")
-      $("#deposit_bal_text").text("0.0")
-
-      $("#edit_rentdep").val($("#depmemory").val())
-      $("#edit_prentdep").val($("#pdepmemory").val())
-      $("#edit_brentdep").val($("#bdepmemory").val())
-      
-    }
-
-
-    $("#advance_pay").val(pay_remainder)
-    $("#deposit_pay").val(pay_deposit)
-
-  })
-
-  </script>
 
   <script>
   $("#paybtn_alt").on('click',function(){
@@ -2054,7 +1924,7 @@
                 depelectricitypaid: $("#edit_pelecdep").val(),
                 depotherpaid:$("#edit_potherdep").val(),
 
-                paidamount:$("#paidamount").val(),
+                paidamount:$("#available_bal").val(),
                 overpayment:$("#advance_pay").val(),
                 housecheck:$("#housecheck").text()
             },

@@ -4705,31 +4705,31 @@ class ResolveInvoices2(Resource):
 
                         tenant_obj = tt.tenant
 
-                        if dep:
-                            try:
-                                dt = check_house_occupied(bill.tenant)[2].checkin_date
-                            except:
-                                dt = bill.tenant.date
+                        # if dep:
+                        #     try:
+                        #         dt = check_house_occupied(bill.tenant)[2].checkin_date
+                        #     except:
+                        #         dt = bill.tenant.date
 
-                            rentdep_bal = dep.rentdep - deposit_paid
+                        #     rentdep_bal = dep.rentdep - deposit_paid
 
-                            # TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
-                            total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
-                            TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+                        #     # TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+                        #     total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                        #     TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                            TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
+                        #     TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
 
-                            totalpaid = 0.0
-                            totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
-                            totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
-                            totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
-                            totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+                        #     totalpaid = 0.0
+                        #     totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                        #     totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                        #     totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                        #     totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
 
-                            totalbalance = rentdep_bal
+                        #     totalbalance = rentdep_bal
 
-                            TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+                        #     TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
 
-                            TenantOp.update_deposit(tenant_obj,total)
+                        #     TenantOp.update_deposit(tenant_obj,total)
 
 
             elif tt.balance < 0.0 and tt.paid_amount > 0.0:
@@ -4766,31 +4766,31 @@ class ResolveInvoices2(Resource):
 
                     tenant_obj = tt.tenant
 
-                    if dep:
-                        try:
-                            dt = check_house_occupied(bill.tenant)[2].checkin_date
-                        except:
-                            dt = bill.tenant.date
+                    # if dep:
+                    #     try:
+                    #         dt = check_house_occupied(bill.tenant)[2].checkin_date
+                    #     except:
+                    #         dt = bill.tenant.date
 
-                        rentdep_bal = dep.rentdep - deposit_paid
+                    #     rentdep_bal = dep.rentdep - deposit_paid
 
-                        # TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
-                        total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
-                        TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+                    #     # TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+                    #     total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                    #     TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                        TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
+                    #     TenantDepositOp.update_paid_deposits(dep,deposit_paid,0.0,0.0,0.0,rentdep_bal,0.0,0.0,0.0,None,None,"unrefunded")
 
-                        totalpaid = 0.0
-                        totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
-                        totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
-                        totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
-                        totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+                    #     totalpaid = 0.0
+                    #     totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                    #     totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                    #     totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                    #     totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
 
-                        totalbalance = rentdep_bal
+                    #     totalbalance = rentdep_bal
 
-                        TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+                    #     TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
 
-                        TenantOp.update_deposit(tenant_obj,total)
+                    #     TenantOp.update_deposit(tenant_obj,total)
 
             else:
                 pass

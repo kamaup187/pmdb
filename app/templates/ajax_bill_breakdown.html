@@ -1,14 +1,19 @@
 <span id="edit_bill_identifier" class="dispnone">{{bill.id}}</span>
+<span id="tenant_identifier_id" class="dispnone">{{bill.tenant.id}}</span>
+<span id="deposit_paid" class="dispnone">False</span>
 
 <div class="container">
 
 
     <div id="depositbed" class="row dispnone">
         <div class="form-group col-6 no-paddin input-icons">
-            <span>Unpaid deposit</span>
+            <span class="text-danger">Unpaid deposit</span>
+            <span type="button" class="text-primary ml-2" data-toggle="modal"
+            data-target="#editDepModal"><i class="text-primary feather-16" data-feather="edit"></i> adjust</span>
+
             <input id="newdepositdue"
                 class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right text-danger"
-                type="text" value="{{dep.balance_rentdep}}" disabled />
+                type="text" value="{{dep.balance}}" disabled />
         </div>
         <div class="form-group col-6 no-paddin input-icons">
             <span>Deposit allocation </span>
@@ -24,7 +29,7 @@
                 type="text" value="" disabled />
         </div>
         <div class="form-group col-6 no-paddin input-icons">
-            <span>Available allocation </span>
+            <span>Available for other allocations </span>
             <input id="available_bal"
                 class="form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-right" type="text"
                 placeholder="0.0" value="" disabled/>
@@ -34,11 +39,11 @@
     <div class="form-group mb-1 text-right {{edit}}">
         <span class="">
             <input type="checkbox" id="paydeposit" class="check-bt" name="paydeposit" value="paydeposit">
-            <label for="paydeposit">Pay deposit?</label>
+            <label class="text-black" for="paydeposit">Pay deposit?</label>
         </span>
         <span class="">
             <input type="checkbox" id="paidll" class="check-bt" name="paidll" value="paidll">
-            <label for="paidll">Paid to landlord?</label>
+            <label class="text-black" for="paidll">Paid to landlord?</label>
         </span>
         <button type="button" class="btn btn-light text-danger btn-sm" data-toggle="modal"
             data-target="#editBillModal"><i class="fas fa-edit mr-1"></i>edit invoice</button>
@@ -256,70 +261,50 @@
 </div>
 
 
+<div class="dispnone">
+    <div>
+        <input id="paid_rentdep_memory" value="{{dep.paid_rentdep}}">
+        <input id="paid_waterdep_memory" value="{{dep.paid_waterdep}}">
+        <input id="paid_elecdep_memory" value="{{dep.paid_elecdep}}">
+        <input id="paid_otherdep_memory" value="{{dep.paid_otherdep}}">
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-3 border-0 semi-small">Rent deposit</div>
+        <div class="col-3"><input id="edit_rentdep" class="form-control ph" type="text" value="{{dep.rentdep}}"></div>
+        <div class="col-3"><input id="edit_prentdep" class="form-control ph" type="text" value="{{dep.paid_rentdep}}"></div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col-3 border-0 semi-small">Water deposit</div>
+        <div class="col-3"><input id="edit_waterdep" class="form-control ph" type="text" value="{{dep.waterdep}}"></div>
+        <div class="col-3"><input id="edit_pwaterdep" class="form-control ph" type="text" value="{{dep.paid_waterdep}}"></div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col-3 border-0 semi-small">Elec deposit</div>
+        <div class="col-3"><input id="edit_elecdep" class="form-control ph" type="text" value="{{dep.elecdep}}"></div>
+        <div class="col-3"><input id="edit_pelecdep" class="form-control ph" type="text" value="{{dep.paid_elecdep}}"></div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col-3 border-0 semi-small">Other deposits</div>
+        <div class="col-3"><input id="edit_otherdep" class="form-control ph" type="text" value="{{dep.otherdep}}"></div>
+        <div class="col-3"><input id="edit_potherdep" class="form-control ph" type="text" value="{{dep.paid_otherdep}}"></div>
+    </div>
+    
+</div>
+
+
 <div id="advancepay" class="form-group dispnone no-paddin input-icons">
     <span class="text-danger font-weight-bold">Overpayment/Advance/Prepayment</span> : Kes <span class="text-black text-125" id="advance_pay_text">...</span>
     <input id="advance_pay"
         class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
         value="" disabled /> <br>
-
-        <input id="deposit_pay"
-        class="dispnone form-control border-top-0 border-right-0 border-left-0 pl-5 ph-dark text-center text-danger" type="text"
-        value="" disabled /> <br>
-
-    <span class="text-black font-weight-bold">Invoice deposit</span> : <span class="text-black text-125">{{bill.deposit_due}}</span><br>
-    <span class="text-black font-weight-bold">Initial unpaid deposit</span> : <span class="text-black text-125">{{dep.balance_rentdep}}</span><br>
-
-    <span class="text-black font-weight-bold">Initial payment</span> : <span class="text-black text-125">{{dep.paid_rentdep}}</span> <br>
-    <span class="text-black font-weight-bold">Current payment</span> : <span class="text-black text-125" id="deposit_pay_text">...</span><br>
-    <span class="text-black font-weight-bold">Total deposit payment</span> : <span class="text-black text-125" id="total_deposit_pay_text">...</span><br>
-
-
-    <span class="text-black font-weight-bold">Deposit balance</span> : <span class="text-black text-125" id="deposit_bal_text">...</span> <br>
-
-    <div class="dispnone">
-        <div>
-            <input id="depmemory" value="{{dep.rentdep}}">
-            <input id="pdepmemory" value="{{dep.paid_rentdep}}">
-            <input id="bdepmemory" value="{{dep.balance_rentdep}}">
-        </div>
-
-        <div class="row mb-2">
-            <div class="col-3 border-0 semi-small">Rent deposit</div>
-            <div class="col-3"><input id="edit_rentdep" class="form-control ph" type="text" value="{{dep.rentdep}}"></div>
-            <div class="col-3"><input id="edit_prentdep" class="form-control ph" type="text" value="{{dep.paid_rentdep}}"></div>
-            <div class="col-3"><input id="edit_brentdep" class="form-control ph" type="text" placeholder="{{dep.balance_rentdep}}"></div>
-        </div>
-        
-        <div class="row mb-2">
-            <div class="col-3 border-0 semi-small">Water deposit</div>
-            <div class="col-3"><input id="edit_waterdep" class="form-control ph" type="text" value="{{dep.waterdep}}"></div>
-            <div class="col-3"><input id="edit_pwaterdep" class="form-control ph" type="text" value="{{dep.paid_waterdep}}"></div>
-            <div class="col-3"><input id="edit_bwaterdep" class="form-control ph" type="text" placeholder="{{dep.balance_waterdep}}"></div>
-        </div>
-        
-        <div class="row mb-2">
-            <div class="col-3 border-0 semi-small">Elec deposit</div>
-            <div class="col-3"><input id="edit_elecdep" class="form-control ph" type="text" value="{{dep.elecdep}}"></div>
-            <div class="col-3"><input id="edit_pelecdep" class="form-control ph" type="text" value="{{dep.paid_elecdep}}"></div>
-            <div class="col-3"><input id="edit_belecdep" class="form-control ph" type="text" placeholder="{{dep.balance_elecdep}}"></div>
-        </div>
-        
-        <div class="row mb-2">
-            <div class="col-3 border-0 semi-small">Other deposits</div>
-            <div class="col-3"><input id="edit_otherdep" class="form-control ph" type="text" value="{{dep.otherdep}}"></div>
-            <div class="col-3"><input id="edit_potherdep" class="form-control ph" type="text" value="{{dep.paid_otherdep}}"></div>
-            <div class="col-3"><input id="edit_botherdep" class="form-control ph" type="text" placeholder="{{dep.balance_otherdep}}"></div>
-        </div>
-        
-        <div class="row underline-top pt-2">
-            <div class="col-3 border-0 text-black semi-small">TOTAL</div>
-            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.total}}" disabled></div>
-            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.total_paid}}" disabled></div>
-            <div class="col-3"><input class="form-control ph" type="text" value="{{dep.balance}}" disabled></div>
-        </div>
-    </div>
-
 </div>
+
+
+
 
 <!-- <script>
     let wrapper=document.querySelector("#lineitems");
@@ -390,76 +375,76 @@
 
     if (bal >= agreementdue) {$("#agreementpaid").val(agreementdue);bal -= agreementdue}else if (bal < agreementdue && bal > 0) {$("#agreementpaid").val(bal);bal = 0}else {$("#agreementpaid").val(0.0)}
     
-    var pay_remainder = 0;
-    var pay_deposit = 0;
-
     if(bal){
       $("#advancepay").removeClass("dispnone")
-
-      console.log("advancepay....",bal)
-
       $("#advance_pay_text").text(bal)
-
-      pay_remainder = bal
-
-        if (parseInt($("#bdepmemory").val()) > 0){
-
-          if (bal > parseInt($("#bdepmemory").val())){
-
-            pay_remainder = bal-parseInt($("#bdepmemory").val())
-
-            $("#deposit_pay_text").text($("#bdepmemory").val())
-            $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
-
-            pay_deposit = $("#bdepmemory").val()
-            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
-
-            $("#edit_rentdep").val($("#depmemory").val())
-            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + parseInt($("#bdepmemory").val() ))
-            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()))
-          }
-          else{
-
-            pay_remainder = 0
-            pay_deposit = bal
-
-            $("#deposit_pay_text").text(bal)
-            $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
-
-            $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
-
-            $("#edit_rentdep").val($("#depmemory").val())
-            $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + bal)
-            $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - bal )
-          }
-        }
-    }else{
-
-      pay_remainder = 0
-      pay_deposit = 0
-
-      console.log("no bal no dep paid")
-
-      $("#advancepay").addClass("dispnone")
-    //   $("#advance_pay").val(0.0)
-      $("#advance_pay_text").text("0.0")
-
-      $("#deposit_pay").val(0.0)
-      $("#deposit_pay_text").text("0.0")
-      $("#total_deposit_pay_text").text("0.0")
-
-      $("#deposit_bal").val("0.0")
-      $("#deposit_bal_text").text("0.0")
-
-      $("#edit_rentdep").val($("#depmemory").val())
-      $("#edit_prentdep").val($("#pdepmemory").val())
-      $("#edit_brentdep").val($("#bdepmemory").val())
-      
+      $("#advance_pay").val(bal)
     }
+    else{
+        // $("#advancepay").addClass("dispnone")
+      $("#advance_pay_text").text("")
+      $("#advance_pay").val(0.0)
+
+    }
+        // if (parseInt($("#bdepmemory").val()) > 0)
+        // {
+
+        //   if (bal > parseInt($("#bdepmemory").val())){
+
+        //     pay_remainder = bal-parseInt($("#bdepmemory").val())
+
+        //     $("#deposit_pay_text").text($("#bdepmemory").val())
+        //     $("#total_deposit_pay_text").text((Number($("#bdepmemory").val()) + Number($("#pdepmemory").val())))
+
+        //     pay_deposit = $("#bdepmemory").val()
+        //     $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()) )
+
+        //     $("#edit_rentdep").val($("#depmemory").val())
+        //     $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + parseInt($("#bdepmemory").val() ))
+        //     $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - parseInt($("#bdepmemory").val()))
+        //   }
+        //   else{
+
+        //     pay_remainder = 0
+        //     pay_deposit = bal
+
+        //     $("#deposit_pay_text").text(bal)
+        //     $("#total_deposit_pay_text").text(bal + parseInt($("#pdepmemory").val()))
+
+        //     $("#deposit_bal_text").text( parseInt($("#bdepmemory").val()) - bal )
+
+        //     $("#edit_rentdep").val($("#depmemory").val())
+        //     $("#edit_prentdep").val(parseInt($("#pdepmemory").val()) + bal)
+        //     $("#edit_brentdep").val( parseInt($("#bdepmemory").val()) - bal )
+        //   }
+        // }
+        // }else{
+
+        //   pay_remainder = 0
+        //   pay_deposit = 0
+
+        //   console.log("no bal no dep paid")
+
+        //   $("#advancepay").addClass("dispnone")
+        // //   $("#advance_pay").val(0.0)
+        //   $("#advance_pay_text").text("0.0")
+
+        //   $("#deposit_pay").val(0.0)
+        //   $("#deposit_pay_text").text("0.0")
+        //   $("#total_deposit_pay_text").text("0.0")
+
+        //   $("#deposit_bal").val("0.0")
+        //   $("#deposit_bal_text").text("0.0")
+
+        //   $("#edit_rentdep").val($("#depmemory").val())
+        //   $("#edit_prentdep").val($("#pdepmemory").val())
+        //   $("#edit_brentdep").val($("#bdepmemory").val())
+        
+        // }
 
 
     // $("#advance_pay").val(pay_remainder)
-    $("#deposit_pay").val(pay_deposit)
+    // $("#deposit_pay").val(pay_deposit)
 
   })
 
@@ -566,6 +551,25 @@
 
     $("#available_bal").change();
 
+    //logic for deposit payment lie here
+
+    let dp = parseInt($("#newdepositpaid").val().replace(/,/g, ''));
+
+    let rentdep_paid = parseInt($("#paid_rentdep_memory").val().replace(/,/g, ''));
+    let waterdep_paid = parseInt($("#paid_waterdep_memory").val().replace(/,/g, ''));
+    let elecdep_paid = parseInt($("#paid_elecdep_memory").val().replace(/,/g, ''));
+    let otherdep_paid =  parseInt($("#paid_otherdep_memory").val().replace(/,/g, ''));
+
+    let rentdep_due = parseInt($("#edit_rentdep").val().replace(/,/g, '')) - parseInt($("#paid_rentdep_memory").val().replace(/,/g, ''));
+    let waterdep_due = parseInt($("#edit_waterdep").val().replace(/,/g, '')) - parseInt($("#paid_waterdep_memory").val().replace(/,/g, ''));
+    let elecdep_due = parseInt($("#edit_elecdep").val().replace(/,/g, '')) - parseInt($("#paid_elecdep_memory").val().replace(/,/g, ''));
+    let otherdep_due = parseInt($("#edit_otherdep").val().replace(/,/g, '')) - parseInt($("#paid_otherdep_memory").val().replace(/,/g, ''));
+
+    if (dp >= rentdep_due) {$("#edit_prentdep").val(rentdep_due + rentdep_paid); dp -= rentdep_due} else if (dp < rentdep_due && dp > 0) {$("#edit_prentdep").val(dp + rentdep_paid);dp = 0}else {$("#edit_prentdep").val(rentdep_paid)};
+    if (dp >= waterdep_due) {$("#edit_pwaterdep").val(waterdep_due + waterdep_paid); dp -= waterdep_due} else if(dp < waterdep_due && dp > 0) {$("#edit_pwaterdep").val(dp + waterdep_paid); dp = 0}else {$("#edit_pwaterdep").val(waterdep_paid)};
+    if (dp >= elecdep_due) {$("#edit_pelecdep").val(elecdep_due + elecdep_paid); dp -= elecdep_due} else if (dp < elecdep_due && dp > 0) {$("#edit_pelecdep").val(dp + elecdep_paid); dp = 0} else {$("#edit_pelecdep").val(elecdep_paid)};
+    if (dp >= otherdep_due) {$("#edit_potherdep").val(otherdep_due + otherdep_paid); dp -= otherdep_due} else if (dp < otherdep_due && dp > 0) {$("#edit_potherdep").val(dp + otherdep_paid); dp = 0} else {$("#edit_potherdep").val(otherdep_paid)};
+
   });
 
 
@@ -575,9 +579,14 @@
             if ($(this).is(':checked')) {
                 // Checkbox is checked, show the deposit section
                 $('#depositbed').removeClass("dispnone");
+                $("#deposit_paid").text("True")
             } else {
                 // Checkbox is unchecked, hide the deposit section
                 $('#depositbed').addClass("dispnone");
+                $("#deposit_paid").text("False")
             }
         });
 </script>
+<script>
+    feather.replace();
+  </script>

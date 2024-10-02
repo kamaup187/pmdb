@@ -1604,7 +1604,6 @@ class HouseOp(House,Base):
 
     def view(self):
         if not self.housecode:
-            print(self.deposits)
             return {
                 'id':self.id,
                 'editid':HouseOp.generate_editid(self),

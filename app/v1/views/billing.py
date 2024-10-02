@@ -533,7 +533,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(1,9,timenow.year)
+        invdate = generate_exact_date(1,10,timenow.year)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)
@@ -2785,6 +2785,7 @@ class ReceivePayment(Resource):
     def post(self):
         current_period_payment = True
         prop_id = request.form.get('propid')
+        tenantid = request.form.get('tenantid')
         propname = request.form.get('propname')
 
         propid = get_identifier(prop_id)
@@ -2821,6 +2822,8 @@ class ReceivePayment(Resource):
         paid_waterdep = request.form.get("depwaterpaid")
         paid_elecdep = request.form.get("depelectricitypaid")
         paid_otherdep = request.form.get("depotherpaid")
+
+        paying_deposit = request.form.get("deposit_paid")
 
         cbid = request.form.get("cbid")
 
@@ -2898,6 +2901,42 @@ class ReceivePayment(Resource):
         valid_amount = validate_input(amount)
 
         if not valid_amount:
+            if paying_deposit == "True":
+                tenant_id = get_identifier(tenantid)
+                d_tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
+
+                if d_tenant_obj:
+                    values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
+                    values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+                    # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+
+                    a = values[0] - values2[0]
+                    b = values[1] - values2[1]
+                    c = values[2] - values2[2]
+                    d = values[3] - values2[3]
+
+                    dep = d_tenant_obj.deposits
+
+                    if dep:
+                        TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,"unrefunded")
+                        total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                        TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+                        TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
+
+                        totalpaid = 0.0
+                        totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                        totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                        totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                        totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+                        totalbalance = a + b + c + d
+
+                        TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+
+                        TenantOp.update_deposit(d_tenant_obj,total)
+
+                    return "Deposit payment submitted"
             return "<div class='center-btn text-danger text-xx'>Invalid amount !</div"
 
         if raw_bill_ref.upper() == "N/A":
@@ -3215,6 +3254,37 @@ class ReceivePayment(Resource):
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
 
+        values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
+        values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+        # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+
+        a = values[0] - values2[0]
+        b = values[1] - values2[1]
+        c = values[2] - values2[2]
+        d = values[3] - values2[3]
+
+
+        dep = tenant_obj.deposits
+
+        if dep:
+            TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,"unrefunded")
+            total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+            TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+            TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
+
+            totalpaid = 0.0
+            totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+            totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+            totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+            totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+            totalbalance = a + b + c + d
+
+            TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+
+            TenantOp.update_deposit(tenant_obj,total)
+
         create_activity(current_user,f"added payment no. {payment_obj.id} for house: {payment_obj.house.name} in {payment_obj.apartment}")
 
         if cbid:
@@ -3475,35 +3545,35 @@ class ReceivePayment(Resource):
                     print("ERROR >>",e)
 
 
-                values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
-                values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
+                # values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
+                # values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
 
-                a = values[0] - values2[0]
-                b = values[1] - values2[1]
-                c = values[2] - values2[2]
-                d = values[3] - values2[3]
+                # a = values[0] - values2[0]
+                # b = values[1] - values2[1]
+                # c = values[2] - values2[2]
+                # d = values[3] - values2[3]
 
 
-                dep = tenant_obj.deposits
+                # dep = tenant_obj.deposits
 
-                if dep:
-                    TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
-                    total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
-                    TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+                # if dep:
+                #     TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,None)
+                #     total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                #     TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                    TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,None)
+                #     TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,None)
 
-                    totalpaid = 0.0
-                    totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
-                    totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
-                    totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
-                    totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+                #     totalpaid = 0.0
+                #     totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                #     totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                #     totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                #     totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
 
-                    totalbalance = a + b + c + d
+                #     totalbalance = a + b + c + d
 
-                    TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+                #     TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
 
-                    TenantOp.update_deposit(tenant_obj,total)
+                #     TenantOp.update_deposit(tenant_obj,total)
 
             # elif not specific_charge_obj and not current_period_payment:
             #     subsequent_specific_charge_obj = get_specific_monthly_charge_obj(monthly_charges,billing_period.month,billing_period.year)
@@ -5057,39 +5127,6 @@ class UpdateDeposit(Resource):
         values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
         values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)
         # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
-
-        # try:
-        #     if balance_rentdep:
-        #         a = values3[0]
-        #     else:
-        #         a = values[0] - values2[0] if values2[0] else 0.0
-        # except:
-        #     a = 0
-
-        # try:
-        #     if balance_waterdep:
-        #         b = values3[1]
-        #     else:
-        #         b = values[1] - values2[1] if values2[1] else 0.0
-        # except:
-        #     b = 0
-
-        # try:
-        #     if balance_elecdep:
-        #         c = values3[2]
-        #     else:
-        #         c = values[2] - values2[2] if values2[2] else 0.0
-        # except:
-        #     c = 0
-
-        # try:
-        #     if balance_otherdep:
-        #         d = values3[3]
-        #     else:
-        #         d = values[3] - values2[3] if values2[3] else 0.0
-        # except:
-        #     d = 0
-
 
         a = values[0] - values2[0]
         b = values[1] - values2[1]
@@ -8680,6 +8717,8 @@ class CallBackUrlLes(Resource):
         try:
             my_data=request.data
             my_json = my_data.decode('utf8').replace("'", '"')
+            advanta_send_sms(f"PROD LESAMA COOP has good data >>> {my_json}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
         except Exception as e:
             advanta_send_sms(f"PROD LESAMA COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
@@ -8689,6 +8728,8 @@ class CallBackUrlLes(Resource):
             # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
         try:
             data = json.loads(my_json)
+            advanta_send_sms(f"UNPACKING PROD LESAMA COOP data >>> {data}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
             # print("#####################################COOP COOP COOP############################################")
             # print(data)
             # print("#####################################COOP COOP COOP############################################")

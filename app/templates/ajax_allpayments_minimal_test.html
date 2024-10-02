@@ -154,7 +154,7 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0">
-            <div class="smallify text-white font-weight-bold bg-gradient-info form-control mb-2" id="paymentDetailModalLabel">#{{current_month}} payments <div id="propname" class="d-inline text-warning font-weight-bold">
+            <div class="smallify text-white font-weight-bold card-bg form-control mb-2" id="paymentDetailModalLabel">#{{current_month}} payments <div id="propname" class="d-inline text-warning font-weight-bold">
               <div class="fountainG-small d-inline ml-3">
                 <div class="fountainG_1s fountainG-s"></div>
                 <div class="fountainG_2s fountainG-s"></div>
@@ -617,8 +617,8 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center bg-dark">
-            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit bill</h5>
+          <div class="modal-header pb-0 text-center card-bg">
+            <h5 class="modal-title text-white" id="paymentDetailModalLabel">Edit bill</h5>
             <span id="update-reloader" class="dispnone"></span>
             <div class="alert-msgs"></div>
           </div>
@@ -681,12 +681,13 @@
     </div>
 
     <div class="modal fade" id="editDepModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-header pb-0">
-            <div class="smallify text-white font-weight-bold bg-gradient-info form-control mb-2">
-              Update deposits
-            </div>
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center card-bg">
+            <h5 class="modal-title text-white" id="paymentDetailModalLabel">Adjust deposits</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
           </div>
           <div class="modal-body bg-light pt-0">
             <div class="media mb-2">
@@ -695,11 +696,11 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
      
-                      <div class="mt-2 mb-3" id="depbed"></div>
+                      <div class="mt-2 mb-3 p-3" id="depositeditbed"></div>
                     
                       <div class="divbg center-btn">
-                        <button id="editdep" type="button" class="btn btn-outline-success">Update</button>
-                        <button class="btn btn-outline-danger" id="closeBillModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button id="adjustdep" type="button" class="btn btn-success form-control">Update</button>
+                        <button class="btn btn-danger form-control ml-2" id="closeDepModal" type="button" data-dismiss="modal"></i>Dismiss</button>
                         <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                       </div>
                       
@@ -713,37 +714,90 @@
       </div>
     </div>
 
-    <script>
-      $("#editdep").click(function(){   
-        $("#editdep").html("updating...")  
+<script>
+  $("#adjustdep").click(function(){   
+    $("#adjustdep").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.updatedeposit') }}",
+        type: "POST",
+        data: {
+                tenant_id: $("#tenant_identifier_id").text(),
+                
+                rent: $("#edit_rentdep_alt").val(),
+                water: $("#edit_waterdep_alt").val(),
+                electricity: $("#edit_elecdep_alt").val(),
+                other:$("#edit_otherdep_alt").val(),
+
+                paidrent: $("#edit_prentdep_alt").val(),
+                paidwater: $("#edit_pwaterdep_alt").val(),
+                paidelectricity: $("#edit_pelecdep_alt").val(),
+                paidother:$("#edit_potherdep_alt").val(),
+
+                balancerent: $("#edit_brentdep_alt").val(),
+                balancewater: $("#edit_bwaterdep_alt").val(),
+                balanceelectricity: $("#edit_belecdep_alt").val(),
+                balanceother:$("#edit_botherdep_alt").val(),
+
+                status: $("input[name=depstatus]:checked").val(),
+                ttype: $("#ttype").text()
+            },
+        success: function(response) {
+          $("#tenant-deposit").html(response)
+          $("#adjustdep").html("Update")
+          // $("#raise-depmodal").click();
+
           $.ajax({
-            url: "{{ url_for('api.updatedeposit') }}",
-            type: "POST",
+            url: "{{ url_for('api.receivepayment') }}",
+            type: "get",
             data: {
-                    billid: $("#edit_bill_identifier").text(),
-                    rent: $("#edit_rentdep").val(),
-                    water: $("#edit_waterdep").val(),
-                    electricity: $("#edit_elecdep").val(),
-                    other:$("#edit_otherdep").val(),
-                    // status: $("input[name=depstatus]:checked").val(),
-                    // ttype: $("#ttype").text()
+                  propid: $("#prop_identifier_main").text(),
+                  propname:$("#select_prop").val(),
+                  house: $("#select_house").val(),
+                  cbid:$("#c2bitem_id").text(),
+                  paidamount:$("#paidamount").val(),
+                  target:"breakdown"
                 },
             success: function(response) {
-              // $("#tenant-deposit").html(response)
-              $("#editdep").html("Update")  
-    
-            }
-          });
+              $("#billbreakdown").html(response);
+
+              $.ajax({
+                url: "{{ url_for('api.receivepayment') }}",
+                type: "get",
+                data: {
+                      propid: $("#prop_identifier_main").text(),
+                      propname:$("#select_prop").val(),
+                      house: $("#select_house").val(),
+                      house2: $("#house-holder").text(),
+                      cbid:$("#c2bitem_id").text(),
+                      target:"amount due"
+                    },
+                success: function(response) {
+                  $("#totaldue").html(response);                  
+                }
+              });
+
+              }
+            });
+
+          setTimeout(function(){
+            $(".alert-msgs").empty();
+            // $(".reset").click();
+            $("#editbill").html("Update")
+            $("#closeDepModal").click();
+          }, 1000);
+
+        }
       });
-    </script>
+  });
+</script>
     
 
     <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="indicator"></div>
-          <div class="modal-header pb-0 text-center bg-dark">
-            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Edit arrears per invoice item</h5>
+          <div class="modal-header pb-0 text-center card-bg">
+            <h5 class="modal-title text-whiteyyyy" id="paymentDetailModalLabel">Edit arrears per invoice item</h5>
             <span id="update-reloader" class="dispnone"></span>
             <div class="alert-msgs"></div>
           </div>
@@ -1584,6 +1638,7 @@
                 cbid:$("#c2bitem_id").text(),
                 house: $("#select_house").val(),
                 house2: $("#house-holder").text(),
+                tenantid:$("#tenant_identifier_id").text(),
                 chargetype1:"rent",
                 bank:$("input[name=bank]:checked").val(),
                 sms:notifysms,
@@ -1631,6 +1686,8 @@
                 depwaterpaid: $("#edit_pwaterdep").val(),
                 depelectricitypaid: $("#edit_pelecdep").val(),
                 depotherpaid:$("#edit_potherdep").val(),
+
+                deposit_paid:$("#deposit_paid").text(),
 
                 paidamount:$("#available_bal").val(),
                 overpayment:$("#advance_pay").val(),
@@ -1875,21 +1932,19 @@
 
 <script>
   $("#editDepModal").on('shown.bs.modal', function(){
-    $("#editdep").removeClass("dispnone");
-    $("#depbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $("#depositeditbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
     $.ajax({
-      url: "{{ url_for('api.editbill') }}",
+      url: "{{ url_for('api.updatetenant') }}",
       type: "get",
       data: {
-            billid: $("#edit_bill_identifier").text(),
-            target:"editdeposits"
+            tenantid: $("#tenant_identifier_id").text(),
+            target: "editdeposit"
           },
       success: function(response) {
-        $("#depbed").html(response);
+        $("#depositeditbed").html(response);
       },
       error: function(xhr) {
-        $("#depbed").html('<div class="center-btn text-danger mb-3">error!</div>');
-        $("#editdep").addClass("dispnone");
+        alert("Error: " + xhr.responseText);
         }
     });
   });

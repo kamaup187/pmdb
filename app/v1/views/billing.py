@@ -5332,6 +5332,8 @@ class Receipt(Resource):
 
         if request.args.get("target") == "custom":
             template = "ajax_custom_receiptpay.html"
+        if payment_obj.tenant.id == 29334:
+            template = "ajax_malibu_receipt.html"
         else:
             template = "ajax_receiptpay.html"
 

@@ -2780,6 +2780,15 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                       </div>
                 
                       <div class="form-group">
+                        <select class="select-css" id="remindertenant" required>
+                          <option disabled selected value> -- Select tenant -- </option>
+                          {% for o in tenants%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <div class="form-group">
                         <select class="select-css" id="reminderbalance" required>
                           <option disabled selected value> -- Balance category -- </option>
                 
@@ -5627,6 +5636,20 @@ $("#closemodule").on('click',function(){
     });
   });
 
+
+  $("#reminderprop").on('change', function(){
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#reminderprop").val(),
+            target:"tenant house options"
+          },
+      success: function(response) {
+        $("#remindertenant").html(response);
+      }
+    });
+  });
 
 
   // This script autopulate house options and displays tenant name

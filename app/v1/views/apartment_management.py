@@ -7118,6 +7118,61 @@ class UpdateTenant(Resource):
             else:
                 dep = None
 
+            if not dep:
+                tenant_obj= tenant
+                try:
+                    dt = check_house_occupied(tenant_obj)[2].checkin_date
+                except:
+                    dt = tenant_obj.date
+
+                house_obj = check_house_occupied(tenant_obj)[1]
+
+
+
+
+                
+                if house_obj.housecode:
+                    status = "unrefunded"
+                    rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
+                    waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
+                    elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
+                    otherdep = "0"
+
+
+
+                    values = validate_deposit_float_inputs(str(rentdep),str(waterdep),str(elecdep),str(otherdep))
+                    values2 = validate_deposit_float_inputs("0","0","0","0")
+                    # values3 = validate_float_inputs(balance_rentdep,balance_waterdep,balance_elecdep,balance_otherdep)
+
+                    a = values[0] - values2[0]
+                    b = values[1] - values2[1]
+                    c = values[2] - values2[2]
+                    d = values[3] - values2[3]
+
+                    total = rentdep+waterdep+elecdep
+
+                    print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+                    dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant_obj.id,None,house_obj.id,house_obj.apartment_id)
+                    dep.save()
+
+                    TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+                    total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
+                    TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+                    TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,status)
+
+                    totalpaid = 0.0
+                    totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                    totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                    totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                    totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+                    totalbalance = a + b + c + d
+
+                    TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
+
+                    TenantOp.update_deposit(tenant_obj,total)
+
             return render_template('ajax_dynamic_deposit_form.html',tenant=tenant,dep=dep)
 
         if target == "tenant sms":
@@ -7285,6 +7340,15 @@ class AllocateTenants(Resource):
         if target == "house options":
             if not house_list:
                 placeholder = "No vacant house!"
+            else:
+                placeholder = "select house"
+            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder=placeholder)
+
+        if target == "tenant house options":
+            house_list = filter_in_occupied_houses(stored_apartment.name) if stored_apartment else None
+            house_list.append("All")
+            if not house_list:
+                placeholder = "No occupied houses!"
             else:
                 placeholder = "select house"
             return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder=placeholder)

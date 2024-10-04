@@ -2268,13 +2268,7 @@ class ReceivePayment(Resource):
     """class"""
     @login_required
     def get(self):
-
-
-        # user_group = current_user.company_user_group
-        # accessright = check_accessright(user_group,"receive_payment")
-        # if accessright != True:
-        #     return Response(render_template('noaccess.html',name=current_user.name))
-        
+      
         prop_id = request.args.get("propid")
         propname = request.args.get("propname")
         house_name = request.args.get("house")
@@ -2305,11 +2299,8 @@ class ReceivePayment(Resource):
         else:
             pay_period_date = get_billing_period(prop)
 
-        print("PAYPERIOOOOOOOD",pay_period_date)
-
         if target == "proplist":
             props = fetch_all_apartments_by_user(current_user)
-            # print("these are props",props)
             return render_template('ajax_multivariable.html',items=sort_items(props),placeholder="select property",access="")
 
         if target == "houselist":
@@ -2319,12 +2310,11 @@ class ReceivePayment(Resource):
                 no_cash = ""
 
             if current_user.user_group_id == 2 and current_user.name != "WANGO SHEMA":
-                return render_template('ajax_multivariable.html',items=[],placeholder="Not allowed",access=no_cash)
+                return render_template('ajax_multivariable.html',items=[],placeholder="Not allowed",access="")
             else:
                 tenant_list = tenantauto(propid)
-                # house_tenant_list = generate_house_tenants(tenant_list)
                 house_tenant_list = generate_house_ownertenants(tenant_list,propid)
-                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select client",access=no_cash)
+                return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select client",access="")
 
         if target == "propname":
             return f'>> {prop.name}'
@@ -2442,16 +2432,6 @@ class ReceivePayment(Resource):
                 cb = CtoBop.fetch_record_by_id(cbid)
 
                 if cb.bill_ref_num:
-                    # if cb.bill_ref_num.startswith("TNT"):
-                    #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    #     house_item = check_house_occupied(tenant_obj)[1]
-                    #     bill = fetch_target_period_invoice(house_item,pay_period_date)
-
-                    # elif cb.bill_ref_num.startswith("WN"):
-                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    #     house_item = tenant_obj.house
-                    #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
-
                     if cb.bill_ref_num.startswith("TNT"):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
@@ -2485,9 +2465,7 @@ class ReceivePayment(Resource):
                     elif prop.name == "Greatwall Gardens 2" and housecheck != "manual":
                         hh = get_specific_house_obj(propid,cb.bill_ref_num)
                         if hh:
-                            print("KATA SIM",hh,hh.owner)
                             bill = fetch_target_period_owner_invoice(hh,pay_period_date)
-                            print("LETA BILL BUANA",bill,"YA HII SIKU",pay_period_date)
                             tenant = hh.owner
                         else:
                             bill = None
@@ -2659,15 +2637,7 @@ class ReceivePayment(Resource):
                         else:
                             print("DID NOT FIND ASTROL GUY")
                             bill = None
-                    # if cb.bill_ref_num.startswith("TNT"):
-                    #     tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    #     house_item = check_house_occupied(tenant_obj)[1]
-                    #     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-                    # elif cb.bill_ref_num.startswith("WN"):
-                    #     tenant_obj = PermanentTenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
-                    #     house_item = tenant_obj.house
-                    #     bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                     else:
                         skip = True
 
@@ -2695,86 +2665,31 @@ class ReceivePayment(Resource):
                 house_item = house_obj if house_name2 else house_obj[0]
             
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
-
-                    # if tenant_obj.apartment.company.name == "REVER MWIMUTO LIMITED":
                     if crm(current_user):
                         bill = tenant_obj.monthly_charges[0]
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
-                    # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
                     bill = fetch_target_period_invoice(house_item,pay_period_date)
 
-            # print("HOUSE ITEM",house_item,"PAYPERIOD >>>",pay_period_date)
-
-
-
             if bill:
-                # print("BILL DATE",bill.month,"/",bill.year)
-                # print("PAID STATUS","RENT PAID",bill.rent_paid,"DEPOSIT PAID",bill.deposit_paid,"GARBAGE PAID",bill.garbage_paid,"TOTAL DUE",bill.total_bill)
-                # print("BALANCE STATUS","RENT BALANCE",bill.rent_balance,"DEPOSIT BALANCE",bill.deposit_balance,"GARBAGE BALANCE",bill.garbage_balance,"OVERALL BALANCE",bill.balance)
-                # print("DUE STATUS","RENT DUE",bill.rent_due,"DEPOSIT DUE",bill.deposit_due,"GARBAGE DUE",bill.garbage_due,"OVERALL DUE",bill.balance)
                 try:
                     dep = tenant_obj.deposits
                 except:
                     dep = None
 
 
-                if dep:
-                    if not bill.dep_journal:
-                        dep_bal = bill.deposit_due + dep.balance_rentdep if dep.balance_rentdep else 0.0
-                        MonthlyChargeOp.update_dues(bill,"null","null","null","null","null","null","null","null","null","null",dep_bal,"null")
-                        MonthlyChargeOp.update_dep_journal(bill,True)
+                # if dep:
+                #     if not bill.dep_journal:
+                #         dep_bal = bill.deposit_due + dep.balance_rentdep if dep.balance_rentdep else 0.0
+                #         MonthlyChargeOp.update_dues(bill,"null","null","null","null","null","null","null","null","null","null",dep_bal,"null")
+                #         MonthlyChargeOp.update_dep_journal(bill,True)
 
 
                 if crm(current_user):
                     edit = "dispnone"
                 else:
                     edit = ""
-
-                if target2 == "minimal":
-                    return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit)
-
-                    # if localenv:
-                        # return render_template('ajax_bill_breakdown.html',bill=bill,edit=edit)
-                        # order = {
-                        #     "rent":1,
-                        #     "garb":2,
-                        #     "dep":6,
-                        #     "water":4,
-                        #     "sec":5,
-                        #     "serv":7,
-                        #     "fine":3,
-                        #     "agre":8,
-                        #     "elec":9
-                        # }
-
-                    if current_user.company_id == 114:
-                        order = {
-                            "rent":1,
-                            "garb":2,
-                            "dep":6,
-                            "water":4,
-                            "sec":5,
-                            "serv":7,
-                            "fine":3,
-                            "agre":8,
-                            "elec":9
-                        }
-                    else:
-                        order = {
-                            "dep":1,
-                            "rent":2,
-                            "garb":3,
-                            "water":4,
-                            "sec":6,
-                            "serv":7,
-                            "fine":5,
-                            "agre":8,
-                            "elec":9
-                        }
-
-                    return render_template('ajax_bill_breakdown_test.html',order=order,dep=dep,bill=bill,edit=edit)
 
                 return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit)
 
@@ -2788,12 +2703,11 @@ class ReceivePayment(Resource):
         tenantid = request.form.get('tenantid')
         propname = request.form.get('propname')
 
-        propid = get_identifier(prop_id)
-
         if propname:
             prop = ApartmentOp.fetch_apartment_by_name(propname)
             propid = prop.id
         else:
+            propid = get_identifier(prop_id)
             prop = ApartmentOp.fetch_apartment_by_id(propid)
 
         house_name = request.form.get('house')
@@ -2817,7 +2731,6 @@ class ReceivePayment(Resource):
         waterdep = request.form.get("depwater")
         elecdep = request.form.get("depelectricity")
         otherdep = request.form.get("depother")
-
         paid_rentdep = request.form.get("deprentpaid")
         paid_waterdep = request.form.get("depwaterpaid")
         paid_elecdep = request.form.get("depelectricitypaid")
@@ -2826,11 +2739,9 @@ class ReceivePayment(Resource):
         paying_deposit = request.form.get("deposit_paid")
 
         cbid = request.form.get("cbid")
-
         book = "Deposit" if bookingpaid else ""
         inst = "Instalment" if instalmentpaid else ""
         addfee = "Additional fees" if addfeepaid else ""
-
         water = "Water" if waterpaid else ""
         rent = "Rent" if rentpaid else ""
         garbage = "Garbage" if garbagepaid else ""
@@ -2842,8 +2753,6 @@ class ReceivePayment(Resource):
         serv = "Service" if servicepaid else ""
 
         narration = f"{rent} {water} {garbage} {sec} {serv} {dep} {book} {inst} {addfee}"
-
-        print(narration)
 
         bank = request.form.get("bank")
 

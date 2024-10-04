@@ -7391,8 +7391,8 @@ def read_mpesa_excel(dict_array,target,user_id):
         ctob_obj = CtoBop(trans_id,trans_time,valid_amount[0],trans_type,shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 
-        if target != "unclaimed":
-            CtoBop.update_status(ctob_obj,"claimed")
+        if target.lower() != "claimed":
+            CtoBop.update_status(ctob_obj,"unclaimed")
         else:
             prop = None
 

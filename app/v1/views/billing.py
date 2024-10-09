@@ -8666,31 +8666,58 @@ class CallBackUrlLes(Resource):
             # "TransactionId": "6186a77c0fffE0iY"
             # }
 
-            custmemo = data.get("CustMemo")
-            narration = data.get("Narration")
-            try:
-                refnum1 = narration.split(" ")[1]
-                refnum2 = refnum1.split("#")[1]
-            except:
-                refnum1 = narration
-                refnum2 = narration
-       
-            print("Data will be proccessed here")
+            if data.get("EventType") == "CREDIT":
+                pass
+            else:
+                response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                resp = jsonify(response)
+                return make_response(resp)
 
-            trans_id = data.get('PaymentRef')
-            trans_time = data.get('TransactionDate')
+
+            lesama_dict = {
+                "AcctNo": "01148173864900",
+                "Amount": "17430.0",
+                "BookedBalance": "1288578.27",
+                "ClearedBalance": "1288578.27",
+                "Currency": "KES",
+                "CustMemoLine1": "SJ98GDWUXE~432942#NF16~25",
+                "CustMemoLine2": "4111366171~MPESAC2B_40022",
+                "CustMemoLine3": "2~Natalie Bosire",
+                "EventType": "CREDIT",
+                "ExchangeRate": "",
+                "Narration": "SJ98GDWUXE~432942#NF16~254111366171~MPESAC2B_400222~Natalie Bosire",
+                "PaymentRef": "09102024_613155272",
+                "PostingDate": "2024-10-09 03:00",
+                "ValueDate": "2024-10-09 03:00",
+                "TransactionDate": "2024-10-09 03:00",
+                "TransactionId": "CB0198527_09102024_2"
+                }
+
+
+            acc_no = data.get("AcctNo")
             trans_amnt = data.get('Amount')
-            trans_type = custmemo.get('CustMemoLine2')
+            trans_id = data.get('PaymentRef')
+
+            custmemo = data.get("CustMemoLine1")
+            # narration = data.get("Narration")
+
+            try:
+                refnum2 = custmemo.split("#")[1]
+            except:
+                refnum2 = custmemo
+       
+            trans_time = data.get('TransactionDate')
+            trans_type = data.get('EventType')
             business_shortcode = "000000"
             bill_ref_num = refnum2
             invoice_num = data.get('InvoiceNumber')
-            msisdn = custmemo.get('CustMemoLine2')
+            msisdn = data.get('CustMemoLine2')
             org_acc_bal = data.get('OrgAccountBalance')
-            fname = custmemo.get('CustMemoLine3')
+            fname = data.get('CustMemoLine3')
             lname = "N/A"
-
             mode = "Bank"
             company_id = 45
+
 
             data_obj = CtoBop.fetch_record_by_ref(trans_id)
             if data_obj:

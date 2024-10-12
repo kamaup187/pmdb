@@ -8702,7 +8702,7 @@ class CallBackUrlLes(Resource):
             # narration = data.get("Narration")
 
             try:
-                refnum2 = custmemo.split("#")[1]
+                refnum2 = custmemo.split("#")[1].replace("~", "")
             except:
                 refnum2 = custmemo
        

@@ -219,6 +219,23 @@ def extract_code(text):
         return match.group(1)  # Extracts what's between # and ~ (if it exists)
     return "house not specified"  # If no match is found
 
+def extract_and_modify_number(text):
+    # Split the input on '~'
+    parts = text.split('~')
+    number_part = parts[0]  # Get the part before '~'
+
+    # Modify the number based on its starting digits
+    if number_part.startswith('254'):
+        number_part = '0' + number_part[3:]  # Replace 254 with 0
+    elif number_part.startswith('54'):
+        number_part = '0' + number_part[2:]  # Replace 54 with 0
+    elif number_part.startswith('4'):
+        number_part = '0' + number_part[1:]  # Replace 4 with 0
+    else:
+        number_part = '0' + number_part  # Prepend 0 for any other cases
+
+    return number_part
+
 class TokenGen(object):
     """
     Base class of every token generator.

@@ -8717,7 +8717,10 @@ class CallBackUrlLes(Resource):
             business_shortcode = "000000"
             bill_ref_num = refnum2
             invoice_num = data.get('InvoiceNumber')
-            msisdn = data.get('CustMemoLine2')
+            try:
+                msisdn = extract_and_modify_number(data.get('CustMemoLine2'))
+            except:
+                msisdn = data.get('CustMemoLine2')
             org_acc_bal = data.get('OrgAccountBalance')
             fname = data.get('CustMemoLine3')
             lname = "N/A"
@@ -8741,8 +8744,8 @@ class CallBackUrlLes(Resource):
                 target_house = None
 
                 if bill_ref_num:
-                    bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
-                    formatted_ref = name_standard(bill_ref_num2)
+                    # bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
+                    formatted_ref = name_standard(bill_ref_num)
 
                     part1_part2 = split_text_by_keywords(formatted_ref,keywords)
 

@@ -8797,7 +8797,7 @@ class CallBackUrlLes(Resource):
 
                 if not target_house:
                     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-                    advanta_send_sms(f"fail, PROD LESAMA Did not find house for {bill_ref_num} and extracted {bill_ref_num2} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                    advanta_send_sms(f"fail, PROD LESAMA Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
                 else:
                     propid = prop.id if prop else None
@@ -8822,7 +8822,7 @@ class CallBackUrlLes(Resource):
 
                         CtoBop.update_status(data_obj,"claimed")
 
-                        advanta_send_sms(f"success, PROD LESAMA Did find house for {bill_ref_num} and extracted {bill_ref_num2}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                        advanta_send_sms(f"success, PROD LESAMA Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
 
             # auto_consume_ctob(ctob_obj)

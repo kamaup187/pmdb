@@ -5234,9 +5234,14 @@ class Receipt(Resource):
         else:
             tenant = payment_obj.tenant
             if tenant.deposits:
-                depbal = f"Kes {tenant.deposits.balance:,.0f}"
-                depbaltitle = "Deposit balance"
-                bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                if payment_obj.apartment_id.company.id == 114:
+                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                    depbaltitle = "Deposit balance"
+                else:
+                # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                # bal = f"KES {(payment_obj.balance)}"
+                    depbal = f"Kes 0.0"
+                    depbaltitle = "Deposit balance"
 
             else:
                 depbal = f"Kes 0.0"

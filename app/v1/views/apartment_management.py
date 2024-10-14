@@ -181,7 +181,6 @@ class Index(Resource):
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
 
-        hostee = request.host
         # mayiit = sms_phone_number_formatter("0716674695")
         # report = advanta_send_sms(hostee,mayiit,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 

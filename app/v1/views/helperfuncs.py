@@ -14129,10 +14129,11 @@ def auto_consume_ctob2(ctob_obj):
 def name_standard(name):
     try:
         n1 = name.replace(" ","")
-        n2 = n1.upper()
+        n2 = name.replace(".","")
+        n3 = n2.upper()
     except:
-        n2 = name
-    return n2
+        n3 = name
+    return n3
     
 def mpesa_response(ctob_obj):
 

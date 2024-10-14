@@ -6966,8 +6966,7 @@ class TenantStatementFour(Resource):
                 prop = house_obj.apartment.name
 
 
-
-            begin_date = tenant_obj.date
+            begin_date = tenant_obj.house_allocated[0].checkin_date
             end_date = datetime.datetime.now()
 
         else:
@@ -7009,7 +7008,7 @@ class TenantStatementFour(Resource):
         if house_obj:
 
             range_period_data = []
-            for i in house_obj.monthlybills:
+            for i in tenant_obj.monthly_charges:
                 period_of_billing = generate_start_date(i.month,i.year)
                 # print("PERIOD",period_of_billing)
                 if period_of_billing.month in month_range and period_of_billing.year in year_range:
@@ -7036,6 +7035,7 @@ class TenantStatementFour(Resource):
             for item in range_period_data:
 
                 cb = 0.0
+                deposits = 0.0
 
                 prev_num = item.month -1 if item.month != 1 else 12
                 month = get_str_month(item.month)
@@ -7057,84 +7057,115 @@ class TenantStatementFour(Resource):
                     checkidate = tenant_obj.date
 
 
-                # if item.month == checkidate.month and item.year == checkidate.year:
-                #     if house_obj.deposits:
-                #         if house_obj.deposits.rentdep:
-                #             cb += house_obj.deposits.rentdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} RENT DEPOSIT BILL",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":house_obj.deposits.rentdep,
-                #                 "credit":"",
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
-                #         if house_obj.deposits.waterdep:
-                #             cb += house_obj.deposits.waterdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} WATER DEPOSIT BILL",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":house_obj.deposits.waterdep,
-                #                 "credit":"",
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
+                if item.month == checkidate.month and item.year == checkidate.year:
+                    if tenant_obj.deposits:
+                        if tenant_obj.deposits.rentdep:
+                            cb += tenant_obj.deposits.rentdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} RENT DEPOSIT BILL",
+                                "ref":f'INV{item.id}',
+                                "debit":tenant_obj.deposits.rentdep,
+                                "credit":"",
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
 
-                #         if house_obj.deposits.elecdep:
-                #             cb += house_obj.deposits.elecdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} ELECTRICITY DEPOSIT BILL",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":house_obj.deposits.elecdep,
-                #                 "credit":"",
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
+                        if tenant_obj.deposits.waterdep:
+                            cb += tenant_obj.deposits.waterdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} WATER DEPOSIT BILL",
+                                "ref":f'INV{item.id}',
+                                "debit":tenant_obj.deposits.waterdep,
+                                "credit":"",
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
+
+                        if tenant_obj.deposits.elecdep:
+                            cb += tenant_obj.deposits.elecdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} S.CHARGE DEPOSIT BILL",
+                                "ref":f'INV{item.id}',
+                                "debit":tenant_obj.deposits.elecdep,
+                                "credit":"",
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
+
+                        if tenant_obj.deposits.otherdep:
+                            cb += tenant_obj.deposits.otherdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} DOCUMENTATION FEE",
+                                "ref":f'INV{item.id}',
+                                "debit":tenant_obj.deposits.otherdep,
+                                "credit":"",
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
 
 
-                #         if house_obj.deposits.rentdep:
-                #             cb -= house_obj.deposits.rentdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} RENT DEPOSIT PAYMENT",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":"",
-                #                 "credit":house_obj.deposits.rentdep,
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
-                #         if house_obj.deposits.waterdep:
-                #             cb -= house_obj.deposits.waterdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} WATER DEPOSIT PAYMENT",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":"",
-                #                 "credit":house_obj.deposits.waterdep,
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
+                        if tenant_obj.deposits.paid_rentdep:
+                            cb -= tenant_obj.deposits.paid_rentdep
+                            deposits += tenant_obj.deposits.paid_rentdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} RENT DEPOSIT PAYMENT",
+                                "ref":'-',
+                                "debit":"",
+                                "credit":tenant_obj.deposits.paid_rentdep,
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
+                        if tenant_obj.deposits.paid_waterdep:
+                            cb -= tenant_obj.deposits.paid_waterdep
+                            deposits += tenant_obj.deposits.paid_waterdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} WATER DEPOSIT PAYMENT",
+                                "ref":f'-',
+                                "debit":"",
+                                "credit":tenant_obj.deposits.paid_waterdep,
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
 
-                #         if house_obj.deposits.elecdep:
-                #             cb -= house_obj.deposits.elecdep
-                #             datadict = {
-                #                 "month":f"{item.year} {month}",
-                #                 "date":date,
-                #                 "desc":f"{item.house} ELECTRICITY DEPOSIT PAYMENT",
-                #                 "ref":f'INV{item.id}',
-                #                 "debit":"",
-                #                 "credit":house_obj.deposits.elecdep,
-                #                 "balance":f'{cb:,.1f}'
-                #             }
-                #             main.append(datadict)
+                        if tenant_obj.deposits.paid_elecdep:
+                            cb -= tenant_obj.deposits.paid_elecdep
+                            deposits += tenant_obj.deposits.paid_elecdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} S.CHARGE DEPOSIT PAYMENT",
+                                "ref":f'-',
+                                "debit":"",
+                                "credit":tenant_obj.deposits.paid_elecdep,
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
+
+                        if tenant_obj.deposits.paid_otherdep:
+                            cb -= tenant_obj.deposits.paid_otherdep
+                            deposits += tenant_obj.deposits.paid_otherdep
+                            datadict = {
+                                "month":f"{item.year} {month}",
+                                "date":date,
+                                "desc":f"{item.house} DOCUMENTAION FEE PAYMENT",
+                                "ref":f'-',
+                                "debit":"",
+                                "credit":tenant_obj.deposits.paid_otherdep,
+                                "balance":f'{cb:,.1f}'
+                            }
+                            main.append(datadict)
                                 
                 if item.rent:
                     cb += item.rent
@@ -7313,7 +7344,7 @@ class TenantStatementFour(Resource):
 
 
 
-                that_month_payments = fetch_specific_period_payments(item.month,item.year,house_obj.payments)
+                that_month_payments = fetch_specific_period_payments(item.month,item.year,tenant_obj.payments)
                 for x in that_month_payments:
                     paydate = x.pay_date.strftime("%d/%b/%y")
 
@@ -7321,13 +7352,15 @@ class TenantStatementFour(Resource):
 
                     if x.amount:
                         cb -= x.amount
+                        cb += deposits
+                        credit = x.amount - deposits
                         datadict = {
                             "month":month,
                             "date":paydate,
                             "desc":f"Payment",
                             "ref":ref,
                             "debit":"",
-                            "credit":f'{x.amount:,.1f}',
+                            "credit":f'{credit:,.1f}',
                             "balance":f'{cb:,.1f}'
                         }
                         main.append(datadict)

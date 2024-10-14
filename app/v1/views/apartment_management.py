@@ -7176,6 +7176,8 @@ class UpdateTenant(Resource):
 
                     TenantOp.update_deposit(tenant_obj,total)
 
+            # import pdb; pdb.set_trace()
+
             return render_template('ajax_dynamic_deposit_form.html',tenant=tenant,dep=dep)
 
         if target == "tenant sms":
@@ -7349,12 +7351,13 @@ class AllocateTenants(Resource):
 
         if target == "tenant house options":
             house_list = filter_in_occupied_houses(stored_apartment.name) if stored_apartment else None
-            house_list.append("All")
             if not house_list:
                 placeholder = "No occupied houses!"
             else:
                 placeholder = "select house"
-            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder=placeholder)
+            items = sort_items(house_list)
+            items.insert(0, "All")
+            return render_template('ajax_multivariable.html',items=items,placeholder=placeholder)
         
         if target == "house grid options":
             house_list = houseauto(apartment_id)

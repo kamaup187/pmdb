@@ -182,8 +182,8 @@ class Index(Resource):
             return redirect(url_for("api.stockmodule"))
 
         hostee = request.host
-        mayiit = sms_phone_number_formatter("0716674695")
-        report = advanta_send_sms(hostee,mayiit,kiotapay_api_key,kiotapay_partner_id,"Bizline")
+        # mayiit = sms_phone_number_formatter("0716674695")
+        # report = advanta_send_sms(hostee,mayiit,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
         # return redirect(url_for("api.stockmodule"))
 

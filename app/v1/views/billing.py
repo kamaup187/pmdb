@@ -5234,7 +5234,7 @@ class Receipt(Resource):
         else:
             tenant = payment_obj.tenant
             if tenant.deposits:
-                if payment_obj.apartment_id.company.id == 114:
+                if payment_obj.apartment.company.id == 114:
                     depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
                 else:

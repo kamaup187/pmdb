@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,8 +449,11 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
                 current_month_bill.save()
+
+        if not current_month_bill:
+            return "nada"
 
         items = bill_details_alt([current_month_bill])
 
@@ -512,7 +515,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -8702,9 +8705,12 @@ class CallBackUrlLes(Resource):
             # narration = data.get("Narration")
 
             try:
-                refnum2 = custmemo.split("#")[1].replace("~", "")
+                # refnum2 = custmemo.split("#")[1].replace("~", "")
+                refnum2 = extract_code(custmemo)
             except:
                 refnum2 = custmemo
+
+            
        
             trans_time = data.get('TransactionDate')
             trans_type = data.get('EventType')

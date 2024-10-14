@@ -212,7 +212,12 @@ def get_leads_api(current_user):
         return [0,0]
 
 
-
+def extract_code(text):
+    import re
+    match = re.search(r"#([^~]*)~?", text)
+    if match:
+        return match.group(1)  # Extracts what's between # and ~ (if it exists)
+    return "house not specified"  # If no match is found
 
 class TokenGen(object):
     """

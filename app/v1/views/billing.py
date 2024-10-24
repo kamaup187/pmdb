@@ -4391,7 +4391,6 @@ class ResolveInvoices2(Resource):
                     
                     MonthlyChargeOp.update_balances(bill,0.0,0.0,0.0,update_rent,update_water,update_electricity,update_garbage,update_security,update_maintenance,update_fine,update_deposit,update_agreement)
 
-                    # if bill.rent_balance:
                     if bill.rent_paid:
                         rentbal = bill.rent + update_rent - bill.rent_paid
                     else:
@@ -4449,13 +4448,14 @@ class ResolveInvoices2(Resource):
                     else:
                         update_rent = working_balance
                         working_balance = 0.0
-                    if working_balance > (bill.deposit + update_deposit):
-                        update_deposit = (bill.deposit + update_deposit)
-                        working_balance -= update_deposit
-                        update_rent += working_balance
-                    else:
-                        update_deposit = working_balance
-                        working_balance = 0.0
+                        
+                    # if working_balance > (bill.deposit + update_deposit):
+                    #     update_deposit = (bill.deposit + update_deposit)
+                    #     working_balance -= update_deposit
+                    #     update_rent += working_balance
+                    # else:
+                    #     update_deposit = working_balance
+                    #     working_balance = 0.0
 
                     update_water = 0.0
                     update_garbage = 0.0

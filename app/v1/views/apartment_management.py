@@ -6,7 +6,6 @@
 
 
 # from re import S
-# import time
 import os
 import qrcode
 # from unicodedata import category
@@ -9899,7 +9898,7 @@ class KikuyuCouncilOfEldersJoin(Resource):
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("web_join.html",countries=countries,counties=counties))
 
-class KceHome(Resource):
+class KceHome2(Resource):
     @login_required
     def get(self):
         # return Response(render_template("kce_index.html"))
@@ -9910,6 +9909,18 @@ class KceHome(Resource):
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("home.html",co="set",countries=countries,counties=counties,items=users))
+    
+class KceHome(Resource):
+    @login_required
+    def get(self):
+        # return Response(render_template("kce_index.html"))
+        # return Response(render_template("home.html"))
+        c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+        users = c_data.users
+        for user in users:
+            user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users))
 
 class KceReport(Resource):
     @login_required
@@ -10038,6 +10049,198 @@ class KceRegister(Resource):
             return "failed to register"
 
         return "success"
+
+class Requests(Resource):
+    def get(self):
+        target = request.args.get("target")
+        
+        
+        items = []
+        if target == "pending":
+            accepted_dict = {
+                "id":2,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":3000,
+                "status":'<span class="badge bg-warning">Pending</span>'
+            }
+            items.append(accepted_dict)
+        elif target == "accepted":
+            accepted_dict = {
+                "id":3,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":9000,
+                "status":'<span class="badge bg-secondary">Accepted</span>'
+            }
+            items.append(accepted_dict)
+
+        elif target == "delivered":
+            accepted_dict = {
+                "id":4,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":6500,
+                "status":'<span class="badge bg-success">Delivered</span>'
+            }
+            items.append(accepted_dict)
+        else:
+            accepted_dict = {
+                "id":2,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":3000,
+                "status":'<span class="badge bg-warning">Pending</span>'
+            }
+            items.append(accepted_dict)
+            accepted_dict = {
+                "id":3,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":9000,
+                "status":'<span class="badge bg-secondary">Accepted</span>'
+            }
+            items.append(accepted_dict)
+            accepted_dict = {
+                "id":4,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":65000,
+                "status":'<span class="badge bg-success">Delivered</span>'
+            }
+            items.append(accepted_dict)
+        return items
+    
+class Floats(Resource):
+    def get(self):
+        target = request.args.get("target")
+        
+        
+        items = []
+        if target == "pending":
+            accepted_dict = {
+                "id":2,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":"Kes 6,500.0",
+                "status":'<span class="badge bg-warning">Pending</span>'
+            }
+            items.append(accepted_dict)
+
+        elif target == "confirmed":
+            accepted_dict = {
+                "id":4,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":"Kes 8,500.0",
+                "status":'<span class="badge bg-success">Confirmed</span>'
+            }
+            items.append(accepted_dict)
+        else:
+            accepted_dict = {
+                "id":2,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":"Kes 6,500.0",
+                "status":'<span class="badge bg-warning">Pending</span>'
+            }
+            items.append(accepted_dict)
+            accepted_dict = {
+                "id":4,
+                "branch":"Agriculture#001",
+                "date":"2023-05-10",
+                "amount":"Kes 8,500.0",
+                "status":'<span class="badge bg-success">Confirmed</span>'
+            }
+            items.append(accepted_dict)
+        return items
+    
+class Roles(Resource):
+    def get(self):
+        target = request.args.get("target")
+        
+        
+        items = []
+        if target == "all":
+            accepted_dict = {
+                "id":"#002",
+                "name":"Admin",
+                "desc":'Administrator'
+            }
+            items.append(accepted_dict)
+
+            accepted_dict = {
+                "id":"#003",
+                "name":"Chairperson",
+                "desc":'Chief elder'
+            }
+            items.append(accepted_dict)
+
+            accepted_dict = {
+                "id":"#004",
+                "name":"Treasurer",
+                "desc":"Manages the council's funds and resources"
+            }
+            items.append(accepted_dict)
+
+            accepted_dict = {
+                "id":"#005",
+                "name":"Secretary",
+                "desc":"Handles the administrative work of the council"
+            }
+            items.append(accepted_dict)
+
+        return items
+    
+class KceUsers(Resource):
+    def get(self):
+        target = request.args.get("target")
+        import time
+        time.sleep(0.2)
+        items = []
+        if target == "all":
+            accepted_dict = {
+                "id":"#001",
+                "code":"BTL002",
+                "name":"Admin",
+                "tel":"07123456789",
+                "branch":"Agriculture#001",
+                "role":"Admin",
+                "status":"Active"
+            }
+            items.append(accepted_dict)
+            accepted_dict = {
+                "id":"#002",
+                "code":"BTL003",
+                "name":"Manager",
+                "tel":"07890123456",
+                "branch":"Agriculture#001",
+                "role":"Manager",
+                "status":"Active"
+            }
+            items.append(accepted_dict)
+
+            accepted_dict = {
+                "id":"#003",
+                "code":"BTL004",
+                "name":"Shop Agent",
+                "tel":"07987654321",
+                "branch":"Agriculture#001",
+                "role":"Shop Agent",
+                "status":"Active"
+            }
+            items.append(accepted_dict)
+            accepted_dict = {
+                "id":"#004",
+                "code":"BTL005",
+                "name":"Collection Agent",
+                "tel":"07765432109",
+                "branch":"Agriculture#001",
+                "role":"Collection Agent",
+                "status":"Active"
+            }
+            items.append(accepted_dict)
+        return items
 
 
 class StockDataUpload(Resource):

@@ -37,6 +37,21 @@ function updateRoleDataTable(data,table) {
     table.draw();
 }
 
+function updateFloatDataTable(data,table) {
+    table.clear();
+    data.forEach(function(item) {
+        table.row.add([
+            item.id,             // PNo
+            item.date,           // Name
+            item.amount,        // Region
+            item.member,
+            item.status,
+            '<button class="btn btn-light btn-sm delete" data-id="' + item.id + '">View</button>'  // Remove button
+        ]);
+    });
+    table.draw();
+}
+
 function updateUserDataTable(data,table) {
     table.clear();
     data.forEach(function(item) {
@@ -64,6 +79,24 @@ var dataTableTemplate = `
             <th class="fw-bold">Location</th>
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Attendees</th>
+            <th class="fw-bold">Status</th>
+            <th class="fw-bold">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+
+`
+var floatDataTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">Ref</th>
+            <th class="fw-bold">Date</th>
+            <th class="fw-bold">Amount</th>
+            <th class="fw-bold">Member</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">Action</th>
         </tr>
@@ -151,11 +184,46 @@ var cashTemplate = `
     <div class="tab-pane fade" id="requests-pending" role="tabpanel" aria-labelledby="requests-pending-tab">
         <div class="app-card app-card-requests-table shadow-sm mb-5">
             <div class="app-card-body">
-                <div class="row">
-                    <div class="col-lg-12 no-padding">
+                <div class="row g-4">
+                    <div class="col-lg-12 no-padding d-none">
                         <div id="requests-pending-table" class="table-responsive">
                         </div>
                     </div>
+
+                    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/chairman5.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
                 </div>
             
             </div><!--//app-card-body-->		
@@ -165,11 +233,50 @@ var cashTemplate = `
     <div class="tab-pane fade" id="requests-accepted" role="tabpanel" aria-labelledby="requests-accepted-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
-                <div class="row">
+                <div class="row g-4">
                     <div class="col-lg-12 no-padding">
-                        <div id="requests-accepted-table" class="table-responsive">
+                        <div id="requests-accepted-table" class="table-responsive d-none">
                         </div>
                     </div>
+
+				    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/chairman4.jpeg" alt="">
+	                            </div>
+	                            <span class="badge bg-success">NEW</span>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Doc lorem ipsum dolor sit amet</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Fundaraiser</li>
+									    <li><span class="text-muted">Venue:</span> Garden Estate</li>
+									    <li><span class="text-muted">Date:</span> 16th November</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+
+
                 </div>
 
             </div><!--//app-card-body-->		
@@ -179,11 +286,47 @@ var cashTemplate = `
     <div class="tab-pane fade" id="requests-delivered" role="tabpanel" aria-labelledby="requests-delivered-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
-                <div class="row">
-                    <div class="col-lg-12 no-padding">
+                <div class="row g-4">
+                    <div class="col-lg-12 no-padding d-none">
                         <div id="requests-delivered-table" class="table-responsive">
                         </div>
                     </div>
+
+				    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Image lorem ipsum dolor sit amet</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Conference</li>
+									    <li><span class="text-muted">Venue:</span> City hall</li>
+									    <li><span class="text-muted">Date:</span> 2nd December</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
                 </div>
 
             </div><!--//app-card-body-->		
@@ -193,32 +336,243 @@ var cashTemplate = `
     <div class="tab-pane fade show active" id="requests-all" role="tabpanel" aria-labelledby="requests-all-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
-                <div class="row">
-                    <div class="col-lg-12 no-padding">
+                <div class="row g-4">
+                    <div class="col-lg-12 no-padding d-none">
                         <div id="requests-all-table" class="table-responsive">
                         </div>
                     </div>
+
+                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/stadium2.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Elders' meeting</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Team building</li>
+									    <li><span class="text-muted">Venue:</span> Thika Greens</li>
+									    <li><span class="text-muted">Date:</span> 28th October</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
+
+                    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+					    <div class="app-card app-card-doc shadow-sm  h-100">
+						    <div class="app-card-thumb-holder p-3">
+							    <div class="app-card-thumb">
+	                                <img class="thumb-image" src="../static/kce/img/kce/chairman6.jpeg" alt="">
+	                            </div>
+	                             <a class="app-card-link-mask" href="#file-link"></a>
+						    </div>
+						    <div class="app-card-body p-3 has-card-actions">
+							    
+							    <h4 class="app-doc-title truncate mb-0"><a href="#file-link">Garden Seminar</a></h4>
+							    <div class="app-doc-meta">
+								    <ul class="list-unstyled mb-0">
+									    <li><span class="text-muted">Type:</span> Seminar</li>
+									    <li><span class="text-muted">Venue:</span> Garden Restaurant</li>
+									    <li><span class="text-muted">Edited:</span> 1st November</li>
+								    </ul>
+							    </div><!--//app-doc-meta-->
+							    
+							    <div class="app-card-actions">
+								    <div class="dropdown">
+									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+			</svg>
+									    </div><!--//dropdown-toggle-->
+
+								    </div><!--//dropdown-->
+						        </div><!--//app-card-actions-->
+								    
+						    </div><!--//app-card-body-->
+
+						</div><!--//app-card-->
+				    </div><!--//col-->
                 </div>
 
             </div><!--//app-card-body-->		
         </div><!--//app-card-->
     </div><!--//tab-pane-->
 </div><!--//tab-content-->
+
 `
 
 
 var floatTemplate = `
 <div class="row g-3 mb-4 align-items-center justify-content-between">
 <div class="col-auto">
-    <h1 class="app-page-title mb-0">Activities</h1>
+    <h1 class="app-page-title mb-0">Financial management</h1>
 </div>
-<div class="col-auto">
+<div class="col-auto d-none">
      <div class="page-utilities">
         <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
             <div class="col-auto">						    
                 <a class="btn app-btn-secondary" href="#"  data-bs-toggle="modal" data-bs-target="#floatModal">
                     <i data-feather="plus" style="width: 16px; height: 16px;"></i>
-                    Create an activity
+                    Create an expense
                 </a>
             </div>
         </div><!--//row-->
@@ -227,9 +581,9 @@ var floatTemplate = `
 </div><!--//row-->
 
 <nav id="floats-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All activities</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-pending" aria-selected="false">Past activities</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Upcoming activities</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All payments</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-pending" aria-selected="false">Pending payments</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Paid payments</a>
 </nav>
 
 

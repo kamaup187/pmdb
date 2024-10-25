@@ -258,7 +258,7 @@
 						        <span class="nav-icon">
 									<i data-feather="calendar"></i>
 						         </span>
-		                         <span class="nav-link-text">Events & Activities</span>
+		                         <span class="nav-link-text">Financial Management</span>
 		                         <span class="submenu-arrow">
 		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -267,8 +267,28 @@
 					        </a>
 					        <div id="submenu-2" class="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Meetings & Events</a></li>
-							        <li class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Activities</span></li>
+							        <li class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Manage finances</span></li>
+						        </ul>
+					        </div>
+					    </li>
+
+						<li class="nav-item has-submenu">
+					        
+					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
+						        <span class="nav-icon">
+									<i data-feather="calendar"></i>
+						         </span>
+		                         <span class="nav-link-text">Events & Activities</span>
+		                         <span class="submenu-arrow">
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+	</svg>
+	                             </span><!--//submenu-arrow-->
+					        </a>
+					        <div id="submenu-4" class="collapse submenu submenu-4" data-bs-parent="#menu-accordion">
+						        <ul class="submenu-list list-unstyled">
+							        <li class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Events & Activities</a></li>
+							        <!-- <li class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Activities</span></li> -->
 						        </ul>
 					        </div>
 					    </li>
@@ -679,7 +699,7 @@
 
 			</div>
 			<div class="modal-footer">
-				<button id="submit-role" type="button" class="btn app-btn-primary" >Save Changes</button>
+				<button id="submit-role" type="button" class="btn app-btn-primary" >Submit</button>
 			  	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 			</div>
 		  </div>
@@ -712,7 +732,7 @@
   <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
   <circle cx="8" cy="4.5" r="1"/>
 </svg></span></label>
-									    <input type="text" class="form-control" id="event-input-amount" placeholder="e.g Fundraiser.0" required>
+									    <input type="text" class="form-control" id="event-input-amount" placeholder="e.g Fundraiser, project meetings" required>
 									</div>
 
 								    <div class="mb-3">
@@ -720,7 +740,41 @@
 									    <textarea type="text" class="form-control" id="event-input-desc" placeholder="Write a brief description" rows="50"></textarea>
 									</div>
 
-									<button type="button" class="btn app-btn-primary" >Save Changes</button>
+									<div class="mb-3">
+										<label for="event-input-image" class="form-label">Upload Image</label>
+										<input type="file" class="form-control" id="event-input-image" accept="image/*">
+									</div>
+
+									<div class="row">
+										<div class="mb-3 col-6">
+											<label for="event-input-date" class="form-label">Event Date</label>
+											<input type="date" class="form-control" id="event-input-date" required>
+										</div>
+	
+										<div class="mb-3 col-6">
+											<label for="event-input-time" class="form-label">Event Time</label>
+											<input type="time" class="form-control" id="event-input-time" required>
+										</div>
+									</div>
+
+									<div class="mb-3">
+										<label for="event-input-location" class="form-label">Location</label>
+										<input type="text" class="form-control" id="event-input-location" placeholder="e.g., City Hall, Garden Restaurant">
+									</div>
+
+									<div class="mb-3">
+										<label for="event-input-type" class="form-label">Event Type</label>
+										<select class="form-select" id="event-input-type">
+											<option selected>Select event type</option>
+											<option value="workshop">Workshop</option>
+											<option value="conference">Conference/Meetings</option>
+											<option value="networking">Fundraiser</option>
+										</select>
+									</div>
+
+
+
+									<button type="button" class="btn app-btn-primary" >Submit</button>
 							    </form>
 						    </div><!--//app-card-body-->
 						    
@@ -805,7 +859,7 @@
 
 									</div>
 
-									<button type="button" class="btn app-btn-primary" >Save Changes</button>
+									<button type="button" class="btn app-btn-primary" >Submit</button>
 							    </form>
 						    </div><!--//app-card-body-->
 						    
@@ -878,7 +932,7 @@
 									</div>
 									
 									<div class="mt-3">
-									    <button type="submit" class="btn app-btn-primary" >Save Changes</button>
+									    <button type="submit" class="btn app-btn-primary" >Submit</button>
 									</div>
 							    </form>
 						    </div><!--//app-card-body-->						    
@@ -900,7 +954,7 @@
 										<label class="form-check-label" for="settings-switch-1">sms notifications</label>
 									</div>
 									<div class="mt-3">
-									    <button type="submit" class="btn app-btn-primary" >Save Changes</button>
+									    <button type="submit" class="btn app-btn-primary" >Submit</button>
 									</div>
 							    </form>
 						    </div><!--//app-card-body-->						    
@@ -917,78 +971,7 @@
 		</div>
 	  </div>
 
-	  <div class="modal fade" id="floatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">ACTIVITY CREATION</h5>
-			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-
-
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Create Activities</h3>
-		                <div class="section-intro">Create and plan for future activities</div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
-						    
-						    <div class="app-card-body">
-							    <form class="settings-form">
-								    <div class="mb-3">
-									    <label for="activity-input-name" class="form-label">Actvity name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Activity name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
-  <circle cx="8" cy="4.5" r="1"/>
-</svg></span></label>
-									    <input type="text" class="form-control" id="activity-input-name" placeholder="e.g Elders' dinner" required>
-									</div>
-
-
-
-									<div class="mb-3 row">
-										<div class="col-6">
-											<label for="activity-input-location" class="form-label">Select Location</label>
-											<select class="form-select" id="float-input-branch">
-												<option selected disabled value="">Select Location</option>
-												<option value="option-2">Thika</option>
-												<option value="option-3">Thome</option>
-										  </select>
-										</div>
-										<div class="col-6">
-											<label for="activity-input-date" class="form-label">Select month</label>
-											<select class="form-select" id="activity-input-date">
-												<option selected disabled value="">Select month</option>
-												<option value="option-2">November 2024</option>
-												<option value="option-3">December 2024</option>
-										  </select>
-										</div>
-
-									</div>
-
-									<button type="button" class="btn app-btn-primary" >Save Changes</button>
-							    </form>
-						    </div><!--//app-card-body-->
-						    
-						</div><!--//app-card-->
-	                </div>
-                </div><!--//row-->
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			  </div>
-
-			</div>
-
-		  </div>
-		</div>
-
-
-
-
-	 	  <div class="modal fade" id="payModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal fade" id="payModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
@@ -1008,34 +991,34 @@
 						    
 						    <div class="app-card-body">
 							    <form class="settings-form">
+
+									<div class="mb-1">
+										<label for="activity-input-location" class="form-label">Payment method <span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Select method to get payment instructions below"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+											<path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+											<path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+											<circle cx="8" cy="4.5" r="1"/>
+										  </svg></span></label>
+										<select class="form-select" id="float-input-branch">
+											<option selected value="mpesa">Mpesa</option>
+											<option value="bank">Bank deposit</option>
+										</select>
+									</div>
+									<div class="mb-3">
+										<span class="fst-italic">Payment instructions:</span>
+										<p id="payment-details" class="fw-bold ms-4">Pay Bill: 247247 Acc: 1750269969674</p>
+									</div>
 								    <div class="mb-3">
-									    <label for="pay-input-amount" class="form-label">Amount paid<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Amount paid"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
-  <circle cx="8" cy="4.5" r="1"/>
-</svg></span></label>
+									    <label for="pay-input-amount" class="form-label">Amount paid</label>
 									    <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0" required>
 									</div>
-
-
-									<div class="mb-3 row">
-										<div class="col-6">
-											<label for="activity-input-location" class="form-label">Select payment method used</label>
-											<select class="form-select" id="float-input-branch">
-												<option selected disabled value="">Select payment method used</option>
-												<option value="option-2">Mpesa</option>
-												<option value="option-3">Bank deposit</option>
-										  </select>
-										</div>
-										<div class="col-6">
-											<label for="pay-input-trans" class="form-label">Transaction code / reference</label>
-											<input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR" required>
-
-										</div>
+									<div class="mb-3">
+										<label for="pay-input-trans" class="form-label">Transaction code / reference</label>
+										<input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR" required>
 
 									</div>
 
-									<button type="button" id="submit-pay" class="btn app-btn-primary" >Save Changes</button>
+
+									<button type="button" id="submit-pay" class="btn app-btn-primary" >Submit</button>
 							    </form>
 						    </div><!--//app-card-body-->
 						    
@@ -1138,7 +1121,7 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
-					renderTemplate("allTable",elem);
+					renderFloatTemplate("allTable",elem);
 
 					var t1 = $('#allTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1150,7 +1133,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateFloatDataTable(response,t1)
 
 				$("#floats-spinner").addClass("d-none")
 
@@ -1275,7 +1258,16 @@
 				resolve();
 			});
 		}
+		function renderFloatTemplate(newId,elem) {
+			return new Promise((resolve) => {
 
+				elem.html(floatDataTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				resolve();
+			});
+		}
 		function renderUserTemplate(newId,elem) {
 			return new Promise((resolve) => {
 
@@ -1457,7 +1449,7 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
-					renderTemplate("allTable",elem);
+					renderFloatTemplate("allTable",elem);
 
 					var t1 = $('#allTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1469,7 +1461,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateFloatDataTable(response,t1)
 
 				$("#floats-spinner").addClass("d-none")
 
@@ -1495,7 +1487,7 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-pending-table")
-					renderTemplate("pendingTable",elem);
+					renderFloatTemplate("pendingTable",elem);
 
 					var t1 = $('#pendingTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1507,7 +1499,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateFloatDataTable(response,t1)
 
 				$("#floats-spinner").addClass("d-none")
 
@@ -1532,7 +1524,7 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-confirmed-table")
-					renderTemplate("confirmedTable",elem);
+					renderFloatTemplate("confirmedTable",elem);
 
 					var t1 = $('#confirmedTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1544,7 +1536,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateFloatDataTable(response,t1)
 
 				$("#floats-spinner").addClass("d-none")
 
@@ -1574,14 +1566,15 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						$("#role-btn").click();
+						$(".role-btn").click()
+						$('#roleModal').modal('hide');
                     },
                     error: function (xhr) {
 						toastIt(`${xhr}`, 'danger');
                     }
                 });
 			} else{
-				$("#role-btn").click();
+				$(".role-btn").click();
 			}
 		})
 
@@ -1606,7 +1599,7 @@
                     }
                 });
 			} else{
-				$("#role-btn").click();
+				//pass
 			}
 		})
 	</script>
@@ -1657,6 +1650,21 @@
   
 	  $("#goto_reports").attr("href", url_report);
 	})
+  </script>
+
+  <script>
+	    $('#float-input-branch').on('change',function() {
+            var selectedMethod = $(this).val();
+            var instructions = '';
+
+            if (selectedMethod === 'mpesa') {
+                instructions = 'Pay Bill: 247247 Acc: 1750269969674';
+            } else if (selectedMethod === 'bank') {
+                instructions = 'Acc: 1750269969674, Bank: Equity Bank.';
+            }
+
+            $('#payment-details').text(instructions);
+        });
   </script>
 
 </body>

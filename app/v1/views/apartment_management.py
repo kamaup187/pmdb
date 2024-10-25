@@ -10059,7 +10059,7 @@ class Requests(Resource):
         if target == "pending":
             accepted_dict = {
                 "id":2,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-warning">Pending</span>'
@@ -10068,7 +10068,7 @@ class Requests(Resource):
         elif target == "accepted":
             accepted_dict = {
                 "id":3,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-secondary">Accepted</span>'
@@ -10078,7 +10078,7 @@ class Requests(Resource):
         elif target == "delivered":
             accepted_dict = {
                 "id":4,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-success">Delivered</span>'
@@ -10087,7 +10087,7 @@ class Requests(Resource):
         else:
             accepted_dict = {
                 "id":2,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-warning">Pending</span>'
@@ -10095,7 +10095,7 @@ class Requests(Resource):
             items.append(accepted_dict)
             accepted_dict = {
                 "id":3,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-secondary">Accepted</span>'
@@ -10103,7 +10103,7 @@ class Requests(Resource):
             items.append(accepted_dict)
             accepted_dict = {
                 "id":4,
-                "branch":"Thika",
+                "branch":"Garden restaurant",
                 "date":"2024-05-10",
                 "amount":"-",
                 "status":'<span class="badge bg-success">Delivered</span>'
@@ -10119,38 +10119,38 @@ class Floats(Resource):
         items = []
         if target == "pending":
             accepted_dict = {
-                "id":2,
-                "branch":"Thika",
+                "id":"GHER63MKJ",
                 "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-warning">Pending</span>'
+                "member":"Paul Kamau",
+                "amount":"Kes 4,500.0",
+                "status":'<span class="badge bg-warning">Unpaid</span>'
             }
             items.append(accepted_dict)
 
         elif target == "confirmed":
             accepted_dict = {
-                "id":4,
-                "branch":"Thika",
+                "id":"TRZ342938782",
+                "member":"Peter Gachagua",
                 "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-success">Confirmed</span>'
+                "amount":"4,500.00",
+                "status":'<span class="badge bg-success">Paid</span>'
             }
             items.append(accepted_dict)
         else:
             accepted_dict = {
-                "id":2,
-                "branch":"Thika",
+                "id":"GHER63MKJ",
+                "member":"Paul Kamau",
                 "date":"2024-05-10",
-                "amount":"Kes 6,500.0",
-                "status":'<span class="badge bg-warning">Pending</span>'
+                "amount":"Kes 4,500.0",
+                "status":'<span class="badge bg-warning">Unpaid</span>'
             }
             items.append(accepted_dict)
             accepted_dict = {
-                "id":4,
-                "branch":"Thika",
+                "id":"TRZ342938782",
+                "member":"Peter Gachagua",
                 "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-success">Confirmed</span>'
+                "amount":"4,500.0",
+                "status":'<span class="badge bg-success">Paid</span>'
             }
             items.append(accepted_dict)
         return items

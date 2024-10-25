@@ -10059,18 +10059,18 @@ class Requests(Resource):
         if target == "pending":
             accepted_dict = {
                 "id":2,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":3000,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-warning">Pending</span>'
             }
             items.append(accepted_dict)
         elif target == "accepted":
             accepted_dict = {
                 "id":3,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":9000,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-secondary">Accepted</span>'
             }
             items.append(accepted_dict)
@@ -10078,34 +10078,34 @@ class Requests(Resource):
         elif target == "delivered":
             accepted_dict = {
                 "id":4,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":6500,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-success">Delivered</span>'
             }
             items.append(accepted_dict)
         else:
             accepted_dict = {
                 "id":2,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":3000,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-warning">Pending</span>'
             }
             items.append(accepted_dict)
             accepted_dict = {
                 "id":3,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":9000,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-secondary">Accepted</span>'
             }
             items.append(accepted_dict)
             accepted_dict = {
                 "id":4,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":65000,
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-success">Delivered</span>'
             }
             items.append(accepted_dict)
@@ -10120,9 +10120,9 @@ class Floats(Resource):
         if target == "pending":
             accepted_dict = {
                 "id":2,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":"Kes 6,500.0",
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-warning">Pending</span>'
             }
             items.append(accepted_dict)
@@ -10130,26 +10130,26 @@ class Floats(Resource):
         elif target == "confirmed":
             accepted_dict = {
                 "id":4,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":"Kes 8,500.0",
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-success">Confirmed</span>'
             }
             items.append(accepted_dict)
         else:
             accepted_dict = {
                 "id":2,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
+                "branch":"Thika",
+                "date":"2024-05-10",
                 "amount":"Kes 6,500.0",
                 "status":'<span class="badge bg-warning">Pending</span>'
             }
             items.append(accepted_dict)
             accepted_dict = {
                 "id":4,
-                "branch":"Agriculture#001",
-                "date":"2023-05-10",
-                "amount":"Kes 8,500.0",
+                "branch":"Thika",
+                "date":"2024-05-10",
+                "amount":"-",
                 "status":'<span class="badge bg-success">Confirmed</span>'
             }
             items.append(accepted_dict)
@@ -10158,40 +10158,45 @@ class Floats(Resource):
 class Roles(Resource):
     def get(self):
         target = request.args.get("target")
-        
-        
         items = []
         if target == "all":
-            accepted_dict = {
-                "id":"#002",
-                "name":"Admin",
-                "desc":'Administrator'
-            }
-            items.append(accepted_dict)
 
-            accepted_dict = {
-                "id":"#003",
-                "name":"Chairperson",
-                "desc":'Chief elder'
-            }
-            items.append(accepted_dict)
-
-            accepted_dict = {
-                "id":"#004",
-                "name":"Treasurer",
-                "desc":"Manages the council's funds and resources"
-            }
-            items.append(accepted_dict)
-
-            accepted_dict = {
-                "id":"#005",
-                "name":"Secretary",
-                "desc":"Handles the administrative work of the council"
-            }
-            items.append(accepted_dict)
-
+            co = current_user.company
+            groups = co.groups
+            for g in groups:
+                # CompanyUserGroupOp.delete(g)
+                groupdict = {
+                    "id":g.id,
+                    "name":g.name,
+                    "desc":g.description,
+                }
+                items.append(groupdict)
+            # groupids = get_obj_ids(items)
         return items
     
+    def post(self):
+        co = current_user.company
+        groupitems = []
+
+        target = request.form.get('target')
+
+        if target == "add group":
+            target_group = request.form.get('group')
+            desc = request.form.get('desc')
+            if target_group:
+                group = target_group.title()
+                curr_groups = current_user.company.groups
+                existing_group = None
+                for cg in curr_groups:
+                    if cg.name.title() == group:
+                        existing_group = cg
+
+                if existing_group:
+                    return "group already exists"
+                else:
+                    group_obj = CompanyUserGroupOp(group,desc,current_user.company.id)
+                    group_obj.save()
+                    return "group successfully added"
 class KceUsers(Resource):
     def get(self):
         target = request.args.get("target")
@@ -10199,50 +10204,24 @@ class KceUsers(Resource):
         time.sleep(0.2)
         items = []
         if target == "all":
-            accepted_dict = {
-                "id":"#001",
-                "code":"BTL002",
-                "name":"Admin",
-                "tel":"07123456789",
-                "branch":"Agriculture#001",
-                "role":"Admin",
-                "status":"Active"
-            }
-            items.append(accepted_dict)
-            accepted_dict = {
-                "id":"#002",
-                "code":"BTL003",
-                "name":"Manager",
-                "tel":"07890123456",
-                "branch":"Agriculture#001",
-                "role":"Manager",
-                "status":"Active"
-            }
-            items.append(accepted_dict)
 
-            accepted_dict = {
-                "id":"#003",
-                "code":"BTL004",
-                "name":"Shop Agent",
-                "tel":"07987654321",
-                "branch":"Agriculture#001",
-                "role":"Shop Agent",
-                "status":"Active"
-            }
-            items.append(accepted_dict)
-            accepted_dict = {
-                "id":"#004",
-                "code":"BTL005",
-                "name":"Collection Agent",
-                "tel":"07765432109",
-                "branch":"Agriculture#001",
-                "role":"Collection Agent",
-                "status":"Active"
-            }
-            items.append(accepted_dict)
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            for user in users:
+                user_dict = {
+                    "id":user.id,
+                    "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status": "Active" if user.active else "Dormant",
+                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "company":c_data.name
+                }
+                items.append(user_dict)
         return items
-
-
 class StockDataUpload(Resource):
     """class"""
 

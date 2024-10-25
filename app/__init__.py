@@ -118,6 +118,8 @@ def create_app(*args):
         app.config['CORS_HEADERS'] = 'Content-Type'
         app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
+        # app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
+
         # app.config['MAIL_SERVER']='mail.privateemail.com'
         # app.config['MAIL_PORT'] = 465
         # app.config['MAIL_USERNAME'] = 'info@kiotapay.com'

@@ -98,7 +98,7 @@
         }
 
         .success {
-            background-color: #14195A;
+            background-color: #15a362;
             color: white;
         }
 
@@ -333,21 +333,21 @@
 				<div id="home-block">
 					<h1 class="app-page-title">Overview</h1>
 					
-					<div class="app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration d-none" role="alert">
+					<div class="app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration" role="alert">
 						<div class="inner">
 							<div class="app-card-body p-3 p-lg-4">
 								<h3 class="mb-3">Welcome, user!</h3>
 								<div class="row gx-5 gy-3">
 									<div class="col-12 col-lg-9">
 										
-										<div>Float tracker is a tool to monitor cash transactions between Mpesa agents and Banks through Collection Agents for the purpose of float purchases.</div>
+										<div>You haven't paid your registration fees yet. Please complete your payment to access all membership features.</div>
 									</div>
 									<div class="col-12 col-lg-3">
-										<a class="btn app-btn-primary" href="#"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-file-earmark-arrow-down me-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<a class="btn app-btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#payModal"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-file-earmark-arrow-down me-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	<path d="M4 0h5.5v1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h1V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
 	<path d="M9.5 3V0L14 4.5h-3A1.5 1.5 0 0 1 9.5 3z"/>
 	<path fill-rule="evenodd" d="M8 6a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 10.293V6.5A.5.5 0 0 1 8 6z"/>
-	</svg>Download reports here</a>
+	</svg>Click here to pay now</a>
 									</div>
 								</div><!--//row-->
 								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -653,23 +653,23 @@
 							    <form class="settings-form scrollable">
 								    <div class="form-check form-switch mb-3">
 										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Post collection requests</label>
+										<label class="form-check-label" for="settings-switch-1">Re-assign permissions</label>
 									</div>
 									<div class="form-check form-switch mb-3">
 										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Accept collection requests</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Adjust account limits</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Confirm float purchases</label>
+										<label class="form-check-label" for="settings-switch-1">Adjust registration fees</label>
 									</div>
 									<div class="form-check form-switch mb-3">
 										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
 										<label class="form-check-label" for="settings-switch-1">View reports</label>
+									</div>
+									<div class="form-check form-switch mb-3">
+										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
+										<label class="form-check-label" for="settings-switch-1">Decommsion members</label>
+									</div>
+									<div class="form-check form-switch mb-3">
+										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
+										<label class="form-check-label" for="settings-switch-1">Re-assign roles</label>
 									</div>
 							    </form>
 						    </div><!--//app-card-body-->						    
@@ -690,7 +690,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">ADD NEW REQUEST</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">CREATE NEW EVENT</h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -698,8 +698,8 @@
 
                 <div class="row g-4 settings-section">
 	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Collection request</h3>
-		                <div class="section-intro">Create cash collection request to purchase float</div>
+		                <h3 class="section-title">Event creation</h3>
+		                <div class="section-intro">Create events/meetings</div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
@@ -707,17 +707,17 @@
 						    <div class="app-card-body">
 							    <form class="settings-form">
 								    <div class="mb-3">
-									    <label for="role-input-name" class="form-label">Cash Amount<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Cash amount"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									    <label for="event-input-name" class="form-label">Event Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Event name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
   <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
   <circle cx="8" cy="4.5" r="1"/>
 </svg></span></label>
-									    <input type="text" class="form-control" id="request-input-amount" placeholder="e.g 150,000.0" required>
+									    <input type="text" class="form-control" id="event-input-amount" placeholder="e.g Fundraiser.0" required>
 									</div>
 
 								    <div class="mb-3">
-									    <label for="request-input-desc" class="form-label">Description</label>
-									    <textarea type="text" class="form-control" id="role-input-desc" placeholder="Write a brief description" rows="50"></textarea>
+									    <label for="event-input-desc" class="form-label">Description</label>
+									    <textarea type="text" class="form-control" id="event-input-desc" placeholder="Write a brief description" rows="50"></textarea>
 									</div>
 
 									<button type="button" class="btn app-btn-primary" >Save Changes</button>
@@ -921,7 +921,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">FLOAT PURCHASE</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">ACTIVITY CREATION</h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -929,8 +929,8 @@
 
                 <div class="row g-4 settings-section">
 	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Float Purchase</h3>
-		                <div class="section-intro">Make float purchases subject to approval</div>
+		                <h3 class="section-title">Create Activities</h3>
+		                <div class="section-intro">Create and plan for future activities</div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
@@ -938,31 +938,31 @@
 						    <div class="app-card-body">
 							    <form class="settings-form">
 								    <div class="mb-3">
-									    <label for="user-input-name" class="form-label">Bank Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Bank name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									    <label for="activity-input-name" class="form-label">Actvity name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Activity name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
   <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
   <circle cx="8" cy="4.5" r="1"/>
 </svg></span></label>
-									    <input type="text" class="form-control" id="bank-input-name" placeholder="e.g Family Bank" required>
+									    <input type="text" class="form-control" id="activity-input-name" placeholder="e.g Elders' dinner" required>
 									</div>
 
 
 
 									<div class="mb-3 row">
 										<div class="col-6">
-											<label for="user-input-role" class="form-label">Select Branch</label>
+											<label for="activity-input-location" class="form-label">Select Location</label>
 											<select class="form-select" id="float-input-branch">
-												<option selected disabled value="">Select branch</option>
-												<option value="option-2">Agriculture#001</option>
-												<option value="option-3">Agriculture#002</option>
+												<option selected disabled value="">Select Location</option>
+												<option value="option-2">Thika</option>
+												<option value="option-3">Thome</option>
 										  </select>
 										</div>
 										<div class="col-6">
-											<label for="user-input-branch" class="form-label">Select Amount</label>
-											<select class="form-select" id="float-input-amount">
-												<option selected disabled value="">Select amount</option>
-												<option value="option-2">7,000</option>
-												<option value="option-3">86,500</option>
+											<label for="activity-input-date" class="form-label">Select month</label>
+											<select class="form-select" id="activity-input-date">
+												<option selected disabled value="">Select month</option>
+												<option value="option-2">November 2024</option>
+												<option value="option-3">December 2024</option>
 										  </select>
 										</div>
 
@@ -984,7 +984,73 @@
 
 		  </div>
 		</div>
-	 
+
+
+
+
+	 	  <div class="modal fade" id="payModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">REGISTRATION PAYMENTS</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Membership registration payment</h3>
+		                <div class="section-intro">Make payments and await confirmation</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div class="app-card-body">
+							    <form class="settings-form">
+								    <div class="mb-3">
+									    <label for="pay-input-amount" class="form-label">Amount paid<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Amount paid"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+  <circle cx="8" cy="4.5" r="1"/>
+</svg></span></label>
+									    <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0" required>
+									</div>
+
+
+									<div class="mb-3 row">
+										<div class="col-6">
+											<label for="activity-input-location" class="form-label">Select payment method used</label>
+											<select class="form-select" id="float-input-branch">
+												<option selected disabled value="">Select payment method used</option>
+												<option value="option-2">Mpesa</option>
+												<option value="option-3">Bank deposit</option>
+										  </select>
+										</div>
+										<div class="col-6">
+											<label for="pay-input-trans" class="form-label">Transaction code / reference</label>
+											<input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR" required>
+
+										</div>
+
+									</div>
+
+									<button type="button" id="submit-pay" class="btn app-btn-primary" >Save Changes</button>
+							    </form>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			  </div>
+
+			</div>
+
+		  </div>
+		</div>
 
 
 
@@ -1497,17 +1563,50 @@
                     url: "/roles",
                     type: "post",
                     data: {
-                    name: $("#role-input-name").val(),
-					desc:$("")
+                    group: $("#role-input-name").val(),
+					desc:$("#role-input-desc").val(),
+					target:"add group"
                     },
                     success: function (response) {
-                        alert("Role created successfully")
-                        $("#role-input-name").val("")
+						if (response.includes("success")){
+							toastIt(`${response}`, 'success');
+							$("#role-input-name").val("")
+						} else{
+							toastIt(`${response}`, 'danger');
+						}
+						$("#role-btn").click();
                     },
                     error: function (xhr) {
-                        alert("Error creating role")
+						toastIt(`${xhr}`, 'danger');
                     }
                 });
+			} else{
+				$("#role-btn").click();
+			}
+		})
+
+		$("#submit-pay").on("click", function() {
+			if(validate("pay-input-amount","pay-input-trans")){
+				$.ajax({
+                    url: "/dashboard",
+                    type: "get",
+                    data: {
+                    group: $("#role-input-name").val(),
+					desc:$("#role-input-desc").val(),
+					target:""
+                    },
+                    success: function (response) {
+							toastIt("request submitted, kindly wait for approval", 'success');
+							$("#pay-input-amount").val("")
+							$("#pay-input-trans").val("")
+	
+                    },
+                    error: function (xhr) {
+						toastIt(`${xhr}`, 'danger');
+                    }
+                });
+			} else{
+				$("#role-btn").click();
 			}
 		})
 	</script>

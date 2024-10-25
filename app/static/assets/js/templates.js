@@ -61,9 +61,9 @@ var dataTableTemplate = `
     <thead class="custom-header">
         <tr>
             <th class="fw-bold">Id</th>
-            <th class="fw-bold">Branch</th>
+            <th class="fw-bold">Location</th>
             <th class="fw-bold">Date</th>
-            <th class="fw-bold">Amount</th>
+            <th class="fw-bold">Attendees</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">Action</th>
         </tr>
@@ -94,10 +94,10 @@ var userDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
+            <th class="fw-bold">#</th>
             <th class="fw-bold">Code</th>
-            <th class="fw-bold">StaffId</th>
             <th class="fw-bold">Name</th>
-            <th class="fw-bold">Branch</th>
+            <th class="fw-bold">Address</th>
             <th class="fw-bold">Contact</th>
             <th class="fw-bold">Role</th>
             <th class="fw-bold">Status</th>

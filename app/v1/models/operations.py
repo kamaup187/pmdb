@@ -343,6 +343,13 @@ class CompanyUserGroupOp(CompanyUserGroup,Base):
     @staticmethod
     def fetch_usergroup_by_id(id):
         return CompanyUserGroup.query.filter_by(id=id).first()
+    
+    def update_access(self,name=None,access=None):
+        if name:
+            self.name = name
+        if access:
+            self.description = access
+        db.session.commit()
 
     def view_users(self):
         return self.users

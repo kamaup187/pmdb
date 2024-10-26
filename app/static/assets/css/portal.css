@@ -14439,7 +14439,8 @@ button.close:focus {
 
 .app-card {
     position: relative;
-    background: #fff;
+    /* background: #fff; */
+    background: #f7f3ec;
     border-radius: .25rem
 }
 

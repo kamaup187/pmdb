@@ -10172,11 +10172,23 @@ class Roles(Resource):
                 }
                 items.append(groupdict)
             # groupids = get_obj_ids(items)
-        return items
+            return items
+
+        else:
+            role_id = request.args.get('id')
+            role_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role_id))
+
+            role_dict = {
+                "id":role_obj.id,
+                "name":role_obj.name,
+                "desc":"-",
+                "access":role_obj.description
+            }
+
+            return role_dict
     
     def post(self):
         co = current_user.company
-        groupitems = []
 
         target = request.form.get('target')
 
@@ -10197,6 +10209,16 @@ class Roles(Resource):
                     group_obj = CompanyUserGroupOp(group,desc,current_user.company.id)
                     group_obj.save()
                     return "group successfully added"
+
+        else:
+            role_id = request.form.get('id')
+            role_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role_id))
+            access = request.form.get('access')
+            name = request.form.get('name')
+            CompanyUserGroupOp.update_access(role_obj,name,access)
+            return "access updated successfully"
+            
+
 class KceUsers(Resource):
     def get(self):
         target = request.args.get("target")
@@ -10204,7 +10226,6 @@ class KceUsers(Resource):
         time.sleep(0.2)
         items = []
         if target == "all":
-
             c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
             users = c_data.users
             for user in users:
@@ -10221,7 +10242,74 @@ class KceUsers(Resource):
                     "company":c_data.name
                 }
                 items.append(user_dict)
-        return items
+            return items
+        else:
+            member_obj = UserOp.fetch_user_by_id(get_identifier(request.args.get("id")))
+            user_dict = {
+                "id":member_obj.id,
+                "code":f"KCE/{member_obj.ward.subcounty.county.code}/{member_obj.id}/2024",
+                "name":member_obj.name,
+                "natid":member_obj.national_id,
+                "tel":member_obj.phone,
+                "role":member_obj.company_user_group.name if member_obj.company_user_group else "-"
+            }
+
+            co = current_user.company
+            groups = co.groups
+            items = []
+            for g in groups:
+                groupdict = {
+                    "value":g.id,
+                    "label":g.name,
+                }
+                items.append(groupdict)
+
+            return [user_dict,items]
+
+    def post(self):
+        member_id = request.form.get("id")
+        member_obj = UserOp.fetch_user_by_id(get_identifier(member_id))
+
+        name = request.form.get("name")
+        tel = request.form.get("tel")
+        pass1 = request.form.get("pass1")
+        pass2 = request.form.get("pass2")
+        role = request.form.get("role")
+
+        print("name ", name) 
+        print("tel ", tel)
+        print("pass1 ", pass1)
+        print("pass2 ", pass2)
+        print("role ", role)
+
+        if tel:
+            user = fetch_user(tel.replace("+",""))
+            if user:
+                return "denied, that number is unavailable"
+
+        if pass1:
+            validate_pass = ValidatePass.validate_password(pass1,pass2)
+            if  validate_pass=="no match":
+                return "password no match"
+
+        user_group_id=None
+        if role:      
+            user_group_id = get_company_usergroup_id(role,current_user.company)
+            if not user_group_id:
+                user_group_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role))
+                user_group_id = user_group_obj.id if user_group_obj else None
+
+        modified_by = current_user.id
+        company_id = None
+
+        UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
+
+        return "success"
+        
+
+
+
+            
 class StockDataUpload(Resource):
     """class"""
 

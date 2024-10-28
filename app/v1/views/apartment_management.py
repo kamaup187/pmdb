@@ -10168,7 +10168,7 @@ class Roles(Resource):
                 groupdict = {
                     "id":g.id,
                     "name":g.name,
-                    "desc":g.description,
+                    "desc":permission_strings(g.description),
                 }
                 items.append(groupdict)
             # groupids = get_obj_ids(items)
@@ -10229,6 +10229,10 @@ class KceUsers(Resource):
             c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
             users = c_data.users
             for user in users:
+                status = f'<span class="badge bg-success">Member</span>'
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() == "non-member":
+                        status = f'<span class="badge bg-danger">Non member</span>'
                 user_dict = {
                     "id":user.id,
                     "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
@@ -10237,12 +10241,58 @@ class KceUsers(Resource):
                     "tel":user.phone,
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
-                    "status": "Active" if user.active else "Dormant",
+                    "status": status,
                     "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
                     "company":c_data.name
                 }
                 items.append(user_dict)
             return items
+        
+        elif target == "pending":
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            for user in users:
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() != "non-member":
+                        continue
+
+                user_dict = {
+                    "id":user.id,
+                    "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status":f'<span class="badge bg-danger">Non member</span>',
+                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
+        
+        elif target == "confirmed":
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            for user in users:
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() == "non-member":
+                        continue
+                user_dict = {
+                    "id":user.id,
+                    "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status":f'<span class="badge bg-success">Member</span>',
+                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
+        
         else:
             member_obj = UserOp.fetch_user_by_id(get_identifier(request.args.get("id")))
             user_dict = {

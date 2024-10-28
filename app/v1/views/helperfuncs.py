@@ -2614,6 +2614,25 @@ def string_formatter(item):
 def string_formatter_alt(item):
     return (f"{item}") if item else ""
 
+def permission_strings(ids_str):
+    permissions_dict = {
+        "1": "edit",
+        "2": "write",
+        "3": "view",
+        "4": "delete",
+        "5": "approve",
+        "6": "deny",
+        "7": "reset",
+        "8": "export"
+    }
+
+    ids = ids_str.split()
+    # Get the permission names based on the dictionary
+    names = [permissions_dict[id] for id in ids if id in permissions_dict]
+    
+    # Join the names back into a single string
+    return " ".join(names)
+
 def switch_property_code(value):
     cases = {
         "KH": "Karurumo House",

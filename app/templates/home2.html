@@ -658,6 +658,9 @@
 									    <textarea type="text" class="form-control" id="role-input-desc" placeholder="Write a brief description" rows="50"></textarea>
 									</div>
 
+									<div class="mb-3">
+										<button id="submit-role" type="button" class="btn app-btn-primary" >Submit</button>
+									</div>
 							    </form>
 						    </div><!--//app-card-body-->
 						    
@@ -665,44 +668,7 @@
 	                </div>
                 </div><!--//row-->
 
-				
-
-
-                <hr class="my-4">
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Permissions</h3>
-		                <div class="section-intro">Toggle permissions</div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
-						    <div class="app-card-body">
-							    <form class="settings-form scrollable">
-								    <div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Re-assign permissions</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Adjust registration fees</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">View reports</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Decommsion members</label>
-									</div>
-									<div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">Re-assign roles</label>
-									</div>
-							    </form>
-						    </div><!--//app-card-body-->						    
-						</div><!--//app-card-->
-	                </div>
-                </div><!--//row-->
+		
 
 			</div>
 			<div class="modal-footer">
@@ -839,7 +805,7 @@
 									<div class="row mb-3">
 										<div class="col-6">
 											<label for="member_input_natid" class="form-label">National Id</label>
-											<input type="text" class="form-control" id="member_input_mobile" placeholder="e.g 32063376" required>
+											<input type="text" class="form-control" id="member_input_natid" placeholder="e.g 32063376" required>
 										</div>
 										<div class="col-6">
 											<label class="form-label" for="select_member_age">Gender</label>
@@ -854,12 +820,12 @@
 
 									<div class="mb-3 row">
 										<div class="col-6">
-											<label for="user-input-pass1" class="form-label">Password</label>
-											<input type="password" class="form-control" id="user-input-pass1" placeholder="******">
+											<label for="member_input_pass1" class="form-label">Password</label>
+											<input type="password" class="form-control" id="member_input_pass1" placeholder="******">
 										</div>
 										<div class="col-6">
-											<label for="user-input-pass2" class="form-label">Confirm password</label>
-											<input type="password" class="form-control" id="user-input-pass2" placeholder="******">
+											<label for="member_input_pass2" class="form-label">Confirm password</label>
+											<input type="password" class="form-control" id="member_input_pass2" placeholder="******">
 										</div>
 									</div>
 
@@ -870,7 +836,7 @@
 											<select class="form-select" id="select_member_country">
 												<option selected value="Kenya">Kenya</option>
 												{% for o in countries%}
-												<option value="{{ o.code }}">{{ o.name }}</option>
+												<option value="{{ o.code }}">{{ o }}</option>
 												{% endfor %}
 										  </select>
 										</div>
@@ -885,7 +851,7 @@
 										</div>
 									</div>
 
-									<div class="mb-3 row">
+									<div id="subcounty-ward" class="mb-3 row d-none">
 										<div class="col-6">
 											<label for="" class="form-label">Select subcounty</label>
 											<select class="form-select" id="select_member_subcounty">
@@ -930,14 +896,14 @@
 
 									<div class="mb-3">
 										<label for="select-member-payment" class="form-label">Payment status</label>
-											<select class="form-select" id="select_member_category">
+											<select class="form-select" id="select_member_payment">
 												<option selected disabled value="">Select paid/unpaid</option>
 												<option value="paid">Paid</option>
 												<option value="unpaid">Unpaid</option>
 										  </select>
 									</div>
 
-									<div class="">
+									<div id="payment-status" class="mb-3 d-none">
 										<div class="row mb-3">
 											<div class="col-6">
 												<label for="member_payment_name" class="form-label">Name</label>
@@ -945,14 +911,14 @@
 											</div>
 											<div class="col-6">
 												<label for="" class="form-label">Transaction Id</label>
-												<input type="email" class="form-control" id="member_payment_trans" placeholder="e.g JKR52HDIY">
+												<input type="text" class="form-control" id="member_payment_trans" placeholder="e.g JKR52HDIY">
 											</div>
 										</div>
 
 										<div>
 											<label for="member_input_time" class="form-label">Payment date</label>
-											<input type="time" class="form-control" id="member-input-time" required>	
-											</div>
+											<input type="date" class="form-control" id="member_input_time" required>	
+										</div>
 									</div>
 									
 
@@ -1195,8 +1161,6 @@
 			} else {
 				//desktop only
 				}
-
-
 
 			$("#home-block").removeClass("d-none")
 			$("#working-block").addClass("d-none")
@@ -1609,6 +1573,120 @@
 	</script>
 
 	<script>
+		$("#working-block").on("click", "#users-all-tab", function() {
+
+			$("#users-spinner").removeClass("d-none")
+			$("#users-all-table").empty()
+			$.ajax({
+				url: "/kce/users",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					var elem = $("#users-all-table")
+					renderUserTemplate("allTable",elem);
+
+					var t1 = $('#allTable').DataTable({
+					"dom": '<"top"f>rt<"bottom"lp><"clear">',
+					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+					"pageLength": 100,
+					"searching":true,
+					columnDefs: [ { targets: 0, type: 'natural' } ],
+					"order": [[ 0, "asc" ]],
+					"bLengthChange": false
+				});
+
+				updateUserDataTable(response,t1)
+
+				$("#users-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#users-spinner").addClass("d-none")
+				}
+			});
+			});
+
+
+
+			$("#working-block").on("click", "#users-pending-tab", function() {
+
+			$("#users-spinner").removeClass("d-none")
+			$("#users-pending-table").empty()
+			$.ajax({
+				url: "/kce/users",
+				type: "get",
+				data: {
+				target: "pending"
+				},
+				success: function (response) {
+					var elem = $("#users-pending-table")
+					renderUserTemplate("pendingTable",elem);
+
+					var t1 = $('#pendingTable').DataTable({
+					"dom": '<"top"f>rt<"bottom"lp><"clear">',
+					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+					"pageLength": 100,
+					"searching":true,
+					columnDefs: [ { targets: 0, type: 'natural' } ],
+					"order": [[ 0, "asc" ]],
+					"bLengthChange": false
+				});
+
+				updateUserDataTable(response,t1)
+
+				$("#users-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#users-spinner").addClass("d-none")
+				}
+			});
+			});
+
+
+			$("#working-block").on("click", "#users-confirmed-tab", function() {
+
+			$("#users-spinner").removeClass("d-none")
+			$("#users-confirmed-table").empty()
+			$.ajax({
+				url: "/kce/users",
+				type: "get",
+				data: {
+				target: "confirmed"
+				},
+				success: function (response) {
+					var elem = $("#users-confirmed-table")
+					renderUserTemplate("confirmedTable",elem);
+
+					var t1 = $('#confirmedTable').DataTable({
+					"dom": '<"top"f>rt<"bottom"lp><"clear">',
+					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+					"pageLength": 100,
+					"searching":true,
+					columnDefs: [ { targets: 0, type: 'natural' } ],
+					"order": [[ 0, "asc" ]],
+					"bLengthChange": false
+				});
+
+				updateUserDataTable(response,t1)
+
+				$("#users-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#users-spinner").addClass("d-none")
+				}
+			});
+			});
+
+	</script>
+
+	<script>
 
 		$("#working-block").on("click", "#floats-all-tab", function() {
 
@@ -1870,6 +1948,28 @@
 
             $('#payment-details').text(instructions);
         });
+
+
+		$('#select_member_payment').on('change',function() {
+            var selectedStatus = $(this).val();
+
+            if (selectedStatus == 'paid') {
+                $('#payment-status').removeClass('d-none');
+            } else if (selectedStatus == 'unpaid') {
+                $('#payment-status').addClass('d-none');
+            }
+
+        });
+
+
+		$('#select_member_county').on('change',function() {
+            var selectedCounty = $(this).val();
+
+            if (selectedCounty) {
+                $('#subcounty-ward').removeClass('d-none');
+            }
+
+        });
   </script>
 
   <script>
@@ -2024,14 +2124,90 @@
   </script>
 
 
-<!-- <script>
-	let checkSmDevice = toggleSide();
-      if (checkSmDevice) {
-        alert("mobiiiii");
-      } else {
-		alert("desktoooooo");
-	  }
-</script> -->
+<script>
+    $("#submit-member-btn").on('click', function () {
+
+	county_code = $("#select_member_county").val()
+	if (!county_code){
+	alert("Please select a county");
+	return false;
+	}
+
+	subcounty_code = $("#select_member_subcounty").val()
+	if (!subcounty_code){
+		alert("Please select a subcounty");
+		return false;
+	}
+	ward_code = $("#select_member_ward").val()
+	if (!ward_code){
+		alert("Please select a ward");
+		return false;
+	}
+
+	$('#submit-member-btn').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+	$.ajax({
+	url: "/kce/register",
+	type: "POST",
+	data: {
+	fname: $("#member_input_name").val(),
+	lname: "",
+
+	tel1: $("#member_input_mobile").val(),
+	email: $("#member_input_email").val(),
+
+	natid:$('#member_input_mobile').val(),
+	addr1 : "",
+
+	co : "Rentlib Company",
+	addr2 : "",
+
+	email2:"",
+	tel2 :"",
+
+	county_code : $("#select_member_county").val(),
+	subcounty_code : $("#select_member_subcounty").val(),
+	ward_code : $("#select_member_ward").val(),
+
+	pass1 : $('#member_input_pass1').val()
+	},
+	success: function (response) {
+	if (response === "success") {
+		toastIt("Member registration successful","success");
+		$('#submit-member-btn').html('Submit');
+
+	}else if(response === "id taken"){
+		toastIt("failed: National Id already in use","danger");
+		$('#submit-member-btn').html('Submit');
+
+	}else if(response === "tel taken"){
+		
+		toastIt("Registration failed: Mobile number already in use","danger");
+		$('#submit-member-btn').html('Submit');
+
+	}else if(response === "email taken"){
+		
+		toastIt("Registration failed: Email address already in use","danger");
+		$('#submit-member-btn').html('Submit');
+
+	}else if(response === "co taken"){
+		
+		toastIt("Registration failed: Company name is not available","danger");
+		$('#submit-member-btn').html('Submit');
+
+	}else{
+		toastIt("Registration failed: Company name is not available","danger");
+		$('#submit-member-btn').html('Submit');
+	}
+
+
+	}, 
+	error: function(xhr) {
+	toastIt("fRegistration failed","danger");
+	$('#submit-member-btn').html('Submit');
+	}
+	});
+	})
+</script>
 </body>
 </html> 
 

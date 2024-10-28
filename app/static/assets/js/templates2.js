@@ -882,6 +882,12 @@ var userTemplate = `
 </div><!--//col-auto-->
 </div><!--//row-->
 
+<nav id="user-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="users-all-tab" data-bs-toggle="tab" href="#users-all" role="tab" aria-controls="users-all" aria-selected="true">All users</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="users-pending-tab" data-bs-toggle="tab" href="#users-pending" role="tab" aria-controls="users-pending" aria-selected="false">Non-members</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="users-confirmed-tab" data-bs-toggle="tab" href="#users-confirmed" role="tab" aria-controls="users-confirmed" aria-selected="false">Members</a>
+</nav>
+
 <div class="tab-content" id="users-table-tab-content">
 
     <div id="users-spinner" class="d-flex justify-content-center d-none">
@@ -902,6 +908,37 @@ var userTemplate = `
             </div><!--//app-card-body-->		
         </div><!--//app-card-->						
     </div><!--//tab-pane-->
+
+
+
+    <div class="tab-pane fade" id="users-pending" role="tabpanel" aria-labelledby="users-pending-tab">
+            <div class="app-card app-card-requests-table mb-5">
+                <div class="app-card-body">
+                    <div class="row">
+                        <div class="col-lg-12 no-padding">
+                            <div id="users-pending-table" class="table-responsive">
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!--//app-card-body-->		
+            </div><!--//app-card-->	
+    </div><!--//tab-pane-->
+
+    <div class="tab-pane fade show active" id="users-confirmed" role="tabpanel" aria-labelledby="users-all-tab">
+            <div class="app-card app-card-requests-table mb-5">
+                <div class="app-card-body">
+                    <div class="row">
+                        <div class="col-lg-12 no-padding">
+                            <div id="users-confirmed-table" class="table-responsive">
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!--//app-card-body-->		
+            </div><!--//app-card-->	
+    </div><!--//tab-pane-->
+
 </div>
 
 `

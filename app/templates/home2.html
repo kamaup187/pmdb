@@ -507,7 +507,7 @@
                                               <div class="form-group row">
                                                 <div class="col-sm-3">
                                                   <label class="small mb-1" for="gender">Country</label>
-                                                  <select class="form-control kodi-input" id="country" name="county">
+                                                  <select class="form-control kodi-input" id="select_country" name="county">
                                                     <option selected value="Kenya">Kenya</option>
                                                     {% for o in countries%}
                                                     <option value="{{ o }}">{{ o }}</option>
@@ -800,7 +800,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">ADD NEW USER</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">ADD NEW MEMBER</h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -817,21 +817,41 @@
 						    <div class="app-card-body">
 							    <form class="settings-form">
 								    <div class="mb-3">
-									    <label for="user-input-name" class="form-label">Full Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									    <label for="member-input-name" class="form-label">Full Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
   <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
   <circle cx="8" cy="4.5" r="1"/>
 </svg></span></label>
-									    <input type="text" class="form-control" id="user-input-name" placeholder="e.g Abraham Morogo" required>
+									    <input type="text" class="form-control" id="member_input_name" placeholder="e.g Paul Kamau" required>
 									</div>
-									<div class="mb-3">
-									    <label for="user-input-mobile" class="form-label">Phone No</label>
-									    <input type="text" class="form-control" id="user-input-mobile" placeholder="e.g 0700123123" required>
+
+									<div class="row mb-3">
+										<div class="col-6">
+											<label for="member_input_mobile" class="form-label">Phone No</label>
+											<input type="tel" class="form-control" id="member_input_mobile" placeholder="e.g 0700123123" required>
+										</div>
+										<div class="col-6">
+											<label for="user_input_email" class="form-label">Email</label>
+											<input type="email" class="form-control" id="member_input_email" placeholder="e.g someone@email.com">
+										</div>
 									</div>
-								    <div class="mb-3">
-									    <label for="user-input-staffid" class="form-label">Staff No</label>
-									    <input type="text" class="form-control" id="user-input-staffid" placeholder="e.g BTL0765">
+
+									<div class="row mb-3">
+										<div class="col-6">
+											<label for="member_input_natid" class="form-label">National Id</label>
+											<input type="text" class="form-control" id="member_input_mobile" placeholder="e.g 32063376" required>
+										</div>
+										<div class="col-6">
+											<label class="form-label" for="select_member_age">Gender</label>
+											<select class="form-control kodi-input" id="select_member_age" name="gender">
+											  <option value="">Select Gender</option>
+											  <option value="male">Male</option>
+											  <option value="female">Female</option>
+											  <option value="other">Other</option>
+											</select>
+										</div>
 									</div>
+
 									<div class="mb-3 row">
 										<div class="col-6">
 											<label for="user-input-pass1" class="form-label">Password</label>
@@ -843,131 +863,106 @@
 										</div>
 									</div>
 
+
 									<div class="mb-3 row">
 										<div class="col-6">
-											<label for="user-input-role" class="form-label">Select role</label>
-											<select class="form-select" id="user-input-role">
-												<option selected disabled value="">Select role</option>
-												<option value="option-2">Manager</option>
-												<option value="option-3">Shop Agent</option>
-												<option value="option-4">Collection Agent</option>
+											<label for="" class="form-label">Select country</label>
+											<select class="form-select" id="select_member_country">
+												<option selected value="Kenya">Kenya</option>
+												{% for o in countries%}
+												<option value="{{ o.code }}">{{ o.name }}</option>
+												{% endfor %}
 										  </select>
 										</div>
 										<div class="col-6">
-											<label for="user-input-branch" class="form-label">Select Branch</label>
-											<select class="form-select" id="user-input-branch">
-												<option selected disabled value="">Select branch</option>
-												<option value="option-2">Agriculture#001</option>
-												<option value="option-3">Agriculture#002</option>
-												<option value="option-4">Reinsurance#001</option>
+											<label for="" class="form-label">Select county</label>
+											<select class="form-select" id="select_member_county">
+												<option selected disabled value="">Select county</option>
+												{% for o in counties%}
+												<option value="{{ o.code }}">{{ o.name }}</option>
+												{% endfor %}
+										  </select>
+										</div>
+									</div>
+
+									<div class="mb-3 row">
+										<div class="col-6">
+											<label for="" class="form-label">Select subcounty</label>
+											<select class="form-select" id="select_member_subcounty">
+												<option selected disabled value="">Select county first</option>
+										  </select>
+										</div>
+										<div class="col-6">
+											<label for="" class="form-label">Select ward</label>
+											<select class="form-select" id="select_member_ward">
+												<option selected disabled value="">Select subcounty first</option>
 										  </select>
 										</div>
 
 									</div>
 
-									<button type="button" class="btn app-btn-primary" >Submit</button>
-							    </form>
-						    </div><!--//app-card-body-->
-						    
-						</div><!--//app-card-->
-	                </div>
-                </div><!--//row-->
-                <hr class="my-4">
+									<div class="mb-3 row">
+										<div class="col-6">
+											<label for="" class="form-label">Select age bracket</label>
+											<select class="form-select" id="select_member_age">
+												<option value="" disabled selected>Select Age Bracket</option>
+												<option value="18-25">18-25</option>
+												<option value="26-35">26-35</option>
+												<option value="36-45">36-45</option>
+												<option value="46-55">46-55</option>
+												<option value="56-65">56-65</option>
+												<option value="65+">65+</option>
+										  </select>
+										</div>
 
-				<div class="text-center my-4">
-					<button id="toggle-settings" class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#moreSettings" aria-expanded="false" aria-controls="moreSettings">
-						Show more Settings
-					</button>
-				</div>
+										<div class="col-6">
+											<label for="user-input-branch" class="form-label">Select Category</label>
+											<select class="form-select" id="select_member_category">
+												<option selected disabled value="">Select Category</option>
+												<option value="elders">Elders</option>
+												<option value="youth">Youth League</option>
+												<option value="women">Women League</option>
+										  </select>
+										</div>
 
-				<div id="moreSettings" class="collapse" >
-
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Account limits</h3>
-		                <div class="section-intro">Adjust account limits </div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
-						    
-						    <div class="app-card-body">
-							    <div class="mb-2"><strong>Current limit:</strong> 500,000.0</div>
-							    <div class="mb-2"><strong>Status:</strong> <span class="badge bg-success">Active</span></div>
-							    <div class="mb-2"><strong>Resets at:</strong> 24hrs</div>
-							    <div class="row justify-content-between">
-								    <div class="col-auto">
-								        <a class="btn app-btn-primary" href="#">Adjust Limit</a>
-								    </div>
-								    <div class="col-auto">
-								        <a class="btn app-btn-secondary" href="#">Reset Limit</a>
-								    </div>
-							    </div>
-								    
-						    </div><!--//app-card-body-->
-						    
-						</div><!--//app-card-->
-	                </div>
-                </div><!--//row-->
-                <hr class="my-4">
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Data &amp; Privacy</h3>
-		                <div class="section-intro">Settings</div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
-						    <div class="app-card-body">
-							    <form class="settings-form">
-								    <div class="form-check mb-3">
-										<input class="form-check-input" type="checkbox" value="" id="settings-checkbox-1" checked>
-										<label class="form-check-label" for="settings-checkbox-1">
-										    Keep user app activity history
-										</label>
-									</div><!--//form-check-->
-									<div class="form-check mb-3">
-									    <input class="form-check-input" type="checkbox" value="" id="settings-checkbox-2" checked>
-										<label class="form-check-label" for="settings-checkbox-2">
-										    Keep user app preferences
-										</label>
 									</div>
-									<div class="form-check mb-3">
-									    <input class="form-check-input" type="checkbox" value="" id="settings-checkbox-3">
-										<label class="form-check-label" for="settings-checkbox-3">
-										    Keep user app search history
-										</label>
+
+
+									<div class="mb-3">
+										<label for="select-member-payment" class="form-label">Payment status</label>
+											<select class="form-select" id="select_member_category">
+												<option selected disabled value="">Select paid/unpaid</option>
+												<option value="paid">Paid</option>
+												<option value="unpaid">Unpaid</option>
+										  </select>
+									</div>
+
+									<div class="">
+										<div class="row mb-3">
+											<div class="col-6">
+												<label for="member_payment_name" class="form-label">Name</label>
+												<input type="tel" class="form-control" id="member_payment_name" placeholder="e.g Paul Kamau" required>
+											</div>
+											<div class="col-6">
+												<label for="" class="form-label">Transaction Id</label>
+												<input type="email" class="form-control" id="member_payment_trans" placeholder="e.g JKR52HDIY">
+											</div>
+										</div>
+
+										<div>
+											<label for="member_input_time" class="form-label">Payment date</label>
+											<input type="time" class="form-control" id="member-input-time" required>	
+											</div>
 									</div>
 									
-									<div class="mt-3">
-									    <button type="submit" class="btn app-btn-primary" >Submit</button>
-									</div>
+
+									<button type="button" id="submit-member-btn" class="btn app-btn-primary" >Submit</button>
 							    </form>
-						    </div><!--//app-card-body-->						    
+						    </div><!--//app-card-body-->
+						    
 						</div><!--//app-card-->
 	                </div>
                 </div><!--//row-->
-                <hr class="my-4">
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Notifications</h3>
-		                <div class="section-intro">Toggle sms notifications</div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
-						    <div class="app-card-body">
-							    <form class="settings-form">
-								    <div class="form-check form-switch mb-3">
-										<input class="form-check-input" type="checkbox" id="settings-switch-1" checked>
-										<label class="form-check-label" for="settings-switch-1">sms notifications</label>
-									</div>
-									<div class="mt-3">
-									    <button type="submit" class="btn app-btn-primary" >Submit</button>
-									</div>
-							    </form>
-						    </div><!--//app-card-body-->						    
-						</div><!--//app-card-->
-	                </div>
-                </div><!--//row-->
-			</div>
 
 			</div>
 			<div class="modal-footer">
@@ -1798,9 +1793,8 @@
 		}
 	  });
 	})
-  </script>
-  
-  <script>
+
+
 	$("#select_subcounty").on("change", function(){
 	  $("#select_ward").html("<option disabled selected value> -- select ward -- </option>");
 	  var subcounty_code = $("#select_subcounty").val();
@@ -1828,6 +1822,39 @@
   
 	  $("#goto_reports").attr("href", url_report);
 	})
+
+
+  $("#select_member_county").on("change", function(){
+    $("#select_member_subcounty").html("<option disabled selected value> -- select subcounty -- </option>");
+    $("#select_member_ward").html("<option disabled selected value> -- select ward -- </option>");
+    var county_code = $("#select_member_county").val();
+    $.ajax({
+      url: "/fetch/subcounties",
+      type: "get",
+      data: {
+        countycode: county_code
+      },
+      success: function (response) {
+        $("#select_member_subcounty").html(response);
+      }
+    });
+  })
+
+
+  $("#select_member_subcounty").on("change", function(){
+    $("#select_member_ward").html("<option disabled selected value> -- select ward -- </option>");
+    var subcounty_code = $("#select_member_subcounty").val();
+    $.ajax({
+      url: "/fetch/wards",
+      type: "get",
+      data: {
+        subcountycode: subcounty_code
+      },
+      success: function (response) {
+        $("#select_member_ward").html(response);
+      }
+    });
+  })
   </script>
 
   <script>

@@ -871,10 +871,10 @@ var userTemplate = `
 <div class="col-auto">
      <div class="page-utilities">
         <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-            <div class="col-auto d-none">						    
+            <div class="col-auto">						    
                 <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#userModal">
                     <i data-feather="plus" style="width: 16px; height: 16px;"></i>
-                    New user
+                    Add new member
                 </a>
             </div>
         </div><!--//row-->

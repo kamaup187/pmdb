@@ -10037,7 +10037,7 @@ class KceRegister(Resource):
 
         try:
             if ward_obj:
-                new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,None,company.id,1)
+                new_user = UserOp(name,usercode,username,national_id,phone,email,pass1,4,4992,company.id,1)
                 new_user.save()
                 UserOp.update_user_ward(new_user,ward_obj.id)
                 print("User created succeessfuly")

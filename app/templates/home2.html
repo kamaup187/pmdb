@@ -2175,28 +2175,35 @@
 		toastIt("Member registration successful","success");
 		$('#submit-member-btn').html('Submit');
 
+		$("#user-btn").click();
+
 	}else if(response === "id taken"){
 		toastIt("failed: National Id already in use","danger");
 		$('#submit-member-btn').html('Submit');
+		$("#user-btn").click();
 
 	}else if(response === "tel taken"){
 		
 		toastIt("Registration failed: Mobile number already in use","danger");
 		$('#submit-member-btn').html('Submit');
+		$("#user-btn").click();
 
 	}else if(response === "email taken"){
 		
 		toastIt("Registration failed: Email address already in use","danger");
 		$('#submit-member-btn').html('Submit');
+		$("#user-btn").click();
 
 	}else if(response === "co taken"){
 		
 		toastIt("Registration failed: Company name is not available","danger");
 		$('#submit-member-btn').html('Submit');
+		$("#user-btn").click();
 
 	}else{
 		toastIt("Registration failed: Company name is not available","danger");
 		$('#submit-member-btn').html('Submit');
+		$("#user-btn").click();
 	}
 
 
@@ -2204,6 +2211,7 @@
 	error: function(xhr) {
 	toastIt("fRegistration failed","danger");
 	$('#submit-member-btn').html('Submit');
+	$("#user-btn").click();
 	}
 	});
 	})

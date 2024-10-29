@@ -9997,7 +9997,7 @@ class KceLogin(Resource):
 class FloatLogin(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
-        return Response(render_template("login2.html"))
+        return Response(render_template("float_login.html"))
     
     def post(self):
         from flask_login import login_user
@@ -10021,9 +10021,10 @@ class FloatLogin(Resource):
         if user:
             if UserOp.password_is_valid(user,password):
                 login_user(user, remember=False)
-                return redirect(url_for('api.kcehome'))
-            return Response(render_template("login2.html"))
-        return Response(render_template("login2.html"))
+                # return redirect(url_for('api.kcehome'))
+                return Response(render_template("float_login.html"))
+            return Response(render_template("float_login.html"))
+        return Response(render_template("float_login.html"))
 
 class KceRegister(Resource):
     def post(self):

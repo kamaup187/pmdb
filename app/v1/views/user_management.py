@@ -1461,7 +1461,7 @@ class LandingPage(Resource):
             return Response(render_template("home.html"))
         if request.host == "kiotapay.com":
             return redirect("https://kiotapay.co.ke")
-        if request.host == "beacontechnologies.co.ke":
+        if request.host == "float.beacontechnologies.co.ke":
             return redirect(url_for('api.floatlogin'))
         if os.getenv("HOMEPAGE") or HOMEPAGE == "False":
             return redirect(url_for('api.index'))

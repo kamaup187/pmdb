@@ -27,6 +27,8 @@ api.add_resource(Floats,"/floats")
 api.add_resource(Roles,"/roles")
 api.add_resource(KceUsers,"/kce/users")
 
+api.add_resource(FloatLogin,"/float/login")
+
 api.add_resource(DataUpload,"/data/upload")
 api.add_resource(MpesaDataUpload,"/mpesadata/upload")
 

@@ -9994,6 +9994,37 @@ class KceLogin(Resource):
             return Response(render_template("login2.html"))
         return Response(render_template("login2.html"))
 
+class FloatLogin(Resource):
+    def get(self):
+        # return Response(render_template("kce_index.html"))
+        return Response(render_template("login2.html"))
+    
+    def post(self):
+        from flask_login import login_user
+        identity = request.form.get('identifier')
+        password = request.form.get('password')
+        downtime = False
+
+        if identity:
+            try:
+                user = fetch_user(identity)
+            except Exception as e:
+                user = None
+                downtime = True
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Login fail error",e)
+        else:
+            user = None
+
+        if downtime:
+            db.session.rollback()
+
+        if user:
+            if UserOp.password_is_valid(user,password):
+                login_user(user, remember=False)
+                return redirect(url_for('api.kcehome'))
+            return Response(render_template("login2.html"))
+        return Response(render_template("login2.html"))
+
 class KceRegister(Resource):
     def post(self):
 

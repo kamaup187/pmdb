@@ -9922,6 +9922,18 @@ class KceHome(Resource):
         counties = CountyOp.fetch_all_counties()
         return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users))
 
+class FloatHome(Resource):
+    @login_required
+    def get(self):
+        # return Response(render_template("kce_index.html"))
+        # return Response(render_template("home.html"))
+        c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+        users = c_data.users
+        for user in users:
+            user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
+        counties = CountyOp.fetch_all_counties()
+        return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users))
+
 class KceReport(Resource):
     @login_required
     def get(self):

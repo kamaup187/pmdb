@@ -9916,6 +9916,10 @@ class KceHome(Resource):
         # return Response(render_template("kce_index.html"))
         # return Response(render_template("home.html"))
         c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+        if current_user.company.name == c_data.name:
+            pass
+        else:
+            return redirect(url_for('api.kcelogin'))
         users = c_data.users
         for user in users:
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
@@ -9927,12 +9931,14 @@ class FloatHome(Resource):
     def get(self):
         # return Response(render_template("kce_index.html"))
         # return Response(render_template("home.html"))
-        c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
-        users = c_data.users
-        for user in users:
-            user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
+        c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+        if current_user.company.name == c_data.name:
+            pass
+        else:
+            return redirect(url_for('api.floatlogin'))
+
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users))
+        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[]))
 
 class KceReport(Resource):
     @login_required
@@ -10033,8 +10039,8 @@ class FloatLogin(Resource):
         if user:
             if UserOp.password_is_valid(user,password):
                 login_user(user, remember=False)
-                # return redirect(url_for('api.kcehome'))
-                return Response(render_template("float_login.html"))
+                return redirect(url_for('api.floathome'))
+                # return Response(render_template("float_login.html"))
             return Response(render_template("float_login.html"))
         return Response(render_template("float_login.html"))
 
@@ -10088,6 +10094,57 @@ class KceRegister(Resource):
             else:
                 print("no ward error")
                 return "failed to register"
+        except Exception as e:
+            print("error",e)
+            return "failed to register"
+
+        return "success"
+
+class FloatRegister(Resource):
+    def post(self):
+
+        name = request.form.get('name')
+        national_id = request.form.get('natid')
+        phone = request.form.get('tel1')
+        email = request.form.get('email')
+        staffid = request.form.get('staffid')
+        pass1 = request.form.get('pass1')
+
+        company = CompanyOp.fetch_company_by_name('Beacon Technologies Ltd')
+
+        usercode = usercode_generator()
+        is_present  = UserOp.fetch_user_by_usercode(usercode)
+        if is_present:
+            usercode = usercode_generator()#generate code again
+            is_present  = UserOp.fetch_user_by_usercode(usercode)
+            if is_present:
+                usercode = usercode_generator()#generate code again
+
+        if national_id:
+            national_id_present = UserOp.fetch_user_by_national_id(national_id)
+            if national_id_present:
+                print("id taken by ", national_id_present.name, "natid being ",national_id)
+                return "id taken"
+        if email:
+            email_is_present = UserOp.fetch_user_by_email(email)
+            if email_is_present:
+                print("email taken")
+                return "email taken"
+        if phone:
+            phone_is_present = UserOp.fetch_user_by_phone(phone)
+            if phone_is_present:
+                print("tel taken")
+                return "tel taken"
+            
+        try:
+            new_user = UserOp(name,staffid,usercode,national_id,phone,email,pass1,4,None,company.id,1)
+            new_user.save()
+
+            account_obj = AccountsOp(name,0.0,0.0,500000,new_user.id)
+            account_obj.save()
+
+            print("User created succeessfuly")
+
         except Exception as e:
             print("error",e)
             return "failed to register"
@@ -10155,6 +10212,31 @@ class Requests(Resource):
             items.append(accepted_dict)
         return items
     
+
+class Accounts(Resource):
+    def get(self):
+        com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+        users = com.users
+        items = []
+        for user in users:
+            if user.account:
+                acc_dict = {
+                    "name": f"{user.name}#00{user.account.id}",
+                    "ob": user.account.opening_balance,
+                    "cb": user.account.closing_balance,
+                    "limit": user.account.account_limit,
+                    "status": user.account.status,
+                    "ltd": user.account.modifiedon.strftime("%d/%b/%y")
+                }
+                items.append(acc_dict)
+            else:
+                print("no account njege")
+
+        print(items)
+        return items
+    
+    def post(self):
+        pass
 class Floats(Resource):
     def get(self):
         target = request.args.get("target")
@@ -10399,9 +10481,142 @@ class KceUsers(Resource):
         UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
 
         return "success"
+
+
+class FloatUsers(Resource):
+    def get(self):
+        target = request.args.get("target")
+        import time
+        time.sleep(0.2)
+        items = []
+        if target == "all":
+            c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = c_data.users
+            for user in users:
+                status = f'<span class="badge bg-success">Active</span>'
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() == "non-member":
+                        status = f'<span class="badge bg-danger">Non member</span>'
+                user_dict = {
+                    "id":user.id,
+                    "code":user.usercode,
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status": status,
+                    "branch":"-",
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
         
+        elif target == "pending":
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            for user in users:
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() != "non-member":
+                        continue
 
+                user_dict = {
+                    "id":user.id,
+                    "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status":f'<span class="badge bg-danger">Non member</span>',
+                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
+        
+        elif target == "confirmed":
+            c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = c_data.users
+            for user in users:
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() == "non-member":
+                        continue
+                user_dict = {
+                    "id":user.id,
+                    "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status":f'<span class="badge bg-success">Active</span>',
+                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
+        
+        else:
+            member_obj = UserOp.fetch_user_by_id(get_identifier(request.args.get("id")))
+            user_dict = {
+                "id":member_obj.id,
+                "code":f"-",
+                "name":member_obj.name,
+                "natid":member_obj.national_id,
+                "tel":member_obj.phone,
+                "branch":"-",
+                "role":member_obj.company_user_group.id if member_obj.company_user_group else "-"
+            }
 
+            co = current_user.company
+            groups = co.groups
+            items = []
+            for g in groups:
+                groupdict = {
+                    "value":g.id,
+                    "label":g.name,
+                }
+                items.append(groupdict)
+
+            return [user_dict,items,[]]
+
+    def post(self):
+        member_id = request.form.get("id")
+        member_obj = UserOp.fetch_user_by_id(get_identifier(member_id))
+
+        name = request.form.get("name")
+        tel = request.form.get("tel")
+        pass1 = request.form.get("pass1")
+        pass2 = request.form.get("pass2")
+        role = request.form.get("role")
+        staffid = request.form.get("staff") 
+
+        if tel:
+            user = fetch_user(tel.replace("+",""))
+            if user:
+                return "denied, that number is unavailable"
+
+        if pass1:
+            validate_pass = ValidatePass.validate_password(pass1,pass2)
+            if  validate_pass=="no match":
+                return "password no match"
+
+        user_group_id=None
+        if role:      
+            user_group_id = get_company_usergroup_id(role,current_user.company)
+            if not user_group_id:
+                user_group_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role))
+                user_group_id = user_group_obj.id if user_group_obj else None
+
+        modified_by = current_user.id
+        company_id = None
+
+        UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
+        if staffid:
+            UserOp.update_usercode(member_obj,staffid)
+
+        return "success"
 
             
 class StockDataUpload(Resource):

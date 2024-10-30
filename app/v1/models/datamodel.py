@@ -216,9 +216,32 @@ class User(db.Model,UserMixin):
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
     leads = db.relationship('Lead',backref='user',order_by='Lead.date', cascade="all, delete-orphan")
 
+    account = db.relationship('Account', backref='user', uselist=False, cascade="all, delete-orphan")
+
+
 
     def __repr__(self):
         return self.username
+
+
+class Account(db.Model):
+
+    __tablename__ = 'accounts'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+    opening_balance = db.Column(db.Float,default=0.0)
+    closing_balance = db.Column(db.Float,default=0.0)
+    account_limit = db.Column(db.Float,default=500000)
+    status = db.Column(db.String,default="Open")
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    def __repr__(self):
+        return self.name
 
 class UserLoginData(db.Model):
 

@@ -13,6 +13,8 @@
         <link rel="manifest" href="../static/images/favico/site.webmanifest"> -->
         <!-- <link href="../static/kce/img/favicon.ico" rel="icon"> -->
 
+        <link href="../static/float/img/favicon.ico" rel="icon">
+
         <title>Login</title>
         <link href="/static/css/style.css" rel="stylesheet" />
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main_float.css') }}">
@@ -33,8 +35,8 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header center-btn">
                                         <!-- <span class="text-125 font-weight-bold my-1">Login</span> -->
-                                        <span class="d-none d-lg-inline"><a class="d-none d-lg-inline" href="#"><img src="../static/float/img/beacon-logo.png" width="200" height="80" alt=""></a> | <span class="text-kodi-alt">Login</span></span>
-                                        <span class="desktop-malaysian"><a class="" href="#"><img src="../static/float/img/beacon-logo.png" width="150" height="60" alt=""></a> | <span class="text-kodi-alt">Login</span></span>
+                                        <span class="d-none d-lg-inline"><a class="d-none d-lg-inline" href="/float/login"><img src="../static/float/img/beacon-logo.png" width="200" height="80" alt=""></a> | <span class="text-kodi-alt">Login</span></span>
+                                        <span class="desktop-malaysian"><a class="" href="/float/login"><img src="../static/float/img/beacon-logo.png" width="150" height="60" alt=""></a> | <span class="text-kodi-alt">Login</span></span>
                                         <!-- <span class="text-right my-1">
                                             <a class="sidebar-brand bg-white d-flex align-items-center justify-content-center" href="{{ url_for('api.demo') }}">
                                                 Demo
@@ -72,7 +74,7 @@
                                                 <!-- <div class="small text-kodi" >Forgot Password?</div> -->
 
                                                 <div class="text-center">
-                                                    <a style="color: #15a362;" href="/kce/login">Forgot Password?</a>
+                                                    <a style="color: #15a362;" href="/float/login">Forgot Password?</a>
                                                 </div>
 
                                             </div>

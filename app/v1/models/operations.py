@@ -523,6 +523,10 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_usercode(self,usercode):
+        self.usercode = usercode
+        db.session.commit()
+
     def update_group(self, group_id):
         print("uppppppdddddaaaaating",self,"group",group_id)
         self.company_usergroup_id = group_id
@@ -613,6 +617,15 @@ class UserOp(User,Base):
             
         dbpassword=self.password
         return Bcrypt().check_password_hash(dbpassword, password)
+
+class AccountsOp(Account,Base):
+    def __init__(self,name,ob,cb,limit,user_id):
+        self.name=name
+        self.opening_balance = ob
+        self.closing_balance = cb
+        self.limit=limit
+        self.user_id=user_id
+
 
 class UserLoginDataOp(UserLoginData,Base):
     def __init__(self,user_id):

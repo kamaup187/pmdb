@@ -191,7 +191,9 @@ class User(db.Model,UserMixin):
     active = db.Column(db.Boolean,default=True)
     softdelete = db.Column(db.Boolean,default=False)
     roles = db.Column(db.VARCHAR,default="none")
-
+    category = db.Column(db.String)
+    gender = db.Column(db.String)
+    
     bank = db.Column(db.VARCHAR)
     bankacc = db.Column(db.VARCHAR)
 
@@ -217,6 +219,7 @@ class User(db.Model,UserMixin):
     leads = db.relationship('Lead',backref='user',order_by='Lead.date', cascade="all, delete-orphan")
 
     account = db.relationship('Account', backref='user', uselist=False, cascade="all, delete-orphan")
+    reg_account = db.relationship('RegistrationAccount', backref='user', uselist=False, cascade="all, delete-orphan")
 
     collection_requests = db.relationship('CollectionRequest', backref='created_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.posted_by')
     accepted_requests = db.relationship('CollectionRequest', backref='received_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.accepted_by')
@@ -238,6 +241,26 @@ class Account(db.Model):
     closing_balance = db.Column(db.Float,default=0.0)
     account_limit = db.Column(db.Float,default=500000)
     status = db.Column(db.String,default="Open")
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+    def __repr__(self):
+        return self.name
+    
+class RegistrationAccount(db.Model):
+
+    __tablename__ = 'registration_accounts'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+    registration_fee = db.Column(db.Float,default=5000.0)
+    amount_paid = db.Column(db.Float,default=0.0)
+    reference = db.Column(db.VARCHAR)
+    approved = db.Column(db.Boolean,default=False)
+    status = db.Column(db.String,default="unpaid")
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 

@@ -261,9 +261,9 @@
 					        
 					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
 						        <span class="nav-icon">
-									<i data-feather="calendar"></i>
+									<i data-feather="dollar-sign"></i>
 						         </span>
-		                         <span class="nav-link-text">Financial Management</span>
+		                         <span class="nav-link-text">Financial Accounts</span>
 		                         <span class="submenu-arrow">
 		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
@@ -972,26 +972,13 @@
 			<div class="modal-body">
 
 
-                <div class="row g-4 settings-section">
-	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Personal info</h3>
-		                <div class="section-intro">General biodata</div>
-	                </div>
-	                <div class="col-12 col-md-8">
-		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
-						    
-						    <div id="update-user-bed" class="app-card-body">
-								<div class="d-flex justify-content-center">
-									<div class="spinner-border text-success m-2" role="status">
-										<span class="visually-hidden">Loading...</span>
-									</div>
-								</div>
-						    </div><!--//app-card-body-->
-						    
-						</div><!--//app-card-->
-	                </div>
+                <div id="update-user-bed" class="row g-4 settings-section">
+					<div class="d-flex justify-content-center">
+						<div class="spinner-border text-success m-2" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
                 </div><!--//row-->
-                <hr class="my-4">
 
 			</div>
 			<div class="modal-footer">
@@ -2098,6 +2085,8 @@
 					pass1:$("#user-update-pass1").val(),
 					pass2:$("#user-update-pass2").val(),
 					role:$("#user-update-role").val(),
+					gender:$("#user-update-gender").val(),
+					category:$("#user-update-category").val(),
 					target:"single"
 				},
 				success: function (response) {
@@ -2214,6 +2203,11 @@
 	$("#user-btn").click();
 	}
 	});
+	})
+
+
+	$(document).on("click","#toggle-update-section", function(){
+		$("#update-section").removeClass("d-none");
 	})
 </script>
 </body>

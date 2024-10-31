@@ -53,11 +53,12 @@ function updateFloatDataTable(data,table) {
     table.clear();
     data.forEach(function(item) {
         table.row.add([
-            item.id,             // PNo
-            item.date,           // Name
-            item.amount,        // Region
-            item.member,
+            item.name,             // PNo
+            item.fee,           // Name
+            item.paid,        // Region
+            item.ref,
             item.status,
+            item.date,
             '<button class="btn btn-light btn-sm" data-id="' + item.id + '">View</button>'  // Remove button
         ]);
     });
@@ -105,11 +106,12 @@ var floatDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
+            <th class="fw-bold">Acc</th>
+            <th class="fw-bold">Fee</th>
+            <th class="fw-bold">Paid</th>
             <th class="fw-bold">Ref</th>
-            <th class="fw-bold">Date</th>
-            <th class="fw-bold">Amount</th>
-            <th class="fw-bold">Member</th>
             <th class="fw-bold">Status</th>
+            <th class="fw-bold">Date</th>
             <th class="fw-bold">Action</th>
         </tr>
     </thead>
@@ -231,14 +233,64 @@ var roleUpdateForm = (roleobj,roles) => {
     var userUpdateForm = (memberobj,rolesArray) => {
 
         const roleOptions = rolesArray.map(r => `
-            <option value="${r.value}" ${r.value === memberobj.role ? 'selected' : ''}>${r.label}</option>
+            <option value="${r.value}" ${r.value === memberobj.roleid ? 'selected' : ''}>${r.label}</option>
         `).join('');
         
         return `
-    
-    
-    
-                                    <form class="settings-form">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Personal details</h3>
+		                <div class="section-intro">View account details </div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div class="app-card-body">
+                                <div class="mb-2"><strong>Name : </strong> ${memberobj.name}</div>
+                                <div class="mb-2"><strong>Status : </strong> ${memberobj.membership}</div>
+                                <div class="mb-2"><strong>Role : </strong> ${memberobj.role}</div>
+
+							    <div class="mb-2"><strong>Amount paid : </strong> ${memberobj.paid}</div>
+                                <div class="mb-2"><strong>Mobile contact : </strong> ${memberobj.tel}</div>
+                                <div class="mb-2"><strong>National Id : </strong> ${memberobj.natid}</div>
+
+                                <div class="mb-2"><strong>Gender : </strong> ${memberobj.gender}</div>
+                                <div class="mb-2"><strong>Category : </strong> ${memberobj.category}</div>
+
+                                <div class="mb-2"><strong>Nationality : </strong> Kenyan</div>
+                                <div class="mb-2"><strong>County : </strong> ${memberobj.county}</div>
+                                <div class="mb-2"><strong>Subcounty : </strong> ${memberobj.subcounty}</div>
+                                <div class="mb-2"><strong>Ward : </strong> ${memberobj.ward}</div>
+
+
+							    <div class="row justify-content-between">
+								    <div class="col-auto invisible">
+								        <a class="btn app-btn-primary" href="#">Hidden</a>
+								    </div>
+								    <div class="col-auto">
+								        <a id="toggle-update-section" class="btn app-btn-secondary" href="#"> <i data-feather="edit"></i> Adjust</a>
+								    </div>
+							    </div>
+								    
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+
+
+
+                <div id="update-section" class="row g-4 settings-section d-none">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Update member details</h3>
+		                <div class="section-intro">Reassign role</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
+						    <div class="app-card-body">
+							    <form class="settings-form">
                                         <div class="mb-3">
                                             <label for="user-update-name" class="form-label">Update Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -265,6 +317,28 @@ var roleUpdateForm = (roleobj,roles) => {
     
                                         <input type="hidden" class="form-control" id="user-update-id" value="${memberobj.id}">
     
+
+                                        <div class="mb-3 row">
+                                            <div class="col-6">
+                                                <label for="user-update-category" class="form-label">Update category</label>
+                                                <select class="form-select" id="user-update-category">
+                                                    <option selected disabled value="">Select category</option>
+                                                    <option value="elders">Elders</option>
+                                                    <option value="youth league">Youth League</option>
+                                                    <option value="women league">Women League</option>
+                                              </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="user-update-gender" class="form-label">Update gender</label>
+                                                <select class="form-select" id="user-update-gender">
+                                                    <option selected disabled value="">Select gender</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Other</option>
+                                              </select>
+                                            </div>
+                                        </div>
+
                                         <div class="mb-3 row">
                                             <div class="col-12">
                                                 <label for="user-update-role" class="form-label">Update role</label>
@@ -277,7 +351,12 @@ var roleUpdateForm = (roleobj,roles) => {
                                         </div>
     
                                         <button type="button" id="update-user-btn" class="btn app-btn-primary" >Submit</button>
-                                    </form>
+							    </form>
+						    </div><!--//app-card-body-->						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+
     
     `;
         };
@@ -742,7 +821,7 @@ var floatTemplate = `
 <nav id="floats-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
 <a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All payments</a>
 <a class="flex-sm-fill text-sm-center nav-link" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-pending" aria-selected="false">Pending payments</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Paid payments</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Approved payments</a>
 </nav>
 
 

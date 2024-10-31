@@ -523,6 +523,13 @@ class UserOp(User,Base):
             self.user_id = modified_by
         db.session.commit()
 
+    def update_extra_details(self, gender=None, category=None):
+        if gender:
+            self.gender = gender
+        if category:
+            self.category = category
+        db.session.commit()
+
     def update_usercode(self,usercode):
         self.usercode = usercode
         db.session.commit()
@@ -632,6 +639,23 @@ class AccountsOp(Account,Base):
     def update_limit(self, limit,balance):
         self.account_limit=limit
         self.closing_balance=balance
+        db.session.commit()
+
+class RegistrationAccountOp(RegistrationAccount,Base):
+    def __init__(self,name,fee,user_id):
+        self.name=name
+        self.registration_fee = fee
+        self.user_id=user_id
+
+    def fetch_account_by_id(id):
+        return Account.query.filter_by(id=id).first()
+    
+    def update_payment(self, fee,paid,ref,approved,status):
+        self.registration_fee = fee
+        self.amount_paid = paid
+        self.reference = ref
+        self.approved = approved
+        self.status = status
         db.session.commit()
 
 class CollectionRequestOp(CollectionRequest,Base):

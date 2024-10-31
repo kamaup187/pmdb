@@ -10311,9 +10311,33 @@ class Accounts(Resource):
 class Floats(Resource):
     def get(self):
         target = request.args.get("target")
-        
-        
         items = []
+
+        target = request.args.get("target")
+        if target == "all":
+            com =  CompanyOp.fetch_company_by_name("Rentlib Company")
+            users = com.users
+            items = []
+            for user in users:
+                if user.reg_account:
+                    acc_dict = {
+                        "id":user.reg_account.id,
+                        "name": f"{user.name}#00{user.reg_account.id}",
+                        "fee": user.reg_account.registration_fee,
+                        "paid": user.reg_account.amount_paid,
+                        "ref": user.reg_account.reference,
+                        "status": user.reg_account.status,
+                        "date": user.reg_account.modifiedon.strftime("%d/%b/%y")
+                    }
+                    items.append(acc_dict)
+                else:
+                    print("no account njege")
+
+            print(items)
+            return items
+
+
+
         if target == "pending":
             accepted_dict = {
                 "id":"GHER63MKJ",
@@ -10492,24 +10516,69 @@ class KceUsers(Resource):
         
         else:
             member_obj = UserOp.fetch_user_by_id(get_identifier(request.args.get("id")))
+
+            if member_obj.reg_account:
+                pass
+            else:
+                reg_acc = RegistrationAccountOp(member_obj.name, 5000.0,member_obj.id)
+                reg_acc.save()
+
+            membership = f'<span class="badge bg-danger"> Non-member</span>'
+
+            if member_obj.company_user_group:
+                if member_obj.company_user_group.name.lower() != "non-member":
+                    membership = f'<span class="badge bg-success"> Member</span>'
+
             user_dict = {
                 "id":member_obj.id,
                 "code":f"KCE/{member_obj.ward.subcounty.county.code}/{member_obj.id}/2024",
+                "membership":membership,
                 "name":member_obj.name,
                 "natid":member_obj.national_id,
                 "tel":member_obj.phone,
-                "role":member_obj.company_user_group.name if member_obj.company_user_group else "-"
+                "gender":member_obj.gender,
+                "category":member_obj.category,
+                "roleid":member_obj.company_user_group.id if member_obj.company_user_group else "-",
+                "role":member_obj.company_user_group.name if member_obj.company_user_group else "-",
+                "email":member_obj.email,
+                "county":member_obj.ward.subcounty.county.name,
+                "subcounty":member_obj.ward.subcounty.name,
+                "ward": member_obj.ward.name,
+                "paid":member_obj.reg_account.amount_paid
             }
 
             co = current_user.company
             groups = co.groups
             items = []
+            # for g in groups:
+            #     groupdict = {
+            #         "value":g.id,
+            #         "label":g.name,
+            #     }
+            #     if member_obj.company_user_group:
+            #         if member_obj.company_user_group.name.lower() != "non-member":
+            #             if g.name.lower() == "non-member":
+            #                 pass
+            #             else:
+            #                 items.append(groupdict)
+            #         else:
+            #             if g.name.lower() == "non-member":
+            #                 items.append(groupdict)
+            #     else:
+            #         if g.name.lower() == "non-member":
+            #             items.append(groupdict)
+
+
+            non_member_name = "non-member"
+            is_member = (
+                member_obj.company_user_group
+                and member_obj.company_user_group.name.lower() != non_member_name
+            )
+
             for g in groups:
-                groupdict = {
-                    "value":g.id,
-                    "label":g.name,
-                }
-                items.append(groupdict)
+                is_non_member = g.name.lower() == non_member_name
+                if (is_member and not is_non_member) or (not is_member and is_non_member):
+                    items.append({"value": g.id, "label": g.name})
 
             return [user_dict,items]
 
@@ -10522,6 +10591,8 @@ class KceUsers(Resource):
         pass1 = request.form.get("pass1")
         pass2 = request.form.get("pass2")
         role = request.form.get("role")
+        gender = request.form.get("gender")
+        category = request.form.get("category")
 
         print("name ", name) 
         print("tel ", tel)
@@ -10550,6 +10621,7 @@ class KceUsers(Resource):
         company_id = None
 
         UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
+        UserOp.update_extra_details(member_obj,gender,category)
 
         return "success"
 

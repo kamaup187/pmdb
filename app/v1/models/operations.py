@@ -626,6 +626,18 @@ class AccountsOp(Account,Base):
         self.limit=limit
         self.user_id=user_id
 
+    def fetch_account_by_id(id):
+        return Account.query.filter_by(id=id).first()
+    
+    def update_limit(self, limit,balance):
+        self.account_limit=limit
+        self.closing_balance=balance
+        db.session.commit()
+
+class CollectionRequestOp(CollectionRequest,Base):
+    def __init__(self,amount,posted_by):
+        self.amount=amount
+        self.posted_by=posted_by
 
 class UserLoginDataOp(UserLoginData,Base):
     def __init__(self,user_id):

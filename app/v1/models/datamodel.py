@@ -218,6 +218,9 @@ class User(db.Model,UserMixin):
 
     account = db.relationship('Account', backref='user', uselist=False, cascade="all, delete-orphan")
 
+    collection_requests = db.relationship('CollectionRequest', backref='created_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.posted_by')
+    accepted_requests = db.relationship('CollectionRequest', backref='received_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.accepted_by')
+
 
 
     def __repr__(self):
@@ -242,6 +245,21 @@ class Account(db.Model):
 
     def __repr__(self):
         return self.name
+
+class CollectionRequest(db.Model):
+    
+    __tablename__ = 'collection_requests'
+
+    id = db.Column(db.Integer,autoincrement=True, primary_key=True)
+    amount = db.Column(db.Float, default=0.0)
+    description = db.Column(db.String)
+    purpose = db.Column(db.String, default="float purchase")
+    status = db.Column(db.String, default="pending")
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+    acceptedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    posted_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    accepted_by = db.Column(db.Integer, db.ForeignKey(User.id))
 
 class UserLoginData(db.Model):
 

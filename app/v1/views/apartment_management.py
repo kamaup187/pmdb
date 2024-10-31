@@ -10186,57 +10186,128 @@ class Requests(Resource):
             }
             items.append(accepted_dict)
         else:
-            accepted_dict = {
-                "id":2,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-warning">Pending</span>'
-            }
-            items.append(accepted_dict)
-            accepted_dict = {
-                "id":3,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-secondary">Accepted</span>'
-            }
-            items.append(accepted_dict)
-            accepted_dict = {
-                "id":4,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-success">Delivered</span>'
-            }
-            items.append(accepted_dict)
-        return items
+
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            for user in users:
+                if user.collection_requests:
+                    for req in user.collection_requests:
+                        acc_dict = {
+                            "id":req.id,
+                            "branch": f"Agriculture#001",
+                            "date": req.acceptedon.strftime("%d/%b/%y"),
+                            "amount": req.amount,
+                            "status": f'<span class="badge bg-success">{req.status}</span>',
+                            "posted_by":req.created_by.name,
+                        }
+                        items.append(acc_dict)
+                else:
+                    print("no account njege")
+
+            print(items)
+            return items
+
+            # accepted_dict = {
+            #     "id":2,
+            #     "branch":"Garden restaurant",
+            #     "date":"2024-05-10",
+            #     "amount":"-",
+            #     "status":'<span class="badge bg-warning">Pending</span>'
+            # }
+            # items.append(accepted_dict)
+            # accepted_dict = {
+            #     "id":3,
+            #     "branch":"Garden restaurant",
+            #     "date":"2024-05-10",
+            #     "amount":"-",
+            #     "status":'<span class="badge bg-secondary">Accepted</span>'
+            # }
+            # items.append(accepted_dict)
+            # accepted_dict = {
+            #     "id":4,
+            #     "branch":"Garden restaurant",
+            #     "date":"2024-05-10",
+            #     "amount":"-",
+            #     "status":'<span class="badge bg-success">Delivered</span>'
+            # }
+            # items.append(accepted_dict)
+        # return items
+
+    def post(self):
+        try:
+            amount = request.form.get('amount')
+            new_request = CollectionRequestOp(amount,current_user.id)
+            new_request.save()
+
+            return "success"
+    
+        except Exception as e:
+            print("error",e)
+            return "failed to add"
+    
+
+
     
 
 class Accounts(Resource):
     def get(self):
-        com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-        users = com.users
-        items = []
-        for user in users:
-            if user.account:
-                acc_dict = {
-                    "name": f"{user.name}#00{user.account.id}",
-                    "ob": user.account.opening_balance,
-                    "cb": user.account.closing_balance,
-                    "limit": user.account.account_limit,
-                    "status": user.account.status,
-                    "ltd": user.account.modifiedon.strftime("%d/%b/%y")
-                }
-                items.append(acc_dict)
-            else:
-                print("no account njege")
+        target = request.args.get("target")
+        if target == "all":
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            for user in users:
+                if user.account:
+                    acc_dict = {
+                        "id":user.account.id,
+                        "name": f"{user.name}#00{user.account.id}",
+                        "ob": user.account.opening_balance,
+                        "cb": user.account.closing_balance,
+                        "limit": user.account.account_limit,
+                        "status": user.account.status,
+                        "ltd": user.account.modifiedon.strftime("%d/%b/%y")
+                    }
+                    items.append(acc_dict)
+                else:
+                    print("no account njege")
 
-        print(items)
-        return items
+            print(items)
+            return items
+        else:
+            account_id = request.args.get('id')
+            acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
+
+            if acc_obj:
+                acc_dict = {
+                    "id":acc_obj.id,
+                    "name": f"{acc_obj.name}#00{acc_obj.id}",
+                    "ob": acc_obj.opening_balance,
+                    "cb": acc_obj.closing_balance,
+                    "limit": acc_obj.account_limit,
+                    "status": acc_obj.status,
+                    "ltd": acc_obj.modifiedon.strftime("%d/%b/%y")
+                }
+                return acc_dict
+            else:
+                return {}
     
     def post(self):
-        pass
+        try:
+            account_id = request.form.get('id')
+            acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
+            new_limit = request.form.get("limit")
+            new_balance = request.form.get("balance")
+
+            valid_limit_input = validate_input(new_limit)
+            valid_balance_input = validate_input(new_balance)
+
+            AccountsOp.update_limit(acc_obj,valid_limit_input,valid_balance_input)
+            return "success"
+        except Exception as e:
+            print("error" + str(e))
+            return "error"
+        
 class Floats(Resource):
     def get(self):
         target = request.args.get("target")

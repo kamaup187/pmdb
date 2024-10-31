@@ -26,8 +26,10 @@ function updateDataTable(data,table) {
             item.branch,           // Name
             item.date,        // Region
             item.amount,            // Phone
-            item.status,       // Branch
-            '<button class="btn btn-light btn-sm delete" data-id="' + item.id + '">View</button>'  // Remove button
+            item.status,
+            item.posted_by,       // Branch
+            // Branch
+            '<button class="btn btn-light btn-sm delete" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'  // Remove button
         ]);
     });
 
@@ -75,7 +77,7 @@ function updateUserDataTable(data,table) {
             item.branch,
             item.tel,
             item.role,
-            item.status,       // Branch
+            item.status,
         ]);
     });
     table.draw();
@@ -86,7 +88,7 @@ function updateAccountDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.name,             // PNo
-            '<button class="btn btn-light btn-sm update-user-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateAccountModal">View</button>',  // Remove button
+            '<button class="btn btn-light btn-sm update-account-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateAccountModal">View</button>',  // Remove button
             item.ob,           // Name
             item.cb,        // Region
             item.limit,
@@ -104,10 +106,11 @@ var dataTableTemplate = `
     <thead class="custom-header">
         <tr>
             <th class="fw-bold">Id</th>
-            <th class="fw-bold">Location</th>
+            <th class="fw-bold">Branch</th>
             <th class="fw-bold">Date</th>
-            <th class="fw-bold">Attendees</th>
+            <th class="fw-bold">Amount</th>
             <th class="fw-bold">Status</th>
+            <th class="fw-bold">PostedBy</th>
             <th class="fw-bold">Action</th>
         </tr>
     </thead>
@@ -179,7 +182,7 @@ var accountDataTableTemplate = `
             <th class="fw-bold">Op.Bal</th>
             <th class="fw-bold">Curr.Bal</th>
             <th class="fw-bold">Limit</th>
-            <th class="fw-bold">Statis</th>
+            <th class="fw-bold">Status</th>
             <th class="fw-bold">L.T.D</th>
         </tr>
     </thead>
@@ -291,7 +294,7 @@ var roleUpdateForm = (roleobj,roles) => {
 
                                             <div class="col-6 mb-3">
                                                 <label for="user-update-staff" class="form-label">Update staffId</label>
-                                                <input type="text" class="form-control" id="user-update-staff" value="${memberobj.usercode}" required>
+                                                <input type="text" class="form-control" id="user-update-staff" value="${memberobj.code}" required>
                                             </div>
                                         </div>
     
@@ -330,6 +333,82 @@ var roleUpdateForm = (roleobj,roles) => {
     
     `;
         };
+
+        var accountUpdateForm = (accountobj) => {
+
+            return `
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Account details</h3>
+		                <div class="section-intro">View account details </div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div class="app-card-body">
+                                <div class="mb-2"><strong>Name:</strong>${accountobj.name}</div>
+                                <div class="mb-2"><strong>Status:</strong> <span class="badge bg-success">Active</span></div>
+							    <div class="mb-2"><strong>Current limit:</strong> ${accountobj.limit}</div>
+                                <div class="mb-2"><strong>Opening balance:</strong> ${accountobj.ob}</div>
+                                <div class="mb-2"><strong>Current balance:</strong> ${accountobj.cb}</div>
+							    <div class="mb-2"><strong>Automatically resets at:</strong> midnight</div>
+							    <div class="row justify-content-between">
+								    <div class="col-auto invisible">
+								        <a class="btn app-btn-primary" href="#">Hidden</a>
+								    </div>
+								    <div class="col-auto">
+								        <a id="toggle-adjust-balances" class="btn app-btn-secondary" href="#"> <i data-feather="edit"></i> Adjust</a>
+								    </div>
+							    </div>
+								    
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+
+
+                <div id="adjust-balances" class="row g-4 settings-section d-none">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Adjust Balance &amp; Limits</h3>
+		                <div class="section-intro">Balance & acccount limit adjustment</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
+						    <div class="app-card-body">
+							    <form class="settings-form">
+                                    <div class=row mb-3>
+                                        <div class="mb-3 col-6">
+                                            <label for="account-update-balance" class="form-label">Update current balance<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Adjust current operating balance"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+                                                <circle cx="8" cy="4.5" r="1"/>
+                                                </svg></span></label>
+                                            <input type="text" class="form-control" id="account-update-balance" value="${accountobj.cb}" required>
+                                        </div>
+
+                                        <input type="hidden" class="form-control" id="account-update-id" value="${accountobj.id}">
+
+                                        <div class="col-6 mb-3">
+                                            <label for="account-update-limit" class="form-label">Adjust limit</label>
+                                            <input type="text" class="form-control" id="account-update-limit" value="${accountobj.limit}" required>
+                                        </div>
+
+                                    </div>
+
+
+									<div class="mt-3">
+                                        <button type="button" id="update-account-btn" class="btn app-btn-primary" >Submit</button>
+									</div>
+							    </form>
+						    </div><!--//app-card-body-->						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+        
+        `;
+            };
 
 var cashTemplate = `
 		

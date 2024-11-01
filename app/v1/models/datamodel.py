@@ -2024,3 +2024,22 @@ class Sale(db.Model):
     stock_id = db.Column(db.Integer, db.ForeignKey('stocks.id'), nullable=False)
     quantity_sold = db.Column(db.Integer, nullable=False)
     sale_time = db.Column(db.DateTime,default=db.func.current_timestamp())
+
+
+class KceEvent(db.Model):
+
+    __tablename__ = 'kceevents'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.VARCHAR)
+    description = db.Column(db.String)
+    venue = db.Column(db.String)
+    category = db.Column(db.String)
+    image_url = db.Column(db.VARCHAR)
+
+    def __repr__(self):
+        return f'<Department {self.name}>'
+
+
+    
+

@@ -14625,7 +14625,8 @@ button.close:focus {
     background: #e9eaf1;
     text-align: center;
     position: relative;
-    height: 112px
+    /* height: 112px */
+    height: 310px;
 }
 
 .app-card-doc .app-card-thumb-holder .app-card-thumb {

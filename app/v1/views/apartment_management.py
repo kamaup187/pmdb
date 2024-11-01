@@ -10320,13 +10320,18 @@ class Floats(Resource):
             items = []
             for user in users:
                 if user.reg_account:
+
+                    status = '<span class="badge bg-success">Approved</span>'
+                    if user.reg_account.status == "unpaid":
+                        status = '<span class="badge bg-danger">Pending</span>'
+                    
                     acc_dict = {
                         "id":user.reg_account.id,
-                        "name": f"{user.name}#00{user.reg_account.id}",
+                        "name": f"#00{user.reg_account.id} ({user.name})",
                         "fee": user.reg_account.registration_fee,
                         "paid": user.reg_account.amount_paid,
-                        "ref": user.reg_account.reference,
-                        "status": user.reg_account.status,
+                        "ref": user.reg_account.reference if user.reg_account.reference else "-",
+                        "status": status,
                         "date": user.reg_account.modifiedon.strftime("%d/%b/%y")
                     }
                     items.append(acc_dict)
@@ -10336,7 +10341,27 @@ class Floats(Resource):
             print(items)
             return items
 
+        elif target == "single":
+            account_id = request.args.get('id')
+            acc_obj = RegistrationAccountOp.fetch_account_by_id(get_identifier(account_id))
 
+            if acc_obj:
+                status = '<span class="badge bg-danger">Pending</span>'
+                if acc_obj.approved:
+                    status = '<span class="badge bg-success">Approved</span>'
+                
+                acc_dict = {
+                    "id":acc_obj.id,
+                    "name": f"#00{acc_obj.id} ({acc_obj.name})",
+                    "fee": acc_obj.registration_fee,
+                    "paid": acc_obj.amount_paid,
+                    "ref": acc_obj.reference if acc_obj.reference else "-",
+                    "status": status,
+                    "date": acc_obj.modifiedon.strftime("%d/%b/%y")
+                }
+                return acc_dict
+            else:
+                return {}
 
         if target == "pending":
             accepted_dict = {
@@ -10375,6 +10400,34 @@ class Floats(Resource):
             }
             items.append(accepted_dict)
         return items
+
+    def post(self):
+        account_id = request.form.get('id')
+        acc_obj = RegistrationAccountOp.fetch_account_by_id(get_identifier(account_id))
+
+        fee = request.form.get('fee')
+        amount = request.form.get('amount')
+        ref = request.form.get('ref')
+        date = request.form.get('date')
+        validity = request.form.get('validity')
+
+        valid_fee = validate_input(fee)
+        valid_amount = validate_input(amount)
+
+        approval = False
+        status = "unpaid"
+        if validity == "approved":
+            approval = True
+            status = "paid"
+
+        RegistrationAccountOp.update_payment(acc_obj,valid_fee,valid_amount,ref,approval,status,date)
+
+        if approval:
+            member_obj = acc_obj.user
+            if member_obj.company_user_group.id == 4992:
+                UserOp.update_group(member_obj,4986)
+
+        return "access updated successfully"  
     
 class Roles(Resource):
     def get(self):
@@ -10443,8 +10496,6 @@ class Roles(Resource):
 class KceUsers(Resource):
     def get(self):
         target = request.args.get("target")
-        import time
-        time.sleep(0.2)
         items = []
         if target == "all":
             c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
@@ -10544,7 +10595,9 @@ class KceUsers(Resource):
                 "county":member_obj.ward.subcounty.county.name,
                 "subcounty":member_obj.ward.subcounty.name,
                 "ward": member_obj.ward.name,
-                "paid":member_obj.reg_account.amount_paid
+                "paid":member_obj.reg_account.amount_paid,
+                "date":member_obj.date.strftime("%d/%b/%y"),
+                "active":"Active" if not member_obj.softdelete else "Inactive"
             }
 
             co = current_user.company
@@ -10594,6 +10647,8 @@ class KceUsers(Resource):
         gender = request.form.get("gender")
         category = request.form.get("category")
 
+        delete = request.form.get("delete")
+
         print("name ", name) 
         print("tel ", tel)
         print("pass1 ", pass1)
@@ -10623,14 +10678,18 @@ class KceUsers(Resource):
         UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
         UserOp.update_extra_details(member_obj,gender,category)
 
+        if delete:
+            if delete == "dormant":
+                UserOp.delete_user(member_obj,True)
+            else:
+                UserOp.delete_user(member_obj,False)
+
         return "success"
 
 
 class FloatUsers(Resource):
     def get(self):
         target = request.args.get("target")
-        import time
-        time.sleep(0.2)
         items = []
         if target == "all":
             c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
@@ -10761,6 +10820,10 @@ class FloatUsers(Resource):
 
         return "success"
 
+
+class Events(Resource):
+    def get(self):
+        target = request.args.get('target')
             
 class StockDataUpload(Resource):
     """class"""

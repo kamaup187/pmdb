@@ -59,7 +59,7 @@ function updateFloatDataTable(data,table) {
             item.ref,
             item.status,
             item.date,
-            '<button class="btn btn-light btn-sm" data-id="' + item.id + '">View</button>'  // Remove button
+            '<button class="btn btn-light btn-sm update-payment-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updatePaymentModal">View</button>'  // Remove button
         ]);
     });
     table.draw();
@@ -251,6 +251,9 @@ var roleUpdateForm = (roleobj,roles) => {
                                 <div class="mb-2"><strong>Name : </strong> ${memberobj.name}</div>
                                 <div class="mb-2"><strong>Status : </strong> ${memberobj.membership}</div>
                                 <div class="mb-2"><strong>Role : </strong> ${memberobj.role}</div>
+                                <div class="mb-2"><strong>Active : </strong> ${memberobj.active}</div>
+                                <div class="mb-4"><strong>Date of registration : </strong> ${memberobj.date}</div>
+
 
 							    <div class="mb-2"><strong>Amount paid : </strong> ${memberobj.paid}</div>
                                 <div class="mb-2"><strong>Mobile contact : </strong> ${memberobj.tel}</div>
@@ -349,6 +352,15 @@ var roleUpdateForm = (roleobj,roles) => {
                                             </div>
     
                                         </div>
+
+                                        <div class="mb-3">
+                                            <label for="user-update-delete" class="form-label">Delete member</label>
+                                            <select class="form-select" id="user-update-delete">
+                                                <option selected disabled value="">Select status</option>
+                                                <option value="active">Active</option>
+                                                <option value="dormant">Delete</option>
+                                            </select>
+                                        </div>
     
                                         <button type="button" id="update-user-btn" class="btn app-btn-primary" >Submit</button>
 							    </form>
@@ -360,6 +372,67 @@ var roleUpdateForm = (roleobj,roles) => {
     
     `;
         };
+
+        var paymentUpdateForm = (memberobj) => {
+            
+            return `    
+                    <div id="update-section" class="row g-4 settings-section">
+                        <div class="col-12 col-md-4">
+                            <h3 class="section-title">Registration payment details</h3>
+                            <div class="section-intro">View account details</div>
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
+                                <div class="app-card-body">
+                                    <form class="settings-form">
+                                            <div class="mb-3">
+                                                <label for="pay-update-fee" class="form-label">Update registration fee<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Registration fee name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+          <circle cx="8" cy="4.5" r="1"/>
+        </svg></span></label>
+                                                <input type="text" class="form-control" id="pay-update-fee" value="${memberobj.fee}" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="pay-update-paid" class="form-label">Update amount paid</label>
+                                                <input type="text" class="form-control" id="pay-update-paid" value="${memberobj.paid}" required>
+                                            </div>
+        
+                                            <div class="mb-3">
+                                                <label for="pay-update-ref" class="form-label">Update payment reference</label>
+                                                <input type="text" class="form-control" id="pay-update-ref" value="${memberobj.ref}" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="pay-update-date" class="form-label">Update date paid</label>
+                                                <input type="date" class="form-control" id="pay-update-date" value="${memberobj.date}" required>
+                                            </div>
+        
+                                            <input type="hidden" class="form-control" id="pay-update-id" value="${memberobj.id}">
+        
+    
+                                            <div class="mb-3 row">
+                                                <div class="col-12">
+                                                    <label for="pay-update-approval" class="form-label">Approve payment</label>
+                                                    <select class="form-select" id="pay-update-approval">
+                                                        <option selected disabled value="">Select status</option>
+                                                        <option value="approved">Approve</option>
+                                                        <option value="pending">Pending</option>
+                                                  </select>
+                                                </div>
+                                            </div>
+            
+                                            <button type="button" id="update-payment-btn" class="btn app-btn-primary" >Submit</button>
+                                    </form>
+                                </div><!--//app-card-body-->						    
+                            </div><!--//app-card-->
+                        </div>
+                    </div><!--//row-->
+    
+        
+        `;
+            };
+
 
 var cashTemplate = `
 		
@@ -417,7 +490,7 @@ var cashTemplate = `
                         </div>
                     </div>
 
-                    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                    <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -440,8 +513,8 @@ var cashTemplate = `
 								    <div class="dropdown">
 									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
 										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-			</svg>
+                                            <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                            </svg>
 									    </div><!--//dropdown-toggle-->
 
 								    </div><!--//dropdown-->
@@ -466,7 +539,7 @@ var cashTemplate = `
                         </div>
                     </div>
 
-				    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+				    <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -490,8 +563,8 @@ var cashTemplate = `
 								    <div class="dropdown">
 									    <div class="dropdown-toggle no-toggle-arrow" data-bs-toggle="dropdown" aria-expanded="false">
 										    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-			  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-			</svg>
+                                        <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        </svg>
 									    </div><!--//dropdown-toggle-->
 
 								    </div><!--//dropdown-->
@@ -519,7 +592,7 @@ var cashTemplate = `
                         </div>
                     </div>
 
-				    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+				    <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -569,7 +642,7 @@ var cashTemplate = `
                         </div>
                     </div>
 
-                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                                        <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -604,7 +677,7 @@ var cashTemplate = `
 						</div><!--//app-card-->
 				    </div><!--//col-->
 
-                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                                        <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -639,7 +712,7 @@ var cashTemplate = `
 						</div><!--//app-card-->
 				    </div><!--//col-->
 
-                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                                        <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -674,7 +747,7 @@ var cashTemplate = `
 						</div><!--//app-card-->
 				    </div><!--//col-->
 
-                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                                        <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -709,7 +782,7 @@ var cashTemplate = `
 						</div><!--//app-card-->
 				    </div><!--//col-->
 
-                                        <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                                        <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -744,7 +817,7 @@ var cashTemplate = `
 						</div><!--//app-card-->
 				    </div><!--//col-->
 
-                    <div class="col-6 col-md-4 col-xl-3 col-xxl-2">
+                    <div class="col-6">
 					    <div class="app-card app-card-doc shadow-sm  h-100">
 						    <div class="app-card-thumb-holder p-3">
 							    <div class="app-card-thumb">
@@ -819,7 +892,7 @@ var floatTemplate = `
 </div><!--//row-->
 
 <nav id="floats-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All payments</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All accounts</a>
 <a class="flex-sm-fill text-sm-center nav-link" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-pending" aria-selected="false">Pending payments</a>
 <a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Approved payments</a>
 </nav>

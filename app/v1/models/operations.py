@@ -648,9 +648,9 @@ class RegistrationAccountOp(RegistrationAccount,Base):
         self.user_id=user_id
 
     def fetch_account_by_id(id):
-        return Account.query.filter_by(id=id).first()
+        return RegistrationAccount.query.filter_by(id=id).first()
     
-    def update_payment(self, fee,paid,ref,approved,status):
+    def update_payment(self,fee,paid,ref,approved,status,date):
         self.registration_fee = fee
         self.amount_paid = paid
         self.reference = ref
@@ -6111,3 +6111,14 @@ class StockOp(Stock, Base):
             return stock.closing_stock
         else:
             return None
+
+
+class KceEvent(KceEvent, Base):
+    """class"""
+
+    def __init__(self,name,desc,venue,category,image):
+        self.name = name
+        self.description = desc
+        self.venue = venue
+        self.category = category
+        self.image_url = image

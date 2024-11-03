@@ -4489,7 +4489,10 @@ class BulkSms(Resource):
         rem_txt = request.form.get("text")
         target = request.form.get("target")
 
-        print("Date: ",rem_date,"Prop ",rem_prop,"Channel ",channel, "Target ",target,"Text",rem_txt)
+        house = request.form.get('house')
+        tel = request.form.get('tel')
+
+        print("Date: ",rem_date,"Prop ",rem_prop,"Channel ",channel, "House ", house, "Tel ",tel, "Target ",target,"Text",rem_txt)
 
         try:
             prop_obj = ApartmentOp.fetch_apartment_by_name(rem_prop)
@@ -4589,7 +4592,7 @@ class BulkSms(Resource):
                 if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551" or permission(current_user, 'sendsms'):
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
-                        func=send_reminder_sms, args=(propid,rem_txt,channel,), result_ttl=5000
+                        func=send_reminder_sms, args=(propid,rem_txt,channel,house,tel,), result_ttl=5000
                     )
                     return success
                 else:
@@ -4601,7 +4604,7 @@ class BulkSms(Resource):
                     else:
                         ApartmentOp.update_reminder_status(prop_obj,"sent")
                         job8 = q.enqueue_call(
-                            func=send_reminder_sms, args=(propid,rem_txt,channel,), result_ttl=5000
+                            func=send_reminder_sms, args=(propid,rem_txt,channel,house,tel,), result_ttl=5000
                         )
                         return success
         
@@ -7356,8 +7359,24 @@ class AllocateTenants(Resource):
                 placeholder = "No occupied houses!"
             else:
                 placeholder = "select house"
-            items = sort_items(house_list)
+
+            str_objs = []
+            for hh in house_list:
+                tt_obj = None
+                tt_check = check_occupancy(hh)
+                if tt_check[0] == "occupied":
+                    tt_obj = tt_check[1]
+
+                inv = None
+                if tt_obj:
+                    inv = fetch_latest_tenant_invoice(tt_obj)
+                if inv:
+                    str_obj = f"{hh.name}-{tt_obj.name} Bal {inv.balance}"
+                    str_objs.append(str_obj)
+
+            items = sort_items(str_objs)
             items.insert(0, "All")
+
             return render_template('ajax_multivariable.html',items=items,placeholder=placeholder)
         
         if target == "house grid options":
@@ -7404,6 +7423,16 @@ class AllocateTenants(Resource):
         if target == "tenant name":
             return tenant_obj.name
 
+        if target == "tenant details":
+            raw_house_string = request.form.get("house") 
+            house_part = raw_house_string.split("-")[0]
+            house_obj = get_specific_house_obj(apartment_id, house_part)
+            tenant_obj_check = check_occupancy(house_obj)
+            if tenant_obj_check[0] == "occupied":
+                tenant_obj = tenant_obj_check[1]
+                string_literal = f"Tenant name & contact : {tenant_obj.name} {tenant_obj.phone}"
+                return [ f'<span class="text-black">{string_literal}</span>',tenant_obj.phone]
+            return "House not occupied!"
 
         if target == "extend":
             pass

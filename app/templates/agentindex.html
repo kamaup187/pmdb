@@ -2801,31 +2801,37 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                         </select>
                       </div>
 
-                        <span class="text-danger small">Reminder message format:</span>
-                        <div>
-                          Dear [<span class="text-black">Tenant/Resident/client</span>] name, [your custom message goes here] [ <span class="text-black">balance as of [date] is Kes [amount]</span>]
-                        </div>
-
-                        <div class="form-group dispnon mt-2">                        
-                          <textarea id="remindertext" class="form-control ph" rows="1" placeholder="write your custom message here"></textarea>
+                      <div class="form-group mt-2">
+                        <span id="tt-details" class="d-block text-black font-weight-bold"></span>
+                        <input type="text" class="dispnone form-control" placeholder="phone number" id="reminderphone">
                       </div>
-                      <div class="text-end mt-1">
-                          <button id="setreminder" type="button" class="btn-sm btn-success borderless text-white">Save</button>
-                      </div>
-
-
-                      <span>Saved template:</span>
-                      <div>
-                          Dear [<span class="text-black">Kamau</span>], {{setreminder}}. Your balance as of <span class="text-black"> [date]</span>  is Kes <span class="text-black"> [amount].</span>
-                      </div>
-                      
                                   
                         <div class="divbg center-btn mt-2">
                           <button id="sendreminder" type="button" class="btn-success borderless text-white">Send reminders</button>
                         </div>
                     </form>
+                    
                     <div class="border-left-dark col-6">
-                      Nothing to display here.
+
+                      <span class="text-black small">Current message format:</span>
+                        <div>
+                            Dear [<span class="text-black">Kamau</span>], {{setreminder}}. Your balance as of <span class="text-black"> [date]</span>  is Kes <span class="text-black"> [amount].</span>
+                        </div>
+
+                        <hr>
+                        <span class="text-black small">Change reminder message format here:</span>
+                        <div>
+                          <span class="text-black d-block"> Dear <span class="text-primary">[Tenant]</span></span>
+                           <span class="text-success font-weight-bold ">--your custom message goes here--</span> 
+                           <span class="text-black ">your balance as of <span class="text-primary">[date]</span> is Kes <span class="text-primary">[amount]</span></span>
+                        </div>
+
+                        <div class="form-group dispnon mt-2">                        
+                          <textarea id="remindertext" class="form-control ph" rows="1" placeholder="write your custom message here"></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button id="setreminder" type="button" class="btn-sm btn-success borderless text-white">Save</button>
+                        </div>
                     </div>
                   </div>
                 
@@ -4081,6 +4087,8 @@ function animateHH(element) {
             url: url2,
             data: {
               prop:$("#reminderprop").val(),
+              house: $("#remindertenant").val(),
+              tel:$("#reminderphone").val(),
               date:$("#reminder-date").val(),
               channel:$("#reminderchannel").val(),
               text:$("#remindertext").val(),
@@ -5638,6 +5646,16 @@ $("#closemodule").on('click',function(){
 
 
   $("#reminderprop").on('change', function(){
+
+    $("#tt-details").html("");
+    $("#reminderphone").addClass("dispnone")
+    $("#reminderphone").val("")
+
+
+
+    var option = `<option disabled selected value> loading tenants... </option>`
+
+    $("#remindertenant").html(option);
     $.ajax({
       url: "{{ url_for('api.allocatetenants') }}",
       type: "POST",
@@ -5650,6 +5668,31 @@ $("#closemodule").on('click',function(){
       }
     });
   });
+
+  $("#remindertenant").on('change', function(){
+
+    var tt_text = `<span class="text-black"> fetching tenant details... </span>`
+
+    $("#tt-details").html(tt_text);
+    $("#reminderphone").addClass("dispnone")
+
+
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            propid: $("#reminderprop").val(),
+            house: $("#remindertenant").val(),
+            target:"tenant details"
+          },
+      success: function(response) {
+        $("#tt-details").html(response[0]);
+        $("#reminderphone").val(response[1])
+        $("#reminderphone").removeClass("dispnone")
+
+      }
+    });
+    });
 
 
   // This script autopulate house options and displays tenant name

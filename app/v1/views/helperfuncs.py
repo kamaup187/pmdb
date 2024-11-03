@@ -4942,14 +4942,26 @@ def send_bulk_sms(propid,temp_txt):
         else:
             print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
-def send_reminder_sms(propid,temp_txt,rem_bal):
+def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
     from app import create_app
     app = create_app()
     app.app_context().push()
 
-    tenants1 = tenantauto(propid)
-    tenants2 = ApartmentOp.fetch_apartment_by_id(propid).ptenants
-    tenants = tenants1 + tenants2
+    if raw_house_string == "All":
+        tenants1 = tenantauto(propid)
+        tenants2 = ApartmentOp.fetch_apartment_by_id(propid).ptenants
+        tenants = tenants1 + tenants2
+    else:
+        tenants = []
+
+        house_part = raw_house_string.split("-")[0]
+        house_obj = get_specific_house_obj(propid, house_part)
+        tenant_obj_check = check_occupancy(house_obj)
+        if tenant_obj_check[0] == "occupied":
+            tenant_obj = tenant_obj_check[1]
+
+            TenantOp.update_phone(tel)
+            tenants.append(tenant_obj)
 
     for tenant_obj in tenants:
 

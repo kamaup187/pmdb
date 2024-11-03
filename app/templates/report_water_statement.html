@@ -32,11 +32,19 @@
               <div class="" id="collapseCardExample">
                 <div class="card-body p-0">
                   <form class="row bg-light" method="GET" action="/water/statement">
-                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                    <!-- <div class="col-lg-2 form-group mb-2 ml-lg-5">
                       <label class="mb-0">Select type:</label>
                       <select name="reporttype" class="select-css" id="reporttype" required>
                         <option selected value="collected">Based on collected amount only</option>
                         <option value="uncollected">Based on amount due</option>
+                      </select>
+                    </div> -->
+
+                    <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                      <label class="mb-0">Select type:</label>
+                      <select name="reporttype" class="select-css" id="reporttype" required>
+                        <option selected value="monthly">Monthly</option>
+                        <option value="weekly">Weekly</option>
                       </select>
                     </div>
 
@@ -58,12 +66,17 @@
                       </select>
                     </div>
                   
-                    <div class="col-lg-2 form-group mb-2 mr-lg-5">
+                    <div id="month_picker" class="col-lg-2 form-group mb-2 mr-lg-5">
                       <label class="mb-0">Select month:</label>
                       <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                         <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
                         <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
                       </div>
+                    </div>
+
+                    <div id="week_picker" class="col-lg-2 form-group mb-2 mr-lg-5 dispnone">
+                      <label class="mb-0">Select week:</label>
+                      <input type="text" id="week-picker" class="form-control" placeholder="Select Week">
                     </div>
                   
                     <div class="col-lg-2 form-group mb-2">
@@ -530,6 +543,21 @@
   });
 </script>
 
+<script>
+  flatpickr("#week-picker", {
+    plugins: [
+      new weekSelect({ // Enables week selection
+        weekStart: "monday", // Week starts on Monday
+      })
+    ],
+    dateFormat: "W", // Display format for the week
+    onChange: function(selectedDates, dateStr, instance) {
+      // Handle selected week range here if needed
+      console.log("Selected week:", dateStr);
+    }
+  });
+</script>
+
 <!-- 
 <script type="text/javascript">
   $(document).ready(function () {
@@ -552,6 +580,19 @@
     $('.dataTables_length').addClass('bs-select');
     });
 </script> -->
+
+<script>
+  $("#reporttype").on("change", function (){
+    if ($("#reporttype").val() == "monthly"){
+      $("#week_picker").addClass("dispnone")
+      $("#month_picker").removeClass("dispnone")
+
+    }else{
+      $("#month_picker").addClass("dispnone")
+      $("#week_picker").removeClass("dispnone")
+    }
+  })
+</script>
 
 
 {% endblock %}

@@ -209,6 +209,15 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
 
+
+                      <div class="form-group mt-2">
+                        <label class="mb-0">Select week/month:</label>
+                        <div id="" class="date" data-date-format="dd-mm-yyyy">
+                          <input id="reading-period" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                          <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                        </div>
+                      </div>
+
                       <div class="form-group input-icons mt-2">
                         <i class="fa fa-caret-down icon text-info"></i>
                         <select name="house" class="form-control" id ="select_house" >
@@ -1412,6 +1421,7 @@
       data: {
             propid: $("#prop_identifier").text(),
             readperiod: $("input[name=readperiod]:checked").val(),
+            readperiod2: $("#reading-period").val(),
             run:"houselist"
           },
       success: function(response) {
@@ -1431,6 +1441,7 @@
       data: {
             propid: $("#prop_identifier").text(),
             readperiod: $("input[name=readperiod]:checked").val(),
+            readperiod2: $("#reading-period").val(),
             run:"houselist-alt"
           },
       success: function(response) {
@@ -1456,6 +1467,7 @@ $("#select_house").on('change',function(){
     data: {
           propid: $("#prop_identifier").text(),
           house: $("#select_house").val(),
+          readperiod2: $("#reading-period").val(),
           readtype:"water",
           run:"run-reading"
         },
@@ -1475,6 +1487,7 @@ $("#select_house_alt").on('change',function(){
     data: {
           propid: $("#prop_identifier").text(),
           house: $("#select_house_alt").val(),
+          readperiod2: $("#reading-period").val(),
           readtype:"electricity",
           run:"run-reading"
         },
@@ -1511,6 +1524,7 @@ $("#select_house_alt").on('change',function(){
         data: {
                 propid: $("#prop_identifier").text(),
                 house: $("#select_house").val(),
+                readperiod2: $("#reading-period").val(),
                 reading: $("#reading").val(),
                 readtype:"water",
                 run:"run-units"
@@ -1547,6 +1561,7 @@ $("#select_house_alt").on('change',function(){
         data: {
                 propid: $("#prop_identifier").text(),
                 house: $("#select_house_alt").val(),
+                readperiod2: $("#reading-period").val(),
                 reading: $("#reading-alt").val(),
                 readtype:"electricity",
                 run:"run-units"
@@ -1574,6 +1589,7 @@ $("#select_house_alt").on('change',function(){
                 house: $("#select_house").val(),
                 reading: $("#reading").val(),
                 readperiod: $("input[name=readperiod]:checked").val(),
+                readperiod2: $("#reading-period").val(),
                 readtype:"water"
             },
         success: function(response) {
@@ -1653,6 +1669,7 @@ $("#select_house_alt").on('change',function(){
                 house: $("#select_house_alt").val(),
                 reading: $("#reading-alt").val(),
                 readperiod: $("input[name=readperiod]:checked").val(),
+                readperiod2: $("#reading-period").val(),
                 readtype:"electricity"
             },
         success: function(response) {
@@ -1962,6 +1979,13 @@ $("#select_house_alt").on('change',function(){
   $("#switch-borehole").click(function(){   
     // $("#edithouse").html("")
     $("#close-borehole").click();
+  });
+</script>
+<script>
+  $("#reading-period").datepicker({ 
+    autoclose: true,
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy"
   });
 </script>
 

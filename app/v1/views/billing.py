@@ -4360,7 +4360,7 @@ class ResolveInvoices2(Resource):
 
         period_target = request.form.get("period")
 
-        if current_user.username.startswith("qc") or localenv:
+        if current_user.username.startswith("qc") or localenv or current_user.company.name == "Vista Own Services":
             pass
         else:
             print("Not allowed to resolve invoices")

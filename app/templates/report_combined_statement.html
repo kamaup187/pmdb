@@ -593,6 +593,19 @@
               $("#reportbase").html(response)
               $("#postloader-btn").click();
 
+
+              $.ajax({
+                url: "/resolve/invoices",
+                type: "POST",
+                data: {
+                  proptext: $("#prop").val(),
+                  period:$("#target_period").text()
+                },
+                success: function(response) {
+                  // $("#"+item).html('all set');
+                }
+              });
+
           }
       });
     }

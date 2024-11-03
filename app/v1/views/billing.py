@@ -4355,6 +4355,9 @@ class ResolveInvoices(Resource):
 class ResolveInvoices2(Resource):
     def post(self):
         prop_id = request.form.get("propid")
+        if not prop_id:
+            prop_object = ApartmentOp.fetch_apartment_by_name(request.form.get("proptext"))
+            prop_id = prop_object.id
 
         prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
 

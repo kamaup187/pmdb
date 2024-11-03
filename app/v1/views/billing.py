@@ -4356,19 +4356,23 @@ class ResolveInvoices2(Resource):
     def post(self):
         prop_id = request.form.get("propid")
 
+        print("weweweeee",request.form.get("proptext"))
         if not prop_id:
             prop_object = ApartmentOp.fetch_apartment_by_name(request.form.get("proptext"))
             prop_id = str(prop_object.id)
+            print("wewiiiiiiiiiiiiii",prop_id)
 
         prop = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
 
+        print("waaaaaaaaa",prop)
+
         period_target = request.form.get("period")
 
-        if current_user.username.startswith("qc") or localenv or current_user.company.name == "Vista Own Services":
-            pass
-        else:
-            print("Not allowed to resolve invoices")
-            return None
+        # if current_user.username.startswith("qc") or localenv or current_user.company.name == "Vista Own Services":
+        #     pass
+        # else:
+        #     print("Not allowed to resolve invoices")
+        #     return None
 
         if period_target:
             datestring = date_formatter_alt(period_target)

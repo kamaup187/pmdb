@@ -2355,11 +2355,12 @@ class Dashboard(Resource):
             if current_user.company_user_group.name == "Field":
                 return ["N/A","-",month_str]
             
-            occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
-            unpacked_occupancy = flatten(occupancy)
-            num_of_occ = len(unpacked_occupancy)
+            # occupancy = [filter_in_occupied_houses(prop.name) for prop in props]
+            # unpacked_occupancy = flatten(occupancy)
+            # num_of_occ = len(unpacked_occupancy)
 
-            invss = f"{invs}/{num_of_occ}"
+            # invss = f"{invs}/{num_of_occ}"
+            invss = ""
 
             return [f'Kes {total_bills:,.1f}',invss,month_str]
 

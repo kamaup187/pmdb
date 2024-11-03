@@ -2420,11 +2420,12 @@ class Dashboard(Resource):
                             defaulters += 1 if item.rent_due > 1 else 0
 
                         if item.tenant:
-                            if item.tenant.deposits:
-                                deptotal_balances += 0 #item.tenant.deposits.balance if item.tenant.deposits.balance > 0 else 0.0
+                            if current_user.company.name == "Vista Own Services":
+                                if item.tenant.deposits:
+                                    deptotal_balances += item.tenant.deposits.balance if item.tenant.deposits.balance > 0 else 0.0
 
-                                if item.tenant.deposits.balance:
-                                    depdefaulters += 0  #1 if item.tenant.deposits.balance > 1 else 0
+                                    if item.tenant.deposits.balance:
+                                        depdefaulters += 1 if item.tenant.deposits.balance > 1 else 0
 
             if datetime.datetime.now().day < 6:
                 defaulters = "--"
@@ -10505,6 +10506,8 @@ class KceUsers(Resource):
                 if user.company_user_group:
                     if user.company_user_group.name.lower() == "non-member":
                         status = f'<span class="badge bg-danger">Non member</span>'
+                if user.softdelete:
+                    continue
                 user_dict = {
                     "id":user.id,
                     "code":f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024",

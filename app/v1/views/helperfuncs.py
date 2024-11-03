@@ -4960,7 +4960,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
         if tenant_obj_check[0] == "occupied":
             tenant_obj = tenant_obj_check[1]
 
-            TenantOp.update_phone(tel)
+            TenantOp.update_phone(tenant_obj,tel)
             tenants.append(tenant_obj)
 
     for tenant_obj in tenants:

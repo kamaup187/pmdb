@@ -1623,6 +1623,12 @@ class UserLogin(Resource):
 
         ################################################################################
 
+
+        if request.host == "float.beacontechnologies.co.ke":
+            return redirect(url_for('api.floatlogin'))
+        if request.host == "kikuyucouncilofelders.org":
+            return redirect(url_for('api.kikuyucouncilofelders'))
+
         auth = os.getenv("TARGET") or TARGET
 
         loginpage = "login2.html" if auth == "lasshouse" else "rentlib_login.html"

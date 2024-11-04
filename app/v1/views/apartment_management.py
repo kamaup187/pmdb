@@ -10314,7 +10314,7 @@ class Requests(Resource):
             amount = request.form.get('amount')
             new_request = CollectionRequestOp(amount,current_user.id)
             new_request.save()
-            sms_text = f"{request_obj.created_by.name} has posted a request"
+            sms_text = f"{current_user.name} has posted a request"
             phonenum = sms_phone_number_formatter("0704448189")
             sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
 

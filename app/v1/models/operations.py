@@ -641,6 +641,10 @@ class AccountsOp(Account,Base):
         self.closing_balance=balance
         db.session.commit()
 
+    def update_current_account(self,balance):
+        self.closing_balance=balance
+        db.session.commit()
+
 class RegistrationAccountOp(RegistrationAccount,Base):
     def __init__(self,name,fee,user_id):
         self.name=name
@@ -662,6 +666,14 @@ class CollectionRequestOp(CollectionRequest,Base):
     def __init__(self,amount,posted_by):
         self.amount=amount
         self.posted_by=posted_by
+
+    def fetch_request_by_id(id):
+        return CollectionRequest.query.filter_by(id=id).first()
+
+    def update_accepted_by(self,user_id,status):
+        self.accepted_by = user_id
+        self.status = status
+        db.session.commit()
 
 class UserLoginDataOp(UserLoginData,Base):
     def __init__(self,user_id):

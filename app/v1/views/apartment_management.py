@@ -9969,7 +9969,7 @@ class FloatHome(Resource):
             return redirect(url_for('api.floatlogin'))
 
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[]))
+        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],user_logged_in=current_user.name))
 
 class KceReport(Resource):
     @login_required
@@ -10216,6 +10216,26 @@ class Requests(Resource):
                 "status":'<span class="badge bg-success">Delivered</span>'
             }
             items.append(accepted_dict)
+
+        elif target == "single":
+            request_id = request.args.get('id')
+
+            request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
+
+            status = f'<span class="badge bg-success">Collected</span>'
+            if request_obj.status == "pending":
+                status = f'<span class="badge bg-warning">Pending</span>'
+
+            acc_dict = {
+                "id":request_obj.id,
+                "branch": f"Agriculture#001",
+                "date": request_obj.acceptedon.strftime("%d/%b/%y"),
+                "amount": request_obj.amount,
+                "status": status,
+                "by":request_obj.created_by.name,
+            }
+
+            return acc_dict
         else:
 
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
@@ -10224,12 +10244,17 @@ class Requests(Resource):
             for user in users:
                 if user.collection_requests:
                     for req in user.collection_requests:
+
+                        status = f'<span class="badge bg-success">Collected</span>'
+                        if req.status == "pending":
+                            status = f'<span class="badge bg-warning">Pending</span>'
+
                         acc_dict = {
                             "id":req.id,
                             "branch": f"Agriculture#001",
                             "date": req.acceptedon.strftime("%d/%b/%y"),
                             "amount": req.amount,
-                            "status": f'<span class="badge bg-success">{req.status}</span>',
+                            "status": status,
                             "posted_by":req.created_by.name,
                         }
                         items.append(acc_dict)
@@ -10267,6 +10292,25 @@ class Requests(Resource):
 
     def post(self):
         try:
+            target = request.form.get('target')
+
+            if target == "accept":
+                request_id = request.form.get('id')
+                request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
+                CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
+
+
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.closing_balance + request_obj.amount
+                AccountsOp.update_current_account(current_user_account_obj,new_amount)
+
+
+                post_user_account_obj = request_obj.created_by.account
+                new_amount = post_user_account_obj.closing_balance - request_obj.amount
+                AccountsOp.update_current_account(post_user_account_obj,new_amount)
+
+                return "success"
+
             amount = request.form.get('amount')
             new_request = CollectionRequestOp(amount,current_user.id)
             new_request.save()
@@ -10796,7 +10840,7 @@ class FloatUsers(Resource):
             member_obj = UserOp.fetch_user_by_id(get_identifier(request.args.get("id")))
             user_dict = {
                 "id":member_obj.id,
-                "code":f"-",
+                "code":member_obj.usercode,
                 "name":member_obj.name,
                 "natid":member_obj.national_id,
                 "tel":member_obj.phone,

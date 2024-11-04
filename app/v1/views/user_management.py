@@ -1753,7 +1753,13 @@ class UserLogout(Resource):
     @login_required
     def get(self):
         logout_user()
-        return redirect(url_for('api.userlogin'))
+
+        if request.host == "float.beacontechnologies.co.ke":
+            return redirect(url_for('api.floatlogin'))
+        elif request.host == "kikuyucouncilofelders.org":
+            return redirect(url_for('api.kikuyucouncilofelders'))
+        else:
+            return redirect(url_for('api.userlogin'))
         
 class DeleteUser(Resource):
     @login_required

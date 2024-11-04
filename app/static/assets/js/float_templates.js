@@ -29,7 +29,7 @@ function updateDataTable(data,table) {
             item.status,
             item.posted_by,       // Branch
             // Branch
-            '<button class="btn btn-light btn-sm delete" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'  // Remove button
+            '<button class="btn btn-light btn-sm update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'  // Remove button
         ]);
     });
 
@@ -372,7 +372,7 @@ var roleUpdateForm = (roleobj,roles) => {
                 <div id="adjust-balances" class="row g-4 settings-section d-none">
 	                <div class="col-12 col-md-4">
 		                <h3 class="section-title">Adjust Balance &amp; Limits</h3>
-		                <div class="section-intro">Balance & acccount limit adjustment</div>
+		                <div class="section-intro">Balance & account limit adjustment</div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">						    
@@ -409,6 +409,46 @@ var roleUpdateForm = (roleobj,roles) => {
         
         `;
             };
+
+
+            var requestUpdateForm = (requestobj) => {
+
+                return `
+    
+                    <div class="row g-4 settings-section">
+                        <div class="col-12 col-md-4">
+                            <h3 class="section-title">Cash Collection request details</h3>
+                            <div class="section-intro">View request details </div>
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                
+                                <div class="app-card-body">
+                                    <div class="mb-2"><strong>Code: </strong> #00${requestobj.id}</div>
+                                    <div class="mb-2"><strong>Status: </strong> ${requestobj.status}</div>
+                                    <div class="mb-2"><strong>Cash amount: </strong> ${requestobj.amount}</div>
+                                    <div class="mb-2"><strong>Posted on: </strong> ${requestobj.date}</div>
+                                    <div class="mb-2"><strong>Posted by: </strong> ${requestobj.by}</div>
+
+                                    <input type="hidden" class="form-control" id="request-update-id" value="${requestobj.id}">
+
+                                    <div class="row justify-content-between">
+                                        <div class="col-auto invisible">
+                                            <a class="btn app-btn-primary" href="#">Hidden</a>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a id="update-request-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> Accept cash</a>
+                                        </div>
+                                    </div>
+                                        
+                                </div><!--//app-card-body-->
+                                
+                            </div><!--//app-card-->
+                        </div>
+                    </div><!--//row-->
+            
+            `;
+                };
 
 var cashTemplate = `
 		

@@ -663,12 +663,27 @@ class RegistrationAccountOp(RegistrationAccount,Base):
         db.session.commit()
 
 class CollectionRequestOp(CollectionRequest,Base):
-    def __init__(self,amount,posted_by):
+    def __init__(self,amount,purpose,posted_by):
         self.amount=amount
+        self.purpose=purpose
         self.posted_by=posted_by
 
     def fetch_request_by_id(id):
         return CollectionRequest.query.filter_by(id=id).first()
+
+    def update_accepted_by(self,user_id,status):
+        self.accepted_by = user_id
+        self.status = status
+        db.session.commit()
+
+class TransactionDataOp(TransactionData,Base):
+    def __init__(self,amount,purpose,posted_by):
+        self.amount=amount
+        self.purpose=purpose
+        self.posted_by=posted_by
+
+    def fetch_transaction_by_id(id):
+        return TransactionData.query.filter_by(id=id).first()
 
     def update_accepted_by(self,user_id,status):
         self.accepted_by = user_id

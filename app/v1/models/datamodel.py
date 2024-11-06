@@ -218,12 +218,14 @@ class User(db.Model,UserMixin):
     logins = db.relationship("UserLoginData",backref="user",cascade="all, delete-orphan")
     leads = db.relationship('Lead',backref='user',order_by='Lead.date', cascade="all, delete-orphan")
 
-    account = db.relationship('Account', backref='user', uselist=False, cascade="all, delete-orphan")
     reg_account = db.relationship('RegistrationAccount', backref='user', uselist=False, cascade="all, delete-orphan")
 
+    account = db.relationship('Account', backref='user', uselist=False, cascade="all, delete-orphan")
     collection_requests = db.relationship('CollectionRequest', backref='created_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.posted_by')
     accepted_requests = db.relationship('CollectionRequest', backref='received_by', cascade="all, delete-orphan", foreign_keys='CollectionRequest.accepted_by')
 
+    posted_transactions = db.relationship('TransactionData', backref='created_by', cascade="all, delete-orphan", foreign_keys='TransactionData.posted_by')
+    accepted_transactions = db.relationship('TransactionData', backref='received_by', cascade="all, delete-orphan", foreign_keys='TransactionData.accepted_by')
 
 
     def __repr__(self):
@@ -251,6 +253,8 @@ class Account(db.Model):
     
 class RegistrationAccount(db.Model):
 
+    """kce table"""
+
     __tablename__ = 'registration_accounts'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -269,7 +273,24 @@ class RegistrationAccount(db.Model):
     def __repr__(self):
         return self.name
 
+class TransactionData(db.Model):
+    """float purchase table"""
+    
+    __tablename__ = 'transactions'
+
+    id = db.Column(db.Integer,autoincrement=True, primary_key=True)
+    amount = db.Column(db.Float, default=0.0)
+    description = db.Column(db.String)
+    purpose = db.Column(db.String, default="float purchased")
+    status = db.Column(db.String, default="pending")
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+    acceptedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    posted_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    accepted_by = db.Column(db.Integer, db.ForeignKey(User.id))
+
 class CollectionRequest(db.Model):
+    """float table"""
     
     __tablename__ = 'collection_requests'
 

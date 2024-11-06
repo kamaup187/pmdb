@@ -10186,38 +10186,9 @@ class Requests(Resource):
     def get(self):
         target = request.args.get("target")
         
-        
         items = []
-        if target == "pending":
-            accepted_dict = {
-                "id":2,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-warning">Pending</span>'
-            }
-            items.append(accepted_dict)
-        elif target == "accepted":
-            accepted_dict = {
-                "id":3,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-secondary">Accepted</span>'
-            }
-            items.append(accepted_dict)
 
-        elif target == "delivered":
-            accepted_dict = {
-                "id":4,
-                "branch":"Garden restaurant",
-                "date":"2024-05-10",
-                "amount":"-",
-                "status":'<span class="badge bg-success">Delivered</span>'
-            }
-            items.append(accepted_dict)
-
-        elif target == "single":
+        if target == "single":
             request_id = request.args.get('id')
 
             request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
@@ -10229,15 +10200,15 @@ class Requests(Resource):
             acc_dict = {
                 "id":request_obj.id,
                 "branch": f"Agriculture#001",
-                "date": request_obj.acceptedon.strftime("%d/%b/%y"),
+                "date":  f'{request_obj.acceptedon.strftime("%d/%b/%y")} {request_obj.acceptedon.strftime("%H:%M")}',
                 "amount": request_obj.amount,
+                "purpose":"Float purchase" if "float" in request_obj.purpose else "Cash transfer",
                 "status": status,
                 "by":request_obj.created_by.name,
             }
 
             return acc_dict
         else:
-
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = com.users
             items = []
@@ -10252,10 +10223,12 @@ class Requests(Resource):
                         acc_dict = {
                             "id":req.id,
                             "branch": f"Agriculture#001",
-                            "date": req.acceptedon.strftime("%d/%b/%y"),
+                            "date": f'{req.acceptedon.strftime("%d/%b/%y")} {req.acceptedon.strftime("%H:%M")}',
                             "amount": req.amount,
                             "status": status,
                             "posted_by":req.created_by.name,
+                            "collectedby":req.received_by.name if req.received_by else "-",
+
                         }
                         items.append(acc_dict)
                 else:
@@ -10263,32 +10236,6 @@ class Requests(Resource):
 
             print(items)
             return items
-
-            # accepted_dict = {
-            #     "id":2,
-            #     "branch":"Garden restaurant",
-            #     "date":"2024-05-10",
-            #     "amount":"-",
-            #     "status":'<span class="badge bg-warning">Pending</span>'
-            # }
-            # items.append(accepted_dict)
-            # accepted_dict = {
-            #     "id":3,
-            #     "branch":"Garden restaurant",
-            #     "date":"2024-05-10",
-            #     "amount":"-",
-            #     "status":'<span class="badge bg-secondary">Accepted</span>'
-            # }
-            # items.append(accepted_dict)
-            # accepted_dict = {
-            #     "id":4,
-            #     "branch":"Garden restaurant",
-            #     "date":"2024-05-10",
-            #     "amount":"-",
-            #     "status":'<span class="badge bg-success">Delivered</span>'
-            # }
-            # items.append(accepted_dict)
-        # return items
 
     def post(self):
         try:
@@ -10312,7 +10259,9 @@ class Requests(Resource):
                 return "success"
 
             amount = request.form.get('amount')
-            new_request = CollectionRequestOp(amount,current_user.id)
+            purpose = request.form.get('purpose')
+            valid_amount = validate_input(amount)
+            new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
             sms_text = f"{current_user.name} has posted a request"
             phonenum = sms_phone_number_formatter("0704448189")
@@ -10324,8 +10273,98 @@ class Requests(Resource):
             print("error",e)
             return "failed to add"
     
+class Floats(Resource):
+    def get(self):
+        target = request.args.get("target")
+        
+        items = []
+
+        if target == "single":
+            trans_id = request.args.get('id')
+
+            trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+
+            status = f'<span class="badge bg-success">Collected</span>'
+            if trans_obj.status == "pending":
+                status = f'<span class="badge bg-warning">Pending</span>'
 
 
+            print("maaaaaiiiii",trans_obj.purpose)
+
+            acc_dict = {
+                "id":trans_obj.id,
+                "branch": f"Agriculture#001",
+                "date": f'{trans_obj.acceptedon.strftime("%d/%b/%y")} {trans_obj.acceptedon.strftime("%H:%M")}',
+                "amount": trans_obj.amount,
+                "purpose":"Float purchased" if "float" in trans_obj.purpose else "Cash transferred",
+                "status": status,
+                "by":trans_obj.created_by.name,
+            }
+
+            return acc_dict
+        else:
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            for user in users:
+                if user.posted_transactions:
+                    for trans in user.posted_transactions:
+
+                        status = f'<span class="badge bg-success">Collected</span>'
+                        if trans.status == "pending":
+                            status = f'<span class="badge bg-warning">Pending</span>'
+
+                        acc_dict = {
+                            "id":trans.id,
+                            "branch": f"Agriculture#001",
+                            "date": f'{trans.acceptedon.strftime("%d/%b/%y")} {trans.acceptedon.strftime("%H:%M")}',
+                            "amount": trans.amount,
+                            "status": status,
+                            "postedby":trans.created_by.name,
+                            "collectedby":trans.received_by.name if trans.accepted_by else "-",
+                        }
+                        items.append(acc_dict)
+                else:
+                    print("no account njege")
+
+            print(items)
+            return items
+        
+    def post(self):
+        try:
+            target = request.form.get('target')
+
+            if target == "accept":
+                trans_id = request.form.get('id')
+                trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+                TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
+
+
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.closing_balance + trans_obj.amount
+                AccountsOp.update_current_account(current_user_account_obj,new_amount)
+
+
+                post_user_account_obj = trans_obj.created_by.account
+                new_amount = post_user_account_obj.closing_balance - trans_obj.amount
+                AccountsOp.update_current_account(post_user_account_obj,new_amount)
+
+                return "success"
+
+            amount = request.form.get('amount')
+            valid_amount = validate_input(amount)
+            purpose = request.form.get('purpose')
+            new_transaction = TransactionDataOp(valid_amount,purpose,current_user.id)
+            new_transaction.save()
+            sms_text = f"{current_user.name} has approved a transaction"
+            phonenum = sms_phone_number_formatter("0704448189")
+            sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
+
+            return "success"
+    
+        except Exception as e:
+            print("error",e)
+            return "failed to add"
     
 
 class Accounts(Resource):
@@ -10386,9 +10425,9 @@ class Accounts(Resource):
             print("error" + str(e))
             return "error"
         
-class Floats(Resource):
+
+class RegistrationAccounts(Resource):
     def get(self):
-        target = request.args.get("target")
         items = []
 
         target = request.args.get("target")

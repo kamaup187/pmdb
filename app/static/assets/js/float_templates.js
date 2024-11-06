@@ -28,6 +28,8 @@ function updateDataTable(data,table) {
             item.amount,            // Phone
             item.status,
             item.posted_by,       // Branch
+            item.collectedby,       // Branch
+
             // Branch
             '<button class="btn btn-light btn-sm update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'  // Remove button
         ]);
@@ -55,12 +57,14 @@ function updateFloatDataTable(data,table) {
     table.clear();
     data.forEach(function(item) {
         table.row.add([
-            item.id,             // PNo
+            item.id,
+            item.branch,             // PNo
             item.date,           // Name
             item.amount,        // Region
-            item.member,
             item.status,
-            '<button class="btn btn-light btn-sm" data-id="' + item.id + '">View</button>'  // Remove button
+            item.postedby,
+            item.collectedby,
+            '<button class="btn btn-light btn-sm update-float-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>'  // Remove button
         ]);
     });
     table.draw();
@@ -111,6 +115,7 @@ var dataTableTemplate = `
             <th class="fw-bold">Amount</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">PostedBy</th>
+            <th class="fw-bold">CollectedBy</th>
             <th class="fw-bold">Action</th>
         </tr>
     </thead>
@@ -124,11 +129,13 @@ var floatDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
-            <th class="fw-bold">Ref</th>
+            <th class="fw-bold">Id</th>
+            <th class="fw-bold">Branch</th>
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Amount</th>
-            <th class="fw-bold">Member</th>
             <th class="fw-bold">Status</th>
+            <th class="fw-bold">PostedBy</th>
+            <th class="fw-bold">CollectedBy</th>
             <th class="fw-bold">Action</th>
         </tr>
     </thead>
@@ -426,6 +433,7 @@ var roleUpdateForm = (roleobj,roles) => {
                                 <div class="app-card-body">
                                     <div class="mb-2"><strong>Code: </strong> #00${requestobj.id}</div>
                                     <div class="mb-2"><strong>Status: </strong> ${requestobj.status}</div>
+                                    <div class="mb-2"><strong>Type: </strong> ${requestobj.purpose}</div>
                                     <div class="mb-2"><strong>Cash amount: </strong> ${requestobj.amount}</div>
                                     <div class="mb-2"><strong>Posted on: </strong> ${requestobj.date}</div>
                                     <div class="mb-2"><strong>Posted by: </strong> ${requestobj.by}</div>
@@ -437,7 +445,7 @@ var roleUpdateForm = (roleobj,roles) => {
                                             <a class="btn app-btn-primary" href="#">Hidden</a>
                                         </div>
                                         <div class="col-auto">
-                                            <a id="update-request-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> Accept cash</a>
+                                            <a id="update-request-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> Accept request</a>
                                         </div>
                                     </div>
                                         
@@ -449,6 +457,48 @@ var roleUpdateForm = (roleobj,roles) => {
             
             `;
                 };
+
+
+    var floatUpdateForm = (transobj) => {
+
+                    return `
+        
+                        <div class="row g-4 settings-section">
+                            <div class="col-12 col-md-4">
+                                <h3 class="section-title">Transaction details</h3>
+                                <div class="section-intro">View transaction details </div>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                    
+                                    <div class="app-card-body">
+                                        <div class="mb-2"><strong>Code: </strong> #00${transobj.id}</div>
+                                        <div class="mb-2"><strong>Status: </strong> ${transobj.status}</div>
+                                        <div class="mb-2"><strong>Type: </strong> ${transobj.purpose}</div>
+                                        <div class="mb-2"><strong>Cash amount: </strong> ${transobj.amount}</div>
+                                        <div class="mb-2"><strong>Posted on: </strong> ${transobj.date}</div>
+                                        <div class="mb-2"><strong>Posted by: </strong> ${transobj.by}</div>
+    
+                                        <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
+    
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto invisible">
+                                                <a class="btn app-btn-primary" href="#">Hidden</a>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a id="update-float-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> approve transaction</a>
+                                            </div>
+                                        </div>
+                                            
+                                    </div><!--//app-card-body-->
+                                    
+                                </div><!--//app-card-->
+                            </div>
+                        </div><!--//row-->
+                
+                `;
+                    };
+    
 
 var cashTemplate = `
 		
@@ -583,14 +633,7 @@ var floatTemplate = `
             <div class="col-auto">						    
                 <a class="btn app-btn-secondary" href="#"  data-bs-toggle="modal" data-bs-target="#floatModal">
                     <i data-feather="plus" style="width: 16px; height: 16px;"></i>
-                    Float purchase
-                </a>
-            </div>
-
-            <div class="col-auto">						    
-                <a class="btn app-btn-secondary" href="#"  data-bs-toggle="modal" data-bs-target="#returnCashModal">
-                    <i data-feather="plus" style="width: 16px; height: 16px;"></i>
-                    Cash return
+                    Post transaction
                 </a>
             </div>
 

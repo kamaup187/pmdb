@@ -625,6 +625,70 @@
 		</div>
 	  </div>
 	
+
+	  <div class="modal fade" id="floatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">POST TRANSACTION</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Transaction details</h3>
+		                <div class="section-intro">Post a transaction</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div class="app-card-body">
+							    <form class="settings-form">
+								    <div class="mb-3">
+									    <label for="request-input-amount" class="form-label">Cash amount<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Cash amount"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+  <circle cx="8" cy="4.5" r="1"/>
+</svg></span></label>
+									    <input type="text" class="form-control" id="float-input-amount" placeholder="e.g 150,000.0" required>
+									</div>
+
+								    <div class="mb-3">
+									    <label for="request-input-desc" class="form-label">Description</label>
+									    <textarea type="text" class="form-control" id="float-input-desc" placeholder="Write a brief description" rows="50"></textarea>
+									</div>
+
+									<div class="mb-3">
+										<label for="request-input-type" class="form-label">Transaction purpose</label>
+										<select class="form-select" id="float-input-type">
+											<option selected>Select transaction purpose</option>
+											<option value="float">Float purchase</option>
+											<option value="transfer">Cash transfer</option>
+											<option value="other">Other</option>
+										</select>
+									</div>
+
+
+
+									<button type="button" id="submit-float-btn" class="btn app-btn-primary" >Submit</button>
+							    </form>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+
 	<div class="modal fade" id="userModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -820,6 +884,36 @@
 		  </div>
 		</div>
 	  </div>
+
+
+	  <div class="modal fade" id="updateFloatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">APPROVE TRANSACTION</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div id="update-float-bed" class="row g-4 settings-section">
+
+					<div class="d-flex justify-content-center">
+						<div class="spinner-border text-success m-2" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+
+                </div><!--//row-->
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
 
 	<div class="modal fade" id="payModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -1724,7 +1818,7 @@
                     success: function (response) {
 						if (response.includes("success")){
 							toastIt(`${response}`, 'success');
-							$("#request-input-name").val("")
+							$("#request-input-amount").val("")
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
@@ -1737,6 +1831,36 @@
                 });
 			} else{
 				$(".cash-btn-request").click();
+			}
+		})
+
+		$("#submit-float-btn").on("click", function() {
+			if(validate("float-input-amount")){
+				$.ajax({
+                    url: "/floats",
+                    type: "post",
+                    data: {
+                    amount: $("#float-input-amount").val(),
+					desc:$("#float-input-desc").val(),
+					purpose: $("#float-input-type").val(),
+					target:"add float"
+                    },
+                    success: function (response) {
+						if (response.includes("success")){
+							toastIt(`${response}`, 'success');
+							$("#float-input-amount").val("")
+						} else{
+							toastIt(`${response}`, 'danger');
+						}
+						$(".cash-btn-float").click()
+						$('#floatModal').modal('hide');
+                    },
+                    error: function (xhr) {
+						toastIt(`${xhr}`, 'danger');
+                    }
+                });
+			} else{
+				$(".cash-btn-float").click();
 			}
 		})
 
@@ -1974,6 +2098,33 @@
 			});
 		});
 
+		$(document).on('click', '.update-float-button', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+
+			$.ajax({
+				url: '/floats',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var updateFloatForm = floatUpdateForm(response);
+
+					$("#update-float-bed").html(updateFloatForm)
+
+					feather.replace();
+
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
+
 		$('#updateUserModal').on('hidden.bs.modal', function () {
 			$("#update-user-bed").html(
 				`
@@ -1989,6 +2140,18 @@
 
 		$('#updateRequestModal').on('hidden.bs.modal', function () {
 			$("#update-request-bed").html(
+				`
+				<div class="d-flex justify-content-center">
+					<div class="spinner-border text-success m-2" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>
+				`
+			)
+		})
+
+		$('#updateFlaotModal').on('hidden.bs.modal', function () {
+			$("#update-float-bed").html(
 				`
 				<div class="d-flex justify-content-center">
 					<div class="spinner-border text-success m-2" role="status">
@@ -2092,6 +2255,38 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
 					$(".cash-btn-request").click();
+				}
+			});
+
+		})
+
+
+		$(document).on("click", "#update-float-btn", function () {
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+
+			$.ajax({
+				url: '/floats',
+				method: 'post',
+				data:{
+					id:$("#float-update-id").val(),
+					target:"accept"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Transaction approved", 'success');
+						$(".cash-btn-float").click();
+
+						setTimeout(function(){
+							$('#updateFloatModal').modal('hide');
+						},1000)
+					}else{
+						toastIt(response, 'danger');
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating account data: ' + error);
+					$(".cash-btn-float").click();
 				}
 			});
 

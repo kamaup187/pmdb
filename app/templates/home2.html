@@ -1317,7 +1317,7 @@
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-all-table").empty()
 			$.ajax({
-				url: "/floats",
+				url: "/registration/accounts",
 				type: "get",
 				data: {
 				target: "all"
@@ -1776,7 +1776,7 @@
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-all-table").empty()
 			$.ajax({
-				url: "/floats",
+				url: "/registration/accounts",
 				type: "get",
 				data: {
 				target: "all"
@@ -1814,7 +1814,7 @@
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-pending-table").empty()
 			$.ajax({
-				url: "/floats",
+				url: "/registration/accounts",
 				type: "get",
 				data: {
 				target: "pending"
@@ -1851,7 +1851,7 @@
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-confirmed-table").empty()
 			$.ajax({
-				url: "/floats",
+				url: "/registration/accounts",
 				type: "get",
 				data: {
 				target: "confirmed"
@@ -2214,7 +2214,7 @@
 			var id = button.data('id'); // Get the ID from the button's data attribute
 
 			$.ajax({
-				url: '/floats',
+				url: '/registration/accounts',
 				method: 'GET',
 				data:{
 					id:id,
@@ -2250,7 +2250,7 @@
 
 		$(document).on("click", "#update-payment-btn", function () {
 			$.ajax({
-				url: '/floats',
+				url: '/registration/accounts',
 				method: 'post',
 				data:{
 					id:$("#pay-update-id").val(),

@@ -1775,6 +1775,68 @@
 		});
 
 
+		$("#working-block").on("click", "#accounts-all-tab", function() {
+
+			$("#accounts-spinner").removeClass("d-none")
+			$("#accounts-all-table").empty()
+			$.ajax({
+				url: "/accounts",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					var elem = $("#accounts-all-table")
+					renderAccountTemplate("allTable",elem);
+
+					var t1 = $('#allTable').DataTable({
+					"dom": '<"top"f>rt<"bottom"lp><"clear">',
+					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+					"pageLength": 100,
+					"searching":true,
+					columnDefs: [ { targets: 0, type: 'natural' } ],
+					"order": [[ 0, "asc" ]],
+					"bLengthChange": false
+				});
+
+				updateAccountDataTable(response,t1)
+
+				$("#accounts-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#accounts-spinner").addClass("d-none")
+				}
+			});
+			});
+
+		$("#working-block").on("click", "#accounts-pending-tab", function() {
+
+			$("#accounts-spinner").removeClass("d-none")
+			$("#accounts-pending-table").empty()
+			$.ajax({
+				url: "/accounts",
+				type: "get",
+				data: {
+				target: "current account"
+				},
+				success: function (response) {
+					var allocateAccountForm = accountAllocateForm(response[0],response[1]);
+
+					$("#accounts-pending-table").html(allocateAccountForm)
+
+				$("#accounts-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#accounts-spinner").addClass("d-none")
+				}
+			});
+			});
+
+
 		$("#submit-role").on("click", function() {
 			if(validate("role-input-name")){
 				$.ajax({
@@ -2205,14 +2267,48 @@
 				method: 'post',
 				data:{
 					id:$("#account-update-id").val(),
-					balance:$("#account-update-balance").val(),
+					// balance:$("#account-update-balance").val(),
 					limit:$("#account-update-limit").val(),
-					target:"single"
+					target:"set limit"
 				},
 				success: function (response) {
 
 					if (response.includes("success")){
 						toastIt("Account updated successsfully", 'success');
+						$(".account-btn-manager").click()
+
+						setTimeout(function(){
+							$('#updateAccountModal').modal('hide');
+						},1000)
+					}else{
+						toastIt(response, 'danger');
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating account data: ' + error);
+				}
+			});
+
+		})
+
+
+		$(document).on("click", "#allocate-account-btn", function () {
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+
+			$.ajax({
+				url: '/accounts',
+				method: 'post',
+				data:{
+					id:$("#account-allocating-id").val(),
+					cid:$("#account-allocated-id").val(),
+					fb:$("#account-allocate-float").val(),
+					cb:$("#account-allocate-cash").val(),
+					target:"update balances"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Account allocated successsfully", 'success');
 						$(".account-btn-manager").click()
 
 						setTimeout(function(){

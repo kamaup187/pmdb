@@ -10216,6 +10216,15 @@ class Requests(Resource):
                 if user.collection_requests:
                     for req in user.collection_requests:
 
+                        if request.args.get("target") == "pending":
+                            if req.status != "pending":
+                                continue
+                        elif request.args.get("target") == "confirmed":
+                            if req.status == "pending":
+                                continue
+                        else:
+                            pass
+
                         status = f'<span class="badge bg-success">Collected</span>'
                         if req.status == "pending":
                             status = f'<span class="badge bg-warning">Pending</span>'
@@ -10248,12 +10257,12 @@ class Requests(Resource):
 
 
                 current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.closing_balance + request_obj.amount
+                new_amount = current_user_account_obj.float_balance + request_obj.amount
                 AccountsOp.update_current_account(current_user_account_obj,new_amount)
 
 
                 post_user_account_obj = request_obj.created_by.account
-                new_amount = post_user_account_obj.closing_balance - request_obj.amount
+                new_amount = post_user_account_obj.float_balance - request_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,new_amount)
 
                 return "success"
@@ -10310,6 +10319,16 @@ class Floats(Resource):
                 if user.posted_transactions:
                     for trans in user.posted_transactions:
 
+
+                        if request.args.get("target") == "pending":
+                            if trans.status != "pending":
+                                continue
+                        elif request.args.get("target") == "confirmed":
+                            if trans.status == "pending":
+                                continue
+                        else:
+                            pass
+
                         status = f'<span class="badge bg-success">Collected</span>'
                         if trans.status == "pending":
                             status = f'<span class="badge bg-warning">Pending</span>'
@@ -10341,12 +10360,12 @@ class Floats(Resource):
 
 
                 current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.closing_balance + trans_obj.amount
+                new_amount = current_user_account_obj.float_balance + trans_obj.amount
                 AccountsOp.update_current_account(current_user_account_obj,new_amount)
 
 
                 post_user_account_obj = trans_obj.created_by.account
-                new_amount = post_user_account_obj.closing_balance - trans_obj.amount
+                new_amount = post_user_account_obj.float_balance - trans_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,new_amount)
 
                 return "success"
@@ -10379,8 +10398,8 @@ class Accounts(Resource):
                     acc_dict = {
                         "id":user.account.id,
                         "name": f"{user.name}#00{user.account.id}",
-                        "ob": user.account.opening_balance,
-                        "cb": user.account.closing_balance,
+                        "fb": user.account.float_balance,
+                        "cb": user.account.cash_balance,
                         "limit": user.account.account_limit,
                         "status": user.account.status,
                         "ltd": user.account.modifiedon.strftime("%d/%b/%y")
@@ -10391,6 +10410,34 @@ class Accounts(Resource):
 
             print(items)
             return items
+
+        elif target == "current account":
+            current_user_account_obj = current_user.account
+
+            if current_user_account_obj:
+                acc_dict = {
+                    "id":current_user_account_obj.id,
+                    "name": f"{current_user.name}#00{current_user_account_obj.id}",
+                    "fb": current_user_account_obj.float_balance,
+                    "cb": current_user_account_obj.cash_balance,
+                    "limit": current_user_account_obj.account_limit,
+                    "status": current_user_account_obj.status,
+                    "ltd": current_user_account_obj.modifiedon.strftime("%d/%b/%y")
+                }
+
+                co = current_user.company
+                users = co.users
+                items = []
+                for user in users:
+                    if user.account:
+                        accdict = {
+                            "value":user.account.id,
+                            "label":user.account.name,
+                        }
+                        items.append(accdict)
+                return [acc_dict,items]
+            else:
+                return []
         else:
             account_id = request.args.get('id')
             acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
@@ -10399,8 +10446,8 @@ class Accounts(Resource):
                 acc_dict = {
                     "id":acc_obj.id,
                     "name": f"{acc_obj.name}#00{acc_obj.id}",
-                    "ob": acc_obj.opening_balance,
-                    "cb": acc_obj.closing_balance,
+                    "fb": acc_obj.float_balance,
+                    "cb": acc_obj.cash_balance,
                     "limit": acc_obj.account_limit,
                     "status": acc_obj.status,
                     "ltd": acc_obj.modifiedon.strftime("%d/%b/%y")
@@ -10410,17 +10457,26 @@ class Accounts(Resource):
                 return {}
     
     def post(self):
+        target = request.form.get('target')
         try:
-            account_id = request.form.get('id')
+            account_id = request.form.get('cid')
             acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
+
+            if target == "update balances":
+                new_float_balance = request.form.get("fb")
+                new_cash_balance = request.form.get("cb")
+
+                valid_float_balance = validate_input(new_float_balance)
+                valid_cash_balance = validate_input(new_cash_balance)
+                AccountsOp.update_current_account(acc_obj,valid_float_balance,valid_cash_balance)
+                return "success"
+            
             new_limit = request.form.get("limit")
-            new_balance = request.form.get("balance")
 
-            valid_limit_input = validate_input(new_limit)
-            valid_balance_input = validate_input(new_balance)
-
-            AccountsOp.update_limit(acc_obj,valid_limit_input,valid_balance_input)
+            valid_limit = validate_input(new_limit)
+            AccountsOp.update_limit(acc_obj,valid_limit)
             return "success"
+        
         except Exception as e:
             print("error" + str(e))
             return "error"

@@ -626,23 +626,23 @@ class UserOp(User,Base):
         return Bcrypt().check_password_hash(dbpassword, password)
 
 class AccountsOp(Account,Base):
-    def __init__(self,name,ob,cb,limit,user_id):
+    def __init__(self,name,fb,cb,lim,user_id):
         self.name=name
-        self.opening_balance = ob
-        self.closing_balance = cb
-        self.limit=limit
+        self.float_balance = fb
+        self.cash_balance = cb
+        self.account_limit = lim
         self.user_id=user_id
 
     def fetch_account_by_id(id):
         return Account.query.filter_by(id=id).first()
     
-    def update_limit(self, limit,balance):
+    def update_limit(self, limit):
         self.account_limit=limit
-        self.closing_balance=balance
         db.session.commit()
 
-    def update_current_account(self,balance):
-        self.closing_balance=balance
+    def update_current_account(self,fb,cb):
+        self.float_balance= fb
+        self.cash_balance = cb
         db.session.commit()
 
 class RegistrationAccountOp(RegistrationAccount,Base):

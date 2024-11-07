@@ -239,17 +239,30 @@ class Account(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.String)
-    opening_balance = db.Column(db.Float,default=0.0)
-    closing_balance = db.Column(db.Float,default=0.0)
-    account_limit = db.Column(db.Float,default=500000)
+    float_balance = db.Column(db.Float,default=0.0)
+    cash_balance = db.Column(db.Float,default=0.0)
+    account_limit = db.Column(db.Float,default=500000.0)
     status = db.Column(db.String,default="Open")
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
+    account_trails = db.relationship('AccountTrail', backref='account', cascade="all, delete-orphan")
+
     def __repr__(self):
         return self.name
+    
+class AccountTrail(db.Model):
+
+    __tablename__ = 'accounttrails'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    amount = db.Column(db.Float, default=0.0)
+    balance = db.Column(db.Float, default=0.0)
+    description = db.Column(db.String)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    account_id = db.Column(db.Integer, db.ForeignKey(Account.id))
     
 class RegistrationAccount(db.Model):
 

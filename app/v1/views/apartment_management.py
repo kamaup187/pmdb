@@ -9969,7 +9969,7 @@ class FloatHome(Resource):
             return redirect(url_for('api.floatlogin'))
 
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user.name))
+        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user))
 
 class KceReport(Resource):
     @login_required

@@ -1002,37 +1002,45 @@
 	<script>
 		// Permission codes and names mapping
 		const permissionMap = {
-		"1": { name: "edit", id: 1 },
-		"2": { name: "write", id: 2 },
-		"3": { name: "view", id: 3 },
-		"4": { name: "delete", id: 4 },
-        "5": { name: "approve", id: 5 },
-        "6": { name: "reject", id: 6 },
-        "7": { name: "reset", id: 7 },
-        "8": { name: "export", id: 8 }
+		"1": { name: "allocate-cash/float", id: 1 },
+		"2": { name: "add-update-user", id: 2 },
+		"3": { name: "adjust-limit", id: 3 },
+		"4": { name: "add-update-role", id: 4 },
+        "5": { name: "post-cash-float-request", id: 5 },
+        "6": { name: "post-cash-float-transaction", id: 6 },
+        "7": { name: "accept-cash-float-request", id: 7 },
+        "8": { name: "accept-cash-float-transaction", id: 8 },
+		"9": { name: "view-users", id: 9 },
+        "10": { name: "view-accounts", id: 10 },
+        "11": { name: "update-posts", id: 11 },
+        "12": { name: "view-reports", id: 12 },
 		};
 
 
 		let permissionsArray2 = [
-			{ id: 1, name: 'edit' },
-			{ id: 2, name: 'write' },
-			{ id: 3, name: 'view' },
-			{ id: 4, name: 'delete' },
-			{ id: 5, name: 'approve' },
-			{ id: 6, name: 'deny' },
-			{ id: 7, name: 'reset' },
-			{ id: 8, name: 'export' }
+			{ id: 1, name: 'allocate-cash/float' },
+			{ id: 2, name: 'add-update-user' },
+			{ id: 3, name: 'adjust-limit' },
+			{ id: 4, name: 'add-update-role' },
+			{ id: 5, name: 'post-cash-float-request' },
+			{ id: 6, name: 'post-cash-float-transaction' },
+			{ id: 7, name: 'accept-cash-float-request' },
+			{ id: 8, name: 'accept-cash-float-transaction' },
+			{ id: 9, name: 'view-users' },
+            { id: 10, name: 'view-accounts' },
+            { id: 11, name: 'update-posts' },
+            { id: 12, name: 'view-reports' },
 		];
 
 		// Convert the permissions string from the backend into an array of permission objects
 		function parsePermissions(permissionString) {
-		const activePermissions = permissionString.split(" ");
-		
-		// Use the map to create a predetermined length array
-		const permissionsArray = Object.values(permissionMap).map(permission => ({
-			...permission,
-			active: activePermissions.includes(String(permission.id))
-		}));
+			const activePermissions = permissionString.split(" ");
+			
+			// Use the map to create a predetermined length array
+			const permissionsArray = Object.values(permissionMap).map(permission => ({
+				...permission,
+				active: activePermissions.includes(String(permission.id))
+			}));
 
 		return permissionsArray;
 		}

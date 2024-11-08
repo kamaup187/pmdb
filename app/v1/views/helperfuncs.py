@@ -2619,14 +2619,18 @@ def string_formatter_alt(item):
 
 def permission_strings(ids_str):
     permissions_dict = {
-        "1": "edit",
-        "2": "write",
-        "3": "view",
-        "4": "delete",
-        "5": "approve",
-        "6": "deny",
-        "7": "reset",
-        "8": "export"
+        "1": "allocate-cash-float",
+        "2": "add-update-user",
+        "3": "adjust-limit",
+        "4": "add-update-role",
+        "5": "post-cash-float-request",
+        "6": "post-cash-float-transaction",
+        "7": "accept-cash-float-request",
+        "8": "accept-cash-float-transaction",
+        "9": "view-users",
+        "10": "view-accounts",
+        "11": "update-posts",
+        "12": "view-reports"
     }
 
     ids = ids_str.split()
@@ -2634,7 +2638,10 @@ def permission_strings(ids_str):
     names = [permissions_dict[id] for id in ids if id in permissions_dict]
     
     # Join the names back into a single string
-    return " ".join(names)
+    return ",  ".join(names)
+
+def get_permissions(user):
+    return user.company_user_group.description if user.company_user_group else ""
 
 def switch_property_code(value):
     cases = {

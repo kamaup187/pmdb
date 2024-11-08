@@ -9969,7 +9969,7 @@ class FloatHome(Resource):
             return redirect(url_for('api.floatlogin'))
 
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],user_logged_in=current_user.name))
+        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user.name))
 
 class KceReport(Resource):
     @login_required
@@ -10444,7 +10444,8 @@ class Accounts(Resource):
                     "cb": current_user_account_obj.cash_balance,
                     "limit": current_user_account_obj.account_limit,
                     "status": current_user_account_obj.status,
-                    "ltd": current_user_account_obj.modifiedon.strftime("%d/%b/%y")
+                    "ltd": current_user_account_obj.modifiedon.strftime("%d/%b/%y"),
+                    "permissions": get_permissions(current_user)
                 }
 
                 co = current_user.company
@@ -10684,6 +10685,8 @@ class Roles(Resource):
             role_id = request.form.get('id')
             role_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role_id))
             access = request.form.get('access')
+
+            print("acccesssi ",access)
             name = request.form.get('name')
             CompanyUserGroupOp.update_access(role_obj,name,access)
             return "access updated successfully"

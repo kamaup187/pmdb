@@ -415,6 +415,33 @@ var roleUpdateForm = (roleobj,roles) => {
 
             var accountAllocateForm = (accountobj,accountsArray) => {
 
+
+                const permissionsArray = accountobj.permissions.split(" ");
+                const hasPermission = (permission) => permissionsArray.includes(permission);
+
+                
+                if (! hasPermission("1")) {
+                    return `
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                
+                                <div class="app-card-body text-center mt-3">
+
+                                    <p class="text-danger fw-bold">Access denied!</p>
+                                        
+                                </div><!--//app-card-body-->
+                                
+                            </div><!--//app-card-->
+                        </div>
+                    </div><!--//row-->
+            
+            `;
+
+
+                }
+
                 const accountOptions = accountsArray.map(r => `
                     <option value="${r.value}" ${r.value === accountobj.id ? 'selected' : ''}>${r.label}</option>
                 `).join('');

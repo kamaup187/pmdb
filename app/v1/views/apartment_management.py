@@ -10256,14 +10256,26 @@ class Requests(Resource):
                 CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
 
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.float_balance + request_obj.amount
-                AccountsOp.update_current_account(current_user_account_obj,new_amount)
+                if request_obj.purpose == "float purchase":
+
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.float_balance + request_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
 
 
-                post_user_account_obj = request_obj.created_by.account
-                new_amount = post_user_account_obj.float_balance - request_obj.amount
-                AccountsOp.update_current_account(post_user_account_obj,new_amount)
+                    post_user_account_obj = request_obj.created_by.account
+                    new_amount = post_user_account_obj.float_balance - request_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
+                else:
+
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.cash_balance + request_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
+
+
+                    post_user_account_obj = request_obj.created_by.account
+                    new_amount = post_user_account_obj.cash_balance - request_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
 
                 return "success"
 
@@ -10358,15 +10370,25 @@ class Floats(Resource):
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
 
+                if trans_obj.purpose == "float purchased":
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.float_balance + trans_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
 
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.float_balance + trans_obj.amount
-                AccountsOp.update_current_account(current_user_account_obj,new_amount)
+
+                    post_user_account_obj = trans_obj.created_by.account
+                    new_amount = post_user_account_obj.float_balance - trans_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
+                else:
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.cash_balance + trans_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
 
 
-                post_user_account_obj = trans_obj.created_by.account
-                new_amount = post_user_account_obj.float_balance - trans_obj.amount
-                AccountsOp.update_current_account(post_user_account_obj,new_amount)
+                    post_user_account_obj = trans_obj.created_by.account
+                    new_amount = post_user_account_obj.cash_balance - trans_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
+
 
                 return "success"
 
@@ -10459,10 +10481,10 @@ class Accounts(Resource):
     def post(self):
         target = request.form.get('target')
         try:
-            account_id = request.form.get('cid')
-            acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
 
             if target == "update balances":
+                account_id = request.form.get('cid')
+                acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
                 new_float_balance = request.form.get("fb")
                 new_cash_balance = request.form.get("cb")
 
@@ -10471,8 +10493,9 @@ class Accounts(Resource):
                 AccountsOp.update_current_account(acc_obj,valid_float_balance,valid_cash_balance)
                 return "success"
             
+            account_id = request.form.get('id')
+            acc_obj = AccountsOp.fetch_account_by_id(get_identifier(account_id))
             new_limit = request.form.get("limit")
-
             valid_limit = validate_input(new_limit)
             AccountsOp.update_limit(acc_obj,valid_limit)
             return "success"

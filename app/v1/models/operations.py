@@ -641,8 +641,10 @@ class AccountsOp(Account,Base):
         db.session.commit()
 
     def update_current_account(self,fb,cb):
-        self.float_balance= fb
-        self.cash_balance = cb
+        if fb:
+            self.float_balance = fb
+        if cb:
+            self.cash_balance = cb
         db.session.commit()
 
 class RegistrationAccountOp(RegistrationAccount,Base):

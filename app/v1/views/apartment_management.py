@@ -9955,7 +9955,7 @@ class KceHome(Resource):
         for user in users:
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
-        return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users))
+        return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users,user_logged_in=current_user))
 
 class FloatHome(Resource):
     @login_required
@@ -10760,7 +10760,7 @@ class KceUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-success">Member</span>',
-                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "branch":f"County: {user.ward.subcounty.county.name}, Subcounty: {user.ward.subcounty.name}, Ward:  {user.ward.name}",
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -10932,7 +10932,7 @@ class FloatUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-danger">Non member</span>',
-                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "branch":f"County: {user.ward.subcounty.county.name}, Subcounty: {user.ward.subcounty.name}, Ward:  {user.ward.name}",
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -10954,7 +10954,7 @@ class FloatUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-success">Active</span>',
-                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "branch":f"County: {user.ward.subcounty.county.name}, Subcounty: {user.ward.subcounty.name}, Ward:  {user.ward.name}",
                     "company":c_data.name
                 }
                 items.append(user_dict)

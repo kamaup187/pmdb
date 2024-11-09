@@ -1036,7 +1036,10 @@ var userTemplate = `
 
 <nav id="user-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
 <a class="flex-sm-fill text-sm-center nav-link active" id="users-all-tab" data-bs-toggle="tab" href="#users-all" role="tab" aria-controls="users-all" aria-selected="true">All users</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="users-pending-tab" data-bs-toggle="tab" href="#users-pending" role="tab" aria-controls="users-pending" aria-selected="false">Non-members</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="users-pending-tab" data-bs-toggle="tab" href="#users-pending" role="tab" aria-controls="users-pending" aria-selected="false">Life members</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="users-pending-tabb" data-bs-toggle="tab" href="#users-pending" role="tab" aria-controls="users-pending" aria-selected="false">Non-members</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="users-pending-tabbb" data-bs-toggle="tab" href="#users-pending" role="tab" aria-controls="users-pending" aria-selected="false">Archived</a>
+
 <a class="flex-sm-fill text-sm-center nav-link" id="users-confirmed-tab" data-bs-toggle="tab" href="#users-confirmed" role="tab" aria-controls="users-confirmed" aria-selected="false">Members</a>
 </nav>
 

@@ -577,9 +577,7 @@
                               </select>
                             </div>
                           </div>
-                          
-    
-    
+
                           <!-- Save changes button-->
                           <div class="text-right">
                             <button class="gotocompany btn btn-primary dispnone" type="button">Next</button>
@@ -652,6 +650,19 @@
                       <div class="card mb-2 mt-1">
                         <div class="card-header text-kodi">Complete registration</div>
                         <div class="card-body">
+
+
+                          <div class="form-group row">
+                            <div class="mb-3 col-6">
+                              <label for="pay-input-amount" class="form-label">Registration fee paid</label>
+                              <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0" required>
+                            </div>
+                            <div class="mb-3 col-6">
+                              <label for="pay-input-trans" class="form-label">Transaction reference</label>
+                              <input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR" required>
+          
+                            </div>
+                          </div>
     
                           <div class="form-group row">
                             <div class="col-sm-6">
@@ -678,7 +689,7 @@
                             <button class="previous btn btn-primary back-btn" type="button">Back</button>
                             <button class="gotocompany btn btn-primary back-btn dispnone" type="button">Back</button>
     
-                            <button type="reset" class="btn btn-outline-danger" type="button">Reset</button>
+                            <!-- <button type="reset" class="btn btn-outline-danger" type="button">Reset</button> -->
     
                             <button id="register" class="btn btn-primary dispnone" type="button">Finish</button>
                             <button class="next register btn btn-primary" type="button">Finish</button>

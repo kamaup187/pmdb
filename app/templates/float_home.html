@@ -1009,6 +1009,14 @@
 	
 	<script>feather.replace();</script>
 
+	<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+	<script>
+		const socket = io({
+			transports: ['websocket']
+		});
+	</script>
+
 	<script>
 		// Permission codes and names mapping
 		const permissionMap = {
@@ -2507,6 +2515,15 @@
 	}else{
 		$("#view-accounts").addClass("d-none");
 	}
+</script>
+
+
+<script>
+	//websockets are supported here
+	socket.on('new_request', (post) => {
+            console.log("New request created:", post);
+            // displayNewPost(post);
+        });
 </script>
 
 </body>

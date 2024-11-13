@@ -9,6 +9,7 @@ from flask_login import LoginManager
 from config import *
 from flask_talisman import Talisman
 from flask_migrate import Migrate
+from flask_socketio import SocketIO
 
 import jwt
 from flask_cors import CORS
@@ -27,6 +28,7 @@ from global_functions import *
 db = SQLAlchemy()
 mail = Mail()
 migrate = Migrate()
+socketio = SocketIO() 
 # rq = RQ()
 
 
@@ -120,13 +122,6 @@ def create_app(*args):
 
         # app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
 
-        # app.config['MAIL_SERVER']='mail.privateemail.com'
-        # app.config['MAIL_PORT'] = 465
-        # app.config['MAIL_USERNAME'] = 'info@kiotapay.com'
-        # app.config['MAIL_PASSWORD'] = 'Still7waters'
-        # app.config['MAIL_USE_TLS'] = False
-        # app.config['MAIL_USE_SSL'] = True
-
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT'] = 465
         app.config['MAIL_USERNAME'] = 'kiotapay@gmail.com'
@@ -141,8 +136,8 @@ def create_app(*args):
         # app.config['MAIL_USE_TLS'] = False
         # app.config['MAIL_USE_SSL'] = True
 
-        mail.init_app(app)
-    
+        socketio.init_app(app) 
+        mail.init_app(app)    
     
     @login_manager.user_loader
     def load_user(user_id):

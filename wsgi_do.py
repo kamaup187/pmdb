@@ -1,5 +1,5 @@
 import os
-from app import create_app
+from app import create_app, socketio
 # try:
 #     from do_secrets import APP_SETTINGS
 # except ImportError:
@@ -12,5 +12,8 @@ app = create_app()
 # app = create_dapp()
 
 
+# if __name__ == "__main__":
+#     app.run()
+
 if __name__ == "__main__":
-    app.run()
+    socketio.run(app, debug=True)

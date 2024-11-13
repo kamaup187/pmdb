@@ -36,6 +36,7 @@ from .advanta import *
 from operator import add
 from app import sms
 from app import mail
+from app import socketio
 
 
 # from rq import Queue
@@ -10284,6 +10285,19 @@ class Requests(Resource):
             valid_amount = validate_input(amount)
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
+
+
+            socketio.emit('new_request', {
+                            "id":new_request.id,
+                            "branch": f"Agriculture#001",
+                            "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
+                            "amount": new_request.amount,
+                            "status": f'<span class="badge bg-warning">Pending</span>',
+                            "posted_by":new_request.created_by.name,
+                            "collectedby":new_request.received_by.name if new_request.received_by else "-",
+            }, broadcast=True)
+
+
             sms_text = f"{current_user.name} has posted a request"
             phonenum = sms_phone_number_formatter("0704448189")
             sms_sender("Beacon Technologies Ltd",sms_text,phonenum)

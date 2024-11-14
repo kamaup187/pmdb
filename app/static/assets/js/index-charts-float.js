@@ -65,7 +65,7 @@ var lineChartConfig = {
 		
 		title: {
 			display: true,
-			text: 'Registration payments Line Chart',
+			text: 'Cash transfers Line Chart',
 			
 		}, 
 		tooltips: {
@@ -139,7 +139,7 @@ var barChartConfig = {
 	data: {
 		labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 		datasets: [{
-			label: 'Members',
+			label: 'Purchases',
 			backgroundColor: window.chartColors.green,
 			borderColor: window.chartColors.green,
 			borderWidth: 1,
@@ -165,7 +165,7 @@ var barChartConfig = {
 		},
 		title: {
 			display: true,
-			text: 'Member registration Bar Chart'
+			text: 'Float purchases Bar Chart'
 		},
 		tooltips: {
 			mode: 'index',

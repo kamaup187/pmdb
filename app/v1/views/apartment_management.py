@@ -36,21 +36,22 @@ from .advanta import *
 from operator import add
 from app import sms
 from app import mail
-from app import socketio
 
-connected_clients = []
+# from app import socketio
 
-# Define socket handlers to track connected clients
-@socketio.on('connect')
-def handle_connect():
-    connected_clients.append(request.sid)
-    print(f'Client connected: {request.sid}')
+# connected_clients = []
 
-@socketio.on('disconnect')
-def handle_disconnect():
-    if request.sid in connected_clients:
-        connected_clients.remove(request.sid)
-    print(f'Client disconnected: {request.sid}')
+# # Define socket handlers to track connected clients
+# @socketio.on('connect')
+# def handle_connect():
+#     connected_clients.append(request.sid)
+#     print(f'Client connected: {request.sid}')
+
+# @socketio.on('disconnect')
+# def handle_disconnect():
+#     if request.sid in connected_clients:
+#         connected_clients.remove(request.sid)
+#     print(f'Client disconnected: {request.sid}')
 
 
 # from rq import Queue
@@ -64,6 +65,29 @@ Cloud.config.update = ({
     'api_secret': os.environ.get('CLOUDINARY_API_SECRET')
 })
 
+import time
+from threading import Event, Lock
+from queue import Queue
+
+connected_clients = []  # List to track connected clients
+new_data_event = Event()  # Event that will be set when there's new data
+data_queue = Queue()  # Queue to hold new data for clients
+
+def event_stream():
+    while True:
+        # Wait for new data to be available
+        new_data_event.wait()  # Block until there is new data
+        # Retrieve the latest data from the queue
+        while not data_queue.empty():
+            data = data_queue.get()
+            yield f"data: {json.dumps(data)}\n\n"
+        # Reset the event to block further emissions until new data is added
+        new_data_event.clear()
+
+
+class StreamEvents(Resource):
+    def get(self):
+        return Response(event_stream(), content_type='text/event-stream')
 
 # urll = "https://api.whatso.net/api/v2/SendMessage"
 
@@ -10312,6 +10336,7 @@ class Requests(Resource):
 
 
             data = {
+                "stream":"requests",
                 "id":new_request.id,
                 "branch": f"Agriculture#001",
                 "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
@@ -10321,8 +10346,13 @@ class Requests(Resource):
                 "collectedby":new_request.received_by.name if new_request.received_by else "-",
             }
 
-            for client_id in connected_clients:
-                socketio.emit('new_request', [data], to=client_id)
+            # for client_id in connected_clients:
+            #     socketio.emit('new_request', [data], to=client_id)
+
+            data_queue.put(data)
+            
+            # Trigger event to notify clients of new data
+            new_data_event.set()
 
 
             sms_text = f"{current_user.name} has posted a request"

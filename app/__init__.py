@@ -9,7 +9,7 @@ from flask_login import LoginManager
 from config import *
 from flask_talisman import Talisman
 from flask_migrate import Migrate
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 import jwt
 from flask_cors import CORS
@@ -30,7 +30,7 @@ mail = Mail()
 migrate = Migrate()
 # socketio = SocketIO(debug=True,cors_allowed_origins='*',async_mode='eventlet') 
 # socketio = SocketIO(async_mode='eventlet')
-socketio = SocketIO() 
+# socketio = SocketIO() 
 
 
 # rq = RQ()
@@ -142,7 +142,7 @@ def create_app(*args):
         # app.config['MAIL_USE_TLS'] = False
         # app.config['MAIL_USE_SSL'] = True
 
-        socketio.init_app(app) 
+        # socketio.init_app(app) 
         mail.init_app(app)    
     
     @login_manager.user_loader

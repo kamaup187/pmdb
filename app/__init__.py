@@ -29,7 +29,9 @@ db = SQLAlchemy()
 mail = Mail()
 migrate = Migrate()
 # socketio = SocketIO(debug=True,cors_allowed_origins='*',async_mode='eventlet') 
-socketio = SocketIO(async_mode='eventlet') 
+# socketio = SocketIO(async_mode='eventlet')
+socketio = SocketIO() 
+
 
 # rq = RQ()
 

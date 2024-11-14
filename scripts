@@ -110,3 +110,44 @@ echo $response;
 @miguel: I managed to setup an app and workers running. However I have three separate apps which I would like to assign workers. 
 The workers are configured with different working directories to reflect each app working directory. I noted the apps send jobs to any available worker and not to any specific worker. This messes the jobs in queue since they may be executed by a wrong app.
 How can I ensure the apps will send jobs to the specific worker with its working directory configured within it.
+
+
+
+
+"""
+
+
+server {
+    server_name rentlib.com kiotapay.com float.beacontechnologies.co.ke kikuyucouncilofelders.org;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/dev/rentlib-pms/rentlib.sock;
+    }
+
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/rentlib.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/rentlib.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+
+
+
+}
+
+server {
+    if ($host = float.beacontechnologies.co.ke) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = kiotapay.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+"""

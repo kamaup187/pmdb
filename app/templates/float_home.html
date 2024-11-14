@@ -1910,7 +1910,7 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						$(".cash-btn-request").click()
+						// $(".cash-btn-request").click()
 						$('#requestModal').modal('hide');
                     },
                     error: function (xhr) {
@@ -1918,7 +1918,7 @@
                     }
                 });
 			} else{
-				$(".cash-btn-request").click();
+				// $(".cash-btn-request").click();
 			}
 		})
 
@@ -2522,6 +2522,30 @@
 	//websockets are supported here
 	socket.on('new_request', (post) => {
             console.log("New request created:", post);
+
+
+			var elem = $("#requests-all-table")
+					renderTemplate("allTable",elem);
+
+					var t1 = $('#allTable').DataTable({
+					"dom": '<"top"f>rt<"bottom"lp><"clear">',
+					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+					"pageLength": 100,
+					"searching":true,
+					columnDefs: [ { targets: 0, type: 'natural' } ],
+					"order": [[ 0, "asc" ]],
+					"bLengthChange": false
+				});
+
+				updateDataTable(post,t1)
+
+				$("#requests-spinner").addClass("d-none")
+
+				console.log("New request rendered:", post);
+
+
+
+
             // displayNewPost(post);
         });
 </script>

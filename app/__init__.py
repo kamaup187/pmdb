@@ -2,7 +2,7 @@
 import os
 
 import africastalking
-from flask import Flask,session
+from flask import Flask,request
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -28,7 +28,9 @@ from global_functions import *
 db = SQLAlchemy()
 mail = Mail()
 migrate = Migrate()
-socketio = SocketIO() 
+# socketio = SocketIO(debug=True,cors_allowed_origins='*',async_mode='eventlet') 
+socketio = SocketIO(async_mode='eventlet') 
+
 # rq = RQ()
 
 
@@ -120,6 +122,8 @@ def create_app(*args):
         app.config['CORS_HEADERS'] = 'Content-Type'
         app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
+        app.config['SECRET_KEY'] = '2b5f7b9b23c54f557b42c8f0fc6d22d3d922f607d3c9075b'
+
         # app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
 
         app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -182,6 +186,8 @@ def create_app(*args):
 
         
     return app
+
+
 
 
 

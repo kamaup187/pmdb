@@ -38,6 +38,20 @@ from app import sms
 from app import mail
 from app import socketio
 
+connected_clients = []
+
+# Define socket handlers to track connected clients
+@socketio.on('connect')
+def handle_connect():
+    connected_clients.append(request.sid)
+    print(f'Client connected: {request.sid}')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    if request.sid in connected_clients:
+        connected_clients.remove(request.sid)
+    print(f'Client disconnected: {request.sid}')
+
 
 # from rq import Queue
 # from rq.job import Job
@@ -10244,7 +10258,6 @@ class Requests(Resource):
                 else:
                     print("no account njege")
 
-            print(items)
             return items
 
     def post(self):
@@ -10287,15 +10300,29 @@ class Requests(Resource):
             new_request.save()
 
 
-            socketio.emit('new_request', {
-                            "id":new_request.id,
-                            "branch": f"Agriculture#001",
-                            "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
-                            "amount": new_request.amount,
-                            "status": f'<span class="badge bg-warning">Pending</span>',
-                            "posted_by":new_request.created_by.name,
-                            "collectedby":new_request.received_by.name if new_request.received_by else "-",
-            }, broadcast=True)
+            # socketio.emit('new_request', {
+            #                 "id":new_request.id,
+            #                 "branch": f"Agriculture#001",
+            #                 "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
+            #                 "amount": new_request.amount,
+            #                 "status": f'<span class="badge bg-warning">Pending</span>',
+            #                 "posted_by":new_request.created_by.name,
+            #                 "collectedby":new_request.received_by.name if new_request.received_by else "-",
+            # }, broadcast=True)
+
+
+            data = {
+                "id":new_request.id,
+                "branch": f"Agriculture#001",
+                "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
+                "amount": new_request.amount,
+                "status": f'<span class="badge bg-warning">Pending</span>',
+                "posted_by":new_request.created_by.name,
+                "collectedby":new_request.received_by.name if new_request.received_by else "-",
+            }
+
+            for client_id in connected_clients:
+                socketio.emit('new_request', [data], to=client_id)
 
 
             sms_text = f"{current_user.name} has posted a request"
@@ -10372,7 +10399,6 @@ class Floats(Resource):
                 else:
                     print("no account njege")
 
-            print(items)
             return items
         
     def post(self):
@@ -10444,7 +10470,6 @@ class Accounts(Resource):
                 else:
                     print("no account njege")
 
-            print(items)
             return items
 
         elif target == "current account":
@@ -10549,7 +10574,6 @@ class RegistrationAccounts(Resource):
                 else:
                     print("no account njege")
 
-            print(items)
             return items
 
         elif target == "single":

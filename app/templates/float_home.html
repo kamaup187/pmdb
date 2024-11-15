@@ -137,6 +137,23 @@
 
 	</style>
 
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+<script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('5783c52679e093c8d101', {
+      cluster: 'us3'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+  </script>
+
 </head> 
 
 <body class="app">   
@@ -390,6 +407,13 @@
 							
 						</div><!--//inner-->
 					</div><!--//app-card-->
+
+
+					<!-- <h1>Pusher Test</h1>
+					<p>
+					  Try publishing an event to channel <code>my-channel</code>
+					  with event name <code>my-event</code>.
+					</p> -->
 						
 					<div class="row g-4 mb-4">
 						<div class="col-6 col-lg-3 user-btn">
@@ -2550,7 +2574,7 @@
         });
 </script> -->
 
-<script>
+<!-- <script>
 if (typeof(EventSource) !== "undefined") {
     const source = new EventSource('/datastream');
     console.log("Waiting for event source...");
@@ -2600,7 +2624,9 @@ if (typeof(EventSource) !== "undefined") {
 } else {
     console.log("Sorry, your browser doesn't support SSE.");
 }
-</script>
+</script> -->
+
+
 
 </body>
 </html> 

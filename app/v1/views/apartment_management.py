@@ -89,6 +89,9 @@ class StreamEvents(Resource):
     def get(self):
         return Response(event_stream(), content_type='text/event-stream')
 
+
+
+
 # urll = "https://api.whatso.net/api/v2/SendMessage"
 
 # request = {
@@ -216,6 +219,7 @@ class Index(Resource):
 
         # import pdb; pdb.set_trace()
 
+    
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
 
@@ -10349,10 +10353,12 @@ class Requests(Resource):
             # for client_id in connected_clients:
             #     socketio.emit('new_request', [data], to=client_id)
 
-            data_queue.put(data)
+            # data_queue.put(data)
             
-            # Trigger event to notify clients of new data
-            new_data_event.set()
+            # # Trigger event to notify clients of new data
+            # new_data_event.set()
+
+            pusher_client.trigger('my-channel', 'my-event', {'message': 'New request posted'})
 
 
             sms_text = f"{current_user.name} has posted a request"

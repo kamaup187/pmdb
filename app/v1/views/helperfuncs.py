@@ -149,6 +149,17 @@ from functools import wraps
 from timeit import default_timer
 
 
+import pusher
+
+pusher_client = pusher.Pusher(
+  app_id='1896350',
+  key='5783c52679e093c8d101',
+  secret='53f6cbc0a7b991b6be00',
+  cluster='us3',
+  ssl=True
+)
+
+
 def get_leads_api(current_user):
     # from app.v1.models.datamodel import *
 

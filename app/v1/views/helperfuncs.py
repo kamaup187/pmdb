@@ -151,10 +151,18 @@ from timeit import default_timer
 
 import pusher
 
-pusher_client = pusher.Pusher(
+pusher_client_dev = pusher.Pusher(
   app_id='1896350',
   key='5783c52679e093c8d101',
   secret='53f6cbc0a7b991b6be00',
+  cluster='us3',
+  ssl=True
+)
+
+pusher_client_prod = pusher.Pusher(
+  app_id='1896352',
+  key='7cc7b73d9738db8f1c61',
+  secret='9b8a2c091b5b0c6f0699',
   cluster='us3',
   ssl=True
 )

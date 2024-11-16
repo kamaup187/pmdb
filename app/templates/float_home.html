@@ -2679,6 +2679,41 @@ if (typeof(EventSource) !== "undefined") {
     });
   </script>
 
+<script>
+    // Enable pusher logging - don't include this in production
+    // Pusher.logToConsole = true;
+
+    var pusher = new Pusher('7cc7b73d9738db8f1c61', {
+      cluster: 'us3'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+    //   alert(JSON.stringify(data));
+
+	  var elem = $("#requests-all-table")
+				renderTemplate("allTable",elem);
+
+				var t1 = $('#allTable').DataTable({
+				"dom": '<"top"f>rt<"bottom"lp><"clear">',
+				"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+				"pageLength": 100,
+				"searching":true,
+				columnDefs: [ { targets: 0, type: 'natural' } ],
+				"order": [[ 0, "asc" ]],
+				"bLengthChange": false
+			});
+
+				updateDataTable([data],t1)
+
+				$("#requests-spinner").addClass("d-none")
+
+				console.log("New request rendered:", data);
+
+
+    });
+  </script>
+
 
 
 </body>

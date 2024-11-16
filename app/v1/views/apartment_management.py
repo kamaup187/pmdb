@@ -10372,7 +10372,7 @@ class Requests(Resource):
             # # Trigger event to notify clients of new data
             # new_data_event.set()
 
-            pusher_client_dev.trigger('my-channel', 'my-event', data)
+            pusher_client_prod.trigger('my-channel', 'my-event', data)
 
 
             sms_text = f"{current_user.name} has posted a request"

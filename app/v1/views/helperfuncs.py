@@ -168,6 +168,39 @@ pusher_client_prod = pusher.Pusher(
 )
 
 
+# Your Pusher Beams credentials
+INSTANCE_ID = '53dde07a-9b39-4061-94eb-e388e0b3dae7'
+SECRET_KEY = 'D734DDE75C45F057B9BFCC22561C70C6E4B7D852EAA19098D08551BD6FEF3CE5'
+
+
+def send_push_notification(interests, title, message):
+    url = f"https://{INSTANCE_ID}.pushnotifications.pusher.com/publish_api/v1/instances/{INSTANCE_ID}/publishes"
+    
+    headers = {
+        "Authorization": f"Bearer {SECRET_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "interests": interests,  # List of interests, e.g., ['hello']
+        "web": {
+            "notification": {
+                "title": title,
+                "body": message,
+                "icon": "https://example.com/icon.png",  # Optional icon URL
+                "deep_link": "https://rentlib.com/"      # Optional link
+            }
+        }
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    if response.status_code == 200:
+        print("Notification sent successfully!")
+    else:
+        print(f"Failed to send notification: {response.status_code}, {response.text}")
+
+
+
 def get_leads_api(current_user):
     # from app.v1.models.datamodel import *
 

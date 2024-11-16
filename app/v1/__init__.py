@@ -14,6 +14,7 @@ version_one = Blueprint('api', __name__)
 api = Api(version_one)
 
 api.add_resource(StreamEvents,"/datastream")
+api.add_resource(ServiceWorker,"/service-worker.js")
 
 api.add_resource(GardenRestaurant,"/garden")
 api.add_resource(KikuyuCouncilOfElders,"/kce")

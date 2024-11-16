@@ -26,7 +26,7 @@ from cloudinary.utils import cloudinary_url
 from flask_mail import Message
 from flask_login import login_required, current_user
 from flask_restful import Resource, abort
-from flask import render_template,Response,request,flash,redirect,url_for,jsonify
+from flask import render_template,Response,request,flash,redirect,url_for,jsonify,send_from_directory,current_app
 from dateutil.relativedelta import relativedelta
 from sqlalchemy import exc
 from app.v1.models.operations import *
@@ -88,6 +88,16 @@ def event_stream():
 class StreamEvents(Resource):
     def get(self):
         return Response(event_stream(), content_type='text/event-stream')
+
+class ServiceWorker(Resource):
+    def get(self):
+        return send_from_directory(os.path.join(current_app.root_path, 'static'), 'service-worker.js')
+
+
+# import requests
+
+
+
 
 
 
@@ -218,6 +228,8 @@ class Index(Resource):
     def get(self):
 
         # import pdb; pdb.set_trace()
+
+        
 
     
         if current_user.usercode == "5023":
@@ -10227,6 +10239,9 @@ class FloatRegister(Resource):
 
 class Requests(Resource):
     def get(self):
+
+        send_push_notification(["hello"], "Requests!", "You are accessing collection requests.")
+
         target = request.args.get("target")
         
         items = []
@@ -10340,7 +10355,6 @@ class Requests(Resource):
 
 
             data = {
-                "stream":"requests",
                 "id":new_request.id,
                 "branch": f"Agriculture#001",
                 "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
@@ -10358,7 +10372,7 @@ class Requests(Resource):
             # # Trigger event to notify clients of new data
             # new_data_event.set()
 
-            pusher_client_prod.trigger('my-channel', 'my-event', {'message': 'New request posted'})
+            pusher_client_dev.trigger('my-channel', 'my-event', data)
 
 
             sms_text = f"{current_user.name} has posted a request"

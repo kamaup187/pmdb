@@ -137,23 +137,41 @@
 
 	</style>
 
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+	<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-<script>
+	<!-- <script>
+		// Enable pusher logging - don't include this in production
+		Pusher.logToConsole = true;
+		var pusher = new Pusher('7cc7b73d9738db8f1c61', {
+		cluster: 'us3'
+		});
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+		var channel = pusher.subscribe('my-channel');
+		channel.bind('my-event', function(data) {
+		alert(JSON.stringify(data));
+		});
+	</script> -->
 
-    var pusher = new Pusher('7cc7b73d9738db8f1c61', {
-      cluster: 'us3'
-    });
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
-    });
-  </script>
 
+
+
+
+
+
+	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+
+	<script>
+		const beamsClient = new PusherPushNotifications.Client({
+		  instanceId: '53dde07a-9b39-4061-94eb-e388e0b3dae7',
+		});
+	  
+		beamsClient.start()
+		  .then(() => beamsClient.addDeviceInterest('hello'))
+		  .then(() => console.log('Successfully registered and subscribed!'))
+		  .catch(console.error);
+	</script>
+	
 </head> 
 
 <body class="app">   
@@ -2625,6 +2643,41 @@ if (typeof(EventSource) !== "undefined") {
     console.log("Sorry, your browser doesn't support SSE.");
 }
 </script> -->
+
+<script>
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('5783c52679e093c8d101', {
+      cluster: 'us3'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+    //   alert(JSON.stringify(data));
+
+	  var elem = $("#requests-all-table")
+				renderTemplate("allTable",elem);
+
+				var t1 = $('#allTable').DataTable({
+				"dom": '<"top"f>rt<"bottom"lp><"clear">',
+				"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+				"pageLength": 100,
+				"searching":true,
+				columnDefs: [ { targets: 0, type: 'natural' } ],
+				"order": [[ 0, "asc" ]],
+				"bLengthChange": false
+			});
+
+				updateDataTable([data],t1)
+
+				$("#requests-spinner").addClass("d-none")
+
+				console.log("New request rendered:", data);
+
+
+    });
+  </script>
 
 
 

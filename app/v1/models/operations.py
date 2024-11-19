@@ -641,9 +641,13 @@ class AccountsOp(Account,Base):
         db.session.commit()
 
     def update_current_account(self,fb,cb):
-        if fb:
+        print("Update values ",fb,cb)
+        if isinstance(fb, float):
+            print("njege eno ",type(fb))
             self.float_balance = fb
-        if cb:
+        else:
+            print("lalalalal ",type(cb))
+        if isinstance(cb, float):
             self.cash_balance = cb
         db.session.commit()
 

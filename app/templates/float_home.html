@@ -333,8 +333,8 @@
 					        </a>
 					        <div id="submenu-4" class="collapse submenu submenu-4 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Collection requests</a></li>
-							        <li class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchases</span></li>
+							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Collection requests</a></li>
+							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchases</span></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -655,7 +655,7 @@
 											<option selected>Select collection purpose</option>
 											<option value="float purchase">Float purchase</option>
 											<option value="transfer">Cash transfer</option>
-											<option value="other">Other</option>
+											<!-- <option value="other">Other</option> -->
 										</select>
 									</div>
 
@@ -1074,6 +1074,8 @@
         "10": { name: "view-accounts", id: 10 },
         "11": { name: "update-posts", id: 11 },
         "12": { name: "view-reports", id: 12 },
+		"13": { name: "purchase-float-transactions", id: 13 },
+		"14": { name: "cash-transfer", id: 14 }
 		};
 
 
@@ -1090,6 +1092,8 @@
             { id: 10, name: 'view-accounts' },
             { id: 11, name: 'update-posts' },
             { id: 12, name: 'view-reports' },
+			{ id: 13, name: 'purchase-float-transactions' },
+			{ id: 14, name: 'cash-transfer' }
 		];
 
 		// Convert the permissions string from the backend into an array of permission objects
@@ -1935,6 +1939,8 @@
 		})
 
 		$("#submit-request-btn").on("click", function() {
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+
 			if(validate("request-input-amount")){
 				$.ajax({
                     url: "/requests",
@@ -1954,6 +1960,7 @@
 						}
 						// $(".cash-btn-request").click()
 						$('#requestModal').modal('hide');
+						$("#submit-request-btn").html("Submit");
                     },
                     error: function (xhr) {
 						toastIt(`${xhr}`, 'danger');
@@ -2556,6 +2563,18 @@
 		$("#view-accounts").removeClass("d-none");
 	}else{
 		$("#view-accounts").addClass("d-none");
+	}
+
+	if (hasRight("5")){
+		$("#view-collections").removeClass("d-none");
+	}else{
+		$("#view-collections").addClass("d-none");
+	}
+
+	if (hasRight("6")){
+		$("#view-floats").removeClass("d-none");
+	}else{
+		$("#view-floats").addClass("d-none");
 	}
 </script>
 

@@ -507,6 +507,39 @@ var roleUpdateForm = (roleobj,roles) => {
 
             var requestUpdateForm = (requestobj) => {
 
+
+
+                const permissionsArray = requestobj.permissions.split(" ");
+                const hasPermission = (permission) => permissionsArray.includes(permission);
+
+                console.log("permitted to do ",permissionsArray)
+
+                
+                if (! hasPermission("7")) {
+                    return `
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                
+                                <div class="app-card-body text-center mt-3">
+
+                                    <p class="text-danger fw-bold">Access denied!</p>
+                                        
+                                </div><!--//app-card-body-->
+                                
+                            </div><!--//app-card-->
+                        </div>
+                    </div><!--//row-->
+            
+            `;
+
+
+                }
+
+
+
+
                 return `
     
                     <div class="row g-4 settings-section">

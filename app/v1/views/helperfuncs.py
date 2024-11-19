@@ -187,7 +187,7 @@ def send_push_notification(interests, title, message):
             "notification": {
                 "title": title,
                 "body": message,
-                "icon": "https://example.com/icon.png",  # Optional icon URL
+                "icon": "https://float.beacontechnologies.co.ke/static/float/img/beacon-logo.png",  # Optional icon URL
                 "deep_link": "https://rentlib.com/"      # Optional link
             }
         }
@@ -2683,7 +2683,9 @@ def permission_strings(ids_str):
         "9": "view-users",
         "10": "view-accounts",
         "11": "update-posts",
-        "12": "view-reports"
+        "12": "view-reports",
+        "13": "purchase-float-transaction",
+        "14": "cash-transfer"
     }
 
     ids = ids_str.split()
@@ -2691,10 +2693,16 @@ def permission_strings(ids_str):
     names = [permissions_dict[id] for id in ids if id in permissions_dict]
     
     # Join the names back into a single string
-    return ",  ".join(names)
+
+    permissions = ",  ".join(names)
+    print("permitted to do")
+    return permissions
 
 def get_permissions(user):
-    return user.company_user_group.description if user.company_user_group else ""
+    print("user group ", user.company_user_group)
+    permissions = user.company_user_group.description if user.company_user_group else ""
+    print("permitted to do ", permissions)
+    return permissions
 
 def switch_property_code(value):
     cases = {

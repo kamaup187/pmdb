@@ -10024,8 +10024,8 @@ class FloatHome(Resource):
             return redirect(url_for('api.floatlogin'))
 
         counties = CountyOp.fetch_all_counties()
-        return "updates ongoing"
-        # return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user))
+        # return "updates ongoing"
+        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user))
 
 class KceReport(Resource):
     @login_required
@@ -10234,14 +10234,14 @@ class FloatRegister(Resource):
 
         except Exception as e:
             print("error",e)
-            return "failed to register"
+            return f"Error :{e}"
 
         return "success"
 
 class Requests(Resource):
     def get(self):
 
-        send_push_notification(["hello"], "Requests!", "You are accessing collection requests.")
+        # send_push_notification(["hello"], "Requests!", "You are accessing collection requests.")
 
         target = request.args.get("target")
         
@@ -10264,6 +10264,7 @@ class Requests(Resource):
                 "purpose":"Float purchase" if "float" in request_obj.purpose else "Cash transfer",
                 "status": status,
                 "by":request_obj.created_by.name,
+                "permissions": get_permissions(current_user)
             }
 
             return acc_dict
@@ -10274,6 +10275,8 @@ class Requests(Resource):
             for user in users:
                 if user.collection_requests:
                     for req in user.collection_requests:
+                        # CollectionRequestOp.delete(req)
+                        # continue
 
                         if request.args.get("target") == "pending":
                             if req.status != "pending":
@@ -10317,32 +10320,43 @@ class Requests(Resource):
                 if request_obj.purpose == "float purchase":
 
                     current_user_account_obj = current_user.account
-                    new_amount = current_user_account_obj.float_balance + request_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
-
-
-                    post_user_account_obj = request_obj.created_by.account
-                    new_amount = post_user_account_obj.float_balance - request_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
-                else:
-
-                    current_user_account_obj = current_user.account
                     new_amount = current_user_account_obj.cash_balance + request_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
+                    AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
 
 
                     post_user_account_obj = request_obj.created_by.account
                     new_amount = post_user_account_obj.cash_balance - request_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
+                    AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
+                else:
+
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.float_balance + request_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
+
+
+                    post_user_account_obj = request_obj.created_by.account
+                    new_amount = post_user_account_obj.float_balance - request_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,new_amount,"null")
 
                 return "success"
 
             amount = request.form.get('amount')
             purpose = request.form.get('purpose')
             valid_amount = validate_input(amount)
+
+            if purpose == "float purchase":
+                if current_user.account.cash_balance < valid_amount:
+                    return "Error, Insufficient funds"
+            else:
+                if current_user.account.float_balance < valid_amount:
+                    return "Error, Insufficient funds"
+
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
 
+            msg = f"{current_user.name} has posted a collection request"
+
+            send_push_notification(["hello"], "Collection Request posted!", msg)
 
             # socketio.emit('new_request', {
             #                 "id":new_request.id,
@@ -10384,7 +10398,7 @@ class Requests(Resource):
     
         except Exception as e:
             print("error",e)
-            return "failed to add"
+            return f"Error :{e}"
     
 class Floats(Resource):
     def get(self):
@@ -10423,6 +10437,8 @@ class Floats(Resource):
                 if user.posted_transactions:
                     for trans in user.posted_transactions:
 
+                        # TransactionDataOp.delete(trans)
+                        # continue
 
                         if request.args.get("target") == "pending":
                             if trans.status != "pending":
@@ -10457,46 +10473,73 @@ class Floats(Resource):
             target = request.form.get('target')
 
             if target == "accept":
-                trans_id = request.form.get('id')
-                trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
-                TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
+                return "Errro, transaction not accepted"
+            
+                # trans_id = request.form.get('id')
+                # trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+                # TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
 
-                if trans_obj.purpose == "float purchased":
-                    current_user_account_obj = current_user.account
-                    new_amount = current_user_account_obj.float_balance + trans_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
-
-
-                    post_user_account_obj = trans_obj.created_by.account
-                    new_amount = post_user_account_obj.float_balance - trans_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
-                else:
-                    current_user_account_obj = current_user.account
-                    new_amount = current_user_account_obj.cash_balance + trans_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
+                # if trans_obj.purpose == "float purchased":
+                #     current_user_account_obj = current_user.account
+                #     new_amount = current_user_account_obj.float_balance + trans_obj.amount
+                #     AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
 
 
-                    post_user_account_obj = trans_obj.created_by.account
-                    new_amount = post_user_account_obj.cash_balance - trans_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
+                #     post_user_account_obj = trans_obj.created_by.account
+                #     new_amount = post_user_account_obj.float_balance - trans_obj.amount
+                #     AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
+                # else:
+                #     current_user_account_obj = current_user.account
+                #     new_amount = current_user_account_obj.cash_balance + trans_obj.amount
+                #     AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
 
 
-                return "success"
+                #     post_user_account_obj = trans_obj.created_by.account
+                #     new_amount = post_user_account_obj.cash_balance - trans_obj.amount
+                #     AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
+
+
+                # return "success"
 
             amount = request.form.get('amount')
             valid_amount = validate_input(amount)
             purpose = request.form.get('purpose')
+
+            if purpose == "float purchase":
+                if current_user.account.cash_balance < valid_amount:
+                    return "Error, Insufficient funds"
+            else:
+                if current_user.account.float_balance < valid_amount:
+                    return "Error, Insufficient funds"
+                
             new_transaction = TransactionDataOp(valid_amount,purpose,current_user.id)
             new_transaction.save()
-            sms_text = f"{current_user.name} has approved a transaction"
-            phonenum = sms_phone_number_formatter("0704448189")
-            sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
+
+            if purpose == "float purchased":
+
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.cash_balance - new_transaction.amount
+                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
+
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.float_balance + new_transaction.amount
+                AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
+
+            else:
+
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.cash_balance - new_transaction.amount
+                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
+
+            # sms_text = f"{current_user.name} has approved a transaction"
+            # phonenum = sms_phone_number_formatter("0704448189")
+            # sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
 
             return "success"
     
         except Exception as e:
             print("error",e)
-            return "failed to add"
+            return f"Error :{e}"
     
 
 class Accounts(Resource):
@@ -10506,7 +10549,10 @@ class Accounts(Resource):
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = com.users
             items = []
+            allowed_groups = [5001,5002,5003,5004,5005,5006]
             for user in users:
+                if not user.company_user_group.id in allowed_groups:
+                    continue
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,
@@ -10579,9 +10625,8 @@ class Accounts(Resource):
                 new_float_balance = request.form.get("fb")
                 new_cash_balance = request.form.get("cb")
 
-                valid_float_balance = validate_input(new_float_balance)
-                valid_cash_balance = validate_input(new_cash_balance)
-                AccountsOp.update_current_account(acc_obj,valid_float_balance,valid_cash_balance)
+                valid_inputs = validate_float_inputs(new_float_balance,new_cash_balance)
+                AccountsOp.update_current_account(acc_obj,valid_inputs[0],valid_inputs[1])
                 return "success"
             
             account_id = request.form.get('id')
@@ -10593,7 +10638,7 @@ class Accounts(Resource):
         
         except Exception as e:
             print("error" + str(e))
-            return "error"
+            return f"Error :{e}"
         
 
 class RegistrationAccounts(Resource):

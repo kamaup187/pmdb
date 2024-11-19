@@ -200,6 +200,23 @@ def send_push_notification(interests, title, message):
         print(f"Failed to send notification: {response.status_code}, {response.text}")
 
 
+def format_eat_datetime(date_obj):
+    from datetime import datetime, timedelta
+    """
+    Converts a datetime object to East African Time (UTC+3) and formats it.
+
+    Args:
+        date_obj (datetime): The original datetime object.
+
+    Returns:
+        str: The formatted date string in the format "dd/Mon/yy HH:MM".
+    """
+    # Convert to East African Time (UTC+3)
+    eat_timezone = date_obj + timedelta(hours=3)
+
+    # Format the datetime object
+    formatted_date = f'{eat_timezone.strftime("%d/%b/%y")} {eat_timezone.strftime("%H:%M")}'
+    return formatted_date
 
 def get_leads_api(current_user):
     # from app.v1.models.datamodel import *

@@ -10259,7 +10259,7 @@ class Requests(Resource):
             acc_dict = {
                 "id":request_obj.id,
                 "branch": f"Agriculture#001",
-                "date":  f'{request_obj.acceptedon.strftime("%d/%b/%y")} {request_obj.acceptedon.strftime("%H:%M")}',
+                "date":  format_eat_datetime(request_obj.acceptedon),
                 "amount": request_obj.amount,
                 "purpose":"Float purchase" if "float" in request_obj.purpose else "Cash transfer",
                 "status": status,
@@ -10294,7 +10294,7 @@ class Requests(Resource):
                         acc_dict = {
                             "id":req.id,
                             "branch": f"Agriculture#001",
-                            "date": f'{req.acceptedon.strftime("%d/%b/%y")} {req.acceptedon.strftime("%H:%M")}',
+                            "date": format_eat_datetime(req.acceptedon),
                             "amount": req.amount,
                             "status": status,
                             "posted_by":req.created_by.name,
@@ -10372,7 +10372,7 @@ class Requests(Resource):
             data = {
                 "id":new_request.id,
                 "branch": f"Agriculture#001",
-                "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
+                "date": format_eat_datetime(new_request.acceptedon),
                 "amount": new_request.amount,
                 "status": f'<span class="badge bg-warning">Pending</span>',
                 "posted_by":new_request.created_by.name,
@@ -10421,7 +10421,7 @@ class Floats(Resource):
             acc_dict = {
                 "id":trans_obj.id,
                 "branch": f"Agriculture#001",
-                "date": f'{trans_obj.acceptedon.strftime("%d/%b/%y")} {trans_obj.acceptedon.strftime("%H:%M")}',
+                "date": format_eat_datetime(trans_obj.acceptedon),
                 "amount": trans_obj.amount,
                 "purpose":"Float purchased" if "float" in trans_obj.purpose else "Cash transferred",
                 "status": status,
@@ -10456,7 +10456,7 @@ class Floats(Resource):
                         acc_dict = {
                             "id":trans.id,
                             "branch": f"Agriculture#001",
-                            "date": f'{trans.acceptedon.strftime("%d/%b/%y")} {trans.acceptedon.strftime("%H:%M")}',
+                            "date": format_eat_datetime(trans.acceptedon),
                             "amount": trans.amount,
                             "status": status,
                             "postedby":trans.created_by.name,

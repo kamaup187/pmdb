@@ -420,7 +420,7 @@ var roleUpdateForm = (roleobj,roles) => {
                 const hasPermission = (permission) => permissionsArray.includes(permission);
 
                 
-                if (! hasPermission("1")) {
+                if (! hasPermission("6")) {
                     return `
     
                     <div class="row">
@@ -511,11 +511,8 @@ var roleUpdateForm = (roleobj,roles) => {
 
                 const permissionsArray = requestobj.permissions.split(" ");
                 const hasPermission = (permission) => permissionsArray.includes(permission);
-
-                console.log("permitted to do ",permissionsArray)
-
                 
-                if (! hasPermission("7")) {
+                if (! hasPermission("3")) {
                     return `
     
                     <div class="row">

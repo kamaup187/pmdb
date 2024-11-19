@@ -2689,20 +2689,14 @@ def string_formatter_alt(item):
 
 def permission_strings(ids_str):
     permissions_dict = {
-        "1": "allocate-cash-float",
-        "2": "add-update-user",
-        "3": "adjust-limit",
-        "4": "add-update-role",
-        "5": "post-cash-float-request",
-        "6": "post-cash-float-transaction",
-        "7": "accept-cash-float-request",
-        "8": "accept-cash-float-transaction",
-        "9": "view-users",
-        "10": "view-accounts",
-        "11": "update-posts",
-        "12": "view-reports",
-        "13": "purchase-float-transaction",
-        "14": "cash-transfer"
+        "1": "post collection",
+        "2": "post purchase",
+        "3": "accept collection",
+        "4": "accept purchase",
+        "5": "post transfer",
+        "6": "manage accounts",
+        "7": "manage users",
+        "8": "view reports",
     }
 
     ids = ids_str.split()

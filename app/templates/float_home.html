@@ -1061,39 +1061,27 @@
 
 	<script>
 		// Permission codes and names mapping
-		const permissionMap = {
-		"1": { name: "allocate-cash/float", id: 1 },
-		"2": { name: "add-update-user", id: 2 },
-		"3": { name: "adjust-limit", id: 3 },
-		"4": { name: "add-update-role", id: 4 },
-        "5": { name: "post-cash-float-request", id: 5 },
-        "6": { name: "post-cash-float-transaction", id: 6 },
-        "7": { name: "accept-cash-float-request", id: 7 },
-        "8": { name: "accept-cash-float-transaction", id: 8 },
-		"9": { name: "view-users", id: 9 },
-        "10": { name: "view-accounts", id: 10 },
-        "11": { name: "update-posts", id: 11 },
-        "12": { name: "view-reports", id: 12 },
-		"13": { name: "purchase-float-transactions", id: 13 },
-		"14": { name: "cash-transfer", id: 14 }
+		let permissionMap = {
+		"1": { name: "post collection", id: 1 },
+		"2": { name: "post purchase", id: 2 },
+		"3": { name: "accept collection", id: 3 },
+		"4": { name: "accept purchase", id: 4 },
+        "5": { name: "post transfer", id: 5 },
+        "6": { name: "manage accounts", id: 6 },
+        "7": { name: "manage users", id: 7 },
+        "8": { name: "view reports", id: 8 },
 		};
 
 
 		let permissionsArray2 = [
-			{ id: 1, name: 'allocate-cash/float' },
-			{ id: 2, name: 'add-update-user' },
-			{ id: 3, name: 'adjust-limit' },
-			{ id: 4, name: 'add-update-role' },
-			{ id: 5, name: 'post-cash-float-request' },
-			{ id: 6, name: 'post-cash-float-transaction' },
-			{ id: 7, name: 'accept-cash-float-request' },
-			{ id: 8, name: 'accept-cash-float-transaction' },
-			{ id: 9, name: 'view-users' },
-            { id: 10, name: 'view-accounts' },
-            { id: 11, name: 'update-posts' },
-            { id: 12, name: 'view-reports' },
-			{ id: 13, name: 'purchase-float-transactions' },
-			{ id: 14, name: 'cash-transfer' }
+			{ id: 1, name: 'post collection' },
+			{ id: 2, name: 'post purchase' },
+			{ id: 3, name: 'accept collection' },
+			{ id: 4, name: 'accept purchase' },
+			{ id: 5, name: 'post transfer' },
+			{ id: 6, name: 'manage accounts' },
+			{ id: 7, name: 'manage users' },
+			{ id: 8, name: 'view reports' }
 		];
 
 		// Convert the permissions string from the backend into an array of permission objects
@@ -2553,25 +2541,25 @@
 	const rightsArray = rightSpan.split(" ");
 	const hasRight = (permission) => rightsArray.includes(permission);
 
-	if(hasRight("9")){
+	if(hasRight("7")){
 		$("#view-users").removeClass("d-none");
 	}else{
 		$("#view-users").addClass("d-none");
 	}
 
-	if (hasRight("10")){
+	if (hasRight("6")){
 		$("#view-accounts").removeClass("d-none");
 	}else{
 		$("#view-accounts").addClass("d-none");
 	}
 
-	if (hasRight("5")){
+	if (hasRight("1") || hasRight("3")){
 		$("#view-collections").removeClass("d-none");
 	}else{
 		$("#view-collections").addClass("d-none");
 	}
 
-	if (hasRight("6")){
+	if (hasRight("2")){
 		$("#view-floats").removeClass("d-none");
 	}else{
 		$("#view-floats").addClass("d-none");

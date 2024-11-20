@@ -23,6 +23,7 @@ function updateDataTable(data,table) {
 
         table.row.add([
             item.id,             // PNo
+            '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
             item.branch,           // Name
             item.date,        // Region
             item.amount,            // Phone
@@ -31,7 +32,6 @@ function updateDataTable(data,table) {
             item.collectedby,       // Branch
 
             // Branch
-            '<button class="btn btn-light btn-sm update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'  // Remove button
         ]);
     });
 
@@ -45,7 +45,7 @@ function updateRoleDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.id,             // PNo
-            '<button class="btn btn-light btn-sm update-role-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRoleModal">View</button>',  // Remove button
+            '<button class="btn btn-success text-white update-role-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRoleModal">View</button>',  // Remove button
             item.name,           // Name
             item.desc,        // Region
         ]);
@@ -58,13 +58,13 @@ function updateFloatDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.id,
+            '<button class="btn btn-success text-white update-float-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>',  // Remove button
             item.branch,             // PNo
             item.date,           // Name
             item.amount,        // Region
             item.status,
             item.postedby,
             item.collectedby,
-            '<button class="btn btn-light btn-sm update-float-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>'  // Remove button
         ]);
     });
     table.draw();
@@ -75,7 +75,7 @@ function updateUserDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.id,             // PNo
-            '<button class="btn btn-light btn-sm update-user-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateUserModal">View</button>',  // Remove button
+            '<button class="btn btn-success text-white update-user-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateUserModal">View</button>',  // Remove button
             item.code,           // Name
             item.name,        // Region
             item.branch,
@@ -92,7 +92,7 @@ function updateAccountDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.name,             // PNo
-            '<button class="btn btn-light btn-sm update-account-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateAccountModal">View</button>',  // Remove button
+            '<button class="btn btn-success text-white update-account-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateAccountModal">View</button>',  // Remove button
             item.fb,           // Name
             item.cb,        // Region
             item.limit,
@@ -110,13 +110,13 @@ var dataTableTemplate = `
     <thead class="custom-header">
         <tr>
             <th class="fw-bold">Id</th>
+            <th class="fw-bold">Action</th>
             <th class="fw-bold">Branch</th>
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Amount</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">PostedBy</th>
             <th class="fw-bold">CollectedBy</th>
-            <th class="fw-bold">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -130,13 +130,13 @@ var floatDataTableTemplate = `
     <thead class="custom-header">
         <tr>
             <th class="fw-bold">Id</th>
+            <th class="fw-bold">Action</th>
             <th class="fw-bold">Branch</th>
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Amount</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">PostedBy</th>
             <th class="fw-bold">CollectedBy</th>
-            <th class="fw-bold">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -456,8 +456,8 @@ var roleUpdateForm = (roleobj,roles) => {
                             <div class="mb-2 mt-3"><strong>Name:</strong>${accountobj.name}</div>
                             <div class="mb-2"><strong>Status:</strong> <span class="badge bg-success">Active</span></div>
                             <div class="mb-2"><strong>Current limit:</strong> ${accountobj.limit}</div>
-                            <div class="mb-2"><strong>Available float balance:</strong> ${accountobj.fb}</div>
-                            <div class="mb-2"><strong>Available cash balance:</strong> ${accountobj.cb}</div>
+                            <div class="mb-2"><strong>Available float:</strong> ${accountobj.fb}</div>
+                            <div class="mb-2"><strong>Available cash:</strong> ${accountobj.cb}</div>
                         </div>
                         <div class="col-12 col-md-8">
                             <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
@@ -479,12 +479,12 @@ var roleUpdateForm = (roleobj,roles) => {
     
                                             <div class="col-6 mb-3">
                                                 <label for="account-update-limit" class="form-label">Float amount</label>
-                                                <input type="text" class="form-control" id="account-allocate-float" required>
+                                                <input type="text" class="form-control" id="account-allocate-float" value="${accountobj.fb}" required disabled>
                                             </div>
 
                                             <div class="col-6 mb-3">
                                                 <label for="account-update-limit" class="form-label">Cash amount</label>
-                                                <input type="text" class="form-control" id="account-allocate-cash" required>
+                                                <input type="text" class="form-control" id="account-allocate-cash" value="${accountobj.cb}" required>
                                             </div>
     
                                         </div>
@@ -507,6 +507,26 @@ var roleUpdateForm = (roleobj,roles) => {
 
             var requestUpdateForm = (requestobj) => {
 
+                if (requestobj.rawstatus == "pending"){
+                    //pass
+                }else{
+                    return `
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                
+                                <div class="app-card-body text-center mt-3">
+
+                                    <p class="text-success fw-bold">This request has already been collected</p>
+                                        
+                                </div><!--//app-card-body-->
+                                
+                            </div><!--//app-card-->
+                        </div>
+                    </div><!--//row-->
+                    `
+                }
+
 
 
                 const permissionsArray = requestobj.permissions.split(" ");
@@ -521,7 +541,7 @@ var roleUpdateForm = (roleobj,roles) => {
                                 
                                 <div class="app-card-body text-center mt-3">
 
-                                    <p class="text-danger fw-bold">Access denied!</p>
+                                    <p class="text-danger fw-bold">You are not allowed to accept the request</p>
                                         
                                 </div><!--//app-card-body-->
                                 
@@ -577,6 +597,52 @@ var roleUpdateForm = (roleobj,roles) => {
 
 
     var floatUpdateForm = (transobj) => {
+
+                    if (transobj.rawstatus == "pending"){
+                        //pass
+                    }else{
+                        return `
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                    
+                                    <div class="app-card-body text-center mt-3">
+
+                                        <p class="text-success fw-bold">This transaction has already been approved</p>
+                                            
+                                    </div><!--//app-card-body-->
+                                    
+                                </div><!--//app-card-->
+                            </div>
+                        </div><!--//row-->
+                        `
+                    }
+
+
+                    const permissionsArray = transobj.permissions.split(" ");
+                    const hasPermission = (permission) => permissionsArray.includes(permission);
+                    
+                    if (! hasPermission("4")) {
+                        return `
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                    
+                                    <div class="app-card-body text-center mt-3">
+
+                                        <p class="text-danger fw-bold">You are not allowed to approve the transaction</p>
+                                            
+                                    </div><!--//app-card-body-->
+                                    
+                                </div><!--//app-card-->
+                            </div>
+                        </div><!--//row-->
+                
+                `;
+
+
+                    }
 
                     return `
         

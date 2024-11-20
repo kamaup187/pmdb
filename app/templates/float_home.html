@@ -292,8 +292,8 @@
 					        </a>
 					        <div id="submenu-1" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-									<li class="submenu-item role-btn"><a class="submenu-link button" type="button">User roles & Permissions</a></li>
-							        <li class="submenu-item user-btn"><a class="submenu-link button" type="button">User management</a></li>
+									<li class="submenu-item user-btn"><a class="submenu-link button" type="button">Users</a></li>
+							        <li class="submenu-item role-btn"><a class="submenu-link button" type="button">Rights</a></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -333,8 +333,8 @@
 					        </a>
 					        <div id="submenu-4" class="collapse submenu submenu-4 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Collection requests</a></li>
-							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchases</span></li>
+							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Cash collection</a></li>
+							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchase</span></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -627,13 +627,12 @@
 
                 <div class="row g-4 settings-section">
 	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Collection request details</h3>
-		                <div class="section-intro">Create collection request</div>
+		                <h3 class="section-title">Current account</h3>
+		                <div class="section-introo account-balance"></div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
-						    
-						    <div class="app-card-body">
+						    <div id="request-body" class="app-card-body">
 							    <form class="settings-form">
 								    <div class="mb-3">
 									    <label for="request-input-amount" class="form-label">Cash amount<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Cash amount"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -644,22 +643,21 @@
 									    <input type="text" class="form-control" id="request-input-amount" placeholder="e.g 150,000.0" required>
 									</div>
 
-								    <div class="mb-3">
-									    <label for="request-input-desc" class="form-label">Description</label>
-									    <textarea type="text" class="form-control" id="request-input-desc" placeholder="Write a brief description" rows="50"></textarea>
-									</div>
 
 									<div class="mb-3">
 										<label for="request-input-type" class="form-label">Collection purpose</label>
 										<select class="form-select" id="request-input-type">
-											<option selected>Select collection purpose</option>
-											<option value="float purchase">Float purchase</option>
+											<!-- <option selected>Select collection purpose</option> -->
+											<option selected value="float purchase">Float purchase</option>
 											<option value="transfer">Cash transfer</option>
 											<!-- <option value="other">Other</option> -->
 										</select>
 									</div>
 
-
+								    <div class="mb-3">
+									    <label for="request-input-desc" class="form-label">Description (optional)</label>
+									    <textarea type="text" class="form-control" id="request-input-desc" placeholder="Write a brief description" rows="50"></textarea>
+									</div>
 
 									<button type="button" id="submit-request-btn" class="btn app-btn-primary" >Submit</button>
 							    </form>
@@ -690,13 +688,13 @@
 
                 <div class="row g-4 settings-section">
 	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Transaction details</h3>
-		                <div class="section-intro">Post a transaction</div>
+		                <h3 class="section-title">Current account</h3>
+		                <div class="section-introo account-balance"></div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
 						    
-						    <div class="app-card-body">
+						    <div id="float-body" class="app-card-body">
 							    <form class="settings-form">
 								    <div class="mb-3">
 									    <label for="request-input-amount" class="form-label">Cash amount<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Cash amount"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -707,22 +705,19 @@
 									    <input type="text" class="form-control" id="float-input-amount" placeholder="e.g 150,000.0" required>
 									</div>
 
-								    <div class="mb-3">
-									    <label for="request-input-desc" class="form-label">Description</label>
-									    <textarea type="text" class="form-control" id="float-input-desc" placeholder="Write a brief description" rows="50"></textarea>
-									</div>
 
 									<div class="mb-3">
 										<label for="request-input-type" class="form-label">Transaction purpose</label>
 										<select class="form-select" id="float-input-type">
-											<option selected>Select transaction purpose</option>
-											<option value="float purchased">Float purchase</option>
+											<option selected value="float purchased">Float purchase</option>
 											<option value="transfer">Cash transfer</option>
-											<option value="other">Other</option>
 										</select>
 									</div>
 
-
+								    <div class="mb-3">
+									    <label for="request-input-desc" class="form-label">Description (optional)</label>
+									    <textarea type="text" class="form-control" id="float-input-desc" placeholder="Write a brief description" rows="50"></textarea>
+									</div>
 
 									<button type="button" id="submit-float-btn" class="btn app-btn-primary" >Submit</button>
 							    </form>
@@ -1123,6 +1118,36 @@
 		}
 
 	</script>
+
+<script>
+	var rightSpan = $("#rights-span").text()
+	const rightsArray = rightSpan.split(" ");
+	const hasRight = (permission) => rightsArray.includes(permission);
+
+	if(hasRight("7")){
+		$("#view-users").removeClass("d-none");
+	}else{
+		$("#view-users").addClass("d-none");
+	}
+
+	if (hasRight("6")){
+		$("#view-accounts").removeClass("d-none");
+	}else{
+		$("#view-accounts").addClass("d-none");
+	}
+
+	if (hasRight("1") || hasRight("3")){
+		$("#view-collections").removeClass("d-none");
+	}else{
+		$("#view-collections").addClass("d-none");
+	}
+
+	if (hasRight("2")){
+		$("#view-floats").removeClass("d-none");
+	}else{
+		$("#view-floats").addClass("d-none");
+	}
+</script>
 
 	<script>
 
@@ -1926,6 +1951,87 @@
 			}
 		})
 
+		$("#requestModal").on("shown.bs.modal",function(){
+
+
+			$(".account-balance").html(
+				`Retrieving balance...
+							<div class="d-flex justify-content-center">
+								<div class="spinner-border text-success m-2" role="status">
+									<span class="visually-hidden">Loading...</span>
+								</div>
+							</div>`
+			)
+
+
+			if (hasRight("1")){
+				//pass
+			}else{
+					$("#request-body").html(
+						'<p class="text-danger fw-bold">You are not allowed to post a collection request.</p>'
+					)
+				}
+
+			const input = $(this).find('input');
+			if (input.length) input.focus();
+
+			$.ajax({
+				url: "/accounts",
+				type: "get",
+				data: {target:"current account"},
+				success: function(response){
+					let accountTemplate = `
+					    <div class="mb-2"><strong>Current limit:</strong> ${response[0].limit}</div>
+                        <div class="mb-2"><strong>Available float:</strong> ${response[0].fb}</div>
+                        <div class="mb-2"><strong>Available cash:</strong> ${response[0].cb}</div>
+					`
+					$(".account-balance").html(accountTemplate)
+
+				}
+			})
+		})
+
+		$("#floatModal").on("shown.bs.modal",function(){
+
+
+			$(".account-balance").html(
+				`Retrieving balance...
+							<div class="d-flex justify-content-center">
+								<div class="spinner-border text-success m-2" role="status">
+									<span class="visually-hidden">Loading...</span>
+								</div>
+						</div>`
+			)
+
+
+			if (hasRight("2")){
+				//pass
+			}else{
+					$("#float-body").html(
+						'<p class="text-danger fw-bold">You are not allowed to purchase float or post cash transfer.</p>'
+					)
+				}
+
+			const input = $(this).find('input');
+			if (input.length) input.focus();
+
+			$.ajax({
+				url: "/accounts",
+				type: "get",
+				data: {target:"current account"},
+				success: function(response){
+					let accountTemplate = `
+						<div class="mb-2"><strong>Current limit:</strong> ${response[0].limit}</div>
+						<div class="mb-2"><strong>Available float:</strong> ${response[0].fb}</div>
+						<div class="mb-2"><strong>Available cash:</strong> ${response[0].cb}</div>
+					`
+					$(".account-balance").html(accountTemplate)
+
+				}
+			})
+		})
+
+
 		$("#submit-request-btn").on("click", function() {
 			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
 
@@ -2421,7 +2527,7 @@
 
 
 		$(document).on("click", "#update-float-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
 
 			$.ajax({
 				url: '/floats',
@@ -2536,35 +2642,7 @@
 		$("#adjust-balances").removeClass("d-none");
 	})
 </script>
-<script>
-	var rightSpan = $("#rights-span").text()
-	const rightsArray = rightSpan.split(" ");
-	const hasRight = (permission) => rightsArray.includes(permission);
 
-	if(hasRight("7")){
-		$("#view-users").removeClass("d-none");
-	}else{
-		$("#view-users").addClass("d-none");
-	}
-
-	if (hasRight("6")){
-		$("#view-accounts").removeClass("d-none");
-	}else{
-		$("#view-accounts").addClass("d-none");
-	}
-
-	if (hasRight("1") || hasRight("3")){
-		$("#view-collections").removeClass("d-none");
-	}else{
-		$("#view-collections").addClass("d-none");
-	}
-
-	if (hasRight("2")){
-		$("#view-floats").removeClass("d-none");
-	}else{
-		$("#view-floats").addClass("d-none");
-	}
-</script>
 
 
 <!-- <script>

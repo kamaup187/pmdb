@@ -188,7 +188,7 @@ def send_push_notification(interests, title, message):
                 "title": title,
                 "body": message,
                 "icon": "https://float.beacontechnologies.co.ke/static/float/img/beacon-logo.png",  # Optional icon URL
-                "deep_link": "https://rentlib.com/"      # Optional link
+                "deep_link": "https://float.beacontechnologies.co.ke/float/dashboard"      # Optional link
             }
         }
     }

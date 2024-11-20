@@ -345,10 +345,8 @@ class CompanyUserGroupOp(CompanyUserGroup,Base):
         return CompanyUserGroup.query.filter_by(id=id).first()
     
     def update_access(self,name=None,access=None):
-        if name:
-            self.name = name
-        if access:
-            self.description = access
+        self.name = name
+        self.description = access
         db.session.commit()
 
     def view_users(self):

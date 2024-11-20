@@ -10263,6 +10263,7 @@ class Requests(Resource):
                 "amount": request_obj.amount,
                 "purpose":"Float purchase" if "float" in request_obj.purpose else "Cash transfer",
                 "status": status,
+                "rawstatus": request_obj.status,
                 "by":request_obj.created_by.name,
                 "permissions": get_permissions(current_user)
             }
@@ -10317,26 +10318,17 @@ class Requests(Resource):
                 CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
 
-                if request_obj.purpose == "float purchase":
+                # if request_obj.purpose == "float purchase":
 
-                    current_user_account_obj = current_user.account
-                    new_amount = current_user_account_obj.cash_balance + request_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
-
-
-                    post_user_account_obj = request_obj.created_by.account
-                    new_amount = post_user_account_obj.cash_balance - request_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
-                else:
-
-                    current_user_account_obj = current_user.account
-                    new_amount = current_user_account_obj.float_balance + request_obj.amount
-                    AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
+                current_user_account_obj = current_user.account
+                new_amount = current_user_account_obj.cash_balance + request_obj.amount
+                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
 
 
-                    post_user_account_obj = request_obj.created_by.account
-                    new_amount = post_user_account_obj.float_balance - request_obj.amount
-                    AccountsOp.update_current_account(post_user_account_obj,new_amount,"null")
+                post_user_account_obj = request_obj.created_by.account
+                new_amount = post_user_account_obj.cash_balance - request_obj.amount
+                AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
+
 
                 return "success"
 
@@ -10356,18 +10348,7 @@ class Requests(Resource):
 
             msg = f"{current_user.name} has posted a collection request"
 
-            send_push_notification(["hello"], "Collection Request posted!", msg)
-
-            # socketio.emit('new_request', {
-            #                 "id":new_request.id,
-            #                 "branch": f"Agriculture#001",
-            #                 "date": f'{new_request.acceptedon.strftime("%d/%b/%y")} {new_request.acceptedon.strftime("%H:%M")}',
-            #                 "amount": new_request.amount,
-            #                 "status": f'<span class="badge bg-warning">Pending</span>',
-            #                 "posted_by":new_request.created_by.name,
-            #                 "collectedby":new_request.received_by.name if new_request.received_by else "-",
-            # }, broadcast=True)
-
+            send_push_notification(["hello"], "Cash Collection Request!", msg)
 
             data = {
                 "id":new_request.id,
@@ -10378,14 +10359,6 @@ class Requests(Resource):
                 "posted_by":new_request.created_by.name,
                 "collectedby":new_request.received_by.name if new_request.received_by else "-",
             }
-
-            # for client_id in connected_clients:
-            #     socketio.emit('new_request', [data], to=client_id)
-
-            # data_queue.put(data)
-            
-            # # Trigger event to notify clients of new data
-            # new_data_event.set()
 
             pusher_client_prod.trigger('my-channel', 'my-event', data)
 
@@ -10415,9 +10388,6 @@ class Floats(Resource):
             if trans_obj.status == "pending":
                 status = f'<span class="badge bg-warning">Pending</span>'
 
-
-            print("maaaaaiiiii",trans_obj.purpose)
-
             acc_dict = {
                 "id":trans_obj.id,
                 "branch": f"Agriculture#001",
@@ -10425,7 +10395,9 @@ class Floats(Resource):
                 "amount": trans_obj.amount,
                 "purpose":"Float purchased" if "float" in trans_obj.purpose else "Cash transferred",
                 "status": status,
+                "rawstatus": trans_obj.status,
                 "by":trans_obj.created_by.name,
+                "permissions": get_permissions(current_user)
             }
 
             return acc_dict
@@ -10473,33 +10445,26 @@ class Floats(Resource):
             target = request.form.get('target')
 
             if target == "accept":
-                return "Errro, transaction not accepted"
-            
-                # trans_id = request.form.get('id')
-                # trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
-                # TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
-
-                # if trans_obj.purpose == "float purchased":
-                #     current_user_account_obj = current_user.account
-                #     new_amount = current_user_account_obj.float_balance + trans_obj.amount
-                #     AccountsOp.update_current_account(current_user_account_obj,new_amount,0.0)
+                trans_id = request.form.get('id')
+                trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+                TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
 
 
-                #     post_user_account_obj = trans_obj.created_by.account
-                #     new_amount = post_user_account_obj.float_balance - trans_obj.amount
-                #     AccountsOp.update_current_account(post_user_account_obj,new_amount,0.0)
-                # else:
-                #     current_user_account_obj = current_user.account
-                #     new_amount = current_user_account_obj.cash_balance + trans_obj.amount
-                #     AccountsOp.update_current_account(current_user_account_obj,0.0,new_amount)
+                if trans_obj.purpose == "float purchased":
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.float_balance + trans_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
+                else:
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.cash_balance + trans_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
+
+                post_user_account_obj = trans_obj.created_by.account
+                new_amount = post_user_account_obj.cash_balance - trans_obj.amount
+                AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
 
-                #     post_user_account_obj = trans_obj.created_by.account
-                #     new_amount = post_user_account_obj.cash_balance - trans_obj.amount
-                #     AccountsOp.update_current_account(post_user_account_obj,0.0,new_amount)
-
-
-                # return "success"
+                return "success"
 
             amount = request.form.get('amount')
             valid_amount = validate_input(amount)
@@ -10515,21 +10480,21 @@ class Floats(Resource):
             new_transaction = TransactionDataOp(valid_amount,purpose,current_user.id)
             new_transaction.save()
 
-            if purpose == "float purchased":
+            msg = f"{current_user.name} has purchased float"
 
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.cash_balance - new_transaction.amount
-                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
+            send_push_notification(["hello"], "Float purchase notification!", msg)
 
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.float_balance + new_transaction.amount
-                AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
+            data = {
+                "id":new_transaction.id,
+                "branch": f"Agriculture#001",
+                "date": format_eat_datetime(new_transaction.acceptedon),
+                "amount": new_transaction.amount,
+                "status": f'<span class="badge bg-warning">Pending</span>',
+                "posted_by":new_transaction.created_by.name,
+                "collectedby":new_transaction.received_by.name if new_transaction.received_by else "-",
+            }
 
-            else:
-
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.cash_balance - new_transaction.amount
-                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
+            pusher_client_prod.trigger('my-channel', 'my-event', data)
 
             # sms_text = f"{current_user.name} has approved a transaction"
             # phonenum = sms_phone_number_formatter("0704448189")

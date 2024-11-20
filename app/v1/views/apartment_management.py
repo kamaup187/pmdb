@@ -10514,7 +10514,7 @@ class Accounts(Resource):
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = com.users
             items = []
-            allowed_groups = [5001,5002,5003,5004,5005,5006]
+            allowed_groups = [5000,5001,5002,5003]
             for user in users:
                 if not user.company_user_group.id in allowed_groups:
                     continue

@@ -7885,6 +7885,68 @@ class Financials(Resource):
             co=current_user.company
         ))
 
+
+class Recon(Resource):
+    @login_required
+    def get(self):
+        return Response(render_template(
+            'report_recon.html',
+            name=current_user.name,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            co=current_user.company
+        ))
+
+    def post(self):
+
+        shiftstart = request.form.get("start")
+        shiftend = request.form.get("end")
+
+        begin_t = request.form.get("tstart")
+        end_t = request.form.get("tend")
+
+        if not shiftstart:
+            return "shift not specified"
+        else:
+            str_start = date_formatter_weekday(shiftstart)
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + begin_t
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_weekday(shiftend)
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + end_t
+
+            end = parse(timestring)
+
+        str_day = start.day
+        str_year = start.year
+
+        timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
+        detailed_bills = []
+
+
+        return Response(render_template(
+            "ajax_report_recon_statement.html",
+
+            tenantlist=[],
+            timeline = timeline,
+
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+ 
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            reportdate = generate_exact_date(datetime.datetime.now().day,datetime.datetime.now().month,datetime.datetime.now().year).strftime("%d/%m/%Y"),
+            printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+
 class BookingSchedule(Resource):
     @login_required
     def get(self):

@@ -697,6 +697,19 @@ class TransactionDataOp(TransactionData,Base):
         self.status = status
         db.session.commit()
 
+class AppTransactionOp(AppTransaction,Base):
+    def __init__(self,ref,amount,trans_type,company_id):
+        self.ref=ref
+        self.amount=amount
+        self.trans_type=trans_type
+        self.company_id=company_id
+
+    def fetch_transaction_by_id(id):
+        return AppTransaction.query.filter_by(id=id).first()
+    
+    def fetch_all_transactions_by_company_id(company_id):
+        return AppTransaction.query.filter_by(company_id=company_id).all()
+
 class UserLoginDataOp(UserLoginData,Base):
     def __init__(self,user_id):
         self.user_id=user_id

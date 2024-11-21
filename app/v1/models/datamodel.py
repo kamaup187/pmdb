@@ -124,6 +124,8 @@ class Company(db.Model):
     sent_messages = db.relationship('SentMessages',backref='company',order_by='SentMessages.date', cascade="all, delete-orphan")
     remits = db.relationship('LandlordRemittance',backref='company',order_by='LandlordRemittance.date_remitted', cascade="all, delete-orphan")
     cbids = db.relationship('CtoB',backref='company',order_by='CtoB.post_date', cascade="all, delete-orphan")
+    apptransactions = db.relationship('AppTransaction',backref='company',order_by='AppTransaction.date', cascade="all, delete-orphan")
+
 
     def __repr__(self):
         return self.name
@@ -302,6 +304,20 @@ class TransactionData(db.Model):
     posted_by = db.Column(db.Integer, db.ForeignKey(User.id))
     accepted_by = db.Column(db.Integer, db.ForeignKey(User.id))
 
+class AppTransaction(db.Model):
+    """ app transactions"""
+
+    __tablename__ = 'app_transactions'
+
+    id = db.Column(db.Integer,autoincrement=True, primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    ref = db.Column(db.VARCHAR)
+    amount = db.Column(db.Float, default=0.0)
+    reconciled = db.Column(db.Boolean, default=False)
+    transaction_type = db.Column(db.String, default="credit") 
+
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+    
 class CollectionRequest(db.Model):
     """float table"""
     

@@ -370,6 +370,7 @@ api.add_resource(SummarisedCombinedBill,"/summarised/combinedbill")
 api.add_resource(ExternalDetail,"/external/detailed")
 api.add_resource(CombinedReportSummary,"/combinedreport/summary")
 api.add_resource(CombinedReport,"/combined/report")
+api.add_resource(Recon,"/recon/report")
 
 api.add_resource(CustomCombinedReport,"/customcombined/report")
 

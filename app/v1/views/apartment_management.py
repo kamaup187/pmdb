@@ -10493,7 +10493,12 @@ class Floats(Resource):
                 new_amount = post_user_account_obj.cash_balance - trans_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
+                return "success"
 
+            if request == "delete":
+                trans_id = request.form.get('id')
+                trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+                TransactionDataOp.delete(trans_obj)
                 return "success"
 
             amount = request.form.get('amount')

@@ -2598,6 +2598,37 @@
 
 		})
 
+		$(document).on("click", "#delete-float-btn", function () {
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> archiving...');
+
+			$.ajax({
+				url: '/floats',
+				method: 'post',
+				data:{
+					id:$("#float-update-id").val(),
+					target:"delete"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Transaction archived successfully", 'success');
+						$(".cash-btn-float").click();
+
+						setTimeout(function(){
+							$('#updateFloatModal').modal('hide');
+						},1000)
+					}else{
+						toastIt(response, 'danger');
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating account data: ' + error);
+					$(".cash-btn-float").click();
+				}
+			});
+
+		})
+
 		$('#updateAccountModal').on('hidden.bs.modal', function () {
 			$("#update-account-bed").html(
 				`

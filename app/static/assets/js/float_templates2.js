@@ -613,8 +613,15 @@ var roleUpdateForm = (roleobj,roles) => {
                                 <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
                                     
                                     <div class="app-card-body text-center mt-3">
+                                        <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
 
-                                        <p class="text-success fw-bold">This transaction has already been approved</p>
+                                        <div>
+                                            <p class="text-success fw-bold">This transaction has already been approved</p>
+                                        </div>
+
+                                        <div class="col-auto">
+                                            <a id="delete-float-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Archive</a>
+                                        </div> 
                                             
                                     </div><!--//app-card-body-->
                                     

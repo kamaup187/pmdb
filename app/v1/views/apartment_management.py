@@ -10495,7 +10495,7 @@ class Floats(Resource):
 
                 return "success"
 
-            if request == "delete":
+            if target == "delete":
                 trans_id = request.form.get('id')
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.delete(trans_obj)

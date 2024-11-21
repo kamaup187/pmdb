@@ -680,6 +680,9 @@ class CollectionRequestOp(CollectionRequest,Base):
         self.status = status
         db.session.commit()
 
+    def fetch_all_requests_by_date(date):
+        return CollectionRequest.query.filter(extract('day', CollectionRequest.acceptedon)==date.day).filter(extract('month', CollectionRequest.acceptedon)==date.month).filter(extract('year', CollectionRequest.acceptedon)==date.year).all()
+
 class TransactionDataOp(TransactionData,Base):
     def __init__(self,amount,purpose,posted_by):
         self.amount=amount

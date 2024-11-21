@@ -517,8 +517,14 @@ var roleUpdateForm = (roleobj,roles) => {
                                 
                                 <div class="app-card-body text-center mt-3">
 
+                                <input type="hidden" class="form-control" id="request-update-id" value="${requestobj.id}">
+
+                                <div>
                                     <p class="text-success fw-bold">This request has already been collected</p>
-                                        
+                                </div>
+                                <div class="col-auto">
+                                    <a id="delete-request-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Archive</a>
+                                </div>        
                                 </div><!--//app-card-body-->
                                 
                             </div><!--//app-card-->

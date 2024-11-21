@@ -2689,14 +2689,15 @@ def string_formatter_alt(item):
 
 def permission_strings(ids_str):
     permissions_dict = {
-        "1": "post collection",
-        "2": "post purchase",
-        "3": "accept collection",
-        "4": "accept purchase",
-        "5": "post transfer",
-        "6": "manage accounts",
-        "7": "manage users",
-        "8": "view reports",
+        "1": "<br>post collection",
+        "2": "<br>post purchase",
+        "3": "<br>accept collection",
+        "4": "<br>accept purchase",
+        "5": "<br>post transfer",
+        "6": "<br>manage accounts",
+        "7": "<br>manage users",
+        "8": "<br>view reports",
+        "9": "<br>archive records"
     }
 
     ids = ids_str.split()

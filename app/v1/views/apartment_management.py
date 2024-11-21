@@ -10023,9 +10023,33 @@ class FloatHome(Resource):
         else:
             return redirect(url_for('api.floatlogin'))
 
-        counties = CountyOp.fetch_all_counties()
         # return "updates ongoing"
-        return Response(render_template("float_home.html",co="set",countries=countries,counties=counties,items=[],permissions=get_permissions(current_user),user_logged_in=current_user))
+
+        all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
+
+        pendingcollections = 0
+        cashintransit = 0
+        totalbankings = 0
+        totaltransfers = 0
+
+        for req in all_requests:
+            pendingcollections += 1 if req.status == "pending" else 0
+        for user in c_data.users:
+            if user.company_user_group.id == 5002:
+                if user.account:
+                    if user.account.cash_balance > 0:
+                        cashintransit += user.account.cash_balance
+
+        return Response(render_template(
+            "float_home.html",
+            co="set",
+            pendingcollections= pendingcollections,
+            cashintransit= f'Kes {cashintransit:,.1f}',
+            totalbankings= f'Kes {totalbankings:,.1f}',
+            totaltransfers=f'Kes {totaltransfers:,.1f}',
+            permissions=get_permissions(current_user),
+            user_logged_in=current_user
+            ))
 
 class KceReport(Resource):
     @login_required
@@ -10329,6 +10353,12 @@ class Requests(Resource):
                 new_amount = post_user_account_obj.cash_balance - request_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
+                return "success"
+
+            if target == "delete":
+                request_id = request.form.get('id')
+                request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
+                CollectionRequestOp.delete(request_obj)
 
                 return "success"
 

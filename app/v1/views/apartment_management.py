@@ -10505,7 +10505,7 @@ class Floats(Resource):
             valid_amount = validate_input(amount)
             purpose = request.form.get('purpose')
 
-            if purpose == "float purchase":
+            if purpose == "float purchased":
                 if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
             else:

@@ -37,6 +37,7 @@ api.add_resource(FloatUsers,"/float/users")
 api.add_resource(Accounts,"/accounts")
 api.add_resource(Requests,"/requests")
 api.add_resource(Floats,"/floats")
+api.add_resource(ReconAccount,"/recon/account")
 
 
 api.add_resource(DataUpload,"/data/upload")

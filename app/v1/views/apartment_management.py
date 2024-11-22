@@ -10541,6 +10541,18 @@ class Floats(Resource):
             print("error",e)
             return f"Error :{e}"
     
+class ReconAccount(Resource):
+    def post(self):
+        trans_amount = request.form.get('amount')
+        valid_amount = validate_input(trans_amount)
+        trans_date = request.form.get('date')
+        trans_ref = request.form.get('ref')
+        trans_type = request.form.get('type')
+        trans_desc = request.form.get('desc')
+
+        print("mayai ndio hizi ", valid_amount,trans_date,trans_ref,trans_type,trans_desc)
+
+        return "mayai"
 
 class Accounts(Resource):
     def get(self):

@@ -1622,7 +1622,8 @@ class UserLogin(Resource):
         #     import pdb; pdb.set_trace()
 
         ################################################################################
-
+        if request.host == "kiotapay.com":
+            return "meno"
 
         if request.host == "float.beacontechnologies.co.ke":
             return redirect(url_for('api.floatlogin'))

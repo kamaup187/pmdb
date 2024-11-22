@@ -12,6 +12,9 @@
     <meta name="author" content="" />
 
 	<link href="../static/float/img/favicon.ico" rel="icon">
+
+	<link rel="manifest" href="../static/float_manifest.json">
+
     
     <!-- FontAwesome JS-->
 	 
@@ -177,7 +180,9 @@
 <body class="app">   
 	<div class="sh-toast-container" id="shToastContainerTop"></div>
 	<div class="sh-toast-container" id="shToastContainerBottom"></div>	
-    <header class="app-header fixed-top">	   	            
+    <header class="app-header fixed-top">
+		<button id="install-button" style="display:none;">Install App</button>
+	   	            
         <div class="app-header-inner">  
 	        <div class="container-fluid py-2">
 		        <div class="app-header-content"> 
@@ -2869,6 +2874,41 @@ if (typeof(EventSource) !== "undefined") {
 
 
     });
+  </script>
+
+  <script>
+	let deferredPrompt; // For storing the beforeinstallprompt event
+
+// Listen for the beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (event) => {
+  // Prevent the default prompt from showing
+  event.preventDefault();
+  
+  // Store the event so it can be triggered later
+  deferredPrompt = event;
+
+  // Optionally, show a custom install button
+  const installButton = document.getElementById('install-button');
+  installButton.style.display = 'block';  // Show the install button
+  
+  // Add an event listener for the custom install button
+  installButton.addEventListener('click', () => {
+    // Show the install prompt when the user clicks the button
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+      console.log(choiceResult.outcome);
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      deferredPrompt = null; // Reset the prompt after it's used
+    });
+  });
+});
+
   </script>
 
 

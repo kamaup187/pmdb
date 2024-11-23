@@ -1623,7 +1623,7 @@ class UserLogin(Resource):
 
         ################################################################################
         if request.host == "kiotapay.com":
-            return "meno"
+            return "error"
 
         if request.host == "float.beacontechnologies.co.ke":
             return redirect(url_for('api.floatlogin'))

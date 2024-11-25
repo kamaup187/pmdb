@@ -10037,8 +10037,8 @@ class FloatHome(Resource):
             pendingcollections += 1 if req.status == "pending" else 0
 
         for trans in all_transactions:
-            if trans.status =! "pending":
-                if trans.purpose =! "transfer":
+            if trans.status != "pending":
+                if trans.purpose != "transfer":
                     totalbankings += trans.amount
             # totaltransfers += trans.amount if trans.type == "transfer" else 0
         for user in c_data.users:

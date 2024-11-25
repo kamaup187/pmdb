@@ -10026,6 +10026,7 @@ class FloatHome(Resource):
         # return "updates ongoing"
 
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
+        all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
 
         pendingcollections = 0
         cashintransit = 0
@@ -10034,6 +10035,12 @@ class FloatHome(Resource):
 
         for req in all_requests:
             pendingcollections += 1 if req.status == "pending" else 0
+
+        for trans in all_transactions:
+            if trans.status =! "pending":
+                if trans.purpose =! "transfer":
+                    totalbankings += trans.amount
+            # totaltransfers += trans.amount if trans.type == "transfer" else 0
         for user in c_data.users:
             if user.company_user_group.id == 5002:
                 if user.account:

@@ -697,6 +697,9 @@ class TransactionDataOp(TransactionData,Base):
         self.status = status
         db.session.commit()
 
+    def fetch_all_transactions_by_date(date):
+        return TransactionData.query.filter(extract('day', TransactionData.acceptedon)==date.day).filter(extract('month', TransactionData.acceptedon)==date.month).filter(extract('year', TransactionData.acceptedon)==date.year).all()
+
 class AppTransactionOp(AppTransaction,Base):
     def __init__(self,ref,amount,trans_type,company_id):
         self.ref=ref

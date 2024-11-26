@@ -11,7 +11,7 @@ function toggleSide(){
 
 
 // Datatable update
-function updateDataTable(data,table) {
+function updateRequestDataTable(data,table) {
     // Assuming data is an array of objects
     // var table = $('#primaryData').DataTable();
 
@@ -87,6 +87,19 @@ function updateUserDataTable(data,table) {
     table.draw();
 }
 
+function updateBranchDataTable(data,table) {
+    table.clear();
+    data.forEach(function(item) {
+        table.row.add([
+            item.id,             // PNo
+            '<button class="btn btn-success text-white update-user-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateUserModal">View</button>',  // Remove button
+            item.name,        // Region
+            item.members,
+        ]);
+    });
+    table.draw();
+}
+
 function updateAccountDataTable(data,table) {
     table.clear();
     data.forEach(function(item) {
@@ -105,7 +118,7 @@ function updateAccountDataTable(data,table) {
 
 
 //TABLES TEMPLATES GOES HERE
-var dataTableTemplate = `
+var requestdataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
@@ -172,6 +185,22 @@ var userDataTableTemplate = `
             <th class="fw-bold">Contact</th>
             <th class="fw-bold">Role</th>
             <th class="fw-bold">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+`
+
+var branchDataTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Action</th>
+            <th class="fw-bold">Branch</th>
+            <th class="fw-bold">Members</th>
         </tr>
     </thead>
     <tbody>
@@ -952,6 +981,68 @@ var roleTemplate = `
 </div>
 
 `
+
+
+var branchTemplate = `
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+<div class="col-auto">
+    <h1 class="app-page-title mb-0">Branch Management</h1>
+</div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+
+
+<div class="col-auto">
+     <div class="page-utilities">
+        <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+            <div class="col-auto">						    
+                <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#branchModal">
+                    <i data-feather="plus" style="width: 16px; height: 16px;"></i>
+                    Add new branch
+                </a>
+            </div>
+        </div><!--//row-->
+    </div><!--//table-utilities-->
+</div><!--//col-auto-->
+</div><!--//row-->
+
+<nav id="branch-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="branches-all-tab" data-bs-toggle="tab" href="#branches-all" role="tab" aria-controls="branches-all" aria-selected="true">All Branches</a>
+</nav>
+
+<div class="tab-content" id="branches-table-tab-content">
+
+    <div id="branches-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="tab-pane fade show active" id="branches-all" role="tabpanel" aria-labelledby="users-all-tab">
+            <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="branches-all-table" class="table-responsive ms-4 me-4">
+                        </div>
+                    </div>
+                </div>
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->						
+    </div><!--//tab-pane-->
+
+</div>
+
+`
+
+
 var userTemplate = `
 <div class="row g-3 mb-4 align-items-center justify-content-between">
 <div class="col-auto">

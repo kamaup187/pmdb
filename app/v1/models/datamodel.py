@@ -115,6 +115,8 @@ class Company(db.Model):
 
     shortcodes = db.relationship('Shortcode', backref='company',order_by='Shortcode.shortcode', cascade="all, delete-orphan")
     props = db.relationship('Apartment', backref='company',order_by='Apartment.name', cascade="all, delete-orphan")
+    branches = db.relationship('Branch', backref='company',order_by='Branch.name', cascade="all, delete-orphan")
+
     # houses = db.relationship('House', backref='company', order_by='House.name' ,cascade="all, delete-orphan")
     groups = db.relationship('CompanyUserGroup', backref='company',order_by='CompanyUserGroup.name', cascade="all, delete-orphan")
 
@@ -129,6 +131,19 @@ class Company(db.Model):
 
     def __repr__(self):
         return self.name
+    
+class Branch(db.Model):
+    """db model class"""
+
+    __tablename__ = 'branches'
+
+    id = db.Column(db.Integer,autoincrement=True, primary_key=True)
+    name = db.Column(db.String)
+
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    users = db.relationship('User', backref='branch',order_by='User.id', cascade="all, delete-orphan")
+
 
 
 class Shortcode(db.Model):
@@ -206,6 +221,8 @@ class User(db.Model,UserMixin):
     user_group_id = db.Column(db.Integer, db.ForeignKey(UserGroup.id))
     ward_id = db.Column(db.Integer, db.ForeignKey(Ward.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+    branch_id = db.Column(db.Integer, db.ForeignKey(Branch.id))
+
     company_usergroup_id = db.Column(db.Integer, db.ForeignKey(CompanyUserGroup.id))
 
     activities = db.relationship('Activity', backref='user', order_by='Activity.id', cascade="all, delete-orphan")

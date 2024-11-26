@@ -867,6 +867,19 @@ class LocationOp(Location,Base):
     @staticmethod
     def fetch_all_locations():
         return Location.query.order_by(Location.id.asc()).all()
+    
+class BranchOp(Branch,Base):
+    def __init__(self,name,company_id):
+        self.name = name
+        self.company_id = company_id
+
+    @staticmethod
+    def fetch_branch_by_id(id):
+        return Branch.query.filter_by(id=id).first()
+
+    @staticmethod
+    def fetch_all_locations():
+        return Branch.query.order_by(Branch.id.asc()).all()
 
 class CountyOp(County,Base):
     def __init__(self,code,name):

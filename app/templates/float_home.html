@@ -142,18 +142,17 @@
 
 	<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-	<!-- <script>
+	<script>
 		// Enable pusher logging - don't include this in production
-		Pusher.logToConsole = true;
+		// Pusher.logToConsole = true;
+
 		var pusher = new Pusher('7cc7b73d9738db8f1c61', {
 		cluster: 'us3'
 		});
 
 		var channel = pusher.subscribe('my-channel');
-		channel.bind('my-event', function(data) {
-		alert(JSON.stringify(data));
-		});
-	</script> -->
+
+	</script>
 
 
 
@@ -297,8 +296,10 @@
 					        </a>
 					        <div id="submenu-1" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-									<li class="submenu-item user-btn"><a class="submenu-link button" type="button">Users</a></li>
+									<li class="submenu-item branch-btn"><a class="submenu-link button" type="button">Branches</a></li>
 							        <li class="submenu-item role-btn"><a class="submenu-link button" type="button">Rights</a></li>
+									<li class="submenu-item user-btn"><a class="submenu-link button" type="button">Users</a></li>
+
 						        </ul>
 					        </div>
 					    </li>
@@ -431,12 +432,6 @@
 						</div><!--//inner-->
 					</div><!--//app-card-->
 
-
-					<!-- <h1>Pusher Test</h1>
-					<p>
-					  Try publishing an event to channel <code>my-channel</code>
-					  with event name <code>my-event</code>.
-					</p> -->
 						
 					<div class="row g-4 mb-4">
 						<div class="col-6 col-lg-3 cash-btn-request">
@@ -604,7 +599,7 @@
 									</div>
 
 									<div class="mb-3">
-										<button id="submit-role" type="button" class="btn app-btn-primary" >Submit</button>
+										<button id="submit-role-btn" type="button" class="btn app-btn-primary" >Submit</button>
 									</div>
 							    </form>
 						    </div><!--//app-card-body-->
@@ -819,6 +814,51 @@
 		</div>
 	  </div>
 
+
+	  <div class="modal fade" id="branchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">ADD NEW BRANCH</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Branch info</h3>
+		                <div class="section-intro">Branch details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div class="app-card-body">
+							    <form class="settings-form">
+								    <div class="mb-3">
+									    <label for="user_input_name" class="form-label">Branch Name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Branch name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+  <circle cx="8" cy="4.5" r="1"/>
+</svg></span></label>
+									    <input type="text" class="form-control" id="branch_input_name" placeholder="e.g Agriculture" required>
+									</div>							
+
+									<button type="button" id="submit-branch-btn" class="btn app-btn-primary" >Submit</button>
+							    </form>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
 
 	  <div class="modal fade" id="updateRoleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -1061,6 +1101,20 @@
 			transports: ['websocket']
 		});
 	</script> -->
+<script>
+	function runDataTable(table_id){
+		var t1 = $('#'+table_id).DataTable({
+			"dom": '<"top"f>rt<"bottom"lp><"clear">',
+			"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+			"pageLength": 100,
+			"searching":true,
+			columnDefs: [ { targets: 0, type: 'natural' } ],
+			"order": [[ 0, "asc" ]],
+			"bLengthChange": false
+			});
+		return t1;	
+	}
+</script>
 
 	<script>
 		// Permission codes and names mapping
@@ -1202,15 +1256,7 @@
 					var elem = $("#accounts-all-table")
 					renderAccountTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateAccountDataTable(response,t1)
 
@@ -1251,19 +1297,11 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-all-table")
-					renderTemplate("allTable",elem);
+					renderRequestTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
-				updateDataTable(response,t1)
+				updateRequestDataTable(response,t1)
 
 				$("#requests-spinner").addClass("d-none")
 
@@ -1303,15 +1341,7 @@
 					var elem = $("#floats-all-table")
 					renderFloatTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateFloatDataTable(response,t1)
 
@@ -1353,15 +1383,7 @@
 					var elem = $("#roles-all-table")
 					renderRoleTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateRoleDataTable(response,t1)
 
@@ -1373,6 +1395,47 @@
 				$("#roles-spinner").addClass("d-none")
 				}
 			});
+			feather.replace();
+		})
+
+		$(".branch-btn").on("click",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(branchTemplate)
+
+			$("#branches-spinner").removeClass("d-none")
+			$("#branches-all-table").empty()
+			$.ajax({
+				url: "/float/branches",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					var elem = $("#branches-all-table")
+					renderBranchTemplate("allTable",elem);
+
+					var t1 = runDataTable("allTable")
+
+				updateBranchDataTable(response,t1)
+
+				$("#branches-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#branches-spinner").addClass("d-none")
+				}
+			});
+
 			feather.replace();
 		})
 
@@ -1401,15 +1464,7 @@
 					var elem = $("#users-all-table")
 					renderUserTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateUserDataTable(response,t1)
 
@@ -1429,14 +1484,10 @@
 	</script>
 
 	<script>
-		function renderTemplate(newId,elem) {
+		function renderRequestTemplate(newId,elem) {
 			return new Promise((resolve) => {
-
-				
-				
-				
 				// Insert into the DOM
-				elem.html(dataTableTemplate);
+				elem.html(requestdataTableTemplate);
 				
 				$('#primaryData').attr('id', newId);
 
@@ -1485,19 +1536,16 @@
 				resolve();
 			});
 		}
-		// // Function to initialize DataTable
-		// function initializeDataTable() {
-		// 	var tt = $('#primaryData').DataTable({
-		// 		"pagingType": "simple_numbers",
-		// 		"pageLength": 100,
-		// 		"searching": true,
-		// 		"bLengthChange": false,
-		// 		"order": [[0, "asc"]],
-		// 		"dom": 'lrtip', // Ensure the search box is included
-		// 		columnDefs: [{ targets: 0, type: 'natural' }]
-		// 	});
+		function renderBranchTemplate(newId,elem) {
+			return new Promise((resolve) => {
 
-		// }
+				elem.html(branchDataTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				resolve();
+			});
+		}
 
 
 		$("#working-block").on("click", "#requests-accepted-tab", function() {
@@ -1512,19 +1560,21 @@
 				},
 				success: function (response) {
 				var elem = $("#requests-accepted-table")
-				renderTemplate("acceptedTable",elem);
+				renderRequestTemplate("acceptedTable",elem);
 
-				var t1 = $('#acceptedTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+				// var t1 = $('#acceptedTable').DataTable({
+				// 	"dom": '<"top"f>rt<"bottom"lp><"clear">',
+				// 	"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+				// 	"pageLength": 100,
+				// 	"searching":true,
+				// 	columnDefs: [ { targets: 0, type: 'natural' } ],
+				// 	"order": [[ 0, "asc" ]],
+				// 	"bLengthChange": false
+				// });
 
-				updateDataTable(response,t1)
+				var t1 = runDataTable("acceptedTable")
+
+				updateRequestDataTable(response,t1)
 
 				$("#requests-spinner").addClass("d-none")
 
@@ -1549,7 +1599,7 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-pending-table")
-					renderTemplate("pendingTable",elem);
+					renderRequestTemplate("pendingTable",elem);
 
 					var t1 = $('#pendingTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1561,7 +1611,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateRequestDataTable(response,t1)
 
 				$("#requests-spinner").addClass("d-none")
 
@@ -1584,7 +1634,7 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-delivered-table")
-					renderTemplate("deliveredTable",elem);
+					renderRequestTemplate("deliveredTable",elem);
 
 					var t1 = $('#deliveredTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -1596,7 +1646,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(response,t1)
+				updateRequestDataTable(response,t1)
 				$("#requests-spinner").addClass("d-none")
 
 				},
@@ -1618,19 +1668,11 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-all-table")
-					renderTemplate("allTable",elem);
+					renderRequestTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
-				updateDataTable(response,t1)
+				updateRequestDataTable(response,t1)
 				$("#requests-spinner").addClass("d-none")
 
 				},
@@ -1657,15 +1699,7 @@
 					var elem = $("#users-all-table")
 					renderUserTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateUserDataTable(response,t1)
 
@@ -1772,15 +1806,7 @@
 					var elem = $("#floats-all-table")
 					renderFloatTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateFloatDataTable(response,t1)
 
@@ -1884,15 +1910,7 @@
 					var elem = $("#accounts-all-table")
 					renderAccountTemplate("allTable",elem);
 
-					var t1 = $('#allTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
-					"bLengthChange": false
-				});
+					var t1 = runDataTable("allTable")
 
 				updateAccountDataTable(response,t1)
 
@@ -1932,7 +1950,7 @@
 			});
 
 
-		$("#submit-role").on("click", function() {
+		$("#submit-role-btn").on("click", function() {
 			if(validate("role-input-name")){
 				$.ajax({
                     url: "/roles",
@@ -1949,7 +1967,6 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						$(".role-btn").click()
 						$('#roleModal').modal('hide');
                     },
                     error: function (xhr) {
@@ -1957,7 +1974,7 @@
                     }
                 });
 			} else{
-				$(".role-btn").click();
+				toastIt("check your inputs", 'danger');
 			}
 		})
 
@@ -2062,7 +2079,6 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						// $(".cash-btn-request").click()
 						$('#requestModal').modal('hide');
 						$("#submit-request-btn").html("Submit");
                     },
@@ -2070,9 +2086,7 @@
 						toastIt(`${xhr}`, 'danger');
                     }
                 });
-			} else{
-				// $(".cash-btn-request").click();
-			}
+			} else{}
 		})
 
 		$("#submit-float-btn").on("click", function() {
@@ -2093,16 +2107,13 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						$(".cash-btn-float").click()
 						$('#floatModal').modal('hide');
                     },
                     error: function (xhr) {
 						toastIt(`${xhr}`, 'danger');
                     }
                 });
-			} else{
-				$(".cash-btn-float").click();
-			}
+			} else{}
 		})
 
 		$("#submit-pay").on("click", function() {
@@ -2239,11 +2250,7 @@
 			success: function (response) {
 				if (response.includes("success")){
 					toastIt("Role updated successfully", 'success');
-					$(".role-btn").click()
-
-					setTimeout(function(){
-						$('#updateRoleModal').modal('hide');
-					},1000)
+					$('#updateRoleModal').modal('hide');
 				}else{
 					toastIt(response, 'danger');
 				}
@@ -2422,16 +2429,11 @@
 
 					if (response.includes("success")){
 						toastIt("User updated successfully", 'success');
-						$(".user-btn").click()
-
-						setTimeout(function(){
-							$('#updateUserModal').modal('hide');
-						},1000)
+						$('#updateUserModal').modal('hide');
 					}else{
 						toastIt(response, 'danger');
 					}
-				},
-				error: function (xhr, status, error) {
+				},error: function (xhr, status, error) {
 					console.error('Error update user data: ' + error);
 				}
 			});
@@ -2454,11 +2456,7 @@
 
 					if (response.includes("success")){
 						toastIt("Account updated successfully", 'success');
-						$(".account-btn-manager").click()
-
-						setTimeout(function(){
-							$('#updateAccountModal').modal('hide');
-						},1000)
+						$('#updateAccountModal').modal('hide');
 					}else{
 						toastIt(response, 'danger');
 					}
@@ -2488,11 +2486,7 @@
 
 					if (response.includes("success")){
 						toastIt("Account allocated successfully", 'success');
-						$(".account-btn-manager").click()
-
-						setTimeout(function(){
-							$('#updateAccountModal').modal('hide');
-						},1000)
+						$('#updateAccountModal').modal('hide');
 					}else{
 						toastIt(response, 'danger');
 					}
@@ -2518,11 +2512,8 @@
 
 					if (response.includes("success")){
 						toastIt("Request accepted successfully", 'success');
-						$(".cash-btn-request").click();
+						$('#updateRequestModal').modal('hide');
 
-						setTimeout(function(){
-							$('#updateRequestModal').modal('hide');
-						},1000)
 					}else{
 						toastIt(response, 'danger');
 					}
@@ -2555,18 +2546,14 @@
 
 					if (response.includes("success")){
 						toastIt("Record archived successfully", 'success');
-						$(".cash-btn-request").click();
+						$('#updateRequestModal').modal('hide');
 
-						setTimeout(function(){
-							$('#updateRequestModal').modal('hide');
-						},1000)
 					}else{
 						toastIt(response, 'danger');
 					}
 				},
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
-					$(".cash-btn-request").click();
 				}
 			});
 
@@ -2586,11 +2573,7 @@
 
 					if (response.includes("success")){
 						toastIt("Transaction approved", 'success');
-						$(".cash-btn-float").click();
-
-						setTimeout(function(){
-							$('#updateFloatModal').modal('hide');
-						},1000)
+						$('#updateFloatModal').modal('hide');
 					}else{
 						toastIt(response, 'danger');
 					}
@@ -2617,11 +2600,7 @@
 
 					if (response.includes("success")){
 						toastIt("Transaction archived successfully", 'success');
-						$(".cash-btn-float").click();
-
-						setTimeout(function(){
-							$('#updateFloatModal').modal('hide');
-						},1000)
+						$('#updateFloatModal').modal('hide');
 					}else{
 						toastIt(response, 'danger');
 					}
@@ -2669,47 +2648,23 @@
 	pass1 : $('#user_input_pass1').val()
 	},
 	success: function (response) {
-	if (response === "success") {
-		toastIt("User registration successful","success");
 		$('#submit-user-btn').html('Submit');
-
-		$("#user-btn").click();
-
-	}else if(response === "id taken"){
-		toastIt("failed: National Id already in use","danger");
+		if (response === "success") {
+			toastIt("User registration successful","success");
+		}else if(response === "id taken"){
+			toastIt("failed: National Id already in use","danger");
+		}else if(response === "tel taken"){
+			toastIt("Registration failed: Mobile number already in use","danger");
+		}else if(response === "email taken"){
+			toastIt("Registration failed: Email address already in use","danger");
+		}else if(response === "co taken"){
+			toastIt("Registration failed: Company name is not available","danger");
+		}else{
+			toastIt("Registration failed: Company name is not available","danger");
+		}
+	},error: function(xhr) {
+		toastIt("fRegistration failed","danger");
 		$('#submit-user-btn').html('Submit');
-		$("#user-btn").click();
-
-	}else if(response === "tel taken"){
-		
-		toastIt("Registration failed: Mobile number already in use","danger");
-		$('#submit-user-btn').html('Submit');
-		$("#user-btn").click();
-
-	}else if(response === "email taken"){
-		
-		toastIt("Registration failed: Email address already in use","danger");
-		$('#submit-user-btn').html('Submit');
-		$("#user-btn").click();
-
-	}else if(response === "co taken"){
-		
-		toastIt("Registration failed: Company name is not available","danger");
-		$('#submit-user-btn').html('Submit');
-		$("#user-btn").click();
-
-	}else{
-		toastIt("Registration failed: Company name is not available","danger");
-		$('#submit-user-btn').html('Submit');
-		$("#user-btn").click();
-	}
-
-
-	}, 
-	error: function(xhr) {
-	toastIt("fRegistration failed","danger");
-	$('#submit-user-btn').html('Submit');
-	$("#user-btn").click();
 	}
 	});
 	})
@@ -2717,6 +2672,31 @@
 
 	$(document).on("click","#toggle-adjust-balances", function(){
 		$("#adjust-balances").removeClass("d-none");
+	})
+
+
+	$("#submit-branch-btn").on('click', function () {
+		$('#submit-branch-btn').html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+		$.ajax({
+		url: "/float/branches",
+		type: "POST",
+		data: {
+		name: $("#branch_input_name").val()
+		},
+		success: function (response) {
+			$('#submit-branch-btn').html('Submit');
+			if (response === "success") {
+				toastIt("Branch added successfully","success");
+			}else if(response === "branch taken"){
+				toastIt("Registration failed: Branch name is not available","danger");
+			}else{
+				toastIt("Registration failed: Branch cannot be registered at this time","danger");
+			}
+		},error: function(xhr) {
+			toastIt("Registration failed","danger");
+			$('#submit-branch-btn').html('Submit');
+		}
+		});
 	})
 </script>
 
@@ -2729,7 +2709,7 @@
 
 
 			var elem = $("#requests-all-table")
-					renderTemplate("allTable",elem);
+					renderRequestTemplate("allTable",elem);
 
 					var t1 = $('#allTable').DataTable({
 					"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -2741,7 +2721,7 @@
 					"bLengthChange": false
 				});
 
-				updateDataTable(post,t1)
+				updateRequestDataTable(post,t1)
 
 				$("#requests-spinner").addClass("d-none")
 
@@ -2777,7 +2757,7 @@ if (typeof(EventSource) !== "undefined") {
 			delete data.stream;
 
 			var elem = $("#requests-all-table")
-				renderTemplate("allTable",elem);
+				renderRequestTemplate("allTable",elem);
 
 				var t1 = $('#allTable').DataTable({
 				"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -2789,7 +2769,7 @@ if (typeof(EventSource) !== "undefined") {
 				"bLengthChange": false
 			});
 
-				updateDataTable([data],t1)
+				updateRequestDataTable([data],t1)
 
 				$("#requests-spinner").addClass("d-none")
 
@@ -2806,75 +2786,65 @@ if (typeof(EventSource) !== "undefined") {
 }
 </script> -->
 
-<script>
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
 
-    var pusher = new Pusher('5783c52679e093c8d101', {
-      cluster: 'us3'
-    });
-
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-    //   alert(JSON.stringify(data));
-
-	  var elem = $("#requests-all-table")
-				renderTemplate("allTable",elem);
-
-				var t1 = $('#allTable').DataTable({
-				"dom": '<"top"f>rt<"bottom"lp><"clear">',
-				"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-				"pageLength": 100,
-				"searching":true,
-				columnDefs: [ { targets: 0, type: 'natural' } ],
-				"order": [[ 0, "asc" ]],
-				"bLengthChange": false
-			});
-
-				updateDataTable([data],t1)
-
-				$("#requests-spinner").addClass("d-none")
-
-				console.log("New request rendered:", data);
-
-
-    });
-  </script>
 
 <script>
-    // Enable pusher logging - don't include this in production
-    // Pusher.logToConsole = true;
 
-    var pusher = new Pusher('7cc7b73d9738db8f1c61', {
-      cluster: 'us3'
-    });
-
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-    //   alert(JSON.stringify(data));
-
-	  var elem = $("#requests-all-table")
-				renderTemplate("allTable",elem);
-
-				var t1 = $('#allTable').DataTable({
-				"dom": '<"top"f>rt<"bottom"lp><"clear">',
-				"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-				"pageLength": 100,
-				"searching":true,
-				columnDefs: [ { targets: 0, type: 'natural' } ],
-				"order": [[ 0, "asc" ]],
-				"bLengthChange": false
-			});
-
-				updateDataTable([data],t1)
-
-				$("#requests-spinner").addClass("d-none")
-
-				console.log("New request rendered:", data);
-
+    channel.bind('branches', function(data) {
+		var elem = $("#branches-all-table")
+		renderBranchTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateBranchDataTable(data,t1)
+		$("#branches-spinner").addClass("d-none")
 
     });
-  </script>
+
+	channel.bind('roles', function(data) {
+		var elem = $("#roles-all-table")
+		renderRoleTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateRoleDataTable(data,t1)
+		$("#roles-spinner").addClass("d-none")
+		console.log("New role rendered:", data);
+
+	});
+
+	channel.bind('users', function(data) {
+		var elem = $("#users-all-table")
+		renderUserTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateUserDataTable(data,t1)
+		$("#users-spinner").addClass("d-none")
+
+	});
+
+	channel.bind('accounts', function(data) {
+		var elem = $("#accounts-all-table")
+		renderAccountTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateAccountDataTable(data,t1)
+		$("#accounts-spinner").addClass("d-none")
+
+	});
+
+	channel.bind('requests', function(data) {
+		var elem = $("#requests-all-table")
+		renderRequestTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateRequestDataTable(data,t1)
+		$("#requests-spinner").addClass("d-none")
+
+	});
+
+	channel.bind('floats', function(data) {
+		var elem = $("#floats-all-table")
+		renderFloatTemplate("allTable",elem);
+		var t1 = runDataTable("allTable")
+		updateFloatDataTable(data,t1)
+		$("#floats-spinner").addClass("d-none")
+
+	});
+	</script>
 
   <script>
 	let deferredPrompt; // For storing the beforeinstallprompt event

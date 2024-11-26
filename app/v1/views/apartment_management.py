@@ -10267,8 +10267,68 @@ class FloatRegister(Resource):
             print("error",e)
             return f"Error :{e}"
 
+
+        items = []
+        co = current_user.company
+        groups = co.users
+        for user in groups:
+            user_dict = {
+                "id":user.id,
+                "code":user.usercode,
+                "name":user.name,
+                "national_id":user.national_id,
+                "tel":user.phone,
+                "email":user.email,
+                "role":user.company_user_group.name if user.company_user_group else "-",
+                "status": f'<span class="badge bg-success">Active</span>',
+                "branch":"-",
+                "company":current_user.company.name
+            }
+            items.append(user_dict)
+
+        pusher_client_prod.trigger('my-channel', 'users', items)
+
         return "success"
 
+class FloatBranch(Resource):
+    def get(self):
+        com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+        branches = com.branches
+        items = []
+        for branch in branches:
+            branch_obj = {
+                "id":branch.id,
+                "code":branch.id,
+                "name":branch.name,
+                "members":"~"
+                # "permissions": get_permissions(current_user)
+            }
+            items.append(branch_obj)
+
+        return items
+
+    def post(self):
+        name = request.form.get("name")
+
+        if name:
+            new_branch = BranchOp(name,current_user.company.id)
+            new_branch.save()
+
+            items = []
+            co = current_user.company
+            groups = co.branches
+            for g in groups:
+                groupdict = {
+                    "id":g.id,
+                    "code":new_branch.id,
+                    "name":g.name,
+                    "members":"~",
+                }
+                items.append(groupdict)
+
+            pusher_client_prod.trigger('my-channel', 'branches', items)
+            return "success"
+    
 class Requests(Resource):
     def get(self):
 
@@ -10360,12 +10420,62 @@ class Requests(Resource):
                 new_amount = post_user_account_obj.cash_balance - request_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
+
+                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+                users = com.users
+                items = []
+                for user in users:
+                    if user.collection_requests:
+                        for req in user.collection_requests:
+                            status = f'<span class="badge bg-success">Collected</span>'
+                            if req.status == "pending":
+                                status = f'<span class="badge bg-warning">Pending</span>'
+
+                            acc_dict = {
+                                "id":req.id,
+                                "branch": f"Agriculture#001",
+                                "date": format_eat_datetime(req.acceptedon),
+                                "amount": req.amount,
+                                "status": status,
+                                "posted_by":req.created_by.name,
+                                "collectedby":req.received_by.name if req.received_by else "-",
+
+                            }
+                            items.append(acc_dict)
+
+                pusher_client_prod.trigger('my-channel', 'requests', items)
+
                 return "success"
 
             if target == "delete":
                 request_id = request.form.get('id')
                 request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
                 CollectionRequestOp.delete(request_obj)
+
+
+                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+                users = com.users
+                items = []
+                for user in users:
+                    if user.collection_requests:
+                        for req in user.collection_requests:
+                            status = f'<span class="badge bg-success">Collected</span>'
+                            if req.status == "pending":
+                                status = f'<span class="badge bg-warning">Pending</span>'
+
+                            acc_dict = {
+                                "id":req.id,
+                                "branch": f"Agriculture#001",
+                                "date": format_eat_datetime(req.acceptedon),
+                                "amount": req.amount,
+                                "status": status,
+                                "posted_by":req.created_by.name,
+                                "collectedby":req.received_by.name if req.received_by else "-",
+
+                            }
+                            items.append(acc_dict)
+
+                pusher_client_prod.trigger('my-channel', 'requests', items)
 
                 return "success"
 
@@ -10387,22 +10497,33 @@ class Requests(Resource):
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
-            data = {
-                "id":new_request.id,
-                "branch": f"Agriculture#001",
-                "date": format_eat_datetime(new_request.acceptedon),
-                "amount": new_request.amount,
-                "status": f'<span class="badge bg-warning">Pending</span>',
-                "posted_by":new_request.created_by.name,
-                "collectedby":new_request.received_by.name if new_request.received_by else "-",
-            }
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            for user in users:
+                if user.collection_requests:
+                    for req in user.collection_requests:
+                        status = f'<span class="badge bg-success">Collected</span>'
+                        if req.status == "pending":
+                            status = f'<span class="badge bg-warning">Pending</span>'
 
-            pusher_client_prod.trigger('my-channel', 'my-event', data)
+                        acc_dict = {
+                            "id":req.id,
+                            "branch": f"Agriculture#001",
+                            "date": format_eat_datetime(req.acceptedon),
+                            "amount": req.amount,
+                            "status": status,
+                            "posted_by":req.created_by.name,
+                            "collectedby":req.received_by.name if req.received_by else "-",
 
+                        }
+                        items.append(acc_dict)
 
-            sms_text = f"{current_user.name} has posted a request"
-            phonenum = sms_phone_number_formatter("0704448189")
-            sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
+            pusher_client_prod.trigger('my-channel', 'requests', items)
+
+            # sms_text = f"{current_user.name} has posted a request"
+            # phonenum = sms_phone_number_formatter("0704448189")
+            # sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
 
             return "success"
     
@@ -10500,12 +10621,63 @@ class Floats(Resource):
                 new_amount = post_user_account_obj.cash_balance - trans_obj.amount
                 AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
+
+                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+                users = com.users
+                items = []
+                for user in users:
+                    if user.posted_transactions:
+                        for trans in user.posted_transactions:
+
+                            status = f'<span class="badge bg-success">Collected</span>'
+                            if trans.status == "pending":
+                                status = f'<span class="badge bg-warning">Pending</span>'
+
+                            acc_dict = {
+                                "id":trans.id,
+                                "branch": f"Agriculture#001",
+                                "date": format_eat_datetime(trans.acceptedon),
+                                "amount": trans.amount,
+                                "status": status,
+                                "postedby":trans.created_by.name,
+                                "collectedby":trans.received_by.name if trans.accepted_by else "-",
+                            }
+                            items.append(acc_dict)
+
+                pusher_client_prod.trigger('my-channel', 'floats', items)
+
                 return "success"
 
             if target == "delete":
                 trans_id = request.form.get('id')
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.delete(trans_obj)
+
+                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+                users = com.users
+                items = []
+                for user in users:
+                    if user.posted_transactions:
+                        for trans in user.posted_transactions:
+
+                            status = f'<span class="badge bg-success">Collected</span>'
+                            if trans.status == "pending":
+                                status = f'<span class="badge bg-warning">Pending</span>'
+
+                            acc_dict = {
+                                "id":trans.id,
+                                "branch": f"Agriculture#001",
+                                "date": format_eat_datetime(trans.acceptedon),
+                                "amount": trans.amount,
+                                "status": status,
+                                "postedby":trans.created_by.name,
+                                "collectedby":trans.received_by.name if trans.accepted_by else "-",
+                            }
+                            items.append(acc_dict)
+
+                pusher_client_prod.trigger('my-channel', 'floats', items)
+
+
                 return "success"
 
             amount = request.form.get('amount')
@@ -10526,22 +10698,34 @@ class Floats(Resource):
 
             send_push_notification(["hello"], "Float purchase notification!", msg)
 
-            data = {
-                "id":new_transaction.id,
-                "branch": f"Agriculture#001",
-                "date": format_eat_datetime(new_transaction.acceptedon),
-                "amount": new_transaction.amount,
-                "status": f'<span class="badge bg-warning">Pending</span>',
-                "posted_by":new_transaction.created_by.name,
-                "collectedby":new_transaction.received_by.name if new_transaction.received_by else "-",
-            }
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            for user in users:
+                if user.posted_transactions:
+                    for trans in user.posted_transactions:
 
-            pusher_client_prod.trigger('my-channel', 'my-event', data)
+                        status = f'<span class="badge bg-success">Collected</span>'
+                        if trans.status == "pending":
+                            status = f'<span class="badge bg-warning">Pending</span>'
+
+                        acc_dict = {
+                            "id":trans.id,
+                            "branch": f"Agriculture#001",
+                            "date": format_eat_datetime(trans.acceptedon),
+                            "amount": trans.amount,
+                            "status": status,
+                            "postedby":trans.created_by.name,
+                            "collectedby":trans.received_by.name if trans.accepted_by else "-",
+                        }
+                        items.append(acc_dict)
+
+            pusher_client_prod.trigger('my-channel', 'floats', items)
 
             # sms_text = f"{current_user.name} has approved a transaction"
             # phonenum = sms_phone_number_formatter("0704448189")
             # sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
-
+            
             return "success"
     
         except Exception as e:
@@ -10583,8 +10767,6 @@ class Accounts(Resource):
                         "ltd": user.account.modifiedon.strftime("%d/%b/%y")
                     }
                     items.append(acc_dict)
-                else:
-                    print("no account njege")
 
             return items
 
@@ -10653,6 +10835,27 @@ class Accounts(Resource):
             new_limit = request.form.get("limit")
             valid_limit = validate_input(new_limit)
             AccountsOp.update_limit(acc_obj,valid_limit)
+
+            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            users = com.users
+            items = []
+            allowed_groups = [5000,5001,5002,5003]
+            for user in users:
+                if not user.company_user_group.id in allowed_groups:
+                    continue
+                if user.account:
+                    acc_dict = {
+                        "id":user.account.id,
+                        "name": f"{user.name}#00{user.account.id}",
+                        "fb": user.account.float_balance,
+                        "cb": user.account.cash_balance,
+                        "limit": user.account.account_limit,
+                        "status": user.account.status,
+                        "ltd": user.account.modifiedon.strftime("%d/%b/%y")
+                    }
+                    items.append(acc_dict)
+
+            pusher_client_prod.trigger('my-channel', 'accounts', items)
             return "success"
         
         except Exception as e:
@@ -10795,7 +10998,6 @@ class Roles(Resource):
                     "desc":permission_strings(g.description),
                 }
                 items.append(groupdict)
-            # groupids = get_obj_ids(items)
             return items
 
         else:
@@ -10832,6 +11034,19 @@ class Roles(Resource):
                 else:
                     group_obj = CompanyUserGroupOp(group,desc,current_user.company.id)
                     group_obj.save()
+
+                    items = []
+                    co = current_user.company
+                    groups = co.groups
+                    for g in groups:
+                        groupdict = {
+                            "id":g.id,
+                            "name":g.name,
+                            "desc":permission_strings(g.description),
+                        }
+                        items.append(groupdict)
+                    pusher_client_prod.trigger('my-channel', 'roles', items)
+
                     return "group successfully added"
 
         else:
@@ -10839,9 +11054,21 @@ class Roles(Resource):
             role_obj = CompanyUserGroupOp.fetch_usergroup_by_id(get_identifier(role_id))
             access = request.form.get('access')
 
-            print("acccesssi ",access)
             name = request.form.get('name')
             CompanyUserGroupOp.update_access(role_obj,name,access)
+
+            items = []
+            co = current_user.company
+            groups = co.groups
+            for g in groups:
+                groupdict = {
+                    "id":g.id,
+                    "name":g.name,
+                    "desc":permission_strings(g.description),
+                }
+                items.append(groupdict)
+            pusher_client_prod.trigger('my-channel', 'roles', items)
+
             return "access updated successfully"
             
 
@@ -11171,6 +11398,27 @@ class FloatUsers(Resource):
         UserOp.update_user(member_obj,name,tel,None,None,pass1,user_group_id,company_id,modified_by)
         if staffid:
             UserOp.update_usercode(member_obj,staffid)
+
+
+        items = []
+        co = current_user.company
+        groups = co.users
+        for user in groups:
+            user_dict = {
+                "id":user.id,
+                "code":user.usercode,
+                "name":user.name,
+                "national_id":user.national_id,
+                "tel":user.phone,
+                "email":user.email,
+                "role":user.company_user_group.name if user.company_user_group else "-",
+                "status": f'<span class="badge bg-success">Active</span>',
+                "branch":"-",
+                "company":current_user.company.name
+            }
+            items.append(user_dict)
+
+        pusher_client_prod.trigger('my-channel', 'users', items)
 
         return "success"
 

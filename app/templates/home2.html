@@ -12,7 +12,6 @@
     <meta name="author" content="" />
 
 	<link href="../static/kce/img/favicon.ico" rel="icon">
-    
     <!-- FontAwesome JS-->
 	 
     <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
@@ -136,6 +135,19 @@
         }
 
 	</style>
+
+<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+
+<script>
+  const beamsClient = new PusherPushNotifications.Client({
+    instanceId: '53dde07a-9b39-4061-94eb-e388e0b3dae7',
+  });
+  
+  beamsClient.start()
+    .then(() => beamsClient.addDeviceInterest('kce'))
+    .then(() => console.log('Successfully registered and subscribed!'))
+    .catch(console.error);
+</script>
 
 </head> 
 
@@ -279,7 +291,7 @@
 					        </div>
 					    </li>
 
-						<li class="nav-item has-submenu">
+						<li class="nav-item has-submenu d-none">
 					        
 					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
 						        <span class="nav-icon">
@@ -290,12 +302,11 @@
 		                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
 	</svg>
-	                             </span><!--//submenu-arrow-->
+	                             </span>
 					        </a>
 					        <div id="submenu-4" class="collapse submenu submenu-4" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
 							        <li class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Events & Activities</a></li>
-							        <!-- <li class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Activities</span></li> -->
 						        </ul>
 					        </div>
 					    </li>
@@ -1118,10 +1129,12 @@
 											<option value="bank">Bank deposit</option>
 										</select>
 									</div>
+
 									<div class="mb-3">
 										<span class="fst-italic">Payment instructions:</span>
 										<p id="payment-details" class="fw-bold ms-4">Pay Bill: 247247 Acc: 1750269969674</p>
 									</div>
+
 								    <div class="mb-3">
 									    <label for="pay-input-amount" class="form-label">Amount paid</label>
 									    <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0" required>

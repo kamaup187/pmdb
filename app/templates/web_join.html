@@ -651,17 +651,27 @@
                         <div class="card-header text-kodi">Complete registration</div>
                         <div class="card-body">
 
+                          <div class="mb-3 form-group">
+                            <span class="fst-italic">Payment instructions:</span>
+                            <p id="payment-details" class="fw-bold ms-4">Pay Bill: 247247 Acc: 1750269969674</p>
+                          </div>
+
 
                           <div class="form-group row">
-                            <div class="mb-3 col-6">
+                            <div class="col-6">
                               <label for="pay-input-amount" class="form-label">Registration fee paid</label>
-                              <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0" required>
+                              <input type="text" class="form-control" id="pay-input-amount" placeholder="e.g 5,000.0">
                             </div>
-                            <div class="mb-3 col-6">
+                            <div class="col-6">
                               <label for="pay-input-trans" class="form-label">Transaction reference</label>
-                              <input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR" required>
+                              <input type="text" class="form-control" id="pay-input-trans" placeholder="e.g SJPOAWLZSR">
           
                             </div>
+                          </div>
+
+                          <div class="form-group mb-3">
+                            <input type="checkbox" class="m-2" id="skippay" name="skippay">
+                            <label for="skippay">Skip and pay later</label>
                           </div>
     
                           <div class="form-group row">

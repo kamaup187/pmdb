@@ -2774,14 +2774,18 @@ class FetchSubcounties(Resource):
         county_code = request.args.get('countycode')
         county_obj = CountyOp.fetch_county_by_code(county_code)
         if county_obj:
-            return render_template('ajax_multivariable_alt.html',items=county_obj.subcounties,placeholder="select subcounty")
+            items =county_obj.subcounties
+            items.append("All")
+            return render_template('ajax_multivariable_alt.html',items=items,placeholder="select subcounty")
 
 class FetchWards(Resource):
     def get(self):
         subcounty_code = request.args.get('subcountycode')
         subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
         if subcounty_obj:
-            return render_template('ajax_multivariable_alt.html',items=subcounty_obj.wards,placeholder="select ward")
+            items = subcounty_obj.wards
+            items.append("All")
+            return render_template('ajax_multivariable_alt.html',items=items,placeholder="select ward")
         
 class UploadCounties(Resource):
     def get(self):
@@ -10010,6 +10014,7 @@ class KceHome(Resource):
         for user in users:
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
+        counties.append("All")
         return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users,user_logged_in=current_user))
 
 class FloatHome(Resource):
@@ -11242,6 +11247,8 @@ class KceUsers(Resource):
         if tel:
             user = fetch_user(tel.replace("+",""))
             if user:
+                if current_user.phone == user.phone:
+                    pass
                 return "denied, that number is unavailable"
 
         if pass1:

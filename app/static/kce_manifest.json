@@ -2,7 +2,7 @@
     "name": "Kikuyu Council of Elders",
     "short_name": "KCE",
     "description": "Kikuyu Council of Elders",
-    "start_url": "/kce/dashboard",
+    "start_url": "/kce",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",

@@ -2775,7 +2775,7 @@ class FetchSubcounties(Resource):
         county_obj = CountyOp.fetch_county_by_code(county_code)
         if county_obj:
             items =county_obj.subcounties
-            items.append("All")
+            items.append({"name":"All","code":0})
             return render_template('ajax_multivariable_alt.html',items=items,placeholder="select subcounty")
 
 class FetchWards(Resource):
@@ -2784,7 +2784,7 @@ class FetchWards(Resource):
         subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
         if subcounty_obj:
             items = subcounty_obj.wards
-            items.append("All")
+            items.append({"name":"All","code":0})
             return render_template('ajax_multivariable_alt.html',items=items,placeholder="select ward")
         
 class UploadCounties(Resource):
@@ -10014,7 +10014,7 @@ class KceHome(Resource):
         for user in users:
             user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
         counties = CountyOp.fetch_all_counties()
-        counties.append("All")
+        counties.append({"name":"All","code":0})
         return Response(render_template("home2.html",co="set",countries=countries,counties=counties,items=users,user_logged_in=current_user))
 
 class FloatHome(Resource):

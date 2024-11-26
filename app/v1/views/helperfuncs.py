@@ -2710,6 +2710,29 @@ def permission_strings(ids_str):
     print("permitted to do")
     return permissions
 
+def permission_strings2(ids_str):
+    permissions_dict = {
+        "1": "<br>add member",
+        "2": "<br>archive member",
+        "3": "<br>approve payment",
+        "4": "<br>view report",
+        "5": "<br>create events",
+        "6": "<br>delete events",
+        "7": "<br>create meetings",
+        "8": "<br>delete meetings",
+        "9": "<br>create roles"
+    }
+
+    ids = ids_str.split()
+    # Get the permission names based on the dictionary
+    names = [permissions_dict[id] for id in ids if id in permissions_dict]
+    
+    # Join the names back into a single string
+
+    permissions = ",  ".join(names)
+    print("permitted to do")
+    return permissions
+
 def get_permissions(user):
     print("user group ", user.company_user_group)
     permissions = user.company_user_group.description if user.company_user_group else ""

@@ -10992,10 +10992,11 @@ class Roles(Resource):
             groups = co.groups
             for g in groups:
                 # CompanyUserGroupOp.delete(g)
+                perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
                 groupdict = {
                     "id":g.id,
                     "name":g.name,
-                    "desc":permission_strings(g.description),
+                    "desc":perm,
                 }
                 items.append(groupdict)
             return items
@@ -11039,10 +11040,11 @@ class Roles(Resource):
                     co = current_user.company
                     groups = co.groups
                     for g in groups:
+                        perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
                         groupdict = {
                             "id":g.id,
                             "name":g.name,
-                            "desc":permission_strings(g.description),
+                            "desc":perm,
                         }
                         items.append(groupdict)
                     pusher_client_prod.trigger('my-channel', 'roles', items)
@@ -11061,10 +11063,11 @@ class Roles(Resource):
             co = current_user.company
             groups = co.groups
             for g in groups:
+                perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
                 groupdict = {
                     "id":g.id,
                     "name":g.name,
-                    "desc":permission_strings(g.description),
+                    "desc":perm,
                 }
                 items.append(groupdict)
             pusher_client_prod.trigger('my-channel', 'roles', items)

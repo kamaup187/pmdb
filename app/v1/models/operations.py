@@ -532,6 +532,10 @@ class UserOp(User,Base):
         self.usercode = usercode
         db.session.commit()
 
+    def update_branch(self,branch):
+        self.branch_id = branch
+        db.session.commit()
+
     def update_group(self, group_id):
         print("uppppppdddddaaaaating",self,"group",group_id)
         self.company_usergroup_id = group_id

@@ -883,6 +883,46 @@
 		</div>
 	  </div>
 
+
+	  <div class="modal fade" id="updateBranchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">MANAGE BRANCH</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Branch info</h3>
+		                <div class="section-intro">Branch details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div id="update-branch-bed" class="app-card-body">
+								<div class="d-flex justify-content-center">
+									<div class="spinner-border text-success m-2" role="status">
+										<span class="visually-hidden">Loading...</span>
+									</div>
+								</div>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
 	  <div class="modal fade" id="updateUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
@@ -1088,7 +1128,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates2.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_new.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1254,9 +1294,9 @@
 				},
 				success: function (response) {
 					var elem = $("#accounts-all-table")
-					renderAccountTemplate("allTable",elem);
+					renderAccountTemplate("allAccountTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allAccountTable")
 
 				updateAccountDataTable(response,t1)
 
@@ -1297,9 +1337,9 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-all-table")
-					renderRequestTemplate("allTable",elem);
+					renderRequestTemplate("allRequestTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allRequestTable")
 
 				updateRequestDataTable(response,t1)
 
@@ -1339,9 +1379,9 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
-					renderFloatTemplate("allTable",elem);
+					renderFloatTemplate("allFloatTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allFoatTable")
 
 				updateFloatDataTable(response,t1)
 
@@ -1381,9 +1421,9 @@
 				},
 				success: function (response) {
 					var elem = $("#roles-all-table")
-					renderRoleTemplate("allTable",elem);
+					renderRoleTemplate("allRoleTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allRoleTable")
 
 				updateRoleDataTable(response,t1)
 
@@ -1421,9 +1461,9 @@
 				},
 				success: function (response) {
 					var elem = $("#branches-all-table")
-					renderBranchTemplate("allTable",elem);
+					renderBranchTemplate("allBranchTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allBranchTable")
 
 				updateBranchDataTable(response,t1)
 
@@ -1462,9 +1502,9 @@
 				},
 				success: function (response) {
 					var elem = $("#users-all-table")
-					renderUserTemplate("allTable",elem);
+					renderUserTemplate("allUserTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allUserTable")
 
 				updateUserDataTable(response,t1)
 
@@ -1668,9 +1708,9 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-all-table")
-					renderRequestTemplate("allTable",elem);
+					renderRequestTemplate("allRequestTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allRequestTable")
 
 				updateRequestDataTable(response,t1)
 				$("#requests-spinner").addClass("d-none")
@@ -1697,9 +1737,9 @@
 				},
 				success: function (response) {
 					var elem = $("#users-all-table")
-					renderUserTemplate("allTable",elem);
+					renderUserTemplate("allUserTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allUserTable")
 
 				updateUserDataTable(response,t1)
 
@@ -1804,9 +1844,9 @@
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
-					renderFloatTemplate("allTable",elem);
+					renderFloatTemplate("allFloatTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allFloatTable")
 
 				updateFloatDataTable(response,t1)
 
@@ -1908,9 +1948,9 @@
 				},
 				success: function (response) {
 					var elem = $("#accounts-all-table")
-					renderAccountTemplate("allTable",elem);
+					renderAccountTemplate("allAccountTable",elem);
 
-					var t1 = runDataTable("allTable")
+					var t1 = runDataTable("allAccountTable")
 
 				updateAccountDataTable(response,t1)
 
@@ -2262,7 +2302,31 @@
 
 		})
 
+		// Attach a click event to the button
+		$(document).on('click', '.update-branch-button', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
 
+			$.ajax({
+				url: '/float/branches',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var updateBranchForm = branchUpdateForm(response);
+
+					$("#update-branch-bed").html(updateBranchForm)
+
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
 
 		// Attach a click event to the button
 		$(document).on('click', '.update-user-button', function () {
@@ -2385,6 +2449,18 @@
 			)
 		})
 
+		$('#updateBranchModal').on('hidden.bs.modal', function () {
+			$("#update-user-bed").html(
+				`
+				<div class="d-flex justify-content-center">
+					<div class="spinner-border text-success m-2" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>
+				`
+			)
+		})
+
 
 		$('#updateRequestModal').on('hidden.bs.modal', function () {
 			$("#update-request-bed").html(
@@ -2411,6 +2487,10 @@
 		})
 
 		$(document).on("click", "#update-user-btn", function () {
+			const $btn = $(this); // Cache the button reference
+
+			$btn.prop('disabled', true).text('Submitting...');
+
 			$.ajax({
 				url: '/float/users',
 				method: 'post',
@@ -2435,6 +2515,8 @@
 					}
 				},error: function (xhr, status, error) {
 					console.error('Error update user data: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update User');
 				}
 			});
 
@@ -2608,6 +2690,33 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
 					$(".cash-btn-float").click();
+				}
+			});
+
+		})
+
+		$(document).on("click", "#delete-branch-btn", function () {
+			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> removing...');
+
+			$.ajax({
+				url: '/float/branches',
+				method: 'post',
+				data:{
+					id:$("#branch-update-id").val(),
+					target:"delete"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Branch removed successfully", 'success');
+						$('#updateBranchModal').modal('hide');
+					}else{
+						toastIt(response, 'danger');
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error('Error updating branch: ' + error);
+					$(".user-btn-float").click();
 				}
 			});
 
@@ -2792,8 +2901,8 @@ if (typeof(EventSource) !== "undefined") {
 
     channel.bind('branches', function(data) {
 		var elem = $("#branches-all-table")
-		renderBranchTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderBranchTemplate("allBranchTable",elem);
+		var t1 = runDataTable("allBranchTable")
 		updateBranchDataTable(data,t1)
 		$("#branches-spinner").addClass("d-none")
 
@@ -2801,8 +2910,8 @@ if (typeof(EventSource) !== "undefined") {
 
 	channel.bind('roles', function(data) {
 		var elem = $("#roles-all-table")
-		renderRoleTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderRoleTemplate("allRoleTable",elem);
+		var t1 = runDataTable("allRoleTable")
 		updateRoleDataTable(data,t1)
 		$("#roles-spinner").addClass("d-none")
 		console.log("New role rendered:", data);
@@ -2811,8 +2920,8 @@ if (typeof(EventSource) !== "undefined") {
 
 	channel.bind('users', function(data) {
 		var elem = $("#users-all-table")
-		renderUserTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderUserTemplate("allUserTable",elem);
+		var t1 = runDataTable("allUserTable")
 		updateUserDataTable(data,t1)
 		$("#users-spinner").addClass("d-none")
 
@@ -2820,8 +2929,8 @@ if (typeof(EventSource) !== "undefined") {
 
 	channel.bind('accounts', function(data) {
 		var elem = $("#accounts-all-table")
-		renderAccountTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderAccountTemplate("allAccountTable",elem);
+		var t1 = runDataTable("allAccountTable")
 		updateAccountDataTable(data,t1)
 		$("#accounts-spinner").addClass("d-none")
 
@@ -2829,8 +2938,8 @@ if (typeof(EventSource) !== "undefined") {
 
 	channel.bind('requests', function(data) {
 		var elem = $("#requests-all-table")
-		renderRequestTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderRequestTemplate("allRequestTable",elem);
+		var t1 = runDataTable("allRequestTable")
 		updateRequestDataTable(data,t1)
 		$("#requests-spinner").addClass("d-none")
 
@@ -2838,8 +2947,8 @@ if (typeof(EventSource) !== "undefined") {
 
 	channel.bind('floats', function(data) {
 		var elem = $("#floats-all-table")
-		renderFloatTemplate("allTable",elem);
-		var t1 = runDataTable("allTable")
+		renderFloatTemplate("allFloatTable",elem);
+		var t1 = runDataTable("allFloatTable")
 		updateFloatDataTable(data,t1)
 		$("#floats-spinner").addClass("d-none")
 

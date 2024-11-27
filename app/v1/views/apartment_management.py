@@ -10342,15 +10342,29 @@ class FloatRegister(Resource):
 
 class FloatBranch(Resource):
     def get(self):
+        target = request.args.get("target")
+
+        if target == "single":
+            branch_id = request.args.get("id")
+            branch = BranchOp.fetch_branch_by_id(get_identifier(branch_id))
+            
+            return {
+                "id": branch.id,
+                "name": branch.name,
+                "members":match_users(branch.users),
+                "permissions": get_permissions(current_user)
+            }
+        
         com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
         branches = com.branches
         items = []
         for branch in branches:
+            users = match_users(branch.users)
             branch_obj = {
                 "id":branch.id,
                 "code":branch.id,
                 "name":branch.name,
-                "members":"~"
+                "members":users,
                 # "permissions": get_permissions(current_user)
             }
             items.append(branch_obj)
@@ -10358,6 +10372,30 @@ class FloatBranch(Resource):
         return items
 
     def post(self):
+
+        target = request.form.get("target")
+        if target == "delete":
+            branch_id = request.form.get('id')
+            branch_obj = BranchOp.fetch_branch_by_id(get_identifier(branch_id))
+            BranchOp.delete(branch_obj)
+
+            items = []
+            co = current_user.company
+            groups = co.branches
+            for g in groups:
+                users = match_users(g.users)
+                groupdict = {
+                    "id":g.id,
+                    "code":g.id,
+                    "name":g.name,
+                    "members":users,
+                }
+                items.append(groupdict)
+
+            pusher_client_prod.trigger('my-channel', 'branches', items)
+
+            return success
+
         name = request.form.get("name")
 
         if name:
@@ -10368,11 +10406,12 @@ class FloatBranch(Resource):
             co = current_user.company
             groups = co.branches
             for g in groups:
+                users = match_users(g.users)
                 groupdict = {
                     "id":g.id,
                     "code":new_branch.id,
                     "name":g.name,
-                    "members":"~",
+                    "members":users,
                 }
                 items.append(groupdict)
 
@@ -11042,11 +11081,13 @@ class Roles(Resource):
             groups = co.groups
             for g in groups:
                 # CompanyUserGroupOp.delete(g)
-                perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
+                perm = permission_strings(g.description)  if co.name.startswith("Beacon") else permission_strings2(g.description)
+                users = match_users(g.users)
                 groupdict = {
                     "id":g.id,
                     "name":g.name,
                     "desc":perm,
+                    "members":users
                 }
                 items.append(groupdict)
             return items
@@ -11090,11 +11131,13 @@ class Roles(Resource):
                     co = current_user.company
                     groups = co.groups
                     for g in groups:
-                        perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
+                        perm = permission_strings(g.description) if co.name.startswith("Beacon") else permission_strings2(g.description)
+                        users = match_users(g.users)
                         groupdict = {
                             "id":g.id,
                             "name":g.name,
                             "desc":perm,
+                            "members":users
                         }
                         items.append(groupdict)
                     pusher_client_prod.trigger('my-channel', 'roles', items)
@@ -11113,11 +11156,13 @@ class Roles(Resource):
             co = current_user.company
             groups = co.groups
             for g in groups:
-                perm = permission_strings if co.name.startswith("Beacon") else permission_strings2(g.description) 
+                perm = permission_strings(g.description) if co.name.startswith("Beacon") else permission_strings2(g.description)
+                users = match_users(g.users)
                 groupdict = {
                     "id":g.id,
                     "name":g.name,
                     "desc":perm,
+                    "members":users
                 }
                 items.append(groupdict)
             pusher_client_prod.trigger('my-channel', 'roles', items)
@@ -11344,7 +11389,7 @@ class FloatUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status": status,
-                    "branch":"-",
+                    "branch":user.branch.name if user.branch else "-",
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -11367,7 +11412,7 @@ class FloatUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-danger">Non member</span>',
-                    "branch":f"County: {user.ward.subcounty.county.name}, Subcounty: {user.ward.subcounty.name}, Ward:  {user.ward.name}",
+                    "branch":user.branch.name if user.branch else "-",
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -11389,7 +11434,7 @@ class FloatUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-success">Active</span>',
-                    "branch":f"County: {user.ward.subcounty.county.name}, Subcounty: {user.ward.subcounty.name}, Ward:  {user.ward.name}",
+                    "branch":user.branch.name if user.branch else "-",
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -11403,7 +11448,7 @@ class FloatUsers(Resource):
                 "name":member_obj.name,
                 "natid":member_obj.national_id,
                 "tel":member_obj.phone,
-                "branch":"-",
+                "branch":member_obj.branch.id if member_obj.branch else "-",
                 "role":member_obj.company_user_group.id if member_obj.company_user_group else "-"
             }
 
@@ -11417,7 +11462,19 @@ class FloatUsers(Resource):
                 }
                 items.append(groupdict)
 
-            return [user_dict,items,[]]
+
+            co = current_user.company
+            branches = co.branches
+            branch_items = []
+
+            for g in branches:
+                groupdict = {
+                    "value":g.id,
+                    "label":g.name,
+                }
+                branch_items.append(groupdict)
+
+            return [user_dict,items,branch_items]
 
     def post(self):
         member_id = request.form.get("id")
@@ -11428,6 +11485,7 @@ class FloatUsers(Resource):
         pass1 = request.form.get("pass1")
         pass2 = request.form.get("pass2")
         role = request.form.get("role")
+        branch = request.form.get("branch")
         staffid = request.form.get("staff") 
 
         if tel:
@@ -11454,6 +11512,9 @@ class FloatUsers(Resource):
         if staffid:
             UserOp.update_usercode(member_obj,staffid)
 
+        if branch:
+            UserOp.update_branch(member_obj,get_identifier(branch))
+
 
         items = []
         co = current_user.company
@@ -11468,7 +11529,7 @@ class FloatUsers(Resource):
                 "email":user.email,
                 "role":user.company_user_group.name if user.company_user_group else "-",
                 "status": f'<span class="badge bg-success">Active</span>',
-                "branch":"-",
+                "branch":user.branch.name if user.branch else "-",
                 "company":current_user.company.name
             }
             items.append(user_dict)

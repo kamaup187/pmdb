@@ -47,7 +47,8 @@ function updateRoleDataTable(data,table) {
             item.id,             // PNo
             '<button class="btn btn-success text-white update-role-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRoleModal">View</button>',  // Remove button
             item.name,           // Name
-            item.desc,        // Region
+            item.desc,
+            item.members        // Region
         ]);
     });
     table.draw();
@@ -92,7 +93,7 @@ function updateBranchDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.id,             // PNo
-            '<button class="btn btn-success text-white update-user-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateUserModal">View</button>',  // Remove button
+            '<button class="btn btn-success text-white update-branch-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateBranchModal">View</button>',  // Remove button
             item.name,        // Region
             item.members,
         ]);
@@ -166,6 +167,7 @@ var roleDataTableTemplate = `
             <th class="fw-bold">Action</th>
             <th class="fw-bold">Name</th>
             <th class="fw-bold">Access</th>
+            <th class="fw-bold">Members</th>
         </tr>
     </thead>
     <tbody>
@@ -337,11 +339,11 @@ var roleUpdateForm = (roleobj,roles) => {
                                         <div class="mb-3 row">
                                             <div class="col-6">
                                                 <label for="user-update-pass1" class="form-label">Update password</label>
-                                                <input type="password" class="form-control" id="user-update-pass1" placeholder="******">
+                                                <input type="text" class="form-control" id="user-update-pass1" placeholder="******">
                                             </div>
                                             <div class="col-6">
                                                 <label for="user-update-pass2" class="form-label">Confirm password</label>
-                                                <input type="password" class="form-control" id="user-update-pass2" placeholder="******">
+                                                <input type="text" class="form-control" id="user-update-pass2" placeholder="******">
                                             </div>
                                         </div>
     
@@ -723,6 +725,59 @@ var roleUpdateForm = (roleobj,roles) => {
                 
                 `;
                     };
+
+
+                    var branchUpdateForm = (transobj) => {
+   
+                        const permissionsArray = transobj.permissions.split(" ");
+                        const hasPermission = (permission) => permissionsArray.includes(permission);
+                        
+                        if (! hasPermission("7")) {
+                            return `
+    
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                        
+                                        <div class="app-card-body text-center mt-3">
+    
+                                            <p class="text-danger fw-bold">You are not allowed to perform this action</p>
+                                                
+                                        </div><!--//app-card-body-->
+                                        
+                                    </div><!--//app-card-->
+                                </div>
+                            </div><!--//row-->
+                    
+                    `;
+    
+    
+                        }else{
+                            return `
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+                                        
+                                        <div class="app-card-body text-center mt-3">
+                                            <input type="hidden" class="form-control" id="branch-update-id" value="${transobj.id}">
+    
+                                            <div>
+                                                <p class="text-success fw-bold">Branch: ${transobj.name}</p>
+                                            </div>
+    
+                                            <div class="col-auto">
+                                                <a id="delete-branch-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Delete branch</a>
+                                            </div> 
+                                                
+                                        </div><!--//app-card-body-->
+                                        
+                                    </div><!--//app-card-->
+                                </div>
+                            </div><!--//row-->
+                            `
+                        }
+
+                        };
     
 
 var cashTemplate = `

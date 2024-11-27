@@ -2689,7 +2689,7 @@ def string_formatter_alt(item):
 
 def permission_strings(ids_str):
     permissions_dict = {
-        "1": "<br>post collection",
+        "1": "post collection",
         "2": "<br>post purchase",
         "3": "<br>accept collection",
         "4": "<br>accept purchase",
@@ -2707,12 +2707,11 @@ def permission_strings(ids_str):
     # Join the names back into a single string
 
     permissions = ",  ".join(names)
-    print("permitted to do")
     return permissions
 
 def permission_strings2(ids_str):
     permissions_dict = {
-        "1": "<br>add member",
+        "1": "add member",
         "2": "<br>archive member",
         "3": "<br>approve payment",
         "4": "<br>view report",
@@ -2730,8 +2729,10 @@ def permission_strings2(ids_str):
     # Join the names back into a single string
 
     permissions = ",  ".join(names)
-    print("permitted to do")
     return permissions
+
+def match_users(list_users):
+    return ", ".join(f"<br>{user.name}" for user in list_users)
 
 def get_permissions(user):
     print("user group ", user.company_user_group)

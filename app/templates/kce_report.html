@@ -339,12 +339,11 @@
         var subcounty_code = $("#select_subcounty").val();
         var ward_code = $("#select_ward").val();
 
-        if (!ward_code.lenght) {
-            alert("mongina")
+        if (!ward_code.length) {
+            console.log("wards missing",ward_code);
         }else{
   
-          // Build the URL
-        var url_report = "/api/reports?county_code=" + ajax_county_code + "&subcounty_code=" + ajax_subcounty_code + "&ward_code=" + ajax_ward_code;
+        var url_report = "/api/reports?ajax_county_code=" + county_code + "&ajax_subcounty_code=" + subcounty_code + "&ajax_ward_code=" + ward_code;
   
 
         //pass

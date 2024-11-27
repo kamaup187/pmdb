@@ -2772,20 +2772,31 @@ class CreateLocation(Resource):
 class FetchSubcounties(Resource):
     def get(self):
         county_code = request.args.get('countycode')
-        county_obj = CountyOp.fetch_county_by_code(county_code)
-        if county_obj:
-            items =county_obj.subcounties
-            items.insert(0,{"name":"All","code":0})
-            return render_template('ajax_multivariable_alt.html',items=items,placeholder="select subcounty")
+        # print("type ",type(county_code),"the code ",county_code)
+        if county_code == "0":
+            items = [{"name":"All","code":0}]
+        else:
+            county_obj = CountyOp.fetch_county_by_code(county_code)
+            if county_obj:
+                items = SubcountyOp.fetch_subcounties_by_county_id(county_obj.id)
+                items.insert(0,{"name":"All","code":0})
+            else: items = []
+
+        print("items ",items)
+        return render_template('ajax_multivariable_alt.html',items=items,placeholder="select subcounty")
 
 class FetchWards(Resource):
     def get(self):
         subcounty_code = request.args.get('subcountycode')
-        subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
-        if subcounty_obj:
-            items = subcounty_obj.wards
-            items.insert(0,{"name":"All","code":0})
-            return render_template('ajax_multivariable_alt.html',items=items,placeholder="select ward")
+        if subcounty_code == "0":
+            items = [{"name":"All","code":0}]
+        else:
+            subcounty_obj = SubcountyOp.fetch_subcounty_by_code(subcounty_code)
+            if subcounty_obj:
+                items = WardOp.fetch_wards_by_subcounty_id(subcounty_obj.id)
+                items.insert(0,{"name":"All","code":0})
+            else: items = []
+        return render_template('ajax_multivariable_alt.html',items=items,placeholder="select ward")
         
 class UploadCounties(Resource):
     def get(self):
@@ -10067,11 +10078,6 @@ class KceReport(Resource):
     @login_required
     def get(self):
 
-
-        county_code = request.args.get("county_code")
-        subcounty_code = request.args.get("subcounty_code")
-        ward_code = request.args.get("ward_code")
-
         try:
             ajax_county_code = int(request.args.get("ajax_county_code"))
             ajax_subcounty_code = int(request.args.get("ajax_subcounty_code"))
@@ -10081,18 +10087,57 @@ class KceReport(Resource):
             ajax_subcounty_code = None
             ajax_ward_code = None
 
-        if not ajax_ward_code:
+        print("wtwtwtwtwt ",ajax_ward_code)
+
+        if ajax_ward_code is None:
+
+            county_code = request.args.get("county_code")
+            subcounty_code = request.args.get("subcounty_code")
+            ward_code = request.args.get("ward_code")
+
             counties = CountyOp.fetch_all_counties()
+            counties.insert(0,{"name":"All","code":0})
             report_url = f"/api/reports?ajax_county_code={county_code}&ajax_subcounty_code={subcounty_code}&ajax_ward_code={ward_code}"
-            print("report urlllll", report_url)
             return Response(render_template("kce_report.html",countries=countries,counties=counties,report_url=report_url))
         else:
             c_data = CompanyOp.fetch_company_by_name("Rentlib Company")
             users = c_data.users
             items = []
-            
+
+            county_codes = []
+            sub_county_codes = []
+            ward_codes = []
+
+            county_obj =  CountyOp.fetch_county_by_code(ajax_county_code)
+            if county_obj: county_codes = [county_obj.code]
+            subcounty_obj = SubcountyOp.fetch_subcounty_by_code(ajax_subcounty_code)
+            if subcounty_obj: sub_county_codes = [subcounty_obj.code]
+            ward_obj = WardOp.fetch_ward_by_code(ajax_ward_code)
+            if ward_obj: ward_codes = [ward_obj.code]
+
+
+            if ajax_county_code == 0:
+                county_codes.extend(county.code for county in CountyOp.fetch_all_counties())
+                sub_county_codes.extend(sub.code for sub in SubcountyOp.fetch_all_subcounties())
+                ward_codes.extend(sub.code for sub in WardOp.fetch_all_wards())
+
+            if ajax_subcounty_code == 0 and county_obj:
+                sub_county_codes = [sub.code for sub in county_obj.subcounties]
+                ward_codes = [
+                    ward.code for ward in WardOp.fetch_all_wards() 
+                    if ward.sub_county_id in sub_county_codes
+                    ]
+            if ajax_ward_code == 0 and subcounty_obj:
+                ward_codes = [ward.code for ward in subcounty_obj.wards]
+
+            set_ward_codes = set(ward_codes)
             for user in users:
-                if user.ward.subcounty.county.code == ajax_county_code and user.ward.subcounty.code == ajax_subcounty_code and user.ward.code == ajax_ward_code:
+                # if ajax_county_code == 0:
+                #     user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
+                #     items.append(user)            
+                # else:
+                # if user.ward.subcounty.county.code == ajax_county_code and user.ward.subcounty.code == ajax_subcounty_code and user.ward.code == ajax_ward_code:
+                if user.ward.code in set_ward_codes:
                     user.mem_id = f"KCE/{user.ward.subcounty.county.code}/{user.id}/2024"
                     items.append(user)
 

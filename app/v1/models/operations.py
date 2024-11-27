@@ -904,6 +904,9 @@ class SubcountyOp(Subcounty,Base):
     def fetch_subcounty_by_code(code):
         return Subcounty.query.filter_by(code=code).first()
 
+    def fetch_subcounties_by_county_id(county_id):
+        return Subcounty.query.filter_by(county_id=county_id).all()
+
     @staticmethod
     def fetch_all_subcounties():
         return Subcounty.query.order_by(Subcounty.name.asc()).all()
@@ -917,6 +920,9 @@ class WardOp(Ward,Base):
     @staticmethod
     def fetch_ward_by_code(code):
         return Ward.query.filter_by(code=code).first()
+
+    def fetch_wards_by_subcounty_id(subcounty_id):
+        return Ward.query.filter_by(subcounty_id=subcounty_id).all()
 
     @staticmethod
     def fetch_all_wards():

@@ -10050,7 +10050,7 @@ class FloatHome(Resource):
         totaltransfers = 0
 
         for req in all_requests:
-            pendingcollections += 1 if req.status == "pending" else 0
+            pendingcollections += req.amount if req.status == "pending" else 0
 
         for trans in all_transactions:
             if trans.status != "pending":
@@ -10066,7 +10066,7 @@ class FloatHome(Resource):
         return Response(render_template(
             "float_home.html",
             co="set",
-            pendingcollections= pendingcollections,
+            pendingcollections= f'Kes {pendingcollections:,.1f}',
             cashintransit= f'Kes {cashintransit:,.1f}',
             totalbankings= f'Kes {totalbankings:,.1f}',
             totaltransfers=f'Kes {totaltransfers:,.1f}',

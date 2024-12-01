@@ -10044,6 +10044,9 @@ class FloatHome(Resource):
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
         all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
 
+        com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+        branches = com.branches
+
         pendingcollections = 0
         cashintransit = 0
         totalbankings = 0
@@ -10054,9 +10057,11 @@ class FloatHome(Resource):
 
         for trans in all_transactions:
             if trans.status != "pending":
-                if trans.purpose != "transfer":
+                if "float" in trans.purpose:
                     totalbankings += trans.amount
-            # totaltransfers += trans.amount if trans.type == "transfer" else 0
+                else:
+                    totaltransfers += trans.amount
+                    
         for user in c_data.users:
             if user.company_user_group.id == 5002:
                 if user.account:
@@ -10066,6 +10071,7 @@ class FloatHome(Resource):
         return Response(render_template(
             "float_home.html",
             co="set",
+            branches=branches,
             pendingcollections= f'Kes {pendingcollections:,.1f}',
             cashintransit= f'Kes {cashintransit:,.1f}',
             totalbankings= f'Kes {totalbankings:,.1f}',
@@ -10438,7 +10444,7 @@ class Requests(Resource):
 
             acc_dict = {
                 "id":request_obj.id,
-                "branch": f"Agriculture#001",
+                "branch": request_obj.created_by.branch.name if request_obj.created_by.branch else "Not specified",
                 "date":  format_eat_datetime(request_obj.acceptedon),
                 "amount": request_obj.amount,
                 "purpose":"Float purchase" if "float" in request_obj.purpose else "Cash transfer",
@@ -10474,7 +10480,7 @@ class Requests(Resource):
 
                         acc_dict = {
                             "id":req.id,
-                            "branch": f"Agriculture#001",
+                            "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
                             "date": format_eat_datetime(req.acceptedon),
                             "amount": req.amount,
                             "status": status,
@@ -10483,8 +10489,6 @@ class Requests(Resource):
 
                         }
                         items.append(acc_dict)
-                else:
-                    print("no account njege")
 
             return items
 
@@ -10522,7 +10526,7 @@ class Requests(Resource):
 
                             acc_dict = {
                                 "id":req.id,
-                                "branch": f"Agriculture#001",
+                                "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
                                 "date": format_eat_datetime(req.acceptedon),
                                 "amount": req.amount,
                                 "status": status,
@@ -10554,7 +10558,7 @@ class Requests(Resource):
 
                             acc_dict = {
                                 "id":req.id,
-                                "branch": f"Agriculture#001",
+                                "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
                                 "date": format_eat_datetime(req.acceptedon),
                                 "amount": req.amount,
                                 "status": status,
@@ -10576,7 +10580,7 @@ class Requests(Resource):
                 if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
             else:
-                if current_user.account.float_balance < valid_amount:
+                if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
 
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
@@ -10598,7 +10602,7 @@ class Requests(Resource):
 
                         acc_dict = {
                             "id":req.id,
-                            "branch": f"Agriculture#001",
+                            "branch":req.created_by.branch.name if req.created_by.branch else "Not specified",
                             "date": format_eat_datetime(req.acceptedon),
                             "amount": req.amount,
                             "status": status,
@@ -10633,12 +10637,26 @@ class Floats(Resource):
 
             status = f'<span class="badge bg-success">Collected</span>'
             if trans_obj.status == "pending":
-                status = f'<span class="badge bg-warning">Pending</span>'
+                status = f'<span class="badge bg-danger">Pending</span>'
+
+            trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+            if "float" in trans_obj.purpose:
+                trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+            if trans_obj.description:
+                branch = BranchOp.fetch_branch_by_id(trans_obj.description)
+                if branch:
+                    branch_name = branch.name
+                else:
+                    branch_name = "Not specified"
+            else: 
+                branch_name = "Not specified"
 
             acc_dict = {
                 "id":trans_obj.id,
-                "branch": f"Agriculture#001",
+                "branch": branch_name,
                 "date": format_eat_datetime(trans_obj.acceptedon),
+                "type": trans_type,
                 "amount": trans_obj.amount,
                 "purpose":"Float purchased" if "float" in trans_obj.purpose else "Cash transferred",
                 "status": status,
@@ -10656,9 +10674,6 @@ class Floats(Resource):
                 if user.posted_transactions:
                     for trans in user.posted_transactions:
 
-                        # TransactionDataOp.delete(trans)
-                        # continue
-
                         if request.args.get("target") == "pending":
                             if trans.status != "pending":
                                 continue
@@ -10666,24 +10681,42 @@ class Floats(Resource):
                             if trans.status == "pending":
                                 continue
                         else:
-                            pass
+                            if request.args.get("target") == "all floats":
+                                if not "float" in trans.purpose:
+                                    continue
+                            else:
+                                if "float" in trans.purpose:
+                                    continue
+
 
                         status = f'<span class="badge bg-success">Collected</span>'
                         if trans.status == "pending":
-                            status = f'<span class="badge bg-warning">Pending</span>'
+                            status = f'<span class="badge bg-danger">Pending</span>'
+
+                        trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+                        if "float" in trans.purpose:
+                            trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+                        if trans.description:
+                            branch = BranchOp.fetch_branch_by_id(trans.description)
+                            if branch:
+                                branch_name = branch.name
+                            else:
+                                branch_name = "Not specified"
+                        else: 
+                            branch_name = "Not specified"
 
                         acc_dict = {
                             "id":trans.id,
-                            "branch": f"Agriculture#001",
+                            "branch": branch_name,
                             "date": format_eat_datetime(trans.acceptedon),
+                            "type": trans_type,
                             "amount": trans.amount,
                             "status": status,
                             "postedby":trans.created_by.name,
                             "collectedby":trans.received_by.name if trans.accepted_by else "-",
                         }
                         items.append(acc_dict)
-                else:
-                    print("no account njege")
 
             return items
         
@@ -10697,7 +10730,7 @@ class Floats(Resource):
                 TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
 
 
-                if trans_obj.purpose == "float purchased":
+                if "float" in trans_obj.purpose:
                     current_user_account_obj = current_user.account
                     new_amount = current_user_account_obj.float_balance + trans_obj.amount
                     AccountsOp.update_current_account(current_user_account_obj,new_amount,"null")
@@ -10722,10 +10755,24 @@ class Floats(Resource):
                             if trans.status == "pending":
                                 status = f'<span class="badge bg-warning">Pending</span>'
 
+                            trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+                            if "float" in trans.purpose:
+                                trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+                            if trans.description:
+                                branch = BranchOp.fetch_branch_by_id(trans.description)
+                                if branch:
+                                    branch_name = branch.name
+                                else:
+                                    branch_name = "Not specified"
+                            else: 
+                                branch_name = "Not specified"
+
                             acc_dict = {
                                 "id":trans.id,
-                                "branch": f"Agriculture#001",
+                                "branch": branch_name,
                                 "date": format_eat_datetime(trans.acceptedon),
+                                "type": trans_type,
                                 "amount": trans.amount,
                                 "status": status,
                                 "postedby":trans.created_by.name,
@@ -10753,10 +10800,24 @@ class Floats(Resource):
                             if trans.status == "pending":
                                 status = f'<span class="badge bg-warning">Pending</span>'
 
+                            trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+                            if "float" in trans.purpose:
+                                trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+                            if trans.description:
+                                branch = BranchOp.fetch_branch_by_id(trans.description)
+                                if branch:
+                                    branch_name = branch.name
+                                else:
+                                    branch_name = "Not specified"
+                            else: 
+                                branch_name = "Not specified"
+
                             acc_dict = {
                                 "id":trans.id,
-                                "branch": f"Agriculture#001",
+                                "branch": branch_name,
                                 "date": format_eat_datetime(trans.acceptedon),
+                                "type": trans_type,
                                 "amount": trans.amount,
                                 "status": status,
                                 "postedby":trans.created_by.name,
@@ -10772,15 +10833,19 @@ class Floats(Resource):
             amount = request.form.get('amount')
             valid_amount = validate_input(amount)
             purpose = request.form.get('purpose')
+            branch = request.form.get('branch')
 
-            if purpose == "float purchased":
+            if not branch:
+                branch = "5"
+ 
+            if "float" in purpose:
                 if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
             else:
-                if current_user.account.float_balance < valid_amount:
+                if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
                 
-            new_transaction = TransactionDataOp(valid_amount,purpose,current_user.id)
+            new_transaction = TransactionDataOp(valid_amount,purpose,branch,current_user.id)
             new_transaction.save()
 
             msg = f"{current_user.name} has purchased float"
@@ -10798,10 +10863,24 @@ class Floats(Resource):
                         if trans.status == "pending":
                             status = f'<span class="badge bg-warning">Pending</span>'
 
+                        trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+                        if "float" in trans.purpose:
+                            trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+                        if trans.description:
+                            branch = BranchOp.fetch_branch_by_id(trans.description)
+                            if branch:
+                                branch_name = branch.name
+                            else:
+                                branch_name = "Not specified"
+                        else: 
+                            branch_name = "Not specified"
+
                         acc_dict = {
                             "id":trans.id,
-                            "branch": f"Agriculture#001",
+                            "branch": branch_name,
                             "date": format_eat_datetime(trans.acceptedon),
+                            "type": trans_type,
                             "amount": trans.amount,
                             "status": status,
                             "postedby":trans.created_by.name,

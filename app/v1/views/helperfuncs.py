@@ -2697,7 +2697,8 @@ def permission_strings(ids_str):
         "6": "<br>manage accounts",
         "7": "<br>manage users",
         "8": "<br>view reports",
-        "9": "<br>archive records"
+        "9": "<br>archive records",
+        "10": "<br>accept transfers"
     }
 
     ids = ids_str.split()

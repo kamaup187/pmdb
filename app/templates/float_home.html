@@ -341,6 +341,7 @@
 						        <ul class="submenu-list list-unstyled">
 							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Cash collection</a></li>
 							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchase</span></li>
+									<li id="view-transfers" class="submenu-item cash-btn-transfer"><span class="submenu-link button" type="button">Cash transfer</span></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -651,13 +652,13 @@
 										<label for="request-input-type" class="form-label">Collection purpose</label>
 										<select class="form-select" id="request-input-type">
 											<!-- <option selected>Select collection purpose</option> -->
-											<option selected value="float purchase">Float purchase</option>
+											<option selected value="float">Float purchase</option>
 											<option value="transfer">Cash transfer</option>
 											<!-- <option value="other">Other</option> -->
 										</select>
 									</div>
 
-								    <div class="mb-3">
+								    <div class="mb-3 d-none">
 									    <label for="request-input-desc" class="form-label">Description (optional)</label>
 									    <textarea type="text" class="form-control" id="request-input-desc" placeholder="Write a brief description" rows="50"></textarea>
 									</div>
@@ -683,7 +684,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">POST TRANSACTION</h5>
+			  <h5 class="modal-title trans-type-span" id="staticBackdropLabel"></h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -709,16 +710,26 @@
 									</div>
 
 
+									<div id="branch-selector" class="mb-3 d-none">
+										<label for="transaction-branch" class="form-label">Select branch</label>
+										<select class="form-select" id="transaction-branch">
+											<option disabled selected>Select branch below</option>
+											{% for o in branches%}
+											<option value="{{ o.id }}">{{ o.name }}</option>
+											{% endfor %}
+										</select>
+									</div>
+
 									<div class="mb-3">
-										<label for="request-input-type" class="form-label">Transaction purpose</label>
-										<select class="form-select" id="float-input-type">
-											<option selected value="float purchased">Float purchase</option>
+										<label for="float-input-type" class="form-label">Transaction purpose</label>
+										<select class="form-select" id="float-input-type" disabled>
+											<option value="float">Float purchase</option>
 											<option value="transfer">Cash transfer</option>
 										</select>
 									</div>
 
-								    <div class="mb-3">
-									    <label for="request-input-desc" class="form-label">Description (optional)</label>
+								    <div class="mb-3 d-none">
+									    <label for="float-input-desc" class="form-label">Description (optional)</label>
 									    <textarea type="text" class="form-control" id="float-input-desc" placeholder="Write a brief description" rows="50"></textarea>
 									</div>
 
@@ -1025,7 +1036,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">APPROVE TRANSACTION</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">CONFIRM TRANSACTION</h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -1128,7 +1139,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_new.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v1.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1168,6 +1179,7 @@
         "7": { name: "manage users", id: 7 },
         "8": { name: "view reports", id: 8 },
 		"9": { name: "delete records", id: 9 },
+		"10": { name: "accept transfer", id: 10 },
 		};
 
 
@@ -1181,6 +1193,7 @@
 			{ id: 7, name: 'manage users' },
 			{ id: 8, name: 'view reports' },
 			{ id: 9, name: 'delete records' },
+			{ id: 10, name:'accept transfer' }
 		];
 
 		// Convert the permissions string from the backend into an array of permission objects
@@ -1250,6 +1263,12 @@
 		$("#view-floats").removeClass("d-none");
 	}else{
 		$("#view-floats").addClass("d-none");
+	}
+
+	if (hasRight("10")){
+		$("#view-transfers").removeClass("d-none");
+	}else{
+		$("#view-transfers").addClass("d-none");
 	}
 </script>
 
@@ -1357,6 +1376,8 @@
 		})
 
 		$(".cash-btn-float").on("click",function(){
+			$('#float-input-type').val('float');
+			$("#branch-selector").addClass('d-none');
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -1369,13 +1390,63 @@
 			$("#working-block").removeClass("d-none")
 		    $("#working-block").html(floatTemplate)
 
+			$("#tab-header").text("Float Purchases")
+			$(".trans-type-span").text("Buy float")
+
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-all-table").empty()
 			$.ajax({
 				url: "/floats",
 				type: "get",
 				data: {
-				target: "all"
+				target: "all floats",
+				},
+				success: function (response) {
+					var elem = $("#floats-all-table")
+					renderFloatTemplate("allFloatTable",elem);
+
+					var t1 = runDataTable("allFloatTable")
+
+				updateFloatDataTable(response,t1)
+
+				$("#floats-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#floats-spinner").addClass("d-none")
+				}
+			});
+
+			feather.replace();
+		})
+
+		$(".cash-btn-transfer").on("click",function(){
+			$('#float-input-type').val('transfer'); 
+			$("#branch-selector").removeClass('d-none');
+
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(floatTemplate)
+
+			$("#tab-header").text("Cash Transfers")
+			$(".trans-type-span").text("Transfer cash")
+
+			$("#floats-spinner").removeClass("d-none")
+			$("#floats-all-table").empty()
+			$.ajax({
+				url: "/floats",
+				type: "get",
+				data: {
+				target: "all transfers"
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
@@ -2136,7 +2207,7 @@
                     type: "post",
                     data: {
                     amount: $("#float-input-amount").val(),
-					desc:$("#float-input-desc").val(),
+					branch:$("#transaction-branch").val(),
 					purpose: $("#float-input-type").val(),
 					target:"add float"
                     },
@@ -2275,6 +2346,9 @@
 
 		$(document).on("click", "#update-role-btn", function () {
 
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
+
 			const checkedPermissionsString = getCheckedPermissions(permissionsArray2);
 			console.log("Checked permissions string:", checkedPermissionsString);
 
@@ -2297,7 +2371,9 @@
 			},
 			error: function (xhr, status, error) {
 				console.error('Error updating role permissions: ' + error);
-			}
+			},complete: function () {
+					$btn.prop('disabled', false).text('Update');
+				}
 		});
 
 		})
@@ -2474,7 +2550,7 @@
 			)
 		})
 
-		$('#updateFlaotModal').on('hidden.bs.modal', function () {
+		$('#updateFloatModal').on('hidden.bs.modal', function () {
 			$("#update-float-bed").html(
 				`
 				<div class="d-flex justify-content-center">
@@ -2488,8 +2564,7 @@
 
 		$(document).on("click", "#update-user-btn", function () {
 			const $btn = $(this); // Cache the button reference
-
-			$btn.prop('disabled', true).text('Submitting...');
+			$btn.prop('disabled', true).text('Updating...');
 
 			$.ajax({
 				url: '/float/users',
@@ -2523,7 +2598,10 @@
 		})
 
 		$(document).on("click", "#update-account-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
 
 			$.ajax({
 				url: '/accounts',
@@ -2545,6 +2623,8 @@
 				},
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update');
 				}
 			});
 
@@ -2552,7 +2632,10 @@
 
 
 		$(document).on("click", "#allocate-account-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Allocating...');
 
 			$.ajax({
 				url: '/accounts',
@@ -2575,13 +2658,18 @@
 				},
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Allocate');
 				}
 			});
 
 		})
 
 		$(document).on("click", "#update-request-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span>submitting...');
+
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
 
 			$.ajax({
 				url: '/requests',
@@ -2603,6 +2691,8 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
 					$(".cash-btn-request").click();
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update');
 				}
 			});
 
@@ -2615,7 +2705,10 @@
 				toastIt("You do not have the right to delete this record", 'danger');
                 return false;
 			}
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> archiving...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> archiving...');
+
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Archiving...');
 
 			$.ajax({
 				url: '/requests',
@@ -2636,13 +2729,17 @@
 				},
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Archive');
 				}
 			});
 
 		})
 
 		$(document).on("click", "#update-float-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> submitting...');
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
 
 			$.ajax({
 				url: '/floats',
@@ -2663,13 +2760,22 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
 					$(".cash-btn-float").click();
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update');
 				}
 			});
 
 		})
 
 		$(document).on("click", "#delete-float-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> archiving...');
+
+			if (!hasRight("9")){
+				toastIt("You do not have the right to delete this record", 'danger');
+                return false;
+			}
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> archiving...');
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Archiving...');
 
 			$.ajax({
 				url: '/floats',
@@ -2690,13 +2796,22 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating account data: ' + error);
 					$(".cash-btn-float").click();
+				},complete: function () {
+					$btn.prop('disabled', false).text('Archive');
 				}
 			});
 
 		})
 
 		$(document).on("click", "#delete-branch-btn", function () {
-			$(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> removing...');
+			// $(this).html('<span class="spinner-border spinner-border-sm mr-2 text-dark" role="status" aria-hidden="true"></span> removing...');
+			if (!hasRight("9")){
+				toastIt("You do not have the right to delete this record", 'danger');
+                return false;
+			}
+
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Archiving...');
 
 			$.ajax({
 				url: '/float/branches',
@@ -2717,6 +2832,8 @@
 				error: function (xhr, status, error) {
 					console.error('Error updating branch: ' + error);
 					$(".user-btn-float").click();
+				},complete: function () {
+					$btn.prop('disabled', false).text('Archive');
 				}
 			});
 

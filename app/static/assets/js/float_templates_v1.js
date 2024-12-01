@@ -61,7 +61,8 @@ function updateFloatDataTable(data,table) {
             item.id,
             '<button class="btn btn-success text-white update-float-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>',  // Remove button
             item.branch,             // PNo
-            item.date,           // Name
+            item.date,
+            item.type,           // Name
             item.amount,        // Region
             item.status,
             item.postedby,
@@ -145,8 +146,9 @@ var floatDataTableTemplate = `
         <tr>
             <th class="fw-bold">Id</th>
             <th class="fw-bold">Action</th>
-            <th class="fw-bold">Branch</th>
+            <th class="fw-bold">Destination</th>
             <th class="fw-bold">Date</th>
+            <th class="fw-bold">Type</th>
             <th class="fw-bold">Amount</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">PostedBy</th>
@@ -893,7 +895,7 @@ var cashTemplate = `
 var floatTemplate = `
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">Float purchases & Returns</h1>
+        <h1 id="tab-header" class="app-page-title mb-0"></h1>
     </div>
 
 
@@ -909,11 +911,10 @@ var floatTemplate = `
 <div class="col-auto">
      <div class="page-utilities">
         <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
-
             <div class="col-auto">						    
                 <a class="btn app-btn-secondary" href="#"  data-bs-toggle="modal" data-bs-target="#floatModal">
                     <i data-feather="plus" style="width: 16px; height: 16px;"></i>
-                    Post transaction
+                    <span class="trans-type-span"></span>
                 </a>
             </div>
 

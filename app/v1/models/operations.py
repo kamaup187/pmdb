@@ -688,9 +688,10 @@ class CollectionRequestOp(CollectionRequest,Base):
         return CollectionRequest.query.filter(extract('day', CollectionRequest.acceptedon)==date.day).filter(extract('month', CollectionRequest.acceptedon)==date.month).filter(extract('year', CollectionRequest.acceptedon)==date.year).all()
 
 class TransactionDataOp(TransactionData,Base):
-    def __init__(self,amount,purpose,posted_by):
+    def __init__(self,amount,purpose,branch,posted_by):
         self.amount=amount
         self.purpose=purpose
+        self.description = branch
         self.posted_by=posted_by
 
     def fetch_transaction_by_id(id):
@@ -879,7 +880,11 @@ class BranchOp(Branch,Base):
 
     @staticmethod
     def fetch_branch_by_id(id):
-        return Branch.query.filter_by(id=id).first()
+        try:
+            int_id = int(id)
+        except:
+            return None
+        return Branch.query.filter_by(id=int_id).first()
 
     @staticmethod
     def fetch_all_locations():

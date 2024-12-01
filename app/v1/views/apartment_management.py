@@ -222,6 +222,26 @@ class Scripts(Resource):
 
         return "working..."
 
+class IndexV2(Resource):
+    @login_required
+    def get(self):
+        return Response(render_template(
+            "agentindex2.html",
+            co="set",
+            branches=[],
+            pendingcollections= f'Kes 0.0',
+            cashintransit= f'Kes 0.0',
+            totalbankings= f'Kes 0.0',
+            totaltransfers=f'Kes 0.0',
+            permissions=get_permissions(current_user),
+            user_logged_in=current_user
+            ))
+
+class AddReading(Resource):
+    @login_required
+    def get(self):
+        return []
+
 class Index(Resource):
     """class"""
     @login_required

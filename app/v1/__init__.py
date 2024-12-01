@@ -65,6 +65,7 @@ api.add_resource(ViewNewClients,"/new/clients")
 api.add_resource(ViewClients,"/clients")
 api.add_resource(AdminCreateAgent,"/add/admincreateagent")
 api.add_resource(Index,"/index")
+api.add_resource(IndexV2,"/v2/index")
 api.add_resource(SmsStats,"/smsstats")
 api.add_resource(Dashboard,"/dashboard")
 
@@ -118,6 +119,9 @@ api.add_resource(DiscardBills,"/discard/bills")
 api.add_resource(Payments,"/all/payments")
 api.add_resource(PropertyManagement,"/manage/property")
 api.add_resource(MeterManagement,"/meters")
+
+api.add_resource(AddReading,"/v2/readings")
+
 api.add_resource(SubmissionsManagement,"/submissions")
 api.add_resource(PaymentsManagement,"/manage/payments")
 api.add_resource(UpdateCompanyDetails,"/update/companyinfo")

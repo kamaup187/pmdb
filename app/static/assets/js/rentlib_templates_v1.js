@@ -22,15 +22,15 @@ function updateRequestDataTable(data,table) {
     data.forEach(function(item) {
 
         table.row.add([
-            item.id,             // PNo
-            '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
-            item.branch,           // Name
-            item.date,        // Region
-            item.amount,            // Phone
-            item.status,
-            item.posted_by,       // Branch
-            item.collectedby,       // Branch
-
+            item.house,             // PNo
+            // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.prev,           // Name
+            item.curr,        // Region
+            item.units,            // Phone
+            item.rate,
+            item.amount,       // Branch
+            item.period,       // Branch
+            item.date
             // Branch
         ]);
     });
@@ -124,14 +124,14 @@ var requestdataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
-            <th class="fw-bold">Id</th>
-            <th class="fw-bold">Action</th>
-            <th class="fw-bold">Branch</th>
-            <th class="fw-bold">Date</th>
+            <th class="fw-bold">House</th>
+            <th class="fw-bold">Prev</th>
+            <th class="fw-bold">Curr</th>
+            <th class="fw-bold">Units</th>
+            <th class="fw-bold">Rate</th>
             <th class="fw-bold">Amount</th>
-            <th class="fw-bold">Status</th>
-            <th class="fw-bold">PostedBy</th>
-            <th class="fw-bold">CollectedBy</th>
+            <th class="fw-bold">Period</th>
+            <th class="fw-bold">Read</th>
         </tr>
     </thead>
     <tbody>
@@ -802,7 +802,7 @@ var readingTemplate = `
      <div class="page-utilities">
         <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
             <div class="col-auto">						    
-                <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#requestModal">
+                <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#readingModal">
                     <i data-feather="plus" style="width: 16px; height: 16px;"></i>
                     Add reading
                 </a>
@@ -812,16 +812,33 @@ var readingTemplate = `
 </div><!--//col-auto-->
 </div><!--//row-->
 
+<div class="col-6 row mb-2">
+    <div class="mb-3 col-6">
+        <label for="select-datepicker" class="form-label">Select period:</label>
+        <input type="date" id="select-datepicker" class="form-control">
+        </div>
+
+    <div class="mb-3 col-6">
+        <label for="select-reading-property" class="form-label">Select property</label>
+        <select class="form-select" id="select-reading-property">
+            <option disabled selected>Select property below</option>
+        </select>
+    </div>
+</div>
+
 <nav id="requests-table-tab" class="requests-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="requests-all-tab" data-bs-toggle="tab" href="#requests-all" role="tab" aria-controls="requests-all" aria-selected="true">All</a>
-<a class="flex-sm-fill text-sm-center nav-link"  id="requests-pending-tab" data-bs-toggle="tab" href="#requests-pending" role="tab" aria-controls="requests-pending" aria-selected="false">Pending</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="requests-accepted-tab" data-bs-toggle="tab" href="#requests-accepted" role="tab" aria-controls="requests-accepted" aria-selected="false">Accepted</a>
-<a class="flex-sm-fill text-sm-center nav-link d-none" id="requests-delivered-tab" data-bs-toggle="tab" href="#requests-delivered" role="tab" aria-controls="requests-delivered" aria-selected="false">Upcoming</a>
+<a class="flex-sm-fill text-sm-center nav-link"  id="requests-pending-tab" data-bs-toggle="tab" href="#requests-pending" role="tab" aria-controls="requests-pending" aria-selected="false">Previous month</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="requests-all-tab" data-bs-toggle="tab" href="#requests-all" role="tab" aria-controls="requests-all" aria-selected="true">Current month</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="requests-accepted-tab" data-bs-toggle="tab" href="#requests-accepted" role="tab" aria-controls="requests-accepted" aria-selected="false">Next month</a>
 </nav>
 
 
 
 <div class="tab-content" id="requests-table-tab-content">
+
+
+
+
 
     <div id="requests-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">

@@ -13294,6 +13294,59 @@ def filtered_house_list(apartment_id,readdate=None):
 
     return unread_houses
 
+def weekly_filtered_house_list(apartment_id,readdate):
+    """Filtering out read houses"""
+    unread_houses = []
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    house_list = filter_in_metered_houses(prop.name)
+    
+    # period = current_user.company.billing_period.month
+    billing_period = prop.billing_period
+    
+    if readdate:
+        if readdate.month == billing_period.month and readdate.year == billing_period.year:
+            month = billing_period.month
+            year = billing_period.year
+        else:
+            month = billing_period.month + 1 if billing_period.month != 12 else 1
+            year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+
+        intyear, intweek, intweekday = readdate.isocalendar()
+
+    print("INTWEEK 1 ",intweek)
+
+    for house in house_list:
+        active_meter = fetch_active_meter(house)
+        if not active_meter: continue
+        # prev_reading_obj = fetch_last_reading(active_meter.id)
+        prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
+
+        # print("Prev reading period",prev_reading_obj.reading_period.month,"")
+
+        intyear2, intweek2, intweekday2 = prev_reading_obj.reading_period.isocalendar()
+
+        print("INTWEEK 2 ",intweek2)
+
+        if intweek2 == intweek and prev_reading_obj.reading_period.year == year:
+            if prev_reading_obj.description == "actual water reading":
+                pass
+            else:
+                unread_houses.append(house)
+        else:
+
+            unread_houses.append(house)
+
+
+        # if prev_reading_obj.reading_period and prev_reading_obj.description != "initial reading" and prev_reading_obj.description != "actual electricity reading":
+        #     print("there",house,prev_reading_obj.reading_period)
+        #     if prev_reading_obj:
+        #         if prev_reading_obj.reading_period.month != period: #if diff value is compared against 0, reading will only be done once a month 
+        #             unread_houses.append(house)
+        # else:
+        #     unread_houses.append(house)
+
+    return unread_houses
+
 def filtered_house_list_alt(apartment_id,readdate=None,*args):
     """Filtering out read houses"""
     # unread_houses = []

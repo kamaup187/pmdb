@@ -225,9 +225,11 @@ class Scripts(Resource):
 class IndexV2(Resource):
     @login_required
     def get(self):
+        props = fetch_all_apartments_by_user(current_user)
         return Response(render_template(
             "agentindex2.html",
             co="set",
+            properties=props,
             branches=[],
             pendingcollections= f'Kes 0.0',
             cashintransit= f'Kes 0.0',
@@ -237,10 +239,6 @@ class IndexV2(Resource):
             user_logged_in=current_user
             ))
 
-class AddReading(Resource):
-    @login_required
-    def get(self):
-        return []
 
 class Index(Resource):
     """class"""
@@ -10443,6 +10441,125 @@ class FloatBranch(Resource):
 
             pusher_client_prod.trigger('my-channel', 'branches', items)
             return "success"
+
+class AddReading(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        read_date = request.args.get("readperiod")
+        prop_id = request.args.get("propid")
+
+        if target == "houselist":
+            readtype = request.args.get("readtype")
+            prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+            readdate = datetime.datetime.strptime(read_date, '%Y-%m-%d')
+            if readtype == "weekly":
+                target_houses = weekly_filtered_house_list(prop_obj.id,readdate)
+            else:
+                target_houses = filtered_house_list(prop_obj.id,readdate)
+            th_houses = [{"id": th.id, "name": th.name} for th in target_houses]
+            if th_houses:
+                return th_houses
+            else:
+                return [{"id":0,"name":"reading complete!"}]
+
+        if target == "fetch LR":
+
+            house_id = request.args.get("houseid")
+            house_obj = HouseOp.fetch_house_by_id(get_identifier(house_id))
+            if not house_obj:
+                return ["reading complete",0.0]
+            meter = fetch_active_meter(house_obj)
+            meter_id = meter.id
+            last_reading = getlast_reading(meter_id)
+            return ["success",last_reading]   
+          
+        items = []
+
+        props = fetch_all_apartments_by_user(current_user)
+        apartments = []
+        for prop in props:
+            prop_dict = {
+                "id": prop.id,
+                "name": prop.name,
+            }
+            apartments.append(prop_dict)
+
+        if read_date:
+            if prop_id:
+                reading_period = datetime.datetime.strptime(read_date, '%Y-%m-%d')
+                if target == "prev":
+                    reading_period = reading_period - relativedelta(months=1)
+                elif target == "next":
+                    reading_period = reading_period + relativedelta(months=1)
+
+                prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+                readings = readingsauto(reading_period,prop_obj)
+                for item in readings:
+                    intyear, intweek, intweekday = item.reading_period.isocalendar()
+                    item_dict = {
+                        "house":item.house.name,
+                        "prev":item.last_reading,
+                        "curr":item.reading,
+                        "units":item.units,
+                        "rate":item.house.housecode.waterrate,
+                        "amount":item.house.housecode.waterrate * item.units,
+                        "period":f"Week: {intweek}",
+                        "date":item.date.strftime("%d/%b/%y")
+                    }
+                    items.append(item_dict)
+
+        return [items,apartments]
+
+    def post(self):
+
+        reading = request.form.get('reading')
+        last_reading = request.form.get('lr')
+        units_consumed = request.form.get('units')
+        readingperiod = request.form.get('readperiod')
+        houseid = request.form.get('house')
+
+        reading_period = datetime.datetime.strptime(readingperiod, '%Y-%m-%d')
+
+        house_obj = HouseOp.fetch_house_by_id(get_identifier(houseid))
+        meter = fetch_active_meter(house_obj)
+        meter_id = meter.id
+
+        try:
+            reading = float(reading)
+            last_reading = float(last_reading)
+            units_consumed = float(units_consumed)
+        except:
+            return {"error":"Invalid input for reading."}
+
+        reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,house_obj.apartment.id,house_obj.id,meter_id,current_user.id)
+        reading_obj.save()
+
+        readings = readingsauto(reading_period,house_obj.apartment)
+        items = []
+        for item in readings:
+            intyear, intweek, intweekday = item.reading_period.isocalendar()
+
+            item_dict = {
+                "house":item.house.name,
+                "prev":item.last_reading,
+                "curr":item.reading,
+                "units":item.units,
+                "rate":item.house.housecode.waterrate,
+                "amount":item.house.housecode.waterrate * item.units,
+                "period":f"Week: {intweek}",
+                "date":item.date.strftime("%d/%b/%y")
+
+            }
+            items.append(item_dict)
+
+        pusher_client_prod.trigger('rentlib-channel', 'requests', items)
+
+
+        return {"success": "Reading was successfully captured"}
+
+
+
     
 class Requests(Resource):
     def get(self):

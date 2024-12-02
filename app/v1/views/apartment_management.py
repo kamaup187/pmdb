@@ -10081,10 +10081,11 @@ class FloatHome(Resource):
                     totaltransfers += trans.amount
                     
         for user in c_data.users:
-            if user.company_user_group.id == 5002:
-                if user.account:
-                    if user.account.cash_balance > 0:
-                        cashintransit += user.account.cash_balance
+            if user.company_user_group:
+                if "field" in user.company_user_group.name.lower():
+                    if user.account:
+                        if user.account.cash_balance > 0:
+                            cashintransit += user.account.cash_balance
 
         return Response(render_template(
             "float_home.html",

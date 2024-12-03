@@ -715,6 +715,10 @@ var roleUpdateForm = (roleobj,roles) => {
                                                 <a class="btn app-btn-primary" href="#">Hidden</a>
                                             </div>
                                             <div class="col-auto">
+                                                <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
+                                                <a id="delete-float-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Archive</a>
+                                            </div> 
+                                            <div class="col-auto">
                                                 <a id="update-float-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> approve transaction</a>
                                             </div>
                                         </div>

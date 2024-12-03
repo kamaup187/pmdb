@@ -10637,46 +10637,57 @@ class Requests(Resource):
             if target == "accept":
                 request_id = request.form.get('id')
                 request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
-                CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
+                limit = current_user.account.account_limit
+                cash_at_hand = current_user.account.cash_balance
+                request_amount = request_obj.amount
+
+                if cash_at_hand + request_amount <= limit:
+                    CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
 
-                # if request_obj.purpose == "float purchase":
+                    # if request_obj.purpose == "float purchase":
 
-                current_user_account_obj = current_user.account
-                new_amount = current_user_account_obj.cash_balance + request_obj.amount
-                AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
-
-
-                post_user_account_obj = request_obj.created_by.account
-                new_amount = post_user_account_obj.cash_balance - request_obj.amount
-                AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
+                    current_user_account_obj = current_user.account
+                    new_amount = current_user_account_obj.cash_balance + request_obj.amount
+                    AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
 
 
-                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-                users = com.users
-                items = []
-                for user in users:
-                    if user.collection_requests:
-                        for req in user.collection_requests:
-                            status = f'<span class="badge bg-success">Collected</span>'
-                            if req.status == "pending":
-                                status = f'<span class="badge bg-warning">Pending</span>'
+                    post_user_account_obj = request_obj.created_by.account
+                    new_amount = post_user_account_obj.cash_balance - request_obj.amount
+                    AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
-                            acc_dict = {
-                                "id":req.id,
-                                "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-                                "date": format_eat_datetime(req.acceptedon),
-                                "amount": req.amount,
-                                "status": status,
-                                "posted_by":req.created_by.name,
-                                "collectedby":req.received_by.name if req.received_by else "-",
 
-                            }
-                            items.append(acc_dict)
+                    com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+                    users = com.users
+                    items = []
+                    for user in users:
+                        if user.collection_requests:
+                            for req in user.collection_requests:
+                                status = f'<span class="badge bg-success">Collected</span>'
+                                if req.status == "pending":
+                                    status = f'<span class="badge bg-warning">Pending</span>'
 
-                pusher_client_prod.trigger('my-channel', 'requests', items)
+                                acc_dict = {
+                                    "id":req.id,
+                                    "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
+                                    "date": format_eat_datetime(req.acceptedon),
+                                    "amount": req.amount,
+                                    "status": status,
+                                    "posted_by":req.created_by.name,
+                                    "collectedby":req.received_by.name if req.received_by else "-",
 
-                return "success"
+                                }
+                                items.append(acc_dict)
+
+                    pusher_client_prod.trigger('my-channel', 'requests', items)
+
+                    return "success"
+
+                else:
+                    msg = f"{current_user.name} has reached limit, cash at hand: Kes {cash_at_hand}"
+                    send_push_notification(["hello"], "Limit reached!", msg)
+
+                    return "Account limit reached!"
 
             if target == "delete":
                 request_id = request.form.get('id')
@@ -10724,7 +10735,7 @@ class Requests(Resource):
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
 
-            msg = f"{current_user.name} has posted a collection request"
+            msg = f"{current_user.name} has posted a collection request of Kes {valid_amount}"
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 

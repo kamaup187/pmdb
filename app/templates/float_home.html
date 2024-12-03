@@ -339,6 +339,7 @@
 					        </a>
 					        <div id="submenu-4" class="collapse submenu submenu-4 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
+									<span id="cashfloat" class="d-none"></span>
 							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Cash collection</a></li>
 							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchase</span></li>
 									<li id="view-transfers" class="submenu-item cash-btn-transfer"><span class="submenu-link button" type="button">Cash transfer</span></li>
@@ -1376,6 +1377,7 @@
 		})
 
 		$(".cash-btn-float").on("click",function(){
+			$('#cashfloat').text('floats');
 			$('#float-input-type').val('float');
 			$("#branch-selector").addClass('d-none');
 			let checkSmDevice = toggleSide();
@@ -1422,6 +1424,7 @@
 		})
 
 		$(".cash-btn-transfer").on("click",function(){
+			$('#cashfloat').text('transfers');
 			$('#float-input-type').val('transfer'); 
 			$("#branch-selector").removeClass('d-none');
 
@@ -1911,7 +1914,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
-				target: "all"
+				target: "all " + $("#cashfloat").text(),
 				},
 				success: function (response) {
 					var elem = $("#floats-all-table")
@@ -1941,7 +1944,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
-				target: "pending"
+				target: "pending " + $("#cashfloat").text()
 				},
 				success: function (response) {
 					var elem = $("#floats-pending-table")
@@ -1978,7 +1981,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
-				target: "confirmed"
+				target: "confirmed " + $("#cashfloat").text()
 				},
 				success: function (response) {
 					var elem = $("#floats-confirmed-table")

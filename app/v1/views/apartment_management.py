@@ -10810,21 +10810,57 @@ class Floats(Resource):
             items = []
             for user in users:
                 if user.posted_transactions:
-                    for trans in user.posted_transactions:
 
-                        if request.args.get("target") == "pending":
-                            if trans.status != "pending":
-                                continue
-                        elif request.args.get("target") == "confirmed":
-                            if trans.status == "pending":
-                                continue
-                        else:
-                            if request.args.get("target") == "all floats":
-                                if not "float" in trans.purpose:
-                                    continue
-                            else:
-                                if "float" in trans.purpose:
-                                    continue
+
+                    target = request.args.get("target")
+                    target_is_pending = "pending" in target
+                    target_is_confirmed = "confirmed" in target
+                    target_is_floats = "floats" in target
+                    target_is_all_floats = target == "all floats"
+
+                    for trans in user.posted_transactions:
+                        # Skip based on status
+                        if target_is_pending and trans.status != "pending":
+                            continue
+                        if target_is_confirmed and trans.status == "pending":
+                            continue
+
+                        # Skip based on purpose
+                        if target_is_floats and "float" not in trans.purpose:
+                            continue
+                        if not target_is_floats and "float" in trans.purpose and not target_is_all_floats:
+                            continue
+
+                    # for trans in user.posted_transactions:
+
+                    #     if "pending" in request.args.get("target"):
+                    #         if trans.status != "pending":
+                    #             continue
+
+                    #         if "floats" in request.args.get("target"):
+                    #             if not "float" in trans.purpose:
+                    #                 continue
+                    #         else:
+                    #             if "float" in trans.purpose:
+                    #                 continue
+
+                    #     elif "confirmed" in request.args.get("target"):
+                    #         if trans.status == "pending":
+                    #             continue
+
+                    #         if "floats" not in request.args.get("target"):
+                    #             if "float" in trans.purpose:
+                    #                 continue
+                    #         else:
+                    #             if "float" in trans.purpose:
+                    #                 continue
+                    #     else:
+                    #         if request.args.get("target") == "all floats":
+                    #             if not "float" in trans.purpose:
+                    #                 continue
+                    #         else:
+                    #             if "float" in trans.purpose:
+                    #                 continue
 
 
                         status = f'<span class="badge bg-success">Collected</span>'

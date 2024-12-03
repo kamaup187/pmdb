@@ -10684,7 +10684,7 @@ class Requests(Resource):
                     return "success"
 
                 else:
-                    msg = f"{current_user.name} has reached limit, cash at hand: Kes {cash_at_hand}"
+                    msg = f"{current_user.name} has reached limit, cash at hand: Kes {cash_at_hand}, current limit is: Kes {limit}"
                     send_push_notification(["hello"], "Limit reached!", msg)
 
                     return "Account limit reached!"

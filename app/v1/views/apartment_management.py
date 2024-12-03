@@ -11096,8 +11096,9 @@ class Accounts(Resource):
             items = []
             allowed_groups = [5000,5001,5002,5003]
             for user in users:
-                if not user.company_user_group.id in allowed_groups:
-                    continue
+                if user.company_user_group:
+                    if not user.company_user_group.id in allowed_groups:
+                        continue
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,
@@ -11183,8 +11184,9 @@ class Accounts(Resource):
             items = []
             allowed_groups = [5000,5001,5002,5003]
             for user in users:
-                if not user.company_user_group.id in allowed_groups:
-                    continue
+                if user.company_user_group:
+                    if not user.company_user_group.id in allowed_groups:
+                        continue
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,

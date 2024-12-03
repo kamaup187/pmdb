@@ -714,7 +714,7 @@ var roleUpdateForm = (roleobj,roles) => {
                                             <div class="col-auto invisible">
                                                 <a class="btn app-btn-primary" href="#">Hidden</a>
                                             </div>
-                                            <div class="col-auto">
+                                            <div class="col-auto d-none">
                                                 <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
                                                 <a id="delete-float-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Archive</a>
                                             </div> 

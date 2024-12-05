@@ -1140,7 +1140,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v1.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v2.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1346,6 +1346,8 @@
 			$("#working-block").removeClass("d-none")
 		    $("#working-block").html(cashTemplate)
 
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			$("#date-input").val(today);
 
 			$("#requests-spinner").removeClass("d-none")
 			$("#requests-all-table").empty()
@@ -1353,6 +1355,7 @@
 				url: "/requests",
 				type: "get",
 				data: {
+				period: $("#date-input").val(),
 				target: "all"
 				},
 				success: function (response) {
@@ -1392,6 +1395,9 @@
 			$("#working-block").removeClass("d-none")
 		    $("#working-block").html(floatTemplate)
 
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			$("#date-input").val(today);
+
 			$("#tab-header").text("Float Purchases")
 			$(".trans-type-span").text("Buy float")
 
@@ -1401,6 +1407,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
+				period: $("#date-input").val(),
 				target: "all floats",
 				},
 				success: function (response) {
@@ -1440,6 +1447,9 @@
 			$("#working-block").removeClass("d-none")
 		    $("#working-block").html(floatTemplate)
 
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			$("#date-input").val(today);
+
 			$("#tab-header").text("Cash Transfers")
 			$(".trans-type-span").text("Transfer cash")
 
@@ -1449,6 +1459,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
+				period: $("#date-input").val(),
 				target: "all transfers"
 				},
 				success: function (response) {
@@ -1670,6 +1681,7 @@
 				url: "/requests",
 				type: "get",
 				data: {
+				period: $("#date-input").val(),
 				target: "accepted"
 				},
 				success: function (response) {
@@ -1709,6 +1721,7 @@
 				url: "/requests",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "pending"
 				},
 				success: function (response) {
@@ -1744,6 +1757,7 @@
 				url: "/requests",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "delivered"
 				},
 				success: function (response) {
@@ -1778,6 +1792,7 @@
 				url: "/requests",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "all"
 				},
 				success: function (response) {

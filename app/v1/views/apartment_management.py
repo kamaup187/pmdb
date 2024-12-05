@@ -10595,40 +10595,93 @@ class Requests(Resource):
             return acc_dict
         else:
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-            users = com.users
+
+            posting_date = request.args.get("period")
+
+            end = datetime.datetime.strptime(posting_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
+            start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+
+            from sqlalchemy import and_
+
+            target_status = request.args.get("target")
+            if target_status == "pending":
+                status_filter = CollectionRequest.status == "pending"
+            elif target_status == "confirmed":
+                status_filter = CollectionRequest.status != "pending"
+            else:
+                status_filter = True  # No filter applied if no target specified
+
+            # Query all collection requests for users in the specified company
+            query = (
+                CollectionRequest.query
+                .filter(
+                    and_(
+                        CollectionRequest.posted_by.in_([user.id for user in com.users]),  # Only requests for users in the company
+                        status_filter,
+                        CollectionRequest.acceptedon > start,
+                        CollectionRequest.acceptedon < end,  # Apply the target status filter
+                    )
+                )
+            )
+
+            # Fetch the results
+            raw_items = query.all()
+
             items = []
-            for user in users:
-                if user.collection_requests:
-                    for req in user.collection_requests:
-                        # CollectionRequestOp.delete(req)
-                        # continue
 
-                        if request.args.get("target") == "pending":
-                            if req.status != "pending":
-                                continue
-                        elif request.args.get("target") == "confirmed":
-                            if req.status == "pending":
-                                continue
-                        else:
-                            pass
+            for req in raw_items:
+                status = f'<span class="badge bg-success">Collected</span>'
+                if req.status == "pending":
+                    status = f'<span class="badge bg-warning">Pending</span>'
 
-                        status = f'<span class="badge bg-success">Collected</span>'
-                        if req.status == "pending":
-                            status = f'<span class="badge bg-warning">Pending</span>'
+                acc_dict = {
+                    "id":req.id,
+                    "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
+                    "date": format_eat_datetime(req.acceptedon),
+                    "amount": req.amount,
+                    "status": status,
+                    "posted_by":req.created_by.name,
+                    "collectedby":req.received_by.name if req.received_by else "-",
 
-                        acc_dict = {
-                            "id":req.id,
-                            "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-                            "date": format_eat_datetime(req.acceptedon),
-                            "amount": req.amount,
-                            "status": status,
-                            "posted_by":req.created_by.name,
-                            "collectedby":req.received_by.name if req.received_by else "-",
+                }
+                items.append(acc_dict)
 
-                        }
-                        items.append(acc_dict)
+            # users = com.users
+            # for user in users:
+            #     if user.collection_requests:
+            #         for req in user.collection_requests:
+            #             # CollectionRequestOp.delete(req)
+            #             # continue
+
+            #             if request.args.get("target") == "pending":
+            #                 if req.status != "pending":
+            #                     continue
+            #             elif request.args.get("target") == "confirmed":
+            #                 if req.status == "pending":
+            #                     continue
+            #             else:
+            #                 pass
+
+            #             status = f'<span class="badge bg-success">Collected</span>'
+            #             if req.status == "pending":
+            #                 status = f'<span class="badge bg-warning">Pending</span>'
+
+            #             acc_dict = {
+            #                 "id":req.id,
+            #                 "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
+            #                 "date": format_eat_datetime(req.acceptedon),
+            #                 "amount": req.amount,
+            #                 "status": status,
+            #                 "posted_by":req.created_by.name,
+            #                 "collectedby":req.received_by.name if req.received_by else "-",
+
+            #             }
+            #             items.append(acc_dict)
 
             return items
+
+
+
 
     def post(self):
         try:

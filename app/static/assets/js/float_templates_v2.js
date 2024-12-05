@@ -790,7 +790,7 @@ var cashTemplate = `
 		
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">Cash Collection Requests</h1>
+        <h1 class="app-page-title mb-0">Cash collection requests</h1>
     </div>
 
     <div class="col-auto">
@@ -811,8 +811,13 @@ var cashTemplate = `
                     post collection request
                 </a>
             </div>
-        </div><!--//row-->
+
+            <div class="col-auto">
+                <input class="form-control" type="date" id="date-input">
+            </div>
+            </div><!--//row-->
     </div><!--//table-utilities-->
+
 </div><!--//col-auto-->
 </div><!--//row-->
 

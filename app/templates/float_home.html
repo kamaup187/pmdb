@@ -1140,7 +1140,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v2.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v3.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1161,7 +1161,7 @@
 			"pageLength": 100,
 			"searching":true,
 			columnDefs: [ { targets: 0, type: 'natural' } ],
-			"order": [[ 0, "asc" ]],
+			"order": [[ 0, "desc" ]],
 			"bLengthChange": false
 			});
 		return t1;	
@@ -1734,7 +1734,7 @@
 					"pageLength": 100,
 					"searching":true,
 					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
+					"order": [[ 0, "desc" ]],
 					"bLengthChange": false
 				});
 
@@ -1770,7 +1770,7 @@
 					"pageLength": 100,
 					"searching":true,
 					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
+					"order": [[ 0, "desc" ]],
 					"bLengthChange": false
 				});
 
@@ -1929,6 +1929,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "all " + $("#cashfloat").text(),
 				},
 				success: function (response) {
@@ -1959,6 +1960,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "pending " + $("#cashfloat").text()
 				},
 				success: function (response) {
@@ -1971,7 +1973,7 @@
 					"pageLength": 100,
 					"searching":true,
 					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
+					"order": [[ 0, "desc" ]],
 					"bLengthChange": false
 				});
 
@@ -1996,6 +1998,7 @@
 				url: "/floats",
 				type: "get",
 				data: {
+					period: $("#date-input").val(),
 				target: "confirmed " + $("#cashfloat").text()
 				},
 				success: function (response) {
@@ -2008,7 +2011,7 @@
 					"pageLength": 100,
 					"searching":true,
 					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "asc" ]],
+					"order": [[ 0, "desc" ]],
 					"bLengthChange": false
 				});
 

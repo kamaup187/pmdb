@@ -927,6 +927,10 @@ var floatTemplate = `
                 </a>
             </div>
 
+            <div class="col-auto">
+                <input class="form-control" type="date" id="date-input">
+            </div>
+
         </div><!--//row-->
     </div><!--//table-utilities-->
 </div><!--//col-auto-->

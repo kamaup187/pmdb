@@ -10597,7 +10597,6 @@ class Requests(Resource):
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
 
             posting_date = request.args.get("period")
-
             end = datetime.datetime.strptime(posting_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
             start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
 
@@ -10869,6 +10868,11 @@ class Floats(Resource):
 
             return acc_dict
         else:
+
+            posting_date = request.args.get("period")
+            end = datetime.datetime.strptime(posting_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
+            start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = com.users
             items = []
@@ -10883,6 +10887,10 @@ class Floats(Resource):
                     target_is_all_floats = target == "all floats"
 
                     for trans in user.posted_transactions:
+                        if trans.acceptedon > start and trans.acceptedon < end:
+                            pass
+                        else:
+                            continue
                         # Skip based on status
                         if target_is_pending and trans.status != "pending":
                             continue
@@ -10894,6 +10902,8 @@ class Floats(Resource):
                             continue
                         if not target_is_floats and "float" in trans.purpose and not target_is_all_floats:
                             continue
+
+
 
                     # for trans in user.posted_transactions:
 

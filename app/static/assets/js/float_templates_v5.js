@@ -59,7 +59,7 @@ function updateFloatDataTable(data,table) {
     data.forEach(function(item) {
         table.row.add([
             item.id,
-            '<button class="btn btn-success text-white update-float-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>',  // Remove button
+            item.button,  // Remove button
             item.branch,             // PNo
             item.date,
             item.type,           // Name

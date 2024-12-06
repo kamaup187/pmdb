@@ -3933,7 +3933,7 @@ class Payments(Resource):
             # elif numerator < len(smsstatus) and len(smsstatus) != 0:
             #     sms_outline = "btn-warning"
             else:
-                sms_outline = "btn-success"
+                sms_outline = "btn-light"
 
             sms = f'{numerator}/{len(smsstatus)}'
             payment_ratio = f'{payments.count("1")}/{len(payments)}'
@@ -10630,10 +10630,10 @@ class Requests(Resource):
 
             for req in raw_items:
                 status = f'<span class="badge bg-success">Collected</span>'
-                button = f'<button class="btn btn-secondary text-white update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'
+                button = f'<button class="btn btn-light text-secondary update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'
                 if req.status == "pending":
                     status = f'<span class="badge bg-warning">Pending</span>'
-                    button = f'<button class="btn btn-success text-white update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Accept</button>'
+                    button = f'<button class="btn btn-light text-success update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Accept</button>'
 
 
                 acc_dict = {
@@ -10942,8 +10942,10 @@ class Floats(Resource):
 
 
                         status = f'<span class="badge bg-success">Collected</span>'
+                        button = f'<button class="btn btn-light text-secondary update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>'
                         if trans.status == "pending":
                             status = f'<span class="badge bg-danger">Pending</span>'
+                            button = f'<button class="btn btn-light text-success update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">Confirm</button>'
 
                         trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
                         if "float" in trans.purpose:
@@ -10960,6 +10962,7 @@ class Floats(Resource):
 
                         acc_dict = {
                             "id":trans.id,
+                            "button":button,
                             "branch": branch_name,
                             "date": format_eat_datetime(trans.acceptedon),
                             "type": trans_type,

@@ -10630,11 +10630,15 @@ class Requests(Resource):
 
             for req in raw_items:
                 status = f'<span class="badge bg-success">Collected</span>'
+                button = f'<button class="btn btn-secondary text-white update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'
                 if req.status == "pending":
                     status = f'<span class="badge bg-warning">Pending</span>'
+                    button = f'<button class="btn btn-success text-white update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Accept</button>'
+
 
                 acc_dict = {
                     "id":req.id,
+                    "button":button,
                     "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
                     "date": format_eat_datetime(req.acceptedon),
                     "amount": req.amount,

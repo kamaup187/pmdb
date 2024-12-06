@@ -23,7 +23,7 @@ function updateRequestDataTable(data,table) {
 
         table.row.add([
             item.id,             // PNo
-            '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.button,  // Remove button
             item.branch,           // Name
             item.date,        // Region
             item.amount,            // Phone

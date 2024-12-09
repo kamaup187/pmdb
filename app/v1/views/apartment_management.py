@@ -10605,7 +10605,7 @@ class Requests(Resource):
             target_status = request.args.get("target")
             if target_status == "pending":
                 status_filter = CollectionRequest.status == "pending"
-            elif target_status == "confirmed":
+            elif target_status == "accepted":
                 status_filter = CollectionRequest.status != "pending"
             else:
                 status_filter = True  # No filter applied if no target specified
@@ -10649,42 +10649,7 @@ class Requests(Resource):
                 }
                 items.append(acc_dict)
 
-            # users = com.users
-            # for user in users:
-            #     if user.collection_requests:
-            #         for req in user.collection_requests:
-            #             # CollectionRequestOp.delete(req)
-            #             # continue
-
-            #             if request.args.get("target") == "pending":
-            #                 if req.status != "pending":
-            #                     continue
-            #             elif request.args.get("target") == "confirmed":
-            #                 if req.status == "pending":
-            #                     continue
-            #             else:
-            #                 pass
-
-            #             status = f'<span class="badge bg-success">Collected</span>'
-            #             if req.status == "pending":
-            #                 status = f'<span class="badge bg-warning">Pending</span>'
-
-            #             acc_dict = {
-            #                 "id":req.id,
-            #                 "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-            #                 "date": format_eat_datetime(req.acceptedon),
-            #                 "amount": req.amount,
-            #                 "status": status,
-            #                 "posted_by":req.created_by.name,
-            #                 "collectedby":req.received_by.name if req.received_by else "-",
-
-            #             }
-            #             items.append(acc_dict)
-
             return items
-
-
-
 
     def post(self):
         try:

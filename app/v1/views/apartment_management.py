@@ -10846,7 +10846,7 @@ class Accounts(Resource):
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,
-                        "name": f"{user.name}#00{user.account.id}",
+                        "name": f"{user.name}/00{user.account.id}",
                         "fb": user.account.float_balance,
                         "cb": user.account.cash_balance,
                         "limit": user.account.account_limit,
@@ -10863,7 +10863,7 @@ class Accounts(Resource):
             if current_user_account_obj:
                 acc_dict = {
                     "id":current_user_account_obj.id,
-                    "name": f"{current_user.name}#00{current_user_account_obj.id}",
+                    "name": f"{current_user.name}/00{current_user_account_obj.id}",
                     "fb": current_user_account_obj.float_balance,
                     "cb": current_user_account_obj.cash_balance,
                     "limit": current_user_account_obj.account_limit,
@@ -10892,7 +10892,7 @@ class Accounts(Resource):
             if acc_obj:
                 acc_dict = {
                     "id":acc_obj.id,
-                    "name": f"{acc_obj.name}#00{acc_obj.id}",
+                    "name": f"{acc_obj.name}/00{acc_obj.id}",
                     "fb": acc_obj.float_balance,
                     "cb": acc_obj.cash_balance,
                     "limit": acc_obj.account_limit,
@@ -10934,7 +10934,7 @@ class Accounts(Resource):
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,
-                        "name": f"{user.name}#00{user.account.id}",
+                        "name": f"{user.name}/00{user.account.id}",
                         "fb": user.account.float_balance,
                         "cb": user.account.cash_balance,
                         "limit": user.account.account_limit,
@@ -11192,7 +11192,7 @@ class KceUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status": status,
-                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "branch":user.ward.subcounty.county.name + "/" + user.ward.subcounty.name + "/" + user.ward.name,
                     "company":c_data.name
                 }
                 items.append(user_dict)
@@ -11215,7 +11215,7 @@ class KceUsers(Resource):
                     "email":user.email,
                     "role":user.company_user_group.name if user.company_user_group else "-",
                     "status":f'<span class="badge bg-danger">Non member</span>',
-                    "branch":user.ward.subcounty.county.name + "#" + user.ward.subcounty.name + "#" + user.ward.name,
+                    "branch":user.ward.subcounty.county.name + "/" + user.ward.subcounty.name + "/" + user.ward.name,
                     "company":c_data.name
                 }
                 items.append(user_dict)

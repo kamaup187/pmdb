@@ -10059,6 +10059,11 @@ class FloatHome(Resource):
 
         # return "updates ongoing"
 
+        for trans_id in [96,94,92,91,90]:
+            trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+            if trans_obj:
+                TransactionDataOp.delete(trans_obj)
+
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
         all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
 

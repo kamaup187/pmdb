@@ -4622,6 +4622,8 @@ def get_billing_period(prop):
     return period
 
 def get_identifier(str):
+    if isinstance(str,int):
+        return str
     try:
         for i in str:
             if i.isdigit():

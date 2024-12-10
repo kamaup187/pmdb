@@ -4,7 +4,7 @@
 
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
-from sqlalchemy import extract,or_,not_
+from sqlalchemy import extract,or_,not_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 from flask_login import current_user
@@ -687,6 +687,30 @@ class CollectionRequestOp(CollectionRequest,Base):
     def fetch_all_requests_by_date(date):
         return CollectionRequest.query.filter(extract('day', CollectionRequest.acceptedon)==date.day).filter(extract('month', CollectionRequest.acceptedon)==date.month).filter(extract('year', CollectionRequest.acceptedon)==date.year).all()
 
+    def fetch_items_by_params(target_status,company_users,start,end):
+        if target_status == "pending":
+            status_filter = CollectionRequest.status == "pending"
+        elif target_status == "accepted":
+            status_filter = CollectionRequest.status != "pending"
+        else:
+            status_filter = True  # No filter applied if no target specified
+
+        # Query all collection requests for users in the specified company
+        query = (
+            CollectionRequest.query
+            .filter(
+                and_(
+                    CollectionRequest.posted_by.in_([user.id for user in company_users]),  # Only requests for users in the company
+                    status_filter,
+                    CollectionRequest.acceptedon > start,
+                    CollectionRequest.acceptedon < end,  # Apply the target status filter
+                )
+            )
+        )
+
+        # Fetch the results
+        return query.all()
+    
 class TransactionDataOp(TransactionData,Base):
     def __init__(self,amount,purpose,branch,posted_by):
         self.amount=amount
@@ -704,6 +728,37 @@ class TransactionDataOp(TransactionData,Base):
 
     def fetch_all_transactions_by_date(date):
         return TransactionData.query.filter(extract('day', TransactionData.acceptedon)==date.day).filter(extract('month', TransactionData.acceptedon)==date.month).filter(extract('year', TransactionData.acceptedon)==date.year).all()
+
+    def fetch_items_by_params(target_status,company_users,start,end):
+
+        if "pending" in target_status:
+            status_filter = TransactionData.status == "pending"
+        elif "confirmed" in target_status:
+            status_filter = TransactionData.status != "pending"
+        else:
+            status_filter = True  # No filter applied if no target specified
+
+        if "float" in target_status:
+            purpose_filter = TransactionData.purpose == "float"
+        else:
+            purpose_filter = TransactionData.purpose != "float"
+
+        query = (
+            TransactionData.query
+            .filter(
+                and_(
+                    TransactionData.posted_by.in_([user.id for user in company_users]),  # Only requests for users in the company
+                    status_filter,
+                    purpose_filter,  # Apply the target purpose filter
+                    TransactionData.acceptedon > start,
+                    TransactionData.acceptedon < end,  # Apply the target status filter
+                )
+            )
+        )
+
+        # Fetch the results
+        return query.all()
+
 
 class AppTransactionOp(AppTransaction,Base):
     def __init__(self,ref,amount,trans_type,company_id):

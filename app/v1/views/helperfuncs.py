@@ -15170,3 +15170,76 @@ countries = [
     "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ]
 
+
+def get_request_items(target_status,com,posting_date):
+    end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
+    start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+
+    raw_items = CollectionRequestOp.fetch_items_by_params(target_status,com.users,start,end)
+
+    items = []
+    for req in raw_items:
+        status = f'<span class="badge bg-success">Collected</span>'
+        button = f'<button class="btn btn-light text-secondary update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'
+        if req.status == "pending":
+            status = f'<span class="badge bg-warning">Pending</span>'
+            button = f'<button class="btn btn-light text-success update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Accept</button>'
+
+
+        acc_dict = {
+            "id":req.id,
+            "button":button,
+            "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
+            "date": format_eat_datetime(req.acceptedon),
+            "amount": req.amount,
+            "status": status,
+            "posted_by":req.created_by.name,
+            "collectedby":req.received_by.name if req.received_by else "-",
+
+        }
+        items.append(acc_dict)
+
+    return items
+
+def get_float_items(target_status,com,posting_date):
+    end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
+    start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+
+    raw_items = TransactionDataOp.fetch_items_by_params(target_status,com.users,start,end)
+
+    items = []
+    
+    for trans in raw_items:
+        status = f'<span class="badge bg-success">Collected</span>'
+        button = f'<button class="btn btn-light text-secondary update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>'
+        if trans.status == "pending":
+            status = f'<span class="badge bg-danger">Pending</span>'
+            button = f'<button class="btn btn-light text-success update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">Confirm</button>'
+
+        trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
+        if "float" in trans.purpose:
+            trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
+
+        if trans.description:
+            branch = BranchOp.fetch_branch_by_id(trans.description)
+            if branch:
+                branch_name = branch.name
+            else:
+                branch_name = "Not specified"
+        else: 
+            branch_name = "Not specified"
+
+        acc_dict = {
+            "id":trans.id,
+            "button":button,
+            "branch": branch_name,
+            "date": format_eat_datetime(trans.acceptedon),
+            "type": trans_type,
+            "amount": trans.amount,
+            "status": status,
+            "postedby":trans.created_by.name,
+            "collectedby":trans.received_by.name if trans.accepted_by else "-",
+        }
+        items.append(acc_dict)
+
+    return items

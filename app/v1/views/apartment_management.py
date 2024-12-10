@@ -10594,61 +10594,10 @@ class Requests(Resource):
 
             return acc_dict
         else:
-            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-
-            posting_date = request.args.get("period")
-            end = datetime.datetime.strptime(posting_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
-            start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
-
-            from sqlalchemy import and_
-
+            com =  current_user.company
             target_status = request.args.get("target")
-            if target_status == "pending":
-                status_filter = CollectionRequest.status == "pending"
-            elif target_status == "accepted":
-                status_filter = CollectionRequest.status != "pending"
-            else:
-                status_filter = True  # No filter applied if no target specified
-
-            # Query all collection requests for users in the specified company
-            query = (
-                CollectionRequest.query
-                .filter(
-                    and_(
-                        CollectionRequest.posted_by.in_([user.id for user in com.users]),  # Only requests for users in the company
-                        status_filter,
-                        CollectionRequest.acceptedon > start,
-                        CollectionRequest.acceptedon < end,  # Apply the target status filter
-                    )
-                )
-            )
-
-            # Fetch the results
-            raw_items = query.all()
-
-            items = []
-
-            for req in raw_items:
-                status = f'<span class="badge bg-success">Collected</span>'
-                button = f'<button class="btn btn-light text-secondary update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>'
-                if req.status == "pending":
-                    status = f'<span class="badge bg-warning">Pending</span>'
-                    button = f'<button class="btn btn-light text-success update-request-button" data-id="' + str(req.id) + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">Accept</button>'
-
-
-                acc_dict = {
-                    "id":req.id,
-                    "button":button,
-                    "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-                    "date": format_eat_datetime(req.acceptedon),
-                    "amount": req.amount,
-                    "status": status,
-                    "posted_by":req.created_by.name,
-                    "collectedby":req.received_by.name if req.received_by else "-",
-
-                }
-                items.append(acc_dict)
-
+            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            items = get_request_items(target_status,com,posting_date)
             return items
 
     def post(self):
@@ -10665,9 +10614,6 @@ class Requests(Resource):
                 if cash_at_hand + request_amount <= limit:
                     CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
-
-                    # if request_obj.purpose == "float purchase":
-
                     current_user_account_obj = current_user.account
                     new_amount = current_user_account_obj.cash_balance + request_obj.amount
                     AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
@@ -10678,36 +10624,17 @@ class Requests(Resource):
                     AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
 
-                    com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-                    users = com.users
-                    items = []
-                    for user in users:
-                        if user.collection_requests:
-                            for req in user.collection_requests:
-                                status = f'<span class="badge bg-success">Collected</span>'
-                                if req.status == "pending":
-                                    status = f'<span class="badge bg-warning">Pending</span>'
-
-                                acc_dict = {
-                                    "id":req.id,
-                                    "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-                                    "date": format_eat_datetime(req.acceptedon),
-                                    "amount": req.amount,
-                                    "status": status,
-                                    "posted_by":req.created_by.name,
-                                    "collectedby":req.received_by.name if req.received_by else "-",
-
-                                }
-                                items.append(acc_dict)
+                    com =  current_user.company
+                    target_status = request.args.get("items_target")
+                    posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                    items = get_request_items(target_status,com,posting_date)
 
                     pusher_client_prod.trigger('my-channel', 'requests', items)
-
                     return "success"
 
                 else:
                     msg = f"{current_user.name} has reached limit, cash at hand: Kes {cash_at_hand}, current limit is: Kes {limit}"
                     send_push_notification(["hello"], "Limit reached!", msg)
-
                     return "Account limit reached!"
 
             if target == "delete":
@@ -10715,28 +10642,10 @@ class Requests(Resource):
                 request_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(request_id))
                 CollectionRequestOp.delete(request_obj)
 
-
-                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-                users = com.users
-                items = []
-                for user in users:
-                    if user.collection_requests:
-                        for req in user.collection_requests:
-                            status = f'<span class="badge bg-success">Collected</span>'
-                            if req.status == "pending":
-                                status = f'<span class="badge bg-warning">Pending</span>'
-
-                            acc_dict = {
-                                "id":req.id,
-                                "branch": req.created_by.branch.name if req.created_by.branch else "Not specified",
-                                "date": format_eat_datetime(req.acceptedon),
-                                "amount": req.amount,
-                                "status": status,
-                                "posted_by":req.created_by.name,
-                                "collectedby":req.received_by.name if req.received_by else "-",
-
-                            }
-                            items.append(acc_dict)
+                com =  current_user.company
+                target_status = request.args.get("items_target")
+                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                items = get_request_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'requests', items)
 
@@ -10760,27 +10669,10 @@ class Requests(Resource):
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
-            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-            users = com.users
-            items = []
-            for user in users:
-                if user.collection_requests:
-                    for req in user.collection_requests:
-                        status = f'<span class="badge bg-success">Collected</span>'
-                        if req.status == "pending":
-                            status = f'<span class="badge bg-warning">Pending</span>'
-
-                        acc_dict = {
-                            "id":req.id,
-                            "branch":req.created_by.branch.name if req.created_by.branch else "Not specified",
-                            "date": format_eat_datetime(req.acceptedon),
-                            "amount": req.amount,
-                            "status": status,
-                            "posted_by":req.created_by.name,
-                            "collectedby":req.received_by.name if req.received_by else "-",
-
-                        }
-                        items.append(acc_dict)
+            com =  current_user.company
+            target_status = request.args.get("items_target")
+            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            items = get_request_items(target_status,com,posting_date)
 
             pusher_client_prod.trigger('my-channel', 'requests', items)
 
@@ -10837,106 +10729,10 @@ class Floats(Resource):
 
             return acc_dict
         else:
-
-            posting_date = request.args.get("period")
-            end = datetime.datetime.strptime(posting_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
-            start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
-
-            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-            users = com.users
-            items = []
-            for user in users:
-                if user.posted_transactions:
-
-
-                    target = request.args.get("target")
-                    target_is_pending = "pending" in target
-                    target_is_confirmed = "confirmed" in target
-                    target_is_floats = "floats" in target
-                    target_is_all_floats = target == "all floats"
-
-                    for trans in user.posted_transactions:
-                        if trans.acceptedon > start and trans.acceptedon < end:
-                            pass
-                        else:
-                            continue
-                        # Skip based on status
-                        if target_is_pending and trans.status != "pending":
-                            continue
-                        if target_is_confirmed and trans.status == "pending":
-                            continue
-
-                        # Skip based on purpose
-                        if target_is_floats and "float" not in trans.purpose:
-                            continue
-                        if not target_is_floats and "float" in trans.purpose and not target_is_all_floats:
-                            continue
-
-
-
-                    # for trans in user.posted_transactions:
-
-                    #     if "pending" in request.args.get("target"):
-                    #         if trans.status != "pending":
-                    #             continue
-
-                    #         if "floats" in request.args.get("target"):
-                    #             if not "float" in trans.purpose:
-                    #                 continue
-                    #         else:
-                    #             if "float" in trans.purpose:
-                    #                 continue
-
-                    #     elif "confirmed" in request.args.get("target"):
-                    #         if trans.status == "pending":
-                    #             continue
-
-                    #         if "floats" not in request.args.get("target"):
-                    #             if "float" in trans.purpose:
-                    #                 continue
-                    #         else:
-                    #             if "float" in trans.purpose:
-                    #                 continue
-                    #     else:
-                    #         if request.args.get("target") == "all floats":
-                    #             if not "float" in trans.purpose:
-                    #                 continue
-                    #         else:
-                    #             if "float" in trans.purpose:
-                    #                 continue
-
-
-                        status = f'<span class="badge bg-success">Collected</span>'
-                        button = f'<button class="btn btn-light text-secondary update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">View</button>'
-                        if trans.status == "pending":
-                            status = f'<span class="badge bg-danger">Pending</span>'
-                            button = f'<button class="btn btn-light text-success update-float-button" data-id="' + str(trans.id) + '" data-bs-toggle="modal" data-bs-target="#updateFloatModal">Confirm</button>'
-
-                        trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
-                        if "float" in trans.purpose:
-                            trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
-
-                        if trans.description:
-                            branch = BranchOp.fetch_branch_by_id(trans.description)
-                            if branch:
-                                branch_name = branch.name
-                            else:
-                                branch_name = "Not specified"
-                        else: 
-                            branch_name = "Not specified"
-
-                        acc_dict = {
-                            "id":trans.id,
-                            "button":button,
-                            "branch": branch_name,
-                            "date": format_eat_datetime(trans.acceptedon),
-                            "type": trans_type,
-                            "amount": trans.amount,
-                            "status": status,
-                            "postedby":trans.created_by.name,
-                            "collectedby":trans.received_by.name if trans.accepted_by else "-",
-                        }
-                        items.append(acc_dict)
+            com =  current_user.company
+            target_status = request.args.get("target")
+            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            items = get_float_items(target_status,com,posting_date)
 
             return items
         
@@ -10964,41 +10760,10 @@ class Floats(Resource):
                 AccountsOp.update_current_account(post_user_account_obj,"null",new_amount)
 
 
-                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-                users = com.users
-                items = []
-                for user in users:
-                    if user.posted_transactions:
-                        for trans in user.posted_transactions:
-
-                            status = f'<span class="badge bg-success">Collected</span>'
-                            if trans.status == "pending":
-                                status = f'<span class="badge bg-warning">Pending</span>'
-
-                            trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
-                            if "float" in trans.purpose:
-                                trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
-
-                            if trans.description:
-                                branch = BranchOp.fetch_branch_by_id(trans.description)
-                                if branch:
-                                    branch_name = branch.name
-                                else:
-                                    branch_name = "Not specified"
-                            else: 
-                                branch_name = "Not specified"
-
-                            acc_dict = {
-                                "id":trans.id,
-                                "branch": branch_name,
-                                "date": format_eat_datetime(trans.acceptedon),
-                                "type": trans_type,
-                                "amount": trans.amount,
-                                "status": status,
-                                "postedby":trans.created_by.name,
-                                "collectedby":trans.received_by.name if trans.accepted_by else "-",
-                            }
-                            items.append(acc_dict)
+                com =  current_user.company
+                target_status = request.args.get("target")
+                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                items = get_float_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
 
@@ -11009,44 +10774,12 @@ class Floats(Resource):
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.delete(trans_obj)
 
-                com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-                users = com.users
-                items = []
-                for user in users:
-                    if user.posted_transactions:
-                        for trans in user.posted_transactions:
-
-                            status = f'<span class="badge bg-success">Collected</span>'
-                            if trans.status == "pending":
-                                status = f'<span class="badge bg-warning">Pending</span>'
-
-                            trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
-                            if "float" in trans.purpose:
-                                trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
-
-                            if trans.description:
-                                branch = BranchOp.fetch_branch_by_id(trans.description)
-                                if branch:
-                                    branch_name = branch.name
-                                else:
-                                    branch_name = "Not specified"
-                            else: 
-                                branch_name = "Not specified"
-
-                            acc_dict = {
-                                "id":trans.id,
-                                "branch": branch_name,
-                                "date": format_eat_datetime(trans.acceptedon),
-                                "type": trans_type,
-                                "amount": trans.amount,
-                                "status": status,
-                                "postedby":trans.created_by.name,
-                                "collectedby":trans.received_by.name if trans.accepted_by else "-",
-                            }
-                            items.append(acc_dict)
+                com =  current_user.company
+                target_status = request.args.get("target")
+                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                items = get_float_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
-
 
                 return "success"
 
@@ -11072,47 +10805,12 @@ class Floats(Resource):
 
             send_push_notification(["hello"], "Float purchase notification!", msg)
 
-            com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-            users = com.users
-            items = []
-            for user in users:
-                if user.posted_transactions:
-                    for trans in user.posted_transactions:
-
-                        status = f'<span class="badge bg-success">Collected</span>'
-                        if trans.status == "pending":
-                            status = f'<span class="badge bg-warning">Pending</span>'
-
-                        trans_type = f'<span class="badge bg-warning">Cash transfer</span>'
-                        if "float" in trans.purpose:
-                            trans_type = f'<span class="badge bg-secondary">Float purchase</span>'
-
-                        if trans.description:
-                            branch = BranchOp.fetch_branch_by_id(trans.description)
-                            if branch:
-                                branch_name = branch.name
-                            else:
-                                branch_name = "Not specified"
-                        else: 
-                            branch_name = "Not specified"
-
-                        acc_dict = {
-                            "id":trans.id,
-                            "branch": branch_name,
-                            "date": format_eat_datetime(trans.acceptedon),
-                            "type": trans_type,
-                            "amount": trans.amount,
-                            "status": status,
-                            "postedby":trans.created_by.name,
-                            "collectedby":trans.received_by.name if trans.accepted_by else "-",
-                        }
-                        items.append(acc_dict)
+            com =  current_user.company
+            target_status = request.args.get("target")
+            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            items = get_float_items(target_status,com,posting_date)
 
             pusher_client_prod.trigger('my-channel', 'floats', items)
-
-            # sms_text = f"{current_user.name} has approved a transaction"
-            # phonenum = sms_phone_number_formatter("0704448189")
-            # sms_sender("Beacon Technologies Ltd",sms_text,phonenum)
             
             return "success"
     

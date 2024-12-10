@@ -15173,7 +15173,7 @@ countries = [
 
 def get_request_items(target_status,com,posting_date):
     end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
-    start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+    start = (end - datetime.timedelta(days=0)).replace(hour=0, minute=0, second=0)
 
     raw_items = CollectionRequestOp.fetch_items_by_params(target_status,com.users,start,end)
 
@@ -15203,7 +15203,7 @@ def get_request_items(target_status,com,posting_date):
 
 def get_float_items(target_status,com,posting_date):
     end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
-    start = (end - datetime.timedelta(days=1)).replace(hour=0, minute=0, second=0)
+    start = (end - datetime.timedelta(days=0)).replace(hour=0, minute=0, second=0)
 
     raw_items = TransactionDataOp.fetch_items_by_params(target_status,com.users,start,end)
 

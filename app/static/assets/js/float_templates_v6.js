@@ -822,10 +822,9 @@ var cashTemplate = `
 </div><!--//row-->
 
 <nav id="requests-table-tab" class="requests-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="requests-all-tab" data-bs-toggle="tab" href="#requests-all" role="tab" aria-controls="requests-all" aria-selected="true">All</a>
-<a class="flex-sm-fill text-sm-center nav-link"  id="requests-pending-tab" data-bs-toggle="tab" href="#requests-pending" role="tab" aria-controls="requests-pending" aria-selected="false">Pending</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="requests-accepted-tab" data-bs-toggle="tab" href="#requests-accepted" role="tab" aria-controls="requests-accepted" aria-selected="false">Accepted</a>
-<a class="flex-sm-fill text-sm-center nav-link d-none" id="requests-delivered-tab" data-bs-toggle="tab" href="#requests-delivered" role="tab" aria-controls="requests-delivered" aria-selected="false">Upcoming</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="requests-pending-tab" data-bs-toggle="tab" href="#requests-pending" role="tab" aria-controls="requests-all" aria-selected="true">Pending collections</a>
+<a class="flex-sm-fill text-sm-center nav-link"  id="requests-accepted-tab" data-bs-toggle="tab" href="#requests-accepted" role="tab" aria-controls="requests-pending" aria-selected="false">Collected cash</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="requests-all-tab" data-bs-toggle="tab" href="#requests-all" role="tab" aria-controls="requests-accepted" aria-selected="false">All transactions</a>
 </nav>
 
 
@@ -838,7 +837,7 @@ var cashTemplate = `
         </div>
     </div>
 
-    <div class="tab-pane fade" id="requests-pending" role="tabpanel" aria-labelledby="requests-pending-tab">
+    <div class="tab-pane fade show active" id="requests-pending" role="tabpanel" aria-labelledby="requests-pending-tab">
         <div class="app-card app-card-requests-table shadow-sm mb-5">
             <div class="app-card-body">
                 <div class="row">
@@ -880,7 +879,7 @@ var cashTemplate = `
         </div><!--//app-card-->
     </div><!--//tab-pane-->
 
-    <div class="tab-pane fade show active" id="requests-all" role="tabpanel" aria-labelledby="requests-all-tab">
+    <div class="tab-pane fade" id="requests-all" role="tabpanel" aria-labelledby="requests-all-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
                 <div class="row">
@@ -937,9 +936,9 @@ var floatTemplate = `
 </div><!--//row-->
 
 <nav id="floats-table-tab" class="floats-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-all" aria-selected="true">All transactions</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-pending" aria-selected="false">Pending transactions</a>
-<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-confirmed" aria-selected="false">Confirmed transactions</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="floats-pending-tab" data-bs-toggle="tab" href="#floats-pending" role="tab" aria-controls="floats-all" aria-selected="true">Pending transactions</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="floats-confirmed-tab" data-bs-toggle="tab" href="#floats-confirmed" role="tab" aria-controls="floats-pending" aria-selected="false">Confirmed transactions</a>
+<a class="flex-sm-fill text-sm-center nav-link" id="floats-all-tab" data-bs-toggle="tab" href="#floats-all" role="tab" aria-controls="floats-confirmed" aria-selected="false">All transactions</a>
 </nav>
 
 
@@ -952,7 +951,7 @@ var floatTemplate = `
     </div>
 
  
-    <div class="tab-pane fade" id="floats-pending" role="tabpanel" aria-labelledby="floats-pending-tab">
+    <div class="tab-pane fade show active" id="floats-pending" role="tabpanel" aria-labelledby="floats-pending-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
                 <div class="row">
@@ -981,7 +980,7 @@ var floatTemplate = `
             </div><!--//app-card-->	
     </div><!--//tab-pane-->
 
-    <div class="tab-pane fade show active" id="floats-all" role="tabpanel" aria-labelledby="floats-all-tab">
+    <div class="tab-pane fade" id="floats-all" role="tabpanel" aria-labelledby="floats-all-tab">
             <div class="app-card app-card-requests-table mb-5">
                 <div class="app-card-body">
                     <div class="row">

@@ -1140,7 +1140,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v5.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v6.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1356,13 +1356,13 @@
 				type: "get",
 				data: {
 				period: $("#date-input").val(),
-				target: "all"
+				target: "pending"
 				},
 				success: function (response) {
-					var elem = $("#requests-all-table")
-					renderRequestTemplate("allRequestTable",elem);
+					var elem = $("#requests-pending-table")
+					renderRequestTemplate("pendingTable",elem);
 
-					var t1 = runDataTable("allRequestTable")
+					var t1 = runDataTable("pendingTable")
 
 				updateRequestDataTable(response,t1)
 
@@ -1408,13 +1408,13 @@
 				type: "get",
 				data: {
 				period: $("#date-input").val(),
-				target: "float",
+				target: "pending " +  $("#cashfloat").text(),
 				},
 				success: function (response) {
-					var elem = $("#floats-all-table")
-					renderFloatTemplate("allFloatTable",elem);
+					var elem = $("#floats-pending-table")
+					renderFloatTemplate("pendingFloatTable",elem);
 
-					var t1 = runDataTable("allFloatTable")
+					var t1 = runDataTable("pendingFloatTable")
 
 				updateFloatDataTable(response,t1)
 
@@ -1460,13 +1460,13 @@
 				type: "get",
 				data: {
 				period: $("#date-input").val(),
-				target: "transfer"
+				target: "pending " +  $("#cashfloat").text()
 				},
 				success: function (response) {
-					var elem = $("#floats-all-table")
-					renderFloatTemplate("allFloatTable",elem);
+					var elem = $("#floats-pending-table")
+					renderFloatTemplate("allPendingTable",elem);
 
-					var t1 = runDataTable("allFloatTable")
+					var t1 = runDataTable("allPendingTable")
 
 				updateFloatDataTable(response,t1)
 

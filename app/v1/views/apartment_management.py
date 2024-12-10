@@ -10059,7 +10059,7 @@ class FloatHome(Resource):
 
         # return "updates ongoing"
 
-        # for trans_id in [96,94,92,91,90]:
+        # for trans_id in [101,102,97,98,99]:
         #     trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
         #     if trans_obj:
         #         TransactionDataOp.delete(trans_obj)
@@ -10685,6 +10685,14 @@ class Requests(Resource):
                 if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
 
+
+            transactions = current_user.collection_requests
+            previous_transaction = max(transactions, key=lambda x: x.id) if transactions else None
+
+            if previous_transaction:
+                if previous_transaction.status == "pending" and previous_transaction.amount == valid_amount:
+                    return "duplicate transaction"
+
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
 
@@ -10830,9 +10838,16 @@ class Floats(Resource):
                 if current_user.account.cash_balance < valid_amount:
                     return "Error, Insufficient funds"
                 
+            transactions = current_user.posted_transactions
+            previous_transaction = max(transactions, key=lambda x: x.id) if transactions else None
+
+            if previous_transaction:
+                if previous_transaction.status == "pending" and previous_transaction.amount == valid_amount:
+                    return "duplicate transaction"
+
             new_transaction = TransactionDataOp(valid_amount,purpose,branch,current_user.id)
             new_transaction.save()
-
+                
             msg = f"{current_user.name} has purchased float"
 
             send_push_notification(["hello"], "Float purchase notification!", msg)

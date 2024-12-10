@@ -10057,20 +10057,24 @@ class FloatHome(Resource):
         else:
             return redirect(url_for('api.floatlogin'))
 
-        # return "updates ongoing"
+        #### return "updates ongoing"
 
-        # for trans_id in [101,102,97,98,99]:
+        ############################################################################################################
+
+        # for trans_id in [106,107,97,98,99]:
         #     trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
         #     if trans_obj:
         #         TransactionDataOp.delete(trans_obj)
 
-        # for trans_id in [172,171]:
+        # for trans_id in [172,173]:
         #     trans_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(trans_id))
         #     if trans_obj:
         #         CollectionRequestOp.delete(trans_obj)
 
         # dashboard_items = update_dashboard(current_user)
         # pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
+
+        ###########################################################################################################
 
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
         all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
@@ -10641,7 +10645,7 @@ class Requests(Resource):
 
 
                     com =  current_user.company
-                    target_status = request.args.get("items_target")
+                    target_status = request.form.get("items_target")
                     posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                     items = get_request_items(target_status,com,posting_date)
 
@@ -10663,7 +10667,7 @@ class Requests(Resource):
                 CollectionRequestOp.delete(request_obj)
 
                 com =  current_user.company
-                target_status = request.args.get("items_target")
+                target_status = request.form.get("items_target")
                 posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_request_items(target_status,com,posting_date)
 
@@ -10701,7 +10705,7 @@ class Requests(Resource):
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
             com =  current_user.company
-            target_status = request.args.get("items_target")
+            target_status = request.form.get("items_target")
             posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
             items = get_request_items(target_status,com,posting_date)
 
@@ -10795,7 +10799,7 @@ class Floats(Resource):
 
 
                 com =  current_user.company
-                target_status = request.args.get("target")
+                target_status = request.form.get("target")
                 posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_float_items(target_status,com,posting_date)
 
@@ -10812,7 +10816,7 @@ class Floats(Resource):
                 TransactionDataOp.delete(trans_obj)
 
                 com =  current_user.company
-                target_status = request.args.get("target")
+                target_status = request.form.get("target")
                 posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_float_items(target_status,com,posting_date)
 
@@ -10853,8 +10857,8 @@ class Floats(Resource):
             send_push_notification(["hello"], "Float purchase notification!", msg)
 
             com =  current_user.company
-            target_status = request.args.get("target")
-            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            target_status = request.form.get("target")
+            posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
             items = get_float_items(target_status,com,posting_date)
 
             pusher_client_prod.trigger('my-channel', 'floats', items)

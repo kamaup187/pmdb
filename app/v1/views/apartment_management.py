@@ -10059,10 +10059,18 @@ class FloatHome(Resource):
 
         # return "updates ongoing"
 
-        for trans_id in [96,94,92,91,90]:
-            trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
-            if trans_obj:
-                TransactionDataOp.delete(trans_obj)
+        # for trans_id in [96,94,92,91,90]:
+        #     trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
+        #     if trans_obj:
+        #         TransactionDataOp.delete(trans_obj)
+
+        # for trans_id in [172,171]:
+        #     trans_obj = CollectionRequestOp.fetch_request_by_id(get_identifier(trans_id))
+        #     if trans_obj:
+        #         CollectionRequestOp.delete(trans_obj)
+
+        # dashboard_items = update_dashboard(current_user)
+        # pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
 
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
         all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())

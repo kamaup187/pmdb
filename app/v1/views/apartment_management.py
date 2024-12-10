@@ -10572,6 +10572,9 @@ class Requests(Resource):
 
         # send_push_notification(["hello"], "Requests!", "You are accessing collection requests.")
 
+        # items = ["45","67","0","100"]
+        # pusher_client_prod.trigger('my-channel', 'dashboard', items)
+
         target = request.args.get("target")
         
         items = []
@@ -10635,6 +10638,10 @@ class Requests(Resource):
                     items = get_request_items(target_status,com,posting_date)
 
                     pusher_client_prod.trigger('my-channel', 'requests', items)
+
+                    dashboard_items = update_dashboard(current_user)
+                    pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
+                    
                     return "success"
 
                 else:
@@ -10653,6 +10660,9 @@ class Requests(Resource):
                 items = get_request_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'requests', items)
+
+                dashboard_items = update_dashboard(current_user)
+                pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
 
                 return "success"
 
@@ -10680,6 +10690,9 @@ class Requests(Resource):
             items = get_request_items(target_status,com,posting_date)
 
             pusher_client_prod.trigger('my-channel', 'requests', items)
+
+            dashboard_items = update_dashboard(current_user)
+            pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
 
             # sms_text = f"{current_user.name} has posted a request"
             # phonenum = sms_phone_number_formatter("0704448189")
@@ -10772,6 +10785,9 @@ class Floats(Resource):
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
 
+                dashboard_items = update_dashboard(current_user)
+                pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
+
                 return "success"
 
             if target == "delete":
@@ -10785,6 +10801,9 @@ class Floats(Resource):
                 items = get_float_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
+
+                dashboard_items = update_dashboard(current_user)
+                pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
 
                 return "success"
 
@@ -10816,6 +10835,9 @@ class Floats(Resource):
             items = get_float_items(target_status,com,posting_date)
 
             pusher_client_prod.trigger('my-channel', 'floats', items)
+
+            dashboard_items = update_dashboard(current_user)
+            pusher_client_prod.trigger('my-channel', 'dashboard', dashboard_items)
             
             return "success"
     

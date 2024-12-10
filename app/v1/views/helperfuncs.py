@@ -15245,3 +15245,32 @@ def get_float_items(target_status,com,posting_date):
         items.append(acc_dict)
 
     return items
+
+
+def update_dashboard(current_user):
+    all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
+    all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
+
+    pendingcollections = 0
+    cashintransit = 0
+    totalbankings = 0
+    totaltransfers = 0
+
+    for req in all_requests:
+        pendingcollections += req.amount if req.status == "pending" else 0
+
+    for trans in all_transactions:
+        if trans.status != "pending":
+            if "float" in trans.purpose:
+                totalbankings += trans.amount
+            else:
+                totaltransfers += trans.amount
+                
+    for user in current_user.company.users:
+        if user.company_user_group:
+            if "collection" in user.company_user_group.name.lower():
+                if user.account:
+                    if user.account.cash_balance > 0:
+                        cashintransit += user.account.cash_balance
+
+    return [f'Kes {pendingcollections:,.1f}',f'Kes {cashintransit:,.1f}','Kes 0.0',f'Kes {totalbankings:,.1f}']

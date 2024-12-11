@@ -615,10 +615,10 @@ var roleUpdateForm = (roleobj,roles) => {
                                     <div class="mb-2"><strong>Posted by: </strong> ${requestobj.by}</div>
 
                                     <input type="hidden" class="form-control" id="request-update-id" value="${requestobj.id}">
-
+                                    <hr>
                                     <div class="row justify-content-between">
-                                        <div class="col-auto invisible">
-                                            <a class="btn app-btn-primary" href="#">Hidden</a>
+                                        <div class="col-auto">
+                                            <a id="delete-request-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Cancel request</a>
                                         </div>
                                         <div class="col-auto">
                                             <a id="update-request-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> Accept request</a>
@@ -709,14 +709,10 @@ var roleUpdateForm = (roleobj,roles) => {
                                         <div class="mb-2"><strong>Posted by: </strong> ${transobj.by}</div>
     
                                         <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
-    
+                                        <hr>
                                         <div class="row justify-content-between">
-                                            <div class="col-auto invisible">
-                                                <a class="btn app-btn-primary" href="#">Hidden</a>
-                                            </div>
-                                            <div class="col-auto d-none">
-                                                <input type="hidden" class="form-control" id="float-update-id" value="${transobj.id}">
-                                                <a id="delete-float-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Archive</a>
+                                            <div class="col-auto">
+                                                <a id="delete-float-btn" class="btn btn-danger" href="#"> <i data-feather="trash"></i>Cancel transaction</a>
                                             </div> 
                                             <div class="col-auto">
                                                 <a id="update-float-btn" class="btn app-btn-secondary" href="#"> <i data-feather="thumbs-up"></i> approve transaction</a>

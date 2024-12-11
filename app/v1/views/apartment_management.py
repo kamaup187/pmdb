@@ -10660,8 +10660,8 @@ class Requests(Resource):
 
 
                     com =  current_user.company
-                    target_status = request.form.get("items_target")
-                    posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                    target_status = request.form.get("items")
+                    posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                     items = get_request_items(target_status,com,posting_date)
 
                     pusher_client_prod.trigger('my-channel', 'requests', items)
@@ -10682,8 +10682,8 @@ class Requests(Resource):
                 CollectionRequestOp.delete(request_obj)
 
                 com =  current_user.company
-                target_status = request.form.get("items_target")
-                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                target_status = request.form.get("items")
+                posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_request_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'requests', items)
@@ -10720,11 +10720,9 @@ class Requests(Resource):
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
             com =  current_user.company
-            target_status = request.form.get("items_target")
-            posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+            target_status = request.form.get("items")
+            posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
             items = get_request_items(target_status,com,posting_date)
-
-            print("itemmmmmms ",items)
 
             pusher_client_prod.trigger('my-channel', 'requests', items)
 
@@ -10816,8 +10814,8 @@ class Floats(Resource):
 
 
                 com =  current_user.company
-                target_status = request.form.get("target")
-                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                target_status = request.form.get("items")
+                posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_float_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
@@ -10833,8 +10831,8 @@ class Floats(Resource):
                 TransactionDataOp.delete(trans_obj)
 
                 com =  current_user.company
-                target_status = request.form.get("target")
-                posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
+                target_status = request.form.get("items")
+                posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
                 items = get_float_items(target_status,com,posting_date)
 
                 pusher_client_prod.trigger('my-channel', 'floats', items)
@@ -10874,7 +10872,7 @@ class Floats(Resource):
             send_push_notification(["hello"], "Float purchase notification!", msg)
 
             com =  current_user.company
-            target_status = request.form.get("target")
+            target_status = request.form.get("items")
             posting_date = request.form.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
             items = get_float_items(target_status,com,posting_date)
 

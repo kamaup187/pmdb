@@ -340,6 +340,8 @@
 					        <div id="submenu-4" class="collapse submenu submenu-4 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
 									<span id="cashfloat" class="d-none"></span>
+									<span id="targetbase" class="d-none">pending</span>
+
 							        <li id="view-collections" class="submenu-item cash-btn-request"><a class="submenu-link button" type="button">Cash collection</a></li>
 							        <li id="view-floats" class="submenu-item cash-btn-float"><span class="submenu-link button" type="button">Float purchase</span></li>
 									<li id="view-transfers" class="submenu-item cash-btn-transfer"><span class="submenu-link button" type="button">Cash transfer</span></li>
@@ -1200,7 +1202,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v6.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v7.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1404,6 +1406,7 @@
 		})
 
 		$(".cash-btn-request").on("click",function(){
+			$("#targetbase").text('pending')
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -1451,6 +1454,7 @@
 
 		$(".cash-btn-float").on("click",function(){
 			$('#cashfloat').text('float');
+			$("#targetbase").text('pending')
 			$('#float-input-type').val('float');
 			$("#branch-selector").addClass('d-none');
 			let checkSmDevice = toggleSide();
@@ -1502,6 +1506,7 @@
 
 		$(".cash-btn-transfer").on("click",function(){
 			$('#cashfloat').text('transfer');
+			$("#targetbase").text('pending')
 			$('#float-input-type').val('transfer'); 
 			$("#branch-selector").removeClass('d-none');
 
@@ -1744,6 +1749,8 @@
 
 
 		$("#working-block").on("click", "#requests-accepted-tab", function() {
+			$("#targetbase").text('accepted')
+
 			$("#requests-spinner").removeClass("d-none")
 
 			$("#requests-accepted-table").empty()
@@ -1785,6 +1792,7 @@
 		});
 
 		$("#working-block").on("click", "#requests-pending-tab", function() {
+			$("#targetbase").text('pending')
 			$("#requests-spinner").removeClass("d-none")
 			$("#requests-pending-table").empty()
 			$.ajax({
@@ -1820,42 +1828,10 @@
 			});
 		});
 
-		$("#working-block").on("click", "#requests-delivered-tab", function() {
-			$("#requests-spinner").removeClass("d-none")
-			$("#requests-delivered-table").empty()
-			$.ajax({
-				url: "/requests",
-				type: "get",
-				data: {
-					period: $("#date-input").val(),
-				target: "delivered"
-				},
-				success: function (response) {
-					var elem = $("#requests-delivered-table")
-					renderRequestTemplate("deliveredTable",elem);
 
-					var t1 = $('#deliveredTable').DataTable({
-					"dom": '<"top"f>rt<"bottom"lp><"clear">',
-					"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
-					"pageLength": 100,
-					"searching":true,
-					columnDefs: [ { targets: 0, type: 'natural' } ],
-					"order": [[ 0, "desc" ]],
-					"bLengthChange": false
-				});
-
-				updateRequestDataTable(response,t1)
-				$("#requests-spinner").addClass("d-none")
-
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#requests-spinner").addClass("d-none")
-				}
-			});
-		});
 
 		$("#working-block").on("click", "#requests-all-tab", function() {
+			$("#targetbase").text('all')
 			$("#requests-spinner").removeClass("d-none")
 			$("#requests-all-table").empty()
 			$.ajax({
@@ -1992,6 +1968,7 @@
 	<script>
 
 		$("#working-block").on("click", "#floats-all-tab", function() {
+			$("#targetbase").text('all')
 
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-all-table").empty()
@@ -2023,7 +2000,7 @@
 
 
 		$("#working-block").on("click", "#floats-pending-tab", function() {
-
+			$("#targetbase").text('pending')
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-pending-table").empty()
 			$.ajax({
@@ -2061,7 +2038,7 @@
 
 
 		$("#working-block").on("click", "#floats-confirmed-tab", function() {
-
+			$("#targetbase").text('confirmed')
 			$("#floats-spinner").removeClass("d-none")
 			$("#floats-confirmed-table").empty()
 			$.ajax({
@@ -2272,7 +2249,8 @@
                     amount: $("#request-input-amount").val(),
 					desc:$("#request-input-desc").val(),
 					purpose: $("#request-input-type").val(),
-					target:"add request"
+					target:"add request",
+					items:$("#targetbase").text()
                     },
                     success: function (response) {
 						if (response.includes("success")){
@@ -2300,7 +2278,8 @@
                     amount: $("#float-input-amount").val(),
 					branch:$("#transaction-branch").val(),
 					purpose: $("#float-input-type").val(),
-					target:"add float"
+					target:"add float",
+					items:$("#targetbase").text() + " " + $("#cashfloat").text()
                     },
                     success: function (response) {
 						if (response.includes("success")){
@@ -2445,7 +2424,7 @@
 
 		$.ajax({
 			url: '/roles',
-			method: 'post',
+			method: "post",
 			data:{
 				id:$("#role-update-id").val(),
 				name:$("#role-update-name").val(),
@@ -2659,7 +2638,7 @@
 
 			$.ajax({
 				url: '/float/users',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#user-update-id").val(),
 					name:$("#user-update-name").val(),
@@ -2696,7 +2675,7 @@
 
 			$.ajax({
 				url: '/accounts',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#account-update-id").val(),
 					// balance:$("#account-update-balance").val(),
@@ -2730,7 +2709,7 @@
 
 			$.ajax({
 				url: '/accounts',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#account-allocating-id").val(),
 					cid:$("#account-allocated-id").val(),
@@ -2764,10 +2743,11 @@
 
 			$.ajax({
 				url: '/requests',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#request-update-id").val(),
-					target:"accept"
+					target:"accept",
+					items:$("#targetbase").text()
 				},
 				success: function (response) {
 
@@ -2803,10 +2783,11 @@
 
 			$.ajax({
 				url: '/requests',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#request-update-id").val(),
-					target:"delete"
+					target:"delete",
+					items:$("#targetbase").text()
 				},
 				success: function (response) {
 
@@ -2834,10 +2815,11 @@
 
 			$.ajax({
 				url: '/floats',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#float-update-id").val(),
-					target:"accept"
+					target:"accept",
+					items:$("#targetbase").text() + " " + $("#cashfloat").text()
 				},
 				success: function (response) {
 
@@ -2870,10 +2852,11 @@
 
 			$.ajax({
 				url: '/floats',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#float-update-id").val(),
-					target:"delete"
+					target:"delete",
+					items:$("#targetbase").text() + " " + $("#cashfloat").text()
 				},
 				success: function (response) {
 
@@ -2906,7 +2889,7 @@
 
 			$.ajax({
 				url: '/float/branches',
-				method: 'post',
+				method: "post",
 				data:{
 					id:$("#branch-update-id").val(),
 					target:"delete"

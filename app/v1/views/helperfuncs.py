@@ -15248,29 +15248,44 @@ def get_float_items(target_status,com,posting_date):
 
 
 def update_dashboard(current_user):
+    c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+    db.session.expire(c_data)
     all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
     all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
 
     pendingcollections = 0
     cashintransit = 0
+    totalpendingbankings = 0
+    totalpendingtransfers = 0
     totalbankings = 0
     totaltransfers = 0
 
     for req in all_requests:
+        db.session.expire(req)
         pendingcollections += req.amount if req.status == "pending" else 0
 
+        # cashintransit += req.amount if req.status != "pending" else 0
+
     for trans in all_transactions:
+        db.session.expire(trans)
         if trans.status != "pending":
             if "float" in trans.purpose:
                 totalbankings += trans.amount
             else:
                 totaltransfers += trans.amount
-                
-    for user in current_user.company.users:
+        else:
+            if "float" in trans.purpose:
+                totalpendingbankings += trans.amount
+            else:
+                totalpendingtransfers += trans.amount
+
+
+    for user in c_data.users:
         if user.company_user_group:
             if "collection" in user.company_user_group.name.lower():
                 if user.account:
+                    db.session.expire(user.account)
                     if user.account.cash_balance > 0:
                         cashintransit += user.account.cash_balance
 
-    return [f'Kes {pendingcollections:,.1f}',f'Kes {cashintransit:,.1f}','Kes 0.0',f'Kes {totalbankings:,.1f}']
+    return [f'Kes {pendingcollections:,.1f}',f'Kes {cashintransit:,.1f}',f'Kes {totalpendingbankings:,.1f}',f'Kes {totalpendingtransfers:,.1f}',f'Kes {totalbankings:,.1f}',f'Kes {totaltransfers:,.1f}']

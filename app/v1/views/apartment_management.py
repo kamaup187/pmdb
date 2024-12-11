@@ -10052,6 +10052,8 @@ class FloatHome(Resource):
         # return Response(render_template("kce_index.html"))
         # return Response(render_template("home.html"))
         c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+        db.session.expire(c_data)
+
         if current_user.company.name == c_data.name:
             pass
         else:
@@ -10079,23 +10081,31 @@ class FloatHome(Resource):
         all_requests  = CollectionRequestOp.fetch_all_requests_by_date(datetime.datetime.now())
         all_transactions = TransactionDataOp.fetch_all_transactions_by_date(datetime.datetime.now())
 
-        com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
-        branches = com.branches
-
         pendingcollections = 0
         cashintransit = 0
+        totalpendingbankings = 0
+        totalpendingtransfers = 0
         totalbankings = 0
         totaltransfers = 0
 
         for req in all_requests:
+            db.session.expire(req)
             pendingcollections += req.amount if req.status == "pending" else 0
 
+            # cashintransit += req.amount if req.status != "pending" else 0
+
         for trans in all_transactions:
+            db.session.expire(trans)
             if trans.status != "pending":
                 if "float" in trans.purpose:
                     totalbankings += trans.amount
                 else:
                     totaltransfers += trans.amount
+            else:
+                if "float" in trans.purpose:
+                    totalpendingbankings += trans.amount
+                else:
+                    totalpendingtransfers += trans.amount
                     
         for user in c_data.users:
             if user.company_user_group:
@@ -10107,11 +10117,13 @@ class FloatHome(Resource):
         return Response(render_template(
             "float_home.html",
             co="set",
-            branches=branches,
+            branches=c_data.branches,
             pendingcollections= f'Kes {pendingcollections:,.1f}',
             cashintransit= f'Kes {cashintransit:,.1f}',
             totalbankings= f'Kes {totalbankings:,.1f}',
             totaltransfers=f'Kes {totaltransfers:,.1f}',
+            totalpendingbankings=f'Kes {totalpendingbankings:,.1f}',
+            totalpendingtransfers=f'Kes {totalpendingtransfers:,.1f}',
             permissions=get_permissions(current_user),
             user_logged_in=current_user
             ))

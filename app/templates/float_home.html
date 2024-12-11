@@ -3107,7 +3107,6 @@ if (typeof(EventSource) !== "undefined") {
 
 <script>
 
-
 	channel.bind('dashboard', function(data) {
 			$("#stats-figure1").text(data[0])
 			$("#stats-figure2").text(data[1])
@@ -3155,18 +3154,18 @@ if (typeof(EventSource) !== "undefined") {
 	});
 
 	channel.bind('requests', function(data) {
-		var elem = $("#requests-all-table")
-		renderRequestTemplate("allRequestTable",elem);
-		var t1 = runDataTable("allRequestTable")
+		var elem = $("#requests-pending-table")
+		renderRequestTemplate("pendingRequestTable",elem);
+		var t1 = runDataTable("pendingRequestTable")
 		updateRequestDataTable(data,t1)
 		$("#requests-spinner").addClass("d-none")
 
 	});
 
 	channel.bind('floats', function(data) {
-		var elem = $("#floats-all-table")
-		renderFloatTemplate("allFloatTable",elem);
-		var t1 = runDataTable("allFloatTable")
+		var elem = $("#floats-pending-table")
+		renderFloatTemplate("pendingFloatTable",elem);
+		var t1 = runDataTable("pendingFloatTable")
 		updateFloatDataTable(data,t1)
 		$("#floats-spinner").addClass("d-none")
 

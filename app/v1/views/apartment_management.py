@@ -10724,6 +10724,8 @@ class Requests(Resource):
             posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
             items = get_request_items(target_status,com,posting_date)
 
+            print("itemmmmmms ",items)
+
             pusher_client_prod.trigger('my-channel', 'requests', items)
 
             dashboard_items = update_dashboard(current_user)

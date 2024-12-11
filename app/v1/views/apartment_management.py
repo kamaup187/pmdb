@@ -10224,8 +10224,11 @@ class KceLogin(Resource):
 
 class FloatLogin(Resource):
     def get(self):
-        # return Response(render_template("kce_index.html"))
-        return Response(render_template("float_login.html"))
+        try:
+            name = current_user.name
+            return redirect(url_for('api.floathome'))
+        except:
+            return Response(render_template("float_login.html"))
     
     def post(self):
         from flask_login import login_user

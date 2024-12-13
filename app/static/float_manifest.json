@@ -2,7 +2,7 @@
     "name": "Float Tracker",
     "short_name": "Float",
     "description": "Float purchase tracker",
-    "start_url": "/dashboard",
+    "start_url": "/float/dashboard",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",

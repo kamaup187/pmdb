@@ -10240,12 +10240,15 @@ class FloatLogin(Resource):
             name = current_user.name
             return redirect(url_for('api.floathome'))
         except:
-            return Response(render_template("float_login.html"))
+            c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            branches = c_data.branches
+            return Response(render_template("float_login.html",branches=branches))
     
     def post(self):
         from flask_login import login_user
         identity = request.form.get('identifier')
         password = request.form.get('password')
+        branch_id = request.form.get('branch')
         downtime = False
 
         if identity:
@@ -10264,6 +10267,9 @@ class FloatLogin(Resource):
         if user:
             if UserOp.password_is_valid(user,password):
                 login_user(user, remember=False)
+                if branch_id:
+                    branch =  BranchOp.fetch_branch_by_id(get_identifier(branch_id))
+                    UserOp.update_branch(user, branch.id)
                 return redirect(url_for('api.floathome'))
                 # return Response(render_template("float_login.html"))
             return Response(render_template("float_login.html"))

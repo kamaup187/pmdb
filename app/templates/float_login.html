@@ -46,6 +46,16 @@
                                     <div class="card-body">
                                         <!-- Login form-->
                                         <form method="POST" action="/float/login" autocomplete="off">
+
+                                            <div id="branch-selector" class="mb-3">
+                                                <label for="transaction-branch" class="form-label">Select branch</label>
+                                                <select class="form-select" name="branch" id="transaction-branch">
+                                                    <option disabled selected>Select branch below</option>
+                                                    {% for o in branches%}
+                                                    <option value="{{ o.id }}">{{ o.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
                                             <!-- Form Group (email address)-->
                                             <div class="mb-3">
                                                 <label class="small mb-1" for="inputEmailAddress">Staff ID</label>

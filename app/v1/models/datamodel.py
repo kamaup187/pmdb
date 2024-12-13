@@ -143,7 +143,9 @@ class Branch(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     users = db.relationship('User', backref='branch',order_by='User.id', cascade="all, delete-orphan")
-
+    
+    def __repr__(self):
+        return self.name
 
 
 class Shortcode(db.Model):

@@ -76,10 +76,9 @@
                                             <!-- Form Group (login box)-->
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <!-- <button type="submit" class="btn btn-primary">Login</button> -->
-                                                <button id="signin" class="btn cta-button">
+                                                <button id="signin" type="submit" class="btn cta-button">
                                                     Login
                                                 </button>
-
 
                                                 <!-- <div class="small text-kodi" >Forgot Password?</div> -->
 
@@ -114,7 +113,44 @@
                 </footer>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="../static/jss/scripts.js"></script>
+
+        <!-- <script>
+            $("#signin").on('click', function() {
+                $("#signin").text("Signin in...")
+                
+                var branch = $("#transaction-branch").val();
+                var identifier = $("#inputEmailAddress").val();
+                var password = $("#inputPassword").val();
+                $.ajax({
+                    url: "/float/login",
+                    method: "POST",
+                    data: {
+                        branch: branch,
+                        identifier: identifier,
+                        password: password
+                    },
+                    success: function(response) {
+                        // if (response.status === "success") {
+                        //     $("#signin").text("Sign in")
+                        //     // window.location.href = "/float/dashboard";
+                        // } else {
+                        //     $("#inputPassword").val('');
+                        //     alert("Invalid staff ID or password.");
+                        // }
+                    }
+                });
+            })
+        </script> -->
+        <script>
+
+            $("#signin").on('click',function(){
+            //   $('#signin').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Signin in...');
+            $('#signin').html('<i class="fa fa-spinner fa-spin mr-2"></i>Signin in...');
+            })
+        </script>
     </body>
 </html>

@@ -244,7 +244,7 @@
 									<path d="M2 14s1-4 6-4 6 4 6 4H2z" fill="none" stroke="currentColor" stroke-width="1"/>
 								  </svg>
 								
-								{{user_logged_in.name.split(" ")[0]}} ({{user_logged_in.branch}})</a>
+								{{user_logged_in.name.split(" ")[0]}}</a>
 				            <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
 								<li><a class="dropdown-item" href="#">({{user_logged_in.company_user_group}})</a></li>
 								<!-- <li><a class="dropdown-item" href="#">Account</a></li>
@@ -412,6 +412,10 @@
 						<span class="d-inline d-sm-none"><img class="logo-icon me-2" src="{{ url_for('static', filename='float/img/beacon-logo.png') }}" alt="logo" width="140"></span>
 						<span class="d-inline d-sm-none">Overview</span>
 					</h1>
+
+					<div>
+						Branch: {{user_logged_in.branch}}
+					</div>
 					
 					<div class="d-none app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration" role="alert">
 						<div class="inner">

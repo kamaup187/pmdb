@@ -10725,7 +10725,7 @@ class Requests(Resource):
 
             make_trail("Cash collection request",current_user,valid_amount)
 
-            msg = f'{current_user.company.name}-{current_user.name.split(" ")[0]} has posted a collection request of Kes {valid_amount:,.1f}'
+            msg = f'{current_user.name.split(" ")[0]} ({current_user.branch}) has posted a collection request of Kes {valid_amount:,.1f}'
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
@@ -10880,7 +10880,7 @@ class Floats(Resource):
             new_transaction = TransactionDataOp(valid_amount,purpose,branch,current_user.id)
             new_transaction.save()
                 
-            msg = f'{current_user.company.name}-{current_user.name.split(" ")[0]} has purchased float of Kes {valid_amount:,.1f}'
+            msg = f'{current_user.name.split(" ")[0]} ({current_user.branch}) has purchased float of Kes {valid_amount:,.1f}'
 
             send_push_notification(["hello"], "Float purchase notification!", msg)
 

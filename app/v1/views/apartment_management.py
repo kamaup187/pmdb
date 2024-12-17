@@ -10725,7 +10725,7 @@ class Requests(Resource):
 
             make_trail("Cash collection request",current_user,valid_amount)
 
-            msg = f"{current_user.company.name}-{current_user.name.split(" ")[0]} has posted a collection request of Kes {valid_amount}"
+            msg = f'{current_user.company.name}-{current_user.name.split(" ")[0]} has posted a collection request of Kes {valid_amount}'
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 
@@ -10807,6 +10807,9 @@ class Floats(Resource):
                 trans_id = request.form.get('id')
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
+
+
+                make_trail("float purchase",current_user,trans_obj.amount)
 
 
                 if "float" in trans_obj.purpose:

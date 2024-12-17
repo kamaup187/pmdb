@@ -15247,6 +15247,17 @@ def get_float_items(target_status,com,posting_date):
     return items
 
 
+def make_trail(desc,current_user,valid_amount):
+    if current_user.account:
+        if current_user.account.account_trails:
+            latest_trail = max(current_user.account.account_trails, key=lambda x: x.id)
+            balance = latest_trail.balance
+        else:
+            balance = 0
+        new_trail = AccountTrailOp(desc,valid_amount,balance,current_user.account.id)
+        new_trail.save()
+
+
 def update_dashboard(current_user):
     c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
     db.session.expire(c_data)

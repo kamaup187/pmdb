@@ -653,6 +653,13 @@ class AccountsOp(Account,Base):
             self.cash_balance = cb
         db.session.commit()
 
+class AccountTrailOp(AccountTrail,Base):
+    def __init__(self,description,amount,balance,account_id):
+        self.description=description
+        self.amount = amount
+        self.balance = balance
+        self.account_id = account_id
+
 class RegistrationAccountOp(RegistrationAccount,Base):
     def __init__(self,name,fee,user_id):
         self.name=name

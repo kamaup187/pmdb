@@ -10655,6 +10655,8 @@ class Requests(Resource):
                 if cash_at_hand + request_amount <= limit:
                     CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
+                    make_trail("Cash collection confirmation",current_user,request_amount)
+
                     current_user_account_obj = current_user.account
                     new_amount = current_user_account_obj.cash_balance + request_obj.amount
                     AccountsOp.update_current_account(current_user_account_obj,"null",new_amount)
@@ -10721,7 +10723,9 @@ class Requests(Resource):
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
 
-            msg = f"{current_user.name} has posted a collection request of Kes {valid_amount}"
+            make_trail("Cash collection request",current_user,valid_amount)
+
+            msg = f"{current_user.company.name}-{current_user.name.split(" ")[0]} has posted a collection request of Kes {valid_amount}"
 
             send_push_notification(["hello"], "Cash Collection Request!", msg)
 

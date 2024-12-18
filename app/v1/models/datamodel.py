@@ -282,6 +282,8 @@ class AccountTrail(db.Model):
     amount = db.Column(db.Float, default=0.0)
     balance = db.Column(db.Float, default=0.0)
     description = db.Column(db.String)
+    ttype = db.Column(db.String)
+    status = db.Column(db.String)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id))
     

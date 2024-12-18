@@ -10341,7 +10341,22 @@ class FloatRegister(Resource):
         staffid = request.form.get('staffid')
         pass1 = request.form.get('pass1')
 
+        # name = "TEST USER"
+        # national_id = ""
+        # phone = "0716674695"
+        # email = ""
+        # staffid = "5000"
+        # pass1 = "0"
+
         company = CompanyOp.fetch_company_by_name('Beacon Technologies Ltd')
+        if not company:
+            c = CompanyOp("Beacon Technologies Ltd","","","","","")
+            c.save()
+
+        usergroup = UserGroupOp.fetch_usergroup_by_id(1)
+        if not usergroup:
+            ug = UserGroupOp("User","")
+            ug.save()
 
         usercode = usercode_generator()
         is_present  = UserOp.fetch_user_by_usercode(usercode)
@@ -10368,7 +10383,7 @@ class FloatRegister(Resource):
                 return "tel taken"
             
         try:
-            new_user = UserOp(name,staffid,usercode,national_id,phone,email,pass1,4,None,company.id,1)
+            new_user = UserOp(name,staffid,usercode,national_id,phone,email,pass1,1,None,company.id,1)
             new_user.save()
 
             account_obj = AccountsOp(name,0.0,0.0,500000,new_user.id)
@@ -10380,6 +10395,7 @@ class FloatRegister(Resource):
             print("error",e)
             return f"Error :{e}"
 
+        print("passed user creation")
 
         items = []
         co = current_user.company

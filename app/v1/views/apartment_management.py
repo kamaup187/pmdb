@@ -10678,7 +10678,7 @@ class Requests(Resource):
                     make_trail("Cash collection confirmation",current_user,request_amount,"credit","complete",request_obj,None)
 
                     branch = request_obj.created_by.branch.name if request_obj.created_by.branch else "Not specified"
-                    msg = f'{current_user.name.split(" ")[0]} has collected Kes {valid_amount:,.1f} from {branch}'
+                    msg = f'{current_user.name.split(" ")[0]} has collected Kes {request_amount:,.1f} from {branch}'
                     if not localenv:
                         send_push_notification(["hello"], "Cash Collection!", msg)
 

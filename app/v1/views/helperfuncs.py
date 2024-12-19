@@ -15246,16 +15246,72 @@ def get_float_items(target_status,com,posting_date):
 
     return items
 
+def get_trans_items(posting_date):
+    end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
+    start = (end - datetime.timedelta(days=0)).replace(hour=0, minute=0, second=0)
 
-def make_trail(desc,current_user,valid_amount):
+    raw_items = AccountTrailOp.fetch_items_by_params(start,end)
+
+    items = []
+    
+    for trans in raw_items:
+        # AccountTrailOp.delete(trans)
+        # continue
+        status = f'<span class="badge bg-success">Confirmed</span>'
+        if trans.status == "incomplete":
+            status = f'<span class="badge bg-danger">Pending</span>'
+
+        acc_dict = {
+            "id":trans.id,
+            "desc": trans.description,
+            "date": format_eat_datetime(trans.date),
+            "cdate":format_eat_datetime(trans.modifiedon),
+            "amount": trans.amount,
+            "caccount": trans.balance,
+            "status": status,
+            "postedby":UserOp.fetch_user_by_id(trans.posted_by).name if trans.posted_by else "-",
+            "collectedby":UserOp.fetch_user_by_id(trans.collected_by).name if trans.collected_by else "-",
+        }
+        items.append(acc_dict)
+
+    return items
+
+
+def make_trail(desc,current_user,valid_amount,ttype,status,request_obj,trans_obj):
     if current_user.account:
         if current_user.account.account_trails:
             latest_trail = max(current_user.account.account_trails, key=lambda x: x.id)
             balance = latest_trail.balance
+            if ttype == "credit":
+                balance += valid_amount
+            else:
+                balance -= valid_amount
         else:
             balance = 0
-        new_trail = AccountTrailOp(desc,valid_amount,balance,current_user.account.id)
+            if ttype == "credit":
+                balance += valid_amount
+            else:
+                balance -= valid_amount
+
+
+
+        new_trail = AccountTrailOp(desc,valid_amount,balance,ttype,status,current_user.id,current_user.account.id)
         new_trail.save()
+
+        if status == "complete":
+            if request_obj:
+                trail_obj = AccountTrailOp.fetch_account_trail_by_id(request_obj.trail_id)
+            if trans_obj:
+                trail_obj = AccountTrailOp.fetch_account_trail_by_id(trans_obj.trail_id)
+            AccountTrailOp.update_account(trail_obj, "complete",current_user.id,datetime.datetime.now())
+
+        else:
+            if request_obj:
+                CollectionRequestOp.update_trail_id(request_obj,new_trail.id)
+            if trans_obj:
+                TransactionDataOp.update_trail_id(trans_obj,new_trail.id)
+
+
 
 
 def update_dashboard(current_user):

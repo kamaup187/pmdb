@@ -10654,7 +10654,11 @@ class Requests(Resource):
             com =  current_user.company
             target_status = request.args.get("target")
             posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
-            items = get_request_items(target_status,com,posting_date)
+
+            if target_status not in ["pending","accepted"]:
+                items = get_trans_items(posting_date)
+            else:
+                items = get_request_items(target_status,com,posting_date)
             return items
 
     def post(self):
@@ -10671,7 +10675,12 @@ class Requests(Resource):
                 if cash_at_hand + request_amount <= limit:
                     CollectionRequestOp.update_accepted_by(request_obj,current_user.id,"collected")
 
-                    make_trail("Cash collection confirmation",current_user,request_amount)
+                    make_trail("Cash collection confirmation",current_user,request_amount,"credit","complete",request_obj,None)
+
+                    branch = request_obj.created_by.branch.name if request_obj.created_by.branch else "Not specified"
+                    msg = f'{current_user.name.split(" ")[0]} has collected Kes {valid_amount:,.1f} from {branch}'
+                    if not localenv:
+                        send_push_notification(["hello"], "Cash Collection!", msg)
 
                     current_user_account_obj = current_user.account
                     new_amount = current_user_account_obj.cash_balance + request_obj.amount
@@ -10697,7 +10706,8 @@ class Requests(Resource):
 
                 else:
                     msg = f"{current_user.name} has reached limit, cash at hand: Kes {cash_at_hand}, current limit is: Kes {limit}"
-                    send_push_notification(["hello"], "Limit reached!", msg)
+                    if not localenv:
+                        send_push_notification(["hello"], "Limit reached!", msg)
                     return "Account limit reached!"
 
             if target == "delete":
@@ -10739,11 +10749,12 @@ class Requests(Resource):
             new_request = CollectionRequestOp(valid_amount,purpose,current_user.id)
             new_request.save()
 
-            make_trail("Cash collection request",current_user,valid_amount)
+            make_trail("Cash collection request",current_user,valid_amount,"debit","incomplete",new_request,None)
 
             msg = f'{current_user.name.split(" ")[0]} ({current_user.branch}) has posted a collection request of Kes {valid_amount:,.1f}'
 
-            send_push_notification(["hello"], "Cash Collection Request!", msg)
+            if not localenv:
+                send_push_notification(["hello"], "Cash Collection Request!", msg)
 
             com =  current_user.company
             target_status = request.form.get("items")
@@ -10824,9 +10835,7 @@ class Floats(Resource):
                 trans_obj = TransactionDataOp.fetch_transaction_by_id(get_identifier(trans_id))
                 TransactionDataOp.update_accepted_by(trans_obj,current_user.id,"collected")
 
-
-                make_trail("float purchase",current_user,trans_obj.amount)
-
+                make_trail("Float purchase confirmation",current_user,trans_obj.amount,"credit","complete",None,trans_obj)
 
                 if "float" in trans_obj.purpose:
                     current_user_account_obj = current_user.account
@@ -10895,10 +10904,12 @@ class Floats(Resource):
 
             new_transaction = TransactionDataOp(valid_amount,purpose,branch,current_user.id)
             new_transaction.save()
-                
-            msg = f'{current_user.name.split(" ")[0]} ({current_user.branch}) has purchased float of Kes {valid_amount:,.1f}'
 
-            send_push_notification(["hello"], "Float purchase notification!", msg)
+            make_trail("Float purchase request",current_user,valid_amount,"debit","incomplete",None,new_transaction)
+
+            msg = f'{current_user.name.split(" ")[0]} ({current_user.branch}) has purchased float of Kes {valid_amount:,.1f}'
+            if not localenv:
+                send_push_notification(["hello"], "Float purchase notification!", msg)
 
             com =  current_user.company
             target_status = request.form.get("items")
@@ -10933,6 +10944,9 @@ class Accounts(Resource):
     def get(self):
         target = request.args.get("target")
         if target == "all":
+            if not current_user.account:
+                account_obj = AccountsOp(current_user.name,0.0,0.0,500000,current_user.id)
+                account_obj.save()
             com =  CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = com.users
             items = []
@@ -10940,7 +10954,8 @@ class Accounts(Resource):
             for user in users:
                 if user.company_user_group:
                     if not user.company_user_group.id in allowed_groups:
-                        continue
+                        # continue
+                        pass
                 if user.account:
                     acc_dict = {
                         "id":user.account.id,

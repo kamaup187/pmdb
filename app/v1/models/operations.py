@@ -226,6 +226,10 @@ class CompanyOp(Company,Base):
 
     def view_users(self):
         return self.users
+    
+    def update_name(self,name):
+        self.name = name
+        db.session.commit()
 
     def update_details(self,co_name=None,co_street=None,co_city=None,co_region=None,co_mailbox=None,co_mail=None,co_phone=None):
         """update bill"""
@@ -654,11 +658,38 @@ class AccountsOp(Account,Base):
         db.session.commit()
 
 class AccountTrailOp(AccountTrail,Base):
-    def __init__(self,description,amount,balance,account_id):
+    def __init__(self,description,amount,balance,ttype,status,posted_by,account_id):
         self.description=description
         self.amount = amount
         self.balance = balance
+        self.ttype = ttype
+        self.status = status
+        self.posted_by = posted_by
         self.account_id = account_id
+
+    def fetch_account_trail_by_id(id):
+        return AccountTrail.query.filter_by(id=id).first()
+    
+    def update_account(self,status,collected_by,date):
+        self.status = status
+        self.collected_by = collected_by
+        self.modifiedon = date
+        db.session.commit()
+
+    def fetch_items_by_params(start,end):
+
+        query = (
+            AccountTrail.query
+            .filter(
+                and_(
+                    AccountTrail.date > start,
+                    AccountTrail.date < end,  # Apply the target status filter
+                )
+            )
+        )
+
+        # Fetch the results
+        return query.all()
 
 class RegistrationAccountOp(RegistrationAccount,Base):
     def __init__(self,name,fee,user_id):
@@ -689,6 +720,10 @@ class CollectionRequestOp(CollectionRequest,Base):
     def update_accepted_by(self,user_id,status):
         self.accepted_by = user_id
         self.status = status
+        db.session.commit()
+
+    def update_trail_id(self,id):
+        self.trail_id = id
         db.session.commit()
 
     def fetch_all_requests_by_date(date):
@@ -731,6 +766,10 @@ class TransactionDataOp(TransactionData,Base):
     def update_accepted_by(self,user_id,status):
         self.accepted_by = user_id
         self.status = status
+        db.session.commit()
+
+    def update_trail_id(self,id):
+        self.trail_id = id
         db.session.commit()
 
     def fetch_all_transactions_by_date(date):

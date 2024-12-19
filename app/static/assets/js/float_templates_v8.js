@@ -39,6 +39,36 @@ function updateRequestDataTable(data,table) {
     table.draw();
 }
 
+function updateTransDataTable(data,table) {
+    // Assuming data is an array of objects
+    // var table = $('#primaryData').DataTable();
+
+    // Clear the existing data
+    table.clear();
+
+    // Add new data
+    data.forEach(function(item) {
+
+        table.row.add([
+            item.id,             // PNo
+            item.desc,        // Region
+            item.amount,
+            item.caccount,            // Phone
+            item.status,
+            item.postedby,
+            item.date,       // Branch
+            item.collectedby,
+            item.cdate,      // Branch
+
+            // Branch
+        ]);
+    });
+
+    // console.log("tableeeu ", table)
+
+    // Draw the updated table
+    table.draw();
+}
 
 function updateRoleDataTable(data,table) {
     table.clear();
@@ -140,6 +170,30 @@ var requestdataTableTemplate = `
 </table>
 
 `
+
+var transdataTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">Id</th>
+            <th class="fw-bold">Description</th>
+            <th class="fw-bold">Amount</th>
+            <th class="fw-bold">CurrAcc</th>
+            <th class="fw-bold">Status</th>
+            <th class="fw-bold">PostedBy</th>
+            <th class="fw-bold">On</th>
+            <th class="fw-bold">CollectedBy</th>
+            <th class="fw-bold">On</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+
+`
+
 var floatDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">

@@ -284,7 +284,10 @@ class AccountTrail(db.Model):
     description = db.Column(db.String)
     ttype = db.Column(db.String)
     status = db.Column(db.String)
+    posted_by = db.Column(db.Integer)
+    collected_by = db.Column(db.Integer)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
     account_id = db.Column(db.Integer, db.ForeignKey(Account.id))
     
 class RegistrationAccount(db.Model):
@@ -319,6 +322,7 @@ class TransactionData(db.Model):
     description = db.Column(db.String)
     purpose = db.Column(db.String, default="float")
     status = db.Column(db.String, default="pending")
+    trail_id = db.Column(db.String, default=0)
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
     acceptedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -349,6 +353,7 @@ class CollectionRequest(db.Model):
     description = db.Column(db.String)
     purpose = db.Column(db.String, default="float")
     status = db.Column(db.String, default="pending")
+    trail_id = db.Column(db.String, default=0)
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
     acceptedon = db.Column(db.DateTime, default=db.func.current_timestamp())
 

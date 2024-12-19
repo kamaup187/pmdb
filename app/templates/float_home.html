@@ -281,7 +281,7 @@
 							</span>
 					    </li>
 
-					    <li id="view-users" class="nav-item has-submenu d-none">
+					    <li id="view-users" class="nav-item has-submenu">
 					        
 					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
 						        <span class="nav-icon">
@@ -1206,7 +1206,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v7.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v8.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1700,6 +1700,18 @@
 			});
 		}
 
+		function renderTransTemplate(newId,elem) {
+			return new Promise((resolve) => {
+				// Insert into the DOM
+				elem.html(transdataTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				// Resolve the promise after rendering
+				resolve();
+			});
+		}
+
 		function renderRoleTemplate(newId,elem) {
 			return new Promise((resolve) => {
 
@@ -1847,11 +1859,13 @@
 				},
 				success: function (response) {
 					var elem = $("#requests-all-table")
-					renderRequestTemplate("allRequestTable",elem);
+					renderTransTemplate("allRequestTable",elem);
 
 					var t1 = runDataTable("allRequestTable")
 
-				updateRequestDataTable(response,t1)
+				console.log("mayai ",t1);
+
+				updateTransDataTable(response,t1)
 				$("#requests-spinner").addClass("d-none")
 
 				},

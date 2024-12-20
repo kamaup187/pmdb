@@ -15305,6 +15305,8 @@ def make_trail(desc,current_user,valid_amount,ttype,status,request_obj,trans_obj
                 trail_obj = AccountTrailOp.fetch_account_trail_by_id(trans_obj.trail_id)
             AccountTrailOp.update_account(trail_obj, "complete",current_user.id,datetime.datetime.now())
 
+            AccountTrailOp.update_posted_by(new_trail, trail_obj.posted_by)
+
         else:
             if request_obj:
                 CollectionRequestOp.update_trail_id(request_obj,new_trail.id)

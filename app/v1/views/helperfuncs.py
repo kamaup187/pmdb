@@ -15246,11 +15246,11 @@ def get_float_items(target_status,com,posting_date):
 
     return items
 
-def get_trans_items(posting_date):
+def get_trans_items(posting_date,user):
     end = datetime.datetime.strptime(posting_date, '%Y-%m-%d') + datetime.timedelta(hours=23, minutes=59, seconds=59)
     start = (end - datetime.timedelta(days=0)).replace(hour=0, minute=0, second=0)
 
-    raw_items = AccountTrailOp.fetch_items_by_params(start,end)
+    raw_items = AccountTrailOp.fetch_items_by_params(start,end,user.account)
 
     items = []
     

@@ -1865,7 +1865,43 @@
 
 				console.log("mayai ",t1);
 
-				updateTransDataTable(response,t1)
+				updateTransDataTable(response[0],t1)
+				$("#requests-spinner").addClass("d-none")
+
+				const accountOptions = response[1].map(r => `
+                    <option value="${r.value}" ${r.value === 0 ? 'selected' : ''}>${r.label}</option>
+                `).join('');
+
+				$("#account-allocated-id").html(accountOptions);
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#requests-spinner").addClass("d-none")
+				}
+			});
+		});
+
+
+		$("#working-block").on("change", "#account-allocated-id", function() {
+			$("#targetbase").text('all')
+			$("#requests-spinner").removeClass("d-none")
+			$("#requests-all-table").empty()
+			$.ajax({
+				url: "/requests",
+				type: "get",
+				data: {
+					period: $("#date-input").val(),
+					user:$("#account-allocated-id").val(),
+				target: "all"
+				},
+				success: function (response) {
+					var elem = $("#requests-all-table")
+					renderTransTemplate("allRequestTable",elem);
+
+					var t1 = runDataTable("allRequestTable")
+
+				updateTransDataTable(response[0],t1)
 				$("#requests-spinner").addClass("d-none")
 
 				},

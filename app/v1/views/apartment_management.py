@@ -10653,13 +10653,28 @@ class Requests(Resource):
         else:
             com =  current_user.company
             target_status = request.args.get("target")
+            user_id = request.args.get("user")
             posting_date = request.args.get("period") or datetime.datetime.today().strftime("%Y-%m-%d")
 
             if target_status not in ["pending","accepted"]:
-                items = get_trans_items(posting_date)
+                user = UserOp.fetch_user_by_id(get_identifier(user_id)) if user_id else current_user
+                items = get_trans_items(posting_date,user)
             else:
                 items = get_request_items(target_status,com,posting_date)
-            return items
+
+            if target == "all":
+                co = current_user.company
+                users = co.users
+                items_alt = []
+                for user in users:
+                    accdict = {
+                        "value":user.id,
+                        "label":user.name,
+                    }
+                    items_alt.append(accdict)
+                return [items,items_alt]
+            else:
+                return items
 
     def post(self):
         try:

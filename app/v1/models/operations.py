@@ -684,12 +684,14 @@ class AccountTrailOp(AccountTrail,Base):
         self.collected_by = collected_by
         db.session.commit()
 
-    def fetch_items_by_params(start,end):
-
+    def fetch_items_by_params(start,end,account):
+        if not account:
+            return []
         query = (
             AccountTrail.query
             .filter(
                 and_(
+                    AccountTrail.account_id == account.id,  # Apply the target account filter
                     AccountTrail.date > start,
                     AccountTrail.date < end,  # Apply the target status filter
                 )

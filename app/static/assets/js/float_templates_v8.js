@@ -932,6 +932,14 @@ var cashTemplate = `
     <div class="tab-pane fade" id="requests-all" role="tabpanel" aria-labelledby="requests-all-tab">
         <div class="app-card app-card-requests-table mb-5">
             <div class="app-card-body">
+
+                <div class="mb-3">
+                    <label for="user-update-role" class="form-label pt-2">Select account to view transaction history</label>
+                    <select class="form-select" id="account-allocated-id">
+                        <option selected disabled value="">Select account</option>
+                    </select>
+                </div>
+
                 <div class="row">
                     <div class="col-lg-12 no-padding">
                         <div id="requests-all-table" class="ps-4 pe-4 table-responsive">

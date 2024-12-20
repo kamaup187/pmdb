@@ -680,6 +680,10 @@ class AccountTrailOp(AccountTrail,Base):
         self.posted_by = posted_by
         db.session.commit()
 
+    def update_collected_by(self,collected_by):
+        self.collected_by = collected_by
+        db.session.commit()
+
     def fetch_items_by_params(start,end):
 
         query = (

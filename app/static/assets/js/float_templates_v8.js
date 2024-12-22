@@ -421,8 +421,16 @@ var roleUpdateForm = (roleobj,roles) => {
                                               </select>
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <button type="button" id="update-user-btn" class="btn app-btn-primary" >Submit</button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button type="button" id="delete-user-btn" class="btn btn-danger" >Delete</button>
+                                            </div>
+                                        </div>
     
-                                        <button type="button" id="update-user-btn" class="btn app-btn-primary" >Submit</button>
                                     </form>
     
     `;

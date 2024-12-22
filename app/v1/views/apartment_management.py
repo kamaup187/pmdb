@@ -10237,8 +10237,16 @@ class KceLogin(Resource):
 class FloatLogin(Resource):
     def get(self):
         try:
+            #logout_user()
+            c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
+            db.session.expire(c_data)
+
             name = current_user.name
-            return redirect(url_for('api.floathome'))
+
+            if current_user.company.name == c_data.name:
+                return redirect(url_for('api.floathome'))
+            else:
+                return redirect(url_for('api.userlogout'))            
         except:
             c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             branches = c_data.branches
@@ -11606,6 +11614,10 @@ class FloatUsers(Resource):
     def post(self):
         member_id = request.form.get("id")
         member_obj = UserOp.fetch_user_by_id(get_identifier(member_id))
+
+        if request.form.get("target") == "delete":
+            UserOp.delete(member_obj)
+            return "success"
 
         name = request.form.get("name")
         tel = request.form.get("tel")

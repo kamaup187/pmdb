@@ -366,11 +366,10 @@
 	</svg>
 	                             </span><!--//submenu-arrow-->
 					        </a>
-					        <div id="submenu-3" class="collapse submenu submenu-3 d-none" data-bs-parent="#menu-accordion">
+					        <div id="submenu-3" class="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link button" type="button">Collection & Floats</a></li>
-							        <li class="submenu-item"><a class="submenu-link button" type="button">Account Balances</a></li>
-									<li class="submenu-item"><a class="submenu-link button" type="button">Pending Purchases</a></li>
+							        <li class="submenu-item"><a class="submenu-link button report-transit" type="button">Cash in transit</a></li>
+							        <li class="submenu-item"><a class="submenu-link button report-history" type="button">Transaction History</a></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -1232,7 +1231,7 @@
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-	<script src="{{ url_for('static', filename='assets/js/float_templates_v8.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/float_templates_v9.2.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 	
@@ -1708,6 +1707,54 @@
 			});
 
 			feather.replace();
+		})
+
+
+		$(".report-transit").on("click",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(transitTemplate)
+
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			$("#date-input").val(today);
+
+			$("#requests-spinner").removeClass("d-none")
+			$("#requests-all-table").empty()
+
+			feather.replace();
+			
+		})
+
+
+		$(".report-history").on("click",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(historyTemplate)
+
+			const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+			$("#date-input").val(today);
+
+			$("#requests-spinner").removeClass("d-none")
+			$("#requests-all-table").empty()
+
+			feather.replace();
+			
 		})
 
 

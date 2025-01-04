@@ -3339,8 +3339,9 @@ class TenantDepositOp(TenantDeposit,Base):
 
 
 class DepositPaymentOp(DepositPayment,Base):
-    def __init__(self,amount,status,deposit_id):
+    def __init__(self,amount,date,status,deposit_id):
         self.amount = amount
+        self.date = date
         self.status = status
         self.deposit_id = deposit_id
     

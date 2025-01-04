@@ -2836,7 +2836,11 @@ class ReceivePayment(Resource):
 
                         paid_memory = dep.total_paid
                         new_paid = (values2[0]+values2[1]+values2[2]+values2[3]) - paid_memory
-                        deposit_payment = DepositPaymentOp(new_paid,"",dep.id)
+                        if paidll_bool:
+                            pl = "paidll"
+                        else:
+                            pl = ""
+                        deposit_payment = DepositPaymentOp(new_paid,pay_period_date,pl,dep.id)
                         deposit_payment.save()
 
                         TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
@@ -3190,7 +3194,11 @@ class ReceivePayment(Resource):
 
             paid_memory = dep.total_paid
             new_paid = (values2[0]+values2[1]+values2[2]+values2[3]) - paid_memory
-            deposit_payment = DepositPaymentOp(new_paid,"",dep.id)
+            if paidll_bool:
+                pl = "paidll"
+            else:
+                pl = ""
+            deposit_payment = DepositPaymentOp(new_paid,period,pl,dep.id)
             deposit_payment.save()
 
             TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")

@@ -3336,6 +3336,13 @@ class TenantDepositOp(TenantDeposit,Base):
             'balance':TenantDepositOp.format(self.balance),
             'status':self.status
         }
+
+
+class DepositPaymentOp(DepositPayment,Base):
+    def __init__(self,amount,status,deposit_id):
+        self.amount = amount
+        self.status = status
+        self.deposit_id = deposit_id
     
 class TenantExpensesOp(TenantExpenses,Base):
     def __init__(self,repainting,plumbing,electricals,fixtures,others,total,tenant_id,apartment_id):
@@ -4361,7 +4368,14 @@ class MonthlyChargeOp(MonthlyCharge,Base):
     def calculate_paid_deposits(self):
         if self.tenant:
             if self.tenant.deposits:
-                return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
+                if self.tenant.deposits.payments:
+                    payments = 0.0
+                    for pp in self.tenant.deposits.payments:
+                        if pp.date.month == self.month and  pp.date.year == self.year:
+                            payments += pp.amount
+                    return f'{payments:,.1f}'
+                else:
+                    return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
             return 0.0
         return 0.0
 

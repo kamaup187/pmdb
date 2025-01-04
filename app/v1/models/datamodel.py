@@ -1102,6 +1102,25 @@ class TenantDeposit(db.Model):
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 
+    payments = db.relationship('DepositPayment',backref='deposit',order_by='DepositPayment.date', cascade="all, delete-orphan")
+
+    def __repr__(self):
+        strhouse = str(self.id)
+
+        return strhouse
+
+class DepositPayment(db.Model):
+    """db model class"""
+
+    __tablename__ = 'depositpayments'
+
+    id = db.Column(db.Integer,autoincrement=True,primary_key=True)
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    amount = db.Column(db.Float,default=0)
+    status = db.Column(db.String, default="")
+
+    deposit_id = db.Column(db.Integer, db.ForeignKey(TenantDeposit.id))
+
     def __repr__(self):
         strhouse = str(self.id)
 

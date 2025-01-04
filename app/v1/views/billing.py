@@ -2834,8 +2834,12 @@ class ReceivePayment(Resource):
                         total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
                         TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
 
-                        TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
+                        paid_memory = dep.total_paid
+                        new_paid = (values2[0]+values2[1]+values2[2]+values2[3]) - paid_memory
+                        deposit_payment = DepositPaymentOp(new_paid,"",dep.id)
+                        deposit_payment.save()
 
+                        TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
                         totalpaid = 0.0
                         totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
                         totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
@@ -3182,6 +3186,12 @@ class ReceivePayment(Resource):
             TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,"unrefunded")
             total = dep.rentdep + dep.waterdep + dep.elecdep + dep.otherdep
             TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+
+            paid_memory = dep.total_paid
+            new_paid = (values2[0]+values2[1]+values2[2]+values2[3]) - paid_memory
+            deposit_payment = DepositPaymentOp(new_paid,"",dep.id)
+            deposit_payment.save()
 
             TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
 

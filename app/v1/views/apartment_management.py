@@ -6906,12 +6906,12 @@ class AddTenant(Resource):
             #     msg = "Client added successfully"
             # return msg + proceed
 
-            try:
-                if current_user.company.id == 114:
-                    txt = f"Mugambi has added tenant {name} to house {house_obj.name} of property {prop.name} with {depstatus}"
-                    advanta_send_sms(txt,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-            except:
-                pass
+            # try:
+            #     if current_user.company.id == 114:
+            #         txt = f"Mugambi has added tenant {name} to house {house_obj.name} of property {prop.name} with {depstatus}"
+            #         advanta_send_sms(txt,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
+            # except:
+            #     pass
 
         
             return success + "Client added successfully"

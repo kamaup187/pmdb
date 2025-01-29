@@ -259,14 +259,27 @@ class Index(Resource):
         # return redirect(url_for("api.stockmodule"))
 
         # import pdb; pdb.set_trace()
-        # prop = ApartmentOp.fetch_apartment_by_id(492)
+
+
+
+
+        # aas = ApartmentOp.fetch_all_unlinked_apartments()
+        # for aa in aas:
+        #     print(aa.name, "wewewe ",aa.id)
+
+        # propq = ApartmentOp.fetch_apartment_by_id(1115)
 
         # company = CompanyOp.fetch_company_by_name("Premier Realty")
-        # ApartmentOp.update_company(prop,company.id)
+        # ApartmentOp.update_company(propq,company.id)
         # company_users = company.users
         # for i in company_users:
-        #     ApartmentOp.relate(prop,i)
-        #     print(i,"user added to ",str(prop))
+        #     ApartmentOp.relate(propq,i)
+        #     print(i,"user added to ",str(propq))
+
+
+
+
+
 
         # import pdb; pdb.set_trace()
         # return Response(render_template("mayai.html"))
@@ -7873,7 +7886,11 @@ class MeterRemoval(Resource):
         meterid = get_identifier(meter_id)
         meter_obj = MeterOp.fetch_meter_by_id(meterid)
         # last_reading = getlast_reading(meterid)
-        house_obj = fetch_specific_metered_house(meter_obj)[0]
+        try:
+            house_obj = fetch_specific_metered_house(meter_obj)[0]
+        except:
+            MeterOp.delete(meter_obj)
+            return f'<span class="text-danger">Meter deleted!</span>'
 
         if house_obj:
             return f'<span class="text-danger">Remove <span class="text-info">{meter_obj}</span> from <span class="text-info">{house_obj}</span>?</span>'
@@ -7886,7 +7903,11 @@ class MeterRemoval(Resource):
         meter_id = request.form.get("meter_id")
         meterid = get_identifier(meter_id)
         meter_obj = MeterOp.fetch_meter_by_id(meterid)
-        last_reading = getlast_reading(meterid)
+        try:
+            last_reading = getlast_reading(meterid)
+        except:
+            return f'<span class="text-success">Meter removed successfully</span>'
+
         house_obj = fetch_specific_metered_house(meter_obj)[0]
         if house_obj:
             active_alloc = fetch_specific_metered_house(meter_obj)[1]

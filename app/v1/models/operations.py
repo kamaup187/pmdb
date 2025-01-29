@@ -2062,7 +2062,8 @@ class MeterOp(Meter,Base):
             'initial':self.initial_reading,
             'housenum':MeterOp.get_houseno(self)[0],
             'alloc-disp':MeterOp.get_houseno(self)[1],
-            'dealloc-disp':MeterOp.get_houseno(self)[2],
+            'dealloc-disp':"",
+            # 'dealloc-disp':MeterOp.get_houseno(self)[2],
             'regby':MeterOp.get_name(self)
         }
 

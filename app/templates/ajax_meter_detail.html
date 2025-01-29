@@ -1359,7 +1359,7 @@
             $(".dismissmodal").click();
             $("#clearance_notifications").empty();
             $("#removemeterbtn").html("Remove")
-          }, 2000);
+          }, 1000);
           $.ajax({
                 url: "{{ url_for('api.fetchmeters') }}",
                 type: "get",

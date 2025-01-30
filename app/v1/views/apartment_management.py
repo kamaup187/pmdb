@@ -306,6 +306,12 @@ class Index(Resource):
         # userss = []
 
 
+        # qw = ApartmentOp.fetch_apartment_by_name("Cavendish Square Block B")
+        # if qw:
+        #     for house_obj in qw.houses:
+        #         HouseOp.update_billing_details(house_obj,"","tenant")
+        # else:
+        #     print("sasa wewe")
 
 
 

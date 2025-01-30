@@ -123,7 +123,7 @@ kevma_partner_id = 3886
 lesama_api_key = "cfc7c4382ae6d4277d8c09419a897c9e"
 lesama_partner_id = 3895
 
-merit_api_key = "fad3000bcfdfb541291ebc018bcc7868"
+merit_api_key = "084f31b96063b63eaaba17a3d7b4bf84"
 merit_partner_id = 2627
 
 greatwall_api_key = "045abd0ed75b563eb186b2a61d686a83"
@@ -3264,6 +3264,7 @@ def readingsauto(period,prop):
     # for reading in readings:
     #     if reading.reading_period:
     #         if reading.reading_period.month == month and reading.reading_period.year == year and reading.description != "initial reading":
+    #             MeterReadingOp.update_reading_period(reading,generate_exact_date(1,2,2025))
     #             readinglist.append(reading)
     
     # return readinglist
@@ -3286,7 +3287,7 @@ def readingsauto_new(period,prop):
     else:
         month_period = 1
         # year = datetime.datetime.now().year + 1
-        year = 2024 #URGENT TODO
+        year = 2025 #URGENT TODO
   
     for reading in readings:
         if reading.reading_period:

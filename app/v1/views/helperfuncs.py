@@ -1502,7 +1502,7 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
                 smssec = f"\nSecurity:{invoice_obj.security}," if invoice_obj.security else ""
                 smselec = f"\nElectricity:{invoice_obj.electricity}," if invoice_obj.electricity else ""
                 smsdep = f"\nDeposit:{invoice_obj.deposit}" if invoice_obj.deposit else ""
-                smsarrears = f"\nArrears:{invoice_obj.arrears}" if invoice_obj.arrears else ""
+                smsarrears = f"Arrears:{invoice_obj.arrears}" if invoice_obj.arrears else ""
                 smsfine = f"\nFine:{invoice_obj.penalty}" if invoice_obj.penalty else ""
                 # smstotal = (f"{invoice_obj.total_bill:,.1f}")
                 smstotal = (f"{invoice_obj.total_bill:,.1f}") if not calculated_total else (f"{calculated_total:,.1f}")

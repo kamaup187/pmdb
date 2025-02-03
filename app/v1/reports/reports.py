@@ -8644,6 +8644,7 @@ class FetchReadings(Resource):
         billing_period = get_billing_period(prop_obj)
         
         if target == "old" or target == "current": #REFACTOR: should BE CURRENT AND NEXT BLOCK "NEXT"
+            print("ayeya")
             next_billing_month = billing_period.month
             str_month = get_str_month(next_billing_month)
             readings = readingsauto(billing_period,prop_obj)
@@ -8652,6 +8653,7 @@ class FetchReadings(Resource):
             readingids = get_obj_ids(readinglist)
             return render_template("ajax_oldreadings.html",period=str_month,items=readinglist,readingids=readingids)
         else:
+            print("imelost")
             next_billing_month = billing_period.month + 1 if billing_period.month != 12 else 1
             str_month = get_str_month(next_billing_month)
             readings = readingsauto_new(billing_period,prop_obj)

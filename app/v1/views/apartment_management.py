@@ -306,7 +306,7 @@ class Index(Resource):
         # userss = []
 
 
-        # qw = ApartmentOp.fetch_apartment_by_name("Cavendish Square Block B")
+        # qw = ApartmentOp.fetch_apartment_by_name("Cavendish Square Block A")
         # if qw:
         #     for house_obj in qw.houses:
         #         HouseOp.update_billing_details(house_obj,"","tenant")
@@ -7982,7 +7982,7 @@ class CreateMeter(Resource):
                     except:
                         meter_num = sheet.row_values(row)[0] if sheet.row_values(row)[0] else "NA"
 
-                    initial_reading = int(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0
+                    initial_reading = float(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0
 
                     metertype = "water"
                     raw_meter_no = meter_num.upper()

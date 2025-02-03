@@ -754,7 +754,7 @@ class Meter(db.Model):
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     serial_number = db.Column(db.VARCHAR)
     meter_number = db.Column(db.VARCHAR)
-    initial_reading = db.Column(db.Integer,default=0)
+    initial_reading = db.Column(db.Float,default=0.0)
     decitype = db.Column(db.String)
     metertype = db.Column(db.String)
 

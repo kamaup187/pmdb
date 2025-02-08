@@ -3252,28 +3252,28 @@ def meterauto(apartment_id):
 
 def readingsauto(period,prop):
 
-    readinglist = []
+    # readinglist = []
 
-    db.session.expire(prop)
-    readings = prop.meter_readings
+    # db.session.expire(prop)
+    # readings = prop.meter_readings
     
-    month = period.month
-    year = period.year
+    # month = period.month
+    # year = period.year
 
-    for reading in readings:
-        # meter = reading.meter
-        # MeterOp.delete(meter)
-        # continue
-        # print("readot ",reading.reading_period)
-        if reading.reading_period:
-            if reading.reading_period.month == 1 and reading.description != "initial reading":
-                MeterReadingOp.update_reading_period(reading,generate_exact_date(2,2,2025))
-                readinglist.append(reading)
+    # for reading in readings:
+    #     # meter = reading.meter
+    #     # MeterOp.delete(meter)
+    #     # continue
+    #     # print("readot ",reading.reading_period)
+    #     if reading.reading_period:
+    #         if reading.reading_period.month == 1 and reading.description != "initial reading":
+    #             MeterReadingOp.update_reading_period(reading,generate_exact_date(2,2,2025))
+    #             readinglist.append(reading)
     
-    return readinglist
+    # return readinglist
 
-    # items = MeterReadingOp.fetch_meter_readings(prop.id,period,"initial reading")
-    # return items
+    items = MeterReadingOp.fetch_meter_readings(prop.id,period,"initial reading")
+    return items
 
 def readingsauto_new(period,prop):
     readinglist = []

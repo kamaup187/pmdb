@@ -838,6 +838,22 @@ class BillInvoice(Resource):
 
             bill2 = MonthlyChargeOp.fetch_specific_bill(identifier2)
 
+
+
+            try:
+                if bill.apartment.paymentdetails.nartype == 'hsenum':
+                    narration = bill.house.name
+                elif bill.apartment.paymentdetails.nartype == 'tntnum':
+                    if bill.ptenant:
+                        narration = "WN"+str(tenant.id)
+                    else:
+                        narration = "TNT"+str(tenant.id)
+                else:
+                    narration = ""
+            except:
+                narration = ""
+
+
             if bill2 and bill2.apartment_id == bill.apartment_id:
                 second_bill = True
 
@@ -901,6 +917,8 @@ class BillInvoice(Resource):
                 return render_template(
                     "ajax_tenant_invoice.html",
                     bill=bill,
+                    p = bill.apartment.paymentdetails,
+                    narration=narration,
                     readings = wbill,
                     w_edited = w_edited,
                     ereadings = ebill,
@@ -947,6 +965,8 @@ class BillInvoice(Resource):
                 return render_template(
                     "ajax_tenant_invoice.html",
                     bill=bill,
+                    p = bill.apartment.paymentdetails,
+                    narration=narration,
                     readings = wbill,
                     w_edited = w_edited,
                     ereadings = ebill,

@@ -255,16 +255,37 @@
 
                 <div class="dispnon">
 
-                    <span class="text-muted">
-                        Payment will be done via Mobile money to:
-                    </span>
-                    <p class="small text-muted">
-                        BANK: NCBA BANK<br>
-                        BRANCH: NCBA HOUSE<br>
-                        ACCOUNT NAME: REVER PROPERTIES LTD<br>
-                        ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 462590016</span><br>
-                        MPESA PAYBILL: <span class="text-gray-900 font-weight-bold">880100</span>
+                    {%if p%}
+
+      
+                    <div class="text-left mt-2">Payment will be done via Mobile money to:</div>
+                    <p class="text-left">
+                      <span class="linebrea">Mpesa Paybill: {{p.mpesapaybill}} </span> ACC: <span class="linebrea">{{narration}}</span><br>
                     </p>
+                          
+                    <div>Or</div>
+        
+                    {%if p.bankpaybill%}
+                    <p class="text-left">
+                        <span>
+                            BANK Mpesa Paybill: {{p.bankpaybill}}<br>
+        
+                            ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}#{{narration}}</span><br>
+                        </span>
+                      </p>
+                    {% else %}
+                    <p class="text-left">
+                        <span>
+                            BANK: {{p.bankname}}<br>
+                            BRANCH: {{p.bankbranch}}<br>
+                            ACCOUNT NAME: {{p.bankaccountname}}<br>
+                            ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
+                        </span>
+                      </p>
+                    {% endif %}
+         
+                    
+                  {% endif %}
 
                 </div>
 
@@ -542,16 +563,37 @@
             {%endif%}
         
 
-                <span class="text-muted">
-                    Payment will be done on Cheque, funds transfer or Mobile money to:
+            {%if p%}
+
+      
+            <div class="text-left mt-2">Payment will be done via Mobile money to:</div>
+            <p class="text-left">
+              <span class="linebrea">Mpesa Paybill: {{p.mpesapaybill}} </span> ACC: <span class="linebrea">{{narration}}</span><br>
+            </p>
+                  
+            <div>Or</div>
+
+            {%if p.bankpaybill%}
+            <p class="text-left">
+                <span>
+                    BANK Mpesa Paybill: {{p.bankpaybill}}<br>
+
+                    ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}#{{narration}}</span><br>
                 </span>
-                <p class="small text-muted">
-                    BANK: EQUITY BANK<br>
-                    BRANCH: PARLIAMENT ROAD BRANCH<br>
-                    ACCOUNT NAME: PROMINENCE TECH & BUILD SYSTEMS LTD<br>
-                    ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold"> 0020275280370</span><br>
-                    Safaricom Paybill: <span class="text-gray-900 font-weight-bold">4012401 </span> Account: <span class="text-gray-900 font-weight-bold">Kiotapay</span><br>
-                </p>
+              </p>
+            {% else %}
+            <p class="text-left">
+                <span>
+                    BANK: {{p.bankname}}<br>
+                    BRANCH: {{p.bankbranch}}<br>
+                    ACCOUNT NAME: {{p.bankaccountname}}<br>
+                    ACCOUNT NUMBER: <span class="text-gray-900 font-weight-bold">{{p.bankaccountnumber}}</span><br>
+                </span>
+              </p>
+            {% endif %}
+ 
+            
+          {% endif %}
 
                 <div class="divjust-end">
                     <p class="small text-muted text-center mt-5">

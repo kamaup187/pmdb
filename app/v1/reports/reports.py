@@ -2859,6 +2859,16 @@ class RentStatement(Resource):
         ###################################################################################################
         db.session.expire(apartment_obj)
 
+        alltenants = 0
+        all_units = apartment_obj.houses
+        allunits = len(all_units)
+
+        for unit in all_units:
+            check = check_occupancy(unit)
+            if check[0] == "occupied":
+                alltenants += 1
+
+
         monthlybills = apartment_obj.monthlybills
         ###################################################################################################
         for bill in monthlybills:
@@ -2890,10 +2900,13 @@ class RentStatement(Resource):
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
 
+        vacant_rents = 0
+
 
         for vac in vacants:
             if vac.id in house_ids:
                 continue
+            vacant_rents += vac.housecode.rentrate
             new_item = {
                 'id':"0",
                 'delid':"0",
@@ -2902,13 +2915,14 @@ class RentStatement(Resource):
                 'tenant-alt':"--VACANT--",
                 'vacancy':"text-danger",
                 'arrears':0,
-                'rent':0.0,
+                'rent':f"{vac.housecode.rentrate:,.1f}",
                 'calc_total':0.0,
                 'paid':0.0,
                 'balance': 0.0
             }
             detailed_bills.append(new_item)
 
+        totalrent += vacant_rents
 
         bbftotal = (f"{totalbbf:,}")
 
@@ -2993,8 +3007,8 @@ class RentStatement(Resource):
         except:
             ratio = f"0.0 %"
 
-        if apartment_obj.id == 137 and target_period.month == 11:
-            ratio = "100.0 %"
+        # if apartment_obj.id == 137 and target_period.month == 11:
+        #     ratio = "100.0 %"
 
         if llp:
             llbal = f"{llp.arrears:.1f}"
@@ -3039,6 +3053,10 @@ class RentStatement(Resource):
 
         return Response(render_template(
             'report_rent_statement.html',
+
+            tothouses=allunits,
+            tottenants=alltenants,
+            totvacants=len(vacants),
             prop=selected_apartment,
             propid=apartment_obj.id,
             prop_obj=apartment_obj,

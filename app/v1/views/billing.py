@@ -1014,7 +1014,7 @@ class BillInvoice(Resource):
                 str_month = get_str_month(bill.month)
 
             return render_template(
-                "ajax_tenant_invoice_mail.html",
+                "ajax_tenant_invoice_mail_print.html",
                 bill=bill,
                 month = str_month,
                 p = bill.apartment.paymentdetails,

@@ -2907,11 +2907,30 @@ class RentStatement(Resource):
             if vac.id in house_ids:
                 continue
             vacant_rents += vac.housecode.rentrate
+
+            description = vac.description
+
+            if description:
+                if "2" in description or "two" in description.lower():
+                    desc = "2BR"
+                elif "bedsitter" in description.lower():
+                    desc = "BEDSITTER"
+                elif "1" in description or "one" in description.lower():
+                    desc = "1BR"
+                elif "3" in description or "three" in description.lower():
+                    desc = "3BR"
+                else:
+                    desc = "n/a"
+            else:
+                desc = "N/A"
+
+
             new_item = {
                 'id':"0",
                 'delid':"0",
                 'editid':"0",
                 'house':vac.name,
+                'desc':desc,
                 'tenant-alt':"--VACANT--",
                 'vacancy':"text-danger",
                 'arrears':0,

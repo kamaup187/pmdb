@@ -108,18 +108,18 @@
                         <div class="row form-group">
                             <span class="dispnone" id="check_paytype">{{prop.paymentdetails.paytype}}</span>
                             <span class="dispnone" id="check_nartype">{{prop.paymentdetails.nartype}}</span>
-                            <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankaccountnumber}}</span>
+                            <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankbiller}}</span>
 
 
                             <div class="kiota-borde col-md-4 pt-1">
                                 <div class="">
                                     <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
-                                    <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
+                                    <label class="small font-weight-bold mb-1 text-danger" for="paytype">Own Paybill</label>
                                 </div>
                             
                                 <div class="">
                                     <input class="" id="paytype2" name="paytype" type="radio" value="bankpay" />
-                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank payment</label>
+                                    <label class="mb-1 small font-weight-bold text-danger" for="paytype2">Bank Paybill</label>
                                 </div>
 
                                 <div class="">
@@ -145,7 +145,7 @@
 
                             <div class="kiota-borde col-md-4 pt-1">
                                 <div id="prefixid" class="dispnone">
-                                    <label class="small font-weight-bold mb-1" for="prefix">Prefix.(Unit A1 in Triumph Apartment) can be (#TAH1)</label>
+                                    <label class="small font-weight-bold mb-1" for="prefix">Prefix.(Property Code e.g #PA...)</label>
                                     <input class="" id="prefix" type="text" value="{{prop.paymentdetails.prefix}}" />
                                 </div>
                             </div>
@@ -173,10 +173,36 @@
                         <div id="bankcorner" class="dispnone">
                         
                             <div class="form-group row">
-                                <div class="col-sm-4">
+                                <div class="col-sm-4 dispnone">
                                     <label class="small mb-1" for="bank">Bank name</label>
                         
                                     <input class="form-control" type="text" id="bankname" value="{{prop.paymentdetails.bankname}}">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank Paybill</label>
+                        
+                                    <input class="form-control" type="text" id="bankpaybill" value="{{prop.paymentdetails.bankpaybill}}">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bankbiller">Biller account</label>
+                        
+                                    <input class="form-control" type="text" id="bankbiller" value="{{prop.paymentdetails.bankbiller}}">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="accno">Bank mpesa accno no</label>
+                        
+                                    <input class="form-control" type="text" id="bankacc" value="{{prop.paymentdetails.bankbiller}}{{nartype}}" readonly>
+                                </div>
+                            </div>
+                        
+                            <div class="form-group row dispnone">
+                                <div class="col-sm-4">
+                                    <label class="small mb-1" for="bank">Bank branch</label>
+                        
+                                    <input class="form-control" type="text" id="bankbranch" value="{{prop.paymentdetails.bankbranch}}">
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="small mb-1" for="accname">Account name</label>
@@ -184,28 +210,11 @@
                                     <input class="form-control" type="text" id="bankaccountname" value="{{prop.paymentdetails.bankaccountname}}">
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="small mb-1" for="accno">Bank Paybill</label>
-                        
-                                    <input class="form-control" type="text" id="bankpaybill" value="{{prop.paymentdetails.bankpaybill}}">
-                                </div>
-                            </div>
-                        
-                            <div class="form-group row">
-                                <div class="col-sm-4">
-                                    <label class="small mb-1" for="bank">Bank branch</label>
-                        
-                                    <input class="form-control" type="text" id="bankbranch" value="{{prop.paymentdetails.bankbranch}}">
-                                </div>
-                                <div class="col-sm-4">
                                     <label class="small mb-1" for="accname">Bank Account no</label>
                         
                                     <input class="form-control" type="text" id="bankaccountnumber" value="{{prop.paymentdetails.bankaccountnumber}}">
                                 </div>
-                                <div class="col-sm-4">
-                                    <label class="small mb-1" for="accno">Bank mpesa accno no</label>
-                        
-                                    <input class="form-control" type="text" id="bankacc" value="{{prop.paymentdetails.bankaccountnumber}}{{nartype}}" readonly>
-                                </div>
+
                             </div>
                         
                         </div>
@@ -622,6 +631,7 @@
                 paytype: $("input[name=paytype]:checked").val(),
                 nartype: $("input[name=nartype]:checked").val(),
                 prefix: $("#prefix").val(),
+                biller: $("#bankbiller").val(),
                 target: "update prop billing info"
             },
             success: function (response) {

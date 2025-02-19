@@ -587,6 +587,7 @@ class PaymentDetail(db.Model):
     bankaccountname = db.Column(db.VARCHAR)
     bankaccountnumber = db.Column(db.VARCHAR)
     bankpaybill = db.Column(db.VARCHAR)
+    bankbiller = db.Column(db.VARCHAR)
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
 

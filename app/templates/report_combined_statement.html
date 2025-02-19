@@ -41,6 +41,8 @@
                           <select name="reporttype" class="select-css" id="reporttype">
                             <option selected value="collected">Based on collected amount only</option>
                             <option value="uncollected">Based on amount due</option>
+                            <option value="deposit">Deposit report</option>
+
                           </select>
                         </div>
                       
@@ -594,17 +596,17 @@
               $("#postloader-btn").click();
 
 
-              $.ajax({
-                url: "/resolve/invoices",
-                type: "POST",
-                data: {
-                  proptext: $("#prop").val(),
-                  period:$("#target_period").text()
-                },
-                success: function(response) {
-                  // $("#"+item).html('all set');
-                }
-              });
+              // $.ajax({
+              //   url: "/resolve/invoices",
+              //   type: "POST",
+              //   data: {
+              //     proptext: $("#prop").val(),
+              //     period:$("#target_period").text()
+              //   },
+              //   success: function(response) {
+              //     // $("#"+item).html('all set');
+              //   }
+              // });
 
           }
       });

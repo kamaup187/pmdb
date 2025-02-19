@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("")
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,00.0,0.0,0.0,0.0,0.0,00.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -515,7 +515,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('')
+        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -536,7 +536,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(5,2,timenow.year)
+        invdate = generate_exact_date(5,10,2024)
         inv_date = invdate.strftime("%d/%b/%y")
 
         invdue = invdate + relativedelta(days=1)
@@ -2791,6 +2791,8 @@ class ReceivePayment(Resource):
         paidll = request.form.get("paidll")
 
         sms_bool = get_bool(textsms)
+        if current_user.company.id == 114:
+            sms_bool = False
         email_bool = get_bool(email)
         paidll_bool = get_bool(paidll)
 
@@ -2863,7 +2865,7 @@ class ReceivePayment(Resource):
                             pl = "paidll"
                         else:
                             pl = ""
-                        deposit_payment = DepositPaymentOp(new_paid,pay_period_date,pl,dep.id)
+                        deposit_payment = DepositPaymentOp(new_paid,pay_date,pl,dep.id)
                         deposit_payment.save()
 
                         TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")
@@ -3221,7 +3223,7 @@ class ReceivePayment(Resource):
                 pl = "paidll"
             else:
                 pl = ""
-            deposit_payment = DepositPaymentOp(new_paid,period,pl,dep.id)
+            deposit_payment = DepositPaymentOp(new_paid,pay_date,pl,dep.id)
             deposit_payment.save()
 
             TenantDepositOp.update_paid_deposits(dep,values2[0],values2[1],values2[2],values2[3],a,b,c,d,None,None,"unrefunded")

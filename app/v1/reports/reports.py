@@ -1911,6 +1911,7 @@ class CombinedReport(Resource):
     def get(self):
         selected_apartment = request.args.get("prop")
         selected_month = request.args.get("month")
+        reporttype = request.args.get("reporttype")
 
 
         if not selected_apartment:
@@ -1977,8 +1978,45 @@ class CombinedReport(Resource):
         #     if bill.month == target_period.month and bill.year == target_period.year:
         #         house_ids.append(bill.house_id)
         #         current_month_bills.append(bill)
-
         propid = apartment_obj.id
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        if reporttype == "deposit":
+            print("kwelu peter")
+            detailed_bills = []
+            deposits = apartment_obj.deposits
+            for dd in deposits:
+                payments = dd.payments
+                for payment in payments:
+                    if payment.date.month == target_period.month and payment.date.year == target_period.year:
+                        d_obj = DepositPaymentOp.view(payment)
+                        detailed_bills.append(d_obj)
+
+            return Response(render_template(
+                "ajax_report_deposit_statement.html",
+                prop=selected_apartment,
+                propid=propid,
+                prop_obj=apartment_obj,
+                tenantlist=[],
+                timeline = timeline,
+                bills=detailed_bills,
+                paging=page(detailed_bills),
+                props=props,
+                apartment_name=selected_apartment,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company,
+                billids = [],
+                # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+                reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
+                printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+                name=current_user.name)) 
+
         month = target_period.month
         year = target_period.year
         current_month_bills = MonthlyChargeOp.fetch_all_monthlycharges_by_apartment_id_by_period(propid,month,year)
@@ -2191,14 +2229,12 @@ class CombinedReport(Resource):
         raw_netpay = netrent - commission - expenses_amount - loan - ll - paidll
         netpay = (f"{raw_netpay:,.1f}")
 
-        props = fetch_all_apartments_by_user(current_user)
-        str_month = get_str_month(target_period.month)
-        timeline = f"{str_month.upper()} / {target_period.year}"
-
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
 
         if apartment_obj.company.id == 1144444444:
             template = "report_combined_statement_alttttt.html"
+        elif reporttype == "deposit":
+            template = "ajax_report_deposit_statement.html"
         else:
             template = "ajax_report_combined_statement.html"
 
@@ -4349,7 +4385,8 @@ class DepositStatement(Resource):
         detailed_bills = []
         ###################################################################################################
         db.session.expire(apartment_obj)
-
+        # if reporttype == "deposit payments":
+        #     return "mayai"
         deps = apartment_obj.deposits
         tenants = tenantauto(apartment_obj.id)
         totaldep = 0.0

@@ -3351,6 +3351,17 @@ class DepositPaymentOp(DepositPayment,Base):
         self.date = date
         self.status = status
         self.deposit_id = deposit_id
+
+    def view(self):
+        return {
+            'id': self.id,
+            'deposit':self.deposit,
+            'tenant-alt':self.deposit.tenant.name,
+            'house':self.deposit.house.name,
+            'amount':DepositPaymentOp.format(self.amount),
+            'date':DepositPaymentOp.date_format(self.date),
+            'status':self.status
+        }
     
 class TenantExpensesOp(TenantExpenses,Base):
     def __init__(self,repainting,plumbing,electricals,fixtures,others,total,tenant_id,apartment_id):
@@ -4379,6 +4390,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 if self.tenant.deposits.payments:
                     payments = 0.0
                     for pp in self.tenant.deposits.payments:
+                        # print(self.tenant.name, " ",pp.date.month, pp.date.year)
                         if pp.date.month == self.month and  pp.date.year == self.year:
                             payments += pp.amount
                     return f'{payments:,.1f}'

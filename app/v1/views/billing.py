@@ -842,7 +842,8 @@ class BillInvoice(Resource):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = bill.house.name
+                    narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
+                    # narration = bill.house.name
                 elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if bill.ptenant:
                         narration = "WN"+str(tenant.id)
@@ -995,7 +996,9 @@ class BillInvoice(Resource):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = bill.house.name
+                    # narration = bill.house.name
+                    narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
+
                 elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if bill.ptenant:
                         narration = "WN"+str(tenant.id)
@@ -1018,7 +1021,7 @@ class BillInvoice(Resource):
                 bill=bill,
                 month = str_month,
                 p = bill.apartment.paymentdetails,
-                narration=narration,
+                narration=narration.replace("None", ""),
                 readings = wbill,
                 watertarget = watertarget,
                 w_edited = w_edited,
@@ -1086,7 +1089,7 @@ class BillInvoice(Resource):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = bill.house.name
+                    narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
                 elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if bill.ptenant:
                         narration = "WN"+str(tenant.id)
@@ -1105,7 +1108,7 @@ class BillInvoice(Resource):
                     if p.paytype == "mpesapay":
                         bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                     elif p.bankpaybill:
-                        bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}#{narration}'
+                        bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {narration}'
                         if p.paytype != "bankpay":
                             bankdetails = ""
                     else:
@@ -1133,7 +1136,7 @@ class BillInvoice(Resource):
             return render_template(
                 template,
                 smsstatus=delivery,
-                narration=narration,
+                narration=narration.replace("None", ""),
                 sms_highlight=sms_highlight,
                 action=action,
                 salutation=salutation,
@@ -1151,7 +1154,7 @@ class BillInvoice(Resource):
                 e_edited = e_edited,
                 watertarget=watertarget,
                 total=f"{bill.total_bill:,.1f}",
-                bank=bankdetails,
+                bank=bankdetails.replace("None", ""),
                 co=str_co
                 )
 

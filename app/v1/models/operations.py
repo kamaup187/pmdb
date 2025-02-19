@@ -1077,9 +1077,10 @@ class LandlordPaymentOp(LandlordPayment,Base):
 
 class PaymentDetailOp(PaymentDetail,Base):
     """class"""
-    def __init__(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,apartment_id):
+    def __init__(self,paytype,nartype,prefix,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,apartment_id):
         self.paytype = paytype
         self.nartype = nartype
+        self.prefix = prefix
         self.mpesapaybill = paybill
 
         self.bankname = bankname
@@ -1090,11 +1091,13 @@ class PaymentDetailOp(PaymentDetail,Base):
 
         self.apartment_id = apartment_id
 
-    def update_details(self,paytype,nartype,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
+    def update_details(self,paytype,nartype,prefix,paybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill):
         if paytype:
             self.paytype = paytype
         if nartype:
             self.nartype = nartype
+        if prefix:
+            self.prefix = prefix
         if paybill:
             self.mpesapaybill = paybill
         if bankname:

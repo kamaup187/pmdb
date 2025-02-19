@@ -111,7 +111,7 @@
                             <span class="dispnone" id="check_accno">{{prop.paymentdetails.bankaccountnumber}}</span>
 
 
-                            <div class="kiota-borde col-md-6 pt-1">
+                            <div class="kiota-borde col-md-4 pt-1">
                                 <div class="">
                                     <input class="" id="paytype" name="paytype" type="radio" value="mpesapay" />
                                     <label class="small font-weight-bold mb-1 text-danger" for="paytype">Mpesa payment(Own paybill)</label>
@@ -128,14 +128,14 @@
                                 </div>
                             </div>
                             
-                            <div class="kiota-borde col-md-6 pt-1 no-wrap">
-                                <div class="">
-                                    <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
-                                    <label class="mb-1 small font-weight-bold" for="nartype">TNT(#TNT123)</label>
-                                </div>
+                            <div class="kiota-borde col-md-4 pt-1 no-wrap">
                                 <div class="">
                                     <input class="" id="nartype2" name="nartype" type="radio" value="hsenum" />
                                     <label class="small font-weight-bold mb-1" for="nartype2">House No.(#H1)</label>
+                                </div>
+                                <div class="">
+                                    <input class="" id="nartype" name="nartype" type="radio" value="tntnum" />
+                                    <label class="mb-1 small font-weight-bold" for="nartype">Unique Tenant No(#TNT123)</label>
                                 </div>
                                 <div class="">
                                     <input class="" id="nartype3" name="nartype" type="radio" value="" />
@@ -143,6 +143,12 @@
                                 </div>
                             </div>
 
+                            <div class="kiota-borde col-md-4 pt-1">
+                                <div id="prefixid" class="dispnone">
+                                    <label class="small font-weight-bold mb-1" for="prefix">Prefix.(Unit A1 in Triumph Apartment) can be (#TAH1)</label>
+                                    <input class="" id="prefix" type="text" value="{{prop.paymentdetails.prefix}}" />
+                                </div>
+                            </div>
                         </div>
 
                         <div id="mpesacorner" class="">
@@ -151,6 +157,7 @@
                                 <div class="col-sm-6">
                                     <label class="small mb-0" for="bank">Paybill</label>
                         
+
                                     <input class="form-control" type="text" id="mpesapaybill" value="{{prop.paymentdetails.mpesapaybill}}">
                                 </div>
                         
@@ -466,12 +473,16 @@
             if (this.value == 'hsenum') {
                 $("#mpesaacc").val("#H1 format")
                 $("#bankacc").val($("#check_accno").text()+"#H1 format")
+                $("#prefixid").removeClass("dispnone")
+
             }else if (this.value == 'tntnum') {
                 $("#mpesaacc").val("#TNT format")
                 $("#bankacc").val($("#check_accno").text()+"#TNT format")
+                $("#prefixid").addClass("dispnone")
             }else{
                 $("#mpesaacc").val("")
                 $("#bankacc").val($("#check_accno").text()+"")
+                $("#prefixid").addClass("dispnone")
             }
         });
 </script>
@@ -525,13 +536,15 @@
             if (checkNartype == "tntnum") {
                 $("input[id=nartype]").attr("checked", "checked");
                 $("#mpesaacc").val("#TNT format")
-
+                $("#prefixid").addClass("dispnone")
             } else if (checkNartype == "hsenum") {
                 $("#mpesaacc").val("#H1 format")
                 $("input[id=nartype2]").attr("checked", "checked");
+                $("#prefixid").removeClass("dispnone")
             } else {
                 $("#mpesaacc").val("")
                 $("input[id=nartype3]").attr("checked", "checked");
+                $("#prefixid").addClass("dispnone")
              }
 
         })
@@ -608,6 +621,7 @@
                 mpesapaybill: $("#mpesapaybill").val(),
                 paytype: $("input[name=paytype]:checked").val(),
                 nartype: $("input[name=nartype]:checked").val(),
+                prefix: $("#prefix").val(),
                 target: "update prop billing info"
             },
             success: function (response) {

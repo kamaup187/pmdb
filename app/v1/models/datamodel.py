@@ -579,6 +579,7 @@ class PaymentDetail(db.Model):
     id = db.Column(db.Integer,autoincrement=True,primary_key=True)
     paytype = db.Column(db.VARCHAR)
     nartype = db.Column(db.VARCHAR)
+    prefix = db.Column(db.VARCHAR)
     mpesapaybill = db.Column(db.VARCHAR)
     
     bankname = db.Column(db.VARCHAR)

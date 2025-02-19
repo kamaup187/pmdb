@@ -979,16 +979,17 @@ class AllProperties(Resource):
 
                 nartype = request.form.get("nartype")
                 paytype = request.form.get("paytype")
+                prefix = request.form.get("prefix")
 
                 print("heeeeeey",nartype,paytype)
 
                 payment_details_obj = p.paymentdetails
                 if not payment_details_obj:
                     print("noooooonnnoonooo",p.paymentdetails)
-                    p = PaymentDetailOp(paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,p.id)
+                    p = PaymentDetailOp(paytype,nartype,prefix,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill,p.id)
                     p.save()
                 else:
-                    PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
+                    PaymentDetailOp.update_details(payment_details_obj,paytype,nartype,prefix,mpesapaybill,bankname,bankbranch,bankaccountname,bankaccountnumber,bankpaybill)
                     print("herereeeeeeeeeeeeee",p.paymentdetails,nartype)
 
             # ApartmentOp.update_tenant_account_payment(prop,"PayBill",prop.name,paybill_no)

@@ -8000,6 +8000,19 @@ class Recon(Resource):
         timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
         detailed_bills = []
 
+        recons = current_user.company.apptransactions
+        cumulative_balance = 0
+        for recon in recons:
+            if recon.date > start and recon.date < end:
+                recon_obj = AppTransactionOp.view(recon)
+                recon_obj['balance'] = cumulative_balance
+                if recon.transaction_type == "debit":
+                    recon_obj['balance'] += recon.amount
+                    cumulative_balance += recon.amount
+                else:
+                    recon_obj['balance'] -= recon.amount
+                    cumulative_balance -= recon.amount
+                detailed_bills.append(recon_obj)
 
         return Response(render_template(
             "ajax_report_recon_statement.html",

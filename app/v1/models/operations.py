@@ -817,10 +817,12 @@ class TransactionDataOp(TransactionData,Base):
 
 
 class AppTransactionOp(AppTransaction,Base):
-    def __init__(self,ref,amount,trans_type,company_id):
+    def __init__(self,ref,trans_time,trans_desc,amount,trans_type,company_id):
         self.ref=ref
+        self.date=trans_time
+        self.trans_desc=trans_desc
         self.amount=amount
-        self.trans_type=trans_type
+        self.transaction_type=trans_type
         self.company_id=company_id
 
     def fetch_transaction_by_id(id):
@@ -828,6 +830,38 @@ class AppTransactionOp(AppTransaction,Base):
     
     def fetch_all_transactions_by_company_id(company_id):
         return AppTransaction.query.filter_by(company_id=company_id).all()
+
+    def get_amount(self,trans):
+        if trans == "debit":
+            if self.transaction_type == "debit":
+                return f"{self.amount:,.1f}"
+            else:
+                return 0.0
+
+        elif trans == "amount":
+            if self.transaction_type == "debit":
+                return f"{self.amount:,.1f}"
+            else:
+                return f"-{self.amount:,.1f}"
+
+        else:
+            if self.transaction_type == "credit":
+                return f"{self.amount:,.1f}"
+            else:
+                return 0.0
+
+    def view(self):
+        return {
+            "id":self.id,
+            "ref":self.ref,
+            "date":self.date.strftime("%Y-%m-%d"),
+            "debit":AppTransactionOp.get_amount(self,"debit"),
+            "credit": AppTransactionOp.get_amount(self,"credit"),
+            "amount": AppTransactionOp.get_amount(self,"amount"),
+            "trans_type":self.transaction_type,
+            "desc": self.trans_desc,
+            "company_id":self.company_id
+        }
 
 class UserLoginDataOp(UserLoginData,Base):
     def __init__(self,user_id):

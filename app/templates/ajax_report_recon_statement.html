@@ -12,7 +12,7 @@
     size:landscape;
   } */
   body {
-    zoom: 87%;
+    zoom: 100%;
   }
 </style>
  
@@ -68,6 +68,7 @@
                       <th class="">DESCRIPTION</th>
                       <th class="">DEBIT</th>
                       <th class="">CREDIT</th>
+                      <th class="">AMOUNT</th>
                       <th class="">BALANCE</th>
 
                     </tr>
@@ -75,14 +76,14 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                      <td class="data-cell text-left">{{ bill['date']}}</td>
+                      <td class="data-cell text-right">{{ bill['ref'] }}</td>
 
-                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent-total'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-
-                      <td class="data-cell text-right">{{ bill['water'] }}</td>
+                      <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                      <td class="data-cell text-right">{{ bill['debit'] }}</td>
+                      <td class="data-cell text-right">{{ bill['credit'] }}</td>
+                      <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                      <td class="data-cell text-right">{{ bill['balance'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -144,6 +145,7 @@
                   <th class="">DESCRIPTION</th>
                   <th class="">DEBIT</th>
                   <th class="">CREDIT</th>
+                  <th class="">AMOUNT</th>
                   <th class="">BALANCE</th>
 
                 </tr>
@@ -151,14 +153,14 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
-                  <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                  <td class="data-cell text-left">{{ bill['date']}}</td>
+                  <td class="data-cell text-right">{{ bill['ref'] }}</td>
 
-                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent-total'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent-paid'] }}</td>
-
-                  <td class="data-cell text-right">{{ bill['water'] }}</td>
+                  <td class="data-cell text-right">{{ bill['desc'] }}</td>
+                  <td class="data-cell text-right">{{ bill['debit'] }}</td>
+                  <td class="data-cell text-right">{{ bill['credit'] }}</td>
+                  <td class="data-cell text-right">{{ bill['amount'] }}</td>
+                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
                 </tr>
               {% endfor %}
 

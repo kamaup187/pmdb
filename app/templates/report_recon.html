@@ -269,6 +269,24 @@ $("#checkindate").datepicker({
               console.log(response);
               $("#submit-transaction").text("Submit");
 
+              $("#preloader-btn").click();
+              $.ajax({
+                  url: "/recon/report",
+                  type: "post",
+                  data: {
+                      start: $("#checkindate").val(),
+                      end: $("#checkoutdate").val(),
+                      tstart:$("#begin").val(),
+                      tend:$("#end").val(),
+                      reconaccount: $("#reconaccount").val()
+                  },
+                  success: function (response) {
+                      $("#reportbase").html(response)
+                      $("#postloader-btn").click();
+
+                  }
+              });
+
 
           }
       });

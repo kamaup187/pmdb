@@ -5770,7 +5770,8 @@ def send_out_single_email_invoice(billid):
 
                 try:
                     if bill.apartment.paymentdetails.nartype == 'hsenum':
-                        narration = bill.house.name
+                        # narration = bill.house.name
+                        narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
                     else:
                         if bill.ptenant:
                             narration = "WN"+str(tenant.id)
@@ -6213,7 +6214,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
-                    narration = bill.house.name
+                    # narration = bill.house.name
+                    narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
                 elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if tenant:
                         narration = "WN"+str(tenant.id)

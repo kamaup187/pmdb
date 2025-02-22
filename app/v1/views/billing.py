@@ -3701,6 +3701,21 @@ class ReceivePayment(Resource):
 
         address = None
 
+        if payment_obj.ptenant:
+            tenant = payment_obj.ptenant
+            depbal = f"Kes 0.0"
+            depbaltitle = "Other balances"
+        else:
+            tenant = payment_obj.tenant
+            if tenant.deposits:
+                depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                depbaltitle = "Deposit balance"
+                # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+
+            else:
+                depbal = f"Kes 0.0"
+                depbaltitle = "Deposit balance"
+
         if current_user.company.name == "LaCasa":
 
             if prop.address:
@@ -3766,6 +3781,8 @@ class ReceivePayment(Resource):
             baltitle=baltitle,
             outline=outline,
             balance=bal,
+            depbalance=depbal,
+            depbaltitle=depbaltitle,
             chargetype=narration,
             receiptno=receiptno,
             refnum=bill_ref,
@@ -4027,7 +4044,7 @@ class PrintActualReceipt(Resource):
                 if tenant.deposits:
                     depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
-                    bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                    # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
 
                 else:
                     depbal = f"Kes 0.0"

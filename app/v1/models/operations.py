@@ -3372,7 +3372,7 @@ class TenantDepositOp(TenantDeposit,Base):
             'elecdep':TenantDepositOp.format(self.elecdep),
             'otherdep':TenantDepositOp.format(self.otherdep),
             'total':TenantDepositOp.format(self.total),
-            'paid':TenantDepositOp.format(self.total_paid),
+            'paid':TenantDepositOp.format(self.paid_rentdep),
             'datepaid':TenantDepositOp.date_format(self.date),
             'balance':TenantDepositOp.format(self.balance),
             'status':self.status

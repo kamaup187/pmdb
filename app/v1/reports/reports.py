@@ -1983,6 +1983,37 @@ class CombinedReport(Resource):
         props = fetch_all_apartments_by_user(current_user)
         str_month = get_str_month(target_period.month)
         timeline = f"{str_month.upper()} / {target_period.year}"
+        
+        if reporttype == "deposit balance":
+            detailed_bills = []
+            deposits = apartment_obj.deposits
+            for dd in deposits:
+                balance = dd.balance
+                if balance > 0.0:
+                    d_obj = TenantDepositOp.view(dd)
+                    detailed_bills.append(d_obj)
+
+            return Response(render_template(
+                "ajax_report_deposit_balance.html",
+                prop=selected_apartment,
+                propid=propid,
+                prop_obj=apartment_obj,
+                tenantlist=[],
+                timeline = timeline,
+                bills=detailed_bills,
+                paging=page(detailed_bills),
+                props=props,
+                apartment_name=selected_apartment,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                fulllogopath=logo(current_user.company)[2],
+                letterhead=logo(current_user.company)[3],
+                co=current_user.company,
+                billids = [],
+                # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+                reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
+                printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+                name=current_user.name)) 
 
         if reporttype == "deposit":
             print("kwelu peter")
@@ -1991,6 +2022,8 @@ class CombinedReport(Resource):
             for dd in deposits:
                 payments = dd.payments
                 for payment in payments:
+                    DepositPaymentOp.delete(payment)
+                    continue
                     if payment.date.month == target_period.month and payment.date.year == target_period.year:
                         d_obj = DepositPaymentOp.view(payment)
                         detailed_bills.append(d_obj)

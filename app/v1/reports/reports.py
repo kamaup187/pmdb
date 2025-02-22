@@ -2024,8 +2024,9 @@ class CombinedReport(Resource):
             for dd in deposits:
                 payments = dd.payments
                 for payment in payments:
-                    # DepositPaymentOp.delete(payment)
-                    # continue
+                    if not payment.amount:
+                        DepositPaymentOp.delete(payment)
+                        continue
                     if payment.date.month == target_period.month and payment.date.year == target_period.year:
                         d_obj = DepositPaymentOp.view(payment)
                         detailed_bills.append(d_obj)

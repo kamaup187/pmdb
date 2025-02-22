@@ -1988,10 +1988,13 @@ class CombinedReport(Resource):
             detailed_bills = []
             deposits = apartment_obj.deposits
             for dd in deposits:
-                balance = dd.balance
-                if balance > 0.0:
-                    d_obj = TenantDepositOp.view(dd)
-                    detailed_bills.append(d_obj)
+                tenant = dd.tenant
+                if tenant.house_allocated:
+                    if tenant.house_allocated.active:
+                        d_obj = TenantDepositOp.view(dd)
+                        detailed_bills.append(d_obj)
+                    else:
+                        TenantDepositOp.delete(dd)
 
             return Response(render_template(
                 "ajax_report_deposit_balance.html",

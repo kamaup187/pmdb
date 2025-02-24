@@ -6991,7 +6991,7 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
         rentdep_str = item["rentdep"]
         waterdep_str = item["waterdep"]
         elecdep_str = item["elecdep"]
-        otherdep = item["otherdep"]
+        otherdep_str = item["otherdep"]
         datepaid = item["datepaid"]
         rstatus = item["status"]
 
@@ -7040,7 +7040,7 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
             except:
                 dt = tenant.date
 
-            acceptables = ["yes","Yes","YES"]
+            acceptables = ["yes","Yes","YES","Y","y"]
 
 
             if rentdep_str not in acceptables and waterdep_str not in acceptables and elecdep_str not in acceptables:
@@ -7051,34 +7051,57 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
                     if rentdep_str in acceptables:
                         rentdep = house_obj.housecode.rentrate if house_obj.housecode.rentrate else 0.0
                     else:
-                        rentdep = 0.0
-                    # if house_obj.name == "B9":
-                    #     rentdep = rentdep * -1
+                        rentdep = validate_float_inputs_to_exclude_zeros_alt(rentdep_str)[0]
+
                     if waterdep_str in acceptables:
                         waterdep = house_obj.housecode.waterdep if house_obj.housecode.waterdep else 0.0
                     else:
-                        waterdep = 0.0
+                        waterdep =  validate_float_inputs_to_exclude_zeros_alt(waterdep_str)[0]
 
                     if elecdep_str in acceptables:
                         elecdep = house_obj.housecode.elecdep if house_obj.housecode.elecdep else 0.0
                     else:
-                        elecdep = 0.0
+                        elecdep = validate_float_inputs_to_exclude_zeros_alt(elecdep_str)[0]
                 else:
                     rentdep = 0.0; waterdep = 0.0; elecdep = 0.0
 
-            values = validate_float_inputs_to_exclude_zeros_alt(otherdep)
-            total = rentdep+waterdep+elecdep+values[0]
+            otherdep = validate_float_inputs_to_exclude_zeros_alt(otherdep_str)[0]
+            total = rentdep+waterdep+elecdep+otherdep
 
             if tenant.deposits:
-                TenantDepositOp.delete(tenant.deposits)
+                dep = tenant.deposits
+                # TenantDepositOp.delete(tenant.deposits)
                 # print("TENANT DEPOSITS ALREADY UPLOADED FOR ....",house_obj,"UPDATING....WITH STATUS", status)
                 # TenantDepositOp.update_deposits(tenant.deposits,rentdep,waterdep,elecdep,values[3],total,dt,status)
                 # TenantOp.update_deposit(tenant,total)
 
 
-                print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
-                dep = TenantDepositOp(rentdep,waterdep,elecdep,values[0],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
-                dep.save()
+                # print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+                # dep = TenantDepositOp(rentdep,waterdep,elecdep,values[0],total,dt,status,tenant.id,None,house_obj.id,apartment_id)
+                # dep.save()
+
+                values = validate_deposit_float_inputs(str(rentdep),str(waterdep),str(elecdep),str(otherdep))
+
+                a = values[0] - dep.paid_rentdep
+                b = values[1] - dep.paid_waterdep
+                c = values[2] - dep.paid_elecdep
+                d = values[3] - dep.paid_otherdep
+
+
+                TenantDepositOp.update_deposits(dep,values[0],values[1],values[2],values[3],None,None,status)
+                TenantDepositOp.update_deposits(dep,"null","null","null","null",total,None,None)
+
+                TenantDepositOp.update_paid_deposits(dep,None,None,None,None,a,b,c,d,None,None,status)
+
+                totalpaid = 0.0
+                totalpaid += dep.paid_rentdep if dep.paid_rentdep != None else 0.0
+                totalpaid += dep.paid_waterdep if dep.paid_waterdep != None else 0.0
+                totalpaid += dep.paid_elecdep if dep.paid_elecdep != None else 0.0
+                totalpaid += dep.paid_otherdep if dep.paid_otherdep != None else 0.0
+
+                totalbalance = a + b + c + d
+
+                TenantDepositOp.update_paid_deposits_alt(dep,total,totalpaid,totalbalance)
                 TenantOp.update_deposit(tenant,total)
 
             else:
@@ -7094,6 +7117,12 @@ def read_deposits_excel(dict_array,apartment_id,user_id):
                 #     dep = TenantDepositOp(values[0],values[1],values[2],values[3],total,status,tenant.id,None,house_obj.id,apartment_id)
                 #     dep.save()
                 #     TenantOp.update_deposit(tenant,total)
+
+                print("CREATING tenant deposits...for >>",house_obj, "total: ", total, "STATUS: ", status)
+                dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant.id,None,house_obj.id,house_obj.apartment_id)
+                dep.save()
+                TenantOp.update_deposit(tenant,total)
+
                 return "completed"
 
     return "completed"

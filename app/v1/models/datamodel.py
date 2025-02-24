@@ -1095,6 +1095,7 @@ class TenantDeposit(db.Model):
     balance = db.Column(db.Float,default=0)
 
     status = db.Column(db.String,default="unrefunded")
+    account = db.Column(db.String,default="landlord held")
 
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())

@@ -4417,7 +4417,7 @@ class DepositStatement(Resource):
 
         apartment_obj = prop
 
-        ##################################################################################################
+        ###################################################################################################
         detailed_bills = []
         ###################################################################################################
         db.session.expire(apartment_obj)
@@ -4426,6 +4426,8 @@ class DepositStatement(Resource):
         deps = apartment_obj.deposits
         tenants = tenantauto(apartment_obj.id)
         totaldep = 0.0
+
+        seen_deps = set()
         
         ###################################################################################################
         for bill in deps:
@@ -4433,113 +4435,115 @@ class DepositStatement(Resource):
             # bill_item = LandlordSummaryOp.external_view(bill)
             if bill.tenant not in tenants:
                 continue
+            if bill.tenant_id not in seen_deps:
+                seen_deps.add(bill.tenant_id)
 
-            if reporttype == "unrefunded":
-                if bill.status == "refunded":
-                    if bill.rentdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'DEP',
-                            "deposit":f'{bill.rentdep:,.1f}',
-                            "status":bill.status,
-                            "amount":f'0.0'
-                        }
-                        detailed_bills.append(datadict)
+                if reporttype == "unrefunded":
+                    if bill.status == "refunded":
+                        if bill.rentdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'DEP',
+                                "deposit":f'{bill.rentdep:,.1f}',
+                                "status":bill.status,
+                                "amount":f'0.0'
+                            }
+                            detailed_bills.append(datadict)
 
-                    if bill.waterdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'WDP',
-                            "deposit":f'{bill.waterdep:,.1f}',
-                            "status":bill.status,
-                            "amount":f'0.0'
-                        }
-                        detailed_bills.append(datadict)
+                        if bill.waterdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'WDP',
+                                "deposit":f'{bill.waterdep:,.1f}',
+                                "status":bill.status,
+                                "amount":f'0.0'
+                            }
+                            detailed_bills.append(datadict)
 
-                    if bill.elecdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'EDP',
-                            "deposit":f'{bill.elecdep:,.1f}',
-                            "status":bill.status,
-                            "amount":f'0.0'
-                        }
-                        detailed_bills.append(datadict)
+                        if bill.elecdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'EDP',
+                                "deposit":f'{bill.elecdep:,.1f}',
+                                "status":bill.status,
+                                "amount":f'0.0'
+                            }
+                            detailed_bills.append(datadict)
 
-                    if bill.otherdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'OTD',
-                            "deposit":f'{bill.otherdep:,.1f}',
-                            "status":bill.status,
-                            "amount":f'0.0'
-                        }
-                        detailed_bills.append(datadict)
+                        if bill.otherdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'OTD',
+                                "deposit":f'{bill.otherdep:,.1f}',
+                                "status":bill.status,
+                                "amount":f'0.0'
+                            }
+                            detailed_bills.append(datadict)
 
+                    else:
+                        if bill.rentdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'DEP',
+                                "status":bill.status,
+                                "amount":f'{bill.rentdep:,.1f}'
+                            }
+                            totaldep += bill.rentdep
+
+                            detailed_bills.append(datadict)
+
+                        if bill.waterdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'WDP',
+                                "status":bill.status,
+                                "amount":f'{bill.waterdep:,.1f}'
+                            }
+                            totaldep += bill.waterdep
+
+                            detailed_bills.append(datadict)
+
+                        if bill.elecdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'EDP',
+                                "status":bill.status,
+                                "amount":f'{bill.elecdep:,.1f}'
+                            }
+                            totaldep += bill.elecdep
+
+                            detailed_bills.append(datadict)
+
+                        if bill.elecdep:
+                            datadict = {
+                                "house":bill.house,
+                                "tenant":bill.tenant,
+                                "datepaid":bill.date.strftime("%d/%b/%y"),
+                                "paycode":'EDP',
+                                "status":bill.status,
+                                "amount":f'{bill.otherdep:,.1f}'
+                            }
+                            totaldep += bill.otherdep
+
+                            detailed_bills.append(datadict)
                 else:
-                    if bill.rentdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'DEP',
-                            "status":bill.status,
-                            "amount":f'{bill.rentdep:,.1f}'
-                        }
-                        totaldep += bill.rentdep
-
-                        detailed_bills.append(datadict)
-
-                    if bill.waterdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'WDP',
-                            "status":bill.status,
-                            "amount":f'{bill.waterdep:,.1f}'
-                        }
-                        totaldep += bill.waterdep
-
-                        detailed_bills.append(datadict)
-
-                    if bill.elecdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'EDP',
-                            "status":bill.status,
-                            "amount":f'{bill.elecdep:,.1f}'
-                        }
-                        totaldep += bill.elecdep
-
-                        detailed_bills.append(datadict)
-
-                    if bill.elecdep:
-                        datadict = {
-                            "house":bill.house,
-                            "tenant":bill.tenant,
-                            "datepaid":bill.date.strftime("%d/%b/%y"),
-                            "paycode":'EDP',
-                            "status":bill.status,
-                            "amount":f'{bill.otherdep:,.1f}'
-                        }
-                        totaldep += bill.otherdep
-
-                        detailed_bills.append(datadict)
-            else:
-                bill_item = TenantDepositOp.view(bill)
-                detailed_bills.append(bill_item)
-                totaldep += bill.total
+                    bill_item = TenantDepositOp.view(bill)
+                    detailed_bills.append(bill_item)
+                    totaldep += bill.total
 
 
         vacants = filter_out_occupied_houses(apartment_obj.name)

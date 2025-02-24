@@ -5649,6 +5649,11 @@ class UpdateDeposit(Resource):
                 dep = TenantDepositOp(rentdep,waterdep,elecdep,0.0,total,dt,status,tenant_obj.id,None,house_obj.id,house_obj.apartment_id)
                 dep.save()
                 TenantOp.update_deposit(tenant_obj,total)
+
+        else:
+            if not dep.total:
+                TenantDepositOp.delete(dep)
+
         return f"KES {tenant_obj.deposit:,.2f}"
 
     def post(self):

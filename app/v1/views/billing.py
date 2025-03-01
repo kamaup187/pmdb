@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
+        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -449,7 +449,7 @@ class ClientBilling(Resource):
                 pass
                 # ClientBillOp.delete(current_month_bill)
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,9000.0,0.0,0.0,0.0,0.0,9000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -515,7 +515,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Lesama Ltd')
+        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -529,17 +529,18 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9127
+        invnum = bill.id + 9829
         # invnum = 
 
         timenow = datetime.datetime.now()
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(5,10,2024)
+        invdate = generate_exact_date(1,3,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
-        invdue = invdate + relativedelta(days=1)
+        # invdue = invdate + relativedelta(days=1)
+        invdue = invdate
         inv_due = invdue.strftime("%d/%b/%y")
 
         return render_template(
@@ -3712,10 +3713,13 @@ class ReceivePayment(Resource):
         else:
             tenant = payment_obj.tenant
             if tenant.deposits:
-                depbal = f"Kes {tenant.deposits.balance:,.0f}"
-                depbaltitle = "Deposit balance"
-                # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
-
+                if payment_obj.apartment.company.id == 114:
+                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                    depbaltitle = "Deposit balance"
+                    # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                else:
+                    depbal = f"Kes 0.0"
+                    depbaltitle = "Deposit balance"
             else:
                 depbal = f"Kes 0.0"
                 depbaltitle = "Deposit balance"
@@ -3929,9 +3933,13 @@ class PrintActualReceipt(Resource):
             else:
                 tenant = payment_obj.tenant
                 if tenant.deposits:
-                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
-                    depbaltitle = "Deposit balance"
-                    bal = f"KES {(curr_tenant_invoice.balance-tenant.deposits.balance):,.0f}"
+                    if payment_obj.apartment.company.id == 114:
+                        depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                        depbaltitle = "Deposit balance"
+                        bal = f"KES {(curr_tenant_invoice.balance-tenant.deposits.balance):,.0f}"
+                    else:
+                        depbal = f"Kes 0.0"
+                        depbaltitle = "Deposit balance"
                 else:
                     depbal = f"Kes 0.0"
                     depbaltitle = "Deposit balance"
@@ -4046,9 +4054,13 @@ class PrintActualReceipt(Resource):
             else:
                 tenant = payment_obj.tenant
                 if tenant.deposits:
-                    depbal = f"Kes {tenant.deposits.balance:,.0f}"
-                    depbaltitle = "Deposit balance"
-                    # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                    if payment_obj.apartment.company.id == 114:
+                        depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                        depbaltitle = "Deposit balance"
+                        # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                    else:
+                        depbal = f"Kes 0.0"
+                        depbaltitle = "Deposit balance"
 
                 else:
                     depbal = f"Kes 0.0"
@@ -5875,8 +5887,8 @@ class Receipt(Resource):
                     depbal = f"Kes {tenant.deposits.balance:,.0f}"
                     depbaltitle = "Deposit balance"
                 else:
-                # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
-                # bal = f"KES {(payment_obj.balance)}"
+                    # bal = f"KES {(payment_obj.balance-tenant.deposits.balance):,.0f}"
+                    # bal = f"KES {(payment_obj.balance)}"
                     depbal = f"Kes 0.0"
                     depbaltitle = "Deposit balance"
 

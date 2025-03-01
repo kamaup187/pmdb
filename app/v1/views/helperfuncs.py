@@ -1433,7 +1433,7 @@ def advanta_sms_delivery(apikey,partnerid,msgid):
 
                 co = invoice_obj.apartment.company
 
-                str_co = f"\n\n ~ {invoice_obj.apartment.name} (UID{str(co.id)})"
+                str_co = f"\n\n ~ {invoice_obj.apartment.name}"
 
                 tele = tenant.phone
                 name = tenant.name
@@ -4949,7 +4949,7 @@ def send_bulk_sms(propid,temp_txt):
         prop = tenant_obj.apartment
         co = prop.company
         # str_co = co.name
-        str_co = f"UID{co.id}"
+        str_co = ""
 
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
@@ -5085,7 +5085,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
 
         prop = tenant_obj.apartment
         co = prop.company
-        str_co = f"UID{co.id}"
+        str_co = ""
 
         if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
             ptenant_id = tenant_obj.id

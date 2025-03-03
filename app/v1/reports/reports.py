@@ -3020,6 +3020,7 @@ class RentStatement(Resource):
         renttotal = (f"{totalrent:,}")
 
         totalbill = actual_totalbbf + totalrent
+        totalbill -= vacant_rents
         billtotal = (f"{totalbill:,}")
         paidtotal = (f"{(paidll + totalpaid):,}")
         bcftotal = (f"{totalbcf:,}")

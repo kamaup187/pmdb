@@ -1059,7 +1059,10 @@ class Index(Resource):
                 pass
 
             if current_user.company.name == "Lesama Ltd":
-                sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
+                try:
+                    sms_units = advanta_sms_balance(lesama_api_key,lesama_partner_id)
+                except:
+                    sms_units = 0.0
                 smsfrac = f"{sms_units} units"
                 color = "text-success"
 

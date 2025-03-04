@@ -6215,7 +6215,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     # narration = bill.house.name
-                    narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
+                    if bill.apartment.paymentdetails.bankbiller:
+                        if bill.apartment.paymentdetails.prefix:
+                            narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
+                        else:
+                            narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.house.name}'
+                    else:
+                        narration = f"#{bill.house.name}"
                 elif bill.apartment.paymentdetails.nartype == 'tntnum':
                     if tenant:
                         narration = "WN"+str(tenant.id)
@@ -6236,8 +6242,10 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                     bankdetails = f'\n\nPaybill: {p.mpesapaybill} \nAcc: {narration}'
                 elif p.bankpaybill:
                     if narration:
-                        narration = "#"+narration
-                    bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
+                        if bill.apartment.paymentdetails.bankbiller:
+                            bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc:{narration}'
+                        else:
+                            bankdetails = f'\n\nPaybill: {p.bankpaybill} \nAcc: {p.bankaccountnumber}{narration}'
                 else:
                     bankdetails = f'\n\nBank: {p.bankname}, \nName: {p.bankaccountname} \nAcc: {p.bankaccountnumber}'
             else:

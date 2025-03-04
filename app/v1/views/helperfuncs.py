@@ -6215,8 +6215,8 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     # narration = bill.house.name
-                    if bill.apartment.paymentdetails.bankbiller:
-                        if bill.apartment.paymentdetails.prefix:
+                    if bill.apartment.paymentdetails.bankbiller and bill.apartment.paymentdetails.bankbiller != "None":
+                        if bill.apartment.paymentdetails.prefix and bill.apartment.paymentdetails.prefix != "None":
                             narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.apartment.paymentdetails.prefix}{bill.house.name}'
                         else:
                             narration = f'{bill.apartment.paymentdetails.bankbiller}#{bill.house.name}'

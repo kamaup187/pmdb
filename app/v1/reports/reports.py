@@ -1989,6 +1989,11 @@ class CombinedReport(Resource):
             deposits = apartment_obj.deposits
             for dd in deposits:
                 tenant = dd.tenant
+                if dd.active is not None:
+                    if dd.active:
+                        pass
+                    else:
+                        continue
                 if check_house_occupied(tenant)[1] is not None:
                     if not dd.active:
                         TenantDepositOp.update_active(dd,True)

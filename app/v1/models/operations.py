@@ -3356,6 +3356,10 @@ class TenantDepositOp(TenantDeposit,Base):
         self.balance = balance
         db.session.commit()
 
+    def update_active(self,active):
+        self.active = active
+        db.session.commit()
+
     def get_name(self):
         if self.ptenant_id:
             return self.ptenant.name

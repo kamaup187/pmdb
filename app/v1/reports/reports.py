@@ -1990,10 +1990,13 @@ class CombinedReport(Resource):
             for dd in deposits:
                 tenant = dd.tenant
                 if check_house_occupied(tenant)[1] is not None:
+                    if not dd.active:
+                        TenantDepositOp.update_active(dd,True)
                     d_obj = TenantDepositOp.view(dd)
                     detailed_bills.append(d_obj)
                 else:
-                    TenantDepositOp.delete(dd)
+                    # TenantDepositOp.delete(dd)
+                    TenantDepositOp.update_active(dd,False)
 
             return Response(render_template(
                 "ajax_report_deposit_balance.html",

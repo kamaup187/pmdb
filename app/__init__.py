@@ -56,9 +56,9 @@ def create_app(*args):
 
     print("INITIATING APPLICATION ...")
 
-    print("Printing LELUT: ",os.getenv('LELUT'))
-    print("Printing PCHOMOSNET: ",os.getenv('PCHOMOSNET'))
-    print("Printing CHEMOSI: ",os.getenv('CHEMOSI'))
+    print("Printing : ",os.getenv('LELUT'))
+    print("Printing : ",os.getenv('PCHOMOSNET'))
+    print("Printing : ",os.getenv('CHEMOSI'))
 
     try:
         from do_secrets import APP_SETTINGS

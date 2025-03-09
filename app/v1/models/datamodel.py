@@ -1094,6 +1094,7 @@ class TenantDeposit(db.Model):
     total_paid = db.Column(db.Float,default=0)
     balance = db.Column(db.Float,default=0)
 
+    active = db.Column(db.Boolean,default=True)
     status = db.Column(db.String,default="unrefunded")
     account = db.Column(db.String,default="landlord held")
 

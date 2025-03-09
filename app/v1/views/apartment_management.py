@@ -267,10 +267,11 @@ class Index(Resource):
         # for aa in aas:
         #     print(aa.name, "wewewe ",aa.id)
 
-        # propq = ApartmentOp.fetch_apartment_by_id(1115)
+        # propq = ApartmentOp.fetch_apartment_by_id(701)
 
-        # company = CompanyOp.fetch_company_by_name("Premier Realty")
-        # ApartmentOp.update_company(propq,company.id)
+        # # company = CompanyOp.fetch_company_by_name("Premier Realty")
+        # company = CompanyOp.fetch_company_by_id(114)
+        # ApartmentOp.update_company(propq,114)
         # company_users = company.users
         # for i in company_users:
         #     ApartmentOp.relate(propq,i)

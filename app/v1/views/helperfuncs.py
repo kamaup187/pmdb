@@ -4261,6 +4261,15 @@ def fetch_target_period_invoice(house_obj,period):
         continue
     return None
 
+def fetch_target_period_tenant_invoice(tenant_obj,period):
+
+    bills = tenant_obj.monthly_charges
+    for item in bills:
+        if item.year == period.year and item.month == period.month:
+            return item
+        continue
+    return None
+
 def fetch_target_period_erp_invoice(house_obj):
 
     bills = house_obj.monthlybills
@@ -7886,7 +7895,8 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             else:
                 bill = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
-            bill = fetch_target_period_invoice(house_obj,pay_period_date)
+            # bill = fetch_target_period_invoice(house_obj,pay_period_date)
+            bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
         valid_amount = amount
 
@@ -8410,7 +8420,8 @@ def read_payments_excel_multiple(dict_array,payperiod,apartment_id,userid,cbid):
                 else:
                     bill = fetch_target_period_owner_invoice(house_obj,pay_period_date)
             else:
-                bill = fetch_target_period_invoice(house_obj,pay_period_date)
+                # bill = fetch_target_period_invoice(house_obj,pay_period_date)
+                bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
             if bill.total_bill > overall_bal:
                 working_bal = overall_bal
@@ -8864,7 +8875,8 @@ def read_payments_excel2(dict_array,payperiod,apartment_id,userid,cbid):
             else:
                 bill = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
-            bill = fetch_target_period_invoice(house_obj,pay_period_date)
+            # bill = fetch_target_period_invoice(house_obj,pay_period_date)
+            bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
         valid_amount = amount
 
@@ -9362,7 +9374,8 @@ def read_payments_excel_alt(dict_array,payperiod,apartment_id,userid,cbid):
             if erp(current_user):
                 bill = fetch_target_period_erp_invoice(house_obj)
             else:
-                bill = fetch_target_period_invoice(house_obj,pay_period_date)
+                # bill = fetch_target_period_invoice(house_obj,pay_period_date)
+                bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
         valid_amount = amount
 

@@ -2463,13 +2463,15 @@ class ReceivePayment(Resource):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
                             hh = check_house_occupied(tenant)[1]
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            # bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
 
                         else:
                             tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
                                 hh = check_house_occupied(tenant)[1]
-                                bill = fetch_target_period_invoice(hh,pay_period_date)
+                                # bill = fetch_target_period_invoice(hh,pay_period_date)
+                                bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
 
                             else:
                                 bill = None
@@ -2509,7 +2511,8 @@ class ReceivePayment(Resource):
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
 
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            # bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
 
                         else:
                             print("DID NOT FIND ASTROL GUY")
@@ -2545,7 +2548,8 @@ class ReceivePayment(Resource):
                     else:
                         bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
                 else:
-                    bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
+                    # bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
+                    bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
             if bill:
                 bill_balance = bill.balance
@@ -2613,14 +2617,15 @@ class ReceivePayment(Resource):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
                             hh = check_house_occupied(tenant)[1]
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            # bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
 
                         else:
                             tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
                                 hh = check_house_occupied(tenant)[1]
-                                bill = fetch_target_period_invoice(hh,pay_period_date)
-
+                                # bill = fetch_target_period_invoice(hh,pay_period_date)
+                                bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
                             else:
                                 bill = None
 
@@ -2659,7 +2664,8 @@ class ReceivePayment(Resource):
                             print("FOUND ASTROL GUY",tenant.name)
                             hh = check_house_occupied(tenant)[1]
 
-                            bill = fetch_target_period_invoice(hh,pay_period_date)
+                            # bill = fetch_target_period_invoice(hh,pay_period_date)
+                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
 
                         else:
                             print("DID NOT FIND ASTROL GUY")
@@ -2697,7 +2703,8 @@ class ReceivePayment(Resource):
                     else:
                         bill = fetch_target_period_owner_invoice(house_item,pay_period_date)
                 else:
-                    bill = fetch_target_period_invoice(house_item,pay_period_date)
+                    # bill = fetch_target_period_invoice(house_item,pay_period_date)
+                    bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
             if bill:
                 try:
@@ -3091,7 +3098,8 @@ class ReceivePayment(Resource):
             else:
                 specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
-            specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
+            # specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
+            specific_charge_obj = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
 
         schedule_obj = None
 

@@ -2028,22 +2028,23 @@ class CombinedReport(Resource):
         if reporttype == "deposit":
             print("kwelu peter")
             detailed_bills = []
-            
+            seen_payments = set()
             deposits = apartment_obj.deposits
             for dd in deposits:
                 payments = dd.payments
-                seen_payments = set()
+                tenant = dd.tenant
+                if check_house_occupied(tenant)[1] is None:
+                    TenantDepositOp.update_active(dd,False)
+                    continue
                 for payment in payments:
                     if not payment.amount:
                         DepositPaymentOp.delete(payment)
                         continue
-                    if payment.deposit.tenant_id not in seen_payments:
-
-                        seen_payments.add(payment.deposit.tenant_id)
-
-                        if payment.date.month == target_period.month and payment.date.year == target_period.year:
-                            d_obj = DepositPaymentOp.view(payment)
-                            detailed_bills.append(d_obj)
+                    if payment.deposit_id not in seen_payments:
+                        seen_payments.add(payment.deposit_id)
+                    if payment.date.month == target_period.month and payment.date.year == target_period.year:
+                        d_obj = DepositPaymentOp.view(payment)
+                        detailed_bills.append(d_obj)
 
             return Response(render_template(
                 "ajax_report_deposit_statement.html",

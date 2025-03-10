@@ -2028,6 +2028,7 @@ class CombinedReport(Resource):
         if reporttype == "deposit":
             print("kwelu peter")
             detailed_bills = []
+            seen_payments = set()
             deposits = apartment_obj.deposits
             for dd in deposits:
                 payments = dd.payments
@@ -2035,9 +2036,13 @@ class CombinedReport(Resource):
                     if not payment.amount:
                         DepositPaymentOp.delete(payment)
                         continue
-                    if payment.date.month == target_period.month and payment.date.year == target_period.year:
-                        d_obj = DepositPaymentOp.view(payment)
-                        detailed_bills.append(d_obj)
+                    if payment.deposit_id not in seen_payments:
+                        
+                        seen_payments.add(payment.deposit_id)
+
+                        if payment.date.month == target_period.month and payment.date.year == target_period.year:
+                            d_obj = DepositPaymentOp.view(payment)
+                            detailed_bills.append(d_obj)
 
             return Response(render_template(
                 "ajax_report_deposit_statement.html",

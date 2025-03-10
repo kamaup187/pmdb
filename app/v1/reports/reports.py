@@ -2036,9 +2036,9 @@ class CombinedReport(Resource):
                     if not payment.amount:
                         DepositPaymentOp.delete(payment)
                         continue
-                    if payment.deposit_id not in seen_payments:
-                        
-                        seen_payments.add(payment.deposit_id)
+                    if payment.deposit.tenant_id not in seen_payments:
+
+                        seen_payments.add(payment.deposit.tenant_id)
 
                         if payment.date.month == target_period.month and payment.date.year == target_period.year:
                             d_obj = DepositPaymentOp.view(payment)

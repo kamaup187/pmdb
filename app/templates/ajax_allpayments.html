@@ -292,7 +292,7 @@
 
                           <div>
                             <span class="">
-                              <input type="checkbox" id="notifysms" class="check-bt" name="chargetype1" value="Rent" checked>
+                              <input type="checkbox" id="notifysms" class="check-bt" name="chargetype1" value="Rent">
                               <label for="notifysms">Sms</label>
                             </span>
             
@@ -2773,6 +2773,20 @@ $("#void_ctob").on('click',function(){
       });
   });
 </script>
+
+
+<script>
+  $(document).ready(function(){
+      var str_notifs = "{{ notifications|safe }}";
+      // var str_notifs = "noti,notifyemail";
+
+      var notifs = str_notifs.split`,`.map(x=>x);
+      console.log(notifs);
+      $.each(notifs, function (i, item) {
+          $("#"+item).prop("checked", true);
+      });
+  });
+  </script>
 
 
 

@@ -246,9 +246,6 @@ class Index(Resource):
     def get(self):
 
         # import pdb; pdb.set_trace()
-
-        
-
     
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
@@ -267,11 +264,11 @@ class Index(Resource):
         # for aa in aas:
         #     print(aa.name, "wewewe ",aa.id)
 
-        # propq = ApartmentOp.fetch_apartment_by_id(701)
+        # propq = ApartmentOp.fetch_apartment_by_id(455)
 
-        # # company = CompanyOp.fetch_company_by_name("Premier Realty")
-        # company = CompanyOp.fetch_company_by_id(114)
-        # ApartmentOp.update_company(propq,114)
+        # company = CompanyOp.fetch_company_by_name("ASTROL")
+        # # company = CompanyOp.fetch_company_by_id(114)
+        # ApartmentOp.update_company(propq,company.id)
         # company_users = company.users
         # for i in company_users:
         #     ApartmentOp.relate(propq,i)
@@ -3843,6 +3840,13 @@ class Payments(Resource):
 
         prevmonth = f'{get_str_month(get_prev_month(co.billing_period.month))}'
 
+        if co.id == 114:
+            notifications = []
+        else:
+            notifications = "notifysms".split(",")
+
+        str_notifs = ','.join(map(str, notifications))
+
 
         # template = "ajax_allpayments.html"
         if target == "minimal":
@@ -3858,6 +3862,7 @@ class Payments(Resource):
             props=props,
             propids=propids,
             items=items,
+            notifications=str_notifs,
             company=current_user.company,
             previous_month = prevmonth,
             current_month=get_str_month(period.month)

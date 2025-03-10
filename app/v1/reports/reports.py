@@ -2028,10 +2028,11 @@ class CombinedReport(Resource):
         if reporttype == "deposit":
             print("kwelu peter")
             detailed_bills = []
-            seen_payments = set()
+            
             deposits = apartment_obj.deposits
             for dd in deposits:
                 payments = dd.payments
+                seen_payments = set()
                 for payment in payments:
                     if not payment.amount:
                         DepositPaymentOp.delete(payment)

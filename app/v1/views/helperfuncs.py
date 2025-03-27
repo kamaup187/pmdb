@@ -6263,7 +6263,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             if bill.apartment.company.name == "Merit Properties Limited":
                 bankdetails = f'\n\nPaybill: 542542, \nAccount: 50961#house no \n or \nPaybill: 999294, \nAccount: your name and house no \n\nPlease pay by 5th. Note: Penalties will be charged for late payments.'
 
-
+            if not bankdetails:
+                bankdetails = ""
+                
             smsgarb = f"\nGarbage:{bill.garbage}," if bill.garbage else ""
             smssec = f"\nSecurity:{bill.security}," if bill.security else ""
             smssev = f"\nService charge:{bill.maintenance}," if bill.maintenance else ""

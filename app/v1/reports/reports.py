@@ -2026,7 +2026,6 @@ class CombinedReport(Resource):
                 name=current_user.name)) 
 
         if reporttype == "deposit":
-            print("kwelu peter")
             detailed_bills = []
             seen_payments = set()
             deposits = apartment_obj.deposits

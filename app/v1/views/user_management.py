@@ -340,7 +340,6 @@ class SelfPasswordUpdate(Resource):
             return Response(render_template('setpassword.html',name=name,tel=userphone))
         else:                             
             return Response(render_template('selfsignup.html'))
-   
 class Users(Resource):
     """class"""
     @login_required

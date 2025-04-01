@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "1iFGwJsJeV1wYpAkWeBaNytdnU6Ky5NjVT7KSsZiTGWMwpUR"
-    consumer_secret = "pez76p6oP1FMmdmhhMy0G8Sv8ZzvdCnxdDohl9PXQtG6ubNnHDeMkeKEnQaGPaZI"
+    consumer_key = "8kFl59aBvdR5rG5MYCiHPosIAcpSGXqOG0OGRu5TJdQVmV4K"
+    consumer_secret = "y69sleBmGcfWNhmKl18SzDEmrRQp507J7Zj1yQaAJgZHElkHYvCOcMalzc71EpRr"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -42,10 +42,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "6740347",
+        "ShortCode": "4089507",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://rentlib.com/villapark/12",
-        "ValidationURL": "https://rentlib.com/villapark/12",
+        "ConfirmationURL": "https://rentlib.com/vintage/4089507",
+        "ValidationURL": "https://rentlib.com/vintage/4089507",
     }
 
     try:

@@ -6220,7 +6220,6 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
             else:
                 smselec = f"\nCurrent electricity bill:{bill.electricity}," if bill.electricity else ""
 
-
             try:
                 if bill.apartment.paymentdetails.nartype == 'hsenum':
                     # narration = bill.house.name

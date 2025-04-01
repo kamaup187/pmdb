@@ -529,14 +529,14 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9829
+        invnum = bill.id + 9856
         # invnum = 
 
         timenow = datetime.datetime.now()
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(1,3,2025)
+        invdate = generate_exact_date(1,4,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)

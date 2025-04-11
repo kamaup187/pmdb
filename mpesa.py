@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "8kFl59aBvdR5rG5MYCiHPosIAcpSGXqOG0OGRu5TJdQVmV4K"
-    consumer_secret = "y69sleBmGcfWNhmKl18SzDEmrRQp507J7Zj1yQaAJgZHElkHYvCOcMalzc71EpRr"
+    consumer_key = "Wdp5TOyOvDPi3uAWXba3my23CReAjT6pXidw7P9EkaGvvKGa"
+    consumer_secret = "CodmDGzqft5R7oSObQYGSNaHJKiXnPm8GG1x0FrzToGA1lSkUo2U588k0u8a81rq"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -42,10 +42,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4089507",
+        "ShortCode": "4091383",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://rentlib.com/vintage/4089507",
-        "ValidationURL": "https://rentlib.com/vintage/4089507",
+        "ConfirmationURL": "https://rentlib.com/astrol/4091383",
+        "ValidationURL": "https://rentlib.com/astrol/4091383",
     }
 
     try:

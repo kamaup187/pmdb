@@ -38,14 +38,32 @@
                     <form class="bg-white">
 
                       <div class="row">
-                        <div class="col-lg-3 form-group mb-2 ml-lg-5">
+                        <div class="col-lg-2 form-group mb-2 ml-lg-5">
                           <label class="mb-0">Select account:</label>
                           <select name="reconaccount" class="select-css" id="reconaccount">
-                            <option selected value="collected">Main account</option>
+                            <option selected disabled value="">Select account</option>
+                            <option value="yetu">Yetu Sacco</option>
+                            <option value="equity">Equity Bank</option>
+                            <option value="family">Family Bank</option>
+                            <option value="coop">Coop Bank</option>
+                            <option value="cash">Cash</option>
+                            <option value="all">All</option>
+
+                          </select>
+                        </div>
+
+                        <div class="col-lg-2 form-group mb-2 ml-lg-5">
+                          <label class="mb-0">Select destination:</label>
+                          <select name="destination" class="select-css" id="destination">
+                            <option selected disabled value="">Select destination</option>
+                            <option value="agent">Paid to agent</option>
+                            <option value="owner">Paid to owner</option>
+
+
                           </select>
                         </div>
                       
-                        <div class="col-lg-3 form-group input-icons">
+                        <div class="col-lg-2 form-group input-icons">
                           <span class="divjust-end">
                             <span class="text-danger font-weight-bold">Start date</span>
                             <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
@@ -58,7 +76,7 @@
                           </div>
                         </div>
   
-                        <div class="col-lg-3 form-group input-icons">
+                        <div class="col-lg-2 form-group input-icons">
                           <span class="divjust-end">
                             <span class="text-danger font-weight-bold">End date</span>
                             <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
@@ -242,7 +260,8 @@ $("#checkindate").datepicker({
               end: $("#checkoutdate").val(),
               tstart:$("#begin").val(),
               tend:$("#end").val(),
-              reconaccount: $("#reconaccount").val()
+              account: $("#reconaccount").val(),
+              destination:$("#destination").val()
           },
           success: function (response) {
               $("#reportbase").html(response)
@@ -278,7 +297,7 @@ $("#checkindate").datepicker({
                       end: $("#checkoutdate").val(),
                       tstart:$("#begin").val(),
                       tend:$("#end").val(),
-                      reconaccount: $("#reconaccount").val()
+                      account: $("#reconaccount").val()
                   },
                   success: function (response) {
                       $("#reportbase").html(response)

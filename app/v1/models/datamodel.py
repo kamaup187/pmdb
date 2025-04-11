@@ -337,6 +337,7 @@ class AppTransaction(db.Model):
     id = db.Column(db.Integer,autoincrement=True, primary_key=True)
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     ref = db.Column(db.VARCHAR)
+    paid_ll = db.Column(db.Boolean,default=False)
     pay_id = db.Column(db.Integer)
     prop = db.Column(db.String)
     house = db.Column(db.String)

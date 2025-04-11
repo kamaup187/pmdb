@@ -11009,7 +11009,7 @@ class ReconAccount(Resource):
 
         tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
 
-        recon = AppTransactionOp(trans_ref,tdate,trans_desc,None,None,None,None,valid_amount,trans_type,current_user.company.id)
+        recon = AppTransactionOp(trans_ref,tdate,trans_desc,False,None,None,None,None,valid_amount,trans_type,current_user.company.id)
         recon.save()
 
         return "mayai"

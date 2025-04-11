@@ -3211,8 +3211,8 @@ class ReceivePayment(Resource):
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
 
-        trans_time = datetime.datetime.now()
-        trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",payment_obj.id,house_obj.apartment.name,house_obj.name,bank,valid_amount,"debit",co.id)
+        # trans_time = datetime.datetime.now()
+        trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",paidll_bool,payment_obj.id,house_obj.apartment.name,house_obj.name,bank,valid_amount,"debit",co.id)
         trans.save()
 
         values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)

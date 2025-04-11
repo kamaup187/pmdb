@@ -817,10 +817,11 @@ class TransactionDataOp(TransactionData,Base):
 
 
 class AppTransactionOp(AppTransaction,Base):
-    def __init__(self,ref,trans_time,trans_desc,pay_id,prop,house,bank,amount,trans_type,company_id):
+    def __init__(self,ref,trans_time,trans_desc,paid_ll,pay_id,prop,house,bank,amount,trans_type,company_id):
         self.ref=ref
         self.date=trans_time
         self.trans_desc=trans_desc
+        self.paid_ll=paid_ll
         self.pay_id = pay_id
         self.prop = prop
         self.house = house

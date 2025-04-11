@@ -8027,12 +8027,19 @@ class Recon(Resource):
         ))
 
     def post(self):
-
+        account = request.form.get("account")
+        destination = request.form.get("destination")
         shiftstart = request.form.get("start")
         shiftend = request.form.get("end")
 
         begin_t = request.form.get("tstart")
         end_t = request.form.get("tend")
+
+        if not destination:
+            destination = "agent"
+
+        if not account:
+            account = "all"
 
         if not shiftstart:
             return "shift not specified"
@@ -8057,17 +8064,39 @@ class Recon(Resource):
 
         recons = current_user.company.apptransactions
         cumulative_balance = 0
+        target_recons = []
         for recon in recons:
-            if recon.date > start and recon.date < end:
-                recon_obj = AppTransactionOp.view(recon)
-                recon_obj['balance'] = cumulative_balance
-                if recon.transaction_type == "debit":
-                    recon_obj['balance'] += recon.amount
-                    cumulative_balance += recon.amount
-                else:
-                    recon_obj['balance'] -= recon.amount
-                    cumulative_balance -= recon.amount
-                detailed_bills.append(recon_obj)
+            print("RECON BANK >>> ",recon.bank)
+            if recon.date >= start and recon.date <= end:
+                print("START >>> ",account)
+                
+                if account == "all" or account is None:
+                    if destination == "owner":
+                        if recon.paid_ll:
+                            target_recons.append(recon)
+                    else:
+                        if not recon.paid_ll:
+                            target_recons.append(recon)
+                else: 
+                    if recon.bank:
+                        if account in recon.bank.lower():
+                            if destination == "owner":
+                                if recon.paid_ll:
+                                    target_recons.append(recon)
+                            else:
+                                if not recon.paid_ll:
+                                    target_recons.append(recon)                   
+
+        for rc in target_recons:
+            recon_obj = AppTransactionOp.view(rc)
+            recon_obj['balance'] = cumulative_balance
+            if recon.transaction_type == "debit":
+                recon_obj['balance'] += recon.amount
+                cumulative_balance += recon.amount
+            else:
+                recon_obj['balance'] -= recon.amount
+                cumulative_balance -= recon.amount
+            detailed_bills.append(recon_obj)
 
         return Response(render_template(
             "ajax_report_recon_statement.html",
@@ -8086,6 +8115,7 @@ class Recon(Resource):
             # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             reportdate = generate_exact_date(datetime.datetime.now().day,datetime.datetime.now().month,datetime.datetime.now().year).strftime("%d/%m/%Y"),
             printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            destination = "Paid " + destination,
             name=current_user.name))
 
 

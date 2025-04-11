@@ -64,8 +64,11 @@
                   <thead class="custom-header-alt small">
                     <tr>
                       <th class="">DATE</th>
-                      <th class="">REFERENCE</th>
-                      <th class="">DESCRIPTION</th>
+                      <th class="">REF</th>
+                      <th class="">PROP</th>
+                      <th class="">HSE</th>
+                      <th class="">BANK</th>
+                      <th class="">DESC</th>
                       <th class="">DEBIT</th>
                       <th class="">CREDIT</th>
                       <th class="">AMOUNT</th>
@@ -78,8 +81,11 @@
                     <tr>
                       <td class="data-cell text-left">{{ bill['date']}}</td>
                       <td class="data-cell text-right">{{ bill['ref'] }}</td>
-
+                      <td class="data-cell text-right">{{ bill['prop'] }}</td>
+                      <td class="data-cell text-right">{{ bill['house'] }}</td>
+                      <td class="data-cell text-right">{{ bill['bank'] }}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
+
                       <td class="data-cell text-right">{{ bill['debit'] }}</td>
                       <td class="data-cell text-right">{{ bill['credit'] }}</td>
                       <td class="data-cell text-right">{{ bill['amount'] }}</td>
@@ -141,8 +147,11 @@
               <thead class="custom-header-alt small">
                 <tr>
                   <th class="">DATE</th>
-                  <th class="">REFERENCE</th>
-                  <th class="">DESCRIPTION</th>
+                  <th class="">REF</th>
+                  <th class="">PROP</th>
+                  <th class="">HSE</th>
+                  <th class="">BANK</th>
+                  <th class="">DESC</th>
                   <th class="">DEBIT</th>
                   <th class="">CREDIT</th>
                   <th class="">AMOUNT</th>
@@ -155,7 +164,9 @@
                 <tr>
                   <td class="data-cell text-left">{{ bill['date']}}</td>
                   <td class="data-cell text-right">{{ bill['ref'] }}</td>
-
+                  <td class="data-cell text-right">{{ bill['prop'] }}</td>
+                  <td class="data-cell text-right">{{ bill['house'] }}</td>
+                  <td class="data-cell text-right">{{ bill['bank'] }}</td>
                   <td class="data-cell text-right">{{ bill['desc'] }}</td>
                   <td class="data-cell text-right">{{ bill['debit'] }}</td>
                   <td class="data-cell text-right">{{ bill['credit'] }}</td>

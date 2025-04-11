@@ -261,21 +261,30 @@ class Index(Resource):
 
 
         # aas = ApartmentOp.fetch_all_unlinked_apartments()
+        # prps = []
         # for aa in aas:
         #     print(aa.name, "wewewe ",aa.id)
-
-        # propq = ApartmentOp.fetch_apartment_by_id(455)
-
-        # company = CompanyOp.fetch_company_by_name("ASTROL")
-        # # company = CompanyOp.fetch_company_by_id(114)
-        # ApartmentOp.update_company(propq,company.id)
-        # company_users = company.users
-        # for i in company_users:
-        #     ApartmentOp.relate(propq,i)
-        #     print(i,"user added to ",str(propq))
+        #     if "ARCHIVE" in aa.name:
+        #         print(aa.name, "wewewe tena ",aa.id)
+        #         # prps.append(aa.id)
 
 
 
+        # prps = [954]
+
+
+
+        # for idd in prps:
+
+        #     propq = ApartmentOp.fetch_apartment_by_id(idd)
+
+        #     company = CompanyOp.fetch_company_by_name("ASTROL")
+        #     # company = CompanyOp.fetch_company_by_id(114)
+        #     ApartmentOp.update_company(propq,company.id)
+        #     company_users = company.users
+        #     for i in company_users:
+        #         ApartmentOp.relate(propq,i)
+        #         print(i,"user added to ",str(propq))
 
 
 
@@ -11000,7 +11009,7 @@ class ReconAccount(Resource):
 
         tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
 
-        recon = AppTransactionOp(trans_ref,tdate,trans_desc,valid_amount,trans_type,current_user.company.id)
+        recon = AppTransactionOp(trans_ref,tdate,trans_desc,None,None,None,None,valid_amount,trans_type,current_user.company.id)
         recon.save()
 
         return "mayai"

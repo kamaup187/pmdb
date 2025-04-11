@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("Orekar Agencies")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -446,10 +446,12 @@ class ClientBilling(Resource):
             print("weeeeeee ",current_month_bill)
 
             if current_month_bill:
-                pass
-                # ClientBillOp.delete(current_month_bill)
+                # pass
+                ClientBillOp.delete(current_month_bill)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,5000.0,c.id)
+                new_month_bill.save()
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,5000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -515,7 +517,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('Orekar Agencies')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -529,7 +531,7 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9856
+        invnum = bill.id + 9858
         # invnum = 
 
         timenow = datetime.datetime.now()
@@ -3210,7 +3212,7 @@ class ReceivePayment(Resource):
         payment_obj.save()
 
         trans_time = datetime.datetime.now()
-        trans = AppTransactionOp(bill_ref,trans_time,tenant_obj.name + " (" + narration + ")",valid_amount,"debit",co.id)
+        trans = AppTransactionOp(bill_ref,trans_time,tenant_obj.name + " (" + narration + ")",payment_obj.id,house_obj.apartment.name,house_obj.name,bank,valid_amount,"debit",co.id)
         trans.save()
 
         values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)

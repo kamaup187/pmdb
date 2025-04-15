@@ -3101,7 +3101,7 @@ class ReceivePayment(Resource):
                 specific_charge_obj = fetch_target_period_owner_invoice(house_obj,pay_period_date)
         else:
             # specific_charge_obj = fetch_target_period_invoice(house_obj,pay_period_date)
-            specific_charge_obj = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
+            specific_charge_obj = fetch_target_period_tenant_invoice(tenant_obj,house_obj,pay_period_date)
 
         schedule_obj = None
 

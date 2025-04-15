@@ -4270,6 +4270,15 @@ def fetch_target_period_tenant_invoice(tenant_obj,period):
         continue
     return None
 
+def fetch_target_period_tenant_invoice(tenant_obj,house_obj,period):
+
+    bills = tenant_obj.monthly_charges
+    for item in bills:
+        if item.year == period.year and item.month == period.month and item.house_id == house_obj.id:
+            return item
+        continue
+    return None
+
 def fetch_target_period_erp_invoice(house_obj):
 
     bills = house_obj.monthlybills

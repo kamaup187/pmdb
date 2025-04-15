@@ -313,7 +313,8 @@ class Index(Resource):
         # userss = []
 
 
-        # qw = ApartmentOp.fetch_apartment_by_name("Cavendish Square Block A")
+        # # qw = ApartmentOp.fetch_apartment_by_name("Cavendish Square Block A")
+        # qw = ApartmentOp.fetch_apartment_by_id(1156)
         # if qw:
         #     for house_obj in qw.houses:
         #         HouseOp.update_billing_details(house_obj,"","tenant")

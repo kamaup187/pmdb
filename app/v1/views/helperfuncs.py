@@ -4270,7 +4270,7 @@ def fetch_target_period_tenant_invoice(tenant_obj,period):
         continue
     return None
 
-def fetch_target_period_tenant_invoice(tenant_obj,house_obj,period):
+def fetch_target_period_tenant_invoice_update(tenant_obj,house_obj,period):
 
     bills = tenant_obj.monthly_charges
     for item in bills:

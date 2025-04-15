@@ -1635,7 +1635,7 @@ class EditBill(Resource):
                     update_water = values[1] if values[1] != "null" else bill.water
                 else:
                     update_water = values[1] if values[1] != "null" else bill.water
-
+                update_electricity = values[8] if values[8] != "null" else bill.electricity
                 update_rent = values[0] if values[0] != "null" else bill.rent
                 update_garbage = values[2] if values[2] != "null" else bill.garbage
                 update_security = values[3] if values[3] != "null" else bill.security
@@ -1645,8 +1645,8 @@ class EditBill(Resource):
                 update_arrears = values[6] if values[6] != "null" else bill.arrears
                 update_maintenance = values[9] if values[9] != "null" else bill.maintenance
 
-                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+bill.electricity+update_maintenance
-                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],"null",values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
+                total_amount = update_water+update_rent+update_garbage+update_security+update_fine+update_arrears+update_deposit+update_agreement+update_electricity+update_maintenance
+                MonthlyChargeOp.update_monthly_charge(bill,values[1],values[0],values[2],values[8],values[3],values[5],values[7],values[9],values[4],values[6],total_amount,current_user.id)
                 if current_user.username.startswith("qc"):
                     pass
                 else:
@@ -1675,9 +1675,9 @@ class EditBill(Resource):
                     waterbal = bill.water_balance + update_water
 
                 if bill.electricity_paid:
-                    electricitybal = bill.electricity_balance + bill.electricity - bill.electricity_paid
+                    electricitybal = bill.electricity_balance + update_electricity - bill.electricity_paid
                 else:
-                    electricitybal = bill.electricity_balance + bill.electricity
+                    electricitybal = bill.electricity_balance + update_electricity
 
                 if bill.maintenance_paid:
                     servicebal = bill.maintenance_balance + update_maintenance - bill.maintenance_paid

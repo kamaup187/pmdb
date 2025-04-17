@@ -451,6 +451,7 @@ class ClientBilling(Resource):
                 new_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                 new_month_bill.save()
             else:
+                ClientBillOp.delete(current_month_bill)
                 current_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                 current_month_bill.save()
 

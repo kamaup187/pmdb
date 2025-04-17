@@ -327,20 +327,30 @@ class BalanceReport(Resource):
         if rtarget == "preview":
 
             sms_text = f"<p class='ln-14 mt-4'> Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: </p>"
-            second_line = "<p class='ln-14'>House & Balance</p>"
+            second_line = "<p class='ln-14'>House, Balance & Phone</p>"
             sms_text += second_line
 
             start = 1
             for bill in actualbills:
                 if category == "rent":
                     if bill.rent_due:
-                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.rent_due:,.0f}</p>"
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1]
+                        else:
+                            phone = ""
+                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.rent_due:,.0f}  Phone: {phone}</p>"
                         start += 1
                         sms_text += new_line
 
                 else:
                     if bill.balance > 1:
-                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.balance:,.0f}</p>"
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1]
+                        else:
+                            phone = ""
+                        new_line = f"<p class='ln-10'>{bill.house}:  {bill.balance:,.0f}  Phone: {phone}</p>"
                         start += 1
                         sms_text += new_line
 
@@ -349,20 +359,30 @@ class BalanceReport(Resource):
 
         else:
             sms_text = f"Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: "
-            second_line = "\n\nHouse & Balance"
+            second_line = "\n\nHouse, Balance & Phone"
             sms_text += second_line
 
             start = 1
             for bill in actualbills:
                 if category == "rent":
                     if bill.rent_due:
-                        new_line = f"\n{bill.house}:  {bill.rent_due:,.0f}"
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1]
+                        else:
+                            phone = ""
+                        new_line = f"\n{bill.house}:  {bill.rent_due:,.0f}  Phone: {phone}"
                         start += 1
                         sms_text += new_line
 
                 else:
                     if bill.balance > 1:
-                        new_line = f"\n{bill.house}:  {bill.balance:,.0f}"
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1]
+                        else:
+                            phone = ""
+                        new_line = f"\n{bill.house}:  {bill.balance:,.0f}  Phone: {phone}"
                         start += 1
                         sms_text += new_line
 

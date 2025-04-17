@@ -531,7 +531,7 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9859
+        invnum = bill.id + 9959
         # invnum = 
 
         timenow = datetime.datetime.now()

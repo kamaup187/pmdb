@@ -339,7 +339,7 @@ class BalanceReport(Resource):
                             phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
-                        new_line = f"<p class='ln-10'>{bill.house} Name&Phone: {tenant_obj_check[1].name} {phone}, Bal :{bill.rent_due:,.0f}</p>"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tenant_obj_check[1].name} {phone}, Bal :{bill.rent_due:,.0f}</p>"
                         start += 1
                         sms_text += new_line
 
@@ -350,7 +350,7 @@ class BalanceReport(Resource):
                             phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
-                        new_line = f"<p class='ln-10'>{bill.house} Name&Phone: {tenant_obj_check[1].name} {phone}, Bal :{bill.rent_due:,.0f}</p>"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tenant_obj_check[1].name} {phone}, Bal :{bill.rent_due:,.0f}</p>"
                         start += 1
                         sms_text += new_line
 

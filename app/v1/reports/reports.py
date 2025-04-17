@@ -336,7 +336,7 @@ class BalanceReport(Resource):
                     if bill.rent_due:
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
-                            phone = tenant_obj_check[1]
+                            phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
                         new_line = f"<p class='ln-10'>{bill.house}:  {bill.rent_due:,.0f}  Phone: {phone}</p>"
@@ -347,7 +347,7 @@ class BalanceReport(Resource):
                     if bill.balance > 1:
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
-                            phone = tenant_obj_check[1]
+                            phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
                         new_line = f"<p class='ln-10'>{bill.house}:  {bill.balance:,.0f}  Phone: {phone}</p>"
@@ -368,7 +368,7 @@ class BalanceReport(Resource):
                     if bill.rent_due:
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
-                            phone = tenant_obj_check[1]
+                            phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
                         new_line = f"\n{bill.house}:  {bill.rent_due:,.0f}  Phone: {phone}"
@@ -379,7 +379,7 @@ class BalanceReport(Resource):
                     if bill.balance > 1:
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
-                            phone = tenant_obj_check[1]
+                            phone = tenant_obj_check[1].phone
                         else:
                             phone = ""
                         new_line = f"\n{bill.house}:  {bill.balance:,.0f}  Phone: {phone}"

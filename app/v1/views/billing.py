@@ -448,10 +448,10 @@ class ClientBilling(Resource):
             if current_month_bill:
                 # pass
                 ClientBillOp.delete(current_month_bill)
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,7500.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                 new_month_bill.save()
             else:
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,5000.0,0.0,0.0,0.0,0.0,7500.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:

@@ -337,9 +337,12 @@ class BalanceReport(Resource):
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
                             phone = tenant_obj_check[1].phone
+                            tname = tenant_obj_check[1].name
+
                         else:
-                            phone = ""
-                        new_line = f"<p class='ln-10'>{bill.house} ; {tenant_obj_check[1].name} {phone}, Bal :{bill.rent_due:,.0f}</p>"
+                            phone = "N/A"
+                            tname = "Vacated!"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, Bal :{bill.rent_due:,.0f}</p>"
                         start += 1
                         sms_text += new_line
 
@@ -348,9 +351,11 @@ class BalanceReport(Resource):
                         tenant_obj_check = check_occupancy(bill.house)
                         if tenant_obj_check[0] == "occupied":
                             phone = tenant_obj_check[1].phone
+                            tname = tenant_obj_check[1].name
                         else:
-                            phone = ""
-                        new_line = f"<p class='ln-10'>{bill.house} ; {tenant_obj_check[1].name} {phone}, Bal :{bill.balance:,.0f}</p>"
+                            phone = "N/A"
+                            tname = "Vacated!"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, Bal :{bill.balance:,.0f}</p>"
                         start += 1
                         sms_text += new_line
 
@@ -370,7 +375,7 @@ class BalanceReport(Resource):
                         if tenant_obj_check[0] == "occupied":
                             phone = tenant_obj_check[1].phone
                         else:
-                            phone = ""
+                            phone = "N/A"
                         new_line = f"\n{bill.house}:  {bill.rent_due:,.0f}  Phone: {phone}"
                         start += 1
                         sms_text += new_line

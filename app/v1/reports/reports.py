@@ -342,7 +342,7 @@ class BalanceReport(Resource):
                         else:
                             phone = "N/A"
                             tname = "Vacated!"
-                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, Bal :{bill.rent_due:,.0f}</p>"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, <span class='text-danger'> Bal :{bill.rent_due:,.0f}</span></p>"
                         start += 1
                         sms_text += new_line
 
@@ -355,7 +355,7 @@ class BalanceReport(Resource):
                         else:
                             phone = "N/A"
                             tname = "Vacated!"
-                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, Bal :{bill.balance:,.0f}</p>"
+                        new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, <span class='text-danger'> Bal :{bill.balance:,.0f}</span></p>"
                         start += 1
                         sms_text += new_line
 

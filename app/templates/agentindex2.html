@@ -16,13 +16,15 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="../static/img/favico-r/favicon-16x16.png">
 	<link rel="manifest" href="../static/img/favico-r/site.webmanifest">
 
-	<link rel="manifest" href="../static/rentlib2_manifest.json">
+	<!-- <link rel="manifest" href="../static/rentlib2_manifest.json"> -->
 
     
     <!-- FontAwesome JS-->
 	 
     <script defer src="{{ url_for('static', filename='assets/plugins/fontawesome/js/all.min.js') }}"></script>
-	<script src="https://unpkg.com/feather-icons"></script>
+	<!-- <script src="https://unpkg.com/feather-icons"></script> -->
+	<script src="{{ url_for('static', filename='assets/js/feather.js') }}"></script>
+
     
     <!-- App CSS -->  
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/v2_portal.css') }}">
@@ -143,7 +145,7 @@
 
 	</style>
 
-	<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+	<!-- <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
 	<script>
 		// Enable pusher logging - don't include this in production
@@ -155,7 +157,7 @@
 
 		var channel = pusher.subscribe('rentlib-channel');
 
-	</script>
+	</script> -->
 
 
 
@@ -164,7 +166,7 @@
 
 
 
-	<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+	<!-- <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
 
 	<script>
 		const beamsClient = new PusherPushNotifications.Client({
@@ -175,7 +177,7 @@
 		  .then(() => beamsClient.addDeviceInterest('rentlib'))
 		  .then(() => console.log('Successfully registered and subscribed!'))
 		  .catch(console.error);
-	</script>
+	</script> -->
 	
 </head> 
 
@@ -286,7 +288,7 @@
 							</span>
 					    </li>
 
-					    <li id="view-users" class="nav-item has-submenu d-none">
+					    <li id="view-users" class="nav-item has-submenu">
 					        
 					        <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
 						        <span class="nav-icon">
@@ -301,7 +303,7 @@
 					        </a>
 					        <div id="submenu-1" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-									<li class="submenu-item branch-btn"><a class="submenu-link button" type="button">Branches</a></li>
+									<li class="submenu-item branch-btn d-none"><a class="submenu-link button" type="button">Branches</a></li>
 							        <li class="submenu-item role-btn"><a class="submenu-link button" type="button">Rights</a></li>
 									<li class="submenu-item user-btn"><a class="submenu-link button" type="button">Users</a></li>
 
@@ -1202,30 +1204,42 @@
 	<script>
 		// Permission codes and names mapping
 		let permissionMap = {
-		"1": { name: "post collection", id: 1 },
-		"2": { name: "post purchase", id: 2 },
-		"3": { name: "accept collection", id: 3 },
-		"4": { name: "accept purchase", id: 4 },
-        "5": { name: "post transfer", id: 5 },
-        "6": { name: "manage accounts", id: 6 },
-        "7": { name: "manage users", id: 7 },
-        "8": { name: "view reports", id: 8 },
-		"9": { name: "delete records", id: 9 },
-		"10": { name: "accept transfer", id: 10 },
+		"1": { name: "post payment", id: 1 },
+		"2": { name: "allocate payment", id: 2 },
+		"3": { name: "add tenant", id: 3 },
+		"4": { name: "vacate tenant", id: 4 },
+		"5": { name: "edit invoice", id: 5 },
+		// "1": { name: "post collection", id: 1 },
+		// "2": { name: "post purchase", id: 2 },
+		// "3": { name: "accept collection", id: 3 },
+		// "4": { name: "accept purchase", id: 4 },
+        // "5": { name: "post transfer", id: 5 },
+        // "6": { name: "manage accounts", id: 6 },
+        // "7": { name: "manage users", id: 7 },
+        // "8": { name: "view reports", id: 8 },
+		// "9": { name: "delete records", id: 9 },
+		// "10": { name: "accept transfer", id: 10 },
 		};
 
 
 		let permissionsArray2 = [
-			{ id: 1, name: 'post collection' },
-			{ id: 2, name: 'post purchase' },
-			{ id: 3, name: 'accept collection' },
-			{ id: 4, name: 'accept purchase' },
-			{ id: 5, name: 'post transfer' },
-			{ id: 6, name: 'manage accounts' },
-			{ id: 7, name: 'manage users' },
-			{ id: 8, name: 'view reports' },
-			{ id: 9, name: 'delete records' },
-			{ id: 10, name:'accept transfer' }
+			{ id: 1, name: 'post payment' },
+			{ id: 2, name: 'allocate payment' },
+			{ id: 3, name: 'add tenant' },
+			{ id: 4, name: 'vacate tenant' },
+			{ id: 5, name: 'edit invoice' },
+
+
+			// { id: 1, name: 'post collection' },
+			// { id: 2, name: 'post purchase' },
+			// { id: 3, name: 'accept collection' },
+			// { id: 4, name: 'accept purchase' },
+			// { id: 5, name: 'post transfer' },
+			// { id: 6, name: 'manage accounts' },
+			// { id: 7, name: 'manage users' },
+			// { id: 8, name: 'view reports' },
+			// { id: 9, name: 'delete records' },
+			// { id: 10, name:'accept transfer' }
 		];
 
 		// Convert the permissions string from the backend into an array of permission objects
@@ -1273,11 +1287,11 @@
 	const rightsArray = rightSpan.split(" ");
 	const hasRight = (permission) => rightsArray.includes(permission);
 
-	if(hasRight("7")){
-		$("#view-users").removeClass("d-none");
-	}else{
-		$("#view-users").addClass("d-none");
-	}
+	// if(hasRight("7")){
+	// 	$("#view-users").removeClass("d-none");
+	// }else{
+	// 	$("#view-users").addClass("d-none");
+	// }
 
 	if (hasRight("6")){
 		$("#view-accounts").removeClass("d-none");
@@ -1607,7 +1621,7 @@
 				url: "/float/users",
 				type: "get",
 				data: {
-				target: "all"
+				target: "v2"
 				},
 				success: function (response) {
 					var elem = $("#users-all-table")
@@ -3104,6 +3118,8 @@
 			toastIt("User registration successful","success");
 		}else if(response === "id taken"){
 			toastIt("failed: National Id already in use","danger");
+		}else if(response === "details missing"){
+			toastIt("Registration failed: Missing details","danger");
 		}else if(response === "tel taken"){
 			toastIt("Registration failed: Mobile number already in use","danger");
 		}else if(response === "email taken"){
@@ -3239,7 +3255,7 @@ if (typeof(EventSource) !== "undefined") {
 
 
 
-<script>
+<!-- <script>
 
     channel.bind('branches', function(data) {
 		var elem = $("#branches-all-table")
@@ -3295,7 +3311,7 @@ if (typeof(EventSource) !== "undefined") {
 		$("#floats-spinner").addClass("d-none")
 
 	});
-	</script>
+	</script> -->
 
 <script>
 let deferredPrompt; // For storing the beforeinstallprompt event

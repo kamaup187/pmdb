@@ -226,6 +226,7 @@ class IndexV2(Resource):
     @login_required
     def get(self):
         props = fetch_all_apartments_by_user(current_user)
+        perm = get_permissions(current_user)
         return Response(render_template(
             "agentindex2.html",
             co="set",
@@ -235,7 +236,7 @@ class IndexV2(Resource):
             cashintransit= f'Kes 0.0',
             totalbankings= f'Kes 0.0',
             totaltransfers=f'Kes 0.0',
-            permissions=get_permissions(current_user),
+            permissions=perm,
             user_logged_in=current_user
             ))
 
@@ -6151,6 +6152,10 @@ class AddTenant(Resource):
         target = request.form.get('target')
         prop_id = request.form.get('propid')
 
+        perm = get_permissions(current_user)
+        if perm:
+            if "3" not in perm:
+                return failure + "not permitted"
 
         prop = ApartmentOp.fetch_apartment_by_name(prop_id)
         if not prop:
@@ -7722,6 +7727,11 @@ class TenantClearance(Resource):
 
     @login_required
     def post(self):
+
+        perm = get_permissions(current_user)
+        if perm:
+            if "4" not in perm:
+                return err + "not permitted"
         # stored_apartment = request.form.get('prop')#dropdown
         tenantid = request.form.get('tenant_id')
         discard_bill = request.form.get('discard_bill')
@@ -10403,7 +10413,11 @@ class FloatRegister(Resource):
         # staffid = "5000"
         # pass1 = "0"
 
-        company = CompanyOp.fetch_company_by_name('Beacon Technologies Ltd')
+        if not name or not phone or not pass1:
+            return "details missing"
+
+        # company = CompanyOp.fetch_company_by_name('Beacon Technologies Ltd')
+        company = current_user.company
         if not company:
             c = CompanyOp("Beacon Technologies Ltd","","","","","")
             c.save()
@@ -10444,7 +10458,7 @@ class FloatRegister(Resource):
             account_obj = AccountsOp(name,0.0,0.0,500000,new_user.id)
             account_obj.save()
 
-            print("User created succeessfuly")
+            print("User created successfuly")
 
         except Exception as e:
             print("error",e)
@@ -10456,6 +10470,7 @@ class FloatRegister(Resource):
         co = current_user.company
         groups = co.users
         for user in groups:
+            # print("userrrr ",user.usercode)
             user_dict = {
                 "id":user.id,
                 "code":user.usercode,
@@ -10470,7 +10485,10 @@ class FloatRegister(Resource):
             }
             items.append(user_dict)
 
-        pusher_client_prod.trigger('my-channel', 'users', items)
+        try:
+            pusher_client_prod.trigger('my-channel', 'users', items)
+        except:
+            pass
 
         return "success"
 
@@ -11327,7 +11345,10 @@ class Roles(Resource):
                             "members":users
                         }
                         items.append(groupdict)
-                    pusher_client_prod.trigger('my-channel', 'roles', items)
+                    try:
+                        pusher_client_prod.trigger('my-channel', 'roles', items)
+                    except:
+                        pass
 
                     return "group successfully added"
 
@@ -11563,6 +11584,30 @@ class FloatUsers(Resource):
             c_data = CompanyOp.fetch_company_by_name("Beacon Technologies Ltd")
             users = c_data.users
             for user in users:
+                status = f'<span class="badge bg-success">Active</span>'
+                if user.company_user_group:
+                    if user.company_user_group.name.lower() == "non-member":
+                        status = f'<span class="badge bg-danger">Non member</span>'
+                user_dict = {
+                    "id":user.id,
+                    "code":user.usercode,
+                    "name":user.name,
+                    "national_id":user.national_id,
+                    "tel":user.phone,
+                    "email":user.email,
+                    "role":user.company_user_group.name if user.company_user_group else "-",
+                    "status": status,
+                    "branch":user.branch.name if user.branch else "-",
+                    "company":c_data.name
+                }
+                items.append(user_dict)
+            return items
+
+        if target == "v2":
+            c_data = current_user.company
+            users = c_data.users
+            for user in users:
+
                 status = f'<span class="badge bg-success">Active</span>'
                 if user.company_user_group:
                     if user.company_user_group.name.lower() == "non-member":

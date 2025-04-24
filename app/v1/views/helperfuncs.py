@@ -2716,15 +2716,20 @@ def permission_strings(ids_str):
 
 def permission_strings2(ids_str):
     permissions_dict = {
-        "1": "add member",
-        "2": "<br>archive member",
-        "3": "<br>approve payment",
-        "4": "<br>view report",
-        "5": "<br>create events",
-        "6": "<br>delete events",
-        "7": "<br>create meetings",
-        "8": "<br>delete meetings",
-        "9": "<br>create roles"
+        "1": "post payment",
+        "2": "allocate payment",
+        "3": "<br>add tenant",
+        "4": "<br>vacate tenant",
+        "5": "<br>edit invoice"
+        # "1": "add member",
+        # "2": "<br>archive member",
+        # "3": "<br>approve payment",
+        # "4": "<br>view report",
+        # "5": "<br>create events",
+        # "6": "<br>delete events",
+        # "7": "<br>create meetings",
+        # "8": "<br>delete meetings",
+        # "9": "<br>create roles"
     }
 
     ids = ids_str.split()

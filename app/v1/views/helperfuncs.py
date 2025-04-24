@@ -2716,11 +2716,12 @@ def permission_strings(ids_str):
 
 def permission_strings2(ids_str):
     permissions_dict = {
-        "1": "post payment",
+        "1": "add payment",
         "2": "allocate payment",
         "3": "<br>add tenant",
         "4": "<br>vacate tenant",
-        "5": "<br>edit invoice"
+        "5": "<br>edit invoice",
+        "6": "<br>transfer tenant"
         # "1": "add member",
         # "2": "<br>archive member",
         # "3": "<br>approve payment",

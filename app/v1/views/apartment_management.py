@@ -7608,6 +7608,11 @@ class AllocateTenants(Resource):
 
 
         if target == "transfer":
+            perm = get_permissions(current_user)
+            if perm:
+                if "6" not in perm:
+                    return err + "not permitted"
+        
             if ttype == "owner" or ttype == "resident":
                 return err + "cannot transfer residents"
             else:

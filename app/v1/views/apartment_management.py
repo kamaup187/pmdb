@@ -6152,10 +6152,11 @@ class AddTenant(Resource):
         target = request.form.get('target')
         prop_id = request.form.get('propid')
 
-        perm = get_permissions(current_user)
-        if perm:
-            if "3" not in perm:
-                return failure + "not permitted"
+        if current_user.company.name.lower() == "villa park":
+            perm = get_permissions(current_user)
+            if perm:
+                if "3" not in perm:
+                    return failure + "not permitted"
 
         prop = ApartmentOp.fetch_apartment_by_name(prop_id)
         if not prop:
@@ -7608,10 +7609,11 @@ class AllocateTenants(Resource):
 
 
         if target == "transfer":
-            perm = get_permissions(current_user)
-            if perm:
-                if "6" not in perm:
-                    return err + "not permitted"
+            if current_user.company.name.lower() == "villa park":
+                perm = get_permissions(current_user)
+                if perm:
+                    if "6" not in perm:
+                        return err + "not permitted"
         
             if ttype == "owner" or ttype == "resident":
                 return err + "cannot transfer residents"
@@ -7733,10 +7735,12 @@ class TenantClearance(Resource):
     @login_required
     def post(self):
 
-        perm = get_permissions(current_user)
-        if perm:
-            if "4" not in perm:
-                return err + "not permitted"
+        if current_user.company.name.lower() == "villa park":
+            perm = get_permissions(current_user)
+            if perm:
+                if "4" not in perm:
+                    return err + "not permitted"
+                
         # stored_apartment = request.form.get('prop')#dropdown
         tenantid = request.form.get('tenant_id')
         discard_bill = request.form.get('discard_bill')

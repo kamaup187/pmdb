@@ -1169,10 +1169,12 @@ class EditBill(Resource):
         if not permission(current_user, 'edit'):
             return err + "Insufficient permissions to edit invoice"
         
-        perm = get_permissions(current_user)
-        if perm:
-            if "5" not in perm:
-                return err + "not permitted"
+        if current_user.company.name.lower() == "villa park":
+
+            perm = get_permissions(current_user)
+            if perm:
+                if "5" not in perm:
+                    return err + "not permitted"
 
         billid = request.args.get('billid')
         target = request.args.get('target')
@@ -2806,16 +2808,17 @@ class ReceivePayment(Resource):
         email = request.form.get("email")
         paidll = request.form.get("paidll")
 
-        if cbid:
-            perm = get_permissions(current_user)
-            if perm:
-                if "2" not in perm:
-                    return err + "not permitted"
-        else:
-            perm = get_permissions(current_user)
-            if perm:
-                if "1" not in perm:
-                    return err + "not permitted"
+        if current_user.company.name.lower() == "villa park":
+            if cbid:
+                perm = get_permissions(current_user)
+                if perm:
+                    if "2" not in perm:
+                        return err + "not permitted"
+            else:
+                perm = get_permissions(current_user)
+                if perm:
+                    if "1" not in perm:
+                        return err + "not permitted"
 
         sms_bool = get_bool(textsms)
         if current_user.company.id == 114:

@@ -1902,6 +1902,7 @@ def fetch_current_billing_period_readings_alt(billing_period,arr):
 
 def fetch_current_billing_period_payments(billing_period,arr):
     current_billling_period_data = []
+    print("pay period month ",billing_period.month)
     for i in arr:
         if i.pay_period.month == billing_period.month and i.pay_period.year == billing_period.year and not i.voided:
             current_billling_period_data.append(i)
@@ -5364,7 +5365,7 @@ def autosend_pending_smsreceipts_prop(propids,period):
         filtered_payments = fetch_current_billing_period_payments(period,payments)
 
         for payment in filtered_payments:
-            print("pay date ",payment.date)
+            print("pay date ",payment.pay_period)
             payids.append(payment.id)
 
     for payment_id in payids:
@@ -5457,7 +5458,8 @@ def autosend_pending_smsreceipts_prop(propids,period):
                                 sms_obj.save()
 
                         else:
-                            smsid = sms_sender(co.name,message,phonenum)
+                            # smsid = sms_sender(co.name,message,phonenum)
+                            smsid = None
                             if smsid:
                                 PaymentOp.update_smsid(payment_obj,smsid)
                                 PaymentOp.update_sms_status(payment_obj,"sent")

@@ -5458,8 +5458,8 @@ def autosend_pending_smsreceipts_prop(propids,period):
                                 sms_obj.save()
 
                         else:
-                            # smsid = sms_sender(co.name,message,phonenum)
-                            smsid = None
+                            smsid = sms_sender(co.name,message,phonenum)
+                            # smsid = None
                             if smsid:
                                 PaymentOp.update_smsid(payment_obj,smsid)
                                 PaymentOp.update_sms_status(payment_obj,"sent")

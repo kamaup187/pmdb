@@ -2839,6 +2839,8 @@ class ReceivePayment(Resource):
         sms_bool = get_bool(textsms)
         if current_user.company.id == 114:
             sms_bool = False
+        else:
+            sms_bool = True  
         email_bool = get_bool(email)
         paidll_bool = get_bool(paidll)
 

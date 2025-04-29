@@ -437,7 +437,7 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Merit Properties Limited")
+        cl = CompanyOp.fetch_company_by_name("ASTROL")
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -448,11 +448,11 @@ class ClientBilling(Resource):
             if current_month_bill:
                 # pass
                 ClientBillOp.delete(current_month_bill)
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,12500.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 new_month_bill.save()
             else:
                 ClientBillOp.delete(current_month_bill)
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,12500.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -518,7 +518,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Merit Properties Limited')
+        comm = CompanyOp.fetch_company_by_name('ASTROL')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -539,7 +539,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(1,4,2025)
+        invdate = generate_exact_date(29,4,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)
@@ -2028,9 +2028,16 @@ class SendSms(Resource):
             return f'<span class="text-danger smallify ln-10">Not allowed</span>'
 
         payment_id = request.args.get("payid")
+        target = request.args.get("target")
+
+        if target == "send all receipts":
+            prop_id = request.args.get("propid")
+            job901 = q.enqueue_call(
+                func=autosend_pending_smsreceipts_prop, args=([prop_id],), result_ttl=5000
+            )
+            return "done"
         
         if payment_id:
-
             payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
 
             # import pdb; pdb.set_trace()
@@ -2172,7 +2179,7 @@ class SendSms(Resource):
             payids = []
             timenow = datetime.datetime.now()
             # payments = PaymentOp.fetch_all_payments()
-            pbrop = ApartmentOp.fetch_apartment_by_id(722)
+            pbrop = ApartmentOp.fetch_apartment_by_id(722) #URGENT TODO
             payments = pbrop.payment_data
             for i in payments:
                 if not i.voided and i.sms_status == "pending" and i.pay_period.month == timenow.month:

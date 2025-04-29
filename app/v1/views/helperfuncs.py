@@ -5343,6 +5343,149 @@ def autosend_pending_smsreceipts(payids):
                 except Exception as e:
                     print("ERROR",e)
 
+
+def autosend_pending_smsreceipts_prop(propids):
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
+
+    payids = []
+
+    for propid in propids:
+        prop_id = get_identifier(propid)
+
+        pay_prop = ApartmentOp.fetch_apartment_by_id(prop_id)
+
+        payments = pay_prop.payment_data
+
+        period = get_billing_period(pay_prop)
+
+        filtered_payments = fetch_current_billing_period_payments(period,payments)
+
+        for payment in filtered_payments:
+            print("pay date ",payment.date)
+            payids.append(payment.id)
+
+    for payment_id in payids:
+        # continue
+        payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
+        db.session.expire(payment_obj)
+        if payment_obj.sms_status != "pending" or payment_obj.apartment.name == "Villa Park Guest House":
+            print("Skipping ahead>>>>>>>>>>>>>>>>>>>>")
+            continue
+
+        if payment_obj.ref_number != "N/A" and payment_obj.ref_number:
+            reference = f'#{payment_obj.ref_number}'
+        else:
+            reference = f'#{payment_obj.id}'
+
+        serv = False
+        if payment_obj.ptenant:
+            serv = True
+            tenant_obj = payment_obj.ptenant
+            ptenant_id = tenant_obj.id
+            tenant_id =  None
+        else:
+            tenant_obj = payment_obj.tenant
+            tenant_id = tenant_obj.id
+            ptenant_id =  None
+
+        if tenant_obj.balance < 0:
+            bal = tenant_obj.balance * -1
+            running_bal = (f"Advance: KES {bal:,}")
+        else:
+            running_bal = (f"Bal: KES {tenant_obj.balance:,}")
+
+        amount = f'KES {payment_obj.amount:,.1f}'
+
+        # receipt = f"Receipt: https://kiotapay.com/r/{payment_obj.rand_id}"
+
+        if os.getenv("TARGET") == "lasshouse" or TARGET == "lasshouse":
+            receiptlink = f"https://{INV}/r/{payment_obj.rand_id}"
+        else:
+            receiptlink = f"https://rentlib.com/r/{payment_obj.rand_id}"
+
+        receipt = f"Receipt: {receiptlink}"
+
+        co = payment_obj.apartment.company
+        str_co = co.name
+        str_prop = payment_obj.apartment.name
+        # end = str_co if payment_obj.apartment.company.name != "LaCasa" else str_prop 
+        end = str_prop 
+
+        raw_rem_sms =co.remainingsms
+
+        own_shortcode = False
+
+        if co.name == "Lesama Ltd" or co.name == "Merit Properties Limited" or payment_obj.apartment.name == "Greatwall Gardens 2":
+            own_shortcode = True
+
+        if own_shortcode:
+            raw_rem_sms = 5000
+
+        tele = tenant_obj.phone
+
+        if (",") in tele:
+            phonenum_list = tele.split(",")
+        elif ("/") in tele:
+            phonenum_list =  tele.split("/")
+        else:
+            phonenum_list =  [tele]
+
+
+        for tele in phonenum_list:
+            phonenum = sms_phone_number_formatter(tele)
+            acc = tenant_obj.uid if tenant_obj.uid else f'TNT{tenant_obj.id}'
+            message = f"Acc {acc} {tenant_obj.name} Unit ({payment_obj.house.name}) Your payment of Ksh {amount} has been received. Ref {reference} \n{running_bal} \n\n{receipt} \n\n~{end}."
+
+            if tenant_obj.sms:
+                if raw_rem_sms > 0 or own_shortcode:
+                    try:
+                        print("Payment sms sending initiated")
+                        smsperiod = generate_date(payment_obj.apartment.billing_period.month, payment_obj.apartment.billing_period.year)
+                        ####################################################################################
+                        if target == "lasshouse":
+                            report = inva_send_sms(message,phonenum)
+                            if report:
+                                PaymentOp.update_smsid(payment_obj,report["msgid"])
+                                PaymentOp.update_sms_status(payment_obj,"sent")
+                                res = update_sms_units(co,message)
+                                sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj.save()
+
+                        else:
+                            smsid = sms_sender(co.name,message,phonenum)
+                            if smsid:
+                                PaymentOp.update_smsid(payment_obj,smsid)
+                                PaymentOp.update_sms_status(payment_obj,"sent")
+                                res = update_sms_units(co,message)
+                                sms_obj = SentMessagesOp(message,res[0],res[1],smsperiod,tenant_id,ptenant_id,payment_obj.apartment.id,co.id)
+                                sms_obj.save()
+
+                        #####################################################################################
+                        
+                    except Exception as e:
+                        print(f"Houston, we have a problem {e}")
+                        PaymentOp.update_sms_status(payment_obj,"fail")
+                else:
+                    print("CLIENT HAS DEPLETED SMS",str_co)
+            else:
+                PaymentOp.update_sms_status(payment_obj,"off")
+
+        if target != "lasshouse":
+            prop_obj = payment_obj.apartment
+            tels = []
+            if prop_obj.receipt:
+                tels = prop_obj.receipt.split(',')
+            for tel in tels:
+                try:
+                    phonenum = sms_phone_number_formatter(tel)
+                    message = f"{tenant_obj.name} of unit ({payment_obj.house.name}) has transacted {amount} in favour of {prop_obj.name}.\nRef {reference} \n{running_bal} \n\n{receipt}"
+                    # sms_sender("",message,phonenum)
+
+                except Exception as e:
+                    print("ERROR",e)
+
 def send_out_email_invoices(prop,houses,override,charge,user_id):
     from app import create_app
     app = create_app()

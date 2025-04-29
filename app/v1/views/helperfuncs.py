@@ -5344,7 +5344,7 @@ def autosend_pending_smsreceipts(payids):
                     print("ERROR",e)
 
 
-def autosend_pending_smsreceipts_prop(propids):
+def autosend_pending_smsreceipts_prop(propids,period):
     from app import create_app
     app = create_app()
     app.app_context().push()
@@ -5358,7 +5358,8 @@ def autosend_pending_smsreceipts_prop(propids):
 
         payments = pay_prop.payment_data
 
-        period = get_billing_period(pay_prop)
+        if not period:
+            period = get_billing_period(pay_prop)
 
         filtered_payments = fetch_current_billing_period_payments(period,payments)
 

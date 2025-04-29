@@ -27,6 +27,18 @@
         <span id="sendspan"> <i class="feather-18 text-black mr-1 pb-0" data-feather="mail"></i></span>send receipts
       </span>
 
+      <input id="receiptmonthpicker" class="ph" type="text" placeholder="select month..." readonly />
+
+      <script>
+        $("#receiptmonthpicker").datepicker({ 
+          autoclose: true, 
+          todayHighlight: true,
+          format: "mm-yyyy",
+          startView: "months", 
+          minViewMode: "months"
+        });
+      </script>
+
     </div>
     <div class="hide">hide</div>
   </div>
@@ -249,6 +261,7 @@
       type: "get",
       data: {
         propid:  $("#prop_identifier").text(),
+        date: $("#receiptmonthpicker").val(),
         target: "send all receipts"
       },
       success: function(response) {

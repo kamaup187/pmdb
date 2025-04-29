@@ -2029,11 +2029,20 @@ class SendSms(Resource):
 
         payment_id = request.args.get("payid")
         target = request.args.get("target")
+        date = request.args.get("date")
+
+        try:
+            billdate = date_formatter_alt(date)
+            bill_date = parse(billdate)
+        except:
+            bill_date = None
+
+        print("dateee ", date, " billdate ", bill_date)
 
         if target == "send all receipts":
             prop_id = request.args.get("propid")
             job901 = q.enqueue_call(
-                func=autosend_pending_smsreceipts_prop, args=([prop_id],), result_ttl=5000
+                func=autosend_pending_smsreceipts_prop, args=([prop_id],bill_date,), result_ttl=5000
             )
             return "done"
         

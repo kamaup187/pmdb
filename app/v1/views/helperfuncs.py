@@ -5370,7 +5370,9 @@ def autosend_pending_smsreceipts_prop(propids):
         # continue
         payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
         db.session.expire(payment_obj)
-        if payment_obj.sms_status != "pending" or payment_obj.apartment.name == "Villa Park Guest House":
+        if payment_obj.sms_status == "pending" or payment_obj.sms_status == "off":
+            print("Proceeding")
+        else:
             print("Skipping ahead>>>>>>>>>>>>>>>>>>>>")
             continue
 

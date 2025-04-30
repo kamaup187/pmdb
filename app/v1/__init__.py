@@ -221,9 +221,13 @@ api.add_resource(CallBackUrlMLatitude,"/m/latitude/ins/payment")
 api.add_resource(CallBackUrlPremier,"/premier/payment")
 api.add_resource(CallBackUrlVintage,"/vintage/4089507")
 api.add_resource(CallBackUrlPremierRealty,"/prealty/payment")
-api.add_resource(CallBackUrlAstrol,"/m/astrol/ins/payment")
-api.add_resource(CallBackUrlAstrolRuiru,"/m/astrolruiru/ins/payment")
+
+api.add_resource(CallBackUrlAstrol,"/astrol/4074689")
+api.add_resource(CallBackUrlAstrolRuiru,"/astrol/4091383")
 api.add_resource(CallBackUrlAstrolThika,"/astrol/872531")
+api.add_resource(CallBackUrlAstrolLenana,"/astrol/4091381")
+
+
 api.add_resource(CallBackUrlDenvic,"/m/denvic/ins/payment")
 api.add_resource(CallBackUrlDenvicTwo,"/m/denvictwo/ins/payment")
 api.add_resource(CallBackUrlDenvicThree,"/m/denvicthree/ins/payment")

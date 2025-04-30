@@ -1332,9 +1332,9 @@ class Index(Resource):
                     if r.status == "unclaimed" and r.mode == "Bank":
                         sifted.append(r)
 
-            if current_user.company.name == "ASTROL":
-                for qwq in sifted:
-                    CtoBop.delete(qwq)
+            # if current_user.company.name == "ASTROL":
+            #     for qwq in sifted:
+            #         CtoBop.delete(qwq)
 
             cbids = ctb_payment_details(sifted)
             cbids_alt = ctb_payment_details(sifted_alt)

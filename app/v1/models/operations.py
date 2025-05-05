@@ -3933,9 +3933,16 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             tname = self.house.owner.name.title()
             ttype = f'<span class="text-black">(R)</span>'
 
+        # try:
+        #     fname = tname.split()[0]
+        # except:
+        #     fname = "None"
+
         try:
-            fname = tname.split()[0]
+            fname = tname.split()[0] + " " + tname.split()[1]
         except:
+            fname = tname.split()[0]
+        finally:
             fname = "None"
 
         house =  self.house.name

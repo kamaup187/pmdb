@@ -3940,10 +3940,11 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
         try:
             fname = tname.split()[0] + " " + tname.split()[1]
-        except:
-            fname = tname.split()[0]
-        finally:
-            fname = "None"
+        except Exception:
+            try:
+                fname = tname.split()[0]
+            except Exception:
+                fname = "None"
 
         house =  self.house.name
         # return f'{house} <span class="text-gray-600">{fname}</span> {ttype}' 

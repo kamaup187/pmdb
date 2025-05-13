@@ -3226,6 +3226,311 @@ class RentStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+
+class RentStatement2(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+        target = request.args.get("target")
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            return Response(render_template(
+                'report_rent_statement2.html',
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        llp = LandlordPaymentOp.fetch_current_llp(apartment_obj.id, target_period.month, target_period.year)
+
+        ##################################################################################################
+        house_ids = []
+        detailed_bills = []
+
+        totalbbf = 0.0
+        actual_totalbbf = 0.0
+        totalrent = 0.0
+
+        totalpaid = 0.0
+        totalbcf = 0.0
+
+        paidll = 0.0
+
+        ###################################################################################################
+        db.session.expire(apartment_obj)
+
+        alltenants = 0
+        all_units = apartment_obj.houses
+        allunits = len(all_units)
+
+        for unit in all_units:
+            check = check_occupancy(unit)
+            if check[0] == "occupied":
+                alltenants += 1
+
+
+        monthlybills = apartment_obj.monthlybills
+        ###################################################################################################
+        for bill in monthlybills:
+            if bill.month == target_period.month and bill.year == target_period.year:
+                # print("AYYYYYYE",bill.paidll,"houseeee",bill.house,"amount paiiideee",bill.paid_amount)
+                house_ids.append(bill.house_id)
+                """compute subtotals"""
+                # bill_item = LandlordSummaryOp.external_view(bill)
+                bill_item = MonthlyChargeOp.external_view(bill)
+                detailed_bills.append(bill_item)
+
+                if bill.paidll:
+                    # paidll += bill.paidll
+                    if bill.rent:
+                        paidll += bill.rent_paid
+
+                if bill.rent_balance:
+                    totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
+                    actual_totalbbf += bill.rent_balance
+
+                totalrent += bill.rent if bill.rent else 0.0
+                if not bill.paidll:
+                    totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+
+                if bill.rent_due:
+                    totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
+        ###################################################################################################
+   
+
+        vacants = filter_out_occupied_houses(apartment_obj.name)
+
+        vacant_rents = 0
+
+
+        for vac in vacants:
+            if vac.id in house_ids:
+                continue
+            vacant_rents += vac.housecode.rentrate
+
+            description = vac.description
+
+            if description:
+                if "2" in description or "two" in description.lower():
+                    desc = "2BR"
+                elif "bedsitter" in description.lower():
+                    desc = "BEDSITTER"
+                elif "1" in description or "one" in description.lower():
+                    desc = "1BR"
+                elif "3" in description or "three" in description.lower():
+                    desc = "3BR"
+                else:
+                    desc = "n/a"
+            else:
+                desc = "N/A"
+
+
+            new_item = {
+                'id':"0",
+                'delid':"0",
+                'editid':"0",
+                'house':vac.name,
+                'desc':desc,
+                'tenant-alt':"--VACANT--",
+                'vacancy':"text-danger",
+                'arrears':0,
+                'rent':f"{vac.housecode.rentrate:,.1f}",
+                'calc_total':0.0,
+                'paid':0.0,
+                'balance': 0.0
+            }
+            detailed_bills.append(new_item)
+
+        totalrent += vacant_rents
+
+        bbftotal = (f"{totalbbf:,}")
+
+        renttotal = (f"{totalrent:,}")
+
+        totalbill = actual_totalbbf + totalrent
+        totalbill -= vacant_rents
+        billtotal = (f"{totalbill:,}")
+        paidtotal = (f"{(paidll + totalpaid):,}")
+        bcftotal = (f"{totalbcf:,}")
+
+        expense_list = []
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+        remittances = 0.0
+        
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+
+
+
+            
+        netrent = totalpaid + paidll
+
+        formatted_netrent = (f"{netrent:,.1f}")
+        
+        commission = netrent * apartment_obj.commission * 0.01
+
+        if apartment_obj.id == 33:
+            loan = 0
+        else:
+            loan = 0
+
+        if apartment_obj.commission:
+            commission = netrent * apartment_obj.commission * 0.01
+            commission_percentage = f"({apartment_obj.commission} %)"
+
+        else:
+            commission = apartment_obj.int_commission
+            commission_percentage = f"{commission} flat rate"
+
+        debits = commission + expenses_amount + paidll
+
+        formatted_debits = f"{debits:,.1f}"
+
+        formatted_commision = (f"{commission:,.1f}")
+        formatted_loan = (f"{loan:,.1f}")
+
+        llp_arr = llp.arrears if llp else 0.0 
+            
+        raw_netpay = netrent - commission - expenses_amount - loan + remittances + llp_arr - paidll
+
+        netpay = (f"{raw_netpay:,.1f}")
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
+
+        try:
+            ratio = (f"{((totalpaid+paidll)/totalbill)*100:,.1f} %")
+        except:
+            ratio = f"0.0 %"
+
+        # if apartment_obj.id == 137 and target_period.month == 11:
+        #     ratio = "100.0 %"
+
+        if llp:
+            llbal = f"{llp.arrears:.1f}"
+        else:
+            llbal = "0.0"
+
+        # totalpaid -= paidll
+        paidtotal_alt = (f"{totalpaid:,}")
+        
+        template_vars = {
+            "code":apartment_obj.id,
+            "name":selected_apartment,
+            "landlord":"",
+            "ll_bbf":llbal,
+
+            "tnt_bbf":totalbbf,
+            "rent":totalrent,
+            "expected":totalbill,
+            "actual":totalpaid,
+            "tnt_bcf":totalbcf,
+
+            "utilities":0.0,
+            "deposit":0.0,
+
+            "expenses":expenses_amount,
+
+            "commission":commission,
+            "netpay":raw_netpay,
+
+            "remitted":raw_netpay,
+            "ratio":ratio,
+
+            "ll_bcf":0.0,
+            "agent":current_user.name,
+        }
+
+        if target == "remit_data":
+            return render_template('ajax_remit_template.html',vars=template_vars)
+
+        remits = remittances if remittances else llp_arr
+
+
+        return Response(render_template(
+            'report_rent_statement2.html',
+
+            tothouses=allunits,
+            tottenants=alltenants,
+            totvacants=len(vacants),
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            selected_month=selected_month,
+            fieldshow_loan=fieldshow_loan,
+            tenantlist=[],
+            timeline = timeline,
+            bbftotal=bbftotal,
+            renttotal=renttotal,
+            billtotal=billtotal,
+            paidtotal=paidtotal,
+            paidtotal_alt=paidtotal_alt,
+            bcftotal=bcftotal,
+            ratio=ratio,
+            expenses = f"{expenses_amount:,.1f}",
+            remits = f"{remits:,.1f}",
+            paidll = f"{paidll:,.1f}",
+            loan = formatted_loan,
+            formatted_netrent=formatted_netrent,
+            commission=formatted_commision,
+            debits=formatted_debits,
+            commission_percentage=commission_percentage,
+            netpay=netpay,
+            bills=detailed_bills,
+            expenselist=expense_list,
+            llbal=llbal,
+            paging="portrait",
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            billids = get_obj_ids(detailed_bills),
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+    
 class GeneralRentStatement(Resource):
     @login_required
     def get(self):

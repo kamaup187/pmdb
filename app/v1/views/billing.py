@@ -437,7 +437,14 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
+        if cl:
+            print("changing name............")
+            CompanyOp.update_name(cl,"THE PEACEFIELD")
+        else:
+            cl = CompanyOp.fetch_company_by_name("THE PEACEFIELD")
+
+        print("CLIENTS >>>>>>>>>>>>>",cl)
         clients.append(cl)
         for c in clients:
             result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -448,11 +455,14 @@ class ClientBilling(Resource):
             if current_month_bill:
                 # pass
                 ClientBillOp.delete(current_month_bill)
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,12000.0,0.0,0.0,0.0,0.0,12000.0,c.id)
                 new_month_bill.save()
             else:
-                ClientBillOp.delete(current_month_bill)
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                try:
+                    ClientBillOp.delete(current_month_bill)
+                except:
+                    pass
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,12000.0,0.0,0.0,0.0,0.0,12000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -518,7 +528,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('THE PEACEFIELD')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -532,14 +542,14 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9959
+        invnum = bill.id + 9989
         # invnum = 
 
         timenow = datetime.datetime.now()
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(29,4,2025)
+        invdate = generate_exact_date(5,5,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)

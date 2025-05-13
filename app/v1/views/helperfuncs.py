@@ -5148,9 +5148,10 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
 
                 try:
                     # temp_txt = "This a friendly reminder that your rent for June was due on or by 5/6/2021. We thank you for timely payment. \nPlease note: \nIf rent is received after 5/6/2021,please add a late fee 10% of your rent."
-
+                    d_now = datetime.datetime.now()
+                    f_dnow = d_now.strftime('%d-%m-%Y')
                     recipient = [phonenum]
-                    message = f"Dear {fname}, \n{temp_txt}. \nBalance: Kshs. {tenant_obj.balance} \n\n~{str_co}."
+                    message = f"Dear {fname}, \n{temp_txt}. \nYour total arrears  as of date {f_dnow} is Kes. {tenant_obj.balance} \n\n~{str_co}."
 
                     char_count = len(message)
                     if char_count <= 160:

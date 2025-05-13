@@ -4639,8 +4639,8 @@ class BulkSms(Resource):
             job8 = q.enqueue_call(
                 func=send_bulk_sms, args=(propid,rem_txt,), result_ttl=5000
             )
-            text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
-            response = sms.send(text, ["+254716674695"],sender)
+            # text = f'General sms requested by {prop_obj.company} for {prop_obj.name}'
+            # response = sms.send(text, ["+254716674695"],sender)
 
             return success
 
@@ -4730,7 +4730,7 @@ class BulkSms(Resource):
                     if prop_obj.reminder_status == "sent":
                         text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
                         send_internal_email_notifications(prop_obj.company.name,text)
-                        response = sms.send(text, ["+254716674695"],sender)
+                        # response = sms.send(text, ["+254716674695"],sender)
                         return failure + "sms already sent"
                     else:
                         ApartmentOp.update_reminder_status(prop_obj,"sent")

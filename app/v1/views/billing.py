@@ -2498,16 +2498,26 @@ class ReceivePayment(Resource):
                     if cb.bill_ref_num.startswith("TNT"):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
-                            hh = check_house_occupied(tenant)[1]
+                            if house_name:
+                                hh = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                            else:
+                                hh = check_house_occupied(tenant)[1]
+
                             # bill = fetch_target_period_invoice(hh,pay_period_date)
-                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                            # bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                            bill = fetch_target_period_tenant_house_invoice(tenant,hh,pay_period_date)
 
                         else:
                             tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
-                                hh = check_house_occupied(tenant)[1]
+                                if house_name:
+                                    hh = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                                else:
+                                    hh = check_house_occupied(tenant)[1]
+
                                 # bill = fetch_target_period_invoice(hh,pay_period_date)
-                                bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                                # bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                                bill = fetch_target_period_tenant_house_invoice(tenant,hh,pay_period_date)
 
                             else:
                                 bill = None
@@ -2585,7 +2595,8 @@ class ReceivePayment(Resource):
                         bill = fetch_target_period_owner_invoice(house_obj[0],pay_period_date)
                 else:
                     # bill = fetch_target_period_invoice(house_obj[0],pay_period_date)
-                    bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
+                    # bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
+                    bill = fetch_target_period_tenant_house_invoice(tenant_obj,house_obj,pay_period_date)
 
             if bill:
                 bill_balance = bill.balance
@@ -2652,16 +2663,24 @@ class ReceivePayment(Resource):
                     if cb.bill_ref_num.startswith("TNT"):
                         tenant = TenantOp.fetch_tenant_by_uid(cb.bill_ref_num)
                         if tenant:
-                            hh = check_house_occupied(tenant)[1]
+                            if house_name:
+                                hh = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                            else:
+                                hh = check_house_occupied(tenant)[1]
                             # bill = fetch_target_period_invoice(hh,pay_period_date)
-                            bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                            # bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                            bill = fetch_target_period_tenant_house_invoice(tenant,hh,pay_period_date)
 
                         else:
                             tenant = TenantOp.fetch_tenant_by_id(get_identifier(cb.bill_ref_num))
                             if tenant:
-                                hh = check_house_occupied(tenant)[1]
+                                if house_name:
+                                    hh = get_specific_house_obj_from_house_tenant_alt_alt(propid,house_name)
+                                else:
+                                    hh = check_house_occupied(tenant)[1]
                                 # bill = fetch_target_period_invoice(hh,pay_period_date)
-                                bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                                # bill = fetch_target_period_tenant_invoice(tenant,pay_period_date)
+                                bill = fetch_target_period_tenant_house_invoice(tenant,hh,pay_period_date)
                             else:
                                 bill = None
 
@@ -2741,6 +2760,7 @@ class ReceivePayment(Resource):
                 else:
                     # bill = fetch_target_period_invoice(house_item,pay_period_date)
                     bill = fetch_target_period_tenant_invoice(tenant_obj,pay_period_date)
+                    bill = fetch_target_period_tenant_house_invoice(tenant_obj,house_obj,pay_period_date)
 
             if bill:
                 try:

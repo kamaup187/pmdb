@@ -7458,7 +7458,9 @@ class TenantStatementFour(Resource):
                 else:
                     house_obj = check_house_occupied(tenant_obj)[2].house
             else:
-                house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,raw_tenant)
+                # new_raw_tenant = raw_tenant.replace(" ","")
+                # house_obj = get_specific_house_obj_from_house_tenant_alt(apartment_obj.id,new_raw_tenant)
+                house_obj = get_specific_house_obj_from_house_tenant_alt_alt(apartment_obj.id,raw_tenant)
                 tenant_obj = check_occupancy(house_obj)[1]
                 tenant_id = tenant_obj.id
             

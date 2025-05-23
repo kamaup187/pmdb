@@ -15,7 +15,7 @@
 
 <span id="remitperiod" class="dispnone">{{selected_month}}</span>
 <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
-<span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="urlpattern" class="dispnone">/rent/statement2</span>
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
 
 <div class="row">
@@ -60,7 +60,7 @@
               <!-- Card Content - Collapse -->
               <div class="noprint" id="collapseCardExample">
                 <div class="card-body p-0">
-                    <form class="row bg-light" method="GET" action="/rent/statement">
+                    <form class="row bg-light" method="GET" action="/rent/statement2">
                       <div class="col-lg-3 form-group mb-2 ml-lg-5">
                         <label class="mb-0">Select type:</label>
                         <select name="reporttype" class="select-css" id="reporttype">
@@ -128,7 +128,7 @@
 
           <div class="center-btn mt-2 overline underline bg-aviv">
             <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
-            <span class="font-weight-bold text-white"><span class="mt-3">STATEMENT FOR RENT FOR {{timeline}}</span></span>
+            <span class="font-weight-bold text-white"><span class="mt-3">MAYAI STATEMENT FOR RENT FOR {{timeline}}</span></span>
           </div>
 
           
@@ -179,7 +179,6 @@
                     <tr>
                       <th class="">PNO</th>
                       <th class="">TENANT NAME</th>
-                      <th class="">TYPE</th>
                       <th class="">BB/F</th>
                       <th class="">RENT</th>
                       <th class="">TOTAL DUE</th>
@@ -194,7 +193,6 @@
                     <tr>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
-                      <td class="data-cell text-right">{{ bill['desc'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{bill['rent-total']}}</td>
@@ -207,7 +205,7 @@
                   </tbody>
                   <tfoot class="custom-footer-alt">
                     <tr>
-                      <td colspan="3" class="font-weight-bold">TOTALS ...</td>
+                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>

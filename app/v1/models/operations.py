@@ -4037,6 +4037,19 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             
         return paid
 
+    # def get_paycode_paymode(self):
+    #     if self.tenant.payments:
+    #         for pay in self.tenant.payments:
+    #             if pay.paydate
+    #         for self
+    #         paymode = self.tenant.payments[0].paymode if self.payments[0].paymode else "N/A"
+    #         paycode = self.payments[0].paycode if self.payments[0].paycode else "N/A"
+    #     else:
+    #         paymode = "N/A"
+    #         paycode = "N/A"
+
+    #     return paymode, paycode
+
     def calculate_bcf(self):
         bill = self.rent * 2
         if self.balance > bill and self.deposit == 0.0 and self.apartment_id in [3,4]:

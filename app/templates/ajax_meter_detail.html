@@ -209,6 +209,16 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
 
+                      <div class="form-group">
+                        <select class="form-control" id="reading_metertype">
+                          <option disabled selected value> -- Select meter type -- </option>
+                          <option selected value="water">Water(Council)</option>
+                          <!-- <option value="electricity">Electricity</option> -->
+                          <option value="borehole">Water(Borehole)</option>
+
+                        </select>
+                        <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
+                      </div>
 
                       <div class="form-group mt-2">
                         <label class="mb-0">Select week/month:</label>
@@ -1422,6 +1432,7 @@
             propid: $("#prop_identifier").text(),
             readperiod: $("input[name=readperiod]:checked").val(),
             readperiod2: $("#reading-period").val(),
+            readtype: $("#reading_metertype").val(),
             run:"houselist"
           },
       success: function(response) {
@@ -1468,7 +1479,7 @@ $("#select_house").on('change',function(){
           propid: $("#prop_identifier").text(),
           house: $("#select_house").val(),
           readperiod2: $("#reading-period").val(),
-          readtype:"water",
+          readtype: $("#reading_metertype").val(),
           run:"run-reading"
         },
     success: function(response) {
@@ -1527,6 +1538,7 @@ $("#select_house_alt").on('change',function(){
                 readperiod2: $("#reading-period").val(),
                 reading: $("#reading").val(),
                 readtype:"water",
+                readtype: $("#reading_metertype").val(),
                 run:"run-units"
             },
         success: function(response) {
@@ -1590,7 +1602,7 @@ $("#select_house_alt").on('change',function(){
                 reading: $("#reading").val(),
                 readperiod: $("input[name=readperiod]:checked").val(),
                 readperiod2: $("#reading-period").val(),
-                readtype:"water"
+                readtype: $("#reading_metertype").val()
             },
         success: function(response) {
           $(".alert-msgs").html(response);
@@ -1613,6 +1625,7 @@ $("#select_house_alt").on('change',function(){
             data: {
                   propid: $("#prop_identifier").text(),
                   readperiod: $("input[name=readperiod]:checked").val(),
+                  readtype: $("#reading_metertype").val(),
                   run:"houselist"
                 },
             success: function(response) {

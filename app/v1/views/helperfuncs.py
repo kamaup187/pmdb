@@ -3708,6 +3708,24 @@ def filter_in_metered_houses(selected_apartment):
 
     return new_list
 
+def filter_in_metered_houses_borehole(selected_apartment):
+    apartment_id = get_apartment_id(selected_apartment)
+    house_list = houseauto(apartment_id)
+    new_list = []
+    for house in house_list:
+        if house.meter_allocated:
+            found = False
+            meter_allocs = house.meter_allocated
+
+            for meter_alloc in meter_allocs:
+                if meter_alloc.active == True and meter_alloc.meter.metertype == "borehole":
+                    found = True
+                    break
+            if found:
+                new_list.append(house)
+
+    return new_list
+
 def filter_in_metered_houses_alt(selected_apartment):
     apartment_id = get_apartment_id(selected_apartment)
     house_list = houseauto(apartment_id)
@@ -3864,6 +3882,24 @@ def fetch_active_meter(house_obj):
         
         for meter_alloc in meter_allocs:
             if meter_alloc.active == True and meter_alloc.meter.metertype == "water":
+                meter = meter_alloc.meter
+                found = True
+                break
+        if found:
+            return meter
+        else:
+            return None
+
+    return None
+
+def fetch_active_meter_borehole(house_obj):
+    """returns active meter""" 
+    if house_obj.meter_allocated:
+        found = False
+        meter_allocs = house_obj.meter_allocated
+        
+        for meter_alloc in meter_allocs:
+            if meter_alloc.active == True and meter_alloc.meter.metertype == "borehole":
                 meter = meter_alloc.meter
                 found = True
                 break
@@ -13540,6 +13576,95 @@ def filtered_house_list(apartment_id,readdate=None):
 
         if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
             if prev_reading_obj.description == "actual water reading":
+                pass
+            else:
+                unread_houses.append(house)
+        else:
+
+            unread_houses.append(house)
+
+
+        # if prev_reading_obj.reading_period and prev_reading_obj.description != "initial reading" and prev_reading_obj.description != "actual electricity reading":
+        #     print("there",house,prev_reading_obj.reading_period)
+        #     if prev_reading_obj:
+        #         if prev_reading_obj.reading_period.month != period: #if diff value is compared against 0, reading will only be done once a month 
+        #             unread_houses.append(house)
+        # else:
+        #     unread_houses.append(house)
+
+    return unread_houses
+
+def filtered_house_list_borehole(apartment_id,readdate=None):
+    """Filtering out read houses"""
+    unread_houses = []
+    prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
+    house_list = filter_in_metered_houses_borehole(prop.name)
+    
+    # period = current_user.company.billing_period.month
+    billing_period = prop.billing_period
+    
+    if readdate:
+        if readdate.month == billing_period.month and readdate.year == billing_period.year:
+            month = billing_period.month
+            year = billing_period.year
+        else:
+            month = billing_period.month + 1 if billing_period.month != 12 else 1
+            year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+    else: 
+        if datetime.datetime.now().day < 21 and datetime.datetime.now().month == billing_period.month:
+            #Only enters this block for readings taken after billing and are meant for the same period as the current bills. next month of billing
+            print("Reading left out captured")
+
+            month = billing_period.month
+            year = billing_period.year
+
+        elif datetime.datetime.now().day >= 21:
+            #Only enters this block if readings are taken early before the next month of billing
+
+            if datetime.datetime.now().month != 12:
+                if datetime.datetime.now().month + 1 == billing_period.month:
+
+                    #Only enters this block for readings taken early and are meant for early next current billing
+                    print("Reading left out captured for next month")
+                    month = billing_period.month
+                    year = billing_period.year
+
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for next period")
+                    month = billing_period.month + 1 if billing_period.month != 12 else 1
+                    year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+            else:
+                if 1 == billing_period.month:
+                    print("Reading left out captured for Jan ater early billing for Jan")
+                    month = billing_period.month
+                    year = billing_period.year
+                else:
+                    #Only enters this block for early billing COMMON PROCESS
+                    print("Reading captured early and normally for Jan")
+                    month = 1
+                    year = billing_period.year + 1
+        else:
+            #Only enters this block if readings are taken early in the next month of billing
+            print("Reading captured late")
+            if billing_period.month == 12:
+                month = 1
+                year = billing_period.year + 1
+
+            else:
+                month = billing_period.month + 1 if billing_period.month != 12 else 1
+                year = billing_period.year if billing_period.month != 12 else billing_period.year + 1
+
+    for house in house_list:
+        active_meter = fetch_active_meter_borehole(house)
+        if not active_meter: continue
+        # prev_reading_obj = fetch_last_reading(active_meter.id)
+        prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
+
+        # print("Prev reading period",prev_reading_obj.reading_period.month,"")
+
+        if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
+            if prev_reading_obj.description == "actual borehole reading":
                 pass
             else:
                 unread_houses.append(house)

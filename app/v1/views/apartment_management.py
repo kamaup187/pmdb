@@ -8487,8 +8487,14 @@ class CaptureReading(Resource):
 
         #################################################################################################
         if run == "houselist":
-            house_list = filtered_house_list(apartment_id,readdate)
-            return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select water meter")
+            if readtype == "water":
+                house_list = filtered_house_list(apartment_id,readdate)
+                return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select water meter")
+
+            else:
+                house_list = filtered_house_list_borehole(apartment_id,readdate)
+                return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select borehole meter")
+            
         elif run == "houselist-alt":
             if readperiod == "current":
                 house_list = filtered_house_list_alt(apartment_id,readdate,"force")
@@ -8506,26 +8512,19 @@ class CaptureReading(Resource):
 
         if readtype == "water":
             meter = fetch_active_meter(house_obj)
-        
-            meter_id = meter.id
-            last_reading = getlast_reading(meter_id)
-
-            meter_num = meter.meter_number
-            str_decitype = get_str_decitype(meter_id)
-            prev_reading = f"Last reading: {last_reading}"
-            meter = f"{meter_num}"
-            mtype = f"Type: {str_decitype}"
+        elif readtype == "borehole":
+            meter = fetch_active_meter_borehole(house_obj)
         else:
             meter = fetch_active_meter_alt(house_obj)
         
-            meter_id = meter.id
-            last_reading = getlast_reading(meter_id)
+        meter_id = meter.id
+        last_reading = getlast_reading(meter_id)
 
-            meter_num = meter.meter_number
-            str_decitype = get_str_decitype(meter_id)
-            prev_reading = f"Last reading: {last_reading}"
-            meter = f"{meter_num}"
-            mtype = f"Type: {str_decitype}"
+        meter_num = meter.meter_number
+        str_decitype = get_str_decitype(meter_id)
+        prev_reading = f"Last reading: {last_reading}"
+        meter = f"{meter_num}"
+        mtype = f"Type: {str_decitype}"
 
         if run == "run-reading":
             return render_template('ajaxreadingdata.html',prev_reading=prev_reading,meter=meter,mtype=mtype)
@@ -8617,6 +8616,9 @@ class CaptureReading(Resource):
 
             if readtype == "water":
                 reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                reading_obj.save()
+            elif readtype == "borehole":
+                reading_obj = MeterReadingOp("actual borehole reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
                 reading_obj.save()
             else:
                 reading_obj = MeterReadingOp("actual electricity reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)

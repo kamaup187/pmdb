@@ -207,14 +207,14 @@
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="">
+                    <form id="readingform" autocomplete="off" method="POST" action="">
 
                       <div class="form-group">
-                        <select class="form-control" id="reading_metertype">
+                        <select class="form-control no-reset" id="reading_metertype">
                           <option disabled selected value> -- Select meter type -- </option>
                           <option selected value="water">Water(Council)</option>
-                          <!-- <option value="electricity">Electricity</option> -->
                           <option value="borehole">Water(Borehole)</option>
+                          <!-- <option value="electricity">Electricity</option> -->
 
                         </select>
                         <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
@@ -1608,6 +1608,19 @@ $("#select_house_alt").on('change',function(){
       });
   });
 
+  </script>
+
+  <script>
+    $("#readingform").on("reset", function (e) {
+  e.preventDefault(); // prevent native reset
+
+  // Reset only inputs without class 'no-reset'
+  $(this)
+    .find("input:not(.no-reset), textarea:not(.no-reset), select:not(.no-reset)")
+    .each(function () {
+      $(this).val('');
+    });
+});
   </script>
 
 

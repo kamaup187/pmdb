@@ -8027,9 +8027,14 @@ class CreateMeter(Resource):
 
                     initial_reading = float(sheet.row_values(row)[1]) if sheet.row_values(row)[1] else 0
 
-                    metertype = "water"
+                    # metertype = "water"
                     raw_meter_no = meter_num.upper()
-                    meter_no = "W-" + raw_meter_no
+                    if metertype == "water":
+                        meter_no = "W-" + raw_meter_no
+                    elif metertype == "borehole":
+                        meter_no = "B-" + raw_meter_no
+                    else:
+                        meter_no = "E-" + raw_meter_no
 
                     target_meter_obj = get_specific_meter_obj(apartment_id,meter_no)
                     house_obj = get_specific_house_obj(apartment_id,raw_meter_no)
@@ -8050,18 +8055,23 @@ class CreateMeter(Resource):
                     prop_obj = meter_obj.apartment
                     w_allocate = False
                     e_allocate = False
+                    b_allocate = False
 
                     if house_obj:
                         if metertype == "water":
                             target_houses = filter_out_metered_houses(prop_obj.name)
                             if house_obj in target_houses:
                                 w_allocate = True
+                        elif metertype == "borehole":
+                            target_houses = filter_out_metered_houses_borehole(prop_obj.name)
+                            if house_obj in target_houses:
+                                b_allocate = True
                         else:
                             target_houses = filter_out_metered_houses_alt(prop_obj.name)
                             if house_obj in target_houses:
                                 e_allocate = True
 
-                    if w_allocate or e_allocate:
+                    if w_allocate or e_allocate or b_allocate:
 
                         house_id = house_obj.id
                         user_id = current_user.id

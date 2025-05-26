@@ -8052,13 +8052,13 @@ def read_water_excel(dict_array,readtype,apartment_id,user_id):
                 # reading_obj.save()
 
                 if readtype == "electricity":
-                    reading_obj = MeterReadingOp("actual electricity reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj = MeterReadingOp("actual electricity reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
                     reading_obj.save()
                 elif readtype == "borehole":
-                    reading_obj = MeterReadingOp("actual borehole reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj = MeterReadingOp("actual borehole reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
                     reading_obj.save()
                 else:
-                    reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
                     reading_obj.save()
                 
     return '<span class="text-success">Upload successful</span>'

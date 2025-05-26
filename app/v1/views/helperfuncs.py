@@ -7906,7 +7906,7 @@ def read_mpesa_excel(dict_array,target,user_id):
 
     return "completed"
 
-def read_water_excel(dict_array,apartment_id,user_id):
+def read_water_excel(dict_array,readtype,apartment_id,user_id):
     from app import create_app
     app = create_app()
     app.app_context().push()
@@ -7955,14 +7955,25 @@ def read_water_excel(dict_array,apartment_id,user_id):
             print("Skipping ",house_name, "not availble in apartment")
             continue
 
-        house_list = filtered_house_list(apartment_id)
+        if readtype == "electricity":
+            house_list = filtered_house_list_alt(apartment_id)
+        elif readtype == "borehole":
+            house_list = filtered_house_list_borehole(apartment_id)
+        else:
+            house_list = filtered_house_list(apartment_id)
 
         if house_obj not in house_list:
             print("FAILED! HOUSE ALREADY READ", house_obj)
             continue
         else:
+            if readtype == "electricity":
+                meter = fetch_active_meter_alt(house_obj)
+            elif readtype == "borehole":
+                meter = fetch_active_meter_borehole(house_obj)
+            else:
+                meter = fetch_active_meter(house_obj)
+
             reading = int(str_reading)
-            meter = fetch_active_meter(house_obj)
         
             meter_id = meter.id
             last_reading = getlast_reading(meter_id)
@@ -8037,8 +8048,18 @@ def read_water_excel(dict_array,apartment_id,user_id):
 
                 reading_period = generate_date(month,year)
 
-                reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
-                reading_obj.save()
+                # reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_obj.id,meter_id,user_id)
+                # reading_obj.save()
+
+                if readtype == "electricity":
+                    reading_obj = MeterReadingOp("actual electricity reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj.save()
+                elif readtype == "borehole":
+                    reading_obj = MeterReadingOp("actual borehole reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj.save()
+                else:
+                    reading_obj = MeterReadingOp("actual water reading",reading,last_reading,units_consumed,reading_period,apartment_id,house_id,meter_id,user_id)
+                    reading_obj.save()
                 
     return '<span class="text-success">Upload successful</span>'
 

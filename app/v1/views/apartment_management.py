@@ -8423,6 +8423,7 @@ class CaptureReading(Resource):
     def post(self):
 
         prop_id = request.form.get('propid')
+        readtype = request.form.get('readtype')
         target = request.form.get('target')
 
         apartment_id = get_identifier(prop_id)
@@ -8463,7 +8464,7 @@ class CaptureReading(Resource):
                     dict_array.append(dict_obj)
 
                 uploadsjob = q.enqueue_call(
-                    func=read_water_excel, args=(dict_array,apartment_id,current_user.id,), result_ttl=5000
+                    func=read_water_excel, args=(dict_array,readtype,apartment_id,current_user.id,), result_ttl=5000
                 )
                                 
                 return '<span class="text-success">Upload successful</span>'
@@ -8485,7 +8486,7 @@ class CaptureReading(Resource):
         house = request.form.get('house')
         reading = request.form.get('reading')
 
-        readtype = request.form.get('readtype')
+        
         run = request.form.get('run')
 
         prop = ApartmentOp.fetch_apartment_by_id(apartment_id)

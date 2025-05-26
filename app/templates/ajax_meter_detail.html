@@ -282,6 +282,17 @@
                   <div class="card-body modal-forms">
                     <span>Upload current readings:</span>
                     <form autocomplete="off" method="POST" action="" enctype="multipart/form-data">
+
+                      <div class="form-group">
+                        <select class="form-control" id="upload_readtype">
+                          <option disabled selected value> -- Select meter type -- </option>
+                          <option value="water">Water(Council)</option>
+                          <option value="borehole">Water(Borehole)</option>
+                          <option value="electricity">Electricity</option>
+
+                        </select>
+                        <span class="fa fa-fw fa-chevron-circle-down field-icon-two text-info"></span>
+                      </div>
      
                       <div class="mt-2 form-group center-btn">
                         <p class="text-black">Excel File: <input class="ph" id="waterbillfile" type = "file" name = "filename" /></p>
@@ -966,6 +977,8 @@
       fd.append('file',files[0]);
       fd.append('target',"excelupload");
       fd.append('propid',$("#prop_identifier").text());
+      fd.append('readtype',$("#upload_readtype").val());
+      fd.append('readperiod',$("input[name=readperiod]:checked").val());
 
       $.ajax({
           type: "POST",

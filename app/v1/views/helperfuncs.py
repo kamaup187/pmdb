@@ -3648,6 +3648,26 @@ def filter_out_metered_houses(selected_apartment):
 
     return new_list
 
+def filter_out_metered_houses_borehole(selected_apartment):
+    apartment_id = get_apartment_id(selected_apartment)
+    house_list = houseauto(apartment_id)
+    new_list = []
+
+    for house in house_list:
+        if not house.meter_allocated:
+            new_list.append(house)
+        else:
+            meter_allocs = house.meter_allocated
+            found = False
+            for meter_alloc in meter_allocs:
+                if meter_alloc.active == True and meter_alloc.meter.metertype == "borehole":
+                    found = True
+                    break
+            if not found:
+                new_list.append(house)
+
+    return new_list
+
 
 def filter_out_metered_houses_alt(selected_apartment):
     apartment_id = get_apartment_id(selected_apartment)

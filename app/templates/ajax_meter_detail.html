@@ -1465,6 +1465,27 @@
     });
   });
 
+    $("#reading_metertype").on('change', function(){
+    $("#alerts-meterreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.capturereading') }}",
+      type: "POST",
+      data: {
+            propid: $("#prop_identifier").text(),
+            readperiod: $("input[name=readperiod]:checked").val(),
+            readperiod2: $("#reading-period").val(),
+            readtype: $("#reading_metertype").val(),
+            run:"houselist"
+          },
+      success: function(response) {
+        $("#select_house").html(response);
+        $("#select_house option:eq('1')").attr("selected", "selected");
+        $("#select_house").change();
+        $("#meterReadingModal").find('#reading').focus();   
+      }
+    });
+  });
+
 </script>
 
 <script>

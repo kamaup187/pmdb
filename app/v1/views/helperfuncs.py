@@ -7694,19 +7694,19 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
                 else:
                     pass
 
-            # if ttype == "ptenant":
-            #     ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
-            #     ptenant_obj.save()
-            # else:
-            #     tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
-            #     tenant_obj.save()
-
             if ttype == "ptenant":
-                tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
-                tenant_obj.save()
+                ptenant_obj = PermanentTenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,house_obj.id,apartment_id,user_id)
+                ptenant_obj.save()
             else:
                 tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
                 tenant_obj.save()
+
+            # if ttype == "ptenant":
+            #     tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
+            #     tenant_obj.save()
+            # else:
+            #     tenant_obj = TenantOp(tenant,tenantphone,nat_id,tenantemail,0.0,"",apartment_id,user_id)
+            #     tenant_obj.save()
 
 
                 active_allocs = get_active_leases(house_obj)

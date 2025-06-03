@@ -437,12 +437,12 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
+        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
         if cl:
             print("changing name............")
-            CompanyOp.update_name(cl,"THE PEACEFIELD")
+            # CompanyOp.update_name(cl,"THE PEACEFIELD")
         else:
-            cl = CompanyOp.fetch_company_by_name("THE PEACEFIELD")
+            cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
         clients.append(cl)
@@ -455,14 +455,14 @@ class ClientBilling(Resource):
             if current_month_bill:
                 # pass
                 ClientBillOp.delete(current_month_bill)
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,12000.0,0.0,0.0,0.0,0.0,12000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 new_month_bill.save()
             else:
                 try:
                     ClientBillOp.delete(current_month_bill)
                 except:
                     pass
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,12000.0,0.0,0.0,0.0,0.0,12000.0,c.id)
+                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
                 current_month_bill.save()
 
         if not current_month_bill:
@@ -528,7 +528,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('THE PEACEFIELD')
+        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -549,7 +549,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(5,5,2025)
+        invdate = generate_exact_date(30,5,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)
@@ -7182,30 +7182,36 @@ class CallBackUrlAstrolRuiru(Resource):
         pass
     def post(self):
         #parse for json
-        my_data=request.data
-        my_json = my_data.decode('utf8').replace("'", '"')
-        data = json.loads(my_json)
 
-        trans_id = data.get('TransID')
-        trans_time = data.get('TransTime')
-        trans_amnt = data.get('TransAmount')
-        trans_type = data.get('TransactionType')
-        business_shortcode = data.get('BusinessShortCode')
-        bill_ref_num = data.get('BillRefNumber')
-        invoice_num = data.get('InvoiceNumber')
-        msisdn = data.get('MSISDN')
-        org_acc_bal = data.get('OrgAccountBalance')
-        fname = data.get('FirstName')
-        lname = data.get('LastName')
+        try:
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            data = json.loads(my_json)
 
-        mode = "Mpesa"
-        company_id = 85
+            trans_id = data.get('TransID')
+            trans_time = data.get('TransTime')
+            trans_amnt = data.get('TransAmount')
+            trans_type = data.get('TransactionType')
+            business_shortcode = data.get('BusinessShortCode')
+            bill_ref_num = data.get('BillRefNumber')
+            invoice_num = data.get('InvoiceNumber')
+            msisdn = data.get('MSISDN')
+            org_acc_bal = data.get('OrgAccountBalance')
+            fname = data.get('FirstName')
+            lname = data.get('LastName')
+
+            mode = "Mpesa"
+            company_id = 85
 
 
-        print("MPESA DATA RECEIEVED: ",data)
+            print("MPESA DATA RECEIEVED: ",data)
 
-        ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
-        ctob_obj.save()
+            ctob_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+            ctob_obj.save()
+
+        except Exception as e:
+            sms_sender("RENTLIB","ASTROL RUIRU MPESA DATA ERROR: "+str(e), ["+254716674695"])
+            return {"message": "success"}, 200
 
         # response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 

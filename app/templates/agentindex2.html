@@ -1500,6 +1500,40 @@
 			
 		})
 
+		  $("#send-balance-button").on('click',function(){
+			alert("sending...")
+			// $("#closemodal").click();
+			setTimeout(function(){
+			url2 = "{{ url_for('api.balancereport') }}";
+			$.ajax({
+					type: "get",
+					url: url2,
+					data: {
+					category:$("#select-balance-category").val(),
+					prop:$("#select-balance-property").val(),
+					contact:$("#balance-mobile").val(),
+					target:"general"
+					},
+					success: function(response) {
+					// $("#sendbalance").html("Sent!")
+
+					// setTimeout(
+					//   $("#sendbalance").html("Send now"), 300
+					//   );
+
+					// snack(response);
+					alert("Balance sent successfully")
+					// $("#sendbalance").html("Sent!")
+				}
+			});
+			},300);
+
+			// setTimeout(function(){
+			// 	$("#sendbalance").html("Send now")
+			// }, 1000);
+		  
+		});
+
 
 		$(".cash-btn-float").on("click",function(){
 			$('#float-input-type').val('float');
@@ -1916,7 +1950,6 @@
 				data: {
 					propid: $("#select-balance-property").val(),
 					category: $("#select-balance-category").val(),
-					mobile: $("#select-balance-mobile").val(),
 				},
 				success: function (response) {
 					var elem = $("#balances-all-table")
